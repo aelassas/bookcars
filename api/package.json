@@ -1,11 +1,26 @@
 {
   "name": "api",
+  "type": "module",
   "version": "1.0.0",
-  "description": "",
+  "description": "BookCars API",
   "main": "app.js",
   "scripts": {
+    "start": "node -r dotenv/config app.js",
+    "dev": "nodemon -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Akram El Assas",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "fs": "^0.0.1-security",
+    "helmet": "^5.0.2",
+    "https": "^1.0.0",
+    "localized-strings": "^0.2.4",
+    "mongoose": "^6.3.0",
+    "nocache": "^3.0.3"
+  }
 }
