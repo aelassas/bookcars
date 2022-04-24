@@ -1,0 +1,10 @@
+/* Error */
+
+.errorContainer {
+	color: #ec5555;
+	text-align: center;
+}
+
+.message {
+	padding: 5px;
+}

@@ -1,0 +1,20 @@
+.content {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.btn-primary,
+.btn-primary:hover {
+    background-color: #f37022 !important;
+}
+
+.btn-secondary,
+.btn-secondary:hover {
+    background-color: #999999 !important;
+}

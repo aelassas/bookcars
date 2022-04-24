@@ -1,0 +1,70 @@
+import LocalizedStrings from 'react-localization';
+
+export const strings = new LocalizedStrings({
+    fr: {
+        /* Header */
+        HOME: 'Acceuil',
+        ABOUT: 'À propos',
+        TOS: "Conditions d'utilisation",
+        CONTACT: 'Contact',
+        LANGUAGE: 'Langue',
+        LANGUAGE_FR: 'Français',
+        LANGUAGE_EN: 'English',
+        PROFILE_HEADING: 'Profile',
+        SIGN_OUT: 'Déconnexion',
+        CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
+        /* Sign up */
+        SIGN_UP_HEADING: 'Inscription',
+        FULL_NAME: 'Nom complet',
+        EMAIL: 'E-mail',
+        PASSWORD: 'Mot de passe',
+        INVALID_EMAIL: 'Adresse e-mail invalide',
+        CONFIRM_PASSWORD: 'Confirmer le mot de passe',
+        TOS_SIGN_UP: "J'ai lu et j'accepte les conditions générales d'utilisation.",
+        SIGN_UP: "S'inscrire",
+        CANCEL: 'Annuler',
+        ERROR_IN_RECAPTCHA: 'Veuillez remplir le captcha pour continuer.',
+        ERROR_IN_PASSWORD: 'Le mot de passe doit contenir au moins 6 caractères.',
+        PASSWORDS_DONT_MATCH: "Les mots de passe ne correspondent pas.",
+        ERROR_IN_SIGN_UP: "Une erreur s'est produite lors de l'inscription.",
+        PLEASE_WAIT: 'Veuillez patienter...',
+        /*Sign in */
+        SIGN_IN_HEADING: 'Connexion',
+        SIGN_IN: 'Se connecter',
+        ERROR_IN_SIGN_IN: 'Nous ne pouvons pas nous connecter à votre compte.',
+        IS_BLACKLISTED: 'Votre compte est suspendu.',
+    },
+    en: {
+        /* Header */
+        HOME: 'Home',
+        ABOUT: 'About',
+        TOS: 'Terms of Service',
+        CONTACT: 'Contact',
+        LANGUAGE: 'Language',
+        LANGUAGE_FR: 'Français',
+        LANGUAGE_EN: 'English',
+        PROFILE_HEADING: 'Profil',
+        SIGN_OUT: 'Sign out',
+        CHANGE_LANGUAGE_ERROR: 'An error occurred while changing language.',
+        /* Sign up */
+        SIGN_UP_HEADING: 'Sign up',
+        FULL_NAME: 'Full name',
+        EMAIL: 'Email',
+        PASSWORD: 'Password',
+        INVALID_EMAIL: 'Invalid email address',
+        CONFIRM_PASSWORD: 'Confirm Password',
+        TOS_SIGN_UP: 'I read and agree with the Terms of Use.',
+        SIGN_UP: 'Sign up',
+        CANCEL: 'Cancel',
+        ERROR_IN_RECAPTCHA: 'Fill out the captcha to continue.',
+        ERROR_IN_PASSWORD: 'Password must be at least 6 characters long.',
+        PASSWORDS_DONT_MATCH: "Passwords don't match.",
+        ERROR_IN_SIGN_UP: 'An error occurred during sign up.',
+        PLEASE_WAIT: 'Please wait...',
+        /*Sign in */
+        SIGN_IN_HEADING: 'Sign in',
+        SIGN_IN: 'Sign in',
+        ERROR_IN_SIGN_IN: "We can't sign in to your account.",
+        IS_BLACKLISTED: 'Your account is suspended.',
+    }
+});
