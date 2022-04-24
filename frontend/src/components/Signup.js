@@ -382,7 +382,7 @@ export default class SignUp extends Component {
                                         variant="contained"
                                         className='btn-secondary'
                                         size="small"
-                                        href="/sign-in"> {strings.CANCEL}
+                                        href="/"> {strings.CANCEL}
                                     </Button>
                                 </div>
                             </div>

@@ -369,8 +369,6 @@ export default function Header(props) {
                         </IconButton>}
                         {((isLoaded || !init) && !isLoading) && <Button
                             variant="contained"
-                            color="primary"
-                            // sx={classes.button}
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}
                             disableElevation
@@ -393,13 +391,12 @@ export default function Header(props) {
                     </div>
                     <div className='header-mobile'>
                         {(!isSignedIn && !isLoading && !init) && <Button
-                            variant="contained"
-                            color="primary"
-                            // className={classes.button}
+                            variant="contained"                            
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}
                             disableElevation
                             fullWidth
+                            className="btn-primary"
                         >
                             {getLang(lang)}
                         </Button>}
