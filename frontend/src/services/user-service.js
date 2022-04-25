@@ -33,7 +33,6 @@ export const signin = data => (
     axios.post(API_HOST + '/api/sign-in/frontend', data)
         .then(res => {
             if (res.data.accessToken) {
-                localStorage.setItem('bc-auth', 'email');
                 localStorage.setItem('bc-user', JSON.stringify(res.data));
             }
             return { status: res.status, data: res.data };
@@ -56,7 +55,6 @@ export const signout = (redirect = true) => {
         };
 
         sessionStorage.clear();
-        localStorage.removeItem('bc-auth');
         localStorage.removeItem('bc-user');
         deleteAllCookies();
 
@@ -123,7 +121,7 @@ export const updateLanguage = (data) => (
 );
 
 export const setLanguage = (lang) => {
-    localStorage.setItem('ws-language', lang);
+    localStorage.setItem('bc-language', lang);
 };
 
 export const getCurrentUser = () => {
@@ -140,7 +138,7 @@ export const getUser = (id) => (
 );
 
 export const updateAvatar = (userId, file) => {
-    const user = JSON.parse(localStorage.getItem('ws-user'));
+    const user = JSON.parse(localStorage.getItem('bc-user'));
     var formData = new FormData();
     formData.append('image', file);
     return axios.post(API_HOST + '/api/update-avatar/' + encodeURIComponent(userId), formData,

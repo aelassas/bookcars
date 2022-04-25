@@ -6,9 +6,9 @@ import {
     getUser,
     signout
 } from '../services/user-service';
-import '../assets/css/resetPassword.css';
+import '../assets/css/profile.css';
 
-export default class ToS extends Component {
+export default class Profile extends Component {
 
     constructor(props) {
         super(props);
@@ -31,10 +31,20 @@ export default class ToS extends Component {
                             }
 
                             this.setState({ user });
+                        } else {
+                            signout();
                         }
-                    });
+                    }).catch(err => {
+                        signout();
+                    });;
+                } else {
+                    signout();
                 }
-            });
+            }).catch(err => {
+                signout();
+            });;
+        } else {
+            signout();
         }
     }
 
@@ -44,7 +54,7 @@ export default class ToS extends Component {
         return (
             <div>
                 <Header user={user} />
-                <div className='content'>ToS!</div>
+                <div className='content'>Settings!</div>
             </div>
         );
     }

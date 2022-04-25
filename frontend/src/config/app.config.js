@@ -10,7 +10,7 @@ export const strings = new LocalizedStrings({
         LANGUAGE: 'Langue',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
-        PROFILE_HEADING: 'Profile',
+        SETTINGS: 'Paramètres',
         SIGN_OUT: 'Déconnexion',
         CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
         /* Sign up */
@@ -43,7 +43,7 @@ export const strings = new LocalizedStrings({
         LANGUAGE: 'Language',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
-        PROFILE_HEADING: 'Profil',
+        SETTINGS: 'Settings',
         SIGN_OUT: 'Sign out',
         CHANGE_LANGUAGE_ERROR: 'An error occurred while changing language.',
         /* Sign up */

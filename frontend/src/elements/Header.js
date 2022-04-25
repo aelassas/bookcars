@@ -5,7 +5,7 @@ import {
     getLanguage,
     updateLanguage,
     setLanguage,
-    getCurrentUser,
+    // getCurrentUser,
     getQueryLanguage,
     signout
 } from '../services/user-service';
@@ -36,11 +36,11 @@ import {
     Notifications as NotificationsIcon,
     More as MoreIcon,
     Language as LanguageIcon,
+    Settings as SettingsIcon,
     Home as HomeIcon,
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
     ExitToApp as SignoutIcon,
-
 } from '@mui/icons-material';
 import '../assets/css/header.css';
 
@@ -159,8 +159,8 @@ export default function Header(props) {
         handleMobileMenuClose();
     };
 
-    const handleOnProfileClick = () => {
-        window.location.href = '/profile';
+    const handleOnSettingsClick = () => {
+        window.location.href = '/settings';
     };
 
     const handleSignout = () => {
@@ -188,6 +188,7 @@ export default function Header(props) {
     };
 
     useEffect(() => {
+
         if (!props.hidden) {
             setIsLoading(true);
 
@@ -234,14 +235,19 @@ export default function Header(props) {
                             });
                     });
             } else {
-                const currentUser = getCurrentUser();
-                if (!currentUser || init) {
+                // const currentUser = getCurrentUser();
+                // if (!currentUser || init) {
+                //     setIsLoading(false);
+                // }
+
+                if (!props.user || init) {
                     setIsLoading(false);
+                    setIsLoaded(true);
                 }
             }
 
         }
-    }, [props, init, currentLanguage,isSignedIn]);
+    }, [props, init, currentLanguage]);
 
     const menuId = 'primary-account-menu';
     const renderMenu = (
@@ -254,14 +260,15 @@ export default function Header(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleOnProfileClick}>
-                {
-                    <Avatar loggedUser={props.user} user={props.user} size="small" className="profile-action" readonly />
-                }
-                {strings.PROFILE_HEADING}
+            <MenuItem onClick={handleOnSettingsClick}>
+                {/* {
+                    <Avatar loggedUser={props.user} user={props.user} size="small" className="header-action" readonly />
+                } */}
+                <SettingsIcon className="header-action" />
+                {strings.SETTINGS}
             </MenuItem>
             <MenuItem onClick={handleSignout}>{
-                <SignoutIcon className="profile-action" />}
+                <SignoutIcon className="header-action" />}
                 <Typography>{strings.SIGN_OUT}</Typography>
             </MenuItem>
         </Menu>
@@ -278,11 +285,12 @@ export default function Header(props) {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={handleOnProfileClick}>
-                <IconButton color="inherit">
+            <MenuItem onClick={handleOnSettingsClick}>
+                {/* <IconButton color="inherit">
                     <Avatar loggedUser={props.user} user={props.user} size="small" readonly />
-                </IconButton>
-                <p>{strings.PROFILE_HEADING}</p>
+                </IconButton> */}
+                <SettingsIcon className="header-action" />
+                <p>{strings.SETTINGS}</p>
             </MenuItem>
             <MenuItem onClick={handleLangMenuOpen}>
                 <IconButton
@@ -391,7 +399,7 @@ export default function Header(props) {
                     </div>
                     <div className='header-mobile'>
                         {(!isSignedIn && !isLoading && !init) && <Button
-                            variant="contained"                            
+                            variant="contained"
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}
                             disableElevation

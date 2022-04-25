@@ -9,9 +9,12 @@
     padding: 0;
 }
 
-.btn-primary,
-.btn-primary:hover {
+.btn-primary {
     background-color: #f37022 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ea6c21 !important;
 }
 
 .btn-secondary,

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-d
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 import Home from './components/Home';
-import Profile from './components/Profile';
+import Settings from './components/Settings';
 import Notifications from "./components/Notifications";
 import Messages from "./components/Messages";
 import ToS from './components/ToS';
@@ -22,7 +22,7 @@ const App = () => {
 					<Route exact path="/sign-in" element={<Signin />} />
 					<Route exact path="/sign-up" element={<Signup />} />
 					<Route exact path="/" element={<Home />} />
-					<Route exact path="/profile" element={<Profile />} />
+					<Route exact path="/settings" element={<Settings />} />
 					<Route exact path="/notifications" element={<Notifications />} />
 					<Route exact path="/messages" element={<Messages />} />
 					<Route exact path="/reset-password" element={<ResetPassword />} />

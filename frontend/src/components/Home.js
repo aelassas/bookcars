@@ -22,17 +22,19 @@ export default class Home extends Component {
         const currentUser = getCurrentUser();
         if (currentUser) {
             validateAccessToken().then(status => {
-                getUser(currentUser.id).then(user => {
-                    if (user) {
+                if (status === 200) {
+                    getUser(currentUser.id).then(user => {
+                        if (user) {
 
-                        if (user.isBlacklisted) {
-                            signout();
-                            return;
+                            if (user.isBlacklisted) {
+                                signout();
+                                return;
+                            }
+
+                            this.setState({ user });
                         }
-
-                        this.setState({ user });
-                    }
-                });
+                    });
+                }
             });
         }
     }
