@@ -23,8 +23,8 @@ export const strings = new LocalizedStrings({
         SIGN_OUT: 'Déconnexion',
         CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
         /* No Match */
-        NO_MATCH: 'Rien à voir ici!',
-        GO_TO_HOME: "Aller à la page d'acceuil",
+        NO_MATCH: 'Rien à voir ici !',
+        GO_TO_HOME: "Aller à la page d'accueil",
         /* Sign up */
         SIGN_UP_HEADING: 'Inscription',
         FULL_NAME: 'Nom complet',
