@@ -54,7 +54,7 @@ export const strings = new LocalizedStrings({
         VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
         /* Header */
         HOME: 'Home',
-        COMPANIES: 'booking companies',
+        COMPANIES: 'Booking companies',
         RESERVATIONS: 'Bookings',
         ABOUT: 'About',
         TOS: 'Terms of Service',
