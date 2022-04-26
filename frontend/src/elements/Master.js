@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { LANGUAGES } from '../config/env.config';
 import { strings } from '../config/app.config';
 import Header from '../elements/Header';
 import {
@@ -7,9 +6,7 @@ import {
     validateAccessToken,
     getUser,
     signout,
-    resendLink,
-    getQueryLanguage,
-    getLanguage
+    resendLink
 } from '../services/user-service';
 import {
     Button
@@ -49,20 +46,16 @@ export default class Master extends Component {
             signout(false, true);
         } else {
             this.setState({ isLoading: false }, _ => {
-                this.props.onLoad();
+                if (this.props.onLoad) {
+                    this.props.onLoad();
+                }
             });
         }
     }
 
     componentDidMount() {
-        let language = getQueryLanguage();
-
-        if (!LANGUAGES.includes(language)) {
-            language = getLanguage();
-        }
-        strings.setLanguage(language);
-
         const currentUser = getCurrentUser();
+
         if (currentUser) {
             validateAccessToken().then(status => {
                 if (status === 200) {
@@ -75,7 +68,9 @@ export default class Master extends Component {
                             }
 
                             this.setState({ isLoading: false, user }, _ => {
-                                this.props.onLoad(user);
+                                if (this.props.onLoad) {
+                                    this.props.onLoad(user);
+                                }
                             });
                         } else {
                             this.exit();

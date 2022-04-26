@@ -1,4 +1,6 @@
 import LocalizedStrings from 'react-localization';
+import { LANGUAGES } from '../config/env.config';
+import { getQueryLanguage, getLanguage } from '../services/user-service';
 
 export const strings = new LocalizedStrings({
     fr: {
@@ -20,6 +22,9 @@ export const strings = new LocalizedStrings({
         SETTINGS: 'Paramètres',
         SIGN_OUT: 'Déconnexion',
         CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
+        /* No Match */
+        NO_MATCH: 'Rien à voir ici!',
+        GO_TO_HOME: "Aller à la page d'acceuil",
         /* Sign up */
         SIGN_UP_HEADING: 'Inscription',
         FULL_NAME: 'Nom complet',
@@ -60,6 +65,9 @@ export const strings = new LocalizedStrings({
         SETTINGS: 'Settings',
         SIGN_OUT: 'Sign out',
         CHANGE_LANGUAGE_ERROR: 'An error occurred while changing language.',
+        /* No Match */
+        NO_MATCH: 'Nothing to see here!',
+        GO_TO_HOME: 'Go to the home page',
         /* Sign up */
         SIGN_UP_HEADING: 'Sign up',
         FULL_NAME: 'Full name',
@@ -82,3 +90,11 @@ export const strings = new LocalizedStrings({
         IS_BLACKLISTED: 'Your account is suspended.',
     }
 });
+
+let language = getQueryLanguage();
+
+if (language === '' || !LANGUAGES.includes(language)) {
+    language = getLanguage();
+}
+
+strings.setLanguage(language);

@@ -19,6 +19,9 @@ import {
     toast
 } from 'react-toastify';
 
+import './assets/css/common.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 if (process.env.REACT_APP_NODE_ENV === 'production') {

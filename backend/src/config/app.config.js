@@ -1,4 +1,6 @@
 import LocalizedStrings from 'react-localization';
+import { LANGUAGES } from '../config/env.config';
+import { getQueryLanguage, getLanguage } from '../services/user-service';
 
 export const strings = new LocalizedStrings({
     fr: {
@@ -86,3 +88,11 @@ export const strings = new LocalizedStrings({
         IS_BLACKLISTED: 'Your account is suspended.',
     }
 });
+
+let language = getQueryLanguage();
+
+if (language === '' || !LANGUAGES.includes(language)) {
+    language = getLanguage();
+}
+
+strings.setLanguage(language);

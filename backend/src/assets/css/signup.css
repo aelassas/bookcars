@@ -1,5 +1,4 @@
 /* Signup */
-
 .signup {
 	margin-top: 40px;
 	width: 100%;
@@ -8,7 +7,7 @@
 .signup-form-title {
 	text-align: center;
 	text-transform: capitalize;
-    color: #121212;
+	color: #121212;
 }
 
 .signup .buttons {

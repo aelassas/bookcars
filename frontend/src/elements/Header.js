@@ -388,7 +388,7 @@ export default function Header(props) {
                             disableElevation
                             fullWidth
                             className="btn-primary"
-                            style={{ minWidth: lang === 'fr' ? '160px' : '100px' }}
+                            style={{ minWidth: '160px' }}
                         >
                             {strings.SIGN_IN}
                         </Button>}
@@ -414,6 +414,17 @@ export default function Header(props) {
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
+                        {(!props.hideSignin && !isSignedIn && isLoaded && !isLoading) && <Button
+                            variant="contained"
+                            startIcon={<LoginIcon />}
+                            href="/sign-in"
+                            disableElevation
+                            fullWidth
+                            className="btn-primary"
+                            style={{ minWidth: '160px' }}
+                        >
+                            {strings.SIGN_IN}
+                        </Button>}
                         {(!isSignedIn && !isLoading && !init) && <Button
                             variant="contained"
                             startIcon={<LanguageIcon />}
