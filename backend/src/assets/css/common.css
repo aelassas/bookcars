@@ -1,0 +1,32 @@
+.content {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.btn-primary,
+.btn-primary:hover {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary,
+.btn-secondary:hover {
+    background-color: #999999 !important;
+    color: #ffffff !important;
+}
+
+.validate-email {
+    position: absolute;
+    top: 65px;
+    margin: 15px;
+}
+
+.btn-resend {
+    margin: 0 10px 0 10px !important;
+}

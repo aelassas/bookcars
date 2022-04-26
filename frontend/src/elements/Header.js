@@ -5,7 +5,7 @@ import {
     getLanguage,
     updateLanguage,
     setLanguage,
-    // getCurrentUser,
+    getCurrentUser,
     getQueryLanguage,
     signout
 } from '../services/user-service';
@@ -13,7 +13,6 @@ import { getNotificationCounter } from '../services/notification-service';
 import { getMessageCounter } from '../services/message-service';
 import { toast } from 'react-toastify';
 import { Avatar } from './Avatar';
-
 import {
     AppBar,
     Toolbar,
@@ -41,6 +40,9 @@ import {
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
     ExitToApp as SignoutIcon,
+    Login as LoginIcon,
+    CorporateFare as CompaniesIcon,
+    EventSeat as ReservationsIcon
 } from '@mui/icons-material';
 import '../assets/css/header.css';
 
@@ -235,12 +237,8 @@ export default function Header(props) {
                             });
                     });
             } else {
-                // const currentUser = getCurrentUser();
-                // if (!currentUser || init) {
-                //     setIsLoading(false);
-                // }
-
-                if (!props.user || init) {
+                const currentUser = getCurrentUser();
+                if (!currentUser || init) {
                     setIsLoading(false);
                     setIsLoaded(true);
                 }
@@ -332,7 +330,7 @@ export default function Header(props) {
         <div style={props.hidden ? { display: 'none' } : classes.grow} >
             <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
                 <Toolbar>
-                    <IconButton
+                    {isLoaded && !isLoading && <IconButton
                         edge="start"
                         sx={classes.menuButton}
                         color="inherit"
@@ -340,7 +338,7 @@ export default function Header(props) {
                         onClick={handleSideMenuOpen}
                     >
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton>}
                     <React.Fragment>
                         <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
                             <List sx={classes.list}>
@@ -348,6 +346,14 @@ export default function Header(props) {
                                     <ListItemIcon>{<HomeIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.HOME} />
                                 </ListItemLink>
+                                <ListItemLink href="/companies">
+                                    <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.COMPANIES} />
+                                </ListItemLink>
+                                {isSignedIn && <ListItemLink href="/reservations">
+                                    <ListItemIcon>{<ReservationsIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.RESERVATIONS} />
+                                </ListItemLink>}
                                 <ListItemLink href="/about">
                                     <ListItemIcon>{<AboutIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.ABOUT} />
@@ -375,13 +381,23 @@ export default function Header(props) {
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>}
+                        {(!props.hideSignin && !isSignedIn && isLoaded && !isLoading) && <Button
+                            variant="contained"
+                            startIcon={<LoginIcon />}
+                            href="/sign-in"
+                            disableElevation
+                            fullWidth
+                            className="btn-primary"
+                            style={{ minWidth: lang === 'fr' ? '160px' : '100px' }}
+                        >
+                            {strings.SIGN_IN}
+                        </Button>}
                         {((isLoaded || !init) && !isLoading) && <Button
                             variant="contained"
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}
                             disableElevation
                             fullWidth
-                            sx={{ bgcolor: '#f37022' }}
                             className="btn-primary"
                         >
                             {getLang(lang)}

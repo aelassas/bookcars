@@ -1,0 +1,31 @@
+/* Header */
+
+.header-action {
+    margin-right: 20px;
+}
+
+.header-desktop {
+    display: none;
+}
+
+.header-mobile {
+    display: flex;
+    margin-right: -13px;
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    .header-desktop {
+        display: flex;
+    }
+
+    .header-mobile {
+        display: none;
+    }
+
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {}

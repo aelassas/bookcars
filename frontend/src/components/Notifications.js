@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import Header from '../elements/Header';
-import {
-    getCurrentUser,
-    validateAccessToken,
-    getUser,
-    signout
-} from '../services/user-service';
+import Master from '../elements/Master';
 import '../assets/css/notifications.css';
 
 export default class Notifications extends Component {
@@ -17,45 +11,19 @@ export default class Notifications extends Component {
         };
     }
 
+    onLoad = (user) => {
+        this.setState({ user });
+    }
+
     componentDidMount() {
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-            validateAccessToken().then(status => {
-                if (status === 200) {
-                    getUser(currentUser.id).then(user => {
-                        if (user) {
-
-                            if (user.isBlacklisted) {
-                                signout();
-                                return;
-                            }
-
-                            this.setState({ user });
-                        } else {
-                            signout();
-                        }
-                    }).catch(err => {
-                        signout();
-                    });;
-                } else {
-                    signout();
-                }
-            }).catch(err => {
-                signout();
-            });;
-        } else {
-            signout();
-        }
     }
 
     render() {
-        const { user } = this.state;
 
         return (
-            <div>
-                <Header user={user} />
-                <div className='content'>Notifications!</div>
-            </div>
+            <Master onLoad={this.onLoad} strict={true}>
+                Notifications!
+            </Master>
         );
     }
 }

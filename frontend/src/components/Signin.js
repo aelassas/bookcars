@@ -132,7 +132,7 @@ export default class SignIn extends Component {
 
         return (
             <div>
-                <Header />
+                <Header hideSignin={true} />
                 <div className='content' style={visible ? null : { display: 'none' }}>
                     <Paper className='signin-form' elevation={10}>
                         <form onSubmit={this.handleSubmit}>
@@ -160,7 +160,7 @@ export default class SignIn extends Component {
                                     required
                                 />
                             </FormControl>
-                            <div className='signin-buttons buttons'>
+                            <div className='signin-buttons'>
                                 <Button
                                     type="submit"
                                     variant="contained"

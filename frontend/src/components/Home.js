@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
-import Header from '../elements/Header';
-import {
-    getCurrentUser,
-    validateAccessToken,
-    getUser,
-    signout
-} from '../services/user-service';
+import Master from '../elements/Master';
 import '../assets/css/home.css';
-
 
 export default class Home extends Component {
 
@@ -18,35 +11,19 @@ export default class Home extends Component {
         };
     }
 
+    onLoad = (user) => {
+        this.setState({ user });
+    }
+
     componentDidMount() {
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-            validateAccessToken().then(status => {
-                if (status === 200) {
-                    getUser(currentUser.id).then(user => {
-                        if (user) {
-
-                            if (user.isBlacklisted) {
-                                signout();
-                                return;
-                            }
-
-                            this.setState({ user });
-                        }
-                    });
-                }
-            });
-        }
     }
 
     render() {
-        const { user } = this.state;
 
         return (
-            <div>
-                <Header user={user} />
-                <div className='content'>Home!</div>
-            </div>
+            <Master onLoad={this.onLoad} strict={false}>
+                Home!
+            </Master>
         );
     }
 }

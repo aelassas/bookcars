@@ -8,7 +8,13 @@
 }
 
 .signin-buttons {
+    float: right;
     margin-top: 35px;
+}
+
+.signin-buttons button {
+	margin-right: 15px;
+	margin-left: 0 !important;
 }
 
 .form-error {

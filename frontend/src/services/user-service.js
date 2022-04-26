@@ -40,7 +40,7 @@ export const signin = data => (
 );
 
 
-export const signout = (redirect = true) => {
+export const signout = (redirect = true, redirectSignin = false) => {
 
     const _signout = () => {
         const deleteAllCookies = () => {
@@ -60,6 +60,9 @@ export const signout = (redirect = true) => {
 
         if (redirect) {
             window.location.href = '/' + window.location.search;
+        }
+        if (redirectSignin) {
+            window.location.href = '/sign-in' + window.location.search;
         }
     };
 

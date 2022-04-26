@@ -284,7 +284,7 @@ export default class SignUp extends Component {
 
         return (
             <div>
-                <Header />
+                <Header hideSignin={true} />
                 <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                     <div className="signup">
                         <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>

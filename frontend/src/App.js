@@ -10,6 +10,12 @@ import ToS from './components/ToS';
 import About from './components/About';
 import ResetPassword from './components/ResetPassword';
 import Contact from './components/Contact';
+import Companies from './components/Companies';
+import Company from './components/Company';
+import Car from './components/Car';
+import Reservations from './components/Reservations';
+import Reservation from './components/Reservation';
+
 import './assets/css/common.css';
 import './assets/css/index.css';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -29,6 +35,12 @@ const App = () => {
 					<Route exact path="/tos" element={<ToS />} />
 					<Route exact path="/about" element={<About />} />
 					<Route exact path="/contact" element={<Contact />} />
+					<Route exact path="/companies" element={<Companies />} />
+					<Route exact path="/company" element={<Company />} />
+					<Route exact path="/car" element={<Car />} />
+					<Route exact path="/reservations" element={<Reservations />} />
+					<Route exact path="/reservation" element={<Reservation />} />
+
 					<Route path="*" element={<Navigate to="/" />} />
 				</Routes>
 			</div>

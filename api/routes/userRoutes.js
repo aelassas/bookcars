@@ -13,6 +13,7 @@ import User from '../schema/User.js';
 import Token from '../schema/Token.js';
 import authJwt from '../middlewares/authJwt.js';
 
+const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE;
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true';
 const JWT_SECRET = process.env.BC_JWT_SECRET;
 const JWT_EXPIRE_AT = parseInt(process.env.BC_JWT_EXPIRE_AT);
@@ -141,6 +142,97 @@ routes.route(routeNames.validateEmail).post((req, res) => {
 // Validate JWT token Router
 routes.route(routeNames.validateAccessToken).post(authJwt.verifyToken, (req, res) => {
     res.sendStatus(200);
+});
+
+// Confirm Email Router
+routes.route(routeNames.confirmEmail).get((req, res) => {
+    Token.findOne({ token: req.params.token }, (err, token) => {
+        User.findOne({ email: req.params.email }, (err, user) => {
+            strings.setLanguage(user.language);
+            // token is not found into database i.e. token may have expired 
+            if (!token) {
+                console.error(strings.ACCOUNT_VALIDATION_LINK_EXPIRED, req.params);
+                return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_LINK_EXPIRED));
+            }
+            // if token is found then check valid user 
+            else {
+                // not valid user
+                if (!user) {
+                    console.error('[user.confirmEmail] User not found', req.params);
+                    return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_LINK_ERROR));
+                }
+                // user is already verified
+                else if (user.isVerified) {
+                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
+                }
+                // verify user
+                else {
+                    // change isVerified to true
+                    user.isVerified = true;
+                    user.verifiedAt = Date.now();
+                    user.save((err) => {
+                        // error occur
+                        if (err) {
+                            console.error('[user.confirmEmail] ' + strings.DB_ERROR + ' ' + req.params, err);
+                            return res.status(500).send(getStatusMessage(user.language, err.message));
+                        }
+                        // account successfully verified
+                        else {
+                            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_SUCCESS));
+                        }
+                    });
+
+                }
+            }
+        });
+    });
+});
+
+// Resend verification link Router
+routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
+
+        // user is not found into database
+        if (!user) {
+            console.error('[user.resendLink] User not found:', req.params);
+            return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_VALIDATION_RESEND_ERROR));
+        }
+        // user has been already verified
+        else if (user.isVerified) {
+            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
+        }
+        // send verification link
+        else {
+            // generate token and save
+            const token = new Token({ user: user._id, token: crypto.randomBytes(16).toString('hex') });
+            token.save((err) => {
+                if (err) {
+                    console.error('[user.resendLink] ' + strings.DB_ERROR, req.params);
+                    return res.status(500).send(getStatusMessage(user.language, err.message));
+                }
+
+                // Send email
+                const transporter = nodemailer.createTransport({
+                    host: SMTP_HOST,
+                    port: SMTP_PORT,
+                    auth: {
+                        user: SMTP_USER,
+                        pass: SMTP_PASS
+                    }
+                });
+
+                strings.setLanguage(user.language);
+                const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_VALIDATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_VALIDATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' };
+                transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params);
+                        return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_TECHNICAL_ISSUE + ' ' + err.response));
+                    }
+                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_2));
+                });
+            });
+        }
+    });
 });
 
 // Update Language Router

@@ -11,13 +11,13 @@
     color: #f37022;
 }
 
-.buttons {
+.signup .buttons {
 	float: right;
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
 
-.buttons button {
+.signup .buttons button {
 	margin-right: 15px;
 	margin-left: 0 !important;
 }

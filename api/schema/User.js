@@ -12,6 +12,9 @@ const userSchema = new Schema({
         validate: [validator.isEmail, 'is invalid'],
         index: true
     },
+    phone:{
+        type: String
+    },
     fullName: {
         type: String,
         required: [true, "can't be blank"],
