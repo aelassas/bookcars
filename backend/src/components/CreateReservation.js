@@ -22,7 +22,7 @@ export default class CreateReservation extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Create Reservation!
             </Master>
         );

@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import './assets/css/index.css';
 
@@ -25,6 +25,7 @@ const ToS = lazy(() => import("./components/ToS"));
 const About = lazy(() => import("./components/About"));
 const ResetPassword = lazy(() => import("./components/ResetPassword"));
 const Contact = lazy(() => import("./components/Contact"));
+const NoMatch = lazy(() => import("./components/NoMatch"));
 
 const App = () => {
 	return (
@@ -34,7 +35,7 @@ const App = () => {
 					<Routes>
 						<Route exact path="/sign-in" element={<Signin />} />
 						<Route exact path="/sign-up" element={<Signup />} />
-						<Route exact path="/dashboard" element={<Dashboard />} />
+						<Route exact path="/" element={<Dashboard />} />
 						<Route exact path="/companies" element={<Companies />} />
 						<Route exact path="/company" element={<Company />} />
 						<Route exact path="/create-company" element={<CreateCompany />} />
@@ -55,7 +56,7 @@ const App = () => {
 						<Route exact path="/tos" element={<ToS />} />
 						<Route exact path="/contact" element={<Contact />} />
 
-						<Route path="*" element={<Navigate to="/sign-in" />} />
+						<Route path="*" element={<NoMatch />} />
 					</Routes>
 				</Suspense>
 			</div>

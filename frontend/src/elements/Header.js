@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { LANGUAGES, DEFAULT_LANGUAGE } from '../config/env.config';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import {
-    getLanguage,
-    updateLanguage,
-    setLanguage,
-    getCurrentUser,
-    getQueryLanguage,
-    signout
-} from '../services/user-service';
-import { getNotificationCounter } from '../services/notification-service';
-import { getMessageCounter } from '../services/message-service';
+import UserService from '../services/UserService';
+import NotificationService from '../services/NotificationService';
+import MessageService from '../services/MessageService';
 import { toast } from 'react-toastify';
 import { Avatar } from './Avatar';
 import {
@@ -53,7 +46,7 @@ const ListItemLink = (props) => (
 export default function Header(props) {
 
     const [currentLanguage, setCurrentLanguage] = useState(null);
-    const [lang, setLang] = useState(DEFAULT_LANGUAGE);
+    const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE);
     const [anchorEl, setAnchorEl] = useState(null);
     const [langAnchorEl, setLangAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -118,16 +111,16 @@ export default function Header(props) {
         const { code } = event.currentTarget.dataset;
         if (code) {
             setLang(code);
-            const currentLang = getLanguage();
+            const currentLang = UserService.getLanguage();
             if (isSignedIn) {
                 // Update user language
                 const data = {
                     id: props.user._id,
                     language: code
                 };
-                const status = await updateLanguage(data);
+                const status = await UserService.updateLanguage(data);
                 if (status === 200) {
-                    setLanguage(code);
+                    UserService.setLanguage(code);
                     if (code && code !== currentLang) {
                         // Refresh page
                         refreshPage();
@@ -136,7 +129,7 @@ export default function Header(props) {
                     toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
                 }
             } else {
-                setLanguage(code);
+                UserService.setLanguage(code);
                 if (code && code !== currentLang) {
                     // Refresh page
                     refreshPage();
@@ -152,7 +145,7 @@ export default function Header(props) {
             case 'en':
                 return strings.LANGUAGE_EN;
             default:
-                return DEFAULT_LANGUAGE;
+                return Env.DEFAULT_LANGUAGE;
         }
     }
 
@@ -166,7 +159,7 @@ export default function Header(props) {
     };
 
     const handleSignout = () => {
-        signout();
+        UserService.signout();
     };
 
     const handleMobileMenuOpen = (event) => {
@@ -210,23 +203,23 @@ export default function Header(props) {
                 return;
             }
 
-            const queryLanguage = getQueryLanguage();
+            const queryLanguage = UserService.getQueryLanguage();
 
-            if (LANGUAGES.includes(queryLanguage)) {
+            if (Env.LANGUAGES.includes(queryLanguage)) {
                 setLang(queryLanguage);
                 setCurrentLanguage(queryLanguage)
                 strings.setLanguage(queryLanguage);
             } else {
-                const language = getLanguage();
+                const language = UserService.getLanguage();
                 setLang(language);
                 setCurrentLanguage(language)
                 strings.setLanguage(language);
             }
 
             if (!init && props.user) {
-                getNotificationCounter(props.user._id)
+                NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
-                        getMessageCounter(props.user._id)
+                        MessageService.getMessageCounter(props.user._id)
                             .then(messageCounter => {
                                 setIsSignedIn(true);
                                 setNotificationsCount(notificationCounter.count);
@@ -237,7 +230,7 @@ export default function Header(props) {
                             });
                     });
             } else {
-                const currentUser = getCurrentUser();
+                const currentUser = UserService.getCurrentUser();
                 if (!currentUser || init) {
                     setIsLoading(false);
                     setIsLoaded(true);

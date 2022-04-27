@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { LANGUAGES, DEFAULT_LANGUAGE } from '../config/env.config';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import {
-    getLanguage,
-    getUser,
-    signin,
-    getCurrentUser,
-    validateAccessToken,
-    signout,
-    getQueryLanguage
-} from '../services/user-service';
+import UserService from '../services/UserService';
 import Header from '../elements/Header';
 import Error from '../elements/Error';
 import {
@@ -19,6 +11,7 @@ import {
     Input,
     Button
 } from '@mui/material';
+
 import '../assets/css/signin.css';
 
 export default class SignIn extends Component {
@@ -26,7 +19,7 @@ export default class SignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: DEFAULT_LANGUAGE,
+            language: Env.DEFAULT_LANGUAGE,
             email: '',
             password: '',
             error: false,
@@ -59,11 +52,11 @@ export default class SignIn extends Component {
         const { email, password } = this.state;
         const data = { email, password };
 
-        signin(data).then(res => {
+        UserService.signin(data).then(res => {
             console.log(res);
             if (res.status === 200) {
                 if (res.data.isBlacklisted) {
-                    signout(false);
+                    UserService.signout(false);
                     this.setState({
                         error: false,
                         isBlacklisted: true,
@@ -94,33 +87,33 @@ export default class SignIn extends Component {
 
 
     componentDidMount() {
-        const queryLanguage = getQueryLanguage();
+        const queryLanguage = UserService.getQueryLanguage();
 
-        if (LANGUAGES.includes(queryLanguage)) {
+        if (Env.LANGUAGES.includes(queryLanguage)) {
             strings.setLanguage(queryLanguage);
             this.setState({ language: queryLanguage });
         } else {
-            const language = getLanguage();
+            const language = UserService.getLanguage();
             strings.setLanguage(language);
             this.setState({ language });
         }
 
-        const currentUser = getCurrentUser();
+        const currentUser = UserService.getCurrentUser();
         if (currentUser) {
-            validateAccessToken().then(status => {
+            UserService.validateAccessToken().then(status => {
                 if (status === 200) {
-                    getUser(currentUser.id).then(user => {
+                    UserService.getUser(currentUser.id).then(user => {
                         if (user) {
                             window.location.href = '/' + window.location.search;
                         } else {
-                            signout();
+                            UserService.signout();
                         }
                     }).catch(err => {
-                        signout();
+                        UserService.signout();
                     });
                 }
             }).catch(err => {
-                signout();
+                UserService.signout();
             });
         } else {
             this.setState({ visible: true });

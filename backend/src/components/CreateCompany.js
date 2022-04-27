@@ -22,7 +22,7 @@ export default class CreateCompany extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Create Company!
             </Master>
         );

@@ -22,7 +22,7 @@ export default class About extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 About!
             </Master>
         );

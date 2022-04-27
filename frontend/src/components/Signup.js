@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
-import { LANGUAGES, DEFAULT_LANGUAGE } from '../config/env.config';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import {
-    signup,
-    validateEmail,
-    signin,
-    getCurrentUser,
-    validateAccessToken,
-    signout,
-    getUser,
-    getLanguage,
-    getQueryLanguage
-} from '../services/user-service';
+import UserService from '../services/UserService';
 import Header from '../elements/Header';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';
@@ -34,7 +24,7 @@ export default class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            language: DEFAULT_LANGUAGE,
+            language: Env.DEFAULT_LANGUAGE,
             fullName: '',
             email: '',
             password: '',
@@ -87,7 +77,7 @@ export default class SignUp extends Component {
             email: this.state.email,
         };
 
-        validateEmail(emailData).then(emailStatus => {
+        UserService.validateEmail(emailData).then(emailStatus => {
             if (emailStatus === 204) {
                 this.setState({ emailError: true });
             } else {
@@ -131,96 +121,70 @@ export default class SignUp extends Component {
             email: this.state.email,
         };
 
-        validateEmail(emailData)
-            .then(emailStatus => {
-                if (emailStatus === 204) {
-                    this.setState({ emailError: true });
-                } else {
-                    this.setState({ emailError: false });
+        UserService.validateEmail(emailData).then(emailStatus => {
+            if (emailStatus === 204) {
+                this.setState({ emailError: true });
+            } else {
+                this.setState({ emailError: false });
 
-                    if (this.state.password.length < 6) {
-                        this.setState({
-                            passwordError: true,
-                            recaptchaError: false,
-                            passwordsDontMatch: false,
-                            error: false,
-                            register: false
-                        });
-                        return;
-                    }
+                if (this.state.password.length < 6) {
+                    this.setState({
+                        passwordError: true,
+                        recaptchaError: false,
+                        passwordsDontMatch: false,
+                        error: false,
+                        register: false
+                    });
+                    return;
+                }
 
-                    if (this.state.password !== this.state.confirmPassword) {
-                        this.setState({
-                            passwordsDontMatch: true,
-                            recaptchaError: false,
-                            passwordError: false,
-                            error: false,
-                            register: false
-                        });
-                        return;
-                    }
+                if (this.state.password !== this.state.confirmPassword) {
+                    this.setState({
+                        passwordsDontMatch: true,
+                        recaptchaError: false,
+                        passwordError: false,
+                        error: false,
+                        register: false
+                    });
+                    return;
+                }
 
-                    if (!this.state.reCaptchaToken) {
-                        this.setState({
-                            recaptchaError: true,
-                            passwordsDontMatch: false,
-                            passwordError: false,
-                            error: false,
-                            register: false
-                        });
-                        return;
-                    }
+                if (!this.state.reCaptchaToken) {
+                    this.setState({
+                        recaptchaError: true,
+                        passwordsDontMatch: false,
+                        passwordError: false,
+                        error: false,
+                        register: false
+                    });
+                    return;
+                }
 
-                    this.setState({ isLoading: true });
+                this.setState({ isLoading: true });
 
-                    const data = {
-                        email: this.state.email,
-                        password: this.state.password,
-                        fullName: this.state.fullName,
-                        language: getLanguage(),
-                        type: 'user'
-                    };
+                const data = {
+                    email: this.state.email,
+                    password: this.state.password,
+                    fullName: this.state.fullName,
+                    language: UserService.getLanguage(),
+                    type: 'user'
+                };
 
-                    signup(data)
-                        .then(
-                            registerStatus => {
-                                if (registerStatus === 200) {
-                                    signin({
-                                        email: this.state.email,
-                                        password: this.state.password
-                                    })
-                                        .then(signInResult => {
-                                            if (signInResult.status === 200) {
-                                                window.location = '/' + window.location.search;
-                                            } else {
-                                                this.setState({
-                                                    error: true,
-                                                    passwordError: false,
-                                                    passwordsDontMatch: false,
-                                                    register: false,
-                                                    isLoading: false
-                                                });
-                                            }
-                                        })
-                                        .catch(err => {
-                                            this.setState({
-                                                error: true,
-                                                passwordError: false,
-                                                passwordsDontMatch: false,
-                                                register: false,
-                                                isLoading: false
-                                            });
-                                        });
-                                } else
-                                    this.setState({
-                                        error: true,
-                                        passwordError: false,
-                                        passwordsDontMatch: false,
-                                        register: false,
-                                        isLoading: false
-                                    });
-                            })
-                        .catch(err => {
+                UserService.signup(data).then(registerStatus => {
+                    if (registerStatus === 200) {
+                        UserService.signin({ email: this.state.email, password: this.state.password }).then(signInResult => {
+                            if (signInResult.status === 200) {
+                                window.location = '/' + window.location.search;
+                            } else {
+                                this.setState({
+                                    error: true,
+                                    passwordError: false,
+                                    passwordsDontMatch: false,
+                                    register: false,
+                                    isLoading: false
+                                });
+                            }
+                        }).catch(err => {
                             this.setState({
                                 error: true,
                                 passwordError: false,
@@ -229,11 +193,29 @@ export default class SignUp extends Component {
                                 isLoading: false
                             });
                         });
-                }
+                    } else
+                        this.setState({
+                            error: true,
+                            passwordError: false,
+                            passwordsDontMatch: false,
+                            register: false,
+                            isLoading: false
+                        });
+                })
+                    .catch(err => {
+                        this.setState({
+                            error: true,
+                            passwordError: false,
+                            passwordsDontMatch: false,
+                            register: false,
+                            isLoading: false
+                        });
+                    });
+            }
 
-            }).catch(err => {
-                this.setState({ emailError: true });
-            })
+        }).catch(err => {
+            this.setState({ emailError: true });
+        })
     };
 
     handleChange = (e) => {
@@ -241,28 +223,28 @@ export default class SignUp extends Component {
     };
 
     componentDidMount() {
-        let language = getQueryLanguage();
+        let language = UserService.getQueryLanguage();
 
-        if (!LANGUAGES.includes(language)) {
-            language = getLanguage();
+        if (!Env.LANGUAGES.includes(language)) {
+            language = UserService.getLanguage();
         }
         strings.setLanguage(language);
         this.setState({ language });
 
-        const currentUser = getCurrentUser();
+        const currentUser = UserService.getCurrentUser();
         if (currentUser) {
-            validateAccessToken().then(status => {
-                getUser(currentUser.id).then(user => {
+            UserService.validateAccessToken().then(status => {
+                UserService.getUser(currentUser.id).then(user => {
                     if (user) {
                         window.location.href = '/home';
                     } else {
-                        signout();
+                        UserService.signout();
                     }
                 }).catch(err => {
-                    signout();
+                    UserService.signout();
                 });
             }).catch(err => {
-                signout();
+                UserService.signout();
             });
         } else {
             this.setState({ visible: true });

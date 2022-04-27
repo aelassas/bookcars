@@ -21,7 +21,7 @@ export default class Cars extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Cars!
             </Master>
         );

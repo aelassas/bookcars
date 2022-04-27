@@ -22,7 +22,7 @@ export default class Messages extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Messages!
             </Master>
         );

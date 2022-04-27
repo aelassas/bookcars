@@ -22,7 +22,7 @@ export default class Contact extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Contact!
             </Master>
         );

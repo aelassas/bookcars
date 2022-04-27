@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import { CDN } from '../config/env.config';
-import { getUser, updateAvatar, deleteAvatar, getCurrentUser, getLanguage } from '../services/user-service';
+import UserService from '../services/UserService';
 import { toast } from 'react-toastify';
 import {
     Button,
@@ -35,10 +35,10 @@ export const Avatar = (props) => {
         const file = e.target.files[0];
 
         reader.onloadend = () => {
-            updateAvatar(_id, file).then(
+            UserService.updateAvatar(_id, file).then(
                 status => {
                     if (status === 200) {
-                        getUser(_id).then(user => {
+                        UserService.getUser(_id).then(user => {
                             if (user) {
                                 setUser(user);
                                 if (props.onChange) {
@@ -104,10 +104,10 @@ export const Avatar = (props) => {
 
     const handleDelete = (e) => {
         const { _id } = user;
-        deleteAvatar(_id)
+        UserService.deleteAvatar(_id)
             .then(status => {
                 if (status === 200) {
-                    getUser(_id).then(user => {
+                    UserService.getUser(_id).then(user => {
                         if (user) {
                             setUser(user);
                             if (props.onChange) {
@@ -139,10 +139,10 @@ export const Avatar = (props) => {
     };
 
     useEffect(() => {
-        const language = getLanguage();
+        const language = UserService.getLanguage();
         strings.setLanguage(language);
 
-        const currentUser = getCurrentUser();
+        const currentUser = UserService.getCurrentUser();
         if (currentUser) {
             setUser(props.user);
         } else {
@@ -187,7 +187,7 @@ export const Avatar = (props) => {
                                     }
                                 >
                                     <MaterialAvatar
-                                        src={user.avatar.startsWith('http') ? user.avatar : joinURL(CDN, user.avatar)}
+                                        src={user.avatar.startsWith('http') ? user.avatar : joinURL(Env.CDN, user.avatar)}
                                         className="avatar"
                                     />
                                 </Badge>
@@ -217,7 +217,7 @@ export const Avatar = (props) => {
                         user.avatar
                             ?
                             <MaterialAvatar
-                                src={user.avatar.startsWith('http') ? user.avatar : joinURL(CDN, user.avatar)}
+                                src={user.avatar.startsWith('http') ? user.avatar : joinURL(Env.CDN, user.avatar)}
                                 className={size ? 'avatar-' + size : 'avatar'} />
                             :
                             <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />

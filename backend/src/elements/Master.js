@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
 import { strings } from '../config/app.config';
 import Header from '../elements/Header';
-import {
-    getCurrentUser,
-    validateAccessToken,
-    getUser,
-    signout,
-    resendLink
-} from '../services/user-service';
-import {
-    Button
-} from '@mui/material';
+import UserService from '../services/UserService';
+import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 
 export default class Master extends Component {
@@ -27,46 +19,58 @@ export default class Master extends Component {
         e.preventDefault();
         const data = { email: this.state.user.email };
 
-        resendLink(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(strings.VALIDATION_EMAIL_SENT, { type: 'info' });
-                } else {
-                    toast(strings.VALIDATION_EMAIL_ERROR, { type: 'error' });
-                }
-            })
-            .catch(err => {
+        UserService.resendLink(data).then(status => {
+            if (status === 200) {
+                toast(strings.VALIDATION_EMAIL_SENT, { type: 'info' });
+            } else {
                 toast(strings.VALIDATION_EMAIL_ERROR, { type: 'error' });
-            });
+            }
+        }).catch(err => {
+            toast(strings.VALIDATION_EMAIL_ERROR, { type: 'error' });
+        });
     };
 
+    exit = _ => {
+        if (this.props.strict) {
+            UserService.signout();
+        } else {
+            this.setState({ isLoading: false }, _ => {
+                if (this.props.onLoad) {
+                    this.props.onLoad();
+                }
+            });
+        }
+    }
+
     componentDidMount() {
-        const currentUser = getCurrentUser();
+        const currentUser = UserService.getCurrentUser();
 
         if (currentUser) {
-            validateAccessToken().then(status => {
+            UserService.validateAccessToken().then(status => {
                 if (status === 200) {
-                    getUser(currentUser.id).then(user => {
-                        if (user && ['admin', 'company'].includes(user.type)) {
+                    UserService.getUser(currentUser.id).then(user => {
+                        if (user) {
 
                             if (user.isBlacklisted) {
-                                signout();
+                                this.exit();
                                 return;
                             }
 
                             this.setState({ isLoading: false, user }, _ => {
-                                this.props.onLoad(user);
+                                if (this.props.onLoad) {
+                                    this.props.onLoad(user);
+                                }
                             });
                         } else {
-                            signout();
+                            this.exit();
                         }
                     });
                 } else {
-                    signout();
+                    this.exit();
                 }
             });
         } else {
-            signout();
+            this.exit();
         }
     }
 
@@ -75,7 +79,7 @@ export default class Master extends Component {
 
         return (
             <div>
-                <Header user={user} />
+                <Header user={user} hidden={isLoading} />
                 {((!user && !isLoading) || (user && user.isVerified)) ? (
                     <div className='content'>{this.props.children}</div>
                 ) :

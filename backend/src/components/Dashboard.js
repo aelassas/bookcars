@@ -22,7 +22,7 @@ export default class Dashboard extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad}>
+            <Master onLoad={this.onLoad} strict={true}>
                 Dashboard!
             </Master>
         );

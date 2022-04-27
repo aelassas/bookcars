@@ -1,23 +1,12 @@
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import App from './App';
+import Env from './config/env.config';
+import { strings } from './config/app.config';
+import UserService from './services/UserService';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-    validateAccessToken,
-    updateLanguage,
-    setLanguage,
-    getQueryLanguage
-} from './services/user-service';
-import {
-    LANGUAGES,
-    DEFAULT_LANGUAGE
-} from './config/env.config';
-import { strings } from './config/app.config';
-import {
-    ToastContainer,
-    toast
-} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 import './assets/css/common.css';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -30,16 +19,16 @@ if (process.env.REACT_APP_NODE_ENV === 'production') {
     }
 }
 
-let language = DEFAULT_LANGUAGE;
+let language = Env.DEFAULT_LANGUAGE;
 const user = JSON.parse(localStorage.getItem('bc-user'));
-let lang = getQueryLanguage();
+let lang = UserService.getQueryLanguage();
 
 if (lang !== '') {
-    if (!LANGUAGES.includes(lang)) {
+    if (!Env.LANGUAGES.includes(lang)) {
         lang = localStorage.getItem('bc-language');
 
-        if (!LANGUAGES.includes(lang)) {
-            lang = DEFAULT_LANGUAGE;
+        if (!Env.LANGUAGES.includes(lang)) {
+            lang = Env.DEFAULT_LANGUAGE;
         }
     }
     if (user) {
@@ -50,9 +39,9 @@ if (lang !== '') {
                 language: lang
             }
 
-            validateAccessToken().then(async status => {
+            UserService.validateAccessToken().then(async status => {
                 if (status === 200) {
-                    const status = await updateLanguage(data);
+                    const status = await UserService.updateLanguage(data);
                     if (status !== 200) {
                         toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
                     }
@@ -63,7 +52,7 @@ if (lang !== '') {
     } else if (lang) {
         language = lang;
     }
-    setLanguage(language);
+    UserService.setLanguage(language);
     strings.setLanguage(language);
 }
 
@@ -111,6 +100,3 @@ root.render(
         </CssBaseline>
     </ThemeProvider>
 );
-
-
-
