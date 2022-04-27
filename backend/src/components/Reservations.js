@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Env from '../config/env.config';
 import Master from '../elements/Master';
 import MultipleSelect from '../elements/MultipleSelect';
 
@@ -60,7 +59,7 @@ export default class Reservations extends Component {
                     ListboxProps={{
                         onScroll: (event) => {
                             const listboxNode = event.currentTarget;
-                            if (fetch && !isLoading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                            if (fetch && !isLoading && (listboxNode.scrollTop + listboxNode.clientHeight === listboxNode.scrollHeight)) {
                                 const p = page + 1;
                                 this.setState({ isLoading: true, page: p });
 
