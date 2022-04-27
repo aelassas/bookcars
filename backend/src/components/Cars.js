@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
+
 import '../assets/css/cars.css';
 
 export default class Cars extends Component {
