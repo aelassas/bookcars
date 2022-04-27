@@ -1,5 +1,5 @@
 const Env = {
-    isMobile: () => window.innerWidth <= 960,
+    isMobile: _ => window.innerWidth <= 960,
 
     API_HOST: process.env.REACT_APP_BC_API_HOST,
     LANGUAGES: ['fr', 'en'],
