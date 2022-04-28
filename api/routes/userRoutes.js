@@ -1,14 +1,14 @@
 import express from 'express';
-import routeNames from '../config/userRoutes.config.js';
-import strings from '../config/app.config.js';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
+import { v1 as uuid } from 'uuid';
+import routeNames from '../config/userRoutes.config.js';
+import strings from '../config/app.config.js';
 import User from '../schema/User.js';
 import Token from '../schema/Token.js';
 import authJwt from '../middlewares/authJwt.js';
@@ -43,8 +43,7 @@ routes.route(routeNames.signup).post((req, res) => {
     user.save()
         .then(user => {
             // generate token and save
-            const token = new Token({ user: user._id, token: crypto.randomBytes(16).toString('hex') });
-            // const token = new Token({ user: user._id, token: nanoid() });
+            const token = new Token({ user: user._id, token: uuid() });
 
             token.save()
                 .then(token => {
@@ -204,7 +203,8 @@ routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) =
         // send verification link
         else {
             // generate token and save
-            const token = new Token({ user: user._id, token: crypto.randomBytes(16).toString('hex') });
+            const token = new Token({ user: user._id, token: uuid() });
+
             token.save((err) => {
                 if (err) {
                     console.error('[user.resendLink] ' + strings.DB_ERROR, req.params);

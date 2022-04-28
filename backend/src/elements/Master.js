@@ -64,10 +64,14 @@ export default class Master extends Component {
                         } else {
                             this.exit();
                         }
-                    });
+                    }).catch(_ => {
+                        this.exit();
+                    });;
                 } else {
                     this.exit();
                 }
+            }).catch(_ => {
+                this.exit();
             });
         } else {
             this.exit();
