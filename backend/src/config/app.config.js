@@ -64,7 +64,7 @@ export const strings = new LocalizedStrings({
         DELETE: 'Supprimer',
         /* Update Company */
         SAVE: 'Sauvegarder',
-        /* Reset Password (TODO en) */
+        /* Reset Password */
         PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
         NEW_PASSWORD: 'Nouveau mot de passe',
         RESET_PASSWORD: 'Changer le Mot de Passe',
@@ -132,6 +132,12 @@ export const strings = new LocalizedStrings({
         DELETE: 'Delete',
         /* Update Company */
         UPDATE: 'Save',
+        /* Reset Password */
+        PASSWORD_RESET_HEADING: 'Password Reset',
+        NEW_PASSWORD: 'New Password',
+        RESET_PASSWORD: 'Reset Password',
+        PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
+        PASSWORD_UPDATE: 'Password changed successfully.',
     }
 });
 

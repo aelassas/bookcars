@@ -178,12 +178,14 @@ export default class ResetPassword extends Component {
                                     type="submit"
                                     className='btn-primary btn-margin'
                                     size="small"
+                                    variant='contained'
                                 >
                                     {strings.RESET_PASSWORD}
                                 </Button>
                                 <Button
                                     className='btn-secondary'
                                     size="small"
+                                    variant='contained'
                                     href="/"
                                 >
                                     {strings.CANCEL}
