@@ -1,0 +1,41 @@
+.companies {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.companies .col-1 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    padding: 20px 0 0 20px;
+    background: #fefefe;
+    border-right: #eee solid 1px;
+}
+
+.companies .search {
+    width: 235px;
+}
+
+.companies .new-company {
+    margin: 20px 5px 0 0;
+    width: 270px;
+}
+
+.companies .col-2 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 300px;
+    overflow-y: auto;
+}
+
+.companies .list {
+    width: 350px;
+    margin-left: calc(50% - 175px) !important;
+}

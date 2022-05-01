@@ -9,6 +9,17 @@
     padding: 0;
 }
 
+.buttons {
+    float: right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.buttons button {
+    margin-right: 15px;
+    margin-left: 0 !important;
+}
+
 .btn-primary,
 .btn-primary:hover {
     background-color: #121212 !important;
@@ -19,6 +30,10 @@
 .btn-secondary:hover {
     background-color: #999999 !important;
     color: #ffffff !important;
+}
+
+.btn-margin {
+    margin-right: 15px !important;
 }
 
 .validate-email {

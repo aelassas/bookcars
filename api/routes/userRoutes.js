@@ -9,6 +9,7 @@ import nodemailer from 'nodemailer';
 import { v1 as uuid } from 'uuid';
 import routeNames from '../config/userRoutes.config.js';
 import strings from '../config/app.config.js';
+import Env from '../config/env.config.js';
 import User from '../schema/User.js';
 import Token from '../schema/Token.js';
 import authJwt from '../middlewares/authJwt.js';
@@ -50,6 +51,8 @@ routes.route(routeNames.signup).post((req, res) => {
                     // Send email
                     strings.setLanguage(user.language);
 
+                    console.log(SMTP_HOST);
+                    console.log(SMTP_PASS)
                     const transporter = nodemailer.createTransport({
                         host: SMTP_HOST,
                         port: SMTP_PORT,
@@ -100,9 +103,9 @@ routes.route(routeNames.signin).post((req, res) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user
-                || (req.params.type !== 'frontend' && req.params.type !== 'backend')
-                || (req.params.type === 'frontend' && user && user.type !== 'user')
-                || (req.params.type === 'backend' && user && user.type === 'user')) {
+                || (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type))
+                || (req.params.type === Env.APP_TYPE.FRONTEND && user && user.type === Env.USER_TYPE.COMPANY)
+                || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)) {
                 res.sendStatus(204);
             } else {
                 bcrypt.compare(req.body.password, user.password).then(passwordMatch => {
@@ -348,6 +351,32 @@ routes.route(routeNames.deleteAvatar)
                 console.error(strings.DB_ERROR, err);
                 res.status(400).send(strings.DB_ERROR + err);
             });
+    });
+
+// Reset password Router
+routes.route(routeNames.resetPassword)
+    .post(authJwt.verifyToken, (req, res) => {
+        User.findOne({ _id: req.body._id })
+            .then(user => {
+                if (!user) {
+                    console.error('[user.resetPassword] User not found:', req.body._id);
+                    res.sendStatus(204);
+                } else {
+                    user.password = req.body.newPassword;
+                    user.save()
+                        .then(_ => {
+                            res.sendStatus(200);
+                        })
+                        .catch(err => {
+                            console.error(strings.DB_ERROR, err);
+                            res.status(400).send(strings.DB_ERROR + err);
+                        });
+                }
+            })
+            .catch(err => {
+                console.error(strings.DB_ERROR, err);
+                res.status(400).send(strings.DB_ERROR + err);
+            });;
     });
 
 export default routes;

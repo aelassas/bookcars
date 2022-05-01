@@ -4,6 +4,7 @@ import Header from '../elements/Header';
 import UserService from '../services/UserService';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
+import Env from '../config/env.config';
 
 export default class Master extends Component {
 
@@ -56,6 +57,11 @@ export default class Master extends Component {
                                 return;
                             }
 
+                            if (this.props.admin && user.type !== Env.USER_TYPE.ADMIN) {
+                                this.exit();
+                                return;
+                            }
+
                             this.setState({ isLoading: false, user }, _ => {
                                 if (this.props.onLoad) {
                                     this.props.onLoad(user);
@@ -85,7 +91,7 @@ export default class Master extends Component {
             <div>
                 <Header user={user} hidden={isLoading} />
                 {((!user && !isLoading) || (user && user.isVerified)) ? (
-                    <div className='content'>{this.props.children}</div>
+                    <div className='content' style={this.props.style}>{this.props.children}</div>
                 ) :
                     (!isLoading && <div className="validate-email">
                         <span>{strings.VALIDATE_EMAIL}</span>

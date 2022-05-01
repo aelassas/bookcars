@@ -1,5 +1,6 @@
 import validator from 'validator';
 import mongoose from 'mongoose';
+import Env from '../config/env.config.js';
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +13,7 @@ const userSchema = new Schema({
         validate: [validator.isEmail, 'is invalid'],
         index: true
     },
-    phone:{
+    phone: {
         type: String
     },
     fullName: {
@@ -55,8 +56,8 @@ const userSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ['user', 'admin', 'company'],
-        default: 'user'
+        enum: [Env.USER_TYPE.USER, Env.USER_TYPE.ADMIN, Env.USER_TYPE.COMPANY],
+        default: Env.USER_TYPE.USER
     },
     isBlacklisted: {
         type: Boolean,

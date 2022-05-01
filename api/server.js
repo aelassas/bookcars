@@ -10,6 +10,7 @@ import carRoutes from './routes/carRoutes.js';
 import reservationRoutes from './routes/reservationRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import companyRoutes from './routes/companyRoutes.js';
 
 const DB_HOST = process.env.BC_DB_HOST;
 const DB_PORT = process.env.BC_DB_PORT;
@@ -70,6 +71,7 @@ app.use('/', carRoutes);
 app.use('/', reservationRoutes);
 app.use('/', notificationRoutes);
 app.use('/', messageRoutes);
+app.use('/', companyRoutes);
 
 strings.setLanguage(process.env.BC_DEFAULT_LANGUAGE);
 

@@ -137,4 +137,15 @@ export default class UserService {
     static deleteAvatar(userId) {
         return axios.post(`${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId), null, { headers: UserService.authHeader() }).then(res => res.status);
     }
+
+    static resetPassword(data) {
+        const salt = bcrypt.genSaltSync(10);
+
+        const newPassword = data.newPassword;
+        const newPasswordHash = bcrypt.hashSync(newPassword, salt);
+
+        data["newPassword"] = newPasswordHash;
+
+        return axios.post(`${Env.API_HOST}/api/reset-password/`, data, { headers: UserService.authHeader() }).then(res => res.status);
+    }
 }

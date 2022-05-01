@@ -35,8 +35,6 @@ export default class SignUp extends Component {
             passwordError: false,
             passwordsDontMatch: false,
             emailError: false,
-            showPassword: false,
-            showConfirmPassword: false,
             visible: false,
             tosChecked: false,
             isLoading: false
@@ -167,7 +165,7 @@ export default class SignUp extends Component {
                     password: this.state.password,
                     fullName: this.state.fullName,
                     language: UserService.getLanguage(),
-                    type: 'admin'
+                    type: Env.USER_TYPE.ADMIN
                 };
 
                 UserService.signup(data).then(registerStatus => {
@@ -236,7 +234,7 @@ export default class SignUp extends Component {
             UserService.validateAccessToken().then(status => {
                 UserService.getUser(currentUser.id).then(user => {
                     if (user) {
-                        window.location.href = '/home';
+                        window.location.href = '/';
                     } else {
                         UserService.signout();
                     }
@@ -258,15 +256,13 @@ export default class SignUp extends Component {
             passwordsDontMatch,
             emailError,
             recaptchaError,
-            showPassword,
-            showConfirmPassword,
             visible,
             tosChecked,
             isLoading } = this.state;
 
         return (
             <div>
-                <Header hideSignin={true} />
+                <Header />
                 <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                     <div className="signup">
                         <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
@@ -281,6 +277,7 @@ export default class SignUp extends Component {
                                         name="FullName"
                                         required
                                         onChange={this.handleOnChangeFullName}
+                                        autoComplete="off"
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
@@ -293,8 +290,13 @@ export default class SignUp extends Component {
                                         name="Email"
                                         onBlur={this.handleOnBlur}
                                         onChange={this.handleOnChangeEmail}
-                                        autoComplete="Email"
                                         required
+                                        inputProps={{
+                                            autoComplete: 'new-email',
+                                            form: {
+                                                autoComplete: 'off',
+                                            },
+                                        }}
                                     />
                                     <FormHelperText error={emailError}>
                                         {emailError ? strings.INVALID_EMAIL : ''}
@@ -307,9 +309,14 @@ export default class SignUp extends Component {
                                         value={this.state.password}
                                         name="Password"
                                         onChange={this.handleOnChangePassword}
-                                        autoComplete="password"
                                         required
-                                        type={showPassword ? 'text' : 'password'}
+                                        type="password"
+                                        inputProps={{
+                                            autoComplete: 'new-password',
+                                            form: {
+                                                autoComplete: 'off',
+                                            },
+                                        }}
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
@@ -321,7 +328,13 @@ export default class SignUp extends Component {
                                         onChange={this.handleOnChangeConfirmPassword}
                                         autoComplete="password"
                                         required
-                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        type="password"
+                                        inputProps={{
+                                            autoComplete: 'new-password',
+                                            form: {
+                                                autoComplete: 'off',
+                                            },
+                                        }}
                                     />
                                 </FormControl>
                                 <div className="recaptcha">

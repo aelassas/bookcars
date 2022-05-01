@@ -125,7 +125,7 @@ export default class SignIn extends Component {
 
         return (
             <div>
-                <Header hideSignin={true} />
+                <Header />
                 <div className='content' style={visible ? null : { display: 'none' }}>
                     <Paper className='signin-form' elevation={10}>
                         <form onSubmit={this.handleSubmit}>

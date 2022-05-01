@@ -9,6 +9,7 @@ export const strings = new LocalizedStrings({
         RESEND: 'Renvoyer',
         VALIDATION_EMAIL_SENT: 'E-mail de validation envoyé.',
         VALIDATION_EMAIL_ERROR: "Une erreur s'est produite lors de l'envoi de l'e-mail de validation.",
+        GENERIC_ERROR: "Une erreur non gérée s'est produite.",
         /* Header */
         DASHBOARD: 'Tableau de bord',
         COMPANIES: 'Sociétés de location',
@@ -47,6 +48,28 @@ export const strings = new LocalizedStrings({
         SIGN_IN: 'Se connecter',
         ERROR_IN_SIGN_IN: 'Nous ne pouvons pas nous connecter à votre compte.',
         IS_BLACKLISTED: 'Votre compte est suspendu.',
+        /* Create Company */
+        CREATE_COMPANY_HEADING: 'Nouvelle société',
+        CREATE: 'Créer',
+        PHONE: 'Téléphone',
+        LOCATION: 'Adresse',
+        BIO: 'Bio',
+        INVALID_FULL_NAME: 'Nom invalide',
+        /* Companies */
+        LOADING: 'Chargement...',
+        SEARCH_PLACEHOLDER: 'Rechercher...',
+        NEW_COMPANY: 'Nouvelle société',
+        CONFIRM_TITLE: 'Confirmation',
+        DELETE_COMPANY: 'Êtes-vous sûr de vouloir supprimer cette société et toutes ses données?',
+        DELETE: 'Supprimer',
+        /* Update Company */
+        SAVE: 'Sauvegarder',
+        /* Reset Password (TODO en) */
+        PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
+        NEW_PASSWORD: 'Nouveau mot de passe',
+        RESET_PASSWORD: 'Changer le Mot de Passe',
+        PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
+        PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
     },
     en: {
         /* Common */
@@ -54,6 +77,7 @@ export const strings = new LocalizedStrings({
         RESEND: 'Resend',
         VALIDATION_EMAIL_SENT: 'Validation email sent.',
         VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
+        GENERIC_ERROR: 'An unhandled error occurred.',
         /* Header */
         DASHBOARD: 'Dashboard',
         COMPANIES: 'Booking companies',
@@ -92,6 +116,22 @@ export const strings = new LocalizedStrings({
         SIGN_IN: 'Sign in',
         ERROR_IN_SIGN_IN: "We can't sign in to your account.",
         IS_BLACKLISTED: 'Your account is suspended.',
+        /* Create Company */
+        CREATE_COMPANY_HEADING: 'New company',
+        CREATE: 'Create',
+        PHONE: 'Phone',
+        LOCATION: 'Address',
+        BIO: 'Bio',
+        INVALID_FULL_NAME: 'Invalid name',
+        /* Companies */
+        LOADING: 'Loading...',
+        SEARCH_PLACEHOLDER: 'Search...',
+        NEW_COMPANY: 'New company',
+        CONFIRM_TITLE: 'Confirmation',
+        DELETE_COMPANY: 'Are you sure you want to delete this company and all its data?',
+        DELETE: 'Delete',
+        /* Update Company */
+        UPDATE: 'Save',
     }
 });
 
