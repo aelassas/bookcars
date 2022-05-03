@@ -36,6 +36,10 @@
     margin-right: 15px !important;
 }
 
+.btn-margin-bottom {
+    margin-bottom: 10px !important;
+}
+
 .validate-email {
     position: absolute;
     top: 65px;
@@ -44,4 +48,68 @@
 
 .btn-resend {
     margin: 0 10px 0 10px !important;
+}
+
+.required:after {
+    content: " *";
+    color: red;
+}
+
+.form-error {
+    clear: both;
+    height: 65px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+/* Avatar */
+
+.avatar,
+.avatar-large {
+    width: 170px !important;
+    height: 170px !important;
+}
+
+.avatar-medium {
+    width: 64px !important;
+    height: 64px !important;
+}
+
+.avatar-small {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.avatar-action-box {
+    width: 46px;
+    height: 46px;
+    background: #ddd;
+    cursor: pointer;
+}
+
+.avatar-action-icon {
+    width: 32px !important;
+    height: 32px !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 8px;
+}
+
+@media only screen and (max-width: 960px) {
+    .avatar-ctn {
+        position: relative;
+        left: 50%;
+        transform: translateX(-33%);
+        margin: 20px 0 20px 0;
+    }
+}
+
+@media only screen and (min-width: 960px) {
+    .avatar-ctn {
+        position: relative;
+        left: 50%;
+        transform: translateX(-20%);
+        margin: 20px 0 20px 0;
+    }
 }

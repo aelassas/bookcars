@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import CompanyService from '../services/CompanyService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
+import { Avatar } from '../elements/Avatar';
 import {
     Input,
     InputLabel,
@@ -16,6 +18,7 @@ import {
 } from '@mui/material';
 
 import '../assets/css/create-company.css';
+import '../assets/css/update-company.css';
 
 export default class UpdateCompany extends Component {
 
@@ -23,7 +26,7 @@ export default class UpdateCompany extends Component {
         super(props);
         this.state = {
             user: null,
-            companyId: '',
+            company: null,
             fullName: '',
             phone: '',
             location: '',
@@ -83,10 +86,10 @@ export default class UpdateCompany extends Component {
 
         this.setState({ isLoading: true });
 
-        const { companyId, fullName, phone, location, bio } = this.state;
+        const { company, fullName, phone, location, bio } = this.state;
 
         const data = {
-            _id: companyId,
+            _id: company._id,
             fullName,
             phone,
             location,
@@ -96,7 +99,7 @@ export default class UpdateCompany extends Component {
         CompanyService.update(data)
             .then(status => {
                 if (status === 200) {
-                    window.location = `/company?c=${companyId}`;
+                    window.location = `/company?c=${company._id}`;
                 } else {
                     toast(strings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false });
@@ -112,6 +115,14 @@ export default class UpdateCompany extends Component {
         e.preventDefault();
     };
 
+    onBeforeUpload = () => {
+        this.setState({ isLoading: true });
+    };
+
+    onAvatarChange = _ => {
+        this.setState({ isLoading: false });
+    };
+
     onLoad = (user) => {
         this.setState({ user, isLoading: true }, _ => {
             const params = new URLSearchParams(window.location.search);
@@ -121,7 +132,7 @@ export default class UpdateCompany extends Component {
                     CompanyService.getCompany(id)
                         .then(company => {
                             this.setState({
-                                companyId: company._id,
+                                company,
                                 fullName: company.fullName,
                                 phone: company.phone,
                                 location: company.location,
@@ -147,6 +158,7 @@ export default class UpdateCompany extends Component {
 
     render() {
         const {
+            company,
             fullName,
             phone,
             location,
@@ -155,18 +167,27 @@ export default class UpdateCompany extends Component {
             fullNameError,
             visible,
             isLoading,
-            noMatch,
-            companyId
+            noMatch
         } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
-                <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                    <div className="company">
-                        <form onSubmit={this.handleSubmit}>
-                            <div>
+                {visible &&
+                    <div className='update-company'>
+                        <Paper className="company-form-update company-form-wrapper" elevation={10}>
+                            <form onSubmit={this.handleSubmit}>
+                                <Avatar
+                                    type={Env.USER_TYPE.COMPANY}
+                                    mode='update'
+                                    user={company}
+                                    size='large'
+                                    readonly={false}
+                                    onBeforeUpload={this.onBeforeUpload}
+                                    onChange={this.onAvatarChange}
+                                    color='disabled'
+                                    className='avatar-ctn' />
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.FULL_NAME}</InputLabel>
+                                    <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
                                     <Input
                                         id="full-name"
                                         type="text"
@@ -220,33 +241,32 @@ export default class UpdateCompany extends Component {
                                     <Button
                                         type="submit"
                                         variant="contained"
-                                        className='btn-primary'
+                                        className='btn-primary btn-margin btn-margin-bottom'
+                                        size="small"
+                                        href={`/reset-password?u=${company._id}`}
+                                    >
+                                        {strings.RESET_PASSWORD}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-primary btn-margin-bottom'
                                         size="small"
                                     >
                                         {strings.SAVE}
                                     </Button>
                                     <Button
-                                        type="submit"
                                         variant="contained"
-                                        className='btn-primary btn-margin'
-                                        size="small"
-                                        href={`/reset-password?u=${companyId}`}
-                                    >
-                                        {strings.RESET_PASSWORD}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary'
+                                        className='btn-secondary btn-margin-bottom'
                                         size="small"
                                         href="/companies"
                                     >
                                         {strings.CANCEL}
                                     </Button>
                                 </div>
-                            </div>
-                        </form>
-                    </div>
-                </Paper>
+                            </form>
+                        </Paper>
+                    </div>}
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
                 {error && <Error message={strings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
                 {noMatch && <NoMatch style={{ marginTop: '-65px' }} />}

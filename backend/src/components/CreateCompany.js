@@ -4,18 +4,16 @@ import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import UserService from '../services/UserService';
 import CompanyService from '../services/CompanyService';
-import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
+import { Avatar } from '../elements/Avatar';
 import {
     Input,
     InputLabel,
     FormControl,
     FormHelperText,
     Button,
-    Paper,
-    Checkbox,
-    Link
+    Paper
 } from '@mui/material';
 
 import '../assets/css/create-company.css';
@@ -34,16 +32,14 @@ export default class CreateCompany extends Component {
             bio: '',
             password: '',
             confirmPassword: '',
-            reCaptchaToken: '',
             error: false,
-            recaptchaError: false,
             passwordError: false,
             passwordsDontMatch: false,
             emailError: false,
             visible: false,
-            tosChecked: false,
             isLoading: false,
-            fullNameError: false
+            fullNameError: false,
+            avatar: null
         };
     }
 
@@ -121,10 +117,6 @@ export default class CreateCompany extends Component {
         });
     };
 
-    handleOnRecaptchaVerify = (token) => {
-        this.setState({ reCaptchaToken: token });
-    };
-
     handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -134,10 +126,6 @@ export default class CreateCompany extends Component {
     };
 
     preventDefault = (event) => event.preventDefault();
-
-    handleTosChange = (event) => {
-        this.setState({ tosChecked: event.target.checked });
-    };
 
     handleSubmit = e => {
         e.preventDefault();
@@ -155,7 +143,6 @@ export default class CreateCompany extends Component {
                 if (this.state.password.length < 6) {
                     this.setState({
                         passwordError: true,
-                        recaptchaError: false,
                         passwordsDontMatch: false,
                         error: false,
                         register: false
@@ -166,18 +153,6 @@ export default class CreateCompany extends Component {
                 if (this.state.password !== this.state.confirmPassword) {
                     this.setState({
                         passwordsDontMatch: true,
-                        recaptchaError: false,
-                        passwordError: false,
-                        error: false,
-                        register: false
-                    });
-                    return;
-                }
-
-                if (!this.state.reCaptchaToken) {
-                    this.setState({
-                        recaptchaError: true,
-                        passwordsDontMatch: false,
                         passwordError: false,
                         error: false,
                         register: false
@@ -195,7 +170,8 @@ export default class CreateCompany extends Component {
                     password: this.state.password,
                     fullName: this.state.fullName,
                     language: UserService.getLanguage(),
-                    type: Env.USER_TYPE.COMPANY
+                    type: Env.USER_TYPE.COMPANY,
+                    avatar: this.state.avatar
                 };
 
                 UserService.signup(data).then(registerStatus => {
@@ -229,6 +205,32 @@ export default class CreateCompany extends Component {
         e.preventDefault();
     };
 
+    onBeforeUpload = () => {
+        this.setState({ isLoading: true });
+    };
+
+    onAvatarChange = (avatar) => {
+        this.setState({ isLoading: false, avatar });
+    };
+
+    handleCancel = _ => {
+        const { avatar } = this.state;
+
+        if (avatar) {
+            this.setState({ isLoading: true });
+
+            UserService.deleteTempAvatar(avatar)
+                .then(_ => {
+                    window.location.href = '/companies';
+                })
+                .catch(_ => {
+                    window.location.href = '/companies';
+                });
+        } else {
+            window.location.href = '/companies';
+        }
+    };
+
     onLoad = (user) => {
         this.setState({ user, language: user.language, visible: true });
     }
@@ -237,179 +239,161 @@ export default class CreateCompany extends Component {
     }
 
     render() {
-        const { error,
-            language,
+        const {
+            error,
             passwordError,
             passwordsDontMatch,
             emailError,
             fullNameError,
-            recaptchaError,
             visible,
-            tosChecked,
             isLoading } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
-                <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                    <div className="company">
+                <div className='create-company'>
+                    <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="company-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
-                            <div>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.FULL_NAME}</InputLabel>
-                                    <Input
-                                        id="full-name"
-                                        type="text"
-                                        error={fullNameError}
-                                        required
-                                        onBlur={this.handleFullNameOnBlur}
-                                        onChange={this.handleOnChangeFullName}
-                                        autoComplete="off"
-                                    />
-                                    <FormHelperText error={fullNameError}>
-                                        {fullNameError ? strings.INVALID_FULL_NAME : ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.EMAIL}</InputLabel>
-                                    <Input
-                                        id="email"
-                                        type="text"
-                                        error={emailError}
-                                        onBlur={this.handleEmailOnBlur}
-                                        onChange={this.handleOnChangeEmail}
-                                        required
-                                        inputProps={{
-                                            autoComplete: 'new-email',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
-                                    />
-                                    <FormHelperText error={emailError}>
-                                        {emailError ? strings.INVALID_EMAIL : ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.PHONE}</InputLabel>
-                                    <Input
-                                        id="phone"
-                                        type="text"
-                                        onChange={this.handleOnChangePhone}
-                                        inputProps={{
-                                            autoComplete: 'new-phone',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.LOCATION}</InputLabel>
-                                    <Input
-                                        id="location"
-                                        type="text"
-                                        onChange={this.handleOnChangeLocation}
-                                        autoComplete="off"
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.BIO}</InputLabel>
-                                    <Input
-                                        id="bio"
-                                        type="text"
-                                        onChange={this.handleOnChangeBio}
-                                        autoComplete="off"
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.PASSWORD}</InputLabel>
-                                    <Input
-                                        id="password"
-                                        onChange={this.handleOnChangePassword}
-                                        required
-                                        type="password"
-                                        inputProps={{
-                                            autoComplete: 'new-password',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.CONFIRM_PASSWORD}</InputLabel>
-                                    <Input
-                                        id="confirm-password"
-                                        onChange={this.handleOnChangeConfirmPassword}
-                                        required
-                                        type="password"
-                                        inputProps={{
-                                            autoComplete: 'new-password',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
-                                    />
-                                </FormControl>
-                                <div className="recaptcha">
-                                    <ReCAPTCHA
-                                        sitekey={process.env.REACT_APP_BC_RECAPTCHA_SITE_KEY}
-                                        hl={language}
-                                        onChange={this.handleOnRecaptchaVerify}
-                                    />
-                                </div>
-                                <div className="company-tos">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <Checkbox
-                                                        checked={tosChecked}
-                                                        onChange={this.handleTosChange}
-                                                        color="primary"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Link href="/tos" onClick={this.preventDefault}>{strings.TOS_SIGN_UP}</Link>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div className="buttons">
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary'
-                                        size="small"
-                                        disabled={emailError || !tosChecked}
-                                    >
-                                        {strings.CREATE}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary'
-                                        size="small"
-                                        href="/companies"
-                                    >
-                                        {strings.CANCEL}
-                                    </Button>
-                                </div>
+                            <Avatar
+                                type={Env.USER_TYPE.COMPANY}
+                                mode='create'
+                                user={null}
+                                size='large'
+                                readonly={false}
+                                onBeforeUpload={this.onBeforeUpload}
+                                onChange={this.onAvatarChange}
+                                color='disabled'
+                                className='avatar-ctn' />
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
+                                <Input
+                                    id="full-name"
+                                    type="text"
+                                    error={fullNameError}
+                                    required
+                                    onBlur={this.handleFullNameOnBlur}
+                                    onChange={this.handleOnChangeFullName}
+                                    autoComplete="off"
+                                />
+                                <FormHelperText error={fullNameError}>
+                                    {fullNameError ? strings.INVALID_FULL_NAME : ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.EMAIL}</InputLabel>
+                                <Input
+                                    id="email"
+                                    type="text"
+                                    error={emailError}
+                                    onBlur={this.handleEmailOnBlur}
+                                    onChange={this.handleOnChangeEmail}
+                                    required
+                                    inputProps={{
+                                        autoComplete: 'new-email',
+                                        form: {
+                                            autoComplete: 'off',
+                                        },
+                                    }}
+                                />
+                                <FormHelperText error={emailError}>
+                                    {emailError ? strings.INVALID_EMAIL : ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{strings.PHONE}</InputLabel>
+                                <Input
+                                    id="phone"
+                                    type="text"
+                                    onChange={this.handleOnChangePhone}
+                                    inputProps={{
+                                        autoComplete: 'new-phone',
+                                        form: {
+                                            autoComplete: 'off',
+                                        },
+                                    }}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{strings.LOCATION}</InputLabel>
+                                <Input
+                                    id="location"
+                                    type="text"
+                                    onChange={this.handleOnChangeLocation}
+                                    autoComplete="off"
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{strings.BIO}</InputLabel>
+                                <Input
+                                    id="bio"
+                                    type="text"
+                                    onChange={this.handleOnChangeBio}
+                                    autoComplete="off"
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.PASSWORD}</InputLabel>
+                                <Input
+                                    id="password"
+                                    onChange={this.handleOnChangePassword}
+                                    required
+                                    type="password"
+                                    inputProps={{
+                                        autoComplete: 'new-password',
+                                        form: {
+                                            autoComplete: 'off',
+                                        },
+                                    }}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.CONFIRM_PASSWORD}</InputLabel>
+                                <Input
+                                    id="confirm-password"
+                                    onChange={this.handleOnChangeConfirmPassword}
+                                    required
+                                    type="password"
+                                    inputProps={{
+                                        autoComplete: 'new-password',
+                                        form: {
+                                            autoComplete: 'off',
+                                        },
+                                    }}
+                                />
+                            </FormControl>
+                            <div className="buttons">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary'
+                                    size="small"
+                                    disabled={emailError}
+                                >
+                                    {strings.CREATE}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className='btn-secondary'
+                                    size="small"
+                                    onClick={this.handleCancel}
+                                >
+                                    {strings.CANCEL}
+                                </Button>
                             </div>
+
                             <div className="form-error">
-                                {(passwordError || passwordsDontMatch || recaptchaError || error) ?
+                                {(passwordError || passwordsDontMatch || error) ?
                                     <div>
                                         {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
                                         {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
-                                        {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
                                         {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
                                     </div>
                                     : null}
                             </div>
                         </form>
-                    </div>
-                </Paper>
+
+                    </Paper>
+                </div>
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
             </Master>
         );

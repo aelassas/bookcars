@@ -281,27 +281,18 @@ export default function Header(props) {
         >
             <MenuItem onClick={handleOnSettingsClick}>
                 {/* <IconButton color="inherit">
-                    <Avatar loggedUser={props.user} user={props.user} size="small" readonly />
+                    <Avatar user={props.user} size="small" readonly />
                 </IconButton> */}
                 <SettingsIcon className="header-action" />
                 <p>{strings.SETTINGS}</p>
             </MenuItem>
             <MenuItem onClick={handleLangMenuOpen}>
-                <IconButton
-                    aria-label="language of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <LanguageIcon />
-                </IconButton>
+                <LanguageIcon className="header-action" />
                 <p>{strings.LANGUAGE}</p>
             </MenuItem>
             <MenuItem onClick={handleSignout}>
-                <IconButton color="inherit">
-                    <SignoutIcon />
-                </IconButton>
-                <Typography>{strings.SIGN_OUT}</Typography>
+                <SignoutIcon className="header-action" />
+                <p>{strings.SIGN_OUT}</p>
             </MenuItem>
         </Menu>
     );
@@ -403,7 +394,7 @@ export default function Header(props) {
                             onClick={handleAccountMenuOpen}
                             color="inherit"
                         >
-                            <Avatar loggedUser={props.user} user={props.user} size="small" readonly />
+                            <Avatar user={props.user} size="small" readonly />
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>

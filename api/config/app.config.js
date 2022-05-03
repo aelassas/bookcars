@@ -2,12 +2,13 @@ import LocalizedStrings from 'localized-strings';
 
 export default new LocalizedStrings.default({
     fr: {
+        ERROR: 'Erreur interne : ',
         DB_ERROR: 'Échec de la requête dans la base de données : ',
+        SMTP_ERROR: "Échec de l'envoi de l'email: ",
         ACCOUNT_VALIDATION_SUBJECT: 'Validation de votre compte',
         HELLO: 'Bonjour ',
         ACCOUNT_VALIDATION_LINK: 'Veuillez activer votre compte en cliquant sur le lien :',
         REGARDS: "Cordialement,<br>L'équipe BookCars",
-        SMTP_ERROR: "Échec de l'envoi de l'email: ",
         ACCOUNT_VALIDATION_TECHNICAL_ISSUE: 'Problème technique! Veuillez cliquer sur renvoyer pour valider votre e-mail.',
         ACCOUNT_VALIDATION_LINK_EXPIRED: 'Votre lien de validation a peut-être expiré. Veuillez cliquer sur renvoyer pour valider votre e-mail.',
         ACCOUNT_VALIDATION_LINK_ERROR: "Nous n'avons pas pu trouver d'utilisateur correspondant à cette adresse e-mail. Veuillez vous inscrire.",
@@ -19,13 +20,14 @@ export default new LocalizedStrings.default({
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_1: 'Un email de validation a été envoyé à',
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_2: ". Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
     },
-    en:{
+    en: {
+        ERROR: 'Internal error: ',
         DB_ERROR: 'Database Failure: ',
+        SMTP_ERROR: 'Failed to send email: ',
         ACCOUNT_VALIDATION_SUBJECT: 'Account Validation',
         HELLO: 'Hello ',
         ACCOUNT_VALIDATION_LINK: 'Please activate your account by clicking the link:',
         REGARDS: 'Kind regards,<br>BookCars team',
-        SMTP_ERROR: 'Failed to send email: ',
         ACCOUNT_VALIDATION_TECHNICAL_ISSUE: 'Technical Issue! Please click on resend to validate your email.',
         ACCOUNT_VALIDATION_LINK_EXPIRED: 'Your validation link may have expired. Please click on resend to validate your email.',
         ACCOUNT_VALIDATION_LINK_ERROR: 'We were unable to find a user for this verification. Please Sign up.',

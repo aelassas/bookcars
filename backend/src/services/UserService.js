@@ -125,17 +125,30 @@ export default class UserService {
         return axios.get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), { headers: UserService.authHeader() }).then(res => res.data);
     }
 
-    static updateAvatar(userId, file) {
-        const user = JSON.parse(localStorage.getItem('bc-user'));
+    static createAvatar(file) {
+        const user = UserService.getCurrentUser();
         var formData = new FormData();
         formData.append('image', file);
-        return axios.post(`${Env.API_HOST}/api/update-avatar/` + encodeURIComponent(userId), formData,
+        return axios.post(`${Env.API_HOST}/api/create-avatar/`, formData,
+            user && user.accessToken ? { headers: { 'x-access-token': user.accessToken, 'Content-Type': 'multipart/form-data' } }
+                : { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.data);
+    }
+
+    static updateAvatar(userId, file) {
+        const user = UserService.getCurrentUser();
+        var formData = new FormData();
+        formData.append('image', file);
+        return axios.post(`${Env.API_HOST}/api/update-avatar/${encodeURIComponent(userId)}`, formData,
             user && user.accessToken ? { headers: { 'x-access-token': user.accessToken, 'Content-Type': 'multipart/form-data' } }
                 : { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.status);
     }
 
     static deleteAvatar(userId) {
-        return axios.post(`${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId), null, { headers: UserService.authHeader() }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/delete-avatar/${encodeURIComponent(userId)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
+    static deleteTempAvatar(avatar) {
+        return axios.post(`${Env.API_HOST}/api/delete-temp-avatar/${encodeURIComponent(avatar)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static resetPassword(data) {

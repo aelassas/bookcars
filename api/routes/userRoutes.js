@@ -23,7 +23,8 @@ const SMTP_PORT = process.env.BC_SMTP_PORT;
 const SMTP_USER = process.env.BC_SMTP_USER;
 const SMTP_PASS = process.env.BC_SMTP_PASS;
 const SMTP_FROM = process.env.BC_SMTP_FROM;
-const CDN = process.env.BC_CDN;
+const CDN = process.env.BC_CDN_USERS;
+const CDN_TEMP = process.env.BC_CDN_TEMP;
 
 const routes = express.Router();
 
@@ -43,6 +44,28 @@ routes.route(routeNames.signup).post((req, res) => {
     const user = new User(body);
     user.save()
         .then(user => {
+            // avatar
+            if (body.avatar) {
+                const avatar = path.join(CDN_TEMP, body.avatar);
+                if (fs.existsSync(avatar)) {
+                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`;
+                    const newPath = path.join(CDN, filename);
+                    fs.rename(avatar, newPath, (err) => {
+                        if (err) {
+                            console.error(strings.ERROR, err);
+                            res.status(400).send(getStatusMessage(user.language, strings.ERROR + err));
+                        } else {
+                            user.avatar = filename;
+                            user.save()
+                                .catch(err => {
+                                    console.error(strings.DB_ERROR, err);
+                                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
+                                });
+                        }
+                    });
+                }
+            }
+
             // generate token and save
             const token = new Token({ user: user._id, token: uuid() });
 
@@ -261,122 +284,153 @@ routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, (req, res) => 
 });
 
 // Get User by Id Router
-routes.route(routeNames.getUser)
-    .get(authJwt.verifyToken, (req, res) => {
-        User.findById(req.params.id)
-            .then(user => {
-                if (!user) {
-                    console.error('[user.getUser] User not found:', req.params);
-                    res.sendStatus(204);
-                } else {
-                    res.json(user);
-                }
-            })
-            .catch(err => {
-                console.error(strings.DB_ERROR, err);
-                res.status(400).send(strings.DB_ERROR + err);
-            });
-    });
+routes.route(routeNames.getUser).get(authJwt.verifyToken, (req, res) => {
+    User.findById(req.params.id)
+        .then(user => {
+            if (!user) {
+                console.error('[user.getUser] User not found:', req.params);
+                res.sendStatus(204);
+            } else {
+                res.json(user);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Create Avatar Router    
+routes.route(routeNames.createAvatar).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('image')], (req, res) => {
+    try {
+        if (!fs.existsSync(CDN_TEMP)) {
+            fs.mkdirSync(CDN_TEMP, { recursive: true });
+        }
+
+        const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`;
+        const filepath = path.join(CDN_TEMP, filename);
+
+        fs.writeFileSync(filepath, req.file.buffer);
+        res.json(filename);
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        res.status(400).send(strings.ERROR + err);
+    }
+});
 
 // Update Avatar Router    
-routes.route(routeNames.updateAvatar)
-    .post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('image')], (req, res) => {
-        const userId = req.params.userId;
+routes.route(routeNames.updateAvatar).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('image')], (req, res) => {
+    const userId = req.params.userId;
 
-        User.findById(userId)
-            .then(user => {
-                if (user) {
-
-                    if (user.avatar && !user.avatar.startsWith('http')) {
-                        const avatar = path.join(CDN, user.avatar);
-                        if (fs.existsSync(avatar)) {
-                            fs.unlinkSync(avatar);
-                        }
-                    }
-
-                    const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`;
-                    const filepath = path.join(CDN, filename);
-
-                    fs.writeFileSync(filepath, req.file.buffer);
-                    user.avatar = filename;
-                    user.save()
-                        .then(usr => {
-                            res.sendStatus(200);
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err);
-                            res.status(400).send(strings.DB_ERROR + err);
-                        });
-                } else {
-                    console.error('[user.updateAvatar] User not found:', req.params.userId);
-                    res.sendStatus(204);
+    User.findById(userId)
+        .then(user => {
+            if (user) {
+                if (!fs.existsSync(CDN)) {
+                    fs.mkdirSync(CDN, { recursive: true });
                 }
-            })
-            .catch(err => {
-                console.error(strings.DB_ERROR, err);
-                res.status(400).send(strings.DB_ERROR + err);
-            });
-    });
+
+                if (user.avatar && !user.avatar.startsWith('http')) {
+                    const avatar = path.join(CDN, user.avatar);
+                    if (fs.existsSync(avatar)) {
+                        fs.unlinkSync(avatar);
+                    }
+                }
+
+                const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`;
+                const filepath = path.join(CDN, filename);
+
+                fs.writeFileSync(filepath, req.file.buffer);
+                user.avatar = filename;
+                user.save()
+                    .then(usr => {
+                        res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+            } else {
+                console.error('[user.updateAvatar] User not found:', req.params.userId);
+                res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
 
 // Delete Avatar Router
-routes.route(routeNames.deleteAvatar)
-    .post(authJwt.verifyToken, (req, res) => {
-        const userId = req.params.userId;
+routes.route(routeNames.deleteAvatar).post(authJwt.verifyToken, (req, res) => {
+    const userId = req.params.userId;
 
-        User.findById(userId)
-            .then(user => {
-                if (user) {
-                    if (user.avatar && !user.avatar.startsWith('http')) {
-                        const avatar = path.join(CDN, user.avatar);
-                        if (fs.existsSync(avatar)) {
-                            fs.unlinkSync(avatar);
-                        }
+    User.findById(userId)
+        .then(user => {
+            if (user) {
+                if (user.avatar && !user.avatar.startsWith('http')) {
+                    const avatar = path.join(CDN, user.avatar);
+                    if (fs.existsSync(avatar)) {
+                        fs.unlinkSync(avatar);
                     }
-                    user.avatar = null;
-
-                    user.save()
-                        .then(usr => {
-                            res.sendStatus(200);
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err);
-                            res.status(400).send(strings.DB_ERROR + err);
-                        });
-                } else {
-                    console.error('[user.updateAvatar] User not found:', req.params.userId);
-                    res.sendStatus(204);
                 }
-            })
-            .catch(err => {
-                console.error(strings.DB_ERROR, err);
-                res.status(400).send(strings.DB_ERROR + err);
-            });
-    });
+                user.avatar = null;
+
+                user.save()
+                    .then(usr => {
+                        res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+            } else {
+                console.error('[user.updateAvatar] User not found:', req.params.userId);
+                res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Delete Temp Avatar Router
+routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, (req, res) => {
+    try {
+        const avatar = path.join(CDN_TEMP, req.params.avatar);
+        if (fs.existsSync(avatar)) {
+            fs.unlinkSync(avatar);
+        }
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        res.status(400).send(strings.ERROR + err);
+    }
+});
 
 // Reset password Router
-routes.route(routeNames.resetPassword)
-    .post(authJwt.verifyToken, (req, res) => {
-        User.findOne({ _id: req.body._id })
-            .then(user => {
-                if (!user) {
-                    console.error('[user.resetPassword] User not found:', req.body._id);
-                    res.sendStatus(204);
-                } else {
-                    user.password = req.body.newPassword;
-                    user.save()
-                        .then(_ => {
-                            res.sendStatus(200);
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err);
-                            res.status(400).send(strings.DB_ERROR + err);
-                        });
-                }
-            })
-            .catch(err => {
-                console.error(strings.DB_ERROR, err);
-                res.status(400).send(strings.DB_ERROR + err);
-            });;
-    });
+routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
+    User.findOne({ _id: req.body._id })
+        .then(user => {
+            if (!user) {
+                console.error('[user.resetPassword] User not found:', req.body._id);
+                res.sendStatus(204);
+            } else {
+                user.password = req.body.newPassword;
+                user.save()
+                    .then(_ => {
+                        res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });;
+});
 
 export default routes;

@@ -11,7 +11,9 @@ export default {
     updateEmailNotifications: '/api/update-email-notifications',
     resetPassword: '/api/reset-password',
     delete: '/api/delete-user/:id',
+    createAvatar: '/api/create-avatar',
     updateAvatar: '/api/update-avatar/:userId',
     deleteAvatar: '/api/delete-avatar/:userId',
+    deleteTempAvatar: '/api/delete-temp-avatar/:avatar',
     search: '/api/users/:name/:page/:pageSize'
 };

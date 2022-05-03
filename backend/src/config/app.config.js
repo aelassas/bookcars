@@ -52,7 +52,7 @@ export const strings = new LocalizedStrings({
         CREATE_COMPANY_HEADING: 'Nouvelle société',
         CREATE: 'Créer',
         PHONE: 'Téléphone',
-        LOCATION: 'Adresse',
+        LOCATION: 'Localisation',
         BIO: 'Bio',
         INVALID_FULL_NAME: 'Nom invalide',
         /* Companies */
@@ -64,6 +64,7 @@ export const strings = new LocalizedStrings({
         DELETE: 'Supprimer',
         /* Update Company */
         SAVE: 'Sauvegarder',
+        DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo de profil ?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
         NEW_PASSWORD: 'Nouveau mot de passe',
@@ -120,7 +121,7 @@ export const strings = new LocalizedStrings({
         CREATE_COMPANY_HEADING: 'New company',
         CREATE: 'Create',
         PHONE: 'Phone',
-        LOCATION: 'Address',
+        LOCATION: 'Location',
         BIO: 'Bio',
         INVALID_FULL_NAME: 'Invalid name',
         /* Companies */
@@ -131,7 +132,8 @@ export const strings = new LocalizedStrings({
         DELETE_COMPANY: 'Are you sure you want to delete this company and all its data?',
         DELETE: 'Delete',
         /* Update Company */
-        UPDATE: 'Save',
+        SAVE: 'Save',
+        DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the profile picture?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Password Reset',
         NEW_PASSWORD: 'New Password',

@@ -22,8 +22,30 @@ routes.route(routeNames.validate).post((req, res) => {
 
 // Update Company Router
 routes.route(routeNames.update).post((req, res) => {
-    const data = req.body;
-    res.sendStatus(200);
+    User.findById(req.body._id)
+        .then(company => {
+            if (company) {
+                const { fullName, phone, location, bio } = req.body;
+                company.fullName = fullName;
+                company.phone = phone;
+                company.location = location;
+                company.bio = bio;
+
+                company.save()
+                    .then(_ => res.sendStatus(200))
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+            } else {
+                console.err('[company.update] Conference not found:', req.params);
+                res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 // Delete Company Router
@@ -34,15 +56,19 @@ routes.route(routeNames.delete).delete((req, res) => {
 
 // Get Company Router
 routes.route(routeNames.getCompany).get((req, res) => {
-    const id = req.params.id;
-    const company = {
-        _id: id,
-        fullName: `Company ${id}`,
-        phone: '+21260000000',
-        location: 'Casablanca',
-        bio: 'Location de voitures',
-    };
-    res.json(company);
+    User.findById(req.params.id)
+        .then(user => {
+            if (!user) {
+                console.error('[company.getCompany] Company not found:', req.params);
+                res.sendStatus(204);
+            } else {
+                res.json(user);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 // Get Companies Router
