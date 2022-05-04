@@ -58,7 +58,7 @@ const App = () => {
 						<Route exact path='/tos' element={<ToS />} />
 						<Route exact path='/contact' element={<Contact />} />
 
-						<Route path='*' element={<NoMatch />} />
+						<Route path='*' element={<NoMatch header/>} />
 					</Routes>
 				</Suspense>
 			</div>

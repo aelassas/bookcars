@@ -53,12 +53,12 @@ export default class Master extends Component {
                         if (user) {
 
                             if (user.isBlacklisted) {
-                                this.setState({ unauthorized: true });
+                                this.setState({ user, unauthorized: true, isLoading: false });
                                 return;
                             }
 
                             if (this.props.admin && user.type !== Env.USER_TYPE.ADMIN) {
-                                this.setState({ unauthorized: true });
+                                this.setState({ user, unauthorized: true, isLoading: false });
                                 return;
                             }
 
@@ -80,7 +80,11 @@ export default class Master extends Component {
                 UserService.signout();
             });
         } else {
-            UserService.signout();
+            if (this.props.strict) {
+                UserService.signout();
+            } else {
+                this.setState({ isLoading: false });
+            }
         }
     }
 
@@ -90,7 +94,7 @@ export default class Master extends Component {
         return (
             (<div>
                 <Header user={this.props.user || user} hidden={isLoading} />
-                {(((!user && !isLoading) || (user && user.isVerified) || !this.props.strict)) && !error ? (
+                {(((!user && !isLoading) || (user && user.isVerified) || !this.props.strict)) && !error && !unauthorized ? (
                     <div className='content' style={this.props.style}>{this.props.children}</div>
                 ) :
                     (!isLoading && !unauthorized && !error &&
@@ -105,8 +109,8 @@ export default class Master extends Component {
                             >{strings.RESEND}</Button>
                         </div>)
                 }
-                {unauthorized && <Unauthorized />}
-                {error && <Error />}
+                {unauthorized && <Unauthorized style={{ marginTop: '75px' }} />}
+                {error && <Error style={{ marginTop: '75px' }} />}
             </div>)
         );
     }
