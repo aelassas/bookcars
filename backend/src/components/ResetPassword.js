@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
+import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
-import Error from '../elements/Error';
+import Error from './Error';
 import { toast } from 'react-toastify';
 import {
     Paper,
@@ -26,11 +27,14 @@ export default class ResetPassword extends Component {
             userId: '',
             newPassword: '',
             confirmPassword: '',
+            newPasswordError: false,
             confirmPasswordError: false,
             passwordLengthError: false,
-            unhandledError: false,
+            error: false,
             isLoading: false,
-            noMatch: false
+            noMatch: false,
+            currentPassword: '',
+            currentPasswordError: false,
         };
     }
 
@@ -46,56 +50,105 @@ export default class ResetPassword extends Component {
         if (e.key === 'Enter') {
             this.handleSubmit(e);
         }
-    }
+    };
+
+    handleCurrentPasswordChange = (e) => {
+        this.setState({ currentPassword: e.target.value });
+    };
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('submit')
-        // TODO
 
-        if (this.state.newPassword.length < 6) {
-            this.setState({
-                passwordLengthError: true,
-                confirmPasswordError: false
-            });
-            return;
-        } else {
-            this.setState({
-                passwordLengthError: false
-            });
-        }
+        const submit = _ => {
 
-        if (this.state.newPassword !== this.state.confirmPassword) {
-            this.setState({
-                confirmPasswordError: true
-            });
-            return;
-        } else {
-            this.setState({
-                confirmPasswordError: false
-            });
-        }
+            if (this.state.newPassword.length < 6) {
+                this.setState({
+                    passwordLengthError: true,
+                    confirmPasswordError: false,
+                    newPasswordError: false
+                });
+                return;
+            } else {
+                this.setState({
+                    passwordLengthError: false,
+                    newPasswordError: false
+                });
+            }
 
+            if (this.state.newPassword !== this.state.confirmPassword) {
+                this.setState({
+                    confirmPasswordError: true,
+                    newPasswordError: false
+                });
+                return;
+            } else {
+                this.setState({
+                    confirmPasswordError: false,
+                    newPasswordError: false
+                });
+            }
 
+            const { user, userId, currentPassword, newPassword, strict } = this.state;
+            const data = {
+                _id: userId,
+                password: user.password,
+                newPassword,
+                strict
+            };
 
-        const { userId, password, newPassword } = this.state;
-        const data = {
-            _id: userId,
-            password,
-            newPassword
+            if (userId === user._id && currentPassword === newPassword) {
+                this.setState({
+                    newPasswordError: true,
+                    passwordLengthError: false,
+                    confirmPasswordError: false,
+                });
+                return;
+            }
+
+            UserService.resetPassword(data)
+                .then(status => {
+                    if (status === 200) {
+                        if (user._id === userId) {
+                            UserService.getUser(user._id)
+                                .then(_user => {
+                                    if (_user) {
+                                        this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
+                                        toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                                    } else {
+                                        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                                    }
+                                })
+                                .catch(_ => {
+                                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                                });
+                        } else {
+                            this.setState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                            toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                        }
+                    } else {
+                        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                    }
+                })
+                .catch(_ => {
+                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                });
         };
 
-        UserService.resetPassword(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(strings.PASSWORD_UPDATE, { type: 'info' });
-                } else {
-                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
-                }
-            })
-            .catch(_ => {
-                toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+        const { user, currentPassword } = this.state;
+
+        UserService.compare(currentPassword, user.password).then((passwordMatch) => {
+            this.setState({
+                currentPasswordError: !passwordMatch,
+                newPasswordError: false,
+                passwordLengthError: false,
+                confirmPasswordError: false
             });
+
+            if (passwordMatch) {
+                submit();
+            }
+        });
+
     };
 
     onLoad = (user) => {
@@ -105,13 +158,25 @@ export default class ResetPassword extends Component {
         if (params.has('u')) {
             const id = params.get('u');
             if (id && id !== '') {
-                UserService.getUser(id)
-                    .then(_user => {
-                        this.setState({ userId: _user._id, visible: true, isLoading: false });
-                    })
-                    .catch(err => {
-                        this.setState({ isLoading: false, unhandledError: true, visible: false });
-                    });
+                if (id === user._id) {
+                    this.setState({ userId: user._id, visible: true, isLoading: false });
+                } else {
+                    if (user.type === Env.USER_TYPE.ADMIN) {
+                        UserService.getUser(id)
+                            .then(_user => {
+                                if (_user) {
+                                    this.setState({ userId: _user._id, visible: true, isLoading: false });
+                                } else {
+                                    this.setState({ isLoading: false, noMatch: true });
+                                }
+                            })
+                            .catch(err => {
+                                this.setState({ isLoading: false, error: true, visible: false });
+                            });
+                    } else {
+                        this.setState({ isLoading: false, noMatch: true });
+                    }
+                }
             } else {
                 this.setState({ isLoading: false, noMatch: true });
             }
@@ -125,7 +190,9 @@ export default class ResetPassword extends Component {
     }
 
     render() {
-        const { visible, confirmPasswordError, passwordLengthError, error, isLoading, unhandledError, noMatch } = this.state;
+        const { userId, user, visible, currentPassword, newPassword, confirmPassword,
+            currentPasswordError, newPasswordError, confirmPasswordError,
+            passwordLengthError, isLoading, error, noMatch } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -133,19 +200,47 @@ export default class ResetPassword extends Component {
                     <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
                         <h1 className="password-reset-form-title"> {strings.PASSWORD_RESET_HEADING} </h1>
                         <form className="form" onSubmit={this.handleSubmit}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel
+                                    error={currentPasswordError}
+                                    className='required'
+                                >
+                                    {user && userId === user._id ? strings.CURRENT_PASSWORD : strings.YOUR_PASSWORD}
+                                </InputLabel>
+                                <Input
+                                    id="password-current"
+                                    onChange={this.handleCurrentPasswordChange}
+                                    value={currentPassword}
+                                    error={currentPasswordError}
+                                    type='password'
+                                    required
+                                />
+                                <FormHelperText
+                                    error={currentPasswordError}
+                                >
+                                    {(currentPasswordError && strings.CURRENT_PASSWORD_ERROR) || ''}
+                                </FormHelperText>
+                            </FormControl>
                             <FormControl
                                 fullWidth
                                 margin="dense"
                             >
-                                <InputLabel>
+                                <InputLabel className='required' error={newPasswordError}>
                                     {strings.NEW_PASSWORD}
                                 </InputLabel>
                                 <Input
                                     id="password-new"
                                     onChange={this.handleNewPasswordChange}
                                     type='password'
+                                    value={newPassword}
+                                    error={newPasswordError}
                                     required
                                 />
+                                <FormHelperText
+                                    error={newPasswordError}
+                                >
+                                    {(newPasswordError && strings.NEW_PASSWORD_ERROR) || ''}
+                                </FormHelperText>
                             </FormControl>
                             <FormControl
                                 fullWidth
@@ -154,6 +249,7 @@ export default class ResetPassword extends Component {
                             >
                                 <InputLabel
                                     error={confirmPasswordError}
+                                    className='required'
                                 >
                                     {strings.CONFIRM_PASSWORD}
                                 </InputLabel>
@@ -163,6 +259,7 @@ export default class ResetPassword extends Component {
                                     onKeyDown={this.handleOnConfirmPasswordKeyDown}
                                     error={confirmPasswordError || passwordLengthError}
                                     type='password'
+                                    value={confirmPassword}
                                     required
                                 />
                                 <FormHelperText
@@ -176,14 +273,14 @@ export default class ResetPassword extends Component {
                             <div className='buttons'>
                                 <Button
                                     type="submit"
-                                    className='btn-primary btn-margin'
+                                    className='btn-primary btn-margin btn-margin-bottom'
                                     size="small"
                                     variant='contained'
                                 >
                                     {strings.RESET_PASSWORD}
                                 </Button>
                                 <Button
-                                    className='btn-secondary'
+                                    className='btn-secondary btn-margin-bottom'
                                     size="small"
                                     variant='contained'
                                     href="/"
@@ -191,15 +288,12 @@ export default class ResetPassword extends Component {
                                     {strings.CANCEL}
                                 </Button>
                             </div>
-                            <div className="form-error">
-                                {error && <Error message={strings.PASSWORD_UPDATE_ERROR} />}
-                            </div>
                         </form>
                     </Paper>
                 </div>
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
-                {unhandledError && <Error message={strings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
-                {noMatch && <NoMatch style={{ marginTop: '-65px' }} />}
+                {error && <Error />}
+                {noMatch && <NoMatch />}
             </Master>
         );
     }

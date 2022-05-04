@@ -24,15 +24,10 @@
 @media only screen and (max-width: 960px) {
 	.company-form {
 		margin-top: 45px !important;
-		margin-left: calc(50% - 180px);
+		margin-left: calc(50% - 180px) !important;
 		width: 360px;
 		height: 870px;
 		padding: 30px;
-	}
-
-	.recaptcha {
-		margin-top: 25px;
-		margin-left: -10px;
 	}
 }
 
@@ -45,10 +40,5 @@
 		width: 550px;
 		height: 870px;
 		padding: 30px;
-	}
-
-	.recaptcha {
-		margin-top: 25px;
-		margin-left: 85px;
 	}
 }

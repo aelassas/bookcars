@@ -40,28 +40,26 @@ export const Avatar = (props) => {
                 const { _id } = user;
 
                 UserService.updateAvatar(_id, file)
-                    .then(
-                        status => {
-                            if (status === 200) {
-                                UserService.getUser(_id).then(user => {
-                                    if (user) {
-                                        setUser(user);
-                                        setAvatar(user.avatar);
+                    .then(status => {
+                        if (status === 200) {
+                            UserService.getUser(_id).then(user => {
+                                if (user) {
+                                    setUser(user);
+                                    setAvatar(user.avatar);
 
-                                        if (props.onChange) {
-                                            props.onChange(user.avatar);
-                                        }
-                                    } else {
-                                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    if (props.onChange) {
+                                        props.onChange(user);
                                     }
-                                }).catch(err => {
+                                } else {
                                     toast(strings.GENERIC_ERROR, { type: 'error' });
-                                });
-                            } else {
+                                }
+                            }).catch(err => {
                                 toast(strings.GENERIC_ERROR, { type: 'error' });
-                            }
+                            });
+                        } else {
+                            toast(strings.GENERIC_ERROR, { type: 'error' });
                         }
-                    )
+                    })
                     .catch(err => {
                         toast(strings.GENERIC_ERROR, { type: 'error' });
                     });
@@ -120,7 +118,7 @@ export const Avatar = (props) => {
                                 setUser(user);
                                 setAvatar(null);
                                 if (props.onChange) {
-                                    props.onChange();
+                                    props.onChange(user);
                                 }
                                 closeDialog();
                             } else {

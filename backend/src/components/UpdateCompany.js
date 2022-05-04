@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import CompanyService from '../services/CompanyService';
-import Error from '../elements/Error';
+import Error from './Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
@@ -131,15 +131,19 @@ export default class UpdateCompany extends Component {
                 if (id && id !== '') {
                     CompanyService.getCompany(id)
                         .then(company => {
-                            this.setState({
-                                company,
-                                fullName: company.fullName,
-                                phone: company.phone,
-                                location: company.location,
-                                bio: company.bio,
-                                isLoading: false,
-                                visible: true
-                            })
+                            if (company) {
+                                this.setState({
+                                    company,
+                                    fullName: company.fullName,
+                                    phone: company.phone,
+                                    location: company.location,
+                                    bio: company.bio,
+                                    isLoading: false,
+                                    visible: true
+                                });
+                            } else {
+                                this.setState({ isLoading: false, noMatch: true });
+                            }
                         })
                         .catch(_ => {
                             this.setState({ isLoading: false, error: true, visible: false });
@@ -268,8 +272,8 @@ export default class UpdateCompany extends Component {
                         </Paper>
                     </div>}
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
-                {error && <Error message={strings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
-                {noMatch && <NoMatch style={{ marginTop: '-65px' }} />}
+                {error && <Error />}
+                {noMatch && <NoMatch />}
             </Master>
         );
     }

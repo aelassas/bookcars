@@ -22,7 +22,7 @@ export default class User extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} strict={true} admin={true}>
                 User!
             </Master>
         );

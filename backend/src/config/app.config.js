@@ -28,6 +28,8 @@ export const strings = new LocalizedStrings({
         /* No Match */
         NO_MATCH: 'Rien à voir ici !',
         GO_TO_HOME: "Aller à la page d'accueil",
+        /* Unauthorized */
+        UNAUTHORIZED: 'Accès non autorisé',
         /* Sign up */
         SIGN_UP_HEADING: 'Inscription',
         FULL_NAME: 'Nom complet',
@@ -67,10 +69,18 @@ export const strings = new LocalizedStrings({
         DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo de profil ?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
+        CURRENT_PASSWORD: 'Mot de passe actuel',
+        YOUR_PASSWORD: 'Votre mot de passe',
+        CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
         NEW_PASSWORD: 'Nouveau mot de passe',
-        RESET_PASSWORD: 'Changer le Mot de Passe',
+        NEW_PASSWORD_ERROR: 'Veuillez choisir un nouveau mot de passe',
+        RESET_PASSWORD: 'Changer le mot de passe',
         PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
         PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
+        /* Settings */
+        SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
+        NETWORK_SETTINGS: 'Paramètres Réseau',
+        SETTINGS_EMAIL_NOTIFICATIONS: 'Activer les notifications par email',
     },
     en: {
         /* Common */
@@ -97,6 +107,8 @@ export const strings = new LocalizedStrings({
         /* No Match */
         NO_MATCH: 'Nothing to see here!',
         GO_TO_HOME: 'Go to the home page',
+        /* Unauthorized */
+        UNAUTHORIZED: 'Unauthorized access',
         /* Sign up */
         SIGN_UP_HEADING: 'Sign up',
         FULL_NAME: 'Full name',
@@ -136,10 +148,18 @@ export const strings = new LocalizedStrings({
         DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the profile picture?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Password Reset',
+        CURRENT_PASSWORD: 'Current Password',
+        YOUR_PASSWORD: 'Your password',
+        CURRENT_PASSWORD_ERROR: 'Wrong password',
         NEW_PASSWORD: 'New Password',
-        RESET_PASSWORD: 'Reset Password',
+        NEW_PASSWORD_ERROR: 'Please choose a new password',
+        RESET_PASSWORD: 'Change Password',
         PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
         PASSWORD_UPDATE: 'Password changed successfully.',
+        /* Settings */
+        SETTINGS_UPDATED: 'Settings updated successfully.',
+        NETWORK_SETTINGS: 'Network settings',
+        SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications',
     }
 });
 

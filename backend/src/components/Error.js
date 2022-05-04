@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Link } from '@mui/material';
 import { strings } from '../config/app.config';
 
-export default class NoMatch extends Component {
+export default class Error extends Component {
     render() {
         return (
             <div className='msg'>
-                <h2>{strings.NO_MATCH}</h2>
-                <p><Link href='/'>{strings.GO_TO_HOME}</Link></p>
+                <h2>{strings.GENERIC_ERROR}</h2>
+                <Link href='/'>{strings.GO_TO_HOME}</Link>
             </div>
         );
     }

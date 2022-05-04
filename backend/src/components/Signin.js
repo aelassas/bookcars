@@ -53,7 +53,6 @@ export default class SignIn extends Component {
         const data = { email, password };
 
         UserService.signin(data).then(res => {
-            console.log(res);
             if (res.status === 200) {
                 if (res.data.isBlacklisted) {
                     UserService.signout(false);

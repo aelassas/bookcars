@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { strings } from '../config/app.config';
-import Header from '../elements/Header';
+import Header from './Header';
 import UserService from '../services/UserService';
+import Unauthorized from '../components/Unauthorized';
+import Error from '../components/Error';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import Env from '../config/env.config';
@@ -13,6 +15,8 @@ export default class Master extends Component {
         this.state = {
             isLoading: true,
             user: null,
+            error: false,
+            unauthorized: false
         };
     }
 
@@ -31,17 +35,13 @@ export default class Master extends Component {
         });
     };
 
-    exit = _ => {
-        if (this.props.strict) {
-            UserService.signout();
-        } else {
-            this.setState({ isLoading: false }, _ => {
-                if (this.props.onLoad) {
-                    this.props.onLoad();
-                }
-            });
-        }
-    }
+    error = _ => {
+        this.setState({ error: true, isLoading: false }, _ => {
+            if (this.props.onError) {
+                this.props.onError();
+            }
+        });
+    };
 
     componentDidMount() {
         const currentUser = UserService.getCurrentUser();
@@ -53,12 +53,12 @@ export default class Master extends Component {
                         if (user) {
 
                             if (user.isBlacklisted) {
-                                this.exit();
+                                this.setState({ unauthorized: true });
                                 return;
                             }
 
                             if (this.props.admin && user.type !== Env.USER_TYPE.ADMIN) {
-                                this.exit();
+                                this.setState({ unauthorized: true });
                                 return;
                             }
 
@@ -68,43 +68,46 @@ export default class Master extends Component {
                                 }
                             });
                         } else {
-                            this.exit();
+                            this.error();
                         }
                     }).catch(_ => {
-                        this.exit();
+                        this.error();
                     });;
                 } else {
-                    this.exit();
+                    UserService.signout();
                 }
             }).catch(_ => {
-                this.exit();
+                UserService.signout();
             });
         } else {
-            this.exit();
+            UserService.signout();
         }
     }
 
     render() {
-        const { isLoading, user } = this.state;
+        const { isLoading, user, error, unauthorized } = this.state;
 
         return (
-            <div>
-                <Header user={user} hidden={isLoading} />
-                {((!user && !isLoading) || (user && user.isVerified)) ? (
+            (<div>
+                <Header user={this.props.user || user} hidden={isLoading} />
+                {(((!user && !isLoading) || (user && user.isVerified) || !this.props.strict)) && !error ? (
                     <div className='content' style={this.props.style}>{this.props.children}</div>
                 ) :
-                    (!isLoading && <div className="validate-email">
-                        <span>{strings.VALIDATE_EMAIL}</span>
-                        <Button
-                            type="button"
-                            variant="contained"
-                            size="small"
-                            className="btn-primary btn-resend"
-                            onClick={this.handleResend}
-                        >{strings.RESEND}</Button>
-                    </div>)
+                    (!isLoading && !unauthorized && !error &&
+                        <div className="validate-email">
+                            <span>{strings.VALIDATE_EMAIL}</span>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                size="small"
+                                className="btn-primary btn-resend"
+                                onClick={this.handleResend}
+                            >{strings.RESEND}</Button>
+                        </div>)
                 }
-            </div>
+                {unauthorized && <Unauthorized />}
+                {error && <Error />}
+            </div>)
         );
     }
 }

@@ -1,0 +1,72 @@
+/* Create settings */
+
+.settings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.settings-form-wrapper {
+    margin: 32px 0;
+}
+
+.settings-form-title {
+    text-align: center;
+    text-transform: capitalize;
+    color: #121212;
+}
+
+.settings-net-wrapper {
+    margin: 32px 0;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    .settings-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 180px) !important;
+        width: 360px;
+        height: 650px;
+        padding: 30px;
+    }
+
+    .settings-ctn {
+        height: 240px;
+    }
+
+    .settings-net {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 180px) !important;
+        width: 360px;
+        height: 200px;
+        padding: 30px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    .settings-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 275px) !important;
+        width: 550px;
+        height: 620px;
+        padding: 30px;
+    }
+
+    .settings-ctn {
+        height: 190px;
+    }
+
+    .settings-net {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 275px) !important;
+        width: 550px;
+        height: 200px;
+        padding: 30px;
+    }
+}

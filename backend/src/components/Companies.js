@@ -134,7 +134,7 @@ export default class Companies extends Component {
         const { companies, isLoading, openDeleteDialog } = this.state;
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} strict={true} admin={true}>
                 <div className='companies'>
                     <div className='col-1'>
                         <Input

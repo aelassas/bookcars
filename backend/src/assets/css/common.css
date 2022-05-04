@@ -62,6 +62,14 @@
     text-align: center;
 }
 
+.msg {
+    margin: 15px;
+}
+
+.msg h2 {
+    color: #121212;
+}
+
 /* Avatar */
 
 .avatar,

@@ -74,8 +74,6 @@ routes.route(routeNames.signup).post((req, res) => {
                     // Send email
                     strings.setLanguage(user.language);
 
-                    console.log(SMTP_HOST);
-                    console.log(SMTP_PASS)
                     const transporter = nodemailer.createTransport({
                         host: SMTP_HOST,
                         port: SMTP_PORT,
@@ -261,6 +259,61 @@ routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) =
     });
 });
 
+// Update User Router
+routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
+    User.findById(req.body._id)
+        .then(user => {
+            if (!user) {
+                console.error('[user.update] User not found:', req.body.email);
+                res.sendStatus(204);
+            } else {
+                const { fullName, phone, bio, location } = req.body;
+                user.fullName = fullName;
+                user.phone = phone;
+                user.location = location;
+                user.bio = bio;
+
+                user.save()
+                    .then(_ => {
+                        res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+
+            }
+        }).catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Update Email Notifications Router
+routes.route(routeNames.updateEmailNotifications).post(authJwt.verifyToken, (req, res) => {
+    User.findById(req.body._id)
+        .then(user => {
+            if (!user) {
+                console.error('[user.updateEmailNotifications] User not found:', req.body.email);
+                res.sendStatus(204);
+            } else {
+                user.enableEmailNotifications = req.body.enableEmailNotifications;
+                user.save()
+                    .then(user => {
+                        res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+
+            }
+        }).catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
 // Update Language Router
 routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, (req, res) => {
     User.findById(req.body.id)
@@ -280,6 +333,9 @@ routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, (req, res) => 
                     });
 
             }
+        }).catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
         });
 });
 
@@ -412,6 +468,11 @@ routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, (req, res) =
 routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
     User.findOne({ _id: req.body._id })
         .then(user => {
+            if (req.body.strict && req.body.password !== user.password) {
+                res.sendStatus(204);
+                return;
+            }
+
             if (!user) {
                 console.error('[user.resetPassword] User not found:', req.body._id);
                 res.sendStatus(204);
