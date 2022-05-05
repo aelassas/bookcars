@@ -139,7 +139,7 @@ export default class CreateLocation extends Component {
     }
 
     render() {
-        const { visible, isLoading, noMatch, error, name, nameError } = this.state;
+        const { visible, isLoading, noMatch, error, location, name, nameError } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -170,6 +170,7 @@ export default class CreateLocation extends Component {
                                     variant="contained"
                                     className='btn-primary'
                                     size="small"
+                                    disabled={location && location.name === name}
                                 >
                                     {strings.SAVE}
                                 </Button>
