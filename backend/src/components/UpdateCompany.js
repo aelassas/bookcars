@@ -25,7 +25,6 @@ export default class UpdateCompany extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: null,
             company: null,
             fullName: '',
             phone: '',
@@ -120,7 +119,7 @@ export default class UpdateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user, isLoading: true }, _ => {
+        this.setState({ isLoading: true }, _ => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');

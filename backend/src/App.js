@@ -10,9 +10,13 @@ const Companies = lazy(() => import('./components/Companies'));
 const Company = lazy(() => import('./components/Company'));
 const CreateCompany = lazy(() => import('./components/CreateCompany'));
 const UpdateCompany = lazy(() => import('./components/UpdateCompany'));
+const Locations = lazy(() => import('./components/Locations'));
+const CreateLocation = lazy(() => import('./components/CreateLocation'));
+const UpdateLocation = lazy(() => import('./components/UpdateLocation'));
 const Cars = lazy(() => import('./components/Cars'));
 const Car = lazy(() => import('./components/Car'));
 const CreateCar = lazy(() => import('./components/CreateCar'));
+const UpdateCar = lazy(() => import('./components/UpdateCar'));
 const Reservations = lazy(() => import('./components/Reservations'));
 const Reservation = lazy(() => import('./components/Reservation'));
 const CreateReservation = lazy(() => import('./components/CreateReservation'));
@@ -41,9 +45,13 @@ const App = () => {
 						<Route exact path='/company' element={<Company />} />
 						<Route exact path='/create-company' element={<CreateCompany />} />
 						<Route exact path='/update-company' element={<UpdateCompany />} />
+						<Route exact path='/locations' element={<Locations />} />
+						<Route exact path='/create-location' element={<CreateLocation />} />
+						<Route exact path='/update-location' element={<UpdateLocation />} />
 						<Route exact path='/cars' element={<Cars />} />
 						<Route exact path='/car' element={<Car />} />
 						<Route exact path='/create-car' element={<CreateCar />} />
+						<Route exact path='/update-car' element={<UpdateCar />} />
 						<Route exact path='/reservations' element={<Reservations />} />
 						<Route exact path='/reservation' element={<Reservation />} />
 						<Route exact path='/create-reservation' element={<CreateReservation />} />
@@ -58,7 +66,7 @@ const App = () => {
 						<Route exact path='/tos' element={<ToS />} />
 						<Route exact path='/contact' element={<Contact />} />
 
-						<Route path='*' element={<NoMatch header/>} />
+						<Route path='*' element={<NoMatch header />} />
 					</Routes>
 				</Suspense>
 			</div>

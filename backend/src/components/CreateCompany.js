@@ -23,7 +23,6 @@ export default class CreateCompany extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: null,
             language: Env.DEFAULT_LANGUAGE,
             fullName: '',
             email: '',
@@ -174,10 +173,19 @@ export default class CreateCompany extends Component {
                     avatar: this.state.avatar
                 };
 
-                UserService.signup(data).then(registerStatus => {
-                    if (registerStatus === 200) {
-                        window.location = '/companies' + window.location.search;
-                    } else
+                UserService.signup(data)
+                    .then(registerStatus => {
+                        if (registerStatus === 200) {
+                            window.location = '/companies';
+                        } else
+                            this.setState({
+                                error: true,
+                                passwordError: false,
+                                passwordsDontMatch: false,
+                                register: false,
+                                isLoading: false
+                            });
+                    }).catch(_ => {
                         this.setState({
                             error: true,
                             passwordError: false,
@@ -185,15 +193,7 @@ export default class CreateCompany extends Component {
                             register: false,
                             isLoading: false
                         });
-                }).catch(_ => {
-                    this.setState({
-                        error: true,
-                        passwordError: false,
-                        passwordsDontMatch: false,
-                        register: false,
-                        isLoading: false
                     });
-                });
             }
 
         }).catch(_ => {
@@ -232,7 +232,7 @@ export default class CreateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user, language: user.language, visible: true });
+        this.setState({ language: user.language, visible: true });
     }
 
     componentDidMount() {

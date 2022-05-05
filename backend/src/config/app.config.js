@@ -14,6 +14,7 @@ export const strings = new LocalizedStrings({
         /* Header */
         DASHBOARD: 'Tableau de bord',
         COMPANIES: 'Sociétés de location',
+        LOCATIONS: 'Lieux',
         RESERVATIONS: 'Réservations',
         CARS: 'Voitures',
         USERS: 'Utilisateurs',
@@ -63,7 +64,7 @@ export const strings = new LocalizedStrings({
         SEARCH_PLACEHOLDER: 'Rechercher...',
         NEW_COMPANY: 'Nouvelle société',
         CONFIRM_TITLE: 'Confirmation',
-        DELETE_COMPANY: 'Êtes-vous sûr de vouloir supprimer cette société et toutes ses données?',
+        DELETE_COMPANY: 'Êtes-vous sûr de vouloir supprimer cette société et toutes ses données ?',
         DELETE: 'Supprimer',
         /* Update Company */
         SAVE: 'Sauvegarder',
@@ -82,6 +83,17 @@ export const strings = new LocalizedStrings({
         SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
         NETWORK_SETTINGS: 'Paramètres Réseau',
         SETTINGS_EMAIL_NOTIFICATIONS: 'Activer les notifications par email',
+        /* Locations */
+        NEW_LOCATION: 'Nouveau lieu',
+        DELETE_LOCATION: 'Êtes-vous sûr de vouloir supprimer ce lieu ?',
+        /* Create Location */
+        LOCATION_NAME: 'Lieu',
+        INVALID_LOCATION: 'Ce lieu existe dèja.',
+        LOCATION_CREATED: 'Lieu créé avec succès.',
+        LOCATION_UPDATED: 'Lieu modifié avec succès.',
+        /* Update Location */
+        UPDATE_LOCATION: 'Modification du lieu',
+
     },
     en: {
         /* Common */
@@ -94,6 +106,7 @@ export const strings = new LocalizedStrings({
         /* Header */
         DASHBOARD: 'Dashboard',
         COMPANIES: 'Booking companies',
+        LOCATIONS: 'Locations',
         RESERVATIONS: 'Bookings',
         CARS: 'Cars',
         USERS: 'Users',
@@ -162,6 +175,16 @@ export const strings = new LocalizedStrings({
         SETTINGS_UPDATED: 'Settings updated successfully.',
         NETWORK_SETTINGS: 'Network settings',
         SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications',
+        /* Locations */
+        NEW_LOCATION: 'New location',
+        DELETE_LOCATION: 'Êtes-vous sûr de vouloir supprimer ce lieu ?',
+        /* Create Location */
+        LOCATION_NAME: 'Location',
+        INVALID_LOCATION: 'This location already exists.',
+        LOCATION_CREATED: 'Location created successfully.',
+        LOCATION_UPDATED: 'Location updated successfully.',
+        /* Update Location */
+        UPDATE_LOCATION: 'Location update',
     }
 });
 

@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import CompanyService from '../services/CompanyService';
+import LocationService from '../services/LocationService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
-import { Avatar as CompanyAvatar } from '../elements/Avatar';
 import {
     List,
     ListItem,
@@ -13,7 +12,7 @@ import {
     ListItemAvatar,
     Avatar,
     IconButton,
-    Link,
+    Typography,
     Input,
     Button,
     Dialog,
@@ -22,30 +21,62 @@ import {
     DialogActions,
 } from '@mui/material';
 import {
+    LocationOn as LocationIcon,
     Edit as EditIcon,
-    Mail as MailIcon,
     Delete as DeleteIcon,
     Search as SearchIcon
 } from '@mui/icons-material';
 
-import '../assets/css/companies.css';
+import '../assets/css/locations.css';
 
-export default class Companies extends Component {
+export default class Locations extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            user: null,
-            companies: [],
-            page: 1,
             isLoading: false,
-            fetch: false,
             keyword: '',
+            page: 1,
+            locations: [],
             openDeleteDialog: false,
-            companyId: '',
-            companyIndex: -1
+            locationId: '',
+            locationIndex: -1
         };
     }
+
+    handleDelete = (e) => {
+        const locationId = e.currentTarget.getAttribute('data-id');
+        const locationIndex = e.currentTarget.getAttribute('data-index');
+        this.setState({ openDeleteDialog: true, locationId, locationIndex });
+    };
+
+    handleConfirmDelete = _ => {
+        const { locationId, locationIndex, locations } = this.state;
+
+        if (locationId !== '' && locationIndex > -1) {
+            this.setState({ isLoading: true, openDeleteDialog: false });
+            LocationService.delete(locationId).then(status => {
+                if (status === 200) {
+                    const _locations = [...locations];
+                    _locations.splice(locationIndex, 1);
+                    this.setState({ locations: _locations, isLoading: false, locationId: '', locationIndex: -1 });
+                } else {
+                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+                }
+            }).catch(() => {
+                toast(strings.GENERIC_ERROR, { type: 'error' })
+                this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+            });
+        } else {
+            toast(strings.GENERIC_ERROR, { type: 'error' });
+            this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });
+        }
+    };
+
+    handleCancelDelete = _ => {
+        this.setState({ openDeleteDialog: false, locationId: '' });
+    };
 
     handleSearchChange = (e) => {
         this.setState({ keyword: e.target.value });
@@ -57,20 +88,6 @@ export default class Companies extends Component {
         }
     }
 
-    fetch = _ => {
-        const { keyword, page, companies } = this.state;
-
-        this.setState({ isLoading: true });
-        CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                setTimeout(_ => {
-                    const _companies = page === 1 ? data : [...companies, ...data];
-                    this.setState({ companies: _companies, isLoading: false, fetch: data.length > 0 });
-                }, 1000);
-            })
-            .catch(() => toast(strings.GENERIC_ERROR, { type: 'error' }));
-    }
-
     handleSearch = (e) => {
         document.querySelector('.col-2').scrollTo(0, 0);
         this.setState({ page: 1 }, () => {
@@ -78,39 +95,19 @@ export default class Companies extends Component {
         });
     };
 
-    handleDelete = (e) => {
-        const companyId = e.currentTarget.getAttribute('data-id');
-        const companyIndex = e.currentTarget.getAttribute('data-index');
-        this.setState({ openDeleteDialog: true, companyId, companyIndex });
-    };
+    fetch = _ => {
+        const { keyword, page, locations } = this.state;
 
-    handleConfirmDelete = _ => {
-        const { companyId, companyIndex, companies } = this.state;
-
-        if (companyId !== '' && companyIndex > -1) {
-            this.setState({ isLoading: true, openDeleteDialog: false });
-            CompanyService.delete(companyId).then(status => {
-                if (status === 200) {
-                    const _companies = [...companies];
-                    _companies.splice(companyIndex, 1);
-                    this.setState({ companies: _companies, isLoading: false, companyId: '', companyIndex: -1 });
-                } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
-                }
-            }).catch(() => {
-                toast(strings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
-            });
-        } else {
-            toast(strings.GENERIC_ERROR, { type: 'error' });
-            this.setState({ openDeleteDialog: false, companyId: '', companyIndex: -1 });
-        }
-    };
-
-    handleCancelDelete = _ => {
-        this.setState({ openDeleteDialog: false, companyId: '' });
-    };
+        this.setState({ isLoading: true });
+        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+            .then(data => {
+                setTimeout(_ => {
+                    const _locations = page === 1 ? data : [...locations, ...data];
+                    this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
+                }, 1000);
+            })
+            .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
+    }
 
     onLoad = (user) => {
         this.fetch();
@@ -132,11 +129,11 @@ export default class Companies extends Component {
     }
 
     render() {
-        const { companies, isLoading, openDeleteDialog } = this.state;
+        const { isLoading, locations, openDeleteDialog } = this.state;
 
         return (
-            <Master onLoad={this.onLoad} strict={true} admin={true}>
-                <div className='companies'>
+            <Master onLoad={this.onLoad} strict={true}>
+                <div className='locations'>
                     <div className='col-1'>
                         <Input
                             type="text"
@@ -151,28 +148,25 @@ export default class Companies extends Component {
                         <Button
                             type="submit"
                             variant="contained"
-                            className='btn-primary new-company'
+                            className='btn-primary new-location'
                             size="small"
-                            href='/create-company'
+                            href='/create-location'
                         >
-                            {strings.NEW_COMPANY}
+                            {strings.NEW_LOCATION}
                         </Button>
                     </div>
                     <div className='col-2'>
                         <List className='list'>
-                            {companies.map((company, index) =>
+                            {locations.map((location, index) =>
                             (
                                 <ListItem
-                                    key={company._id}
+                                    key={location._id}
                                     secondaryAction={
                                         <div>
-                                            <IconButton edge="end" href={`/update-company?c=${company._id}`}>
+                                            <IconButton edge="end" href={`/update-company?c=${location._id}`}>
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton edge="end">
-                                                <MailIcon />
-                                            </IconButton>
-                                            <IconButton edge="end" data-id={company._id} data-index={index} onClick={this.handleDelete}>
+                                            <IconButton edge="end" data-id={location._id} data-index={index} onClick={this.handleDelete}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </div>
@@ -180,17 +174,12 @@ export default class Companies extends Component {
                                 >
                                     <ListItemAvatar>
                                         <Avatar>
-                                            <CompanyAvatar
-                                                user={company}
-                                                type={Env.USER_TYPE.COMPANY}
-                                                size='small'
-                                                readonly
-                                            />
+                                            <LocationIcon />
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
                                         primary={
-                                            <Link href={`/company?c=${company._id}`} className='company-title'>{company.fullName}</Link>
+                                            <Typography className='location-title'>{location.name}</Typography>
                                         }
                                     />
                                 </ListItem>
@@ -204,7 +193,7 @@ export default class Companies extends Component {
                     open={openDeleteDialog}
                 >
                     <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
+                    <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>

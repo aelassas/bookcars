@@ -30,13 +30,14 @@ import {
     Language as LanguageIcon,
     Settings as SettingsIcon,
     Dashboard as DashboardIcon,
+    CorporateFare as CompaniesIcon,
+    LocationOn as LocationsIcon,
     DirectionsCar as CarsIcon,
+    EventSeat as ReservationsIcon,
     People as UsersIcon,
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
-    ExitToApp as SignoutIcon,
-    CorporateFare as CompaniesIcon,
-    EventSeat as ReservationsIcon
+    ExitToApp as SignoutIcon
 } from '@mui/icons-material';
 import '../assets/css/header.css';
 
@@ -97,14 +98,15 @@ export default function Header(props) {
     };
 
     const refreshPage = () => {
-        let params = new URLSearchParams(window.location.search);
+        // let params = new URLSearchParams(window.location.search);
 
-        if (params.has('l')) {
-            params.delete('l');
-            window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '');
-        } else {
-            window.location.reload();
-        }
+        // if (params.has('l')) {
+        //     params.delete('l');
+        //     window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '');
+        // } else {
+        //     window.location.reload();
+        // }
+        window.location.reload();
     };
 
     const handleLangMenuClose = async (event) => {
@@ -337,6 +339,10 @@ export default function Header(props) {
                                     <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.COMPANIES} />
                                 </ListItemLink>}
+                                <ListItemLink href="/locations">
+                                    <ListItemIcon>{<LocationsIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.LOCATIONS} />
+                                </ListItemLink>
                                 <ListItemLink href="/cars">
                                     <ListItemIcon>{<CarsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.CARS} />

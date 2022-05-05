@@ -1,5 +1,6 @@
 import express from 'express';
 import routeNames from '../config/companyRoutes.config.js';
+import authJwt from '../middlewares/authJwt.js';
 import strings from '../config/app.config.js';
 import Env from '../config/env.config.js';
 import User from '../schema/User.js';
@@ -8,7 +9,7 @@ import escapeStringRegexp from 'escape-string-regexp';
 const routes = express.Router();
 
 // Company validation Router
-routes.route(routeNames.validate).post((req, res) => {
+routes.route(routeNames.validate).post(authJwt.verifyToken, (req, res) => {
     const keyword = escapeStringRegexp(req.body.fullName);
     const options = 'i';
     User.findOne({ fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
@@ -19,9 +20,8 @@ routes.route(routeNames.validate).post((req, res) => {
         });
 });
 
-
 // Update Company Router
-routes.route(routeNames.update).post((req, res) => {
+routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
     User.findById(req.body._id)
         .then(company => {
             if (company) {
@@ -38,7 +38,7 @@ routes.route(routeNames.update).post((req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.err('[company.update] Conference not found:', req.params);
+                console.err('[company.update] Location not found:', req.body);
                 res.sendStatus(204);
             }
         })
@@ -49,13 +49,13 @@ routes.route(routeNames.update).post((req, res) => {
 });
 
 // Delete Company Router
-routes.route(routeNames.delete).delete((req, res) => {
+routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
     const id = req.params.id;
     res.sendStatus(200);
 });
 
 // Get Company Router
-routes.route(routeNames.getCompany).get((req, res) => {
+routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
     User.findById(req.params.id)
         .then(user => {
             if (!user) {
@@ -72,7 +72,7 @@ routes.route(routeNames.getCompany).get((req, res) => {
 });
 
 // Get Companies Router
-routes.route(routeNames.getCompanies).get((req, res) => {
+routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
     const getCompanies = (keyword, page, size) => {
         const companies = [];
         for (let _id = (page - 1) * size; _id < page * size; _id++) {
