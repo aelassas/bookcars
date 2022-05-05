@@ -88,12 +88,22 @@ export const strings = new LocalizedStrings({
         DELETE_LOCATION: 'Êtes-vous sûr de vouloir supprimer ce lieu ?',
         /* Create Location */
         LOCATION_NAME: 'Lieu',
-        INVALID_LOCATION: 'Ce lieu existe dèja.',
+        INVALID_LOCATION: 'Ce lieu existe dèjà.',
         LOCATION_CREATED: 'Lieu créé avec succès.',
-        LOCATION_UPDATED: 'Lieu modifié avec succès.',
         /* Update Location */
         UPDATE_LOCATION: 'Modification du lieu',
-
+        LOCATION_UPDATED: 'Lieu modifié avec succès.',
+        /* Extras */
+        EXTRAS: 'Suppléments',
+        NEW_EXTRA: 'Nouveau supplément',
+        DELETE_EXTRA: 'Êtes-vous sûr de vouloir supprimer ce supplément ?',
+        /* Create Extra */
+        EXTRA: 'Supplément',
+        INVALID_EXTRA: 'Ce supplément existe dèjà.',
+        EXTRA_CREATED: 'Supplément créé avec succès.',
+        /* Update Extra */
+        UPDATE_EXTRA: 'Modification du supplément',
+        EXTRA_UPDATED: 'Supplément modifié avec succès.',
     },
     en: {
         /* Common */
@@ -177,14 +187,25 @@ export const strings = new LocalizedStrings({
         SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications',
         /* Locations */
         NEW_LOCATION: 'New location',
-        DELETE_LOCATION: 'Êtes-vous sûr de vouloir supprimer ce lieu ?',
+        DELETE_LOCATION: 'Are you sure you want to delete this location?',
         /* Create Location */
         LOCATION_NAME: 'Location',
         INVALID_LOCATION: 'This location already exists.',
         LOCATION_CREATED: 'Location created successfully.',
-        LOCATION_UPDATED: 'Location updated successfully.',
         /* Update Location */
         UPDATE_LOCATION: 'Location update',
+        LOCATION_UPDATED: 'Location updated successfully.',
+        /* Extras */
+        EXTRAS: 'Extras',
+        NEW_EXTRA: 'New extra',
+        DELETE_EXTRA: 'Are you sure you want to delete this extra?',
+        /* Create Extra */
+        EXTRA: 'Extra',
+        INVALID_EXTRA: 'This extra already exists.',
+        EXTRA_CREATED: 'Extra created successfully.',
+        /* Update Extra */
+        UPDATE_EXTRA: 'Extra update',
+        EXTRA_UPDATED: 'Extra updated successfully.',
     }
 });
 

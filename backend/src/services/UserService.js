@@ -57,7 +57,7 @@ export default class UserService {
             deleteAllCookies();
 
             if (redirect) {
-                window.location.href = '/sign-in' + window.location.search;
+                window.location.href = '/sign-in';
             }
         };
 
@@ -178,7 +178,7 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/reset-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
-    static compare(pass, hash){
+    static compare(pass, hash) {
         return bcrypt.compare(pass, hash);
     }
 }

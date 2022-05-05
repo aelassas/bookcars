@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
-import LocationService from '../services/LocationService';
+import ExtraService from '../services/ExtraService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import {
@@ -21,15 +21,15 @@ import {
     DialogActions,
 } from '@mui/material';
 import {
-    LocationOn as LocationIcon,
+    AddCircle as ExtraIcon,
     Edit as EditIcon,
     Delete as DeleteIcon,
     Search as SearchIcon
 } from '@mui/icons-material';
 
-import '../assets/css/locations.css';
+import '../assets/css/extras.css';
 
-export default class Locations extends Component {
+export default class Extras extends Component {
 
     constructor(props) {
         super(props);
@@ -37,45 +37,45 @@ export default class Locations extends Component {
             isLoading: false,
             keyword: '',
             page: 1,
-            locations: [],
+            extras: [],
             openDeleteDialog: false,
-            locationId: '',
-            locationIndex: -1
+            extraId: '',
+            extraIndex: -1
         };
     }
 
     handleDelete = (e) => {
-        const locationId = e.currentTarget.getAttribute('data-id');
-        const locationIndex = e.currentTarget.getAttribute('data-index');
-        this.setState({ openDeleteDialog: true, locationId, locationIndex });
+        const extraId = e.currentTarget.getAttribute('data-id');
+        const extraIndex = e.currentTarget.getAttribute('data-index');
+        this.setState({ openDeleteDialog: true, extraId, extraIndex });
     };
 
     handleConfirmDelete = _ => {
-        const { locationId, locationIndex, locations } = this.state;
+        const { extraId, extraIndex, extras } = this.state;
 
-        if (locationId !== '' && locationIndex > -1) {
+        if (extraId !== '' && extraIndex > -1) {
             this.setState({ isLoading: true, openDeleteDialog: false });
-            LocationService.delete(locationId).then(status => {
+            ExtraService.delete(extraId).then(status => {
                 if (status === 200) {
-                    const _locations = [...locations];
-                    _locations.splice(locationIndex, 1);
-                    this.setState({ locations: _locations, isLoading: false, locationId: '', locationIndex: -1 });
+                    const _extras = [...extras];
+                    _extras.splice(extraIndex, 1);
+                    this.setState({ extras: _extras, isLoading: false, extraId: '', extraIndex: -1 });
                 } else {
                     toast(strings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+                    this.setState({ isLoading: false, extraId: '', extraIndex: -1 });
                 }
             }).catch(() => {
                 toast(strings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+                this.setState({ isLoading: false, extraId: '', extraIndex: -1 });
             });
         } else {
             toast(strings.GENERIC_ERROR, { type: 'error' });
-            this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });
+            this.setState({ openDeleteDialog: false, extraId: '', extraIndex: -1 });
         }
     };
 
     handleCancelDelete = _ => {
-        this.setState({ openDeleteDialog: false, locationId: '' });
+        this.setState({ openDeleteDialog: false, extraId: '' });
     };
 
     handleSearchChange = (e) => {
@@ -96,14 +96,14 @@ export default class Locations extends Component {
     };
 
     fetch = _ => {
-        const { keyword, page, locations } = this.state;
+        const { keyword, page, extras } = this.state;
 
         this.setState({ isLoading: true });
-        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+        ExtraService.getExtras(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 setTimeout(_ => {
-                    const _locations = page === 1 ? data : [...locations, ...data];
-                    this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
+                    const _extras = page === 1 ? data : [...extras, ...data];
+                    this.setState({ extras: _extras, isLoading: false, fetch: data.length > 0 });
                 }, 1000);
             })
             .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
@@ -129,11 +129,11 @@ export default class Locations extends Component {
     }
 
     render() {
-        const { isLoading, locations, openDeleteDialog } = this.state;
+        const { isLoading, extras, openDeleteDialog } = this.state;
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
-                <div className='locations'>
+            <Master onLoad={this.onLoad} strict={true} admin={true}>
+                <div className='extras'>
                     <div className='col-1'>
                         <Input
                             type="text"
@@ -148,25 +148,25 @@ export default class Locations extends Component {
                         <Button
                             type="submit"
                             variant="contained"
-                            className='btn-primary new-location'
+                            className='btn-primary new-extra'
                             size="small"
-                            href='/create-location'
+                            href='/create-extra'
                         >
-                            {strings.NEW_LOCATION}
+                            {strings.NEW_EXTRA}
                         </Button>
                     </div>
                     <div className='col-2'>
                         <List className='list'>
-                            {locations.map((location, index) =>
+                            {extras.map((extra, index) =>
                             (
                                 <ListItem
-                                    key={location._id}
+                                    key={extra._id}
                                     secondaryAction={
                                         <div>
-                                            <IconButton edge="end" href={`/update-location?l=${location._id}`}>
+                                            <IconButton edge="end" href={`/update-extra?c=${extra._id}`}>
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton edge="end" data-id={location._id} data-index={index} onClick={this.handleDelete}>
+                                            <IconButton edge="end" data-id={extra._id} data-index={index} onClick={this.handleDelete}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </div>
@@ -174,12 +174,12 @@ export default class Locations extends Component {
                                 >
                                     <ListItemAvatar>
                                         <Avatar>
-                                            <LocationIcon />
+                                            <ExtraIcon />
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
                                         primary={
-                                            <Typography className='location-title'>{location.name}</Typography>
+                                            <Typography className='extra-title'>{extra.name}</Typography>
                                         }
                                     />
                                 </ListItem>
@@ -193,7 +193,7 @@ export default class Locations extends Component {
                     open={openDeleteDialog}
                 >
                     <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
+                    <DialogContent>{strings.DELETE_EXTRA}</DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>

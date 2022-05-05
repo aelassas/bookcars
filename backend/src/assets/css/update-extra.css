@@ -1,6 +1,6 @@
-/* Update Location */
+/* Update Extra */
 
-.update-location {
+.update-extra {
     position: absolute;
     top: 0;
     right: 0;
@@ -9,11 +9,11 @@
     overflow: auto;
 }
 
-.location-form-wrapper {
+.extra-form-wrapper {
     margin: 32px 0;
 }
 
-.location-form-title {
+.extra-form-title {
     text-align: center;
     text-transform: capitalize;
     color: #121212;
@@ -22,7 +22,7 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .location-form {
+    .extra-form {
         margin-top: 45px !important;
         margin-left: calc(50% - 180px) !important;
         width: 360px;
@@ -34,7 +34,7 @@
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .location-form {
+    .extra-form {
         margin-top: 45px !important;
         margin-left: calc(50% - 275px) !important;
         width: 550px;

@@ -12,6 +12,7 @@ import notificationRoutes from './routes/notificationRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
+import extraRoutes from './routes/extraRoutes.js';
 
 const DB_HOST = process.env.BC_DB_HOST;
 const DB_PORT = process.env.BC_DB_PORT;
@@ -74,6 +75,7 @@ app.use('/', notificationRoutes);
 app.use('/', messageRoutes);
 app.use('/', companyRoutes);
 app.use('/', locationRoutes);
+app.use('/', extraRoutes);
 
 strings.setLanguage(process.env.BC_DEFAULT_LANGUAGE);
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import { strings } from '../config/app.config';
-import LocationService from '../services/LocationService';
+import ExtraService from '../services/ExtraService';
 import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
 import Error from './Error';
@@ -15,9 +15,9 @@ import {
     Paper
 } from '@mui/material';
 
-import '../assets/css/update-location.css';
+import '../assets/css/create-extra.css';
 
-export default class UpdateLocation extends Component {
+export default class UpdateExtra extends Component {
 
     constructor(props) {
         super(props);
@@ -37,10 +37,10 @@ export default class UpdateLocation extends Component {
 
     handleOnBlurName = e => {
         const data = { name: e.target.value, };
-        const { location } = this.state;
+        const { extra } = this.state;
 
-        if (data.name !== location.name) {
-            LocationService.validate(data).then(status => {
+        if (data.name !== extra.name) {
+            ExtraService.validate(data).then(status => {
                 if (status === 204) {
                     this.setState({ nameError: true });
                 } else {
@@ -68,16 +68,16 @@ export default class UpdateLocation extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const { location, name } = this.state;
-        const data = { _id: location._id, name };
+        const { extra, name } = this.state;
+        const data = { _id: extra._id, name };
 
         const update = _ => {
-            LocationService.update(data)
+            ExtraService.update(data)
                 .then(status => {
                     if (status === 200) {
-                        location.name = name;
-                        this.setState({ isLoading: false, location });
-                        toast(strings.LOCATION_UPDATED, { type: 'info' });
+                        extra.name = name;
+                        this.setState({ isLoading: false, extra });
+                        toast(strings.EXTRA_UPDATED, { type: 'info' });
                     } else {
                         this.error();
                     }
@@ -86,8 +86,8 @@ export default class UpdateLocation extends Component {
                 });
         };
 
-        if (name !== location.name) {
-            LocationService.validate(data).then(status => {
+        if (name !== extra.name) {
+            ExtraService.validate(data).then(status => {
                 if (status === 204) {
                     this.setState({ nameError: true, isLoading: false });
                 } else {
@@ -99,7 +99,6 @@ export default class UpdateLocation extends Component {
             });
         } else {
             this.setState({ nameError: false });
-            update();
         }
 
     };
@@ -107,15 +106,15 @@ export default class UpdateLocation extends Component {
     onLoad = (user) => {
         this.setState({ isLoading: true }, _ => {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('l')) {
-                const id = params.get('l');
+            if (params.has('e')) {
+                const id = params.get('e');
                 if (id && id !== '') {
-                    LocationService.getLocation(id)
-                        .then(location => {
-                            if (location) {
+                    ExtraService.getExtra(id)
+                        .then(extra => {
+                            if (extra) {
                                 this.setState({
-                                    location,
-                                    name: location.name,
+                                    extra,
+                                    name: extra.name,
                                     isLoading: false,
                                     visible: true
                                 });
@@ -139,16 +138,16 @@ export default class UpdateLocation extends Component {
     }
 
     render() {
-        const { visible, isLoading, noMatch, error, location, name, nameError } = this.state;
+        const { visible, isLoading, noMatch, error, extra, name, nameError } = this.state;
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
-                <div className='update-location'>
-                    <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
+            <Master onLoad={this.onLoad} strict={true} admin={true}>
+                <div className='update-extra'>
+                    <Paper className="extra-form extra-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                        <h1 className="extra-form-title"> {strings.UPDATE_EXTRA} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.LOCATION_NAME}</InputLabel>
+                                <InputLabel className='required'>{strings.EXTRA}</InputLabel>
                                 <Input
                                     type="text"
                                     value={name}
@@ -160,7 +159,7 @@ export default class UpdateLocation extends Component {
                                     autoComplete="off"
                                 />
                                 <FormHelperText error={nameError}>
-                                    {nameError ? strings.INVALID_LOCATION : ''}
+                                    {nameError ? strings.INVALID_EXTRA : ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -170,7 +169,7 @@ export default class UpdateLocation extends Component {
                                     variant="contained"
                                     className='btn-primary'
                                     size="small"
-                                    disabled={location && location.name === name}
+                                    disabled={extra && extra.name === name}
                                 >
                                     {strings.SAVE}
                                 </Button>
@@ -178,7 +177,7 @@ export default class UpdateLocation extends Component {
                                     variant="contained"
                                     className='btn-secondary'
                                     size="small"
-                                    href='/locations'
+                                    href='/extras'
                                 >
                                     {strings.CANCEL}
                                 </Button>

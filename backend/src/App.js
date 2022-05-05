@@ -13,6 +13,9 @@ const UpdateCompany = lazy(() => import('./components/UpdateCompany'));
 const Locations = lazy(() => import('./components/Locations'));
 const CreateLocation = lazy(() => import('./components/CreateLocation'));
 const UpdateLocation = lazy(() => import('./components/UpdateLocation'));
+const Extras = lazy(() => import('./components/Extras'));
+const CreateExtra = lazy(() => import('./components/CreateExtra'));
+const UpdateExtra = lazy(() => import('./components/UpdateExtra'));
 const Cars = lazy(() => import('./components/Cars'));
 const Car = lazy(() => import('./components/Car'));
 const CreateCar = lazy(() => import('./components/CreateCar'));
@@ -48,6 +51,9 @@ const App = () => {
 						<Route exact path='/locations' element={<Locations />} />
 						<Route exact path='/create-location' element={<CreateLocation />} />
 						<Route exact path='/update-location' element={<UpdateLocation />} />
+						<Route exact path='/extras' element={<Extras />} />
+						<Route exact path='/create-extra' element={<CreateExtra />} />
+						<Route exact path='/update-extra' element={<UpdateExtra />} />
 						<Route exact path='/cars' element={<Cars />} />
 						<Route exact path='/car' element={<Car />} />
 						<Route exact path='/create-car' element={<CreateCar />} />
