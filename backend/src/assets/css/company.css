@@ -1,0 +1,94 @@
+.company {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.company .col-1 .company-name {
+    text-align: center;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.company .col-1 .company-info {
+    text-align: center;
+    font-weight: 400;
+    margin-top: 10px;
+    color: #676767;
+}
+
+.company .col-1 .company-actions {
+    text-align: center;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    .company .col-1 {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 410px;
+        padding-top: 5px;
+        background: #fefefe;
+        border-bottom: #eee solid 1px;
+    }
+
+    .company .col-1 .company-avatar {
+        position: relative;
+        left: 50%;
+        transform: translateX(-22%);
+    }
+
+    .company .col-2 {
+        position: absolute;
+        top: 120px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        overflow: auto;
+    }
+
+    .company .col-2 .cars {
+        width: 100%;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    .company .col-1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 300px;
+        padding-top: 20px;
+        background: #fefefe;
+        border-right: #eee solid 1px;
+    }
+
+    .company .col-1 .company-avatar {
+        position: relative;
+        left: 50%;
+        transform: translateX(-30%);
+    }
+
+    .company .col-2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 300px;
+        overflow: auto;
+    }
+
+    .company .col-2 .cars {
+        width: 350px;
+        margin-left: calc(50% - 175px) !important;
+    }
+}

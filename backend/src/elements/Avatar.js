@@ -25,6 +25,7 @@ export const Avatar = (props) => {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [avatar, setAvatar] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleChange = (e) => {
 
@@ -176,6 +177,9 @@ export const Avatar = (props) => {
             if (props.user) {
                 setUser(props.user);
                 setAvatar(props.user.avatar);
+                setIsLoading(false);
+            } else {
+                setIsLoading(false);
             }
         } else {
             setError(true);
@@ -184,7 +188,7 @@ export const Avatar = (props) => {
 
     const { size, readonly, className } = props;
     return (
-        !error ?
+        !error && !isLoading ?
             <div className={className}>
                 {avatar ?
                     readonly ?

@@ -22,8 +22,9 @@ import {
 } from '@mui/material';
 import {
     CorporateFare as CompanyIcon,
-    Delete as DeleteIcon,
     Edit as EditIcon,
+    Mail as MailIcon,
+    Delete as DeleteIcon,
     Search as SearchIcon
 } from '@mui/icons-material';
 
@@ -167,6 +168,9 @@ export default class Companies extends Component {
                                         <div>
                                             <IconButton edge="end" href={`/update-company?c=${company._id}`}>
                                                 <EditIcon />
+                                            </IconButton>
+                                            <IconButton edge="end">
+                                                <MailIcon />
                                             </IconButton>
                                             <IconButton edge="end" data-id={company._id} data-index={index} onClick={this.handleDelete}>
                                                 <DeleteIcon />

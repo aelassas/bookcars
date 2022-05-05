@@ -84,8 +84,6 @@ export default class UpdateCompany extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        this.setState({ isLoading: true });
-
         const { company, fullName, phone, location, bio } = this.state;
 
         const data = {
@@ -99,15 +97,13 @@ export default class UpdateCompany extends Component {
         CompanyService.update(data)
             .then(status => {
                 if (status === 200) {
-                    window.location = `/company?c=${company._id}`;
+                    toast(strings.UPDATED, { type: 'info' });
                 } else {
                     toast(strings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false });
                 }
             })
             .catch(_ => {
                 toast(strings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ isLoading: false });
             });
     };
 

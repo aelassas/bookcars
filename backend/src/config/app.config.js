@@ -10,6 +10,7 @@ export const strings = new LocalizedStrings({
         VALIDATION_EMAIL_SENT: 'E-mail de validation envoyé.',
         VALIDATION_EMAIL_ERROR: "Une erreur s'est produite lors de l'envoi de l'e-mail de validation.",
         GENERIC_ERROR: "Une erreur non gérée s'est produite.",
+        UPDATED: 'Modifications effectuées avec succès.',
         /* Header */
         DASHBOARD: 'Tableau de bord',
         COMPANIES: 'Sociétés de location',
@@ -89,6 +90,7 @@ export const strings = new LocalizedStrings({
         VALIDATION_EMAIL_SENT: 'Validation email sent.',
         VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
         GENERIC_ERROR: 'An unhandled error occurred.',
+        UPDATED: 'Changes made successfully.',
         /* Header */
         DASHBOARD: 'Dashboard',
         COMPANIES: 'Booking companies',
