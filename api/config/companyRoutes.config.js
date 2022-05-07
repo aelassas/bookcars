@@ -3,5 +3,5 @@ export default {
     update: '/api/update-company',
     delete: '/api/delete-company/:id',
     getCompany: '/api/get-company/:id',
-    getCompanies: '/api/get-companies/:page/:size',
+    getCompanies: '/api/get-companies',
 }

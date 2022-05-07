@@ -145,7 +145,13 @@ export const strings = new LocalizedStrings({
         FULL_INSURANCE_TOOLTIP: 'La location peut inclure une couverture en cas de collision, de dommages et vol du véhicule.',
         ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
         INCLUDED: 'Inclus',
-        UNAVAILABLE: 'Indisponible'
+        UNAVAILABLE: 'Indisponible',
+
+        /* Companies */
+        VIEW_COMPANY_TOOLTIP: 'Voir le profil de cette société',
+        UPDATE_COMPANY_TOOLTIP: 'Modifier cette société',
+        MESSAGE_COMPANY_TOOLTIP: 'Envoyer un message à cette société',
+        DELETE_COMPANY_TOOLTIP: 'Supprimer cette société et toutes ses données',
 
     },
     en: {

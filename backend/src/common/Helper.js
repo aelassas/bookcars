@@ -190,4 +190,8 @@ export default class Helper {
             return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${cancellation} ${strings.CAR_CURRENCY}`;
         }
     }
+
+    static isAdmin(user) {
+        return user && user.type === Env.USER_TYPE.ADMIN;
+    }
 }

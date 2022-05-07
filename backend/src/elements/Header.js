@@ -335,10 +335,10 @@ export default function Header(props) {
                                     <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.DASHBOARD} />
                                 </ListItemLink>
-                                {isAdmin && <ListItemLink href="/companies">
+                                <ListItemLink href="/companies">
                                     <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.COMPANIES} />
-                                </ListItemLink>}
+                                </ListItemLink>
                                 <ListItemLink href="/locations">
                                     <ListItemIcon>{<LocationsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.LOCATIONS} />
@@ -400,7 +400,7 @@ export default function Header(props) {
                             onClick={handleAccountMenuOpen}
                             color="inherit"
                         >
-                            <Avatar user={props.user} size="small" readonly />
+                            <Avatar user={props.user} type={props.user.type} size="small" readonly />
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>

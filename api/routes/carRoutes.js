@@ -250,7 +250,7 @@ routes.route(routeNames.getCars).get(authJwt.verifyToken, (req, res) => {
             if (!keyword || keyword === '' || name.includes(keyword)) {
                 cars.push({
                     _id,
-                    company: '626e92c69acb065aa8e00459',
+                    company: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62756aae039367a61924c447',
                     name,
                     type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
                     image: '5266dac8680298fa6ae8c747_1651663694739.jpg',

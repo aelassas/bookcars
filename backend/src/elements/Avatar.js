@@ -183,9 +183,13 @@ export const Avatar = (props) => {
             <div className={className}>
                 {avatar ?
                     readonly ?
-                        <MaterialAvatar
-                            src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
-                            className={size ? 'avatar-' + size : 'avatar'} />
+                        (props.type === Env.USER_TYPE.COMPANY ?
+                            <img className='company-avatar-img' src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)} alt={user && user.fullName} />
+                            :
+                            <MaterialAvatar
+                                src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
+                                className={size ? 'avatar-' + size : 'avatar'} />
+                        )
                         :
                         <Badge
                             overlap="circular"
@@ -205,22 +209,26 @@ export const Avatar = (props) => {
                                     vertical: 'bottom',
                                     horizontal: 'right',
                                 }}
+                                className={props.type === Env.USER_TYPE.COMPANY && 'company-avatar'}
                                 badgeContent={
                                     <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                                         <PhotoCameraIcon className='avatar-action-icon' />
                                     </Box>
                                 }
                             >
-                                <MaterialAvatar
-                                    src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
-                                    className="avatar"
-                                />
+                                {props.type === Env.USER_TYPE.COMPANY ?
+                                    <img className='company-avatar-img' src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)} alt={user && user.fullName} />
+                                    :
+                                    <MaterialAvatar
+                                        src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
+                                        className={size ? 'avatar-' + size : 'avatar'} />
+                                }
                             </Badge>
                         </Badge>
                     :
                     readonly ?
                         props.type === Env.USER_TYPE.COMPANY ?
-                            <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                            <CompanyIcon className='company-avatar-img' color={props.color || 'inherit'} />
                             : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
                         :
                         <Badge

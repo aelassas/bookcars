@@ -2,30 +2,27 @@ import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
+import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
-import { Avatar as CompanyAvatar } from '../elements/Avatar';
+import { Avatar } from '../elements/Avatar';
 import {
-    List,
-    ListItem,
-    ListItemText,
-    ListItemAvatar,
-    Avatar,
-    IconButton,
-    Link,
     Input,
+    IconButton,
     Button,
+    Tooltip,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
 } from '@mui/material';
 import {
+    Search as SearchIcon,
+    Visibility as ViewIcon,
     Edit as EditIcon,
     Mail as MailIcon,
-    Delete as DeleteIcon,
-    Search as SearchIcon
+    Delete as DeleteIcon
 } from '@mui/icons-material';
 
 import '../assets/css/companies.css';
@@ -57,26 +54,19 @@ export default class Companies extends Component {
         }
     }
 
-    fetch = _ => {
-        const { keyword, page, companies } = this.state;
-
-        this.setState({ isLoading: true });
-        CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                setTimeout(_ => {
-                    const _companies = page === 1 ? data : [...companies, ...data];
-                    this.setState({ companies: _companies, isLoading: false, fetch: data.length > 0 });
-                }, 1000);
-            })
-            .catch(() => toast(strings.GENERIC_ERROR, { type: 'error' }));
-    }
-
     handleSearch = (e) => {
         document.querySelector('.col-2').scrollTo(0, 0);
-        this.setState({ page: 1 }, () => {
-            this.fetch();
-        });
+        this.fetch();
     };
+
+    fetch = _ => {
+        this.setState({ isLoading: true });
+        CompanyService.getCompanies(this.state.keyword)
+            .then(companies => {
+                this.setState({ companies, isLoading: false });
+            })
+            .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
+    }
 
     handleDelete = (e) => {
         const companyId = e.currentTarget.getAttribute('data-id');
@@ -98,7 +88,7 @@ export default class Companies extends Component {
                     toast(strings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
                 }
-            }).catch(() => {
+            }).catch(_ => {
                 toast(strings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
             });
@@ -113,29 +103,19 @@ export default class Companies extends Component {
     };
 
     onLoad = (user) => {
+        this.setState({ user });
         this.fetch();
-
-        const div = document.querySelector('.col-2');
-        if (div) {
-            div.onscroll = (event) => {
-                const { fetch, isLoading, page } = this.state;
-                if (fetch && !isLoading && (((window.innerHeight - Env.PAGE_TOP_OFFSET) + event.target.scrollTop)) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
-                    this.setState({ page: page + 1 }, _ => {
-                        this.fetch();
-                    });
-                }
-            };
-        }
     }
 
     componentDidMount() {
     }
 
     render() {
-        const { companies, isLoading, openDeleteDialog } = this.state;
+        const { user, companies, isLoading, openDeleteDialog } = this.state;
+        const isAdmin = Helper.isAdmin(user);
 
         return (
-            <Master onLoad={this.onLoad} strict={true} admin={true}>
+            <Master onLoad={this.onLoad} strict={true}>
                 <div className='companies'>
                     <div className='col-1'>
                         <Input
@@ -159,43 +139,50 @@ export default class Companies extends Component {
                         </Button>
                     </div>
                     <div className='col-2'>
-                        <List className='list'>
-                            {companies.map((company, index) =>
-                            (
-                                <ListItem
-                                    key={company._id}
-                                    secondaryAction={
-                                        <div>
-                                            <IconButton edge="end" href={`/update-company?c=${company._id}`}>
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton edge="end">
-                                                <MailIcon />
-                                            </IconButton>
-                                            <IconButton edge="end" data-id={company._id} data-index={index} onClick={this.handleDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
+                        <section className='list'>
+                            {companies.map((company, index) => {
+                                const canEdit = isAdmin || (user && user._id === company._id);
+
+                                return (
+                                    <article key={company._id}>
+                                        <div className='company-item'>
+                                            <div>
+                                                <Avatar
+                                                    user={company}
+                                                    type={Env.USER_TYPE.COMPANY}
+                                                    readonly
+                                                    className='company-item-avatar'
+                                                />
+                                                <span className='company-item-title'>{company.fullName}</span>
+                                            </div>
                                         </div>
-                                    }
-                                >
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <CompanyAvatar
-                                                user={company}
-                                                type={Env.USER_TYPE.COMPANY}
-                                                size='small'
-                                                readonly
-                                            />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={
-                                            <Link href={`/company?c=${company._id}`} className='company-title'>{company.fullName}</Link>
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
+                                        <div className='company-actions'>
+                                            <Tooltip title={strings.VIEW_COMPANY_TOOLTIP}>
+                                                <IconButton href={`/company?c=${company._id}`}>
+                                                    <ViewIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            {canEdit && <Tooltip title={strings.UPDATE_COMPANY_TOOLTIP}>
+                                                <IconButton href={`/update-company?c=${company._id}`}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>}
+                                            {canEdit && <Tooltip title={strings.MESSAGE_COMPANY_TOOLTIP}>
+                                                <IconButton>
+                                                    <MailIcon />
+                                                </IconButton>
+                                            </Tooltip>}
+                                            {canEdit && <Tooltip title={strings.DELETE_COMPANY_TOOLTIP}>
+                                                <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>}
+                                        </div>
+                                    </article>
+                                );
+                            }
+                            )}
+                        </section>
                     </div>
                 </div>
                 <Dialog

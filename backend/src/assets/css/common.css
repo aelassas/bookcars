@@ -104,6 +104,24 @@
     margin-left: 8px;
 }
 
+.company-avatar-img {
+    width: 62px !important;
+    height: fit-content;
+}
+
+.company-avatar {
+    width: 150px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.company-avatar img {
+    width: fit-content;
+    height: fit-content;
+}
+
 @media only screen and (max-width: 960px) {
     .avatar-ctn {
         position: relative;
