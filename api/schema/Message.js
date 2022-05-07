@@ -5,12 +5,12 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
     from: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, "can't be blank"],
         ref: 'User'
     },
     to: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, "can't be blank"],
         ref: 'User'
     },
     subject: {

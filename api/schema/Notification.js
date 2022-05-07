@@ -5,12 +5,12 @@ const Schema = mongoose.Schema;
 const notificationSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, "can't be blank"],
         ref: 'User'
     },
     message: {
         type: String,
-        required: true
+        required: [true, "can't be blank"],
     },
     notifiedAt: {
         type: Date,

@@ -32,7 +32,6 @@ import {
     Dashboard as DashboardIcon,
     CorporateFare as CompaniesIcon,
     LocationOn as LocationsIcon,
-    AddCircle as ExtrasIcon,
     DirectionsCar as CarsIcon,
     EventSeat as ReservationsIcon,
     People as UsersIcon,
@@ -344,10 +343,6 @@ export default function Header(props) {
                                     <ListItemIcon>{<LocationsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.LOCATIONS} />
                                 </ListItemLink>
-                                {isAdmin && <ListItemLink href="/extras">
-                                    <ListItemIcon>{<ExtrasIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.EXTRAS} />
-                                </ListItemLink>}
                                 <ListItemLink href="/cars">
                                     <ListItemIcon>{<CarsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.CARS} />

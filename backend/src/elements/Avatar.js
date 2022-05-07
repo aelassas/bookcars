@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
+import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import { toast } from 'react-toastify';
 import {
@@ -154,18 +155,8 @@ export const Avatar = (props) => {
         }
     };
 
-    const joinURL = (part1, part2) => {
-        if (part1.charAt(part1.length - 1) === '/') {
-            part1 = part1.substr(0, part1.length - 1);
-        }
-        if (part2.charAt(0) === '/') {
-            part2 = part2.substr(1);
-        }
-        return part1 + '/' + part2;
-    };
-
     const cdn = _ => {
-        return props.mode === 'create' ? Env.CDN_TEMP : Env.CDN_USERS;
+        return props.mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS;
     };
 
     useEffect(() => {
@@ -193,7 +184,7 @@ export const Avatar = (props) => {
                 {avatar ?
                     readonly ?
                         <MaterialAvatar
-                            src={avatar.startsWith('http') ? avatar : joinURL(cdn(), avatar)}
+                            src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
                             className={size ? 'avatar-' + size : 'avatar'} />
                         :
                         <Badge
@@ -221,7 +212,7 @@ export const Avatar = (props) => {
                                 }
                             >
                                 <MaterialAvatar
-                                    src={avatar.startsWith('http') ? avatar : joinURL(cdn(), avatar)}
+                                    src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
                                     className="avatar"
                                 />
                             </Badge>

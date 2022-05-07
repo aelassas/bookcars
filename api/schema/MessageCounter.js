@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const messageCounterSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, "can't be blank"],
         unique: true,
         ref: 'User'
     },

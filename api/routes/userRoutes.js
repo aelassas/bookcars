@@ -24,7 +24,7 @@ const SMTP_USER = process.env.BC_SMTP_USER;
 const SMTP_PASS = process.env.BC_SMTP_PASS;
 const SMTP_FROM = process.env.BC_SMTP_FROM;
 const CDN = process.env.BC_CDN_USERS;
-const CDN_TEMP = process.env.BC_CDN_TEMP;
+const CDN_TEMP = process.env.BC_CDN_TEMP_USERS;
 
 const routes = express.Router();
 
@@ -50,19 +50,19 @@ routes.route(routeNames.signup).post((req, res) => {
                 if (fs.existsSync(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`;
                     const newPath = path.join(CDN, filename);
-                    fs.rename(avatar, newPath, (err) => {
-                        if (err) {
-                            console.error(strings.ERROR, err);
-                            res.status(400).send(getStatusMessage(user.language, strings.ERROR + err));
-                        } else {
-                            user.avatar = filename;
-                            user.save()
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err);
-                                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
-                                });
-                        }
-                    });
+
+                    try {
+                        fs.renameSync(avatar, newPath);
+                        user.avatar = filename;
+                        user.save()
+                            .catch(err => {
+                                console.error(strings.DB_ERROR, err);
+                                res.status(400).send(strings.DB_ERROR + err);
+                            });
+                    } catch (err) {
+                        console.error(strings.ERROR, err);
+                        res.status(400).send(strings.ERROR + err);
+                    }
                 }
             }
 
@@ -440,7 +440,7 @@ routes.route(routeNames.deleteAvatar).post(authJwt.verifyToken, (req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.error('[user.updateAvatar] User not found:', req.params.userId);
+                console.error('[user.deleteAvatar] User not found:', req.params.userId);
                 res.sendStatus(204);
             }
         })

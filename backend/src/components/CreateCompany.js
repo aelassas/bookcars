@@ -276,7 +276,7 @@ export default class CreateCompany extends Component {
                                     autoComplete="off"
                                 />
                                 <FormHelperText error={fullNameError}>
-                                    {fullNameError ? strings.INVALID_FULL_NAME : ''}
+                                    {fullNameError ? strings.INVALID_COMPANY_NAME : ''}
                                 </FormHelperText>
                             </FormControl>
                             <FormControl fullWidth margin="dense">

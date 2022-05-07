@@ -58,7 +58,7 @@ export const strings = new LocalizedStrings({
         PHONE: 'Téléphone',
         LOCATION: 'Localisation',
         BIO: 'Bio',
-        INVALID_FULL_NAME: 'Nom invalide',
+        INVALID_COMPANY_NAME: 'Cette société existe déjà.',
         /* Companies */
         LOADING: 'Chargement...',
         SEARCH_PLACEHOLDER: 'Rechercher...',
@@ -88,7 +88,7 @@ export const strings = new LocalizedStrings({
         DELETE_LOCATION: 'Êtes-vous sûr de vouloir supprimer ce lieu ?',
         /* Create Location */
         LOCATION_NAME: 'Lieu',
-        INVALID_LOCATION: 'Ce lieu existe dèjà.',
+        INVALID_LOCATION: 'Ce lieu existe déjà.',
         LOCATION_CREATED: 'Lieu créé avec succès.',
         /* Update Location */
         UPDATE_LOCATION: 'Modification du lieu',
@@ -99,11 +99,54 @@ export const strings = new LocalizedStrings({
         DELETE_EXTRA: 'Êtes-vous sûr de vouloir supprimer ce supplément ?',
         /* Create Extra */
         EXTRA: 'Supplément',
-        INVALID_EXTRA: 'Ce supplément existe dèjà.',
+        INVALID_EXTRA: 'Ce supplément existe déjà.',
         EXTRA_CREATED: 'Supplément créé avec succès.',
         /* Update Extra */
         UPDATE_EXTRA: 'Modification du supplément',
         EXTRA_UPDATED: 'Supplément modifié avec succès.',
+
+        /* Cars */
+        NEW_CAR: 'Nouvelle voiture',
+        DELETE_CAR: 'Êtes-vous sûr de vouloir supprimer cette voiture ?',
+        CAR_CURRENCY: ' DH/jour',
+        UPDATE: 'Modifier',
+        FUEL_POLICY: 'Politique carburant',
+        DIESEL: 'Diesel',
+        GASOLINE: 'Essence',
+        DIESEL_SHORT: 'D',
+        GASOLINE_SHORT: 'E',
+        GEARBOX_MANUAL: 'Manuelle',
+        GEARBOX_AUTOMATIC: 'Automatic',
+        GEARBOX_MANUAL_SHORT: 'M',
+        GEARBOX_AUTOMATIC_SHORT: 'A',
+        FUEL_POLICY_LIKE_TO_LIKE: 'Plein/Plein',
+        FUEL_POLICY_FREE_TANK: 'Plein inclus',
+        CAR_TYPE_TOOLTIP: 'Cette voiture a un moteur',
+        GEARBOX_TYPE_TOOLTIP: 'Cette voiture a une transmission',
+        SEATS_TOOLTIP_1: 'Cette voiture a ',
+        SEATS_TOOLTIP_2: 'sièges.',
+        DOORS_TOOLTIP_1: 'Cette voiture a ',
+        DOORS_TOOLTIP_2: 'portes.',
+        AIRCON_TOOLTIP: 'Cette voiture a de la climatisation.',
+        FUEL_POLICY_LIKE_TO_LIKE_TOOLTIP: 'Cette voiture est fournie avec du carburant dans le réservoir et doit être rendu avec la même quantité de carburant.',
+        FUEL_POLICY_FREE_TANK_TOOLTIP: 'Le prix inclus un plein de carburant.',
+        MILEAGE: 'Kilométrage',
+        MILEAGE_UNIT: 'KM/jour',
+        UNLIMITED: 'Illimité',
+        CANCELLATION: 'Annulation',
+        CANCELLATION_TOOLTIP: 'La réservation peut être annulée avant la date de commencement de la location.',
+        AMENDMENTS: 'Modification',
+        AMENDMENTS_TOOLTIP: 'La réservation peut être modifiée avant la date de commencement de la location.',
+        THEFT_PROTECTION: 'Prontection contre le vol',
+        THEFT_PROTECTION_TOOLTIP: 'La location peut inclure une protection contre le vol.',
+        COLLISION_DAMAGE_WAVER: 'Couverture en cas de collision',
+        COLLISION_DAMAGE_WAVER_TOOLTIP: 'La location peut inclure une couverture en cas de collision.',
+        FULL_INSURANCE: 'Assurance Tous Risques',
+        FULL_INSURANCE_TOOLTIP: 'La location peut inclure une couverture en cas de collision, de dommages et vol du véhicule.',
+        ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
+        INCLUDED: 'Inclus',
+        UNAVAILABLE: 'Indisponible'
+
     },
     en: {
         /* Common */
@@ -160,7 +203,7 @@ export const strings = new LocalizedStrings({
         PHONE: 'Phone',
         LOCATION: 'Location',
         BIO: 'Bio',
-        INVALID_FULL_NAME: 'Invalid name',
+        INVALID_COMPANY_NAME: 'This company already exists.',
         /* Companies */
         LOADING: 'Loading...',
         SEARCH_PLACEHOLDER: 'Search...',

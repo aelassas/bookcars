@@ -6,12 +6,12 @@ const EXPIRE_AT = parseInt(process.env.BC_TOKEN_EXPIRE_AT);
 const tokenSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        required: true,
+        required: [true, "can't be blank"],
         ref: 'User'
     },
     token: {
         type: String,
-        required: true
+        required: [true, "can't be blank"],
     },
     expireAt: {
         type: Date,

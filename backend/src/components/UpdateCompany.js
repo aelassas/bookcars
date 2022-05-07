@@ -198,7 +198,7 @@ export default class UpdateCompany extends Component {
                                         value={fullName}
                                     />
                                     <FormHelperText error={fullNameError}>
-                                        {fullNameError ? strings.INVALID_FULL_NAME : ''}
+                                        {fullNameError ? strings.INVALID_COMPANY_NAME : ''}
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
