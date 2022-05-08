@@ -176,7 +176,7 @@ export default class Helper {
         else if (amendments === 0) {
             return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`;
         } else {
-            return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${amendments} ${strings.CAR_CURRENCY}`;
+            return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${amendments} ${strings.CURRENCY}`;
         }
     }
 
@@ -187,7 +187,7 @@ export default class Helper {
         else if (cancellation === 0) {
             return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`;
         } else {
-            return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${cancellation} ${strings.CAR_CURRENCY}`;
+            return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${cancellation} ${strings.CURRENCY}`;
         }
     }
 

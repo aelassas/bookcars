@@ -108,6 +108,7 @@ export const strings = new LocalizedStrings({
         /* Cars */
         NEW_CAR: 'Nouvelle voiture',
         DELETE_CAR: 'Êtes-vous sûr de vouloir supprimer cette voiture ?',
+        CURRENCY: ' DH',
         CAR_CURRENCY: ' DH/jour',
         UPDATE: 'Modifier',
         FUEL_POLICY: 'Politique carburant',
@@ -135,7 +136,7 @@ export const strings = new LocalizedStrings({
         UNLIMITED: 'Illimité',
         CANCELLATION: 'Annulation',
         CANCELLATION_TOOLTIP: 'La réservation peut être annulée avant la date de commencement de la location.',
-        AMENDMENTS: 'Modification',
+        AMENDMENTS: 'Modifications',
         AMENDMENTS_TOOLTIP: 'La réservation peut être modifiée avant la date de commencement de la location.',
         THEFT_PROTECTION: 'Prontection contre le vol',
         THEFT_PROTECTION_TOOLTIP: 'La location peut inclure une protection contre le vol.',
