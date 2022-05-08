@@ -5,10 +5,11 @@ const Env = {
     API_HOST: process.env.REACT_APP_BC_API_HOST,
     LANGUAGES: ['fr', 'en'],
     DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE,
-    USER_TYPE: {
+    RECORD_TYPE: {
         ADMIN: 'admin',
         COMPANY: 'company',
-        USER: 'user'
+        USER: 'user',
+        CAR: 'car'
     },
     CAR_TYPE: {
         DIESEL: 'diesel',

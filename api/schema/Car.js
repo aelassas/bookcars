@@ -4,6 +4,11 @@ import Env from '../config/env.config.js';
 const Schema = mongoose.Schema;
 
 const carSchema = new Schema({
+    name: {
+        type: String,
+        required: [true, "can't be blank"],
+        index: true
+    },
     company: {
         type: Schema.Types.ObjectId,
         required: [true, "can't be blank"],
@@ -13,11 +18,6 @@ const carSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'Location',
         validate: v => Array.isArray(v) && v.length > 0
-    },
-    name: {
-        type: String,
-        required: [true, "can't be blank"],
-        index: true
     },
     isAvailable: {
         type: Boolean,

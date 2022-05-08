@@ -38,6 +38,10 @@ export default class CarService {
         return axios.post(`${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
+    static deleteTempImage(avatar) {
+        return axios.post(`${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(avatar)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
     static getCar(id) {
         return axios.get(`${Env.API_HOST}/api/get-car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }

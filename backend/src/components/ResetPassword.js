@@ -161,7 +161,7 @@ export default class ResetPassword extends Component {
                 if (id === user._id) {
                     this.setState({ userId: user._id, visible: true, isLoading: false });
                 } else {
-                    if (user.type === Env.USER_TYPE.ADMIN) {
+                    if (user.type === Env.RECORD_TYPE.ADMIN) {
                         UserService.getUser(id)
                             .then(_user => {
                                 if (_user) {

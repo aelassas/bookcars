@@ -165,7 +165,7 @@ export default class SignUp extends Component {
                     password: this.state.password,
                     fullName: this.state.fullName,
                     language: UserService.getLanguage(),
-                    type: Env.USER_TYPE.ADMIN
+                    type: Env.RECORD_TYPE.ADMIN
                 };
 
                 UserService.signup(data).then(registerStatus => {

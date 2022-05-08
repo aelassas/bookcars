@@ -225,6 +225,19 @@ routes.route(routeNames.deleteImage).post(authJwt.verifyToken, (req, res) => {
         });
 });
 
+routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) => {
+    try {
+        const avatar = path.join(CDN_TEMP, req.params.avatar);
+        if (fs.existsSync(avatar)) {
+            fs.unlinkSync(avatar);
+        }
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        res.status(400).send(strings.ERROR + err);
+    }
+});
+
 routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
         .then(car => {

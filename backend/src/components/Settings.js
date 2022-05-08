@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import UserService from '../services/UserService';
 import Error from '../elements/Error';
@@ -153,9 +152,9 @@ export default class Settings extends Component {
                         <Paper className="settings-form settings-form-wrapper" elevation={10}>
                             <form onSubmit={this.handleSubmit}>
                                 <Avatar
-                                    type={Env.USER_TYPE.USER}
+                                    type={user.type}
                                     mode='update'
-                                    user={user}
+                                    record={user}
                                     size='large'
                                     readonly={false}
                                     onBeforeUpload={this.onBeforeUpload}

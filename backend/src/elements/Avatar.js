@@ -3,6 +3,7 @@ import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import Helper from '../common/Helper';
 import UserService from '../services/UserService';
+import CarService from '../services/CarService';
 import { toast } from 'react-toastify';
 import {
     Button,
@@ -19,12 +20,13 @@ import {
     PhotoCamera as PhotoCameraIcon,
     BrokenImageTwoTone as DeleteIcon,
     CorporateFare as CompanyIcon,
+    DirectionsCar as CarIcon
 } from '@mui/icons-material';
 
 export const Avatar = (props) => {
     const [error, setError] = useState(false);
     const [open, setOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [record, setRecord] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -67,55 +69,110 @@ export const Avatar = (props) => {
         const file = e.target.files[0];
 
         reader.onloadend = () => {
-            if (user && props.mode === 'update') {
-                const updateAvatar = _ => {
-                    const { _id } = user;
+            if (props.type === Env.RECORD_TYPE.ADMIN
+                || props.type === Env.RECORD_TYPE.COMPANY) {
+                if (props.mode === 'create') {
+                    const createAvatar = _ => {
+                        UserService.createAvatar(file)
+                            .then(data => {
+                                setAvatar(data);
 
-                    UserService.updateAvatar(_id, file)
-                        .then(status => {
-                            if (status === 200) {
-                                UserService.getUser(_id).then(user => {
-                                    if (user) {
-                                        setUser(user);
-                                        setAvatar(user.avatar);
-
-                                        if (props.onChange) {
-                                            props.onChange(user);
-                                        }
-                                    } else {
-                                        toast(strings.GENERIC_ERROR, { type: 'error' });
-                                    }
-                                }).catch(err => {
-                                    toast(strings.GENERIC_ERROR, { type: 'error' });
-                                });
-                            } else {
+                                if (props.onChange) {
+                                    props.onChange(data);
+                                }
+                            })
+                            .catch(err => {
                                 toast(strings.GENERIC_ERROR, { type: 'error' });
-                            }
-                        })
-                        .catch(err => {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
-                        });
-                };
+                            });
+                    };
 
-                validate(file, updateAvatar);
+                    validate(file, createAvatar);
+                } else if (record && props.mode === 'update') {
 
-            } else if (!user && props.mode === 'create') {
-                const createAvatar = _ => {
-                    UserService.createAvatar(file)
-                        .then(data => {
-                            setAvatar(data);
+                    const updateAvatar = _ => {
+                        const { _id } = record;
 
-                            if (props.onChange) {
-                                props.onChange(data);
-                            }
-                        })
-                        .catch(err => {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
-                        });
-                };
+                        UserService.updateAvatar(_id, file)
+                            .then(status => {
+                                if (status === 200) {
+                                    UserService.getUser(_id).then(user => {
+                                        if (user) {
+                                            setRecord(user);
+                                            setAvatar(user.avatar);
 
-                validate(file, createAvatar);
+                                            if (props.onChange) {
+                                                props.onChange(user);
+                                            }
+                                        } else {
+                                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                                        }
+                                    }).catch(err => {
+                                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    });
+                                } else {
+                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                }
+                            })
+                            .catch(err => {
+                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                            });
+                    };
+
+                    validate(file, updateAvatar);
+
+                }
+            } else if (props.type === Env.RECORD_TYPE.CAR) {
+                if (props.mode === 'create') {
+                    const createAvatar = _ => {
+                        CarService.createImage(file)
+                            .then(data => {
+                                setAvatar(data);
+
+                                if (props.onChange) {
+                                    props.onChange(data);
+                                }
+                            })
+                            .catch(err => {
+                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                            });
+                    };
+
+                    validate(file, createAvatar);
+                } else if (props.mode === 'update') {
+                    
+                    const updateAvatar = _ => {
+                        const { _id } = record;
+
+                        CarService.updateImage(_id, file)
+                            .then(status => {
+                                if (status === 200) {
+                                    CarService.getCar(_id).then(car => {
+                                        if (car) {
+                                            setRecord(car);
+                                            setAvatar(car.image);
+
+                                            if (props.onChange) {
+                                                props.onChange(car);
+                                            }
+                                        } else {
+                                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                                        }
+                                    }).catch(err => {
+                                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    });
+                                } else {
+                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                }
+                            })
+                            .catch(err => {
+                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                            });
+                    };
+
+                    validate(file, updateAvatar);
+                }
             }
+
         };
 
         reader.readAsDataURL(file);
@@ -148,52 +205,101 @@ export const Avatar = (props) => {
 
     const handleDelete = (e) => {
 
-        if (user && props.mode === 'update') {
-            const { _id } = user;
-            UserService.deleteAvatar(_id)
-                .then(status => {
-                    if (status === 200) {
-                        UserService.getUser(_id).then(user => {
-                            if (user) {
-                                setUser(user);
-                                setAvatar(null);
-                                if (props.onChange) {
-                                    props.onChange(user);
+        if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY) {
+            if (record && props.mode === 'update') {
+                const { _id } = record;
+                UserService.deleteAvatar(_id)
+                    .then(status => {
+                        if (status === 200) {
+                            UserService.getUser(_id).then(user => {
+                                if (user) {
+                                    setRecord(user);
+                                    setAvatar(null);
+                                    if (props.onChange) {
+                                        props.onChange(user);
+                                    }
+                                    closeDialog();
+                                } else {
+                                    toast(strings.GENERIC_ERROR, { type: 'error' });
                                 }
-                                closeDialog();
-                            } else {
+                            }).catch(err => {
                                 toast(strings.GENERIC_ERROR, { type: 'error' });
-                            }
-                        }).catch(err => {
+                            });
+                        } else {
                             toast(strings.GENERIC_ERROR, { type: 'error' });
-                        });
-                    } else {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
-                    }
-                })
-                .catch(err => {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
-                });
-        } else if (!user && props.mode === 'create') {
-            UserService.deleteTempAvatar(avatar)
-                .then(status => {
-                    if (status === 200) {
-                        setAvatar(null);
-                        if (props.onChange) {
-                            props.onChange(null);
                         }
-                        closeDialog();
-                    } else {
+                    })
+                    .catch(err => {
                         toast(strings.GENERIC_ERROR, { type: 'error' });
-                    }
-                })
-                .catch(err => {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
-                });
+                    });
+            } else if (!record && props.mode === 'create') {
+                UserService.deleteTempAvatar(avatar)
+                    .then(status => {
+                        if (status === 200) {
+                            setAvatar(null);
+                            if (props.onChange) {
+                                props.onChange(null);
+                            }
+                            closeDialog();
+                        } else {
+                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                        }
+                    })
+                    .catch(err => {
+                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                    });
+            }
+        } else if (props.type === Env.RECORD_TYPE.CAR) {
+            if (!record && props.mode === 'create') {
+                CarService.deleteTempImage(avatar)
+                    .then(status => {
+                        if (status === 200) {
+                            setAvatar(null);
+                            if (props.onChange) {
+                                props.onChange(null);
+                            }
+                            closeDialog();
+                        } else {
+                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                        }
+                    })
+                    .catch(err => {
+                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                    });
+            } else if (record && props.mode === 'update') {
+                const { _id } = record;
+                CarService.deleteImage(_id)
+                    .then(status => {
+                        if (status === 200) {
+                            UserService.getUser(_id).then(car => {
+                                if (car) {
+                                    setRecord(car);
+                                    setAvatar(null);
+                                    if (props.onChange) {
+                                        props.onChange(car);
+                                    }
+                                    closeDialog();
+                                } else {
+                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                }
+                            }).catch(err => {
+                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                            });
+                        } else {
+                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                        }
+                    })
+                    .catch(err => {
+                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                    });
+            }
         }
     };
 
     const cdn = _ => {
+        if (props.type === Env.RECORD_TYPE.CAR) {
+            return props.mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS;
+        }
         return props.mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS;
     };
 
@@ -203,9 +309,13 @@ export const Avatar = (props) => {
 
         const currentUser = UserService.getCurrentUser();
         if (currentUser) {
-            if (props.user) {
-                setUser(props.user);
-                setAvatar(props.user.avatar);
+            if (props.record) {
+                setRecord(props.record);
+                if (props.type === Env.RECORD_TYPE.CAR) {
+                    setAvatar(props.record.image);
+                } else {
+                    setAvatar(props.record.avatar);
+                }
                 setIsLoading(false);
             } else {
                 setIsLoading(false);
@@ -213,7 +323,7 @@ export const Avatar = (props) => {
         } else {
             setError(true);
         }
-    }, [props.user]);
+    }, [props.record, props.type]);
 
     const { size, readonly, className } = props;
 
@@ -222,13 +332,17 @@ export const Avatar = (props) => {
             <div className={className}>
                 {avatar ?
                     readonly ?
-                        (props.type === Env.USER_TYPE.COMPANY ?
-                            <img className='company-avatar-img' src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)} alt={user && user.fullName} />
+                        props.type === Env.RECORD_TYPE.CAR ?
+                            <img className='car-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
                             :
-                            <MaterialAvatar
-                                src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
-                                className={size ? 'avatar-' + size : 'avatar'} />
-                        )
+                            (props.type === Env.RECORD_TYPE.COMPANY ?
+                                <img className='company-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                :
+                                <MaterialAvatar
+                                    src={Helper.joinURL(cdn(), avatar)}
+                                    className={size ? 'avatar-' + size : 'avatar'}
+                                />
+                            )
                         :
                         <Badge
                             overlap="circular"
@@ -248,27 +362,38 @@ export const Avatar = (props) => {
                                     vertical: 'bottom',
                                     horizontal: 'right',
                                 }}
-                                className={props.type === Env.USER_TYPE.COMPANY && 'company-avatar'}
+                                className={props.type === Env.RECORD_TYPE.COMPANY ? 'company-avatar' : null}
                                 badgeContent={
                                     <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                                         <PhotoCameraIcon className='avatar-action-icon' />
                                     </Box>
                                 }
                             >
-                                {props.type === Env.USER_TYPE.COMPANY ?
-                                    <img className='company-avatar-img' src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)} alt={user && user.fullName} />
-                                    :
-                                    <MaterialAvatar
-                                        src={avatar.startsWith('http') ? avatar : Helper.joinURL(cdn(), avatar)}
-                                        className={size ? 'avatar-' + size : 'avatar'} />
+                                {
+                                    props.type === Env.RECORD_TYPE.CAR ?
+                                        <img className='car-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                                        :
+                                        (props.type === Env.RECORD_TYPE.COMPANY ?
+                                            <img className='company-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                            :
+                                            <MaterialAvatar
+                                                src={Helper.joinURL(cdn(), avatar)}
+                                                className={size ? 'avatar-' + size : 'avatar'} />
+                                        )
                                 }
                             </Badge>
                         </Badge>
                     :
                     readonly ?
-                        props.type === Env.USER_TYPE.COMPANY ?
-                            <CompanyIcon className='company-avatar-img' color={props.color || 'inherit'} />
-                            : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                        (props.type === Env.RECORD_TYPE.CAR ?
+                            <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                            :
+                            (
+                                props.type === Env.RECORD_TYPE.COMPANY ?
+                                    <CompanyIcon className='company-avatar-img' color={props.color || 'inherit'} />
+                                    : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                            )
+                        )
                         :
                         <Badge
                             overlap="circular"
@@ -289,9 +414,16 @@ export const Avatar = (props) => {
                                     </Box>
                                 }
                             >
-                                {props.type === Env.USER_TYPE.COMPANY ?
-                                    <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
-                                    : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />}
+                                {
+                                    props.type === Env.RECORD_TYPE.CAR ?
+                                        <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                        :
+                                        (
+                                            props.type === Env.RECORD_TYPE.COMPANY ?
+                                                <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                                : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                        )
+                                }
                             </Badge>
                         </Badge>
                 }

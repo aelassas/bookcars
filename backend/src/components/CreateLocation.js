@@ -116,11 +116,7 @@ export default class CreateLocation extends Component {
                             </div>
 
                             <div className="form-error">
-                                {nameError ?
-                                    <div>
-                                        {nameError && <Error message={strings.INVALID_LOCATION} />}
-                                    </div>
-                                    : null}
+                                {nameError && <Error message={strings.INVALID_LOCATION} />}
                             </div>
                         </form>
 

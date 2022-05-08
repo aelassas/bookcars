@@ -184,7 +184,7 @@ export default class CreateCompany extends Component {
                     password: this.state.password,
                     fullName: this.state.fullName,
                     language: UserService.getLanguage(),
-                    type: Env.USER_TYPE.COMPANY,
+                    type: Env.RECORD_TYPE.COMPANY,
                     avatar: this.state.avatar
                 };
 
@@ -294,9 +294,9 @@ export default class CreateCompany extends Component {
                         <h1 className="company-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <Avatar
-                                type={Env.USER_TYPE.COMPANY}
+                                type={Env.RECORD_TYPE.COMPANY}
                                 mode='create'
-                                user={null}
+                                record={null}
                                 size='large'
                                 readonly={false}
                                 onBeforeUpload={this.onBeforeUpload}

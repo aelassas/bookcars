@@ -157,8 +157,11 @@ export const strings = new LocalizedStrings({
 
         /* Create Company */
         AVATAR_MANDATORY: "L'image est obligatoire.",
-        AVATAR_SIZE_ERROR: "L'image doit être au format 62x24"
+        AVATAR_SIZE_ERROR: "L'image doit être au format 62x24",
 
+        /* Create Car */
+        NAME: 'Nom',
+        CAR_IMAGE_SIZE_ERROR: "L'image doit être au format 240x160",
     },
     en: {
         /* Common */

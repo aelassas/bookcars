@@ -106,7 +106,12 @@
 
 .company-avatar-img {
     width: 62px !important;
-    height: fit-content;
+    height: 24px !important;
+}
+
+.car-avatar-img {
+    width: 240px !important;
+    height: 160px !important;
 }
 
 .company-avatar {

@@ -57,7 +57,7 @@ export default class Master extends Component {
                                 return;
                             }
 
-                            if (this.props.admin && user.type !== Env.USER_TYPE.ADMIN) {
+                            if (this.props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
                                 this.setState({ user, unauthorized: true, isLoading: false });
                                 return;
                             }
@@ -72,7 +72,7 @@ export default class Master extends Component {
                         }
                     }).catch(_ => {
                         this.error();
-                    });;
+                    });
                 } else {
                     UserService.signout();
                 }

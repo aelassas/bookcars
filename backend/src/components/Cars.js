@@ -207,7 +207,7 @@ export default class Cars extends Component {
 
     render() {
         const { user, companies, allCompaniesChecked, cars, isLoading, openDeleteDialog } = this.state;
-        const isAdmin = user && user.type === Env.USER_TYPE.ADMIN;
+        const isAdmin = user && user.type === Env.RECORD_TYPE.ADMIN;
         const fr = user && user.language === 'fr';
 
         return (

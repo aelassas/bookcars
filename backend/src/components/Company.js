@@ -115,7 +115,7 @@ export default class Company extends Component {
 
     render() {
         const { visible, isLoading, error, noMatch, user, company, openDeleteDialog } = this.state;
-        const edit = (user && company) && (user.type === Env.USER_TYPE.ADMIN || user._id === company._id);
+        const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
@@ -123,8 +123,8 @@ export default class Company extends Component {
                     <div className='company'>
                         <div className='col-1'>
                             <Avatar
-                                user={company}
-                                type={Env.USER_TYPE.COMPANY}
+                                record={company}
+                                type={Env.RECORD_TYPE.COMPANY}
                                 mode='update'
                                 size='large'
                                 onBeforeUpload={this.onBeforeUpload}

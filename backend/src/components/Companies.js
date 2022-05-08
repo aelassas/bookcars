@@ -149,8 +149,8 @@ export default class Companies extends Component {
                                         <div className='company-item'>
                                             <div>
                                                 <Avatar
-                                                    user={company}
-                                                    type={Env.USER_TYPE.COMPANY}
+                                                    record={company}
+                                                    type={Env.RECORD_TYPE.COMPANY}
                                                     readonly
                                                     className='company-item-avatar'
                                                 />

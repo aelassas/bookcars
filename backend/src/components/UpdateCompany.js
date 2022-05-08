@@ -215,9 +215,9 @@ export default class UpdateCompany extends Component {
                         <Paper className="company-form-update company-form-wrapper" elevation={10}>
                             <form onSubmit={this.handleSubmit}>
                                 <Avatar
-                                    type={Env.USER_TYPE.COMPANY}
+                                    type={Env.RECORD_TYPE.COMPANY}
                                     mode='update'
-                                    user={company}
+                                    record={company}
                                     size='large'
                                     readonly={false}
                                     onBeforeUpload={this.onBeforeUpload}

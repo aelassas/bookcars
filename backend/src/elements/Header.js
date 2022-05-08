@@ -257,11 +257,8 @@ export default function Header(props) {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleOnSettingsClick}>
-                {/* {
-                    <Avatar loggedUser={props.user} user={props.user} size="small" className="header-action" readonly />
-                } */}
                 <SettingsIcon className="header-action" />
-                {strings.SETTINGS}
+                <Typography>{strings.SETTINGS}</Typography>
             </MenuItem>
             <MenuItem onClick={handleSignout}>{
                 <SignoutIcon className="header-action" />}
@@ -283,7 +280,7 @@ export default function Header(props) {
         >
             <MenuItem onClick={handleOnSettingsClick}>
                 {/* <IconButton color="inherit">
-                    <Avatar user={props.user} size="small" readonly />
+                    <Avatar record={props.user} size="small" readonly />
                 </IconButton> */}
                 <SettingsIcon className="header-action" />
                 <p>{strings.SETTINGS}</p>
@@ -400,7 +397,7 @@ export default function Header(props) {
                             onClick={handleAccountMenuOpen}
                             color="inherit"
                         >
-                            <Avatar user={props.user} type={props.user.type} size="small" readonly />
+                            <Avatar record={props.user} type={props.user.type} size="small" readonly />
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
