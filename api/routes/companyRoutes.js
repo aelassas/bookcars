@@ -59,7 +59,7 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
         } else {
             res.sendStatus(200);
         }
-    })
+    });
 });
 
 // Get Company Router

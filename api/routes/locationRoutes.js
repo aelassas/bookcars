@@ -56,7 +56,15 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
     const id = req.params.id;
-    res.sendStatus(200);
+
+    Location.deleteOne({ _id: id }, (err, response) => {
+        if (err) {
+            console.error(`[location.delete]  ${strings.DB_ERROR} ${req.params.id}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        } else {
+            res.sendStatus(200);
+        }
+    });
 });
 
 routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
@@ -75,19 +83,51 @@ routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.getLocations).get(authJwt.verifyToken, (req, res) => {
-    const getLocations = (keyword, page, size) => {
-        const locations = [];
-        for (let _id = (page - 1) * size; _id < page * size; _id++) {
-            const name = `Location ${_id}`;
-            if (!keyword || keyword === '' || name.includes(keyword)) {
-                locations.push({ _id, name });
-            }
-        }
-        return locations;
-    };
-    const locations = getLocations(req.query.s, req.params.page, req.params.size);
-    res.json(locations);
+routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
+    // const getLocations = (keyword, page, size) => {
+    //     const locations = [];
+    //     for (let _id = (page - 1) * size; _id < page * size; _id++) {
+    //         const name = `Location ${_id}`;
+    //         if (!keyword || keyword === '' || name.includes(keyword)) {
+    //             locations.push({ _id, name });
+    //         }
+    //     }
+    //     return locations;
+    // };
+    // const locations = getLocations(req.query.s, req.params.page, req.params.size);
+    // res.json(locations);
+
+    // for (let i = 1; i < 60; i++) {
+    //     const name = `Location ${i}`;
+    //     await new Location({ name }).save();
+    // }
+
+    // Location.deleteMany({ name: { $regex: 'location', $options: 'i' } }, (err, response) => {
+    //     if (err) {
+    //         console.error(strings.DB_ERROR + err);
+    //         res.status(400).send(strings.DB_ERROR + err);
+    //     }
+    // });
+
+    try {
+        const page = parseInt(req.params.page);
+        const size = parseInt(req.params.size);
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+
+        const locations = await Location.aggregate([
+            { $match: { name: { $regex: keyword, $options: options } } },
+            { $sort: { name: 1 } },
+            { $skip: ((page - 1) * size) },
+            { $limit: size }
+        ]);
+
+        res.json(locations);
+    } catch (err) {
+        console.error(`[location.getLocations]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
+
 });
 
 
