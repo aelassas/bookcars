@@ -13,7 +13,8 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions
+    DialogActions,
+    Tooltip
 } from '@mui/material';
 import {
     AccountCircle,
@@ -139,7 +140,7 @@ export const Avatar = (props) => {
 
                     validate(file, createAvatar);
                 } else if (props.mode === 'update') {
-                    
+
                     const updateAvatar = _ => {
                         const { _id } = record;
 
@@ -327,23 +328,33 @@ export const Avatar = (props) => {
 
     const { size, readonly, className } = props;
 
+    const companyImageStyle = {
+        width: Env.COMPANY_IMAGE_WIDTH,
+        height: Env.COMPANY_IMAGE_HEIGHT
+    };
+
+    const carImageStyle = {
+        width: Env.CAR_IMAGE_WIDTH,
+        height: Env.CAR_IMAGE_HEIGHT
+    };
+
     return (
         !error && !isLoading ?
             <div className={className}>
                 {avatar ?
                     readonly ?
                         props.type === Env.RECORD_TYPE.CAR ?
-                            <img className='car-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                            <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
                             :
                             (props.type === Env.RECORD_TYPE.COMPANY ?
-                                <img className='company-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
                                 :
                                 <MaterialAvatar
                                     src={Helper.joinURL(cdn(), avatar)}
                                     className={size ? 'avatar-' + size : 'avatar'}
                                 />
                             )
-                        :
+                        : //!readonly
                         <Badge
                             overlap="circular"
                             anchorOrigin={{
@@ -351,9 +362,11 @@ export const Avatar = (props) => {
                                 horizontal: 'right',
                             }}
                             badgeContent={
-                                <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
-                                    <DeleteIcon className='avatar-action-icon' />
-                                </Box>
+                                <Tooltip title={strings.DELETE_IMAGE}>
+                                    <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
+                                        <DeleteIcon className='avatar-action-icon' />
+                                    </Box>
+                                </Tooltip>
                             }
                         >
                             <Badge
@@ -364,17 +377,19 @@ export const Avatar = (props) => {
                                 }}
                                 className={props.type === Env.RECORD_TYPE.COMPANY ? 'company-avatar' : null}
                                 badgeContent={
-                                    <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                        <PhotoCameraIcon className='avatar-action-icon' />
-                                    </Box>
+                                    <Tooltip title={strings.UPLOAD_IMAGE}>
+                                        <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                                            <PhotoCameraIcon className='avatar-action-icon' />
+                                        </Box>
+                                    </Tooltip>
                                 }
                             >
                                 {
                                     props.type === Env.RECORD_TYPE.CAR ?
-                                        <img className='car-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                                        <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
                                         :
                                         (props.type === Env.RECORD_TYPE.COMPANY ?
-                                            <img className='company-avatar-img' src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                            <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
                                             :
                                             <MaterialAvatar
                                                 src={Helper.joinURL(cdn(), avatar)}
@@ -383,18 +398,18 @@ export const Avatar = (props) => {
                                 }
                             </Badge>
                         </Badge>
-                    :
+                    : // !avatar
                     readonly ?
                         (props.type === Env.RECORD_TYPE.CAR ?
-                            <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                            <CarIcon style={carImageStyle} color={props.color || 'inherit'} />
                             :
                             (
                                 props.type === Env.RECORD_TYPE.COMPANY ?
-                                    <CompanyIcon className='company-avatar-img' color={props.color || 'inherit'} />
+                                    <CompanyIcon style={companyImageStyle} color={props.color || 'inherit'} />
                                     : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
                             )
                         )
-                        :
+                        ://!readonly
                         <Badge
                             overlap="circular"
                             anchorOrigin={{
@@ -409,9 +424,11 @@ export const Avatar = (props) => {
                                     horizontal: 'right',
                                 }}
                                 badgeContent={
-                                    <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                        <PhotoCameraIcon className='avatar-action-icon' />
-                                    </Box>
+                                    <Tooltip title={strings.UPLOAD_IMAGE}>
+                                        <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                                            <PhotoCameraIcon className='avatar-action-icon' />
+                                        </Box>
+                                    </Tooltip>
                                 }
                             >
                                 {

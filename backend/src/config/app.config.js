@@ -68,7 +68,7 @@ export const strings = new LocalizedStrings({
         DELETE: 'Supprimer',
         /* Update Company */
         SAVE: 'Sauvegarder',
-        DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo de profil ?',
+        DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo ?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
         CURRENT_PASSWORD: 'Mot de passe actuel',
@@ -157,11 +157,13 @@ export const strings = new LocalizedStrings({
 
         /* Create Company */
         AVATAR_MANDATORY: "L'image est obligatoire.",
-        AVATAR_SIZE_ERROR: "L'image doit être au format 62x24",
+        AVATAR_SIZE_ERROR: `L'image doit être au format ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
 
         /* Create Car */
         NAME: 'Nom',
-        CAR_IMAGE_SIZE_ERROR: "L'image doit être au format 240x160",
+        CAR_IMAGE_SIZE_ERROR: `L'image doit être au format ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
+        DELETE_IMAGE: "Supprimer l'image",
+        UPLOAD_IMAGE: "Charger une image",
     },
     en: {
         /* Common */
@@ -228,7 +230,7 @@ export const strings = new LocalizedStrings({
         DELETE: 'Delete',
         /* Update Company */
         SAVE: 'Save',
-        DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the profile picture?',
+        DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the picture?',
         /* Reset Password */
         PASSWORD_RESET_HEADING: 'Password Reset',
         CURRENT_PASSWORD: 'Current Password',

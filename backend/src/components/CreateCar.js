@@ -100,8 +100,8 @@ export default class CreateCar extends Component {
                                 onValidate={this.onAvatarValidate}
                                 color='disabled'
                                 className='avatar-ctn'
-                                width={240}
-                                height={160} />
+                                width={Env.CAR_IMAGE_WIDTH}
+                                height={Env.CAR_IMAGE_HEIGHT} />
 
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{strings.NAME}</InputLabel>

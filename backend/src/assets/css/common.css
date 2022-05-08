@@ -104,27 +104,12 @@
     margin-left: 8px;
 }
 
-.company-avatar-img {
-    width: 62px !important;
-    height: 24px !important;
-}
-
-.car-avatar-img {
-    width: 240px !important;
-    height: 160px !important;
-}
-
 .company-avatar {
     width: 150px;
     height: 75px;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.company-avatar img {
-    width: fit-content;
-    height: fit-content;
 }
 
 .avatar-ctn {

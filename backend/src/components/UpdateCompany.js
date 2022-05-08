@@ -225,8 +225,8 @@ export default class UpdateCompany extends Component {
                                     onValidate={this.onAvatarValidate}
                                     color='disabled'
                                     className='avatar-ctn'
-                                    width={62}
-                                    height={24} />
+                                    width={Env.COMPANY_IMAGE_WIDTH}
+                                    height={Env.COMPANY_IMAGE_HEIGHT} />
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
                                     <Input
