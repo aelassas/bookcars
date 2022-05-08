@@ -51,7 +51,15 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
 // Delete Company Router
 routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
     const id = req.params.id;
-    res.sendStatus(200);
+
+    User.deleteOne({ _id: id }, (err, response) => {
+        if (err) {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        } else {
+            res.sendStatus(200);
+        }
+    })
 });
 
 // Get Company Router
@@ -75,12 +83,26 @@ routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
 routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
     const keyword = escapeStringRegexp(req.query.s || '');
     const options = 'i';
+
     User.find({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: keyword, $options: options } })
         .then(companies => res.json(companies))
         .catch(err => {
             console.error(strings.DB_ERROR, err);
             res.status(400).send(strings.DB_ERROR + err);
         });
+
+    // const getCompanies = (keyword, page, size) => {
+    //     const companies = [];
+    //     for (let _id = (page - 1) * size; _id < page * size; _id++) {
+    //         const fullName = `Company ${_id}`;
+    //         if (!keyword || keyword === '' || fullName.includes(keyword)) {
+    //             companies.push({ _id, fullName });
+    //         }
+    //     }
+    //     return companies;
+    // };
+    // const companies = getCompanies(req.query.s, 1, 13);
+    // res.json(companies);
 });
 
 

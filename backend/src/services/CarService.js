@@ -42,8 +42,9 @@ export default class CarService {
         return axios.get(`${Env.API_HOST}/api/get-car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
-    static getCars(keyword, page, size) {
-        return axios.get(`${Env.API_HOST}/api/get-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+    static getCars(keyword, data, page, size) {
+        return axios.post(`${Env.API_HOST}/api/get-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader(), }
+        ).then(res => res.data);
     }
 
 }

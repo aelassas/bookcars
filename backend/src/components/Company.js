@@ -131,7 +131,7 @@ export default class Company extends Component {
                                 onChange={this.onAvatarChange}
                                 readonly={!edit}
                                 color='disabled'
-                                className='company-avatar-sec' />
+                                className='company-avatar' />
                             <Typography variant="h4" className="company-name">{company.fullName}</Typography>
                             {company.bio && company.bio !== '' && <Typography variant="h6" className="company-info">{company.bio}</Typography>}
                             {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}

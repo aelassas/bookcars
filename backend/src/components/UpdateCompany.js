@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import CompanyService from '../services/CompanyService';
-import Error from './Error';
+import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
@@ -34,7 +34,10 @@ export default class UpdateCompany extends Component {
             visible: false,
             isLoading: false,
             fullNameError: false,
-            noMatch: false
+            noMatch: false,
+            avatar: null,
+            avatarError: false,
+            avatarSizeError: false
         };
     }
 
@@ -83,6 +86,15 @@ export default class UpdateCompany extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
+        if (!this.state.avatar) {
+            this.setState({
+                avatarError: true,
+                avatarSizeError: false,
+                error: false
+            });
+            return;
+        }
+
         const { company, fullName, phone, location, bio } = this.state;
 
         const data = {
@@ -114,8 +126,32 @@ export default class UpdateCompany extends Component {
         this.setState({ isLoading: true });
     };
 
-    onAvatarChange = _ => {
-        this.setState({ isLoading: false });
+    onAvatarChange = (company) => {
+        if (company.avatar) {
+            this.setState({ avatarError: false });
+        }
+        this.setState({ avatar: company.avatar, isLoading: false });
+    };
+
+    onAvatarValidate = (valid) => {
+        if (!valid) {
+            this.setState({
+                avatarSizeError: true,
+                avatarError: false,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false,
+                isLoading: false,
+            });
+        } else {
+            this.setState({
+                avatarSizeError: false,
+                avatarError: false,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false,
+            });
+        }
     };
 
     onLoad = (user) => {
@@ -129,6 +165,7 @@ export default class UpdateCompany extends Component {
                             if (company) {
                                 this.setState({
                                     company,
+                                    avatar: company.avatar,
                                     fullName: company.fullName,
                                     phone: company.phone,
                                     location: company.location,
@@ -166,7 +203,9 @@ export default class UpdateCompany extends Component {
             fullNameError,
             visible,
             isLoading,
-            noMatch
+            noMatch,
+            avatarError,
+            avatarSizeError
         } = this.state;
 
         return (
@@ -183,8 +222,11 @@ export default class UpdateCompany extends Component {
                                     readonly={false}
                                     onBeforeUpload={this.onBeforeUpload}
                                     onChange={this.onAvatarChange}
+                                    onValidate={this.onAvatarValidate}
                                     color='disabled'
-                                    className='avatar-ctn' />
+                                    className='avatar-ctn'
+                                    width={62}
+                                    height={24} />
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
                                     <Input
@@ -263,11 +305,20 @@ export default class UpdateCompany extends Component {
                                         {strings.CANCEL}
                                     </Button>
                                 </div>
+
+                                <div className="form-error">
+                                    {(error || avatarError || avatarSizeError) ?
+                                        <div>
+                                            {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
+                                            {avatarError && <Error message={strings.AVATAR_MANDATORY} />}
+                                            {avatarSizeError && <Error message={strings.AVATAR_SIZE_ERROR} />}
+                                        </div>
+                                        : null}
+                                </div>
                             </form>
                         </Paper>
                     </div>}
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
-                {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>
         );

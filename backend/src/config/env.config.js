@@ -30,6 +30,8 @@ const Env = {
     CDN_TEMP_CARS: process.env.REACT_APP_BC_CDN_TEMP_CARS,
     PAGE_FETCH_OFFSET: 30,
     PAGE_TOP_OFFSET: 65,
+    COMPANY_AVATAR_WIDTH: 62,
+    COMPANY_AVATAR_HEIGHT: 24
 };
 
 export default Env;

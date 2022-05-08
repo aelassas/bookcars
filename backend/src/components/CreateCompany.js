@@ -38,7 +38,9 @@ export default class CreateCompany extends Component {
             visible: false,
             isLoading: false,
             fullNameError: false,
-            avatar: null
+            avatar: null,
+            avatarError: false,
+            avatarSizeError: false
         };
     }
 
@@ -144,7 +146,8 @@ export default class CreateCompany extends Component {
                         passwordError: true,
                         passwordsDontMatch: false,
                         error: false,
-                        register: false
+                        avatarError: false,
+                        avatarSizeError: false,
                     });
                     return;
                 }
@@ -154,7 +157,19 @@ export default class CreateCompany extends Component {
                         passwordsDontMatch: true,
                         passwordError: false,
                         error: false,
-                        register: false
+                        avatarError: false,
+                        avatarSizeError: false,
+                    });
+                    return;
+                }
+
+                if (!this.state.avatar) {
+                    this.setState({
+                        avatarError: true,
+                        avatarSizeError: false,
+                        passwordsDontMatch: false,
+                        passwordError: false,
+                        error: false
                     });
                     return;
                 }
@@ -182,7 +197,6 @@ export default class CreateCompany extends Component {
                                 error: true,
                                 passwordError: false,
                                 passwordsDontMatch: false,
-                                register: false,
                                 isLoading: false
                             });
                     }).catch(_ => {
@@ -190,7 +204,6 @@ export default class CreateCompany extends Component {
                             error: true,
                             passwordError: false,
                             passwordsDontMatch: false,
-                            register: false,
                             isLoading: false
                         });
                     });
@@ -211,6 +224,30 @@ export default class CreateCompany extends Component {
 
     onAvatarChange = (avatar) => {
         this.setState({ isLoading: false, avatar });
+        if (avatar !== null) {
+            this.setState({ avatarError: false });
+        }
+    };
+
+    onAvatarValidate = (valid) => {
+        if (!valid) {
+            this.setState({
+                avatarSizeError: true,
+                avatarError: false,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false,
+                isLoading: false,
+            });
+        } else {
+            this.setState({
+                avatarSizeError: false,
+                avatarError: false,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false,
+            });
+        }
     };
 
     handleCancel = _ => {
@@ -245,6 +282,8 @@ export default class CreateCompany extends Component {
             passwordsDontMatch,
             emailError,
             fullNameError,
+            avatarError,
+            avatarSizeError,
             visible,
             isLoading } = this.state;
 
@@ -262,8 +301,11 @@ export default class CreateCompany extends Component {
                                 readonly={false}
                                 onBeforeUpload={this.onBeforeUpload}
                                 onChange={this.onAvatarChange}
+                                onValidate={this.onAvatarValidate}
                                 color='disabled'
-                                className='avatar-ctn' />
+                                className='avatar-ctn'
+                                width={62}
+                                height={24} />
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
                                 <Input
@@ -382,11 +424,13 @@ export default class CreateCompany extends Component {
                             </div>
 
                             <div className="form-error">
-                                {(passwordError || passwordsDontMatch || error) ?
+                                {(passwordError || passwordsDontMatch || error || avatarError || avatarSizeError) ?
                                     <div>
                                         {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
                                         {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
                                         {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
+                                        {avatarError && <Error message={strings.AVATAR_MANDATORY} />}
+                                        {avatarSizeError && <Error message={strings.AVATAR_SIZE_ERROR} />}
                                     </div>
                                     : null}
                             </div>

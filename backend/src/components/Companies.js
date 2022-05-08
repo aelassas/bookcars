@@ -103,8 +103,9 @@ export default class Companies extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user });
-        this.fetch();
+        this.setState({ user }, _ => {
+            this.fetch();
+        });
     }
 
     componentDidMount() {

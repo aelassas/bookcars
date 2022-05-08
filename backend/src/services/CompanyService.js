@@ -21,7 +21,7 @@ export default class CompanyService {
     }
 
     static getCompanies(keyword) {
-        return axios.get(`${Env.API_HOST}/api/get-companies/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/get-companies/?s=${encodeURIComponent(keyword || '')}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
 }

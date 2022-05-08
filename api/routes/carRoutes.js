@@ -241,34 +241,38 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.getCars).get(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
+    console.log(req.body)
     const getCars = (keyword, page, size) => {
         const cars = [];
         for (let _id = (page - 1) * size; _id < page * size; _id++) {
-            // const name = `Car ${_id}`;
-            const name = _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto';
-            if (!keyword || keyword === '' || name.includes(keyword)) {
-                cars.push({
-                    _id,
-                    company: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62756aae039367a61924c447',
-                    name,
-                    type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
-                    image: '5266dac8680298fa6ae8c747_1651663694739.jpg',
-                    locations: ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
-                    price: 848.78,
-                    seats: 5,
-                    doors: 4,
-                    aircon: true,
-                    gearbox: _id % 2 === 0 ? Env.GEARBOX_TYPE.MANUAL : Env.GEARBOX_TYPE.AUTOMATIC,
-                    mileage: _id % 2 === 0 ? -1 : 150,
-                    fuelPolicy: _id % 2 === 0 ? Env.FUEL_POLICY.LIKE_TO_LIKE : Env.FUEL_POLICY.FREE_TANK,
-                    cancellation: _id % 2 === 0 ? 80 : _id % 3 === 0 ? 0 : -1,
-                    amendments: _id % 2 === 0 ? 120 : _id % 3 === 0 ? 0 : -1,
-                    theftProtection: _id % 2 === 0 ? 100 : _id % 3 === 0 ? 0 : -1,
-                    collisionDamageWaiver: _id % 2 === 0 ? 110 : _id % 3 === 0 ? 0 : -1,
-                    fullInsurance: _id % 2 === 0 ? 170 : _id % 3 === 0 ? 0 : -1,
-                    addionaldriver: _id % 2 === 0 ? 150 : _id % 3 === 0 ? 0 : -1
-                });
+            const car = {
+                _id,
+                company: {
+                    _id: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62756aae039367a61924c447',
+                    fullName: _id % 2 === 0 ? 'Hertz' : 'addCar',
+                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1651934219914.png' : '62756aae039367a61924c447_1651938273288.png'
+                },
+                name: _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto',
+                type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
+                image: '5266dac8680298fa6ae8c747_1651663694739.jpg',
+                locations: ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
+                price: 848.78,
+                seats: 5,
+                doors: 4,
+                aircon: true,
+                gearbox: _id % 2 === 0 ? Env.GEARBOX_TYPE.MANUAL : Env.GEARBOX_TYPE.AUTOMATIC,
+                mileage: _id % 2 === 0 ? -1 : 150,
+                fuelPolicy: _id % 2 === 0 ? Env.FUEL_POLICY.LIKE_TO_LIKE : Env.FUEL_POLICY.FREE_TANK,
+                cancellation: _id % 2 === 0 ? 80 : _id % 3 === 0 ? 0 : -1,
+                amendments: _id % 2 === 0 ? 120 : _id % 3 === 0 ? 0 : -1,
+                theftProtection: _id % 2 === 0 ? 100 : _id % 3 === 0 ? 0 : -1,
+                collisionDamageWaiver: _id % 2 === 0 ? 110 : _id % 3 === 0 ? 0 : -1,
+                fullInsurance: _id % 2 === 0 ? 170 : _id % 3 === 0 ? 0 : -1,
+                addionaldriver: _id % 2 === 0 ? 150 : _id % 3 === 0 ? 0 : -1
+            };
+            if ((!keyword || keyword === '' || car.name.includes(keyword)) && req.body.includes(car.company._id)) {
+                cars.push(car);
             }
         }
         return cars;

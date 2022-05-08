@@ -146,12 +146,18 @@ export const strings = new LocalizedStrings({
         ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
         INCLUDED: 'Inclus',
         UNAVAILABLE: 'Indisponible',
+        UNCHECK_ALL: 'Décocher tout',
+        CHECK_ALL: 'Cocher tout',
 
         /* Companies */
         VIEW_COMPANY_TOOLTIP: 'Voir le profil de cette société',
         UPDATE_COMPANY_TOOLTIP: 'Modifier cette société',
         MESSAGE_COMPANY_TOOLTIP: 'Envoyer un message à cette société',
         DELETE_COMPANY_TOOLTIP: 'Supprimer cette société et toutes ses données',
+
+        /* Create Company */
+        AVATAR_MANDATORY: "L'image est obligatoire.",
+        AVATAR_SIZE_ERROR: "L'image doit être au format 62x24"
 
     },
     en: {

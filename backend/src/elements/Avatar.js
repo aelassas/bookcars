@@ -28,6 +28,35 @@ export const Avatar = (props) => {
     const [avatar, setAvatar] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const validate = (file, onValid) => {
+        if (props.width && props.height) {
+            const _URL = window.URL || window.webkitURL;
+            const img = new Image();
+            const objectUrl = _URL.createObjectURL(file);
+            img.onload = _ => {
+                if (props.width !== img.width || props.height !== img.height) {
+                    if (props.onValidate) {
+                        props.onValidate(false);
+                    }
+                } else {
+                    if (props.onValidate) {
+                        props.onValidate(true);
+                    }
+                    if (onValid) {
+                        onValid();
+                    }
+
+                }
+                _URL.revokeObjectURL(objectUrl);
+            };
+            img.src = objectUrl;
+        } else {
+            if (onValid) {
+                onValid();
+            }
+        }
+    }
+
     const handleChange = (e) => {
 
         if (props.onBeforeUpload) {
@@ -39,44 +68,53 @@ export const Avatar = (props) => {
 
         reader.onloadend = () => {
             if (user && props.mode === 'update') {
-                const { _id } = user;
+                const updateAvatar = _ => {
+                    const { _id } = user;
 
-                UserService.updateAvatar(_id, file)
-                    .then(status => {
-                        if (status === 200) {
-                            UserService.getUser(_id).then(user => {
-                                if (user) {
-                                    setUser(user);
-                                    setAvatar(user.avatar);
+                    UserService.updateAvatar(_id, file)
+                        .then(status => {
+                            if (status === 200) {
+                                UserService.getUser(_id).then(user => {
+                                    if (user) {
+                                        setUser(user);
+                                        setAvatar(user.avatar);
 
-                                    if (props.onChange) {
-                                        props.onChange(user);
+                                        if (props.onChange) {
+                                            props.onChange(user);
+                                        }
+                                    } else {
+                                        toast(strings.GENERIC_ERROR, { type: 'error' });
                                     }
-                                } else {
+                                }).catch(err => {
                                     toast(strings.GENERIC_ERROR, { type: 'error' });
-                                }
-                            }).catch(err => {
+                                });
+                            } else {
                                 toast(strings.GENERIC_ERROR, { type: 'error' });
-                            });
-                        } else {
+                            }
+                        })
+                        .catch(err => {
                             toast(strings.GENERIC_ERROR, { type: 'error' });
-                        }
-                    })
-                    .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
-                    });
-            } else if (!user && props.mode === 'create') {
-                UserService.createAvatar(file)
-                    .then(data => {
-                        setAvatar(data);
+                        });
+                };
 
-                        if (props.onChange) {
-                            props.onChange(data);
-                        }
-                    })
-                    .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
-                    });
+                validate(file, updateAvatar);
+
+            } else if (!user && props.mode === 'create') {
+                const createAvatar = _ => {
+                    UserService.createAvatar(file)
+                        .then(data => {
+                            setAvatar(data);
+
+                            if (props.onChange) {
+                                props.onChange(data);
+                            }
+                        })
+                        .catch(err => {
+                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                        });
+                };
+
+                validate(file, createAvatar);
             }
         };
 
@@ -142,7 +180,7 @@ export const Avatar = (props) => {
                     if (status === 200) {
                         setAvatar(null);
                         if (props.onChange) {
-                            props.onChange();
+                            props.onChange(null);
                         }
                         closeDialog();
                     } else {
@@ -178,6 +216,7 @@ export const Avatar = (props) => {
     }, [props.user]);
 
     const { size, readonly, className } = props;
+
     return (
         !error && !isLoading ?
             <div className={className}>
