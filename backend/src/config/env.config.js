@@ -24,6 +24,7 @@ const Env = {
     },
     DATE_FORMAT: process.env.REACT_APP_BC_DATE_FORMAT,
     PAGE_SIZE: parseInt(process.env.REACT_APP_BC_PAGE_SIZE),
+    CARS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_CARS_PAGE_SIZE),
     CDN_USERS: process.env.REACT_APP_BC_CDN_USERS,
     CDN_TEMP_USERS: process.env.REACT_APP_BC_CDN_TEMP_USERS,
     CDN_CARS: process.env.REACT_APP_BC_CDN_CARS,

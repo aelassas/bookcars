@@ -6,7 +6,6 @@ import Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
 import { toast } from 'react-toastify';
 import {
     IconButton,
@@ -118,7 +117,14 @@ export default class Cars extends Component {
         this.setState({ checkedCompanies }, _ => {
             this.handleSearch();
         });
+    };
 
+    handleCompanyClick = (e) => {
+        const checkbox = e.currentTarget.previousSibling;
+        checkbox.checked = !checkbox.checked;
+        const event = e;
+        event.currentTarget = checkbox;
+        this.handleCheckCompanyChange(event);
     };
 
     handleUncheckAllChange = (e) => {
@@ -147,7 +153,7 @@ export default class Cars extends Component {
         const payload = checkedCompanies;
 
         this.setState({ isLoading: true });
-        CarService.getCars(keyword, payload, page, Env.PAGE_SIZE)
+        CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
             .then(data => {
                 setTimeout(_ => {
                     const _cars = page === 1 ? data : [...cars, ...data];
@@ -163,7 +169,7 @@ export default class Cars extends Component {
             result.push(_id);
         }
         return result;
-    }
+    };
 
     onLoad = (user) => {
         this.setState({ user }, _ => {
@@ -181,7 +187,6 @@ export default class Cars extends Component {
                     });
                 })
                 .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
-
 
             const div = document.querySelector('.col-2');
             if (div) {
@@ -226,12 +231,8 @@ export default class Cars extends Component {
                                         companies.map(company => (
                                             <li key={company._id}>
                                                 <input type='checkbox' data-id={company._id} className='company-checkbox' onChange={this.handleCheckCompanyChange} />
-                                                <label>
-                                                    <Avatar
-                                                        user={company}
-                                                        type={Env.USER_TYPE.COMPANY}
-                                                        readonly
-                                                    />
+                                                <label onClick={this.handleCompanyClick}>
+                                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} />
                                                 </label>
                                             </li>
                                         ))
@@ -242,7 +243,8 @@ export default class Cars extends Component {
                                         {allCompaniesChecked ? strings.UNCHECK_ALL : strings.CHECK_ALL}
                                     </span>
                                 </div>
-                            </div>}
+                            </div>
+                        }
                         <Button
                             type="submit"
                             variant="contained"

@@ -242,7 +242,6 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
 });
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
-    console.log(req.body)
     const getCars = (keyword, page, size) => {
         const cars = [];
         for (let _id = (page - 1) * size; _id < page * size; _id++) {
@@ -251,7 +250,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
                 company: {
                     _id: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62756aae039367a61924c447',
                     fullName: _id % 2 === 0 ? 'Hertz' : 'addCar',
-                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1651934219914.png' : '62756aae039367a61924c447_1651938273288.png'
+                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1651934219914.png' : '62756aae039367a61924c447_1652009350560.png'
                 },
                 name: _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto',
                 type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
