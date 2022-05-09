@@ -191,11 +191,12 @@ export default class CreateCar extends Component {
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">
-                                <InputLabel>{strings.CARTYPE}</InputLabel>
+                                <InputLabel className='required'>{strings.CARTYPE}</InputLabel>
                                 <Select
                                     label={strings.CARTYPE}
                                     value={carType}
                                     onChange={this.handleCarTypeChange}
+                                    required
                                 >
                                     <MenuItem value={Env.CAR_TYPE.DIESEL}>{strings.DIESEL}</MenuItem>
                                     <MenuItem value={Env.CAR_TYPE.GASOLINE}>{strings.GASOLINE}</MenuItem>
