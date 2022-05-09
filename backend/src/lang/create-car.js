@@ -6,7 +6,10 @@ export const strings = new LocalizedStrings({
     fr: {
         NEW_CAR_HEADING: 'Nouvelle voiture',
         NAME: 'Nom',
-        CAR_IMAGE_SIZE_ERROR: `L'image doit être au format ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`
+        CAR_IMAGE_SIZE_ERROR: `L'image doit être au format ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
+        
+        COMPANY: 'Société',
+        LOCATIONS: 'Lieux',
     },
     en: {
         NEW_CAR_HEADING: 'New car',

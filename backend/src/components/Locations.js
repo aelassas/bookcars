@@ -102,10 +102,8 @@ export default class Locations extends Component {
         this.setState({ isLoading: true });
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                setTimeout(_ => {
-                    const _locations = page === 1 ? data : [...locations, ...data];
-                    this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
-                }, 1000);
+                const _locations = page === 1 ? data : [...locations, ...data];
+                this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
             })
             .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }

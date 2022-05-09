@@ -9,7 +9,8 @@ const Env = {
         ADMIN: 'admin',
         COMPANY: 'company',
         USER: 'user',
-        CAR: 'car'
+        CAR: 'car',
+        LOCATION: 'location'
     },
     CAR_TYPE: {
         DIESEL: 'diesel',

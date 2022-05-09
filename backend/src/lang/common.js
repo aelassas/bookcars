@@ -34,7 +34,7 @@ export const strings = new LocalizedStrings({
         DELETE_IMAGE: "Supprimer l'image",
         UPLOAD_IMAGE: "Charger une image",
         UNCHECK_ALL: 'Décocher tout',
-        CHECK_ALL: 'Cocher tout',
+        CHECK_ALL: 'Cocher tout'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -67,7 +67,7 @@ export const strings = new LocalizedStrings({
         UPLOAD_IMAGE: 'Upload image',
         DELETE_IMAGE: 'Delete image',
         UNCHECK_ALL: 'Uncheck all',
-        CHECK_ALL: 'Check all',
+        CHECK_ALL: 'Check all'
     }
 });
 

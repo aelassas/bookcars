@@ -3,11 +3,14 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-car';
+import CompanyService from '../services/CompanyService';
 // import CarService from '../services/CarService';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
+import MultipleSelect from '../elements/MultipleSelect';
+import LocationList from '../elements/LocationList';
 import {
     Input,
     InputLabel,
@@ -29,7 +32,10 @@ export default class CreateCar extends Component {
             error: false,
             avatarError: false,
             avatarSizeError: false,
-            avatar: null
+            avatar: null,
+            companies: [],
+            company: '',
+            locations: [],
         };
     }
 
@@ -74,15 +80,51 @@ export default class CreateCar extends Component {
         }
     }
 
+    handleCompanySelected = (values, key, reference) => {
+        if (values.length > 0) {
+            this.setState({ company: values[0]._id });
+        } else {
+            this.setState({ company: '' });
+        }
+        console.log(values);
+    };
+
+    handleLocationsSelected = (values) => {
+        this.setState({ locations: values });
+        console.log(values);
+    };
+
+    getCompanies = (data) => {
+        const result = [];
+        for (const { _id, fullName, avatar } of data) {
+            result.push({ _id, name: fullName, image: avatar });
+        }
+        return result;
+    };
+
     onLoad = (user) => {
-        this.setState({ user, visible: true });
+        this.setState({ user, visible: true }, _ => {
+            if (user.type === Env.RECORD_TYPE.ADMIN) {
+                CompanyService.getCompanies()
+                    .then(data => {
+                        const companies = this.getCompanies(data);
+                        this.setState({ companies });
+                    })
+                    .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            }
+        });
     }
 
     componentDidMount() {
     }
 
     render() {
-        const { visible, error, avatarError, avatarSizeError, isLoading } = this.state;
+        const { visible,
+            companies,
+            error,
+            avatarError,
+            avatarSizeError,
+            isLoading } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -112,6 +154,25 @@ export default class CreateCar extends Component {
                                     autoComplete="off"
                                 />
                             </FormControl>
+
+                            <MultipleSelect
+                                label={strings.COMPANY}
+                                callbackFromMultipleSelect={this.handleCompanySelected}
+                                options={companies}
+                                loading={false}
+                                required={true}
+                                multiple={false}
+                                type={Env.RECORD_TYPE.COMPANY}
+                                variant='standard'
+                            />
+
+                            <LocationList
+                                label={strings.LOCATIONS}
+                                required={true}
+                                multiple={true}
+                                variant='standard'
+                                onSelected={this.handleLocationsSelected}
+                            />
 
                             <div className="buttons">
                                 <Button

@@ -1,7 +1,15 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
-import { Autocomplete, TextField } from '@mui/material'
+import Env from '../config/env.config';
+import Helper from '../common/Helper';
+import {
+    Autocomplete,
+    TextField
+} from '@mui/material';
+import {
+    LocationOn as LocationIcon
+} from '@mui/icons-material';
 
-import '../assets/css/auto-complete.css';
+import '../assets/css/multiple-select.css';
 
 const ListBox = forwardRef(
     function ListBoxBase(props, ref) {
@@ -22,7 +30,7 @@ export default function MultipleSelect({
     label,
     callbackFromMultipleSelect,
     reference,
-    selectedValues,
+    selectedOptions,
     key,
     required,
     options,
@@ -31,19 +39,24 @@ export default function MultipleSelect({
     onInputChange,
     onClear,
     loading,
-    multiple
+    multiple,
+    type,
+    variant
 }) {
+    const [init, setInit] = useState(false);
     const [values, setValues] = useState([]);
 
-    useEffect(() => {
-        setValues(selectedValues);
-    }, [selectedValues]);
+    useEffect(_ => {
+        if (!init) {
+            setValues(selectedOptions || []);
+            setInit(true);
+        }
+    }, [init, selectedOptions]);
 
     return (
-        <div className='auto-complete'>
+        <div className='multiple-select'>
             <Autocomplete
-                options={[...values, ...options]}
-                filterOptions={() => options}
+                options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
                 getOptionLabel={(option) => (option && option.name) || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -55,10 +68,13 @@ export default function MultipleSelect({
                             onClear();
                         }
                     } else {
-                        setValues([newValue]);
-                        callbackFromMultipleSelect([newValue], key, reference);
-                        if (!newValue && onClear) {
-                            onClear();
+                        const value = (newValue && [newValue]) || [];
+                        setValues(value);
+                        callbackFromMultipleSelect(value, key, reference);
+                        if (!newValue) {
+                            if (onClear) {
+                                onClear();
+                            }
                         }
                     }
                 }}
@@ -70,10 +86,40 @@ export default function MultipleSelect({
                     <TextField
                         {...params}
                         label={label}
-                        variant="outlined"
-                        required={required && values.length === 0}
+                        variant={variant || 'outlined'}
+                        required={required && values && values.length === 0}
                     />
                 )}
+                renderOption={(props, option, { selected }) => {
+                    if (type === Env.RECORD_TYPE.COMPANY) {
+                        return (
+                            <li {...props}>
+                                <span className='option-image'>
+                                    <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                        alt={option.name}
+                                        style={{ width: Env.COMPANY_IMAGE_WIDTH, height: Env.COMPANY_IMAGE_HEIGHT }} />
+                                </span>
+                                <span className='option-name'>{option.name}</span>
+                            </li>
+                        );
+                    } else if (type === Env.RECORD_TYPE.LOCATION) {
+                        return (
+                            <li {...props}>
+                                <span className='option-image'>
+                                    <LocationIcon />
+                                </span>
+                                <span className='option-name'>{option.name}</span>
+                            </li>
+                        );
+                    }
+
+                    return (
+                        <li {...props}>
+                            <span>{option.name}</span>
+                        </li>
+                    );
+
+                }}
                 ListboxProps={ListboxProps || null}
                 onFocus={onFocus || null}
                 onInputChange={onInputChange || null}
