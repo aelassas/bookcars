@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/create-company';
 import UserService from '../services/UserService';
 import CompanyService from '../services/CompanyService';
 import Error from '../elements/Error';
@@ -307,7 +308,7 @@ export default class CreateCompany extends Component {
                                 width={Env.COMPANY_IMAGE_WIDTH}
                                 height={Env.COMPANY_IMAGE_HEIGHT} />
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
+                                <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                 <Input
                                     id="full-name"
                                     type="text"
@@ -322,7 +323,7 @@ export default class CreateCompany extends Component {
                                 </FormHelperText>
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.EMAIL}</InputLabel>
+                                <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
                                 <Input
                                     id="email"
                                     type="text"
@@ -338,11 +339,11 @@ export default class CreateCompany extends Component {
                                     }}
                                 />
                                 <FormHelperText error={emailError}>
-                                    {emailError ? strings.INVALID_EMAIL : ''}
+                                    {emailError ? commonStrings.INVALID_EMAIL : ''}
                                 </FormHelperText>
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel>{strings.PHONE}</InputLabel>
+                                <InputLabel>{commonStrings.PHONE}</InputLabel>
                                 <Input
                                     id="phone"
                                     type="text"
@@ -356,7 +357,7 @@ export default class CreateCompany extends Component {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel>{strings.LOCATION}</InputLabel>
+                                <InputLabel>{commonStrings.LOCATION}</InputLabel>
                                 <Input
                                     id="location"
                                     type="text"
@@ -365,7 +366,7 @@ export default class CreateCompany extends Component {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel>{strings.BIO}</InputLabel>
+                                <InputLabel>{commonStrings.BIO}</InputLabel>
                                 <Input
                                     id="bio"
                                     type="text"
@@ -374,7 +375,7 @@ export default class CreateCompany extends Component {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.PASSWORD}</InputLabel>
+                                <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
                                 <Input
                                     id="password"
                                     onChange={this.handleOnChangePassword}
@@ -389,7 +390,7 @@ export default class CreateCompany extends Component {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.CONFIRM_PASSWORD}</InputLabel>
+                                <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                                 <Input
                                     id="confirm-password"
                                     onChange={this.handleOnChangeConfirmPassword}
@@ -411,7 +412,7 @@ export default class CreateCompany extends Component {
                                     size="small"
                                     disabled={emailError}
                                 >
-                                    {strings.CREATE}
+                                    {commonStrings.CREATE}
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -419,18 +420,18 @@ export default class CreateCompany extends Component {
                                     size="small"
                                     onClick={this.handleCancel}
                                 >
-                                    {strings.CANCEL}
+                                    {commonStrings.CANCEL}
                                 </Button>
                             </div>
 
                             <div className="form-error">
                                 {(passwordError || passwordsDontMatch || error || avatarError || avatarSizeError) ?
                                     <div>
-                                        {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
-                                        {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
-                                        {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
-                                        {avatarError && <Error message={strings.AVATAR_MANDATORY} />}
-                                        {avatarSizeError && <Error message={strings.AVATAR_SIZE_ERROR} />}
+                                        {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                        {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                                        {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                                        {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
+                                        {avatarSizeError && <Error message={strings.COMPANY_IMAGE_SIZE_ERROR} />}
                                     </div>
                                     : null}
                             </div>
@@ -438,7 +439,7 @@ export default class CreateCompany extends Component {
 
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
     }

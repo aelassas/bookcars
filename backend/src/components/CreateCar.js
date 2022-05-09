@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/create-car';
 // import CarService from '../services/CarService';
 // import { toast } from 'react-toastify';
 import Error from '../elements/Error';
@@ -87,7 +88,7 @@ export default class CreateCar extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='create-car'>
                     <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="car-form-title"> {strings.NEW_CAR} </h1>
+                        <h1 className="car-form-title"> {strings.NEW_CAR_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <Avatar
                                 type={Env.RECORD_TYPE.CAR}
@@ -119,7 +120,7 @@ export default class CreateCar extends Component {
                                     className='btn-primary'
                                     size="small"
                                 >
-                                    {strings.CREATE}
+                                    {commonStrings.CREATE}
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -127,20 +128,20 @@ export default class CreateCar extends Component {
                                     size="small"
                                     href='/cars'
                                 >
-                                    {strings.CANCEL}
+                                    {commonStrings.CANCEL}
                                 </Button>
                             </div>
 
                             <div className="form-error">
-                                {error && <Error message={strings.GENERIC_ERROR} />}
-                                {avatarError && <Error message={strings.AVATAR_MANDATORY} />}
+                                {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
                                 {avatarSizeError && <Error message={strings.CAR_IMAGE_SIZE_ERROR} />}
                             </div>
                         </form>
 
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
     }

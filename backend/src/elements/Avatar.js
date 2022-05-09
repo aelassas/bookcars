@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import CarService from '../services/CarService';
@@ -83,7 +83,7 @@ export const Avatar = (props) => {
                                 }
                             })
                             .catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                     };
 
@@ -105,17 +105,17 @@ export const Avatar = (props) => {
                                                 props.onChange(user);
                                             }
                                         } else {
-                                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                         }
                                     }).catch(err => {
-                                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                     });
                                 } else {
-                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             })
                             .catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                     };
 
@@ -134,7 +134,7 @@ export const Avatar = (props) => {
                                 }
                             })
                             .catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                     };
 
@@ -156,17 +156,17 @@ export const Avatar = (props) => {
                                                 props.onChange(car);
                                             }
                                         } else {
-                                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                         }
                                     }).catch(err => {
-                                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                     });
                                 } else {
-                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             })
                             .catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                     };
 
@@ -221,17 +221,17 @@ export const Avatar = (props) => {
                                     }
                                     closeDialog();
                                 } else {
-                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             }).catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                         } else {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     });
             } else if (!record && props.mode === 'create') {
                 UserService.deleteTempAvatar(avatar)
@@ -243,11 +243,11 @@ export const Avatar = (props) => {
                             }
                             closeDialog();
                         } else {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     });
             }
         } else if (props.type === Env.RECORD_TYPE.CAR) {
@@ -261,11 +261,11 @@ export const Avatar = (props) => {
                             }
                             closeDialog();
                         } else {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     });
             } else if (record && props.mode === 'update') {
                 const { _id } = record;
@@ -281,17 +281,17 @@ export const Avatar = (props) => {
                                     }
                                     closeDialog();
                                 } else {
-                                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             }).catch(err => {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             });
                         } else {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     });
             }
         }
@@ -306,7 +306,7 @@ export const Avatar = (props) => {
 
     useEffect(() => {
         const language = UserService.getLanguage();
-        strings.setLanguage(language);
+        commonStrings.setLanguage(language);
 
         const currentUser = UserService.getCurrentUser();
         if (currentUser) {
@@ -362,11 +362,12 @@ export const Avatar = (props) => {
                                 horizontal: 'right',
                             }}
                             badgeContent={
-                                <Tooltip title={strings.DELETE_IMAGE}>
-                                    <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
-                                        <DeleteIcon className='avatar-action-icon' />
-                                    </Box>
-                                </Tooltip>
+                                props.hideDelete ? <></>
+                                    : <Tooltip title={commonStrings.DELETE_IMAGE}>
+                                        <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
+                                            <DeleteIcon className='avatar-action-icon' />
+                                        </Box>
+                                    </Tooltip>
                             }
                         >
                             <Badge
@@ -377,7 +378,7 @@ export const Avatar = (props) => {
                                 }}
                                 className={props.type === Env.RECORD_TYPE.COMPANY ? 'company-avatar' : null}
                                 badgeContent={
-                                    <Tooltip title={strings.UPLOAD_IMAGE}>
+                                    <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                                             <PhotoCameraIcon className='avatar-action-icon' />
                                         </Box>
@@ -424,7 +425,7 @@ export const Avatar = (props) => {
                                     horizontal: 'right',
                                 }}
                                 badgeContent={
-                                    <Tooltip title={strings.UPLOAD_IMAGE}>
+                                    <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                                             <PhotoCameraIcon className='avatar-action-icon' />
                                         </Box>
@@ -449,11 +450,11 @@ export const Avatar = (props) => {
                     maxWidth="xs"
                     open={open}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_AVATAR_CONFIRM}</DialogContent>
+                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCancelDelete} className='btn-secondary'>{strings.CANCEL}</Button>
-                        <Button onClick={handleDelete} color="error" variant='contained'>{strings.DELETE}</Button>
+                        <Button onClick={handleCancelDelete} className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={handleDelete} color="error" variant='contained'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
                 {!readonly && <input id="upload" type="file" hidden onChange={handleChange} />}

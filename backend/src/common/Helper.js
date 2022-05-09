@@ -1,5 +1,6 @@
 import Env from "../config/env.config";
-import { strings } from "../config/app.config";
+import { strings as commonStrings } from "../lang/common";
+import { strings } from "../lang/cars";
 
 export default class Helper {
 
@@ -68,7 +69,7 @@ export default class Helper {
     static getFuelPolicy(type) {
         switch (type) {
             case Env.FUEL_POLICY.LIKE_TO_LIKE:
-                return strings.FUEL_POLICY_LIKE_TO_LIKE;
+                return strings.FUEL_POLICY_LIKE_FOR_LIKE;
 
             case Env.FUEL_POLICY.FREE_TANK:
                 return strings.FUEL_POLICY_FREE_TANK;
@@ -79,13 +80,29 @@ export default class Helper {
     }
 
     static getCarTypeTooltip(type) {
-        const carType = Helper.getCarType(type);
-        return `${strings.CAR_TYPE_TOOLTIP} ${carType.toLowerCase()}.`;
+        switch (type) {
+            case Env.CAR_TYPE.DIESEL:
+                return strings.DIESEL_TOOLTIP;
+
+            case Env.CAR_TYPE.GASOLINE:
+                return strings.GASOLINE_TOOLTIP;
+
+            default:
+                return '';
+        }
     }
 
     static getGearboxTooltip(type) {
-        const gearboxType = Helper.getGearboxType(type);
-        return `${strings.GEARBOX_TYPE_TOOLTIP} ${gearboxType.toLowerCase()}.`;
+        switch (type) {
+            case Env.GEARBOX_TYPE.MANUAL:
+                return strings.GEARBOX_MANUAL_TOOLTIP;
+
+            case Env.GEARBOX_TYPE.AUTOMATIC:
+                return strings.GEARBOX_AUTOMATIC_TOOLTIP;
+
+            default:
+                return '';
+        }
     }
 
     static getSeatsTooltip(seats) {
@@ -99,7 +116,7 @@ export default class Helper {
     static getFuelPolicyTooltip(fuelPolicy) {
         switch (fuelPolicy) {
             case Env.FUEL_POLICY.LIKE_TO_LIKE:
-                return strings.FUEL_POLICY_LIKE_TO_LIKE_TOOLTIP;
+                return strings.FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP;
 
             case Env.FUEL_POLICY.FREE_TANK:
                 return strings.FUEL_POLICY_FREE_TANK_TOOLTIP;
@@ -176,7 +193,7 @@ export default class Helper {
         else if (amendments === 0) {
             return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`;
         } else {
-            return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${amendments} ${strings.CURRENCY}`;
+            return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${amendments} ${commonStrings.CURRENCY}`;
         }
     }
 
@@ -187,7 +204,7 @@ export default class Helper {
         else if (cancellation === 0) {
             return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`;
         } else {
-            return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${cancellation} ${strings.CURRENCY}`;
+            return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${cancellation} ${commonStrings.CURRENCY}`;
         }
     }
 

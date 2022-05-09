@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/companies';
 import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
-import { Avatar } from '../elements/Avatar';
 import {
     Input,
     IconButton,
@@ -65,7 +65,7 @@ export default class Companies extends Component {
             .then(companies => {
                 this.setState({ companies, isLoading: false });
             })
-            .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
+            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     handleDelete = (e) => {
@@ -85,15 +85,15 @@ export default class Companies extends Component {
                     _companies.splice(companyIndex, 1);
                     this.setState({ companies: _companies, isLoading: false, companyId: '', companyIndex: -1 });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
                 }
             }).catch(_ => {
-                toast(strings.GENERIC_ERROR, { type: 'error' })
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
             });
         } else {
-            toast(strings.GENERIC_ERROR, { type: 'error' });
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             this.setState({ openDeleteDialog: false, companyId: '', companyIndex: -1 });
         }
     };
@@ -122,7 +122,7 @@ export default class Companies extends Component {
                         <Input
                             type="text"
                             className='search'
-                            placeholder={strings.SEARCH_PLACEHOLDER}
+                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
                             onKeyDown={this.handleSearchKeyDown}
                             onChange={this.handleSearchChange}
                         />
@@ -148,12 +148,16 @@ export default class Companies extends Component {
                                     <article key={company._id}>
                                         <div className='company-item'>
                                             <div>
-                                                <Avatar
+                                                {/* <Avatar
                                                     record={company}
                                                     type={Env.RECORD_TYPE.COMPANY}
                                                     readonly
                                                     className='company-item-avatar'
-                                                />
+                                                /> */}
+                                                <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                                    alt={company.fullName}
+                                                    className='company-item-avatar'
+                                                    style={{ width: Env.COMPANY_IMAGE_WIDTH, height: Env.COMPANY_IMAGE_HEIGHT }} />
                                                 <span className='company-item-title'>{company.fullName}</span>
                                             </div>
                                         </div>
@@ -191,14 +195,14 @@ export default class Companies extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>
+                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={strings.LOADING} />}
+                {isLoading && <Backdrop text={commonStrings.LOADING} />}
             </Master>
         );
     }

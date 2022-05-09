@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/cars';
 import Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import CompanyService from '../services/CompanyService';
@@ -86,15 +87,15 @@ export default class Cars extends Component {
                     _cars.splice(carIndex, 1);
                     this.setState({ cars: _cars, isLoading: false, carId: '', carIndex: -1 });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false, carId: '', carIndex: -1 });
                 }
             }).catch(() => {
-                toast(strings.GENERIC_ERROR, { type: 'error' })
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false, carId: '', carIndex: -1 });
             });
         } else {
-            toast(strings.GENERIC_ERROR, { type: 'error' });
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             this.setState({ openDeleteDialog: false, carId: '', carIndex: -1 });
         }
     };
@@ -160,7 +161,7 @@ export default class Cars extends Component {
                     this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
                 }, 500);
             })
-            .catch(() => toast(strings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
     flattenCompanies = (companies) => {
@@ -186,7 +187,7 @@ export default class Cars extends Component {
                         this.fetch();
                     });
                 })
-                .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
+                .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
 
             const div = document.querySelector('.col-2');
             if (div) {
@@ -217,7 +218,7 @@ export default class Cars extends Component {
                         <Input
                             type="text"
                             className='search'
-                            placeholder={strings.SEARCH_PLACEHOLDER}
+                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
                             onKeyDown={this.handleSearchKeyDown}
                             onChange={this.handleSearchChange}
                         />
@@ -232,7 +233,9 @@ export default class Cars extends Component {
                                             <li key={company._id}>
                                                 <input type='checkbox' data-id={company._id} className='company-checkbox' onChange={this.handleCheckCompanyChange} />
                                                 <label onClick={this.handleCompanyClick}>
-                                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} />
+                                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                                        alt={company.fullName}
+                                                        style={{ width: Env.COMPANY_IMAGE_WIDTH, height: Env.COMPANY_IMAGE_HEIGHT }} />
                                                 </label>
                                             </li>
                                         ))
@@ -240,7 +243,7 @@ export default class Cars extends Component {
                                 </ul>
                                 <div className='filter-actions'>
                                     <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                                        {allCompaniesChecked ? strings.UNCHECK_ALL : strings.CHECK_ALL}
+                                        {allCompaniesChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
                                     </span>
                                 </div>
                             </div>
@@ -263,7 +266,9 @@ export default class Cars extends Component {
                                     <article key={car._id}>
                                         <div className='name'><h2>{car.name}</h2></div>
                                         <div className='car'>
-                                            <img src={Helper.joinURL(Env.CDN_CARS, car.image)} alt={car.name} className='car-img' />
+                                            <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
+                                                alt={car.name} className='car-img'
+                                                style={{ maxWidth: Env.CAR_IMAGE_WIDTH, maxHeight: Env.CAR_IMAGE_HEIGHT }} />
                                             <div className='car-company'>
                                                 <span className='car-company-logo'>
                                                     <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
@@ -394,7 +399,7 @@ export default class Cars extends Component {
                                                     size="small"
                                                     href={`/update-car?c=${car._id}`}
                                                 >
-                                                    {strings.UPDATE}
+                                                    {commonStrings.UPDATE}
                                                 </Button>
                                                 <Button
                                                     type="submit"
@@ -405,7 +410,7 @@ export default class Cars extends Component {
                                                     data-index={index}
                                                     onClick={this.handleDelete}
                                                 >
-                                                    {strings.DELETE}
+                                                    {commonStrings.DELETE}
                                                 </Button>
                                             </div>}
                                     </article>
@@ -420,14 +425,14 @@ export default class Cars extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_CAR}</DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>
+                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={strings.LOADING} />}
+                {isLoading && <Backdrop text={commonStrings.LOADING} />}
             </Master >
         );
     }

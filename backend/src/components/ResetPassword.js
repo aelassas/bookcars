@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/reset-password';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
@@ -251,7 +252,7 @@ export default class ResetPassword extends Component {
                                     error={confirmPasswordError}
                                     className='required'
                                 >
-                                    {strings.CONFIRM_PASSWORD}
+                                    {commonStrings.CONFIRM_PASSWORD}
                                 </InputLabel>
                                 <Input
                                     id="password-confirm"
@@ -266,8 +267,8 @@ export default class ResetPassword extends Component {
                                     error={confirmPasswordError || passwordLengthError}
                                 >
                                     {confirmPasswordError
-                                        ? strings.PASSWORDS_DONT_MATCH
-                                        : (passwordLengthError ? strings.ERROR_IN_PASSWORD : '')}
+                                        ? commonStrings.PASSWORDS_DONT_MATCH
+                                        : (passwordLengthError ? commonStrings.ERROR_IN_PASSWORD : '')}
                                 </FormHelperText>
                             </FormControl>
                             <div className='buttons'>
@@ -277,7 +278,7 @@ export default class ResetPassword extends Component {
                                     size="small"
                                     variant='contained'
                                 >
-                                    {strings.RESET_PASSWORD}
+                                    {commonStrings.RESET_PASSWORD}
                                 </Button>
                                 <Button
                                     className='btn-secondary btn-margin-bottom'
@@ -285,13 +286,13 @@ export default class ResetPassword extends Component {
                                     variant='contained'
                                     href="/"
                                 >
-                                    {strings.CANCEL}
+                                    {commonStrings.CANCEL}
                                 </Button>
                             </div>
                         </form>
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

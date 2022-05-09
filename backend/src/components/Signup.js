@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/sign-up';
 import UserService from '../services/UserService';
 import Header from '../elements/Header';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -269,7 +270,7 @@ export default class SignUp extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <div>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="full-name">{strings.FULL_NAME}</InputLabel>
+                                    <InputLabel htmlFor="full-name">{commonStrings.FULL_NAME}</InputLabel>
                                     <Input
                                         id="full-name"
                                         type="text"
@@ -281,7 +282,7 @@ export default class SignUp extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="email">{strings.EMAIL}</InputLabel>
+                                    <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
                                     <Input
                                         id="email"
                                         type="text"
@@ -299,11 +300,11 @@ export default class SignUp extends Component {
                                         }}
                                     />
                                     <FormHelperText error={emailError}>
-                                        {emailError ? strings.INVALID_EMAIL : ''}
+                                        {emailError ? commonStrings.INVALID_EMAIL : ''}
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="password">{strings.PASSWORD}</InputLabel>
+                                    <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
                                     <Input
                                         id="password"
                                         value={this.state.password}
@@ -320,7 +321,7 @@ export default class SignUp extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="confirm-password">{strings.CONFIRM_PASSWORD}</InputLabel>
+                                    <InputLabel htmlFor="confirm-password">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                                     <Input
                                         id="confirm-password"
                                         value={this.state.confirmPassword}
@@ -377,15 +378,15 @@ export default class SignUp extends Component {
                                         variant="contained"
                                         className='btn-secondary'
                                         size="small"
-                                        href="/"> {strings.CANCEL}
+                                        href="/"> {commonStrings.CANCEL}
                                     </Button>
                                 </div>
                             </div>
                             <div className="form-error">
                                 {(passwordError || passwordsDontMatch || recaptchaError || error) ?
                                     <div>
-                                        {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
-                                        {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
+                                        {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                        {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
                                         {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
                                         {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
                                     </div>
@@ -394,7 +395,7 @@ export default class SignUp extends Component {
                         </form>
                     </div>
                 </Paper>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </div>
         );
     }

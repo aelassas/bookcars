@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/settings';
 import UserService from '../services/UserService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -78,11 +79,11 @@ export default class Settings extends Component {
                 if (status === 200) {
                     toast(strings.SETTINGS_UPDATED, { type: 'info' });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
             .catch(_ => {
-                toast(strings.GENERIC_ERROR, { type: 'error' });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
@@ -97,7 +98,7 @@ export default class Settings extends Component {
                 }
             })
             .catch(err => {
-                toast(strings.GENERIC_ERROR, { type: 'error' });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
@@ -162,7 +163,7 @@ export default class Settings extends Component {
                                     color='disabled'
                                     className='avatar-ctn' />
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
+                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                     <Input
                                         id="full-name"
                                         type="text"
@@ -173,7 +174,7 @@ export default class Settings extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{strings.EMAIL}</InputLabel>
+                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
                                     <Input
                                         id="email"
                                         type="text"
@@ -182,7 +183,7 @@ export default class Settings extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.PHONE}</InputLabel>
+                                    <InputLabel>{commonStrings.PHONE}</InputLabel>
                                     <Input
                                         id="phone"
                                         type="text"
@@ -197,7 +198,7 @@ export default class Settings extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.LOCATION}</InputLabel>
+                                    <InputLabel>{commonStrings.LOCATION}</InputLabel>
                                     <Input
                                         id="location"
                                         type="text"
@@ -207,7 +208,7 @@ export default class Settings extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.BIO}</InputLabel>
+                                    <InputLabel>{commonStrings.BIO}</InputLabel>
                                     <Input
                                         id="bio"
                                         type="text"
@@ -224,7 +225,7 @@ export default class Settings extends Component {
                                         size="small"
                                         href={`/reset-password?u=${user._id}`}
                                     >
-                                        {strings.RESET_PASSWORD}
+                                        {commonStrings.RESET_PASSWORD}
                                     </Button>
                                     <Button
                                         type="submit"
@@ -232,7 +233,7 @@ export default class Settings extends Component {
                                         className='btn-primary btn-margin-bottom'
                                         size="small"
                                     >
-                                        {strings.SAVE}
+                                        {commonStrings.SAVE}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -240,7 +241,7 @@ export default class Settings extends Component {
                                         size="small"
                                         href="/"
                                     >
-                                        {strings.CANCEL}
+                                        {commonStrings.CANCEL}
                                     </Button>
                                 </div>
                             </form>
@@ -255,8 +256,8 @@ export default class Settings extends Component {
                             </FormControl>
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
-                {error && <Error message={strings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {error && <Error message={commonStrings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
             </Master>
         );
     }

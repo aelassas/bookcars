@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/sign-in';
 import UserService from '../services/UserService';
 import Header from '../elements/Header';
 import Error from '../elements/Error';
@@ -130,7 +131,7 @@ export default class SignIn extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="email">{strings.EMAIL}</InputLabel>
+                                <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
                                 <Input
                                     id="email"
                                     type="text"
@@ -141,7 +142,7 @@ export default class SignIn extends Component {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="password">{strings.PASSWORD}</InputLabel>
+                                <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
                                 <Input
                                     id="password"
                                     name="Password"

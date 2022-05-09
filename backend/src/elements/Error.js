@@ -1,5 +1,5 @@
 import React from 'react';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
 import { Link } from '@mui/material';
 
 import '../assets/css/error.css';
@@ -9,7 +9,7 @@ const Error = ({ message, style, homeLink }) => (
 		<div className="error">
 			<span className="message">{message}</span>
 		</div>
-		{homeLink && <p><Link href='/'>{strings.GO_TO_HOME}</Link></p>}
+		{homeLink && <p><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>}
 	</div>
 );
 

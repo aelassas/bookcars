@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/locations';
 import LocationService from '../services/LocationService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
@@ -61,15 +62,15 @@ export default class Locations extends Component {
                     _locations.splice(locationIndex, 1);
                     this.setState({ locations: _locations, isLoading: false, locationId: '', locationIndex: -1 });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
                 }
             }).catch(() => {
-                toast(strings.GENERIC_ERROR, { type: 'error' })
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
             });
         } else {
-            toast(strings.GENERIC_ERROR, { type: 'error' });
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });
         }
     };
@@ -106,7 +107,7 @@ export default class Locations extends Component {
                     this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
                 }, 1000);
             })
-            .catch(_ => toast(strings.GENERIC_ERROR, { type: 'error' }));
+            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     onLoad = (user) => {
@@ -192,14 +193,14 @@ export default class Locations extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>
+                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={strings.LOADING} />}
+                {isLoading && <Backdrop text={commonStrings.LOADING} />}
             </Master>
         );
     }

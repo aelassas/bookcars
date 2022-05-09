@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/create-location';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
 import Error from '../elements/Error';
@@ -36,7 +37,7 @@ export default class CreateLocation extends Component {
     };
 
     error = _ => {
-        toast(strings.GENERIC_ERROR, { type: 'error' });
+        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
     };
 
     handleSubmit = (e) => {
@@ -82,7 +83,7 @@ export default class CreateLocation extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='create-location'>
                     <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="location-form-title"> {strings.NEW_LOCATION} </h1>
+                        <h1 className="location-form-title"> {strings.NEW_LOCATION_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{strings.LOCATION_NAME}</InputLabel>
@@ -103,7 +104,7 @@ export default class CreateLocation extends Component {
                                     className='btn-primary'
                                     size="small"
                                 >
-                                    {strings.CREATE}
+                                    {commonStrings.CREATE}
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -111,7 +112,7 @@ export default class CreateLocation extends Component {
                                     size="small"
                                     href='/locations'
                                 >
-                                    {strings.CANCEL}
+                                    {commonStrings.CANCEL}
                                 </Button>
                             </div>
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { strings } from '../config/app.config';
+import { strings } from '../lang/master';
 import Header from './Header';
 import UserService from '../services/UserService';
 import Unauthorized from '../components/Unauthorized';

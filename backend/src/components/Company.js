@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as companiesStrings } from '../lang/companies';
 import CompanyService from '../services/CompanyService';
 import Error from './Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -62,11 +63,11 @@ export default class Company extends Component {
                 if (status === 200) {
                     window.location.href = '/companies';
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false });
                 }
             }).catch(_ => {
-                toast(strings.GENERIC_ERROR, { type: 'error' })
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false });
             });
         });
@@ -159,14 +160,14 @@ export default class Company extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
+                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent>{companiesStrings.DELETE_COMPANY}</DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{strings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{strings.DELETE}</Button>
+                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

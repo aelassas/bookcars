@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom/client";
 import App from './App';
 import Env from './config/env.config';
-import { strings } from './config/app.config';
+import { strings as commonStrings } from './lang/common';
 import UserService from './services/UserService';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -43,7 +43,7 @@ if (lang !== '') {
                 if (status === 200) {
                     const status = await UserService.updateLanguage(data);
                     if (status !== 200) {
-                        toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+                        toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
                     }
                 }
             });
@@ -53,7 +53,7 @@ if (lang !== '') {
         language = lang;
     }
     UserService.setLanguage(language);
-    strings.setLanguage(language);
+    commonStrings.setLanguage(language);
 }
 
 const theme = createTheme({

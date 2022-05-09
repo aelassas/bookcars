@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as clStrings } from '../lang/create-location';
+import { strings } from '../lang/update-location';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
@@ -62,7 +64,7 @@ export default class UpdateLocation extends Component {
 
     error = _ => {
         this.setState({ isLoading: false });
-        toast(strings.GENERIC_ERROR, { type: 'error' });
+        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
     }
 
     handleSubmit = (e) => {
@@ -148,7 +150,7 @@ export default class UpdateLocation extends Component {
                         <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.LOCATION_NAME}</InputLabel>
+                                <InputLabel className='required'>{clStrings.LOCATION_NAME}</InputLabel>
                                 <Input
                                     type="text"
                                     value={name}
@@ -160,7 +162,7 @@ export default class UpdateLocation extends Component {
                                     autoComplete="off"
                                 />
                                 <FormHelperText error={nameError}>
-                                    {nameError ? strings.INVALID_LOCATION : ''}
+                                    {nameError ? clStrings.INVALID_LOCATION : ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -172,7 +174,7 @@ export default class UpdateLocation extends Component {
                                     size="small"
                                     disabled={location && location.name === name}
                                 >
-                                    {strings.SAVE}
+                                    {commonStrings.SAVE}
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -180,14 +182,14 @@ export default class UpdateLocation extends Component {
                                     size="small"
                                     href='/locations'
                                 >
-                                    {strings.CANCEL}
+                                    {commonStrings.CANCEL}
                                 </Button>
                             </div>
                         </form>
 
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

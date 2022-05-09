@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as ccStrings } from '../lang/create-company';
 import CompanyService from '../services/CompanyService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -17,7 +18,6 @@ import {
     Paper
 } from '@mui/material';
 
-import '../assets/css/create-company.css';
 import '../assets/css/update-company.css';
 
 export default class UpdateCompany extends Component {
@@ -108,13 +108,13 @@ export default class UpdateCompany extends Component {
         CompanyService.update(data)
             .then(status => {
                 if (status === 200) {
-                    toast(strings.UPDATED, { type: 'info' });
+                    toast(commonStrings.UPDATED, { type: 'info' });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
             .catch(_ => {
-                toast(strings.GENERIC_ERROR, { type: 'error' });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
@@ -220,6 +220,7 @@ export default class UpdateCompany extends Component {
                                     record={company}
                                     size='large'
                                     readonly={false}
+                                    hideDelete={true}
                                     onBeforeUpload={this.onBeforeUpload}
                                     onChange={this.onAvatarChange}
                                     onValidate={this.onAvatarValidate}
@@ -228,7 +229,7 @@ export default class UpdateCompany extends Component {
                                     width={Env.COMPANY_IMAGE_WIDTH}
                                     height={Env.COMPANY_IMAGE_HEIGHT} />
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
+                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                     <Input
                                         id="full-name"
                                         type="text"
@@ -240,11 +241,11 @@ export default class UpdateCompany extends Component {
                                         value={fullName}
                                     />
                                     <FormHelperText error={fullNameError}>
-                                        {fullNameError ? strings.INVALID_COMPANY_NAME : ''}
+                                        {fullNameError ? commonStrings.INVALID_COMPANY_NAME : ''}
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.PHONE}</InputLabel>
+                                    <InputLabel>{commonStrings.PHONE}</InputLabel>
                                     <Input
                                         id="phone"
                                         type="text"
@@ -259,7 +260,7 @@ export default class UpdateCompany extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.LOCATION}</InputLabel>
+                                    <InputLabel>{commonStrings.LOCATION}</InputLabel>
                                     <Input
                                         id="location"
                                         type="text"
@@ -269,7 +270,7 @@ export default class UpdateCompany extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{strings.BIO}</InputLabel>
+                                    <InputLabel>{commonStrings.BIO}</InputLabel>
                                     <Input
                                         id="bio"
                                         type="text"
@@ -286,7 +287,7 @@ export default class UpdateCompany extends Component {
                                         size="small"
                                         href={`/reset-password?u=${company._id}`}
                                     >
-                                        {strings.RESET_PASSWORD}
+                                        {commonStrings.RESET_PASSWORD}
                                     </Button>
                                     <Button
                                         type="submit"
@@ -294,7 +295,7 @@ export default class UpdateCompany extends Component {
                                         className='btn-primary btn-margin-bottom'
                                         size="small"
                                     >
-                                        {strings.SAVE}
+                                        {commonStrings.SAVE}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -302,23 +303,23 @@ export default class UpdateCompany extends Component {
                                         size="small"
                                         href="/companies"
                                     >
-                                        {strings.CANCEL}
+                                        {commonStrings.CANCEL}
                                     </Button>
                                 </div>
 
                                 <div className="form-error">
                                     {(error || avatarError || avatarSizeError) ?
                                         <div>
-                                            {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
-                                            {avatarError && <Error message={strings.AVATAR_MANDATORY} />}
-                                            {avatarSizeError && <Error message={strings.AVATAR_SIZE_ERROR} />}
+                                            {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                                            {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
+                                            {avatarSizeError && <Error message={ccStrings.COMPANY_IMAGE_SIZE_ERROR} />}
                                         </div>
                                         : null}
                                 </div>
                             </form>
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {noMatch && <NoMatch />}
             </Master>
         );
