@@ -19,6 +19,16 @@
     color: #121212;
 }
 
+.available-fc {
+    margin: 13px 0 !important;
+}
+
+.available-fc .available-fcl {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: .9em;
+    line-height: 1em;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {

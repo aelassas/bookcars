@@ -3,7 +3,8 @@ import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import {
     Autocomplete,
-    TextField
+    TextField,
+    InputAdornment
 } from '@mui/material';
 import {
     LocationOn as LocationIcon
@@ -82,14 +83,45 @@ export default function MultipleSelect({
                 clearOnEscape={false}
                 loading={loading}
                 multiple={multiple}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        variant={variant || 'outlined'}
-                        required={required && values && values.length === 0}
-                    />
-                )}
+                renderInput={(params) => {
+                    if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1) {
+                        const option = values[0];
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                    alt={option.name}
+                                                    style={{
+                                                        width: Env.COMPANY_IMAGE_WIDTH,
+                                                        // height: Env.COMPANY_IMAGE_HEIGHT
+                                                    }} />
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
+                        );
+                    }
+
+                    return (
+                        <TextField
+                            {...params}
+                            label={label}
+                            variant={variant || 'outlined'}
+                            required={required && values && values.length === 0}
+                        />
+                    );
+                }}
                 renderOption={(props, option, { selected }) => {
                     if (type === Env.RECORD_TYPE.COMPANY) {
                         return (

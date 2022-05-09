@@ -3,20 +3,22 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-car';
-import CompanyService from '../services/CompanyService';
 // import CarService from '../services/CarService';
-import { toast } from 'react-toastify';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
-import MultipleSelect from '../elements/MultipleSelect';
 import LocationList from '../elements/LocationList';
+import CompanyList from '../elements/CompanyList';
 import {
     Input,
     InputLabel,
     FormControl,
     Button,
-    Paper
+    Paper,
+    FormControlLabel,
+    Switch,
+    Select,
+    MenuItem
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 
@@ -28,6 +30,7 @@ export default class CreateCar extends Component {
         super(props);
         this.state = {
             user: null,
+            isCompany: false,
             isLoading: false,
             visible: false,
             error: false,
@@ -37,6 +40,8 @@ export default class CreateCar extends Component {
             companies: [],
             company: '',
             locations: [],
+            isAvailable: true,
+            carType: ''
         };
     }
 
@@ -81,51 +86,46 @@ export default class CreateCar extends Component {
         }
     }
 
-    handleCompanySelected = (values, key, reference) => {
-        if (values.length > 0) {
-            this.setState({ company: values[0]._id });
-        } else {
-            this.setState({ company: '' });
-        }
-        console.log(values);
-    };
-
     handleLocationsSelected = (values) => {
         this.setState({ locations: values });
-        console.log(values);
     };
 
-    getCompanies = (data) => {
-        const result = [];
-        for (const { _id, fullName, avatar } of data) {
-            result.push({ _id, name: fullName, image: avatar });
-        }
-        return result;
+    handleCompanySelected = (values) => {
+        this.setState({ company: values.length > 0 ? values[0]._id : null });
     };
+
+    handleIsAvailable = (e) => {
+        this.setState({ isAvailable: e.target.checked });
+    };
+
+    handleCarTypeChange = (e) => {
+
+        this.setState({ carType: e.target.value }, _ => {
+            console.log(this.state.carType);
+        });
+
+    }
 
     onLoad = (user) => {
         this.setState({ user, visible: true }, _ => {
-            if (user.type === Env.RECORD_TYPE.ADMIN) {
-                CompanyService.getCompanies()
-                    .then(data => {
-                        const companies = this.getCompanies(data);
-                        this.setState({ companies });
-                    })
-                    .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            if (user.type === Env.RECORD_TYPE.COMPANY) {
+                this.setState({ company: user._id, isCompany: true });
             }
         });
     }
 
-    componentDidMount() {
-    }
-
     render() {
-        const { visible,
+        const {
+            isCompany,
+            visible,
             companies,
             error,
             avatarError,
             avatarSizeError,
-            isLoading } = this.state;
+            isLoading,
+            isAvailable,
+            carType
+        } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -164,16 +164,15 @@ export default class CreateCar extends Component {
                                 />
                             </FormControl>
 
-                            <MultipleSelect
+                            {!isCompany && <CompanyList
                                 label={strings.COMPANY}
-                                callbackFromMultipleSelect={this.handleCompanySelected}
                                 options={companies}
-                                loading={false}
                                 required={true}
                                 multiple={false}
                                 type={Env.RECORD_TYPE.COMPANY}
                                 variant='standard'
-                            />
+                                onSelected={this.handleCompanySelected}
+                            />}
 
                             <LocationList
                                 label={strings.LOCATIONS}
@@ -182,6 +181,26 @@ export default class CreateCar extends Component {
                                 variant='standard'
                                 onSelected={this.handleLocationsSelected}
                             />
+
+                            <FormControl fullWidth margin="dense" className='available-fc'>
+                                <FormControlLabel
+                                    control={<Switch checked={isAvailable} onChange={this.handleIsAvailable} color="primary" />}
+                                    label={strings.IS_AVAILABLE}
+                                    className='available-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{strings.CARTYPE}</InputLabel>
+                                <Select
+                                    label={strings.CARTYPE}
+                                    value={carType}
+                                    onChange={this.handleCarTypeChange}
+                                >
+                                    <MenuItem value={Env.CAR_TYPE.DIESEL}>{strings.DIESEL}</MenuItem>
+                                    <MenuItem value={Env.CAR_TYPE.GASOLINE}>{strings.GASOLINE}</MenuItem>
+                                </Select>
+                            </FormControl>
 
                             <div className="buttons">
                                 <Button
