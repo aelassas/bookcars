@@ -16,6 +16,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-company.css';
 
@@ -305,8 +306,17 @@ export default class CreateCompany extends Component {
                                 onValidate={this.onAvatarValidate}
                                 color='disabled'
                                 className='avatar-ctn'
-                                width={Env.COMPANY_IMAGE_WIDTH}
-                                height={Env.COMPANY_IMAGE_HEIGHT} />
+                            // width={Env.COMPANY_IMAGE_WIDTH}
+                            // height={Env.COMPANY_IMAGE_HEIGHT} 
+                            />
+                            
+                            <div className='image-info'>
+                                <InfoIcon />
+                                <label>
+                                    {strings.RECOMMENDED_IMAGE_SIZE}
+                                </label>
+                            </div>
+
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                 <Input
@@ -408,7 +418,7 @@ export default class CreateCompany extends Component {
                                 <Button
                                     type="submit"
                                     variant="contained"
-                                    className='btn-primary'
+                                    className='btn-primary btn-margin-bottom'
                                     size="small"
                                     disabled={emailError}
                                 >
@@ -416,7 +426,7 @@ export default class CreateCompany extends Component {
                                 </Button>
                                 <Button
                                     variant="contained"
-                                    className='btn-secondary'
+                                    className='btn-secondary btn-margin-bottom'
                                     size="small"
                                     onClick={this.handleCancel}
                                 >

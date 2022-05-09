@@ -56,11 +56,6 @@
         width: 100%;
     }
 
-    .cars section.list * {
-        box-sizing: border-box;
-        border-collapse: collapse;
-    }
-
     .cars section.list article {
         position: relative;
         background: #fff;
@@ -100,8 +95,29 @@
         width: 75%;
     }
 
-    .cars section.list article div.car .car-img-empty {
-        margin: 40px 0 0 45px;
+    .cars section.list article div.car div.car-company {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        bottom: 10px;
+        left: 5px;
+    }
+
+    .cars section.list article div.car div.car-company span.car-company-logo {
+        border: 1px solid #e6e6e6;
+        border-radius: 3px;
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: text-bottom;
+    }
+
+    .cars section.list article div.car div.car-company span.car-company-info {
+        color: #a8a8a8;
+        display: inline-block;
+        font-size: .9em;
+        line-height: 1em;
+        white-space: nowrap;
+        margin-left: 5px;
     }
 
     .cars section.list article div.price {
@@ -220,8 +236,9 @@
     .cars .col-1 ul.companies-list {
         list-style-type: none;
         font-size: 13px;
-        margin: 15px 0 15px -15px;
+        margin: 15px 0 0 0;
         padding: 0;
+        display: inline-block;
     }
 
     .cars .col-1 ul.companies-list li {
@@ -280,11 +297,6 @@
         margin-left: calc(50% - 400px);
     }
 
-    .cars section.list * {
-        box-sizing: border-box;
-        border-collapse: collapse;
-    }
-
     .cars section.list article {
         position: relative;
         background: #fff;
@@ -334,10 +346,6 @@
         display: inline-block;
         overflow: hidden;
         vertical-align: text-bottom;
-    }
-
-    .cars section.list article div.car div.car-company span.car-company-logo img {
-        height: 24px;
     }
 
     .cars section.list article div.car div.car-company span.car-company-info {

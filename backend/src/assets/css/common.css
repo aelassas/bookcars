@@ -12,7 +12,7 @@
 .buttons {
     float: right;
     margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .buttons button {
@@ -121,6 +121,38 @@
     justify-content: center;
 }
 
-@media only screen and (max-width: 960px) {}
+.image-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.image-info label {
+    color: #a8a8a8;
+    display: inline-block;
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+@media only screen and (max-width: 960px) {
+    .buttons {
+        margin-top: 15px;
+        margin-bottom: 5px;
+        display: grid;
+        width: 100%;
+    }
+
+    .buttons button {
+        margin-right: 0 !important;
+    }
+
+    .btn-margin {
+        margin-right: 0 !important;
+    }
+}
 
 @media only screen and (min-width: 960px) {}

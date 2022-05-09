@@ -17,6 +17,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/update-company.css';
 
@@ -155,7 +156,7 @@ export default class UpdateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true }, _ => {
+        this.setState({ isLoading: true, error:true }, _ => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -226,8 +227,17 @@ export default class UpdateCompany extends Component {
                                     onValidate={this.onAvatarValidate}
                                     color='disabled'
                                     className='avatar-ctn'
-                                    width={Env.COMPANY_IMAGE_WIDTH}
-                                    height={Env.COMPANY_IMAGE_HEIGHT} />
+                                // width={Env.COMPANY_IMAGE_WIDTH}
+                                // height={Env.COMPANY_IMAGE_HEIGHT} 
+                                />
+
+                                <div className='image-info'>
+                                    <InfoIcon />
+                                    <label>
+                                        {ccStrings.RECOMMENDED_IMAGE_SIZE}
+                                    </label>
+                                </div>
+
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                     <Input

@@ -330,12 +330,12 @@ export const Avatar = (props) => {
 
     const companyImageStyle = {
         width: Env.COMPANY_IMAGE_WIDTH,
-        height: Env.COMPANY_IMAGE_HEIGHT
+        // height: Env.COMPANY_IMAGE_HEIGHT
     };
 
     const carImageStyle = {
         width: Env.CAR_IMAGE_WIDTH,
-        height: Env.CAR_IMAGE_HEIGHT
+        // height: Env.CAR_IMAGE_HEIGHT
     };
 
     return (

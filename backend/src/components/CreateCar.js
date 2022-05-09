@@ -18,6 +18,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-car.css';
 
@@ -143,8 +144,16 @@ export default class CreateCar extends Component {
                                 onValidate={this.onAvatarValidate}
                                 color='disabled'
                                 className='avatar-ctn'
-                                width={Env.CAR_IMAGE_WIDTH}
-                                height={Env.CAR_IMAGE_HEIGHT} />
+                            // width={Env.CAR_IMAGE_WIDTH}
+                            // height={Env.CAR_IMAGE_HEIGHT} 
+                            />
+
+                            <div className='image-info'>
+                                <InfoIcon />
+                                <label>
+                                    {strings.RECOMMENDED_IMAGE_SIZE}
+                                </label>
+                            </div>
 
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{strings.NAME}</InputLabel>

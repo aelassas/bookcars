@@ -261,13 +261,13 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
             const car = {
                 _id,
                 company: {
-                    _id: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62756aae039367a61924c447',
-                    fullName: _id % 2 === 0 ? 'Hertz' : 'addCar',
-                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1651934219914.png' : '62756aae039367a61924c447_1652024660384.png'
+                    _id: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62794b5121c117948f2a9b2e',
+                    fullName: _id % 2 === 0 ? 'Hertz' : 'dollar',
+                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1652080968846.png' : '62794b5121c117948f2a9b2e_1652116388565.png'
                 },
                 name: _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto',
                 type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
-                image: '5266dac8680298fa6ae8c747_1651663694739.jpg',
+                image: _id % 2 === 0 ?'5266dac8680298fa6ae8c747_1651663694739.jpg': '5266dac8680298fa6ae8c747_1651663694740.jpg',
                 locations: ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
                 price: 848.78,
                 seats: 5,

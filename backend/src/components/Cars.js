@@ -235,7 +235,10 @@ export default class Cars extends Component {
                                                 <label onClick={this.handleCompanyClick}>
                                                     <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                                         alt={company.fullName}
-                                                        style={{ width: Env.COMPANY_IMAGE_WIDTH, height: Env.COMPANY_IMAGE_HEIGHT }} />
+                                                        style={{
+                                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                                            // height: Env.COMPANY_IMAGE_HEIGHT
+                                                        }} />
                                                 </label>
                                             </li>
                                         ))
@@ -268,10 +271,19 @@ export default class Cars extends Component {
                                         <div className='car'>
                                             <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
                                                 alt={car.name} className='car-img'
-                                                style={{ maxWidth: Env.CAR_IMAGE_WIDTH, maxHeight: Env.CAR_IMAGE_HEIGHT }} />
+                                                style={{
+                                                    maxWidth: Env.CAR_IMAGE_WIDTH,
+                                                    // maxHeight: Env.CAR_IMAGE_HEIGHT
+                                                }} />
                                             <div className='car-company'>
                                                 <span className='car-company-logo'>
-                                                    <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                                                    <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                        alt={car.company.fullName}
+                                                        style={{
+                                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                                            // height: Env.COMPANY_IMAGE_HEIGHT
+                                                        }}
+                                                    />
                                                 </span>
                                                 <span className='car-company-info'>
                                                     {car.company.fullName}

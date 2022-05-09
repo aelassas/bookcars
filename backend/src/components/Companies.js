@@ -157,7 +157,10 @@ export default class Companies extends Component {
                                                 <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                                     alt={company.fullName}
                                                     className='company-item-avatar'
-                                                    style={{ width: Env.COMPANY_IMAGE_WIDTH, height: Env.COMPANY_IMAGE_HEIGHT }} />
+                                                    style={{
+                                                        width: Env.COMPANY_IMAGE_WIDTH,
+                                                        // height: Env.COMPANY_IMAGE_HEIGHT
+                                                    }} />
                                                 <span className='company-item-title'>{company.fullName}</span>
                                             </div>
                                         </div>
