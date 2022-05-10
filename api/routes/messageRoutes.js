@@ -27,7 +27,7 @@ routes.route(routeNames.send).post(authJwt.verifyToken, (req, res) => {
                 User.findById(to)
                     .then(async user => {
                         if (!user) {
-                            console.err('[message.send] User not found:', to);
+                            console.error('[message.send] User not found:', to);
                             res.sendStatus(204);
                         } else {
                             const data = {

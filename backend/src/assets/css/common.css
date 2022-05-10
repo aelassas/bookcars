@@ -121,15 +121,15 @@
     justify-content: center;
 }
 
-.image-info {
+.info {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    margin-bottom: 15px;
+    margin: 15px 0;
 }
 
-.image-info label {
+.info label {
     color: #a8a8a8;
     display: inline-block;
     font-size: .9em;

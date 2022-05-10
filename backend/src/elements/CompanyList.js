@@ -15,9 +15,9 @@ class CompanyList extends Component {
         }
     }
 
-    handleCompanySelected = (values, key, reference) => {
-        if (this.props.onSelected) {
-            this.props.onSelected(values);
+    handleChange = (values, key, reference) => {
+        if (this.props.onChange) {
+            this.props.onChange(values);
         }
     };
 
@@ -46,7 +46,7 @@ class CompanyList extends Component {
         return (
             <MultipleSelect
                 label={this.props.label}
-                callbackFromMultipleSelect={this.handleCompanySelected}
+                callbackFromMultipleSelect={this.handleChange}
                 options={companies}
                 loading={isLoading}
                 required={this.props.required}

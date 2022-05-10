@@ -10,7 +10,6 @@ import NoMatch from './NoMatch';
 import { Avatar } from '../elements/Avatar';
 import { toast } from 'react-toastify';
 import {
-    List,
     Typography,
     IconButton,
     Button,
@@ -150,8 +149,8 @@ export default class Company extends Component {
                             </div>}
                         </div>
                         <div className='col-2'>
-                            <List className='cars'>
-                            </List>
+                            <section className='cars'>
+                            </section>
                         </div>
                     </div>
                 }

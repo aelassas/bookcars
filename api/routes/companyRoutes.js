@@ -38,7 +38,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.err('[company.update] Location not found:', req.body);
+                console.error('[company.update] Location not found:', req.body);
                 res.sendStatus(204);
             }
         })

@@ -5,7 +5,7 @@ import UserService from './UserService';
 export default class CarService {
 
     static create(data) {
-        return axios.post(`${Env.API_HOST}/api/create-car`, data, { headers: UserService.authHeader() }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/create-car`, data, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static update(data) {

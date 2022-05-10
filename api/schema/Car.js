@@ -19,6 +19,11 @@ const carSchema = new Schema({
         ref: 'Location',
         validate: v => Array.isArray(v) && v.length > 0
     },
+    price: {
+        type: Number,
+        required: [true, "can't be blank"],
+        index: true
+    },
     isAvailable: {
         type: Boolean,
         required: [true, "can't be blank"],
@@ -29,13 +34,17 @@ const carSchema = new Schema({
         enum: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
         required: [true, "can't be blank"],
     },
+    gearbox: {
+        type: String,
+        enum: [Env.GEARBOX_TYPE.MANUAL, Env.GEARBOX_TYPE.AUTOMATIC],
+        required: [true, "can't be blank"],
+    },
+    aircon: {
+        type: Boolean,
+        required: [true, "can't be blank"]
+    },
     image: {
         type: String
-    },
-    price: {
-        type: Number,
-        required: [true, "can't be blank"],
-        index: true
     },
     seats: {
         type: Number,
@@ -53,47 +62,38 @@ const carSchema = new Schema({
             message: '{VALUE} is not an integer'
         }
     },
-    aircon: {
-        type: Boolean,
-        required: [true, "can't be blank"]
-    },
-    gearbox: {
+    fuelPolicy: {
         type: String,
-        enum: [Env.GEARBOX_TYPE.MANUAL, Env.GEARBOX_TYPE.AUTOMATIC],
+        enum: [Env.FUEL_POLICY.LIKE_FOR_LIKE, Env.FUEL_POLICY.FREE_TANK],
         required: [true, "can't be blank"],
     },
     mileage: {
         type: Number,
-        default: -1
-    },
-    fuelPolicy: {
-        type: String,
-        enum: [Env.FUEL_POLICY.LIKE_TO_LIKE, Env.FUEL_POLICY.FREE_TANK],
-        required: [true, "can't be blank"],
+        required: [true, "can't be blank"]
     },
     cancellation: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
     amendments: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
     theftProtection: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
     collisionDamageWaiver: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
     fullInsurance: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
-    addionaldriver: {
+    additionalDriver: {
         type: Number,
-        default: -1
+        required: [true, "can't be blank"]
     },
 }, {
     timestamps: true,

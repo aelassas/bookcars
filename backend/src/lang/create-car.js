@@ -11,10 +11,13 @@ export const strings = new LocalizedStrings({
         COMPANY: 'Société',
         LOCATIONS: 'Lieux',
         IS_AVAILABLE: 'Disponible pour la location',
-
         CARTYPE: 'Moteur',
-        DIESEL: 'Diesel',
-        GASOLINE: 'Essence',
+        PRICE: 'Prix',
+        SEATS: 'Sièges',
+        DOORS: 'Portes',
+        GEARBOX: 'Transmission',
+        AIRCON: 'Climatisation',
+        OPTIONAL: 'Paramètres optionnels',
     },
     en: {
         NEW_CAR_HEADING: 'New car',
@@ -24,7 +27,13 @@ export const strings = new LocalizedStrings({
         COMPANY: 'Company',
         LOCATIONS: 'Locations',
         IS_AVAILABLE: 'Available for rental',
-
+        CARTYPE: 'Engine',
+        PRICE: 'Price',
+        SEATS: 'Seats',
+        DOORS: 'Doors',
+        GEARBOX: 'Gearbox',
+        AIRCON: 'Aircon',
+        OPTIONAL: 'Optional Parameters',
     }
 });
 

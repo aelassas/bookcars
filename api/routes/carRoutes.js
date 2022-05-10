@@ -19,8 +19,8 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
     const { body } = req;
 
     if (!body.image) {
-        console.error(`[car.create]  ${strings.CAR_IMAGE_ERROR} ${req.body}`);
-        res.status(400).send(strings.CAR_IMAGE_ERROR + err);
+        console.error(`[car.create]  ${strings.CAR_IMAGE_REQUIRED} ${req.body}`);
+        res.status(400).send(strings.CAR_IMAGE_REQUIRED + err);
         return;
     }
 
@@ -29,41 +29,43 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
     car.save()
         .then(async car => {
 
-            const image = path.join(CDN_TEMP, body.image);
-            if (fs.existsSync(image)) {
-                const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`;
-                const newPath = path.join(CDN, filename);
+            if (car.image) {
+                const image = path.join(CDN_TEMP, body.image);
+                if (fs.existsSync(image)) {
+                    const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`;
+                    const newPath = path.join(CDN, filename);
 
-                try {
-                    fs.renameSync(image, newPath);
-                    car.iamge = filename;
                     try {
-                        await car.save();
+                        fs.renameSync(image, newPath);
+                        car.image = filename;
+                        try {
+                            await car.save();
+                        } catch (err) {
+                            console.error(strings.DB_ERROR, err);
+                            res.status(400).send(strings.DB_ERROR + err);
+                        }
+                    } catch (err) {
+                        console.error(strings.ERROR, err);
+                        res.status(400).send(strings.ERROR + err);
+                    }
+                } else {
+                    console.error(strings.CAR_IMAGE_NOT_FOUND, body);
+
+                    try {
+                        await Car.deleteOne({ _id: car._id });
                     } catch (err) {
                         console.error(strings.DB_ERROR, err);
                         res.status(400).send(strings.DB_ERROR + err);
                     }
-                } catch (err) {
-                    console.error(strings.ERROR, err);
-                    res.status(400).send(strings.ERROR + err);
-                }
-            } else {
-                console.error(strings.CAR_IMAGE_NOT_FOUND, body);
+                    finally {
+                        res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + body);
+                    }
 
-                try {
-                    await Car.deleteOne({ _id: car._id });
-                } catch (err) {
-                    console.error(strings.DB_ERROR, err);
-                    res.status(400).send(strings.DB_ERROR + err);
+                    return;
                 }
-                finally {
-                    res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + body);
-                }
-
-                return;
             }
 
-            res.sendStatus(200);
+            res.json(car);
         })
         .catch(err => {
             console.error(`[car.create]  ${strings.DB_ERROR} ${req.body}`, err);
@@ -120,7 +122,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.err('[car.update] Car not found:', req.body);
+                console.error('[car.update] Car not found:', req.body);
                 res.sendStatus(204);
             }
         })
@@ -163,7 +165,7 @@ routes.route(routeNames.updateImage).post([authJwt.verifyToken, multer({ storage
                 }
 
                 if (car.image) {
-                    const image = path.join(CDN, car.iamge);
+                    const image = path.join(CDN, car.image);
                     if (fs.existsSync(image)) {
                         fs.unlinkSync(image);
                     }
@@ -173,7 +175,7 @@ routes.route(routeNames.updateImage).post([authJwt.verifyToken, multer({ storage
                 const filepath = path.join(CDN, filename);
 
                 fs.writeFileSync(filepath, req.file.buffer);
-                car.iamge = filename;
+                car.image = filename;
                 car.save()
                     .then(usr => {
                         res.sendStatus(200);
@@ -198,13 +200,13 @@ routes.route(routeNames.deleteImage).post(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
         .then(car => {
             if (car) {
-                if (car.iamge) {
+                if (car.image) {
                     const image = path.join(CDN, car.image);
                     if (fs.existsSync(image)) {
                         fs.unlinkSync(image);
                     }
                 }
-                car.iamge = null;
+                car.image = null;
 
                 car.save()
                     .then(_ => {
@@ -227,9 +229,9 @@ routes.route(routeNames.deleteImage).post(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) => {
     try {
-        const avatar = path.join(CDN_TEMP, req.params.avatar);
-        if (fs.existsSync(avatar)) {
-            fs.unlinkSync(avatar);
+        const image = path.join(CDN_TEMP, req.params.image);
+        if (fs.existsSync(image)) {
+            fs.unlinkSync(image);
         }
         res.sendStatus(200);
     } catch (err) {
@@ -240,11 +242,12 @@ routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) =>
 
 routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
+        .populate('company')
         .then(car => {
             if (car) {
                 res.json(car);
             } else {
-                console.err('[car.getCar] Car not found:', req.params.id);
+                console.error('[car.getCar] Car not found:', req.params.id);
                 res.sendStatus(204);
             }
         })
@@ -267,7 +270,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
                 },
                 name: _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto',
                 type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
-                image: _id % 2 === 0 ?'5266dac8680298fa6ae8c747_1651663694739.jpg': '5266dac8680298fa6ae8c747_1651663694740.jpg',
+                image: _id % 2 === 0 ? '5266dac8680298fa6ae8c747_1651663694739.jpg' : '5266dac8680298fa6ae8c747_1651663694740.jpg',
                 locations: ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
                 price: 848.78,
                 seats: 5,
@@ -275,7 +278,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
                 aircon: true,
                 gearbox: _id % 2 === 0 ? Env.GEARBOX_TYPE.MANUAL : Env.GEARBOX_TYPE.AUTOMATIC,
                 mileage: _id % 2 === 0 ? -1 : 150,
-                fuelPolicy: _id % 2 === 0 ? Env.FUEL_POLICY.LIKE_TO_LIKE : Env.FUEL_POLICY.FREE_TANK,
+                fuelPolicy: _id % 2 === 0 ? Env.FUEL_POLICY.LIKE_FOR_LIKE : Env.FUEL_POLICY.FREE_TANK,
                 cancellation: _id % 2 === 0 ? 80 : _id % 3 === 0 ? 0 : -1,
                 amendments: _id % 2 === 0 ? 120 : _id % 3 === 0 ? 0 : -1,
                 theftProtection: _id % 2 === 0 ? 100 : _id % 3 === 0 ? 0 : -1,

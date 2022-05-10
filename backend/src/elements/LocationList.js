@@ -36,9 +36,9 @@ class LocationList extends Component {
             .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
-    handleLocationsSelected = (values, key, reference) => {
-        if (this.props.onSelected) {
-            this.props.onSelected(values);
+    handleChange = (values, key, reference) => {
+        if (this.props.onChange) {
+            this.props.onChange(values);
         }
     };
 
@@ -53,7 +53,7 @@ class LocationList extends Component {
             <MultipleSelect
                 loading={isLoadingLocations}
                 label={this.props.label || ''}
-                callbackFromMultipleSelect={this.handleLocationsSelected}
+                callbackFromMultipleSelect={this.handleChange}
                 options={locations}
                 selectedOptions={this.props.selectedOptions}
                 required={this.props.required || false}

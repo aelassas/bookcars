@@ -44,7 +44,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.err('[location.update] Location not found:', req.body);
+                console.error('[location.update] Location not found:', req.body);
                 res.sendStatus(204);
             }
         })
@@ -73,7 +73,7 @@ routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
             if (location) {
                 res.json(location);
             } else {
-                console.err('[location.getLocation] Location not found:', req.params.id);
+                console.error('[location.getLocation] Location not found:', req.params.id);
                 res.sendStatus(204);
             }
         })

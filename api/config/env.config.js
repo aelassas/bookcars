@@ -17,7 +17,7 @@ const Env = {
         AUTOMATIC: 'automatic'
     },
     FUEL_POLICY: {
-        LIKE_TO_LIKE: 'likeTolike',
+        LIKE_FOR_LIKE: 'likeForlike',
         FREE_TANK: 'freeTank'
     }
 };

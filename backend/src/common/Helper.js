@@ -14,6 +14,10 @@ export default class Helper {
         return part1 + '/' + part2;
     }
 
+    static isNumber(val) {
+        return /^-?\d+$/.test(val);
+    }
+
     static getCarType(type) {
         switch (type) {
             case Env.CAR_TYPE.DIESEL:
@@ -68,7 +72,7 @@ export default class Helper {
 
     static getFuelPolicy(type) {
         switch (type) {
-            case Env.FUEL_POLICY.LIKE_TO_LIKE:
+            case Env.FUEL_POLICY.LIKE_FOR_LIKE:
                 return strings.FUEL_POLICY_LIKE_FOR_LIKE;
 
             case Env.FUEL_POLICY.FREE_TANK:
@@ -115,7 +119,7 @@ export default class Helper {
 
     static getFuelPolicyTooltip(fuelPolicy) {
         switch (fuelPolicy) {
-            case Env.FUEL_POLICY.LIKE_TO_LIKE:
+            case Env.FUEL_POLICY.LIKE_FOR_LIKE:
                 return strings.FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP;
 
             case Env.FUEL_POLICY.FREE_TANK:
