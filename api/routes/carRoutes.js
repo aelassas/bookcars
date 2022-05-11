@@ -90,12 +90,13 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                     aircon,
                     gearbox,
                     fuelPolicy,
+                    mileage,
                     cancellation,
                     amendments,
                     theftProtection,
                     collisionDamageWaiver,
                     fullInsurance,
-                    addionaldriver
+                    additionalDriver
                 } = req.body;
 
                 car.company = company;
@@ -109,12 +110,13 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 car.aircon = aircon;
                 car.gearbox = gearbox;
                 car.fuelPolicy = fuelPolicy;
+                car.mileage = mileage;
                 car.cancellation = cancellation;
                 car.amendments = amendments;
                 car.theftProtection = theftProtection;
                 car.collisionDamageWaiver = collisionDamageWaiver;
                 car.fullInsurance = fullInsurance;
-                car.addionaldriver = addionaldriver;
+                car.additionalDriver = additionalDriver;
 
                 car.save()
                     .then(_ => res.sendStatus(200))
@@ -133,10 +135,26 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => {
     const id = req.params.id;
-    // TODO
-    res.sendStatus(200);
+
+    try {
+        const car = await Car.findByIdAndDelete(id);
+        if (car) {
+            if (car.image) {
+                const image = path.join(CDN, car.image);
+                if (fs.existsSync(image)) {
+                    fs.unlinkSync(image);
+                }
+            }
+        } else {
+            return res.sendStatus(404);
+        }
+        return res.sendStatus(200);
+    } catch (err) {
+        console.error(`[car.delete]  ${strings.DB_ERROR} ${id}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 routes.route(routeNames.createImage).post([authJwt.verifyToken, multer({ storage: multer.memoryStorage() }).single('image')], (req, res) => {

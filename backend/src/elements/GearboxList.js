@@ -12,27 +12,37 @@ class GearboxList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gearbox: ''
+            value: ''
         }
     }
 
     handleChange = (e) => {
-        this.setState({ gearbox: e.target.value }, _ => {
+        this.setState({ value: e.target.value }, _ => {
             if (this.props.onChange) {
                 this.props.onChange(e.target.value);
             }
         });
     }
 
+    static getDerivedStateFromProps(props, state) {
+        const { value } = state;
+
+        if (value === '' && props.value && props.value !== value) {
+            return { value: props.value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { gearbox } = this.state;
+        const { value } = this.state;
 
         return (
             <div>
                 <InputLabel className={this.props.required ? 'required' : null}>{this.props.label}</InputLabel>
                 <Select
                     label={this.props.label}
-                    value={gearbox}
+                    value={value}
                     onChange={this.handleChange}
                     variant={this.props.variant || 'standard'}
                     required={this.props.required}

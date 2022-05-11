@@ -156,7 +156,7 @@ export default class UpdateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true, error:true }, _ => {
+        this.setState({ isLoading: true }, _ => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -210,7 +210,7 @@ export default class UpdateCompany extends Component {
         } = this.state;
 
         return (
-            <Master onLoad={this.onLoad} strict={true} admin={true}>
+            <Master onLoad={this.onLoad} strict={true}>
                 {visible &&
                     <div className='update-company'>
                         <Paper className="company-form-update company-form-wrapper" elevation={10}>
@@ -231,7 +231,7 @@ export default class UpdateCompany extends Component {
                                 // height={Env.COMPANY_IMAGE_HEIGHT} 
                                 />
 
-                                <div className='image-info'>
+                                <div className='info'>
                                     <InfoIcon />
                                     <label>
                                         {ccStrings.RECOMMENDED_IMAGE_SIZE}

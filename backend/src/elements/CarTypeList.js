@@ -12,27 +12,37 @@ class CarTypeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            carType: ''
+            value: ''
         }
     }
 
     handleChange = (e) => {
-        this.setState({ carType: e.target.value }, _ => {
+        this.setState({ value: e.target.value }, _ => {
             if (this.props.onChange) {
                 this.props.onChange(e.target.value);
             }
         });
     }
 
+    static getDerivedStateFromProps(props, state) {
+        const { value } = state;
+
+        if (value === '' && props.value && props.value !== value) {
+            return { value: props.value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { carType } = this.state;
+        const { value } = this.state;
 
         return (
             <div>
                 <InputLabel className={this.props.required ? 'required' : null}>{this.props.label}</InputLabel>
                 <Select
                     label={this.props.label}
-                    value={carType}
+                    value={value}
                     onChange={this.handleChange}
                     variant={this.props.variant || 'standard'}
                     required={this.props.required}

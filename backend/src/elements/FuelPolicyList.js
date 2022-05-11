@@ -12,27 +12,37 @@ class FuelPolicyList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fuelPolicy: ''
+            value: ''
         }
     }
 
     handleChange = (e) => {
-        this.setState({ fuelPolicy: e.target.value }, _ => {
+        this.setState({ value: e.target.value }, _ => {
             if (this.props.onChange) {
                 this.props.onChange(e.target.value);
             }
         });
     }
 
+    static getDerivedStateFromProps(props, state) {
+        const { value } = state;
+
+        if (value === '' && props.value && props.value !== value) {
+            return { value: props.value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { fuelPolicy } = this.state;
+        const { value } = this.state;
 
         return (
             <div>
                 <InputLabel className={this.props.required ? 'required' : null}>{this.props.label}</InputLabel>
                 <Select
                     label={this.props.label}
-                    value={fuelPolicy}
+                    value={value}
                     onChange={this.handleChange}
                     variant={this.props.variant || 'standard'}
                     required={this.props.required}

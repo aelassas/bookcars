@@ -286,7 +286,7 @@ export default class Cars extends Component {
                                                         }}
                                                     />
                                                 </span>
-                                                <a href={`/company?c=${car.company.id}`} className='car-company-info'>
+                                                <a href={`/company?c=${car.company._id}`} className='car-company-info'>
                                                     {car.company.fullName}
                                                 </a>
                                             </div>
@@ -405,10 +405,10 @@ export default class Cars extends Component {
                                                     </Tooltip>
                                                 </li>
                                                 <li>
-                                                    <Tooltip title={Helper.getAdditionalDriver(car.addionaldriver, fr)} placement='left'>
+                                                    <Tooltip title={Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
-                                                            {car.addionaldriver > -1 ? <CheckIcon /> : <UncheckIcon />}
-                                                            <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.addionaldriver, fr)}</span>
+                                                            {car.additionalDriver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                            <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                                                         </div>
                                                     </Tooltip>
                                                 </li>

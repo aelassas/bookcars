@@ -10,28 +10,38 @@ class SeatsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            seats: ''
+            value: ''
         }
     }
 
     handleChange = (e) => {
         const value = e.target.value || '';
-        this.setState({ seats: value }, _ => {
+        this.setState({ value: value }, _ => {
             if (this.props.onChange) {
                 this.props.onChange(value);
             }
         });
     };
 
+    static getDerivedStateFromProps(props, state) {
+        const { value } = state;
+
+        if (value === '' && props.value && props.value !== value) {
+            return { value: props.value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { seats } = this.state;
+        const { value } = this.state;
 
         return (
             <div>
                 <InputLabel className={this.props.required ? 'required' : null}>{this.props.label}</InputLabel>
                 <Select
                     label={this.props.label}
-                    value={seats}
+                    value={value}
                     onChange={this.handleChange}
                     variant={this.props.variant || 'standard'}
                     required={this.props.required}

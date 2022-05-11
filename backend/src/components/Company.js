@@ -58,7 +58,6 @@ export default class Company extends Component {
 
         this.setState({ isLoading: true, openDeleteDialog: false }, _ => {
             CompanyService.delete(company._id).then(status => {
-                console.log(status);
                 if (status === 200) {
                     window.location.href = '/companies';
                 } else {
@@ -118,20 +117,22 @@ export default class Company extends Component {
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
-            <Master onLoad={this.onLoad} strict={true} admin={true}>
+            <Master onLoad={this.onLoad} strict={true}>
                 {visible &&
                     <div className='company'>
                         <div className='col-1'>
-                            <Avatar
-                                record={company}
-                                type={Env.RECORD_TYPE.COMPANY}
-                                mode='update'
-                                size='large'
-                                onBeforeUpload={this.onBeforeUpload}
-                                onChange={this.onAvatarChange}
-                                readonly={!edit}
-                                color='disabled'
-                                className='company-avatar' />
+                            <section className='company-avatar-sec'>
+                                <Avatar
+                                    record={company}
+                                    type={Env.RECORD_TYPE.COMPANY}
+                                    mode='update'
+                                    size='large'
+                                    onBeforeUpload={this.onBeforeUpload}
+                                    onChange={this.onAvatarChange}
+                                    readonly={!edit}
+                                    color='disabled'
+                                    className='company-avatar' />
+                            </section>
                             <Typography variant="h4" className="company-name">{company.fullName}</Typography>
                             {company.bio && company.bio !== '' && <Typography variant="h6" className="company-info">{company.bio}</Typography>}
                             {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}

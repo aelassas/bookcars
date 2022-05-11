@@ -318,13 +318,14 @@ export const Avatar = (props) => {
                     setAvatar(props.record.avatar);
                 }
                 setIsLoading(false);
-            } else {
+            } else if (props.mode === 'create') {
                 setIsLoading(false);
             }
         } else {
             setError(true);
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
         }
-    }, [props.record, props.type]);
+    }, [props.record, props.type, props.mode]);
 
     const { size, readonly, className } = props;
 

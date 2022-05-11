@@ -310,7 +310,7 @@ export default class CreateCompany extends Component {
                             // height={Env.COMPANY_IMAGE_HEIGHT} 
                             />
                             
-                            <div className='image-info'>
+                            <div className='info'>
                                 <InfoIcon />
                                 <label>
                                     {strings.RECOMMENDED_IMAGE_SIZE}

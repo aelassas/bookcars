@@ -10,28 +10,38 @@ class DoorsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            doors: ''
+            value: ''
         }
     }
 
     handleChange = (e) => {
         const value = e.target.value || '';
-        this.setState({ doors: value }, _ => {
+        this.setState({ value: value }, _ => {
             if (this.props.onChange) {
                 this.props.onChange(value);
             }
         });
     };
 
+    static getDerivedStateFromProps(props, state) {
+        const { value } = state;
+
+        if (value === '' && props.value && props.value !== value) {
+            return { value: props.value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { doors } = this.state;
+        const { value } = this.state;
 
         return (
             <div>
                 <InputLabel className={this.props.required ? 'required' : null}>{this.props.label}</InputLabel>
                 <Select
                     label={this.props.label}
-                    value={doors}
+                    value={value}
                     onChange={this.handleChange}
                     variant={this.props.variant || 'standard'}
                     required={this.props.required}

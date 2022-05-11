@@ -10,24 +10,23 @@ class LocationList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            initLocations: false,
-            isLoadingLocations: false,
+            init: false,
+            isLoading: false,
             locations: [],
-            selectedLocations: [],
             fetchLocations: false,
-            locationsPage: 1,
-            locationsKeyword: ''
+            page: 1,
+            keyword: ''
         };
     }
 
     fetchLocations = (onFetch) => {
-        const { locations, locationsKeyword, locationsPage } = this.state;
-        this.setState({ isLoadingLocations: true });
+        const { locations, keyword, page } = this.state;
+        this.setState({ isLoading: true });
 
-        LocationService.getLocations(locationsKeyword, locationsPage, Env.PAGE_SIZE)
+        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _locations = locationsPage === 1 ? data : [...locations, ...data];
-                this.setState({ locations: _locations, isLoadingLocations: false, fetchLocations: data.length > 0 }, _ => {
+                const _locations = page === 1 ? data : [...locations, ...data];
+                this.setState({ locations: _locations, isLoading: false, fetchLocations: data.length > 0 }, _ => {
                     if (onFetch) {
                         onFetch();
                     }
@@ -43,19 +42,19 @@ class LocationList extends Component {
     };
 
     render() {
-        const { initLocations,
-            isLoadingLocations,
+        const { init,
+            isLoading,
             locations,
             fetchLocations,
-            locationsPage,
-            locationsKeyword } = this.state;
+            page,
+            keyword } = this.state;
         return (
             <MultipleSelect
-                loading={isLoadingLocations}
+                loading={isLoading}
                 label={this.props.label || ''}
                 callbackFromMultipleSelect={this.handleChange}
                 options={locations}
-                selectedOptions={this.props.selectedOptions}
+                selectedOptions={this.props.value && this.props.value.length > 0 ? this.props.value : []}
                 required={this.props.required || false}
                 multiple={this.props.multiple}
                 type={Env.RECORD_TYPE.LOCATION}
@@ -63,9 +62,9 @@ class LocationList extends Component {
                 ListboxProps={{
                     onScroll: (event) => {
                         const listboxNode = event.currentTarget;
-                        if (fetchLocations && !isLoadingLocations && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
-                            const p = locationsPage + 1;
-                            this.setState({ locationsPage: p }, _ => {
+                        if (fetchLocations && !isLoading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                            const p = page + 1;
+                            this.setState({ page: p }, _ => {
                                 this.fetchLocations();
                             });
                         }
@@ -73,10 +72,10 @@ class LocationList extends Component {
                 }}
                 onFocus={
                     (event) => {
-                        if (!initLocations) {
+                        if (!init) {
                             const p = 1;
-                            this.setState({ locations: [], locationsPage: p }, _ => {
-                                this.fetchLocations(_ => { this.setState({ initLocations: true }) });
+                            this.setState({ locations: [], page: p }, _ => {
+                                this.fetchLocations(_ => { this.setState({ init: true }) });
                             });
                         }
                     }
@@ -85,8 +84,9 @@ class LocationList extends Component {
                     (event) => {
                         const value = (event && event.target ? event.target.value : null) || '';
 
-                        if (event.target.type === 'text' && value !== locationsKeyword) {
-                            this.setState({ locations: [], locationsPage: 1, locationsKeyword: value }, _ => {
+                        //if (event.target.type === 'text' && value !== keyword) {
+                        if (value !== keyword) {
+                            this.setState({ locations: [], page: 1, keyword: value }, _ => {
                                 this.fetchLocations();
                             });
                         }
@@ -94,7 +94,7 @@ class LocationList extends Component {
                 }
                 onClear={
                     (event) => {
-                        this.setState({ locations: [], locationsPage: 1, locationsKeyword: '', fetchLocations: true }, _ => {
+                        this.setState({ locations: [], page: 1, keyword: '', fetchLocations: true }, _ => {
                             this.fetchLocations();
                         });
                     }

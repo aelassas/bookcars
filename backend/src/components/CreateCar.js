@@ -15,6 +15,7 @@ import CarTypeList from '../elements/CarTypeList';
 import GearboxList from '../elements/GearboxList';
 import SeatsList from '../elements/SeatsList';
 import DoorsList from '../elements/DoorsList';
+import FuelPolicyList from '../elements/FuelPolicyList';
 import { toast } from 'react-toastify';
 import {
     Input,
@@ -29,7 +30,6 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-car.css';
-import FuelPolicyList from '../elements/FuelPolicyList';
 
 export default class CreateCar extends Component {
 
@@ -44,7 +44,6 @@ export default class CreateCar extends Component {
             imageError: false,
             imageSizeError: false,
             image: null,
-            companies: [],
             name: '',
             company: '',
             locations: [],
@@ -233,7 +232,6 @@ export default class CreateCar extends Component {
 
         CarService.create(data)
             .then(car => {
-                console.log(car);
                 if (car && car._id) {
                     window.location = `/car?c=${car._id}`;
                 } else {
@@ -251,14 +249,12 @@ export default class CreateCar extends Component {
                 this.setState({ company: user._id, isCompany: true });
             }
         });
-        console.log()
     };
 
     render() {
         const {
             isCompany,
             visible,
-            companies,
             error,
             imageError,
             imageSizeError,
@@ -319,7 +315,6 @@ export default class CreateCar extends Component {
                                 <FormControl fullWidth margin="dense">
                                     <CompanyList
                                         label={strings.COMPANY}
-                                        options={companies}
                                         required={true}
                                         multiple={false}
                                         type={Env.RECORD_TYPE.COMPANY}

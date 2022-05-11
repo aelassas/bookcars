@@ -48,6 +48,7 @@ class CompanyList extends Component {
                 label={this.props.label}
                 callbackFromMultipleSelect={this.handleChange}
                 options={companies}
+                selectedOptions={this.props.value ? [this.props.value] : []}
                 loading={isLoading}
                 required={this.props.required}
                 multiple={this.props.multiple}

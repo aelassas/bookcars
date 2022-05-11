@@ -145,50 +145,51 @@ export default class UpdateLocation extends Component {
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                <div className='update-location'>
-                    <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
-                        <form onSubmit={this.handleSubmit}>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{clStrings.LOCATION_NAME}</InputLabel>
-                                <Input
-                                    type="text"
-                                    value={name}
-                                    error={nameError}
-                                    required
-                                    onBlur={this.handleOnBlurName}
-                                    onChange={this.handleOnChangeName}
-                                    onKeyDown={this.handleOnKeyDownName}
-                                    autoComplete="off"
-                                />
-                                <FormHelperText error={nameError}>
-                                    {nameError ? clStrings.INVALID_LOCATION : ''}
-                                </FormHelperText>
-                            </FormControl>
+                {!error && !noMatch &&
+                    <div className='update-location'>
+                        <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                            <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
+                            <form onSubmit={this.handleSubmit}>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{clStrings.LOCATION_NAME}</InputLabel>
+                                    <Input
+                                        type="text"
+                                        value={name}
+                                        error={nameError}
+                                        required
+                                        onBlur={this.handleOnBlurName}
+                                        onChange={this.handleOnChangeName}
+                                        onKeyDown={this.handleOnKeyDownName}
+                                        autoComplete="off"
+                                    />
+                                    <FormHelperText error={nameError}>
+                                        {nameError ? clStrings.INVALID_LOCATION : ''}
+                                    </FormHelperText>
+                                </FormControl>
 
-                            <div className="buttons">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary'
-                                    size="small"
-                                    disabled={location && location.name === name}
-                                >
-                                    {commonStrings.SAVE}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className='btn-secondary'
-                                    size="small"
-                                    href='/locations'
-                                >
-                                    {commonStrings.CANCEL}
-                                </Button>
-                            </div>
-                        </form>
+                                <div className="buttons">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-primary'
+                                        size="small"
+                                        disabled={location && location.name === name}
+                                    >
+                                        {commonStrings.SAVE}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        className='btn-secondary'
+                                        size="small"
+                                        href='/locations'
+                                    >
+                                        {commonStrings.CANCEL}
+                                    </Button>
+                                </div>
+                            </form>
 
-                    </Paper>
-                </div>
+                        </Paper>
+                    </div>}
                 {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}

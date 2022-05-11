@@ -44,15 +44,17 @@ export default function MultipleSelect({
     type,
     variant
 }) {
-    const [init, setInit] = useState(false);
+    // const [init, setInit] = useState(false);
     const [values, setValues] = useState([]);
 
     useEffect(_ => {
-        if (!init) {
+        // if (!init) {
+        if (selectedOptions && selectedOptions.length > 0) {
             setValues(selectedOptions || []);
-            setInit(true);
         }
-    }, [init, selectedOptions]);
+        // setInit(true);
+        // }
+    }, [selectedOptions]);
 
     return (
         <div className='multiple-select'>
@@ -60,7 +62,7 @@ export default function MultipleSelect({
                 options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
                 getOptionLabel={(option) => (option && option.name) || ''}
-                isOptionEqualToValue={(option, value) => option._id === value._id}
+                isOptionEqualToValue={(option, value) => value._id && option._id === value._id}
                 onChange={(event, newValue) => {
                     if (multiple) {
                         setValues(newValue);
@@ -84,7 +86,7 @@ export default function MultipleSelect({
                 loading={loading}
                 multiple={multiple}
                 renderInput={(params) => {
-                    if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1) {
+                    if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
                         const option = values[0];
 
                         return (

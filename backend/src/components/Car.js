@@ -68,7 +68,6 @@ export default class Car extends Component {
 
         this.setState({ isLoading: true, openDeleteDialog: false }, _ => {
             CarService.delete(car._id).then(status => {
-                console.log(status);
                 if (status === 200) {
                     window.location.href = '/cars';
                 } else {
