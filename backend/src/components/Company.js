@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as companiesStrings } from '../lang/companies';
 import CompanyService from '../services/CompanyService';
-import Error from './Error';
+import CarService from '../services/CarService';
+import Helper from '../common/Helper';
+import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
-import NoMatch from './NoMatch';
 import { Avatar } from '../elements/Avatar';
+import CarList from '../elements/CarList';
+import Error from './Error';
+import NoMatch from './NoMatch';
 import { toast } from 'react-toastify';
 import {
     Typography,
@@ -35,9 +38,12 @@ export default class Company extends Component {
             company: null,
             error: false,
             visible: false,
-            isLoading: false,
+            isLoading: true,
             noMatch: false,
-            openDeleteDialog: false
+            openDeleteDialog: false,
+            cars: [],
+            page: 1,
+            checkedCompanies: []
         };
     }
 
@@ -75,6 +81,19 @@ export default class Company extends Component {
         this.setState({ openDeleteDialog: false });
     };
 
+    fetch = _ => {
+        const { page, checkedCompanies, cars } = this.state;
+        const payload = checkedCompanies;
+
+        this.setState({ isLoading: true });
+        CarService.getCars('', payload, page, Env.CARS_PAGE_SIZE)
+            .then(data => {
+                const _cars = page === 1 ? data : [...cars, ...data];
+                this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
+            })
+            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+    };
+
     onLoad = (user) => {
         this.setState({ user, isLoading: true }, _ => {
             const params = new URLSearchParams(window.location.search);
@@ -86,12 +105,26 @@ export default class Company extends Component {
                             if (company) {
                                 this.setState({
                                     company,
+                                    checkedCompanies: [company._id],
                                     fullName: company.fullName,
                                     phone: company.phone,
                                     location: company.location,
                                     bio: company.bio,
-                                    isLoading: false,
                                     visible: true
+                                }, _ => {
+                                    this.fetch();
+
+                                    const div = document.querySelector('.col-2');
+                                    if (div) {
+                                        div.onscroll = (event) => {
+                                            const { fetch, isLoading, page } = this.state;
+                                            if (fetch && !isLoading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
+                                                this.setState({ page: page + 1 }, _ => {
+                                                    this.fetch();
+                                                });
+                                            }
+                                        };
+                                    }
                                 });
                             } else {
                                 this.setState({ isLoading: false, noMatch: true });
@@ -113,7 +146,7 @@ export default class Company extends Component {
     }
 
     render() {
-        const { visible, isLoading, error, noMatch, user, company, openDeleteDialog } = this.state;
+        const { visible, isLoading, error, noMatch, user, company, cars, openDeleteDialog } = this.state;
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
@@ -122,18 +155,35 @@ export default class Company extends Component {
                     <div className='company'>
                         <div className='col-1'>
                             <section className='company-avatar-sec'>
-                                <Avatar
+                                {edit ? (<Avatar
                                     record={company}
                                     type={Env.RECORD_TYPE.COMPANY}
                                     mode='update'
                                     size='large'
+                                    hideDelete
                                     onBeforeUpload={this.onBeforeUpload}
                                     onChange={this.onAvatarChange}
                                     readonly={!edit}
                                     color='disabled'
-                                    className='company-avatar' />
+                                    className='company-avatar' />)
+                                    :
+                                    <div className='car-company'>
+                                        <span className='car-company-logo'>
+                                            <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                                alt={company.fullName}
+                                                style={{
+                                                    width: Env.COMPANY_IMAGE_WIDTH,
+                                                    // height: Env.COMPANY_IMAGE_HEIGHT
+                                                }}
+                                            />
+                                        </span>
+                                        <span className='car-company-info'>
+                                            {company.fullName}
+                                        </span>
+                                    </div>
+                                }
                             </section>
-                            <Typography variant="h4" className="company-name">{company.fullName}</Typography>
+                            {edit && <Typography variant="h4" className="company-name">{company.fullName}</Typography>}
                             {company.bio && company.bio !== '' && <Typography variant="h6" className="company-info">{company.bio}</Typography>}
                             {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}
                             {company.phone && company.phone !== '' && <Typography variant="h6" className="company-info">{company.phone}</Typography>}
@@ -150,8 +200,12 @@ export default class Company extends Component {
                             </div>}
                         </div>
                         <div className='col-2'>
-                            <section className='cars'>
-                            </section>
+                            <CarList
+                                user={user}
+                                cars={cars}
+                                isLoading={isLoading}
+                                hideCompany
+                            />
                         </div>
                     </div>
                 }
@@ -167,7 +221,7 @@ export default class Company extends Component {
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {isLoading && <Backdrop text={commonStrings.LOADING} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

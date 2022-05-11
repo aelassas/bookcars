@@ -279,6 +279,39 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
     try {
+        for (let i = 1; i <= 60; i++) {
+            const car = {
+                "name": "Car " + i,
+                "company": "62794b5121c117948f2a9b2e",
+                "locations": ["6273e2f9f036f83c05e47b0d", "6273e2d9f036f83c05e47b05"],
+                "price": 350 + i,
+                "available": i % 2 === 0,
+                "type": i % 2 === 0 ? "diesel" : "gasoline",
+                "gearbox": i % 2 === 0 ? "manual" : "automatic",
+                "aircon": i % 2 === 0,
+                "image": "627b577c8392253f86eb25a5_1652290815644.jpg",
+                "seats": 5,
+                "doors": 4,
+                "fuelPolicy": i % 2 === 0 ? "likeForlike" : "freeTank",
+                "mileage": i % 2 === 0 ? -1 : 150,
+                "cancellation": i % 2 === 0 ? -1 : 75,
+                "amendments": i % 2 === 0 ? -1 : 85,
+                "theftProtection": i % 2 === 0 ? -1 : 95,
+                "collisionDamageWaiver": i % 2 === 0 ? -1 : 105,
+                "fullInsurance": i % 2 === 0 ? -1 : 115,
+                "additionalDriver": i % 2 === 0 ? -1 : 125,
+            };
+
+            // await new Car(car).save();
+        }
+
+        // Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
+        //     if (err) {
+        //         console.error(strings.DB_ERROR + err);
+        //         res.status(400).send(strings.DB_ERROR + err);
+        //     }
+        // });
+
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
         const page = parseInt(req.params.page);

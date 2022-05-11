@@ -23,6 +23,28 @@
     text-align: center;
 }
 
+.company .col-1 div.car-company {
+    display: flex;
+    align-items: center;
+}
+
+.company .col-1 div.car-company span.car-company-logo {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: text-bottom;
+}
+
+.company .col-1 div.car-company span.car-company-info {
+    color: #a8a8a8;
+    display: inline-block;
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -32,7 +54,7 @@
         right: 0;
         left: 0;
         width: 100%;
-        height: 410px;
+        height: 320px;
         padding-top: 5px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
@@ -46,7 +68,7 @@
 
     .company .col-2 {
         position: absolute;
-        top: 120px;
+        top: 320px;
         bottom: 0;
         right: 0;
         left: 0;
@@ -85,10 +107,6 @@
         right: 0;
         left: 300px;
         overflow: auto;
-    }
-
-    .company .col-2 .cars {
-        width: 350px;
-        margin-left: calc(50% - 175px) !important;
+        padding-top: 10px;
     }
 }
