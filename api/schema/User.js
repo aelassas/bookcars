@@ -59,7 +59,7 @@ const userSchema = new Schema({
         enum: [Env.USER_TYPE.USER, Env.USER_TYPE.ADMIN, Env.USER_TYPE.COMPANY],
         default: Env.USER_TYPE.USER
     },
-    isBlacklisted: {
+    blacklisted: {
         type: Boolean,
         default: false
     }

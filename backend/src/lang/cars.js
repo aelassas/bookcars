@@ -45,6 +45,13 @@ export const strings = new LocalizedStrings({
         ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
         INCLUDED: 'Inclus',
         UNAVAILABLE: 'Indisponible',
+        CAR_AVAILABLE: 'Disponible pour la location',
+        CAR_AVAILABLE_TOOLTIP: 'Cette voiture est disponible pour la location.',
+        CAR_UNAVAILABLE: 'Indisponible pour la location',
+        CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas disponible pour la location.",
+        VIEW_CAR_TOOLTIP: 'Voir cette voiture',
+        UPDATE_CAR_TOOLTIP: 'Modifier cette voiture',
+        DELETE_CAR_TOOLTIP: 'Supprimer cette voiture',
     },
     en: {
         NEW_CAR: 'New car',
@@ -88,6 +95,13 @@ export const strings = new LocalizedStrings({
         ADDITIONAL_DRIVER: 'Additional driver',
         INCLUDED: 'Included',
         UNAVAILABLE: 'Unavailable',
+        CAR_AVAILABLE: 'Available for rental',
+        CAR_AVAILABLE_TOOLTIP: 'This car is available for rental.',
+        CAR_UNAVAILABLE: 'Unavailable for rental',
+        CAR_UNAVAILABLE_TOOLTIP: 'This car is unavailable for rental.',
+        VIEW_CAR_TOOLTIP: 'View this car',
+        UPDATE_CAR_TOOLTIP: 'Edit this car',
+        DELETE_CAR_TOOLTIP: 'Delete this car',
     }
 });
 

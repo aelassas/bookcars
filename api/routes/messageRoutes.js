@@ -136,7 +136,7 @@ routes.route(routeNames.getMessages).get(authJwt.verifyToken, async (req, res) =
                         {
                             $match: {
                                 $expr: {
-                                    $and: [{ $eq: ['$_id', '$$userId'] }] // , { $eq: ['$isBlacklisted', false] }
+                                    $and: [{ $eq: ['$_id', '$$userId'] }] // , { $eq: ['$blacklisted', false] }
                                 }
                             },
                         }

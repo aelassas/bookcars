@@ -24,7 +24,7 @@ export default class SignIn extends Component {
             password: '',
             error: false,
             visible: false,
-            isBlacklisted: false,
+            blacklisted: false,
         };
     }
 
@@ -55,11 +55,11 @@ export default class SignIn extends Component {
         UserService.signin(data).then(res => {
             console.log(res);
             if (res.status === 200) {
-                if (res.data.isBlacklisted) {
+                if (res.data.blacklisted) {
                     UserService.signout(false);
                     this.setState({
                         error: false,
-                        isBlacklisted: true,
+                        blacklisted: true,
                         loginSuccess: false
                     });
                 } else {
@@ -72,14 +72,14 @@ export default class SignIn extends Component {
             } else {
                 this.setState({
                     error: true,
-                    isBlacklisted: false,
+                    blacklisted: false,
                     loginSuccess: false
                 });
             }
         }).catch(() => {
             this.setState({
                 error: true,
-                isBlacklisted: false,
+                blacklisted: false,
                 loginSuccess: false
             });
         });
@@ -121,7 +121,7 @@ export default class SignIn extends Component {
     }
 
     render() {
-        const { visible, error, isBlacklisted } = this.state;
+        const { visible, error, blacklisted } = this.state;
 
         return (
             <div>
@@ -173,7 +173,7 @@ export default class SignIn extends Component {
                             </div>
                             <div className="form-error">
                                 {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                                {isBlacklisted && <Error message={strings.IS_BLACKLISTED} />}
+                                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
                             </div>
                         </form>
                     </Paper>

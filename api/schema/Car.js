@@ -24,7 +24,7 @@ const carSchema = new Schema({
         required: [true, "can't be blank"],
         index: true
     },
-    isAvailable: {
+    available: {
         type: Boolean,
         required: [true, "can't be blank"],
         index: true

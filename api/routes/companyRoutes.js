@@ -90,20 +90,6 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
             console.error(strings.DB_ERROR, err);
             res.status(400).send(strings.DB_ERROR + err);
         });
-
-    // const getCompanies = (keyword, page, size) => {
-    //     const companies = [];
-    //     for (let _id = (page - 1) * size; _id < page * size; _id++) {
-    //         const fullName = `Company ${_id}`;
-    //         if (!keyword || keyword === '' || fullName.includes(keyword)) {
-    //             companies.push({ _id, fullName });
-    //         }
-    //     }
-    //     return companies;
-    // };
-    // const companies = getCompanies(req.query.s, 1, 13);
-    // res.json(companies);
 });
-
 
 export default routes;

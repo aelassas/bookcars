@@ -26,7 +26,10 @@ import {
     AcUnit as AirconIcon,
     DirectionsCar as MileageIcon,
     Check as CheckIcon,
-    Clear as UncheckIcon
+    Clear as UncheckIcon,
+    Visibility as ViewIcon,
+    Edit as EditIcon,
+    Delete as DeleteIcon
 } from '@mui/icons-material';
 
 import DoorsIcon from '../assets/img/car-door.png';
@@ -156,10 +159,8 @@ export default class Cars extends Component {
         this.setState({ isLoading: true });
         CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
             .then(data => {
-                setTimeout(_ => {
-                    const _cars = page === 1 ? data : [...cars, ...data];
-                    this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
-                }, 500);
+                const _cars = page === 1 ? data : [...cars, ...data];
+                this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
@@ -285,9 +286,9 @@ export default class Cars extends Component {
                                                         }}
                                                     />
                                                 </span>
-                                                <span className='car-company-info'>
+                                                <a href={`/company?c=${car.company.id}`} className='car-company-info'>
                                                     {car.company.fullName}
-                                                </span>
+                                                </a>
                                             </div>
                                         </div>
                                         <div className='car-info'>
@@ -351,7 +352,19 @@ export default class Cars extends Component {
                                                 </li>
                                             </ul>
                                             <ul className='extras-list'>
-                                                <li className={car.cancellation > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li className={car.available ? 'car-available' : 'car-unavailable'}>
+                                                    <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                                                        <div className='car-info-list-item'>
+                                                            {car.available ? <CheckIcon /> : <UncheckIcon />}
+                                                            {car.available ?
+                                                                <span className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
+                                                                :
+                                                                <span className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
+                                                            }
+                                                        </div>
+                                                    </Tooltip>
+                                                </li>
+                                                <li>
                                                     <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -359,7 +372,7 @@ export default class Cars extends Component {
                                                         </div>
                                                     </Tooltip>
                                                 </li>
-                                                <li className={car.amendments > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li>
                                                     <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -367,7 +380,7 @@ export default class Cars extends Component {
                                                         </div>
                                                     </Tooltip>
                                                 </li>
-                                                <li className={car.theftProtection > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li>
                                                     <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -375,7 +388,7 @@ export default class Cars extends Component {
                                                         </div>
                                                     </Tooltip>
                                                 </li>
-                                                <li className={car.collisionDamageWaiver > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li>
                                                     <Tooltip title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -383,7 +396,7 @@ export default class Cars extends Component {
                                                         </div>
                                                     </Tooltip>
                                                 </li>
-                                                <li className={car.fullInsurance > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li>
                                                     <Tooltip title={car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.fullInsurance > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -391,7 +404,7 @@ export default class Cars extends Component {
                                                         </div>
                                                     </Tooltip>
                                                 </li>
-                                                <li className={car.addionaldriver > -1 ? 'extra-available' : 'extra-unavailable'}>
+                                                <li>
                                                     <Tooltip title={Helper.getAdditionalDriver(car.addionaldriver, fr)} placement='left'>
                                                         <div className='car-info-list-item'>
                                                             {car.addionaldriver > -1 ? <CheckIcon /> : <UncheckIcon />}
@@ -402,29 +415,31 @@ export default class Cars extends Component {
                                             </ul>
                                         </div>
                                         <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>
-                                        {canEdit &&
-                                            <div className='action'>
-                                                <Button
-                                                    type="submit"
-                                                    variant="contained"
-                                                    className='btn-primary btn-margin'
-                                                    size="small"
-                                                    href={`/update-car?c=${car._id}`}
-                                                >
-                                                    {commonStrings.UPDATE}
-                                                </Button>
-                                                <Button
-                                                    type="submit"
-                                                    variant="contained"
-                                                    color='error'
-                                                    size="small"
-                                                    data-id={car._id}
-                                                    data-index={index}
-                                                    onClick={this.handleDelete}
-                                                >
-                                                    {commonStrings.DELETE}
-                                                </Button>
-                                            </div>}
+                                        <div className='action'>
+                                            <Tooltip title={strings.VIEW_CAR_TOOLTIP}>
+                                                <IconButton href={`/car?c=${car._id}`}>
+                                                    <ViewIcon />
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            {canEdit &&
+                                                <Tooltip title={strings.UPDATE_CAR_TOOLTIP}>
+                                                    <IconButton href={`/update-car?c=${car._id}`}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+
+                                            {canEdit &&
+                                                <Tooltip title={strings.DELETE_CAR_TOOLTIP}>
+                                                    <IconButton data-id={car._id}
+                                                        data-index={index}
+                                                        onClick={this.handleDelete}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                        </div>
                                     </article>
                                 );
                             }

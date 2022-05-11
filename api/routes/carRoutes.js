@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { v1 as uuid } from 'uuid';
 import escapeStringRegexp from 'escape-string-regexp';
+import mongoose from 'mongoose';
 
 const CDN = process.env.BC_CDN_CARS;
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS;
@@ -80,7 +81,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 const {
                     company,
                     name,
-                    isAvailable,
+                    available,
                     type,
                     locations,
                     price,
@@ -100,7 +101,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 car.company = company;
                 car.locations = locations;
                 car.name = name;
-                car.isAvailaibe = isAvailable;
+                car.available = available;
                 car.type = type;
                 car.price = price;
                 car.seats = seats;
@@ -243,6 +244,7 @@ routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) =>
 routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
         .populate('company')
+        .populate('locations')
         .then(car => {
             if (car) {
                 res.json(car);
@@ -257,43 +259,45 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.getCars).post(authJwt.verifyToken, (req, res) => {
-    const getCars = (keyword, page, size) => {
-        const cars = [];
-        for (let _id = (page - 1) * size; _id < page * size; _id++) {
-            const car = {
-                _id,
-                company: {
-                    _id: _id % 2 === 0 ? '626e92c69acb065aa8e00459' : '62794b5121c117948f2a9b2e',
-                    fullName: _id % 2 === 0 ? 'Hertz' : 'dollar',
-                    avatar: _id % 2 === 0 ? '626e92c69acb065aa8e00459_1652080968846.png' : '62794b5121c117948f2a9b2e_1652116388565.png'
-                },
-                name: _id % 2 === 0 ? 'Toyota Yaris' : 'Dacia Logan Auto',
-                type: _id % 2 === 0 ? Env.CAR_TYPE.DIESEL : Env.CAR_TYPE.GASOLINE,
-                image: _id % 2 === 0 ? '5266dac8680298fa6ae8c747_1651663694739.jpg' : '5266dac8680298fa6ae8c747_1651663694740.jpg',
-                locations: ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
-                price: 848.78,
-                seats: 5,
-                doors: 4,
-                aircon: true,
-                gearbox: _id % 2 === 0 ? Env.GEARBOX_TYPE.MANUAL : Env.GEARBOX_TYPE.AUTOMATIC,
-                mileage: _id % 2 === 0 ? -1 : 150,
-                fuelPolicy: _id % 2 === 0 ? Env.FUEL_POLICY.LIKE_FOR_LIKE : Env.FUEL_POLICY.FREE_TANK,
-                cancellation: _id % 2 === 0 ? 80 : _id % 3 === 0 ? 0 : -1,
-                amendments: _id % 2 === 0 ? 120 : _id % 3 === 0 ? 0 : -1,
-                theftProtection: _id % 2 === 0 ? 100 : _id % 3 === 0 ? 0 : -1,
-                collisionDamageWaiver: _id % 2 === 0 ? 110 : _id % 3 === 0 ? 0 : -1,
-                fullInsurance: _id % 2 === 0 ? 170 : _id % 3 === 0 ? 0 : -1,
-                addionaldriver: _id % 2 === 0 ? 150 : _id % 3 === 0 ? 0 : -1
-            };
-            if ((!keyword || keyword === '' || car.name.includes(keyword)) && req.body.includes(car.company._id)) {
-                cars.push(car);
-            }
+routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
+    try {
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+        const page = parseInt(req.params.page);
+        const size = parseInt(req.params.size);
+
+        const companies = [];
+        for (const id of req.body) {
+            companies.push(mongoose.Types.ObjectId(id));
         }
-        return cars;
-    };
-    const cars = getCars(req.query.s, req.params.page, req.params.size);
-    res.json(cars);
+
+        const cars = await Car.aggregate([
+            { $match: { name: { $regex: keyword, $options: options }, company: { $in: companies } } },
+            {
+                $lookup: {
+                    from: 'User',
+                    let: { userId: '$company' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ['$_id', '$$userId'] }
+                            }
+                        }
+                    ],
+                    as: 'company'
+                }
+            },
+            { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+            { $sort: { name: 1 } },
+            { $skip: ((page - 1) * size) },
+            { $limit: size }
+        ]);
+
+        res.json(cars);
+    } catch (err) {
+        console.error(`[location.getLocations]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 

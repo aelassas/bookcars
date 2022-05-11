@@ -39,7 +39,7 @@ const getStatusMessage = (lang, msg) => {
 routes.route(routeNames.signup).post((req, res) => {
     const { body } = req;
     body.isVerified = false;
-    body.isBlacklisted = false;
+    body.blacklisted = false;
 
     const user = new User(body);
     user.save()
@@ -142,7 +142,7 @@ routes.route(routeNames.signin).post((req, res) => {
                             language: user.language,
                             enableEmailNotifications: user.enableEmailNotifications,
                             accessToken: token,
-                            isBlacklisted: user.isBlacklisted
+                            blacklisted: user.blacklisted
                         });
                     } else {
                         res.sendStatus(204);

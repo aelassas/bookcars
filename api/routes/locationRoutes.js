@@ -84,31 +84,6 @@ routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
 });
 
 routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
-    // const getLocations = (keyword, page, size) => {
-    //     const locations = [];
-    //     for (let _id = (page - 1) * size; _id < page * size; _id++) {
-    //         const name = `Location ${_id}`;
-    //         if (!keyword || keyword === '' || name.includes(keyword)) {
-    //             locations.push({ _id, name });
-    //         }
-    //     }
-    //     return locations;
-    // };
-    // const locations = getLocations(req.query.s, req.params.page, req.params.size);
-    // res.json(locations);
-
-    // for (let i = 1; i < 60; i++) {
-    //     const name = `Location ${i}`;
-    //     await new Location({ name }).save();
-    // }
-
-    // Location.deleteMany({ name: { $regex: 'location', $options: 'i' } }, (err, response) => {
-    //     if (err) {
-    //         console.error(strings.DB_ERROR + err);
-    //         res.status(400).send(strings.DB_ERROR + err);
-    //     }
-    // });
-
     try {
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);

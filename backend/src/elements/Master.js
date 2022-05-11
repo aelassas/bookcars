@@ -52,7 +52,7 @@ export default class Master extends Component {
                     UserService.getUser(currentUser.id).then(user => {
                         if (user) {
 
-                            if (user.isBlacklisted) {
+                            if (user.blacklisted) {
                                 this.setState({ user, unauthorized: true, isLoading: false });
                                 return;
                             }

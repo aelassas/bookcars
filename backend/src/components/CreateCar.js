@@ -48,7 +48,7 @@ export default class CreateCar extends Component {
             name: '',
             company: '',
             locations: [],
-            isAvailable: false,
+            available: false,
             type: '',
             gearbox: '',
             price: '',
@@ -111,8 +111,8 @@ export default class CreateCar extends Component {
 
     };
 
-    handleIsAvailableChange = (e) => {
-        this.setState({ isAvailable: e.target.checked });
+    handleAvailableChange = (e) => {
+        this.setState({ available: e.target.checked });
     };
 
     handleCarTypeChange = (value) => {
@@ -159,7 +159,7 @@ export default class CreateCar extends Component {
         this.setState({ theftProtection: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
     };
 
-    handleCollisionDamageWaverChange = (e) => {
+    handleCollisionDamageWaiverChange = (e) => {
         this.setState({ collisionDamageWaiver: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
     };
 
@@ -192,7 +192,7 @@ export default class CreateCar extends Component {
             company,
             locations,
             price,
-            isAvailable,
+            available,
             type,
             gearbox,
             aircon,
@@ -214,7 +214,7 @@ export default class CreateCar extends Component {
             company,
             locations,
             price,
-            isAvailable,
+            available,
             type,
             gearbox,
             aircon,
@@ -264,7 +264,7 @@ export default class CreateCar extends Component {
             imageSizeError,
             isLoading,
             name,
-            isAvailable,
+            available,
             price,
             aircon,
             mileage,
@@ -355,18 +355,18 @@ export default class CreateCar extends Component {
                             <FormControl fullWidth margin="dense" className='checkbox-fc'>
                                 <FormControlLabel
                                     control={
-                                        <Switch checked={isAvailable}
-                                            onChange={this.handleIsAvailableChange}
+                                        <Switch checked={available}
+                                            onChange={this.handleAvailableChange}
                                             color="primary" />
                                     }
-                                    label={strings.IS_AVAILABLE}
+                                    label={strings.AVAILABLE}
                                     className='checkbox-fcl'
                                 />
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">
                                 <CarTypeList
-                                    label={strings.CARTYPE}
+                                    label={strings.CAR_TYPE}
                                     variant='standard'
                                     required={true}
                                     onChange={this.handleCarTypeChange}
@@ -481,7 +481,7 @@ export default class CreateCar extends Component {
                                     label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
                                     // eslint-disable-next-line
                                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
-                                    onChange={this.handleCollisionDamageWaverChange}
+                                    onChange={this.handleCollisionDamageWaiverChange}
                                     variant='standard'
                                     autoComplete='off'
                                     value={collisionDamageWaiver}
