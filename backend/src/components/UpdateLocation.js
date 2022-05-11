@@ -171,7 +171,7 @@ export default class UpdateLocation extends Component {
                                     <Button
                                         type="submit"
                                         variant="contained"
-                                        className='btn-primary'
+                                        className='btn-primary btn-margin-bottom'
                                         size="small"
                                         disabled={location && location.name === name}
                                     >
@@ -179,7 +179,7 @@ export default class UpdateLocation extends Component {
                                     </Button>
                                     <Button
                                         variant="contained"
-                                        className='btn-secondary'
+                                        className='btn-secondary btn-margin-bottom'
                                         size="small"
                                         href='/locations'
                                     >

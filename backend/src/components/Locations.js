@@ -137,7 +137,7 @@ export default class Locations extends Component {
                         <Input
                             type="text"
                             className='search'
-                            placeholder={strings.SEARCH_PLACEHOLDER}
+                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
                             onKeyDown={this.handleSearchKeyDown}
                             onChange={this.handleSearchChange}
                         />

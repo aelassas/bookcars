@@ -101,14 +101,14 @@ export default class CreateLocation extends Component {
                                 <Button
                                     type="submit"
                                     variant="contained"
-                                    className='btn-primary'
+                                    className='btn-primary btn-margin-bottom'
                                     size="small"
                                 >
                                     {commonStrings.CREATE}
                                 </Button>
                                 <Button
                                     variant="contained"
-                                    className='btn-secondary'
+                                    className='btn-secondary btn-margin-bottom'
                                     size="small"
                                     href='/locations'
                                 >
