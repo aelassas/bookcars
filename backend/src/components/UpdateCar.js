@@ -287,8 +287,6 @@ export default class CreateCar extends Component {
                                     collisionDamageWaiver: this.getCarExtra(car.collisionDamageWaiver),
                                     fullInsurance: this.getCarExtra(car.fullInsurance),
                                     additionalDriver: this.getCarExtra(car.additionalDriver)
-                                }, _ => {
-                                    console.log(this.state.imageRequired)
                                 });
                             } else {
                                 this.setState({ isLoading: false, noMatch: true });
