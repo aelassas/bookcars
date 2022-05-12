@@ -5,4 +5,5 @@ export default {
     delete: '/api/delete-location/:id',
     getLocation: '/api/get-location/:id',
     getLocations: '/api/get-locations/:page/:size',
+    checkLocation: '/api/check-location/:id',
 }

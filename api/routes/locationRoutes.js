@@ -3,7 +3,9 @@ import routeNames from '../config/locationRoutes.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import Location from '../schema/Location.js';
+import Car from '../schema/Car.js';
 import escapeStringRegexp from 'escape-string-regexp';
+import mongoose from 'mongoose';
 
 const routes = express.Router();
 
@@ -106,5 +108,23 @@ routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) 
 
 });
 
+
+routes.route(routeNames.checkLocation).get(authJwt.verifyToken, (req, res) => {
+    const id = mongoose.Types.ObjectId(req.params.id);
+
+    Car.find({ locations: id })
+        .limit(1)
+        .count()
+        .then(count => {
+            if (count === 1) {
+                return res.sendStatus(200);
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[location.checkLocation]  ${strings.DB_ERROR} ${id}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
 
 export default routes;

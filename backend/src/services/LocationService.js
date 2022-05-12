@@ -28,4 +28,8 @@ export default class LocationService {
         return axios.get(`${Env.API_HOST}/api/get-locations/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
+    static check(id) {
+        return axios.get(`${Env.API_HOST}/api/check-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
 }

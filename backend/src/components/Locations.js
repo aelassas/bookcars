@@ -39,6 +39,7 @@ export default class Locations extends Component {
             keyword: '',
             page: 1,
             locations: [],
+            openInfoDialog: false,
             openDeleteDialog: false,
             locationId: '',
             locationIndex: -1
@@ -48,7 +49,22 @@ export default class Locations extends Component {
     handleDelete = (e) => {
         const locationId = e.currentTarget.getAttribute('data-id');
         const locationIndex = e.currentTarget.getAttribute('data-index');
-        this.setState({ openDeleteDialog: true, locationId, locationIndex });
+
+        LocationService.check(locationId)
+            .then(status => {
+                if (status === 204) {
+                    this.setState({ openDeleteDialog: true, locationId, locationIndex });
+                } else if (status === 200) {
+                    this.setState({ openInfoDialog: true });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+    };
+
+    handleCloseInfo = _ => {
+        this.setState({ openInfoDialog: false });
     };
 
     handleConfirmDelete = _ => {
@@ -128,7 +144,7 @@ export default class Locations extends Component {
     }
 
     render() {
-        const { isLoading, locations, openDeleteDialog } = this.state;
+        const { isLoading, locations, openInfoDialog, openDeleteDialog } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -189,6 +205,17 @@ export default class Locations extends Component {
                 <Dialog
                     disableEscapeKeyDown
                     maxWidth="xs"
+                    open={openInfoDialog}
+                >
+                    <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
                     open={openDeleteDialog}
                 >
                     <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
@@ -198,6 +225,7 @@ export default class Locations extends Component {
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
+
                 {isLoading && <Backdrop text={commonStrings.LOADING} />}
             </Master>
         );
