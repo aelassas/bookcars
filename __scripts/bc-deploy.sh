@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 if [ "$1" == "all" ]; then
-
   /bin/bash /opt/bookcars/__scripts/bc-deploy-api.sh
   /bin/bash /opt/bookcars/__scripts/bc-deploy-backend.sh
   /bin/bash /opt/bookcars/__scripts/bc-deploy-frontend.sh
