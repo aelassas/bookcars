@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { strings } from '../lang/booking-list';
 import { DataGrid, frFR, enUS } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -73,10 +74,10 @@ export default function ServerPaginationGrid(props) {
         );
     }, [rowCount, setRowCountState]);
 
-    const columns = [
-        { field: 'firstName', headerName: 'First name', width: 130 },
-        { field: 'lastName', headerName: 'Last name', width: 130 },
-    ];
+    // const columns = [
+    //     { field: 'firstName', headerName: 'First name', width: 130 },
+    //     { field: 'lastName', headerName: 'Last name', width: 130 },
+    // ];
 
     // company, car, driver, pickUpLocation, dropOffLocation, from, to, status, actions
 
@@ -95,7 +96,12 @@ export default function ServerPaginationGrid(props) {
                 onPageSizeChange={(pageSize) =>
                     setRowsState((prev) => ({ ...prev, pageSize }))
                 }
-                localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
+                localeText={(props.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                components={{
+                    NoRowsOverlay: () => (
+                        ''
+                    )
+                }}
             />
         </div>
     );

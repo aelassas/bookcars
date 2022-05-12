@@ -21,17 +21,19 @@ export default class Bookings extends Component {
     }
 
     render() {
+        const { user } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                <div className='bookings'>
-                    <div className='col-1'>
+                {user &&
+                    <div className='bookings'>
+                        <div className='col-1'>
 
-                    </div>
-                    <div className='col-2'>
-                        <BookingList width='100%' height='100%' className='bookings-list' />
-                    </div>
-                </div>
+                        </div>
+                        <div className='col-2'>
+                            <BookingList language={user.language} width='100%' height='100%' className='bookings-list' />
+                        </div>
+                    </div>}
             </Master>
         );
     }
