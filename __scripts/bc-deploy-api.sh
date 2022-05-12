@@ -3,9 +3,9 @@
 echo "Deploying BookCars API..."
 
 cd /opt/bookcars
-git reset --hard
+#git reset --hard
 git pull
-chmod +x -R /opt/bookcars/scripts
+chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/api
 npm install

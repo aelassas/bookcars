@@ -3,9 +3,9 @@
 echo "Deploying BookCars backend..."
 
 cd /opt/bookcars/backend
-git reset --hard
+#git reset --hard
 git pull
-sudo chmod +x -R /opt/bookcars/scripts
+sudo chmod +x -R /opt/bookcars/__scripts
 
 sudo rm -rf build
 npm install

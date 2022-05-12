@@ -3,9 +3,9 @@
 echo "Deploying BookCars frontend..."
 
 cd /opt/bookcars/frontend
-git reset --hard
+#git reset --hard
 git pull
-sudo chmod +x -R /opt/bookcars/scripts
+sudo chmod +x -R /opt/bookcars/__scripts
 
 sudo rm -rf build
 npm install
@@ -17,11 +17,11 @@ npm run build
 
 sudo rm -rf /var/www/bookcars.ma/frontend
 sudo mkdir -p /var/www/bookcars.ma/frontend
-sudo cp -rf build/* /var/www/www.wexstream.com/frontend
+sudo cp -rf build/* /var/www/bookcars.ma/frontend
 
 sudo systemctl restart nginx
 sudo systemctl status nginx --no-pager
 
-echo "BookCars backend frontend."
+echo "BookCars frontend deployed."
 
 $SHELL

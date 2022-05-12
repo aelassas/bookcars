@@ -4,7 +4,7 @@ Wants=mongod.service
 After=mongod.service
 
 [Service]
-ExecStart=/bin/bash /opt/bookcars/scripts/bookcars.sh
+ExecStart=/bin/bash /opt/bookcars/__scripts/bookcars.sh
 Type=idle
 Restart=always
 StartLimitBurst=0
