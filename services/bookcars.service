@@ -1,0 +1,17 @@
+[Unit]
+Description=BookCars API
+Wants=mongod.service
+After=mongod.service
+
+[Service]
+ExecStart=/bin/bash /opt/bookcars/scripts/bookcars.sh
+Type=idle
+Restart=always
+StartLimitBurst=0
+StandardOutput=append:/var/log/bookcars.log
+StandardError=append:/var/log/bookcars.log
+User=aelassas
+Group=aelassas
+
+[Install]
+WantedBy=multi-user.target
