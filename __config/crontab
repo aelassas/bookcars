@@ -1,2 +1,2 @@
-* * * * * /opt/bookcars/__scripts/noip.sh 2>&1 | /usr/bin/logger -t noip-cron
-@reboot /opt/bookcars/__scripts/noip.sh 2>&1 | /usr/bin/logger -t noip-cron
+* * * * * /opt/bookcars/__scripts/noip.sh >> /var/log/noip.log 2>&1
+@reboot /opt/bookcars/__scripts/noip.sh >> /var/log/noip.log 2>&1
