@@ -143,6 +143,8 @@ export default class Companies extends Component {
                         <section className='list'>
                             {companies.map((company, index) => {
                                 const canEdit = isAdmin || (user && user._id === company._id);
+                                const canMessage = isAdmin || (user && user.type === Env.RECORD_TYPE.COMPANY && user._id !== company._id);
+                                const canDelete = isAdmin;
 
                                 return (
                                     <article key={company._id}>
@@ -175,12 +177,12 @@ export default class Companies extends Component {
                                                     <EditIcon />
                                                 </IconButton>
                                             </Tooltip>}
-                                            {canEdit && <Tooltip title={strings.MESSAGE_COMPANY_TOOLTIP}>
+                                            {canMessage && <Tooltip title={strings.MESSAGE_COMPANY_TOOLTIP}>
                                                 <IconButton>
                                                     <MailIcon />
                                                 </IconButton>
                                             </Tooltip>}
-                                            {canEdit && <Tooltip title={strings.DELETE_COMPANY_TOOLTIP}>
+                                            {canDelete && <Tooltip title={strings.DELETE_COMPANY_TOOLTIP}>
                                                 <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
                                                     <DeleteIcon />
                                                 </IconButton>

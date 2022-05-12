@@ -344,6 +344,13 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
             { $limit: size }
         ]);
 
+        cars.forEach(car => {
+            if (car.company) {
+                const { _id, fullName, avatar } = car.company;
+                car.company = { _id, fullName, avatar };
+            }
+        });
+
         res.json(cars);
     } catch (err) {
         console.error(`[location.getLocations]  ${strings.DB_ERROR} ${req.query.s}`, err);
