@@ -12,12 +12,12 @@ npm install
 npm update
 npm run build
 
-sudo systemctl restart bookcars-backend
-sudo systemctl status bookcars-backend --no-pager
+#sudo systemctl restart bookcars-backend
+#sudo systemctl status bookcars-backend --no-pager
 
-sudo rm -rf /var/www/bookcars.ma/html/backend
-sudo mkdir -p /var/www/bookcars.ma/html/backend
-sudo cp -rf build/* /var/www/www.wexstream.com/html/backend
+sudo rm -rf /var/www/bookcars.ma/backend
+sudo mkdir -p /var/www/bookcars.ma/backend
+sudo cp -rf build/* /var/www/www.wexstream.com/backend
 
 sudo systemctl restart nginx
 sudo systemctl status nginx --no-pager

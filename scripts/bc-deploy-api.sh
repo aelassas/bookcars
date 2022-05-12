@@ -1,18 +1,18 @@
 #!/bin/bash
 
-echo "Deploying Wexstream API..."
+echo "Deploying BookCars API..."
 
-cd /opt/wexstream
+cd /opt/bookcars
 git reset --hard
 git pull
-chmod +x -R /opt/wexstream/scripts
+chmod +x -R /opt/bookcars/scripts
 
-cd /opt/wexstream/api
+cd /opt/bookcars/api
 npm install
 npm update
-sudo systemctl restart wexstream-api
-sudo systemctl status wexstream-api --no-pager
+sudo systemctl restart bookcars
+sudo systemctl status bookcars --no-pager
 
-echo "Wexstream API deployed."
+echo "BookCars API deployed."
 
 $SHEL
