@@ -15,4 +15,4 @@ sudo systemctl status bookcars --no-pager
 
 echo "BookCars API deployed."
 
-$SHEL
+#$SHEL
