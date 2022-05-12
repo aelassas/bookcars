@@ -12,7 +12,7 @@ export const strings = new LocalizedStrings({
         /* Header */
         HOME: 'Acceuil',
         COMPANIES: 'Sociétés de location',
-        RESERVATIONS: 'Réservations',
+        BOOKINGS: 'Réservations',
         ABOUT: 'À propos',
         TOS: "Conditions d'utilisation",
         CONTACT: 'Contact',
@@ -55,7 +55,7 @@ export const strings = new LocalizedStrings({
         /* Header */
         HOME: 'Home',
         COMPANIES: 'Booking companies',
-        RESERVATIONS: 'Bookings',
+        BOOKINGS: 'Bookings',
         ABOUT: 'About',
         TOS: 'Terms of Service',
         CONTACT: 'Contact',

@@ -35,7 +35,7 @@ import {
     ExitToApp as SignoutIcon,
     Login as LoginIcon,
     CorporateFare as CompaniesIcon,
-    EventSeat as ReservationsIcon
+    EventSeat as BookingsIcon
 } from '@mui/icons-material';
 import '../assets/css/header.css';
 
@@ -344,8 +344,8 @@ export default function Header(props) {
                                     <ListItemText primary={strings.COMPANIES} />
                                 </ListItemLink>
                                 {isSignedIn && <ListItemLink href="/reservations">
-                                    <ListItemIcon>{<ReservationsIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.RESERVATIONS} />
+                                    <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.BOOKINGS} />
                                 </ListItemLink>}
                                 <ListItemLink href="/about">
                                     <ListItemIcon>{<AboutIcon />}</ListItemIcon>

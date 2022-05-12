@@ -314,7 +314,7 @@ export default class Car extends Component {
                                 </section>}
                         </div>
                         <div className='col-2'>
-                            <section className='reservations-sec'>
+                            <section className='bookings-sec'>
                                 TODO
                             </section>
                         </div>

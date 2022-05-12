@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 
-import '../assets/css/reservations.css';
+import '../assets/css/booking.css';
 
-export default class Bookings extends Component {
+export default class Booking extends Component {
 
     constructor(props) {
         super(props);
@@ -23,7 +23,7 @@ export default class Bookings extends Component {
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                Bookings!
+                Booking!
             </Master>
         );
     }

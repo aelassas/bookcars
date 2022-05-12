@@ -157,7 +157,7 @@ div.car {
         width: 100%;
     }
 
-    div.car .col-2 .reservations-sec {
+    div.car .col-2 .bookings-sec {
         width: 100%;
     }
 }
@@ -321,7 +321,7 @@ div.car {
         overflow: auto;
     }
 
-    div.car .col-2 .reservations-sec {
+    div.car .col-2 .bookings-sec {
         width: 350px;
         margin-left: calc(50% - 175px) !important;
     }

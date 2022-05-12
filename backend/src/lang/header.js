@@ -4,10 +4,11 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        DASHBOARD: 'Tableau de bord',
+        // DASHBOARD: 'Tableau de bord',
+        HOME: 'Accueil',
         COMPANIES: 'Sociétés de location',
         LOCATIONS: 'Lieux',
-        RESERVATIONS: 'Réservations',
+        // BOOKINGS: 'Réservations',
         CARS: 'Voitures',
         USERS: 'Utilisateurs',
         ABOUT: 'À propos',
@@ -20,10 +21,11 @@ export const strings = new LocalizedStrings({
         SIGN_OUT: 'Déconnexion'
     },
     en: {
-        DASHBOARD: 'Dashboard',
+        // DASHBOARD: 'Dashboard',
+        HOME: 'Home',
         COMPANIES: 'Booking companies',
         LOCATIONS: 'Locations',
-        RESERVATIONS: 'Bookings',
+        // BOOKINGS: 'Bookings',
         CARS: 'Cars',
         USERS: 'Users',
         ABOUT: 'About',

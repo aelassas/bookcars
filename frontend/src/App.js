@@ -9,9 +9,9 @@ const Home = lazy(() => import("./components/Home"));
 const Companies = lazy(() => import("./components/Companies"));
 const Company = lazy(() => import("./components/Company"));
 const Car = lazy(() => import("./components/Car"));
-const Reservations = lazy(() => import("./components/Reservations"));
-const Reservation = lazy(() => import("./components/Reservation"));
-const CreateReservation = lazy(() => import("./components/CreateReservation"));
+const Bookings = lazy(() => import("./components/Bookings"));
+const Booking = lazy(() => import("./components/Booking"));
+const CreateBooking = lazy(() => import("./components/CreateBooking"));
 const Settings = lazy(() => import("./components/Settings"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const Messages = lazy(() => import("./components/Messages"));
@@ -33,9 +33,9 @@ const App = () => {
 						<Route exact path="/companies" element={<Companies />} />
 						<Route exact path="/company" element={<Company />} />
 						<Route exact path="/car" element={<Car />} />
-						<Route exact path="/reservations" element={<Reservations />} />
-						<Route exact path="/reservation" element={<Reservation />} />
-						<Route exact path="/create-reservation" element={<CreateReservation />} />
+						<Route exact path="/reservations" element={<Bookings />} />
+						<Route exact path="/reservation" element={<Booking />} />
+						<Route exact path="/create-reservation" element={<CreateBooking />} />
 						<Route exact path="/settings" element={<Settings />} />
 						<Route exact path="/notifications" element={<Notifications />} />
 						<Route exact path="/messages" element={<Messages />} />

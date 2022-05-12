@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
 
-import '../assets/css/reservation.css';
+import '../assets/css/create-user.css';
 
-export default class Reservation extends Component {
+export default class UpdateUser extends Component {
 
     constructor(props) {
         super(props);
@@ -23,7 +23,7 @@ export default class Reservation extends Component {
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                Reservation!
+                Update User!
             </Master>
         );
     }

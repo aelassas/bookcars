@@ -5,7 +5,7 @@ import './assets/css/index.css';
 
 const Signin = lazy(() => import('./components/Signin'));
 // const Signup = lazy(() => import('./components/Signup'));
-const Dashboard = lazy(() => import('./components/Dashboard'));
+// const Dashboard = lazy(() => import('./components/Dashboard'));
 const Companies = lazy(() => import('./components/Companies'));
 const Company = lazy(() => import('./components/Company'));
 const CreateCompany = lazy(() => import('./components/CreateCompany'));
@@ -17,12 +17,14 @@ const Cars = lazy(() => import('./components/Cars'));
 const Car = lazy(() => import('./components/Car'));
 const CreateCar = lazy(() => import('./components/CreateCar'));
 const UpdateCar = lazy(() => import('./components/UpdateCar'));
-const Reservations = lazy(() => import('./components/Reservations'));
-const Reservation = lazy(() => import('./components/Reservation'));
-const CreateReservation = lazy(() => import('./components/CreateReservation'));
+const Bookings = lazy(() => import('./components/Bookings'));
+const Booking = lazy(() => import('./components/Booking'));
+const CreateBooking = lazy(() => import('./components/CreateBooking'));
+const UpdateBooking = lazy(() => import('./components/UpdateBooking'));
 const Users = lazy(() => import('./components/Users'));
 const User = lazy(() => import('./components/User'));
 const CreateUser = lazy(() => import('./components/CreateUser'));
+const UpdateUser = lazy(() => import('./components/UpdateUser'));
 const Settings = lazy(() => import('./components/Settings'));
 const Notifications = lazy(() => import('./components/Notifications'));
 const Messages = lazy(() => import('./components/Messages'));
@@ -40,7 +42,7 @@ const App = () => {
 					<Routes>
 						<Route exact path='/sign-in' element={<Signin />} />
 						{/* <Route exact path='/sign-up' element={<Signup />} /> */}
-						<Route exact path='/' element={<Dashboard />} />
+						<Route exact path='/' element={<Bookings />} />
 						<Route exact path='/companies' element={<Companies />} />
 						<Route exact path='/company' element={<Company />} />
 						<Route exact path='/create-company' element={<CreateCompany />} />
@@ -52,12 +54,13 @@ const App = () => {
 						<Route exact path="/car" element={<Car />} />
 						<Route exact path='/create-car' element={<CreateCar />} />
 						<Route exact path='/update-car' element={<UpdateCar />} />
-						<Route exact path='/reservations' element={<Reservations />} />
-						<Route exact path='/reservation' element={<Reservation />} />
-						<Route exact path='/create-reservation' element={<CreateReservation />} />
+						<Route exact path='/booking' element={<Booking />} />
+						<Route exact path='/create-booking' element={<CreateBooking />} />
+						<Route exact path='/update-booking' element={<UpdateBooking />} />
 						<Route exact path='/users' element={<Users />} />
 						<Route exact path='/user' element={<User />} />
 						<Route exact path='/create-user' element={<CreateUser />} />
+						<Route exact path='/update-user' element={<UpdateUser />} />
 						<Route exact path='/settings' element={<Settings />} />
 						<Route exact path='/notifications' element={<Notifications />} />
 						<Route exact path='/messages' element={<Messages />} />

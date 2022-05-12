@@ -29,11 +29,12 @@ import {
     More as MoreIcon,
     Language as LanguageIcon,
     Settings as SettingsIcon,
-    Dashboard as DashboardIcon,
+    //Dashboard as DashboardIcon,
+    Home as HomeIcon,
     CorporateFare as CompaniesIcon,
     LocationOn as LocationsIcon,
     DirectionsCar as CarsIcon,
-    EventSeat as ReservationsIcon,
+    //EventSeat as BookingsIcon,
     People as UsersIcon,
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
@@ -329,8 +330,8 @@ export default function Header(props) {
                         <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
                             <List sx={classes.list}>
                                 <ListItemLink href="/">
-                                    <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.DASHBOARD} />
+                                    <ListItemIcon>{<HomeIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.HOME} />
                                 </ListItemLink>
                                 <ListItemLink href="/companies">
                                     <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
@@ -344,10 +345,10 @@ export default function Header(props) {
                                     <ListItemIcon>{<CarsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.CARS} />
                                 </ListItemLink>
-                                <ListItemLink href="/reservations">
-                                    <ListItemIcon>{<ReservationsIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.RESERVATIONS} />
-                                </ListItemLink>
+                                {/* <ListItemLink href="/bookings">
+                                    <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.BOOKINGS} />
+                                </ListItemLink> */}
                                 {isAdmin && <ListItemLink href="/users">
                                     <ListItemIcon>{<UsersIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.USERS} />

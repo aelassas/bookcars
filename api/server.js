@@ -7,11 +7,11 @@ import nocache from 'nocache';
 import strings from './config/app.config.js';
 import userRoutes from './routes/userRoutes.js';
 import carRoutes from './routes/carRoutes.js';
-import reservationRoutes from './routes/reservationRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
 
 const DB_HOST = process.env.BC_DB_HOST;
 const DB_PORT = process.env.BC_DB_PORT;
@@ -68,12 +68,12 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(cors());
 app.use('/', userRoutes);
-app.use('/', carRoutes);
-app.use('/', reservationRoutes);
-app.use('/', notificationRoutes);
-app.use('/', messageRoutes);
 app.use('/', companyRoutes);
 app.use('/', locationRoutes);
+app.use('/', carRoutes);
+app.use('/', bookingRoutes);
+app.use('/', notificationRoutes);
+app.use('/', messageRoutes);
 
 strings.setLanguage(process.env.BC_DEFAULT_LANGUAGE);
 
