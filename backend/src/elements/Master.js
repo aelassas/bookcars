@@ -94,7 +94,7 @@ export default class Master extends Component {
         return (
             (<div>
                 <Header user={this.props.user || user} hidden={isLoading} />
-                {(((!user && !isLoading) || (user && user.isVerified) || !this.props.strict)) && !error && !unauthorized ? (
+                {(((!user && !isLoading) || (user && user.verified) || !this.props.strict)) && !error && !unauthorized ? (
                     <div className='content' style={this.props.style}>{this.props.children}</div>
                 ) :
                     (!isLoading && !unauthorized && !error &&

@@ -38,7 +38,7 @@ const getStatusMessage = (lang, msg) => {
 // Sign up route
 routes.route(routeNames.signup).post((req, res) => {
     const { body } = req;
-    body.isVerified = false;
+    body.verified = false;
     body.blacklisted = false;
 
     const user = new User(body);
@@ -185,13 +185,13 @@ routes.route(routeNames.confirmEmail).get((req, res) => {
                     return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_LINK_ERROR));
                 }
                 // user is already verified
-                else if (user.isVerified) {
+                else if (user.verified) {
                     return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
                 }
                 // verify user
                 else {
-                    // change isVerified to true
-                    user.isVerified = true;
+                    // change verified to true
+                    user.verified = true;
                     user.verifiedAt = Date.now();
                     user.save((err) => {
                         // error occur
@@ -221,7 +221,7 @@ routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) =
             return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_VALIDATION_RESEND_ERROR));
         }
         // user has been already verified
-        else if (user.isVerified) {
+        else if (user.verified) {
             return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
         }
         // send verification link

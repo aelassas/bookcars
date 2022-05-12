@@ -26,7 +26,7 @@ const userSchema = new Schema({
         required: [true, "can't be blank"],
         minlength: 6
     },
-    isVerified: {
+    verified: {
         type: Boolean,
         default: false
     },
