@@ -263,8 +263,13 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
         .populate('company')
         .populate('locations')
+        .lean()
         .then(car => {
             if (car) {
+                if (car.company) {
+                    const { _id, fullName, avatar } = car.company;
+                    car.company = { _id, fullName, avatar };
+                }
                 res.json(car);
             } else {
                 console.error('[car.getCar] Car not found:', req.params.id);

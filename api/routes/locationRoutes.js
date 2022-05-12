@@ -69,6 +69,7 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
     Location.findById(req.params.id)
+        .lean()
         .then(location => {
             if (location) {
                 res.json(location);

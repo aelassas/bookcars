@@ -31,3 +31,14 @@
 .btn-resend {
     margin: 0 10px 0 10px !important;
 }
+
+.required:after {
+    content: " *";
+}
+
+.form-error {
+    clear: both;
+    height: 65px;
+    padding-top: 10px;
+    text-align: center;
+}

@@ -52,7 +52,6 @@
 
 .required:after {
     content: " *";
-    /* color: red; */
 }
 
 .form-error {

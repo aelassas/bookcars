@@ -83,7 +83,7 @@ export default class Master extends Component {
 
         return (
             <div>
-                <Header user={user} hidden={isLoading} />
+                <Header user={user} hidden={isLoading} hideSignin={this.props.hideSignin} />
                 {((!user && !isLoading) || (user && user.verified)) ? (
                     <div className='content'>{this.props.children}</div>
                 ) :

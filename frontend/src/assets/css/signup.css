@@ -1,8 +1,12 @@
 /* Signup */
 
 .signup {
-	margin-top: 40px;
-	width: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: auto;
 }
 
 .signup-form-title {
@@ -26,12 +30,7 @@
 
 @media only screen and (max-width: 960px) {
 	.signup-form {
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		position: absolute;
-		top: calc(50% - 370px);
-		right: calc(50% - 175px);
+		margin: 45px 0 20px calc(50% - 175px);
 		width: 350px;
 		height: 730px;
 		padding: 30px;
@@ -47,12 +46,7 @@
 
 @media only screen and (min-width: 960px) {
 	.signup-form {
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		position: absolute;
-		top: calc(50% - 350px);
-		right: calc(50% - 275px);
+		margin: 45px 0 20px calc(50% - 275px);
 		width: 550px;
 		height: 750px;
 		padding: 30px;
@@ -63,7 +57,3 @@
 		margin-left: 85px;
 	}
 }
-
-/* .signup-form-wrapper {
-	margin: 32px 0;
-} */

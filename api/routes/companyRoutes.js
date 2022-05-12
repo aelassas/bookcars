@@ -78,6 +78,7 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => 
 // Get Company Router
 routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
     User.findById(req.params.id)
+        .lean()
         .then(user => {
             if (!user) {
                 console.error('[company.getCompany] Company not found:', req.params);
@@ -99,6 +100,7 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
     const options = 'i';
 
     User.find({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: keyword, $options: options } })
+        .lean()
         .then(data => {
             const companies = [];
             for (const { _id, fullName, avatar } of data) {

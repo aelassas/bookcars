@@ -342,6 +342,7 @@ routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, (req, res) => 
 // Get User by Id Router
 routes.route(routeNames.getUser).get(authJwt.verifyToken, (req, res) => {
     User.findById(req.params.id)
+        .lean()
         .then(user => {
             if (!user) {
                 console.error('[user.getUser] User not found:', req.params);

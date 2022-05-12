@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings } from '../config/app.config';
 import UserService from '../services/UserService';
-import Header from '../elements/Header';
+import Master from '../elements/Master';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -105,8 +105,6 @@ export default class SignUp extends Component {
     handleMouseDownConfirmPassword = (event) => {
         event.preventDefault();
     };
-
-    preventDefault = (event) => event.preventDefault();
 
     handleTosChange = (event) => {
         this.setState({ tosChecked: event.target.checked });
@@ -220,34 +218,13 @@ export default class SignUp extends Component {
         e.preventDefault();
     };
 
-    componentDidMount() {
-        let language = UserService.getQueryLanguage();
-
-        if (!Env.LANGUAGES.includes(language)) {
-            language = UserService.getLanguage();
-        }
-        strings.setLanguage(language);
-        this.setState({ language });
-
-        const currentUser = UserService.getCurrentUser();
-        if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                UserService.getUser(currentUser.id).then(user => {
-                    if (user) {
-                        window.location.href = '/home';
-                    } else {
-                        UserService.signout();
-                    }
-                }).catch(err => {
-                    UserService.signout();
-                });
-            }).catch(err => {
-                UserService.signout();
-            });
+    onLoad = (user) => {
+        if (user) {
+            window.location.href = '/';
         } else {
             this.setState({ visible: true });
         }
-    }
+    };
 
     render() {
         const { error,
@@ -261,33 +238,28 @@ export default class SignUp extends Component {
             isLoading } = this.state;
 
         return (
-            <div>
-                <Header hideSignin={true} />
-                <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                    <div className="signup">
+            <Master strict={false} hideSignin={true} onLoad={this.onLoad}>
+                <div className="signup">
+                    <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <div>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="full-name">{strings.FULL_NAME}</InputLabel>
+                                    <InputLabel className='required'>{strings.FULL_NAME}</InputLabel>
                                     <Input
-                                        id="full-name"
                                         type="text"
                                         value={this.state.fullName}
-                                        name="FullName"
                                         required
                                         onChange={this.handleOnChangeFullName}
                                         autoComplete="off"
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="email">{strings.EMAIL}</InputLabel>
+                                    <InputLabel className='required'>{strings.EMAIL}</InputLabel>
                                     <Input
-                                        id="email"
                                         type="text"
                                         error={emailError}
                                         value={this.state.email}
-                                        name="Email"
                                         onBlur={this.handleOnBlur}
                                         onChange={this.handleOnChangeEmail}
                                         required
@@ -303,13 +275,10 @@ export default class SignUp extends Component {
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="password">{strings.PASSWORD}</InputLabel>
+                                    <InputLabel className='required'>{strings.PASSWORD}</InputLabel>
                                     <Input
-                                        id="password"
                                         value={this.state.password}
-                                        name="Password"
                                         onChange={this.handleOnChangePassword}
-                                        autoComplete="password"
                                         required
                                         type="password"
                                         inputProps={{
@@ -321,13 +290,10 @@ export default class SignUp extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="confirm-password">{strings.CONFIRM_PASSWORD}</InputLabel>
+                                    <InputLabel className='required'>{strings.CONFIRM_PASSWORD}</InputLabel>
                                     <Input
-                                        id="confirm-password"
                                         value={this.state.confirmPassword}
-                                        name="ConfirmPassword"
                                         onChange={this.handleOnChangeConfirmPassword}
-                                        autoComplete="password"
                                         required
                                         type="password"
                                         inputProps={{
@@ -358,7 +324,7 @@ export default class SignUp extends Component {
                                                     />
                                                 </td>
                                                 <td>
-                                                    <Link href="/tos" onClick={this.preventDefault}>{strings.TOS_SIGN_UP}</Link>
+                                                    <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -382,21 +348,18 @@ export default class SignUp extends Component {
                                     </Button>
                                 </div>
                             </div>
-                            <div className="form-error">
-                                {(passwordError || passwordsDontMatch || recaptchaError || error) ?
-                                    <div>
-                                        {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
-                                        {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
-                                        {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
-                                        {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
-                                    </div>
-                                    : null}
-                            </div>
+                            {(passwordError || passwordsDontMatch || recaptchaError || error) &&
+                                <div className="form-error">
+                                    {passwordError && <Error message={strings.ERROR_IN_PASSWORD} />}
+                                    {passwordsDontMatch && <Error message={strings.PASSWORDS_DONT_MATCH} />}
+                                    {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
+                                    {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
+                                </div>}
                         </form>
-                    </div>
-                </Paper>
+                    </Paper>
+                </div>
                 {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
-            </div>
+            </Master >
         );
     }
 }

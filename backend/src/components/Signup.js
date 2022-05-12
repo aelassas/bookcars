@@ -107,8 +107,6 @@ export default class SignUp extends Component {
         event.preventDefault();
     };
 
-    preventDefault = (event) => event.preventDefault();
-
     handleTosChange = (event) => {
         this.setState({ tosChecked: event.target.checked });
     };
@@ -358,7 +356,7 @@ export default class SignUp extends Component {
                                                     />
                                                 </td>
                                                 <td>
-                                                    <Link href="/tos" onClick={this.preventDefault}>{strings.TOS_SIGN_UP}</Link>
+                                                    <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
                                                 </td>
                                             </tr>
                                         </tbody>
