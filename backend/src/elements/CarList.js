@@ -180,7 +180,7 @@ class CarList extends Component {
                                     </ul>
                                     <ul className='extras-list'>
                                         <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP} placement='left'>
                                                 <div className='car-info-list-item'>
                                                     {car.available ? <CheckIcon /> : <UncheckIcon />}
                                                     {car.available ?
