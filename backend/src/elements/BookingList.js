@@ -257,7 +257,7 @@ class BookingList extends Component {
         this.setState({ loading: true });
         BookingService.getBookings(companies, statuses, filter, page, pageSize)
             .then(data => {
-                this.setState({ rows: data.bookings, rowCount: data.count, loading: false });
+                this.setState({ rows: data.rows, rowCount: data.count }, () => this.setState({ loading: false }));
             })
             .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });

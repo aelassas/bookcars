@@ -315,7 +315,7 @@ export default class CreateCar extends Component {
                                 <FormControl fullWidth margin="dense">
                                     <CompanyList
                                         label={strings.COMPANY}
-                                        required={true}
+                                        required
                                         multiple={false}
                                         type={Env.RECORD_TYPE.COMPANY}
                                         variant='standard'
@@ -327,8 +327,8 @@ export default class CreateCar extends Component {
                             <FormControl fullWidth margin="dense">
                                 <LocationList
                                     label={strings.LOCATIONS}
-                                    required={true}
-                                    multiple={true}
+                                    required
+                                    multiple
                                     variant='standard'
                                     onChange={this.handleLocationsChange}
                                 />
@@ -363,7 +363,7 @@ export default class CreateCar extends Component {
                                 <CarTypeList
                                     label={strings.CAR_TYPE}
                                     variant='standard'
-                                    required={true}
+                                    required
                                     onChange={this.handleCarTypeChange}
                                 />
                             </FormControl>
@@ -372,7 +372,7 @@ export default class CreateCar extends Component {
                                 <GearboxList
                                     label={strings.GEARBOX}
                                     variant='standard'
-                                    required={true}
+                                    required
                                     onChange={this.handleGearboxChange}
                                 />
                             </FormControl>
@@ -381,7 +381,7 @@ export default class CreateCar extends Component {
                                 <SeatsList
                                     label={strings.SEATS}
                                     variant='standard'
-                                    required={true}
+                                    required
                                     onChange={this.handleSeatsChange}
                                 />
                             </FormControl>
@@ -390,7 +390,7 @@ export default class CreateCar extends Component {
                                 <DoorsList
                                     label={strings.DOORS}
                                     variant='standard'
-                                    required={true}
+                                    required
                                     onChange={this.handleDoorsChange}
                                 />
                             </FormControl>
@@ -399,17 +399,15 @@ export default class CreateCar extends Component {
                                 <FuelPolicyList
                                     label={csStrings.FUEL_POLICY}
                                     variant='standard'
-                                    required={true}
+                                    required
                                     onChange={this.handleFuelPolicyChange}
                                 />
                             </FormControl>
 
-                            <FormControl fullWidth margin="dense">
-                                <div className='info'>
-                                    <InfoIcon />
-                                    <label>{strings.OPTIONAL}</label>
-                                </div>
-                            </FormControl>
+                            <div className='info'>
+                                <InfoIcon />
+                                <label>{commonStrings.OPTIONAL}</label>
+                            </div>
 
                             <FormControl fullWidth margin="dense" className='checkbox-fc'>
                                 <FormControlLabel

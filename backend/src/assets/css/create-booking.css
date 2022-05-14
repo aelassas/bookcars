@@ -1,0 +1,52 @@
+/* Create Location */
+
+.create-booking {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.booking-form-wrapper {
+    margin: 32px 0;
+}
+
+.booking-form-title {
+    text-align: center;
+    text-transform: capitalize;
+    color: #121212;
+}
+
+.checkbox-fc {
+    margin: 13px 0 !important;
+}
+
+.checkbox-fc .checkbox-fcl {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: .9em;
+    line-height: 1em;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    .booking-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 180px) !important;
+        width: 360px;
+        padding: 30px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    .booking-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 275px) !important;
+        width: 550px;
+        padding: 30px;
+    }
+}

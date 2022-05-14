@@ -141,8 +141,8 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, (req, res) => {
         return bookings;
     };
 
-    const bookings = getBookings(page, size);
-    return res.json({ bookings, count: 100 });
+    const rows = getBookings(page, size);
+    return res.json({ rows, count: 100 });
 });
 
 export default routes;

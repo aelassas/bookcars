@@ -16,8 +16,7 @@ export const strings = new LocalizedStrings({
         SEATS: 'Sièges',
         DOORS: 'Portes',
         GEARBOX: 'Transmission',
-        AIRCON: 'Climatisation',
-        OPTIONAL: 'Paramètres optionnels',
+        AIRCON: 'Climatisation'
     },
     en: {
         NEW_CAR_HEADING: 'New car',
@@ -32,8 +31,7 @@ export const strings = new LocalizedStrings({
         SEATS: 'Seats',
         DOORS: 'Doors',
         GEARBOX: 'Gearbox',
-        AIRCON: 'Aircon',
-        OPTIONAL: 'Optional Parameters',
+        AIRCON: 'Aircon'
     }
 });
 

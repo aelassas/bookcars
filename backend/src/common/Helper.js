@@ -1,6 +1,8 @@
 import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
+import { intervalToDuration } from 'date-fns';
+import CarService from "../services/CarService";
 
 export default class Helper {
 
@@ -302,5 +304,30 @@ export default class Helper {
             { value: Env.BOOKING_STATUS.RESERVED, label: commonStrings.BOOKING_STATUS_RESERVED },
             { value: Env.BOOKING_STATUS.CANCELLED, label: commonStrings.BOOKING_STATUS_CANCELLED }
         ];
+    }
+
+    static calculateBookingPrice(booking, onSucess, onError) {
+        CarService.getCar(booking.car)
+            .then(car => {
+                if (car) {
+                    const days = intervalToDuration({ start: booking.from, end: booking.to }).days;
+                    
+                    let price = car.price * days;
+                    if (booking.cancellation) price += car.cancellation;
+                    if (booking.amendments) price += car.amendments;
+                    if (booking.theftProtection) price += car.theftProtection * days;
+                    if (booking.collisionDamageWaiver) price += car.collisionDamageWaiver * days;
+                    if (booking.fullInsurance) price += car.fullInsurance * days;
+                    if (booking.additionalDriver) price += car.additionalDriver * days;
+
+                    if (onSucess) onSucess(price);
+                } else {
+                    if (onError) onError(`Car ${booking.car} not found.`);
+                }
+            })
+            .catch(err => {
+                if (onError) onError(err);
+            })
+
     }
 }

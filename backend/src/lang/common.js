@@ -45,6 +45,7 @@ export const strings = new LocalizedStrings({
         BOOKING_STATUS_CANCELLED: 'Annulée',
         FROM: 'Début',
         TO: 'Fin',
+        OPTIONAL: 'Paramètres optionnels',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -88,6 +89,7 @@ export const strings = new LocalizedStrings({
         BOOKING_STATUS_CANCELLED: 'Cancelled',
         FROM: 'From',
         TO: 'To',
+        OPTIONAL: 'Optional Parameters',
     }
 });
 
