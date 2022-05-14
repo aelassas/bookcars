@@ -6,29 +6,29 @@
     left: 0;
 }
 
-.company .col-1 .company-name {
+.company div.col-1 .company-name {
     text-align: center;
     font-weight: 600;
     margin-top: 15px;
 }
 
-.company .col-1 .company-info {
+.company div.col-1 .company-info {
     text-align: center;
     font-weight: 400;
     margin-top: 10px;
     color: #676767;
 }
 
-.company .col-1 .company-actions {
+.company div.col-1 .company-actions {
     text-align: center;
 }
 
-.company .col-1 div.car-company {
+.company div.col-1 div.car-company {
     display: flex;
     align-items: center;
 }
 
-.company .col-1 div.car-company span.car-company-logo {
+.company div.col-1 div.car-company span.car-company-logo {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
     display: inline-block;
@@ -36,7 +36,7 @@
     vertical-align: text-bottom;
 }
 
-.company .col-1 div.car-company span.car-company-info {
+.company div.col-1 div.car-company span.car-company-info {
     color: #a8a8a8;
     display: inline-block;
     font-size: .9em;
@@ -48,7 +48,7 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .company .col-1 {
+    .company div.col-1 {
         position: absolute;
         top: 0;
         right: 0;
@@ -60,13 +60,13 @@
         border-bottom: #eee solid 1px;
     }
 
-    .company .col-1 .company-avatar-sec {
+    .company div.col-1 .company-avatar-sec {
         position: relative;
         left: 50%;
         transform: translateX(-22%);
     }
 
-    .company .col-2 {
+    .company div.col-2 {
         position: absolute;
         top: 320px;
         bottom: 0;
@@ -75,7 +75,7 @@
         overflow: auto;
     }
 
-    .company .col-2 .cars {
+    .company div.col-2 .cars {
         width: 100%;
     }
 }
@@ -83,7 +83,7 @@
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .company .col-1 {
+    .company div.col-1 {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -94,13 +94,13 @@
         border-right: #eee solid 1px;
     }
 
-    .company .col-1 .company-avatar-sec {
+    .company div.col-1 .company-avatar-sec {
         position: relative;
         left: 50%;
         transform: translateX(-30%);
     }
 
-    .company .col-2 {
+    .company div.col-2 {
         position: absolute;
         top: 0;
         bottom: 0;

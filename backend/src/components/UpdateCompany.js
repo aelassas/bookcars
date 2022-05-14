@@ -77,7 +77,7 @@ export default class UpdateCompany extends Component {
             } else {
                 this.setState({ fullNameError: false });
             }
-        }).catch(_ => {
+        }).catch(() => {
             this.setState({ fullNameError: false });
         });
     };
@@ -114,7 +114,7 @@ export default class UpdateCompany extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(_ => {
+            .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
@@ -156,7 +156,7 @@ export default class UpdateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true }, _ => {
+        this.setState({ isLoading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -178,7 +178,7 @@ export default class UpdateCompany extends Component {
                                 this.setState({ isLoading: false, noMatch: true });
                             }
                         })
-                        .catch(_ => {
+                        .catch(() => {
                             this.setState({ isLoading: false, error: true, visible: false });
                         });
                 } else {

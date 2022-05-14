@@ -7,7 +7,7 @@ import Master from '../elements/Master'
 
 export default class NoMatch extends Component {
 
-    noMatch = _ => (
+    noMatch = () => (
         <div className='msg'>
             <h2>{strings.NO_MATCH}</h2>
             <p><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>

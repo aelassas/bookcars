@@ -39,8 +39,8 @@ export default class UserService {
 
     static signout(redirect = true) {
 
-        const _signout = _ => {
-            const deleteAllCookies = _ => {
+        const _signout = () => {
+            const deleteAllCookies = () => {
                 const cookies = document.cookie.split(";");
 
                 for (let i = 0; i < cookies.length; i++) {

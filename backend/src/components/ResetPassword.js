@@ -60,7 +60,7 @@ export default class ResetPassword extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const submit = _ => {
+        const submit = () => {
 
             if (this.state.newPassword.length < 6) {
                 this.setState({
@@ -119,7 +119,7 @@ export default class ResetPassword extends Component {
                                         toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                                     }
                                 })
-                                .catch(_ => {
+                                .catch(() => {
                                     toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                                 });
                         } else {
@@ -130,7 +130,7 @@ export default class ResetPassword extends Component {
                         toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                     }
                 })
-                .catch(_ => {
+                .catch(() => {
                     toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                 });
         };

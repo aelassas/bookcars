@@ -60,14 +60,14 @@ export default class Locations extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
-    handleCloseInfo = _ => {
+    handleCloseInfo = () => {
         this.setState({ openInfoDialog: false });
     };
 
-    handleConfirmDelete = _ => {
+    handleConfirmDelete = () => {
         const { locationId, locationIndex, locations } = this.state;
 
         if (locationId !== '' && locationIndex > -1) {
@@ -91,7 +91,7 @@ export default class Locations extends Component {
         }
     };
 
-    handleCancelDelete = _ => {
+    handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false, locationId: '' });
     };
 
@@ -112,7 +112,7 @@ export default class Locations extends Component {
         });
     };
 
-    fetch = _ => {
+    fetch = () => {
         const { keyword, page, locations } = this.state;
 
         this.setState({ isLoading: true });
@@ -121,7 +121,7 @@ export default class Locations extends Component {
                 const _locations = page === 1 ? data : [...locations, ...data];
                 this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     onLoad = (user) => {
@@ -132,7 +132,7 @@ export default class Locations extends Component {
             div.onscroll = (event) => {
                 const { fetch, isLoading, page } = this.state;
                 if (fetch && !isLoading && (((window.innerHeight - Env.PAGE_TOP_OFFSET) + event.target.scrollTop)) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
-                    this.setState({ page: page + 1 }, _ => {
+                    this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });
                 }
@@ -161,7 +161,6 @@ export default class Locations extends Component {
                             <SearchIcon />
                         </IconButton>
                         <Button
-                            type="submit"
                             variant="contained"
                             className='btn-primary new-location'
                             size="small"
@@ -208,7 +207,7 @@ export default class Locations extends Component {
                     open={openInfoDialog}
                 >
                     <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
                     </DialogActions>
                 </Dialog>
@@ -218,9 +217,9 @@ export default class Locations extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>

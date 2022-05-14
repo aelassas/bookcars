@@ -48,7 +48,7 @@ export default class UpdateLocation extends Component {
                 } else {
                     this.setState({ nameError: false });
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 this.error();
             });
         } else {
@@ -62,7 +62,7 @@ export default class UpdateLocation extends Component {
         }
     }
 
-    error = _ => {
+    error = () => {
         this.setState({ isLoading: false });
         toast(commonStrings.GENERIC_ERROR, { type: 'error' });
     }
@@ -73,7 +73,7 @@ export default class UpdateLocation extends Component {
         const { location, name } = this.state;
         const data = { _id: location._id, name };
 
-        const update = _ => {
+        const update = () => {
             LocationService.update(data)
                 .then(status => {
                     if (status === 200) {
@@ -83,7 +83,7 @@ export default class UpdateLocation extends Component {
                     } else {
                         this.error();
                     }
-                }).catch(_ => {
+                }).catch(() => {
                     this.error();
                 });
         };
@@ -96,7 +96,7 @@ export default class UpdateLocation extends Component {
                     this.setState({ nameError: false });
                     update();
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 this.error();
             });
         } else {
@@ -107,7 +107,7 @@ export default class UpdateLocation extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true }, _ => {
+        this.setState({ isLoading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('l')) {
                 const id = params.get('l');
@@ -125,7 +125,7 @@ export default class UpdateLocation extends Component {
                                 this.setState({ isLoading: false, noMatch: true });
                             }
                         })
-                        .catch(_ => {
+                        .catch(() => {
                             this.setState({ isLoading: false, error: true, visible: false });
                         });
                 } else {

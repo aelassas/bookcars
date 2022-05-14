@@ -16,7 +16,7 @@ class SeatsList extends Component {
 
     handleChange = (e) => {
         const value = e.target.value || '';
-        this.setState({ value: value }, _ => {
+        this.setState({ value: value }, () => {
             if (this.props.onChange) {
                 this.props.onChange(value);
             }

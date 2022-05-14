@@ -274,7 +274,7 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 user.bio = bio;
 
                 user.save()
-                    .then(_ => {
+                    .then(() => {
                         res.sendStatus(200);
                     })
                     .catch(err => {
@@ -480,7 +480,7 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
             } else {
                 user.password = req.body.newPassword;
                 user.save()
-                    .then(_ => {
+                    .then(() => {
                         res.sendStatus(200);
                     })
                     .catch(err => {

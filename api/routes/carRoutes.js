@@ -119,7 +119,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 car.additionalDriver = additionalDriver;
 
                 car.save()
-                    .then(_ => res.sendStatus(200))
+                    .then(() => res.sendStatus(200))
                     .catch(err => {
                         console.error(`[car.update]  ${strings.DB_ERROR} ${req.body}`, err);
                         res.status(400).send(strings.DB_ERROR + err);
@@ -228,7 +228,7 @@ routes.route(routeNames.deleteImage).post(authJwt.verifyToken, (req, res) => {
                 car.image = null;
 
                 car.save()
-                    .then(_ => {
+                    .then(() => {
                         res.sendStatus(200);
                     })
                     .catch(err => {

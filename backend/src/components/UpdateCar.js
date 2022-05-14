@@ -235,14 +235,14 @@ export default class CreateCar extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(_ => {
+            .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
     onLoad = (user) => {
 
-        this.setState({ user, isLoading: true }, _ => {
+        this.setState({ user, isLoading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -292,7 +292,7 @@ export default class CreateCar extends Component {
                                 this.setState({ isLoading: false, noMatch: true });
                             }
                         })
-                        .catch(_ => {
+                        .catch(() => {
                             this.setState({ isLoading: false, error: true, visible: false });
                         });
                 } else {

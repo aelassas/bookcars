@@ -99,7 +99,7 @@ export default class CreateCompany extends Component {
             } else {
                 this.setState({ emailError: false });
             }
-        }).catch(_ => {
+        }).catch(() => {
             this.setState({ emailError: false });
         });
     };
@@ -115,7 +115,7 @@ export default class CreateCompany extends Component {
             } else {
                 this.setState({ fullNameError: false });
             }
-        }).catch(_ => {
+        }).catch(() => {
             this.setState({ fullNameError: false });
         });
     };
@@ -201,7 +201,7 @@ export default class CreateCompany extends Component {
                                 passwordsDontMatch: false,
                                 isLoading: false
                             });
-                    }).catch(_ => {
+                    }).catch(() => {
                         this.setState({
                             error: true,
                             passwordError: false,
@@ -211,7 +211,7 @@ export default class CreateCompany extends Component {
                     });
             }
 
-        }).catch(_ => {
+        }).catch(() => {
             this.setState({ emailError: true });
         })
     };
@@ -252,17 +252,17 @@ export default class CreateCompany extends Component {
         }
     };
 
-    handleCancel = _ => {
+    handleCancel = () => {
         const { avatar } = this.state;
 
         if (avatar) {
             this.setState({ isLoading: true });
 
             UserService.deleteTempAvatar(avatar)
-                .then(_ => {
+                .then(() => {
                     window.location.href = '/companies';
                 })
-                .catch(_ => {
+                .catch(() => {
                     window.location.href = '/companies';
                 });
         } else {

@@ -238,13 +238,13 @@ export default class CreateCar extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(_ => {
+            .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
     onLoad = (user) => {
-        this.setState({ user, visible: true }, _ => {
+        this.setState({ user, visible: true }, () => {
             if (user.type === Env.RECORD_TYPE.COMPANY) {
                 this.setState({ company: user._id, isCompany: true });
             }

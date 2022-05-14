@@ -1,108 +1,380 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/booking-list';
-import { DataGrid, frFR, enUS } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import Helper from '../common/Helper';
+import BookingService from '../services/BookingService';
+import StatusList from './StatusList';
+import { toast } from 'react-toastify';
+import {
+    DataGrid,
+    frFR,
+    enUS
+} from '@mui/x-data-grid';
+import {
+    Tooltip,
+    IconButton,
+    Link,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button
+} from '@mui/material';
+import {
+    Edit as EditIcon,
+    Delete as DeleteIcon
+} from '@mui/icons-material';
 
-/**
- * Simulates server data loading
- */
-const loadServerRows = (
-    page,
-    pageSize,
-    allRows,
-) =>
-    new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(allRows.slice(page * pageSize, (page + 1) * pageSize));
-        }, Math.random() * 200 + 100); // simulate network latency
-    });
+import '../assets/css/booking-list.css';
 
-const useQuery = (page, pageSize, allRows) => {
-    const [rowCount, setRowCount] = useState(undefined);
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState([]);
+class BookingList extends Component {
 
-    useEffect(() => {
-        let active = true;
-
-        setIsLoading(true);
-        setRowCount(undefined);
-        loadServerRows(page, pageSize, allRows).then((newRows) => {
-            if (!active) {
-                return;
-            }
-            setData(newRows);
-            setIsLoading(false);
-            setRowCount(allRows.length);
-        });
-
-        return () => {
-            active = false;
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: undefined,
+            page: 0,
+            pageSize: Env.BOOKINGS_PAGE_SIZE,
+            columns: [],
+            rows: [],
+            rowCount: 0,
+            isLoading: false,
+            selectedId: undefined,
+            selectedIds: [],
+            openUpdateDialog: false,
+            openDeleteDialog: false,
+            status: '',
+            companies: [],
+            statuses: Helper.getBookingStatuses(),
+            filter: undefined
         };
-    }, [page, pageSize, allRows]);
+    }
 
-    return { isLoading, data, rowCount };
-};
+    getDate = (date) => {
+        const d = new Date(date);
+        return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`;
+    };
 
-/**
- * TODO: Improve `useDemoData` to move the fake pagination inside it instead of "fetching" everything of slicing in the component
- */
-export default function ServerPaginationGrid(props) {
-    const { data: demoData } = useDemoData({
-        dataSet: 'Commodity',
-        rowLength: 100,
-        maxColumns: 6,
-    });
+    getColumns = (user) => {
+        const columns = [
+            {
+                field: 'car',
+                headerName: strings.CAR,
+                flex: 1,
+                renderCell: (params) => (
+                    <Link href={`/car?c=${params.value._id}`}>{params.value.name}</Link>
+                ),
+            },
+            {
+                field: 'driver',
+                headerName: strings.DRIVER,
+                flex: 1,
+                renderCell: (params) => (
+                    <Link href={`/user?u=${params.value._id}`}>{params.value.fullName}</Link>
+                ),
+            },
+            {
+                field: 'from',
+                headerName: commonStrings.FROM,
+                flex: 1,
+                valueGetter: (params) => (
+                    this.getDate(params.value)
+                ),
+            },
+            {
+                field: 'to',
+                headerName: commonStrings.TO,
+                flex: 1,
+                valueGetter: (params) => (
+                    this.getDate(params.value)
+                ),
+            },
+            {
+                field: 'price',
+                headerName: strings.PRICE,
+                flex: 1,
+                valueGetter: (params) => (
+                    `${params.value} ${strings.CURRENCY}`
+                ),
+                renderCell: (params) => (
+                    <span style={{ fontWeight: 500 }}>{params.value}</span>
+                )
+            },
+            {
+                field: 'status',
+                headerName: strings.STATUS,
+                flex: 1,
+                renderCell: (params) => (
+                    <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>
+                ),
+            },
+            {
+                field: 'action',
+                headerName: '',
+                sortable: false,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                    const handleDelete = (e) => {
+                        e.stopPropagation(); // don't select this row after clicking
+                        this.setState({ selectedId: params.row._id, openDeleteDialog: true });
+                    };
 
-    const [rowsState, setRowsState] = useState({
-        page: 0,
-        pageSize: 5,
-    });
+                    return (
+                        <div>
+                            <Tooltip title={commonStrings.UPDATE}>
+                                <IconButton href={`update-booking?b=${params.row._id}`}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title={commonStrings.DELETE}>
+                                <IconButton
+                                    onClick={handleDelete}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
 
-    const { isLoading, data, rowCount } = useQuery(
-        rowsState.page,
-        rowsState.pageSize,
-        demoData.rows,
-    );
+                        </div>
+                    );
+                },
+                renderHeader: () => {
+                    const { selectedIds } = this.state;
 
-    // Some api client return undefine while loading
-    // Following lines are here to prevent `rowCountState` from being undefined during the loading
-    const [rowCountState, setRowCountState] = useState(rowCount || 0);
-    useEffect(() => {
-        setRowCountState((prevRowCountState) =>
-            rowCount !== undefined ? rowCount : prevRowCountState,
-        );
-    }, [rowCount, setRowCountState]);
-
-    // const columns = [
-    //     { field: 'firstName', headerName: 'First name', width: 130 },
-    //     { field: 'lastName', headerName: 'Last name', width: 130 },
-    // ];
-
-    // company, car, driver, pickUpLocation, dropOffLocation, from, to, status, actions
-
-    return (
-        <div style={{ width: props.width || '100%', height: props.height || 400 }} className={props.className}>
-            <DataGrid
-                columns={demoData.columns}
-                rows={data}
-                rowCount={rowCountState}
-                loading={isLoading}
-                rowsPerPageOptions={[5, 10, 20]}
-                pagination
-                {...rowsState}
-                paginationMode='server'
-                onPageChange={(page) => setRowsState((prev) => ({ ...prev, page }))}
-                onPageSizeChange={(pageSize) =>
-                    setRowsState((prev) => ({ ...prev, pageSize }))
+                    return (
+                        selectedIds.length > 0 ?
+                            <div>
+                                <Tooltip title={strings.UPDATE_SELECTION}>
+                                    <IconButton onClick={() => {
+                                        this.setState({ openUpdateDialog: true });
+                                    }}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={strings.DELETE_SELECTION}>
+                                    <IconButton
+                                        onClick={() => {
+                                            this.setState({ openDeleteDialog: true });
+                                        }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                            : <></>
+                    );
                 }
-                localeText={(props.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                components={{
-                    NoRowsOverlay: () => (
-                        ''
-                    )
-                }}
-            />
-        </div>
-    );
+            }
+
+
+        ];
+
+        if (Helper.isAdmin(user)) {
+            columns.unshift({
+                field: 'company',
+                headerName: strings.COMPANY,
+                flex: 1,
+                // valueGetter: (params) => (
+                //     params.value
+                // ),
+                renderCell: (params) => (
+                    <Link href={`/company?c=${params.value._id}`} className='cell-company'>
+                        <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
+                            alt={params.value.fullName}
+                            style={{
+                                width: Env.COMPANY_IMAGE_WIDTH,
+                                // height: Env.COMPANY_IMAGE_HEIGHT
+                            }} />
+                    </Link>
+                ),
+            });
+        }
+
+        return columns;
+    }
+
+    handleCancelUpdate = () => {
+        this.setState({ openUpdateDialog: false });
+    };
+
+    handleStatusChange = (status) => {
+        this.setState({ status });
+    };
+
+    handleConfirmUpdate = () => {
+        const { selectedIds, status, rows } = this.state;
+        const data = { ids: selectedIds, status };
+
+        BookingService.updateStatus(data)
+            .then(s => {
+                if (s === 200) {
+                    rows.forEach(row => {
+                        if (selectedIds.includes(row._id)) {
+                            row.status = status;
+                        }
+                    });
+                    this.setState({ rows });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+
+                this.setState({ openUpdateDialog: false });
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
+    handleCancelDelete = () => {
+        this.setState({ openDeleteDialog: false, selectedId: undefined });
+    };
+
+    handleConfirmDelete = () => {
+        const { selectedIds, selectedId, rows } = this.state;
+        const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
+        BookingService.delete(ids)
+            .then(status => {
+                if (status === 200) {
+                    if (selectedIds.length > 0) {
+                        this.setState({ rows: rows.filter((row) => !selectedIds.includes(row._id)) });
+                    } else {
+                        this.setState({ rows: rows.filter((row) => row._id !== selectedId) });
+                    }
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+
+                this.setState({ openDeleteDialog: false });
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
+    fetch = () => {
+        const { companies, statuses, filter, page, pageSize } = this.state;
+
+        this.setState({ isLoading: true });
+        BookingService.getBookings(companies, statuses, filter, page, pageSize)
+            .then(data => {
+                this.setState({ rows: data.bookings, rowCount: data.count, isLoading: false });
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { companies, statuses, filter } = prevState;
+
+        if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
+            return { companies: Helper.clone(nextProps.companies) };
+        }
+
+        if (nextProps.statuses && !Helper.statusArrayEqual(statuses, nextProps.statuses)) {
+            return { statuses: Helper.clone(nextProps.statuses) };
+        }
+
+        if (nextProps.filter && !Helper.filterEqual(filter, nextProps.filter)) {
+            return { filter: Helper.clone(nextProps.filter) };
+        }
+
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!Helper.arrayEqual(this.state.companies, prevState.companies)) {
+            this.setState({ page: 0 }, () => this.fetch());
+        }
+
+        if (!Helper.statusArrayEqual(this.state.statuses, prevState.statuses)) {
+            this.setState({ page: 0 }, () => this.fetch());
+        }
+
+        if (!Helper.filterEqual(this.state.filter, prevState.filter)) {
+            this.setState({ page: 0 }, () => this.fetch());
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.user) {
+            const columns = this.getColumns(this.props.user);
+            this.setState({ user: this.props.user, columns });
+        }
+    }
+
+    render() {
+        const {
+            user,
+            columns,
+            rows,
+            rowCount,
+            isLoading,
+            page,
+            pageSize,
+            openDeleteDialog,
+            openUpdateDialog,
+            selectedIds
+        } = this.state;
+
+        return (
+            user && columns.length > 0 ? (
+                <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
+                    <DataGrid
+                        checkboxSelection
+                        getRowId={(row) => row._id}
+                        columns={columns}
+                        rows={rows}
+                        rowCount={rowCount}
+                        loading={isLoading}
+                        rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
+                        pagination
+                        page={page}
+                        pageSize={pageSize}
+                        paginationMode='server'
+                        onPageChange={(page) => this.setState({ page }, () => this.fetch())}
+                        onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
+                        localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                        components={{
+                            NoRowsOverlay: () => ''
+                        }}
+                        onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
+                    />
+
+                    <Dialog
+                        disableEscapeKeyDown
+                        maxWidth="xs"
+                        open={openUpdateDialog}
+                    >
+                        <DialogTitle className='dialog-header'>{strings.UPDATE_STATUS}</DialogTitle>
+                        <DialogContent className='bs-update-status'>
+                            <StatusList
+                                label={strings.NEW_STATUS}
+                                onChange={this.handleStatusChange}
+                            />
+                        </DialogContent>
+                        <DialogActions className='dialog-actions'>
+                            <Button onClick={this.handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                            <Button onClick={this.handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        disableEscapeKeyDown
+                        maxWidth="xs"
+                        open={openDeleteDialog}
+                    >
+                        <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                        <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
+                        <DialogActions className='dialog-actions'>
+                            <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                            <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>)
+                :
+                <></>
+        );
+    }
 }
+
+export default BookingList;

@@ -19,6 +19,14 @@ const Env = {
     FUEL_POLICY: {
         LIKE_FOR_LIKE: 'likeForlike',
         FREE_TANK: 'freeTank'
+    },
+    BOOKING_STATUS: {
+        VOID: 'void',
+        PENDING: 'pending',
+        DEPOSIT: 'deposit',
+        PAID: 'paid',
+        RESERVED: 'reserved',
+        CANCELLED: 'cancelled'
     }
 };
 

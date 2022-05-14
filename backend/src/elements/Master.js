@@ -35,8 +35,8 @@ export default class Master extends Component {
         });
     };
 
-    error = _ => {
-        this.setState({ error: true, isLoading: false }, _ => {
+    error = () => {
+        this.setState({ error: true, isLoading: false }, () => {
             if (this.props.onError) {
                 this.props.onError();
             }
@@ -62,7 +62,7 @@ export default class Master extends Component {
                                 return;
                             }
 
-                            this.setState({ isLoading: false, user }, _ => {
+                            this.setState({ isLoading: false, user }, () => {
                                 if (this.props.onLoad) {
                                     this.props.onLoad(user);
                                 }
@@ -70,13 +70,13 @@ export default class Master extends Component {
                         } else {
                             this.error();
                         }
-                    }).catch(_ => {
+                    }).catch(() => {
                         this.error();
                     });
                 } else {
                     UserService.signout();
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 UserService.signout();
             });
         } else {

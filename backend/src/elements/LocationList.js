@@ -26,13 +26,13 @@ class LocationList extends Component {
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _locations = page === 1 ? data : [...locations, ...data];
-                this.setState({ locations: _locations, isLoading: false, fetchLocations: data.length > 0 }, _ => {
+                this.setState({ locations: _locations, isLoading: false, fetchLocations: data.length > 0 }, () => {
                     if (onFetch) {
                         onFetch();
                     }
                 });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
     handleChange = (values, key, reference) => {
@@ -64,7 +64,7 @@ class LocationList extends Component {
                         const listboxNode = event.currentTarget;
                         if (fetchLocations && !isLoading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
                             const p = page + 1;
-                            this.setState({ page: p }, _ => {
+                            this.setState({ page: p }, () => {
                                 this.fetchLocations();
                             });
                         }
@@ -74,8 +74,8 @@ class LocationList extends Component {
                     (event) => {
                         if (!init) {
                             const p = 1;
-                            this.setState({ locations: [], page: p }, _ => {
-                                this.fetchLocations(_ => { this.setState({ init: true }) });
+                            this.setState({ locations: [], page: p }, () => {
+                                this.fetchLocations(() => { this.setState({ init: true }) });
                             });
                         }
                     }
@@ -86,7 +86,7 @@ class LocationList extends Component {
 
                         //if (event.target.type === 'text' && value !== keyword) {
                         if (value !== keyword) {
-                            this.setState({ locations: [], page: 1, keyword: value }, _ => {
+                            this.setState({ locations: [], page: 1, keyword: value }, () => {
                                 this.fetchLocations();
                             });
                         }
@@ -94,7 +94,7 @@ class LocationList extends Component {
                 }
                 onClear={
                     (event) => {
-                        this.setState({ locations: [], page: 1, keyword: '', fetchLocations: true }, _ => {
+                        this.setState({ locations: [], page: 1, keyword: '', fetchLocations: true }, () => {
                             this.fetchLocations();
                         });
                     }

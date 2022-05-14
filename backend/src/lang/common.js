@@ -19,6 +19,7 @@ export const strings = new LocalizedStrings({
         IMAGE_REQUIRED: "L'image est obligatoire.",
         LOADING: 'Chargement...',
         PLEASE_WAIT: 'Veuillez patienter...',
+        SEARCH: 'Rechercher',
         SEARCH_PLACEHOLDER: 'Rechercher...',
         CONFIRM_TITLE: 'Confirmation',
         ERROR_IN_PASSWORD: 'Le mot de passe doit contenir au moins 6 caractères.',
@@ -35,7 +36,15 @@ export const strings = new LocalizedStrings({
         UPLOAD_IMAGE: "Charger une image",
         UNCHECK_ALL: 'Décocher tout',
         CHECK_ALL: 'Cocher tout',
-        CLOSE: 'Fermer'
+        CLOSE: 'Fermer',
+        BOOKING_STATUS_VOID: 'Vide',
+        BOOKING_STATUS_PENDING: 'En cours',
+        BOOKING_STATUS_DEPOSIT: 'Acompte',
+        BOOKING_STATUS_PAID: 'Payée',
+        BOOKING_STATUS_RESERVED: 'Réservée',
+        BOOKING_STATUS_CANCELLED: 'Annulée',
+        FROM: 'Début',
+        TO: 'Fin',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -53,6 +62,7 @@ export const strings = new LocalizedStrings({
         IMAGE_REQUIRED: 'The picture is required.',
         LOADING: 'Loading...',
         PLEASE_WAIT: 'Please wait...',
+        SEARCH: 'Search',
         SEARCH_PLACEHOLDER: 'Search...',
         CONFIRM_TITLE: 'Confirmation',
         ERROR_IN_PASSWORD: 'Password must be at least 6 characters long.',
@@ -69,7 +79,15 @@ export const strings = new LocalizedStrings({
         DELETE_IMAGE: 'Delete image',
         UNCHECK_ALL: 'Uncheck all',
         CHECK_ALL: 'Check all',
-        CLOSE: 'Close'
+        CLOSE: 'Close',
+        BOOKING_STATUS_VOID: 'Void',
+        BOOKING_STATUS_PENDING: 'Pending',
+        BOOKING_STATUS_DEPOSIT: 'Deposit',
+        BOOKING_STATUS_PAID: 'Paid',
+        BOOKING_STATUS_RESERVED: 'Reserved',
+        BOOKING_STATUS_CANCELLED: 'Cancelled',
+        FROM: 'From',
+        TO: 'To',
     }
 });
 

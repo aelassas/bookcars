@@ -52,7 +52,7 @@ export const strings = new LocalizedStrings({
         VIEW_CAR_TOOLTIP: 'Voir cette voiture',
         UPDATE_CAR_TOOLTIP: 'Modifier cette voiture',
         DELETE_CAR_TOOLTIP: 'Supprimer cette voiture',
-        EMPTY_CARS_LIST: 'Pas de voitures.'
+        EMPTY_CARS_LIST: 'Pas de voitures.',
     },
     en: {
         NEW_CAR: 'New car',
@@ -103,7 +103,7 @@ export const strings = new LocalizedStrings({
         VIEW_CAR_TOOLTIP: 'View this car',
         UPDATE_CAR_TOOLTIP: 'Edit this car',
         DELETE_CAR_TOOLTIP: 'Delete this car',
-        EMPTY_CARS_LIST: 'No cars.'
+        EMPTY_CARS_LIST: 'No cars.',
     }
 });
 

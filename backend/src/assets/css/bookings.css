@@ -12,11 +12,20 @@ div.bookings div.col-1 {
     bottom: 0;
     left: 0;
     width: 300px;
-    padding: 20px 0 0 20px;
+    padding: 20px 0 0 12px;
     background: #fefefe;
 }
 
-div.bookings .bookings-list {}
+div.bookings div.col-1 .cl-company-filter,
+div.bookings div.col-1 .cl-status-filter,
+div.bookings div.col-1 .cl-booking-filter {
+    margin-bottom: 10px;
+}
+
+div.bookings div.col-1 .cl-new-booking {
+    width: 265px;
+    margin-left: 5px;
+}
 
 div.bookings div.col-2 {
     position: absolute;
@@ -24,5 +33,4 @@ div.bookings div.col-2 {
     bottom: 0;
     right: 0;
     left: 300px;
-    overflow: auto;
 }

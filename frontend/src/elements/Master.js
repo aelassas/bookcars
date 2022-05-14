@@ -30,11 +30,11 @@ export default class Master extends Component {
         });
     };
 
-    exit = _ => {
+    exit = () => {
         if (this.props.strict) {
             UserService.signout(false, true);
         } else {
-            this.setState({ isLoading: false }, _ => {
+            this.setState({ isLoading: false }, () => {
                 if (this.props.onLoad) {
                     this.props.onLoad();
                 }
@@ -56,7 +56,7 @@ export default class Master extends Component {
                                 return;
                             }
 
-                            this.setState({ isLoading: false, user }, _ => {
+                            this.setState({ isLoading: false, user }, () => {
                                 if (this.props.onLoad) {
                                     this.props.onLoad(user);
                                 }
@@ -64,13 +64,13 @@ export default class Master extends Component {
                         } else {
                             this.exit();
                         }
-                    }).catch(_ => {
+                    }).catch(() => {
                         this.exit();
                     });
                 } else {
                     this.exit();
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 this.exit();
             });
         } else {

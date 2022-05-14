@@ -20,16 +20,21 @@
     margin-left: 0 !important;
 }
 
-.btn-primary,
-.btn-primary:hover {
+.btn-primary {
     background-color: #121212 !important;
+    color: #ffffff !important;
+    opacity: .9;
+}
+
+.btn-secondary {
+    background-color: #999999 !important;
     color: #ffffff !important;
 }
 
-.btn-secondary,
-.btn-secondary:hover {
-    background-color: #999999 !important;
-    color: #ffffff !important;
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-orange:hover {
+    opacity: 1;
 }
 
 .btn-margin {
@@ -135,6 +140,19 @@
     line-height: 1em;
     white-space: nowrap;
     margin-left: 5px;
+}
+
+.dialog-header {
+    text-align: center;
+}
+
+.dialog-content {
+    margin-top: 20px;
+}
+
+.dialog-actions {
+    margin-right: 5px;
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 960px) {

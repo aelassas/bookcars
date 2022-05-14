@@ -47,7 +47,7 @@ export default function MultipleSelect({
     // const [init, setInit] = useState(false);
     const [values, setValues] = useState([]);
 
-    useEffect(_ => {
+    useEffect(() => {
         // if (!init) {
         if (selectedOptions && selectedOptions.length > 0) {
             setValues(selectedOptions || []);

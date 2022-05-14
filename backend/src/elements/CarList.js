@@ -52,7 +52,7 @@ class CarList extends Component {
         this.setState({ openDeleteDialog: true, carId, carIndex });
     };
 
-    handleConfirmDelete = _ => {
+    handleConfirmDelete = () => {
         const { carId, carIndex, cars } = this.state;
 
         if (carId !== '' && carIndex > -1) {
@@ -76,7 +76,7 @@ class CarList extends Component {
         }
     };
 
-    handleCancelDelete = _ => {
+    handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false, carId: '' });
     };
 
@@ -276,9 +276,9 @@ class CarList extends Component {
                         maxWidth="xs"
                         open={openDeleteDialog}
                     >
-                        <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                        <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                         <DialogContent>{strings.DELETE_CAR}</DialogContent>
-                        <DialogActions>
+                        <DialogActions className='dialog-actions'>
                             <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                             <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                         </DialogActions>

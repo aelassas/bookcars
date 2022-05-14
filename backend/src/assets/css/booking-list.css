@@ -1,0 +1,49 @@
+div.bs-list {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+div.bs-list a.cell-company {
+    display: flex;
+    align-items: center;
+}
+
+div.bs-list span.bs {
+    padding: 3px;
+    width: 75px;
+    text-align: center;
+    font-weight: 200;
+    color: #fff;
+}
+
+div.bs-list span.bs-void {
+    background: #999;
+}
+
+div.bs-list span.bs-pending {
+    background: #e98003;
+}
+
+div.bs-list span.bs-deposit {
+    background: #22bba7;
+}
+
+div.bs-list span.bs-paid {
+    background: #77bc23;
+}
+
+div.bs-list span.bs-reserved {
+    background: #188ace;
+}
+
+div.bs-list span.bs-cancelled {
+    background: #bc2143;
+}
+
+div.bs-update-status {
+    width: 444px;
+    height: 70px;
+    overflow: hidden;
+}

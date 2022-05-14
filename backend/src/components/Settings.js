@@ -82,7 +82,7 @@ export default class Settings extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(_ => {
+            .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
@@ -126,7 +126,7 @@ export default class Settings extends Component {
         });
     };
 
-    onError = _ => {
+    onError = () => {
         this.setState({ isLoading: false });
     }
 

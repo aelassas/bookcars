@@ -37,7 +37,7 @@ class CompanyList extends Component {
                 const companies = this.getCompanies(data);
                 this.setState({ isLoading: false, companies });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     render() {

@@ -36,7 +36,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 company.bio = bio;
 
                 company.save()
-                    .then(_ => res.sendStatus(200))
+                    .then(() => res.sendStatus(200))
                     .catch(err => {
                         console.error(strings.DB_ERROR, err);
                         res.status(400).send(strings.DB_ERROR + err);

@@ -51,18 +51,18 @@ export default class Company extends Component {
         this.setState({ isLoading: true });
     };
 
-    onAvatarChange = _ => {
+    onAvatarChange = () => {
         this.setState({ isLoading: false });
     };
 
-    handleDelete = _ => {
+    handleDelete = () => {
         this.setState({ openDeleteDialog: true });
     };
 
-    handleConfirmDelete = _ => {
+    handleConfirmDelete = () => {
         const { company } = this.state;
 
-        this.setState({ isLoading: true, openDeleteDialog: false }, _ => {
+        this.setState({ isLoading: true, openDeleteDialog: false }, () => {
             CompanyService.delete(company._id).then(status => {
                 if (status === 200) {
                     window.location.href = '/companies';
@@ -70,18 +70,18 @@ export default class Company extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false });
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false });
             });
         });
     };
 
-    handleCancelDelete = _ => {
+    handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false });
     };
 
-    fetch = _ => {
+    fetch = () => {
         const { page, checkedCompanies, cars } = this.state;
         const payload = checkedCompanies;
 
@@ -91,11 +91,11 @@ export default class Company extends Component {
                 const _cars = page === 1 ? data : [...cars, ...data];
                 this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
     onLoad = (user) => {
-        this.setState({ user, isLoading: true }, _ => {
+        this.setState({ user, isLoading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -111,7 +111,7 @@ export default class Company extends Component {
                                     location: company.location,
                                     bio: company.bio,
                                     visible: true
-                                }, _ => {
+                                }, () => {
                                     this.fetch();
 
                                     const div = document.querySelector('.col-2');
@@ -119,7 +119,7 @@ export default class Company extends Component {
                                         div.onscroll = (event) => {
                                             const { fetch, isLoading, page } = this.state;
                                             if (fetch && !isLoading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
-                                                this.setState({ page: page + 1 }, _ => {
+                                                this.setState({ page: page + 1 }, () => {
                                                     this.fetch();
                                                 });
                                             }
@@ -130,7 +130,7 @@ export default class Company extends Component {
                                 this.setState({ isLoading: false, noMatch: true });
                             }
                         })
-                        .catch(_ => {
+                        .catch(() => {
                             this.setState({ isLoading: false, error: true, visible: false });
                         });
                 } else {
@@ -214,9 +214,9 @@ export default class Company extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{companiesStrings.DELETE_COMPANY}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>

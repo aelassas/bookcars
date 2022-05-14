@@ -25,11 +25,11 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
     const location = new Location(req.body);
 
     location.save()
-        .then(_ => res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(err => {
             console.error(`[location.create]  ${strings.DB_ERROR} ${req.body}`, err);
             res.status(400).send(strings.DB_ERROR + err);
-        })
+        });
 });
 
 routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
@@ -40,7 +40,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 location.name = name;
 
                 location.save()
-                    .then(_ => res.sendStatus(200))
+                    .then(() => res.sendStatus(200))
                     .catch(err => {
                         console.error(`[location.update]  ${strings.DB_ERROR} ${req.body}`, err);
                         res.status(400).send(strings.DB_ERROR + err);

@@ -36,7 +36,7 @@ export default class CreateLocation extends Component {
         }
     };
 
-    error = _ => {
+    error = () => {
         toast(commonStrings.GENERIC_ERROR, { type: 'error' });
     };
 
@@ -60,11 +60,11 @@ export default class CreateLocation extends Component {
                         } else {
                             this.error();
                         }
-                    }).catch(_ => {
+                    }).catch(() => {
                         this.error();
                     });
             }
-        }).catch(_ => {
+        }).catch(() => {
             this.error();
         });
     };

@@ -51,22 +51,22 @@ export default class Car extends Component {
         this.setState({ isLoading: true });
     };
 
-    onImageChange = _ => {
+    onImageChange = () => {
         this.setState({ isLoading: false });
     };
 
-    handleDelete = _ => {
+    handleDelete = () => {
         this.setState({ openDeleteDialog: true });
     };
 
-    handleCancelDelete = _ => {
+    handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false });
     };
 
-    handleConfirmDelete = _ => {
+    handleConfirmDelete = () => {
         const { car } = this.state;
 
-        this.setState({ isLoading: true, openDeleteDialog: false }, _ => {
+        this.setState({ isLoading: true, openDeleteDialog: false }, () => {
             CarService.delete(car._id).then(status => {
                 if (status === 200) {
                     window.location.href = '/cars';
@@ -74,7 +74,7 @@ export default class Car extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false });
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false });
             });
@@ -82,7 +82,7 @@ export default class Car extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user, isLoading: true }, _ => {
+        this.setState({ user, isLoading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -99,7 +99,7 @@ export default class Car extends Component {
                                 this.setState({ isLoading: false, noMatch: true });
                             }
                         })
-                        .catch(_ => {
+                        .catch(() => {
                             this.setState({ isLoading: false, error: true, visible: false });
                         });
                 } else {
@@ -325,9 +325,9 @@ export default class Car extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_CAR}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>

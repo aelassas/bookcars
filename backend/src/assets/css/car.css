@@ -10,7 +10,7 @@ div.car {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.car .col-1 {
+    div.car div.col-1 {
         width: 100%;
         padding-top: 5px;
         background: #fefefe;
@@ -153,11 +153,11 @@ div.car {
         margin: 5px !important;
     }
 
-    div.car .col-2 {
+    div.car div.col-2 {
         width: 100%;
     }
 
-    div.car .col-2 .bookings-sec {
+    div.car div.col-2 .bookings-sec {
         width: 100%;
     }
 }
@@ -165,7 +165,7 @@ div.car {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.car .col-1 {
+    div.car div.col-1 {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -312,7 +312,7 @@ div.car {
         margin: 10px;
     }
 
-    div.car .col-2 {
+    div.car div.col-2 {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -321,7 +321,7 @@ div.car {
         overflow: auto;
     }
 
-    div.car .col-2 .bookings-sec {
+    div.car div.col-2 .bookings-sec {
         width: 350px;
         margin-left: calc(50% - 175px) !important;
     }

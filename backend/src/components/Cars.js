@@ -3,10 +3,9 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
-import Helper from '../common/Helper';
 import CarService from '../services/CarService';
-import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
+import CompanyFilter from '../elements/CompanyFilter';
 import { toast } from 'react-toastify';
 import {
     IconButton,
@@ -27,9 +26,7 @@ export default class Cars extends Component {
         this.state = {
             user: null,
             companies: [],
-            companyIds: [],
             checkedCompanies: [],
-            allCompaniesChecked: true,
             cars: [],
             page: 1,
             isLoading: true,
@@ -37,7 +34,8 @@ export default class Cars extends Component {
             keyword: '',
             openDeleteDialog: false,
             carId: '',
-            carIndex: -1
+            carIndex: -1,
+            newCar: false
         };
     }
 
@@ -58,53 +56,19 @@ export default class Cars extends Component {
         });
     };
 
+    handleCompanyFilterLoad = (checkedCompanies) => {
+        this.setState({ checkedCompanies, newCar: true }, () => {
+            this.fetch();
+        });
+    };
 
-    handleCheckCompanyChange = (e) => {
-        const { checkedCompanies } = this.state;
-        const companyId = e.currentTarget.getAttribute('data-id');
-
-        if (e.currentTarget.checked) {
-            checkedCompanies.push(companyId);
-        } else {
-            const index = checkedCompanies.indexOf(companyId);
-            checkedCompanies.splice(index, 1);
-        }
-
-        this.setState({ checkedCompanies }, _ => {
+    handleCompanyFilterChange = (checkedCompanies) => {
+        this.setState({ checkedCompanies }, () => {
             this.handleSearch();
         });
     };
 
-    handleCompanyClick = (e) => {
-        const checkbox = e.currentTarget.previousSibling;
-        checkbox.checked = !checkbox.checked;
-        const event = e;
-        event.currentTarget = checkbox;
-        this.handleCheckCompanyChange(event);
-    };
-
-    handleUncheckAllChange = (e) => {
-        const { allCompaniesChecked } = this.state;
-        const checkboxes = document.querySelectorAll('.company-checkbox');
-
-        if (allCompaniesChecked) { // uncheck all
-            this.setState({ allCompaniesChecked: false, checkedCompanies: [] });
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-        } else { // check all
-            this.setState({ allCompaniesChecked: true, checkedCompanies: this.state.companyIds });
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-
-            this.handleSearch();
-        }
-    };
-
-    fetch = _ => {
+    fetch = () => {
         const { keyword, page, checkedCompanies, cars } = this.state;
         const payload = checkedCompanies;
 
@@ -114,40 +78,18 @@ export default class Cars extends Component {
                 const _cars = page === 1 ? data : [...cars, ...data];
                 this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
-    };
-
-    flattenCompanies = (companies) => {
-        const result = [];
-        for (const { _id } of companies) {
-            result.push(_id);
-        }
-        return result;
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
     onLoad = (user) => {
-        this.setState({ user }, _ => {
-
-            CompanyService.getCompanies()
-                .then(companies => {
-                    const companyIds = this.flattenCompanies(companies);
-                    this.setState({ companies, companyIds, checkedCompanies: companyIds }, _ => {
-                        const checkboxes = document.querySelectorAll('.company-checkbox');
-                        checkboxes.forEach(checkbox => {
-                            checkbox.checked = true;
-                        });
-
-                        this.fetch();
-                    });
-                })
-                .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+        this.setState({ user }, () => {
 
             const div = document.querySelector('.col-2');
             if (div) {
                 div.onscroll = (event) => {
                     const { fetch, isLoading, page } = this.state;
                     if (fetch && !isLoading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
-                        this.setState({ page: page + 1 }, _ => {
+                        this.setState({ page: page + 1 }, () => {
                             this.fetch();
                         });
                     }
@@ -160,7 +102,7 @@ export default class Cars extends Component {
     }
 
     render() {
-        const { user, companies, allCompaniesChecked, cars, isLoading } = this.state;
+        const { user, cars, isLoading, newCar } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -176,33 +118,11 @@ export default class Cars extends Component {
                         <IconButton onClick={this.handleSearch}>
                             <SearchIcon />
                         </IconButton>
-                        {companies.length > 0 &&
-                            <div className='companies-filter'>
-                                <ul className='companies-list'>
-                                    {
-                                        companies.map(company => (
-                                            <li key={company._id}>
-                                                <input type='checkbox' data-id={company._id} className='company-checkbox' onChange={this.handleCheckCompanyChange} />
-                                                <label onClick={this.handleCompanyClick}>
-                                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                                        alt={company.fullName}
-                                                        style={{
-                                                            width: Env.COMPANY_IMAGE_WIDTH,
-                                                            // height: Env.COMPANY_IMAGE_HEIGHT
-                                                        }} />
-                                                </label>
-                                            </li>
-                                        ))
-                                    }
-                                </ul>
-                                <div className='filter-actions'>
-                                    <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                                        {allCompaniesChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                                    </span>
-                                </div>
-                            </div>
-                        }
-                        <Button
+                        <CompanyFilter
+                            onLoad={this.handleCompanyFilterLoad}
+                            onChange={this.handleCompanyFilterChange}
+                        />
+                        {newCar && <Button
                             type="submit"
                             variant="contained"
                             className='btn-primary new-car'
@@ -210,7 +130,7 @@ export default class Cars extends Component {
                             href='/create-car'
                         >
                             {strings.NEW_CAR}
-                        </Button>
+                        </Button>}
                     </div>
                     <div className='col-2'>
                         <CarList

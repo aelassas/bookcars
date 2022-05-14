@@ -18,7 +18,7 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .companies .col-1 {
+    .companies div.col-1 {
         position: absolute;
         top: 0;
         right: 0;
@@ -31,7 +31,7 @@
         border-bottom: #eee solid 1px;
     }
 
-    .companies .col-2 {
+    .companies div.col-2 {
         position: absolute;
         top: 125px;
         bottom: 0;
@@ -81,7 +81,7 @@
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .companies .col-1 {
+    .companies div.col-1 {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -92,7 +92,7 @@
         border-right: #eee solid 1px;
     }
 
-    .companies .col-2 {
+    .companies div.col-2 {
         position: absolute;
         top: 0;
         bottom: 0;

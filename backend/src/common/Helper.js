@@ -215,4 +215,92 @@ export default class Helper {
     static isAdmin(user) {
         return user && user.type === Env.RECORD_TYPE.ADMIN;
     }
+
+    static getBookingStatus(status) {
+        switch (status) {
+            case Env.BOOKING_STATUS.VOID:
+                return commonStrings.BOOKING_STATUS_VOID;
+
+            case Env.BOOKING_STATUS.PENDING:
+                return commonStrings.BOOKING_STATUS_PENDING;
+
+            case Env.BOOKING_STATUS.DEPOSIT:
+                return commonStrings.BOOKING_STATUS_DEPOSIT;
+
+            case Env.BOOKING_STATUS.PAID:
+                return commonStrings.BOOKING_STATUS_PAID;
+
+            case Env.BOOKING_STATUS.RESERVED:
+                return commonStrings.BOOKING_STATUS_RESERVED;
+
+            case Env.BOOKING_STATUS.CANCELLED:
+                return commonStrings.BOOKING_STATUS_CANCELLED;
+
+            default:
+                return '';
+        }
+    }
+
+    static formatNumber(n) {
+        return n > 9 ? '' + n : '0' + n;
+    }
+
+    static arrayEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
+    static statusArrayEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].value !== b[i].value) return false;
+        }
+        return true;
+    }
+
+    static clone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    static filterEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+
+        if (a.from !== b.from) return false;
+        if (a.to !== b.to) return false;
+        if (a.pickupLocation !== b.pickupLocation) return false;
+        if (a.dropOffLocation !== b.dropOffLocation) return false;
+
+        return true;
+    }
+
+    static getBookingStatuses() {
+        return [
+            { value: Env.BOOKING_STATUS.VOID, label: commonStrings.BOOKING_STATUS_VOID },
+            { value: Env.BOOKING_STATUS.PENDING, label: commonStrings.BOOKING_STATUS_PENDING },
+            { value: Env.BOOKING_STATUS.DEPOSIT, label: commonStrings.BOOKING_STATUS_DEPOSIT },
+            { value: Env.BOOKING_STATUS.PAID, label: commonStrings.BOOKING_STATUS_PAID },
+            { value: Env.BOOKING_STATUS.RESERVED, label: commonStrings.BOOKING_STATUS_RESERVED },
+            { value: Env.BOOKING_STATUS.CANCELLED, label: commonStrings.BOOKING_STATUS_CANCELLED }
+        ];
+    }
 }

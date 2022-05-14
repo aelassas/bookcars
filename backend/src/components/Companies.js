@@ -59,13 +59,13 @@ export default class Companies extends Component {
         this.fetch();
     };
 
-    fetch = _ => {
+    fetch = () => {
         this.setState({ isLoading: true });
         CompanyService.getCompanies(this.state.keyword)
             .then(companies => {
                 this.setState({ companies, isLoading: false });
             })
-            .catch(_ => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     handleDelete = (e) => {
@@ -74,7 +74,7 @@ export default class Companies extends Component {
         this.setState({ openDeleteDialog: true, companyId, companyIndex });
     };
 
-    handleConfirmDelete = _ => {
+    handleConfirmDelete = () => {
         const { companyId, companyIndex, companies } = this.state;
 
         if (companyId !== '' && companyIndex > -1) {
@@ -88,7 +88,7 @@ export default class Companies extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                     this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
                 }
-            }).catch(_ => {
+            }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
                 this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
             });
@@ -98,12 +98,12 @@ export default class Companies extends Component {
         }
     };
 
-    handleCancelDelete = _ => {
+    handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false, companyId: '' });
     };
 
     onLoad = (user) => {
-        this.setState({ user }, _ => {
+        this.setState({ user }, () => {
             this.fetch();
         });
     }
@@ -200,9 +200,9 @@ export default class Companies extends Component {
                     maxWidth="xs"
                     open={openDeleteDialog}
                 >
-                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>

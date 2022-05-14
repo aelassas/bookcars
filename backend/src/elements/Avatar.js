@@ -36,7 +36,7 @@ export const Avatar = (props) => {
             const _URL = window.URL || window.webkitURL;
             const img = new Image();
             const objectUrl = _URL.createObjectURL(file);
-            img.onload = _ => {
+            img.onload = () => {
                 if (props.width !== img.width || props.height !== img.height) {
                     if (props.onValidate) {
                         props.onValidate(false);
@@ -73,7 +73,7 @@ export const Avatar = (props) => {
             if (props.type === Env.RECORD_TYPE.ADMIN
                 || props.type === Env.RECORD_TYPE.COMPANY) {
                 if (props.mode === 'create') {
-                    const createAvatar = _ => {
+                    const createAvatar = () => {
                         UserService.createAvatar(file)
                             .then(data => {
                                 setAvatar(data);
@@ -90,7 +90,7 @@ export const Avatar = (props) => {
                     validate(file, createAvatar);
                 } else if (record && props.mode === 'update') {
 
-                    const updateAvatar = _ => {
+                    const updateAvatar = () => {
                         const { _id } = record;
 
                         UserService.updateAvatar(_id, file)
@@ -124,7 +124,7 @@ export const Avatar = (props) => {
                 }
             } else if (props.type === Env.RECORD_TYPE.CAR) {
                 if (props.mode === 'create') {
-                    const createAvatar = _ => {
+                    const createAvatar = () => {
                         CarService.createImage(file)
                             .then(data => {
                                 setAvatar(data);
@@ -141,7 +141,7 @@ export const Avatar = (props) => {
                     validate(file, createAvatar);
                 } else if (props.mode === 'update') {
 
-                    const updateAvatar = _ => {
+                    const updateAvatar = () => {
                         const { _id } = record;
 
                         CarService.updateImage(_id, file)
@@ -297,7 +297,7 @@ export const Avatar = (props) => {
         }
     };
 
-    const cdn = _ => {
+    const cdn = () => {
         if (props.type === Env.RECORD_TYPE.CAR) {
             return props.mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS;
         }
@@ -451,9 +451,9 @@ export const Avatar = (props) => {
                     maxWidth="xs"
                     open={open}
                 >
-                    <DialogTitle>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                     <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
-                    <DialogActions>
+                    <DialogActions className='dialog-actions'>
                         <Button onClick={handleCancelDelete} className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={handleDelete} color="error" variant='contained'>{commonStrings.DELETE}</Button>
                     </DialogActions>
