@@ -11,7 +11,7 @@ class LocationList extends Component {
         super(props);
         this.state = {
             init: false,
-            isLoading: false,
+            loading: false,
             locations: [],
             fetchLocations: false,
             page: 1,
@@ -21,12 +21,12 @@ class LocationList extends Component {
 
     fetchLocations = (onFetch) => {
         const { locations, keyword, page } = this.state;
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
 
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _locations = page === 1 ? data : [...locations, ...data];
-                this.setState({ locations: _locations, isLoading: false, fetchLocations: data.length > 0 }, () => {
+                this.setState({ locations: _locations, loading: false, fetchLocations: data.length > 0 }, () => {
                     if (onFetch) {
                         onFetch();
                     }
@@ -43,14 +43,14 @@ class LocationList extends Component {
 
     render() {
         const { init,
-            isLoading,
+            loading,
             locations,
             fetchLocations,
             page,
             keyword } = this.state;
         return (
             <MultipleSelect
-                loading={isLoading}
+                loading={loading}
                 label={this.props.label || ''}
                 callbackFromMultipleSelect={this.handleChange}
                 options={locations}
@@ -62,7 +62,7 @@ class LocationList extends Component {
                 ListboxProps={{
                     onScroll: (event) => {
                         const listboxNode = event.currentTarget;
-                        if (fetchLocations && !isLoading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                        if (fetchLocations && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
                             const p = page + 1;
                             this.setState({ page: p }, () => {
                                 this.fetchLocations();

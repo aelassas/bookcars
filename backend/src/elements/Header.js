@@ -58,7 +58,7 @@ export default function Header(props) {
     const [notificationsCount, setNotificationsCount] = useState(0);
     const [messagesCount, setMessagesCount] = useState(0);
     const [init, setInit] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
 
@@ -317,7 +317,7 @@ export default function Header(props) {
         <div style={props.hidden ? { display: 'none' } : classes.grow} >
             <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
                 <Toolbar>
-                    {isLoaded && !isLoading && isSignedIn && <IconButton
+                    {isLoaded && !loading && isSignedIn && <IconButton
                         edge="start"
                         sx={classes.menuButton}
                         color="inherit"
@@ -380,7 +380,7 @@ export default function Header(props) {
                                 <NotificationsIcon />
                             </Badge>
                         </IconButton>}
-                        {((isLoaded || !init) && !isLoading) && <Button
+                        {((isLoaded || !init) && !loading) && <Button
                             variant="contained"
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}
@@ -402,7 +402,7 @@ export default function Header(props) {
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
-                        {(!isSignedIn && !isLoading && !init) && <Button
+                        {(!isSignedIn && !loading && !init) && <Button
                             variant="contained"
                             startIcon={<LanguageIcon />}
                             onClick={handleLangMenuOpen}

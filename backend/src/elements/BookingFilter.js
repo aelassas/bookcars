@@ -53,11 +53,12 @@ class BookingFilter extends Component {
                                 label={commonStrings.FROM}
                                 inputFormat='dd-MM-yyyy'
                                 mask='__-__-____'
+                                
                                 value={from}
                                 onChange={(from) => {
                                     this.setState({ from })
                                 }}
-                                renderInput={(params) => <TextField {...params} fullWidth />}
+                                renderInput={(params) => <TextField {...params} variant='standard' fullWidth />}
                             />
                         </LocalizationProvider>
                     </FormControl>
@@ -71,7 +72,7 @@ class BookingFilter extends Component {
                                 onChange={(to) => {
                                     this.setState({ to })
                                 }}
-                                renderInput={(params) => <TextField {...params} fullWidth />}
+                                renderInput={(params) => <TextField {...params} variant='standard' fullWidth />}
                             />
                         </LocalizationProvider>
                     </FormControl>

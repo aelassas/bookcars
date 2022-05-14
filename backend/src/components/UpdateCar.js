@@ -42,7 +42,7 @@ export default class CreateCar extends Component {
             user: null,
             car: null,
             noMatch: false,
-            isLoading: false,
+            loading: false,
             visible: false,
             error: false,
             imageRequired: false,
@@ -71,11 +71,11 @@ export default class CreateCar extends Component {
     }
 
     handleBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     handleImageChange = (image) => {
-        this.setState({ isLoading: false, image });
+        this.setState({ loading: false, image });
         if (image !== null) {
             this.setState({ imageRequired: false });
         }
@@ -87,7 +87,7 @@ export default class CreateCar extends Component {
                 imageSizeError: true,
                 imageRequired: false,
                 error: false,
-                isLoading: false,
+                loading: false,
             });
         } else {
             this.setState({
@@ -242,7 +242,7 @@ export default class CreateCar extends Component {
 
     onLoad = (user) => {
 
-        this.setState({ user, isLoading: true }, () => {
+        this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -251,7 +251,7 @@ export default class CreateCar extends Component {
                         .then(car => {
                             if (car) {
                                 if (user.type === Env.RECORD_TYPE.COMPANY && user._id !== car.company._id) {
-                                    this.setState({ isLoading: false, noMatch: true });
+                                    this.setState({ loading: false, noMatch: true });
                                     return;
                                 }
 
@@ -264,7 +264,7 @@ export default class CreateCar extends Component {
 
                                 this.setState({
                                     car,
-                                    isLoading: false,
+                                    loading: false,
                                     visible: true,
 
                                     imageRequired: !car.image,
@@ -289,17 +289,17 @@ export default class CreateCar extends Component {
                                     additionalDriver: this.getCarExtra(car.additionalDriver)
                                 });
                             } else {
-                                this.setState({ isLoading: false, noMatch: true });
+                                this.setState({ loading: false, noMatch: true });
                             }
                         })
                         .catch(() => {
-                            this.setState({ isLoading: false, error: true, visible: false });
+                            this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
-                    this.setState({ isLoading: false, noMatch: true });
+                    this.setState({ loading: false, noMatch: true });
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         });
     };
@@ -313,7 +313,7 @@ export default class CreateCar extends Component {
             error,
             imageRequired,
             imageSizeError,
-            isLoading,
+            loading,
 
             name,
             company,
@@ -608,7 +608,7 @@ export default class CreateCar extends Component {
 
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

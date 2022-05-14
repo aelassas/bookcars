@@ -29,7 +29,7 @@ export default class Cars extends Component {
             checkedCompanies: [],
             cars: [],
             page: 1,
-            isLoading: true,
+            loading: true,
             fetch: false,
             keyword: '',
             openDeleteDialog: false,
@@ -72,11 +72,11 @@ export default class Cars extends Component {
         const { keyword, page, checkedCompanies, cars } = this.state;
         const payload = checkedCompanies;
 
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
         CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
             .then(data => {
                 const _cars = page === 1 ? data : [...cars, ...data];
-                this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
+                this.setState({ cars: _cars, loading: false, fetch: data.length > 0 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
@@ -87,8 +87,8 @@ export default class Cars extends Component {
             const div = document.querySelector('.col-2');
             if (div) {
                 div.onscroll = (event) => {
-                    const { fetch, isLoading, page } = this.state;
-                    if (fetch && !isLoading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
+                    const { fetch, loading, page } = this.state;
+                    if (fetch && !loading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
                         this.setState({ page: page + 1 }, () => {
                             this.fetch();
                         });
@@ -102,7 +102,7 @@ export default class Cars extends Component {
     }
 
     render() {
-        const { user, cars, isLoading, newCar } = this.state;
+        const { user, cars, loading, newCar } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -136,10 +136,10 @@ export default class Cars extends Component {
                         <CarList
                             user={user}
                             cars={cars}
-                            isLoading={isLoading} />
+                            loading={loading} />
                     </div>
                 </div>
-                {isLoading && <Backdrop text={commonStrings.LOADING} />}
+                {loading && <Backdrop text={commonStrings.LOADING} />}
             </Master >
         );
     }

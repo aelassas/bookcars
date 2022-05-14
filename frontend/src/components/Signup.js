@@ -37,7 +37,7 @@ export default class SignUp extends Component {
             emailError: false,
             visible: false,
             tosChecked: false,
-            isLoading: false
+            loading: false
         };
     }
 
@@ -156,7 +156,7 @@ export default class SignUp extends Component {
                     return;
                 }
 
-                this.setState({ isLoading: true });
+                this.setState({ loading: true });
 
                 const data = {
                     email: this.state.email,
@@ -177,7 +177,7 @@ export default class SignUp extends Component {
                                     passwordError: false,
                                     passwordsDontMatch: false,
                                     register: false,
-                                    isLoading: false
+                                    loading: false
                                 });
                             }
                         }).catch(err => {
@@ -186,7 +186,7 @@ export default class SignUp extends Component {
                                 passwordError: false,
                                 passwordsDontMatch: false,
                                 register: false,
-                                isLoading: false
+                                loading: false
                             });
                         });
                     } else
@@ -195,7 +195,7 @@ export default class SignUp extends Component {
                             passwordError: false,
                             passwordsDontMatch: false,
                             register: false,
-                            isLoading: false
+                            loading: false
                         });
                 })
                     .catch(err => {
@@ -204,7 +204,7 @@ export default class SignUp extends Component {
                             passwordError: false,
                             passwordsDontMatch: false,
                             register: false,
-                            isLoading: false
+                            loading: false
                         });
                     });
             }
@@ -235,7 +235,7 @@ export default class SignUp extends Component {
             recaptchaError,
             visible,
             tosChecked,
-            isLoading } = this.state;
+            loading } = this.state;
 
         return (
             <Master strict={false} hideSignin={true} onLoad={this.onLoad}>
@@ -358,7 +358,7 @@ export default class SignUp extends Component {
                         </form>
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={strings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={strings.PLEASE_WAIT} />}
             </Master >
         );
     }

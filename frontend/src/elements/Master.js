@@ -10,7 +10,7 @@ export default class Master extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
+            loading: true,
             user: null,
         };
     }
@@ -34,7 +34,7 @@ export default class Master extends Component {
         if (this.props.strict) {
             UserService.signout(false, true);
         } else {
-            this.setState({ isLoading: false }, () => {
+            this.setState({ loading: false }, () => {
                 if (this.props.onLoad) {
                     this.props.onLoad();
                 }
@@ -56,7 +56,7 @@ export default class Master extends Component {
                                 return;
                             }
 
-                            this.setState({ isLoading: false, user }, () => {
+                            this.setState({ loading: false, user }, () => {
                                 if (this.props.onLoad) {
                                     this.props.onLoad(user);
                                 }
@@ -79,15 +79,15 @@ export default class Master extends Component {
     }
 
     render() {
-        const { isLoading, user } = this.state;
+        const { loading, user } = this.state;
 
         return (
             <div>
-                <Header user={user} hidden={isLoading} hideSignin={this.props.hideSignin} />
-                {((!user && !isLoading) || (user && user.verified)) ? (
+                <Header user={user} hidden={loading} hideSignin={this.props.hideSignin} />
+                {((!user && !loading) || (user && user.verified)) ? (
                     <div className='content'>{this.props.children}</div>
                 ) :
-                    (!isLoading && <div className="validate-email">
+                    (!loading && <div className="validate-email">
                         <span>{strings.VALIDATE_EMAIL}</span>
                         <Button
                             type="button"

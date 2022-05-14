@@ -38,7 +38,7 @@ export default class Company extends Component {
             company: null,
             error: false,
             visible: false,
-            isLoading: true,
+            loading: true,
             noMatch: false,
             openDeleteDialog: false,
             cars: [],
@@ -48,11 +48,11 @@ export default class Company extends Component {
     }
 
     onBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     onAvatarChange = () => {
-        this.setState({ isLoading: false });
+        this.setState({ loading: false });
     };
 
     handleDelete = () => {
@@ -62,17 +62,17 @@ export default class Company extends Component {
     handleConfirmDelete = () => {
         const { company } = this.state;
 
-        this.setState({ isLoading: true, openDeleteDialog: false }, () => {
+        this.setState({ loading: true, openDeleteDialog: false }, () => {
             CompanyService.delete(company._id).then(status => {
                 if (status === 200) {
                     window.location.href = '/companies';
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false });
+                    this.setState({ loading: false });
                 }
             }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false });
+                this.setState({ loading: false });
             });
         });
     };
@@ -85,17 +85,17 @@ export default class Company extends Component {
         const { page, checkedCompanies, cars } = this.state;
         const payload = checkedCompanies;
 
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
         CarService.getCars('', payload, page, Env.CARS_PAGE_SIZE)
             .then(data => {
                 const _cars = page === 1 ? data : [...cars, ...data];
-                this.setState({ cars: _cars, isLoading: false, fetch: data.length > 0 });
+                this.setState({ cars: _cars, loading: false, fetch: data.length > 0 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     };
 
     onLoad = (user) => {
-        this.setState({ user, isLoading: true }, () => {
+        this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -117,8 +117,8 @@ export default class Company extends Component {
                                     const div = document.querySelector('.col-2');
                                     if (div) {
                                         div.onscroll = (event) => {
-                                            const { fetch, isLoading, page } = this.state;
-                                            if (fetch && !isLoading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
+                                            const { fetch, loading, page } = this.state;
+                                            if (fetch && !loading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
                                                 this.setState({ page: page + 1 }, () => {
                                                     this.fetch();
                                                 });
@@ -127,17 +127,17 @@ export default class Company extends Component {
                                     }
                                 });
                             } else {
-                                this.setState({ isLoading: false, noMatch: true });
+                                this.setState({ loading: false, noMatch: true });
                             }
                         })
                         .catch(() => {
-                            this.setState({ isLoading: false, error: true, visible: false });
+                            this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
-                    this.setState({ isLoading: false, noMatch: true });
+                    this.setState({ loading: false, noMatch: true });
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         });
     }
@@ -146,7 +146,7 @@ export default class Company extends Component {
     }
 
     render() {
-        const { visible, isLoading, error, noMatch, user, company, cars, openDeleteDialog } = this.state;
+        const { visible, loading, error, noMatch, user, company, cars, openDeleteDialog } = this.state;
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
@@ -203,7 +203,7 @@ export default class Company extends Component {
                             <CarList
                                 user={user}
                                 cars={cars}
-                                isLoading={isLoading}
+                                loading={loading}
                                 hideCompany
                             />
                         </div>
@@ -221,7 +221,7 @@ export default class Company extends Component {
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={commonStrings.LOADING} />}
+                {loading && <Backdrop text={commonStrings.LOADING} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

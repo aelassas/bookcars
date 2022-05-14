@@ -35,7 +35,7 @@ export default class Locations extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false,
+            loading: false,
             keyword: '',
             page: 1,
             locations: [],
@@ -71,19 +71,19 @@ export default class Locations extends Component {
         const { locationId, locationIndex, locations } = this.state;
 
         if (locationId !== '' && locationIndex > -1) {
-            this.setState({ isLoading: true, openDeleteDialog: false });
+            this.setState({ loading: true, openDeleteDialog: false });
             LocationService.delete(locationId).then(status => {
                 if (status === 200) {
                     const _locations = [...locations];
                     _locations.splice(locationIndex, 1);
-                    this.setState({ locations: _locations, isLoading: false, locationId: '', locationIndex: -1 });
+                    this.setState({ locations: _locations, loading: false, locationId: '', locationIndex: -1 });
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+                    this.setState({ loading: false, locationId: '', locationIndex: -1 });
                 }
             }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false, locationId: '', locationIndex: -1 });
+                this.setState({ loading: false, locationId: '', locationIndex: -1 });
             });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -115,11 +115,11 @@ export default class Locations extends Component {
     fetch = () => {
         const { keyword, page, locations } = this.state;
 
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _locations = page === 1 ? data : [...locations, ...data];
-                this.setState({ locations: _locations, isLoading: false, fetch: data.length > 0 });
+                this.setState({ locations: _locations, loading: false, fetch: data.length > 0 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
@@ -130,8 +130,8 @@ export default class Locations extends Component {
         const div = document.querySelector('.col-2');
         if (div) {
             div.onscroll = (event) => {
-                const { fetch, isLoading, page } = this.state;
-                if (fetch && !isLoading && (((window.innerHeight - Env.PAGE_TOP_OFFSET) + event.target.scrollTop)) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
+                const { fetch, loading, page } = this.state;
+                if (fetch && !loading && (((window.innerHeight - Env.PAGE_TOP_OFFSET) + event.target.scrollTop)) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
                     this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });
@@ -144,7 +144,7 @@ export default class Locations extends Component {
     }
 
     render() {
-        const { isLoading, locations, openInfoDialog, openDeleteDialog } = this.state;
+        const { loading, locations, openInfoDialog, openDeleteDialog } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -225,7 +225,7 @@ export default class Locations extends Component {
                     </DialogActions>
                 </Dialog>
 
-                {isLoading && <Backdrop text={commonStrings.LOADING} />}
+                {loading && <Backdrop text={commonStrings.LOADING} />}
             </Master>
         );
     }

@@ -25,7 +25,7 @@ export default class UpdateLocation extends Component {
         super(props);
         this.state = {
             visible: false,
-            isLoading: false,
+            loading: false,
             name: '',
             nameError: false,
             noMatch: false,
@@ -63,7 +63,7 @@ export default class UpdateLocation extends Component {
     }
 
     error = () => {
-        this.setState({ isLoading: false });
+        this.setState({ loading: false });
         toast(commonStrings.GENERIC_ERROR, { type: 'error' });
     }
 
@@ -78,7 +78,7 @@ export default class UpdateLocation extends Component {
                 .then(status => {
                     if (status === 200) {
                         location.name = name;
-                        this.setState({ isLoading: false, location });
+                        this.setState({ loading: false, location });
                         toast(strings.LOCATION_UPDATED, { type: 'info' });
                     } else {
                         this.error();
@@ -91,7 +91,7 @@ export default class UpdateLocation extends Component {
         if (name !== location.name) {
             LocationService.validate(data).then(status => {
                 if (status === 204) {
-                    this.setState({ nameError: true, isLoading: false });
+                    this.setState({ nameError: true, loading: false });
                 } else {
                     this.setState({ nameError: false });
                     update();
@@ -107,7 +107,7 @@ export default class UpdateLocation extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true }, () => {
+        this.setState({ loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('l')) {
                 const id = params.get('l');
@@ -118,21 +118,21 @@ export default class UpdateLocation extends Component {
                                 this.setState({
                                     location,
                                     name: location.name,
-                                    isLoading: false,
+                                    loading: false,
                                     visible: true
                                 });
                             } else {
-                                this.setState({ isLoading: false, noMatch: true });
+                                this.setState({ loading: false, noMatch: true });
                             }
                         })
                         .catch(() => {
-                            this.setState({ isLoading: false, error: true, visible: false });
+                            this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
-                    this.setState({ isLoading: false, noMatch: true });
+                    this.setState({ loading: false, noMatch: true });
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         });
     }
@@ -141,7 +141,7 @@ export default class UpdateLocation extends Component {
     }
 
     render() {
-        const { visible, isLoading, noMatch, error, location, name, nameError } = this.state;
+        const { visible, loading, noMatch, error, location, name, nameError } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -190,7 +190,7 @@ export default class UpdateLocation extends Component {
 
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

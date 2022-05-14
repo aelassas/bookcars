@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-// import Env from '../config/env.config';
-// import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/bookings';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
@@ -25,7 +23,8 @@ export default class Bookings extends Component {
             leftPanel: false,
             companies: [],
             statuses: Helper.getBookingStatuses(),
-            filter: undefined
+            filter: undefined,
+            loading: true
         };
     }
 

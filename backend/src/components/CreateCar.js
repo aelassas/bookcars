@@ -38,7 +38,7 @@ export default class CreateCar extends Component {
         this.state = {
             user: null,
             isCompany: false,
-            isLoading: false,
+            loading: false,
             visible: false,
             error: false,
             imageError: false,
@@ -66,11 +66,11 @@ export default class CreateCar extends Component {
     }
 
     handleBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     handleImageChange = (image) => {
-        this.setState({ isLoading: false, image });
+        this.setState({ loading: false, image });
         if (image !== null) {
             this.setState({ imageError: false });
         }
@@ -82,7 +82,7 @@ export default class CreateCar extends Component {
                 imageSizeError: true,
                 imageError: false,
                 error: false,
-                isLoading: false,
+                loading: false,
             });
         } else {
             this.setState({
@@ -258,7 +258,7 @@ export default class CreateCar extends Component {
             error,
             imageError,
             imageSizeError,
-            isLoading,
+            loading,
             name,
             available,
             price,
@@ -535,7 +535,7 @@ export default class CreateCar extends Component {
 
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
     }

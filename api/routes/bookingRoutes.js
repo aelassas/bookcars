@@ -14,11 +14,11 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
     const {
-        pickupLocation,
-        dropOffLocation,
         company,
         car,
         driver,
+        pickupLocation,
+        dropOffLocation,
         from,
         to,
         status,
@@ -61,7 +61,10 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, (req, res) => {
     const size = parseInt(req.params.size);
     const companies = req.body.companies;
     const statuses = req.body.statuses;
-    const filter = req.body.filter;
+    const from = (req.body.filter && req.body.filter.from) || null;
+    const to = (req.body.filter && req.body.filter.to) || null;
+    const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
+    const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null;
     console.log(req.params);
     console.log(req.body);
 

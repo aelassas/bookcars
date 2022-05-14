@@ -31,7 +31,7 @@ export default class Settings extends Component {
             bio: '',
             error: false,
             visible: false,
-            isLoading: false
+            loading: false
         };
     }
 
@@ -107,11 +107,11 @@ export default class Settings extends Component {
     };
 
     onBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     onAvatarChange = (user) => {
-        this.setState({ isLoading: false, user });
+        this.setState({ loading: false, user });
     };
 
     onLoad = (user) => {
@@ -121,17 +121,17 @@ export default class Settings extends Component {
             phone: user.phone,
             location: user.location,
             bio: user.bio,
-            isLoading: false,
+            loading: false,
             visible: true
         });
     };
 
     onError = () => {
-        this.setState({ isLoading: false });
+        this.setState({ loading: false });
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     }
 
     render() {
@@ -143,7 +143,7 @@ export default class Settings extends Component {
             bio,
             error,
             visible,
-            isLoading
+            loading
         } = this.state;
 
         return (
@@ -256,7 +256,7 @@ export default class Settings extends Component {
                             </FormControl>
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error message={commonStrings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
             </Master>
         );

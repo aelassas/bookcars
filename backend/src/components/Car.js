@@ -41,18 +41,18 @@ export default class Car extends Component {
             car: null,
             error: false,
             visible: false,
-            isLoading: false,
+            loading: false,
             noMatch: false,
             openDeleteDialog: false
         };
     }
 
     onBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     onImageChange = () => {
-        this.setState({ isLoading: false });
+        this.setState({ loading: false });
     };
 
     handleDelete = () => {
@@ -66,23 +66,23 @@ export default class Car extends Component {
     handleConfirmDelete = () => {
         const { car } = this.state;
 
-        this.setState({ isLoading: true, openDeleteDialog: false }, () => {
+        this.setState({ loading: true, openDeleteDialog: false }, () => {
             CarService.delete(car._id).then(status => {
                 if (status === 200) {
                     window.location.href = '/cars';
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false });
+                    this.setState({ loading: false });
                 }
             }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false });
+                this.setState({ loading: false });
             });
         });
     };
 
     onLoad = (user) => {
-        this.setState({ user, isLoading: true }, () => {
+        this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -92,21 +92,21 @@ export default class Car extends Component {
                             if (car) {
                                 this.setState({
                                     car,
-                                    isLoading: false,
+                                    loading: false,
                                     visible: true
                                 });
                             } else {
-                                this.setState({ isLoading: false, noMatch: true });
+                                this.setState({ loading: false, noMatch: true });
                             }
                         })
                         .catch(() => {
-                            this.setState({ isLoading: false, error: true, visible: false });
+                            this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
-                    this.setState({ isLoading: false, noMatch: true });
+                    this.setState({ loading: false, noMatch: true });
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         });
     };
@@ -115,7 +115,7 @@ export default class Car extends Component {
     }
 
     render() {
-        const { visible, isLoading, error, noMatch, user, car, openDeleteDialog } = this.state;
+        const { visible, loading, error, noMatch, user, car, openDeleteDialog } = this.state;
         const edit = (user && car && car.company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id);
         const fr = user && user.language === 'fr';
 
@@ -332,7 +332,7 @@ export default class Car extends Component {
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>

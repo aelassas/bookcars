@@ -38,7 +38,7 @@ export default class CreateCompany extends Component {
             passwordsDontMatch: false,
             emailError: false,
             visible: false,
-            isLoading: false,
+            loading: false,
             fullNameError: false,
             avatar: null,
             avatarError: false,
@@ -176,7 +176,7 @@ export default class CreateCompany extends Component {
                     return;
                 }
 
-                this.setState({ isLoading: true });
+                this.setState({ loading: true });
 
                 const data = {
                     email: this.state.email,
@@ -199,14 +199,14 @@ export default class CreateCompany extends Component {
                                 error: true,
                                 passwordError: false,
                                 passwordsDontMatch: false,
-                                isLoading: false
+                                loading: false
                             });
                     }).catch(() => {
                         this.setState({
                             error: true,
                             passwordError: false,
                             passwordsDontMatch: false,
-                            isLoading: false
+                            loading: false
                         });
                     });
             }
@@ -221,11 +221,11 @@ export default class CreateCompany extends Component {
     };
 
     onBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     onAvatarChange = (avatar) => {
-        this.setState({ isLoading: false, avatar });
+        this.setState({ loading: false, avatar });
         if (avatar !== null) {
             this.setState({ avatarError: false });
         }
@@ -239,7 +239,7 @@ export default class CreateCompany extends Component {
                 passwordsDontMatch: false,
                 passwordError: false,
                 error: false,
-                isLoading: false,
+                loading: false,
             });
         } else {
             this.setState({
@@ -256,7 +256,7 @@ export default class CreateCompany extends Component {
         const { avatar } = this.state;
 
         if (avatar) {
-            this.setState({ isLoading: true });
+            this.setState({ loading: true });
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
@@ -287,7 +287,7 @@ export default class CreateCompany extends Component {
             avatarError,
             avatarSizeError,
             visible,
-            isLoading } = this.state;
+            loading } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
@@ -449,7 +449,7 @@ export default class CreateCompany extends Component {
 
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
     }

@@ -35,7 +35,7 @@ export default class Companies extends Component {
             user: null,
             companies: [],
             page: 1,
-            isLoading: false,
+            loading: false,
             fetch: false,
             keyword: '',
             openDeleteDialog: false,
@@ -60,10 +60,10 @@ export default class Companies extends Component {
     };
 
     fetch = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
         CompanyService.getCompanies(this.state.keyword)
             .then(companies => {
-                this.setState({ companies, isLoading: false });
+                this.setState({ companies, loading: false });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
@@ -78,19 +78,19 @@ export default class Companies extends Component {
         const { companyId, companyIndex, companies } = this.state;
 
         if (companyId !== '' && companyIndex > -1) {
-            this.setState({ isLoading: true, openDeleteDialog: false });
+            this.setState({ loading: true, openDeleteDialog: false });
             CompanyService.delete(companyId).then(status => {
                 if (status === 200) {
                     const _companies = [...companies];
                     _companies.splice(companyIndex, 1);
-                    this.setState({ companies: _companies, isLoading: false, companyId: '', companyIndex: -1 });
+                    this.setState({ companies: _companies, loading: false, companyId: '', companyIndex: -1 });
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
+                    this.setState({ loading: false, companyId: '', companyIndex: -1 });
                 }
             }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false, companyId: '', companyIndex: -1 });
+                this.setState({ loading: false, companyId: '', companyIndex: -1 });
             });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -112,7 +112,7 @@ export default class Companies extends Component {
     }
 
     render() {
-        const { user, companies, isLoading, openDeleteDialog } = this.state;
+        const { user, companies, loading, openDeleteDialog } = this.state;
         const isAdmin = Helper.isAdmin(user);
 
         return (
@@ -207,7 +207,7 @@ export default class Companies extends Component {
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {isLoading && <Backdrop text={commonStrings.LOADING} />}
+                {loading && <Backdrop text={commonStrings.LOADING} />}
             </Master>
         );
     }

@@ -10,7 +10,7 @@ class CompanyList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false,
+            loading: false,
             companies: []
         }
     }
@@ -30,18 +30,18 @@ class CompanyList extends Component {
     };
 
     componentDidMount() {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
 
         CompanyService.getCompanies()
             .then(data => {
                 const companies = this.getCompanies(data);
-                this.setState({ isLoading: false, companies });
+                this.setState({ loading: false, companies });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
     render() {
-        const { isLoading, companies } = this.state;
+        const { loading, companies } = this.state;
 
         return (
             <MultipleSelect
@@ -49,7 +49,7 @@ class CompanyList extends Component {
                 callbackFromMultipleSelect={this.handleChange}
                 options={companies}
                 selectedOptions={this.props.value ? [this.props.value] : []}
-                loading={isLoading}
+                loading={loading}
                 required={this.props.required}
                 multiple={this.props.multiple}
                 type={Env.RECORD_TYPE.COMPANY}

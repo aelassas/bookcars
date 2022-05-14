@@ -33,7 +33,7 @@ export default class UpdateCompany extends Component {
             bio: '',
             error: false,
             visible: false,
-            isLoading: false,
+            loading: false,
             fullNameError: false,
             noMatch: false,
             avatar: null,
@@ -124,14 +124,14 @@ export default class UpdateCompany extends Component {
     };
 
     onBeforeUpload = () => {
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
     };
 
     onAvatarChange = (company) => {
         if (company.avatar) {
             this.setState({ avatarError: false });
         }
-        this.setState({ avatar: company.avatar, isLoading: false });
+        this.setState({ avatar: company.avatar, loading: false });
     };
 
     onAvatarValidate = (valid) => {
@@ -142,7 +142,7 @@ export default class UpdateCompany extends Component {
                 passwordsDontMatch: false,
                 passwordError: false,
                 error: false,
-                isLoading: false,
+                loading: false,
             });
         } else {
             this.setState({
@@ -156,7 +156,7 @@ export default class UpdateCompany extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ isLoading: true }, () => {
+        this.setState({ loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -171,21 +171,21 @@ export default class UpdateCompany extends Component {
                                     phone: company.phone,
                                     location: company.location,
                                     bio: company.bio,
-                                    isLoading: false,
+                                    loading: false,
                                     visible: true
                                 });
                             } else {
-                                this.setState({ isLoading: false, noMatch: true });
+                                this.setState({ loading: false, noMatch: true });
                             }
                         })
                         .catch(() => {
-                            this.setState({ isLoading: false, error: true, visible: false });
+                            this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
-                    this.setState({ isLoading: false, noMatch: true });
+                    this.setState({ loading: false, noMatch: true });
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         });
     }
@@ -203,7 +203,7 @@ export default class UpdateCompany extends Component {
             error,
             fullNameError,
             visible,
-            isLoading,
+            loading,
             noMatch,
             avatarError,
             avatarSizeError
@@ -329,7 +329,7 @@ export default class UpdateCompany extends Component {
                             </form>
                         </Paper>
                     </div>}
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {noMatch && <NoMatch />}
             </Master>
         );

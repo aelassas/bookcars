@@ -29,7 +29,7 @@ export const Avatar = (props) => {
     const [open, setOpen] = useState(false);
     const [record, setRecord] = useState(null);
     const [avatar, setAvatar] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setIsLoading] = useState(true);
 
     const validate = (file, onValid) => {
         if (props.width && props.height) {
@@ -340,7 +340,7 @@ export const Avatar = (props) => {
     };
 
     return (
-        !error && !isLoading ?
+        !error && !loading ?
             <div className={className}>
                 {avatar ?
                     readonly ?

@@ -5,6 +5,7 @@ import { strings } from '../lang/booking-list';
 import Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
 import StatusList from './StatusList';
+import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import {
     DataGrid,
@@ -39,7 +40,7 @@ class BookingList extends Component {
             columns: [],
             rows: [],
             rowCount: 0,
-            isLoading: false,
+            loading: true,
             selectedId: undefined,
             selectedIds: [],
             openUpdateDialog: false,
@@ -253,10 +254,10 @@ class BookingList extends Component {
     fetch = () => {
         const { companies, statuses, filter, page, pageSize } = this.state;
 
-        this.setState({ isLoading: true });
+        this.setState({ loading: true });
         BookingService.getBookings(companies, statuses, filter, page, pageSize)
             .then(data => {
-                this.setState({ rows: data.bookings, rowCount: data.count, isLoading: false });
+                this.setState({ rows: data.bookings, rowCount: data.count, loading: false });
             })
             .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -296,6 +297,7 @@ class BookingList extends Component {
     }
 
     componentDidMount() {
+
         if (this.props.user) {
             const columns = this.getColumns(this.props.user);
             this.setState({ user: this.props.user, columns });
@@ -308,24 +310,24 @@ class BookingList extends Component {
             columns,
             rows,
             rowCount,
-            isLoading,
+            loading,
             page,
             pageSize,
             openDeleteDialog,
             openUpdateDialog,
-            selectedIds
+            selectedIds,
         } = this.state;
 
         return (
-            user && columns.length > 0 ? (
-                <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
+            <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
+                {user && columns.length > 0 &&
                     <DataGrid
                         checkboxSelection
                         getRowId={(row) => row._id}
                         columns={columns}
                         rows={rows}
                         rowCount={rowCount}
-                        loading={isLoading}
+                        // loading={loading}
                         rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
                         pagination
                         page={page}
@@ -339,40 +341,40 @@ class BookingList extends Component {
                         }}
                         onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
                     />
+                }
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openUpdateDialog}
+                >
+                    <DialogTitle className='dialog-header'>{strings.UPDATE_STATUS}</DialogTitle>
+                    <DialogContent className='bs-update-status'>
+                        <StatusList
+                            label={strings.NEW_STATUS}
+                            onChange={this.handleStatusChange}
+                        />
+                    </DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={this.handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
+                    </DialogActions>
+                </Dialog>
 
-                    <Dialog
-                        disableEscapeKeyDown
-                        maxWidth="xs"
-                        open={openUpdateDialog}
-                    >
-                        <DialogTitle className='dialog-header'>{strings.UPDATE_STATUS}</DialogTitle>
-                        <DialogContent className='bs-update-status'>
-                            <StatusList
-                                label={strings.NEW_STATUS}
-                                onChange={this.handleStatusChange}
-                            />
-                        </DialogContent>
-                        <DialogActions className='dialog-actions'>
-                            <Button onClick={this.handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                            <Button onClick={this.handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
-                        </DialogActions>
-                    </Dialog>
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openDeleteDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    </DialogActions>
+                </Dialog>
 
-                    <Dialog
-                        disableEscapeKeyDown
-                        maxWidth="xs"
-                        open={openDeleteDialog}
-                    >
-                        <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                        <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
-                        <DialogActions className='dialog-actions'>
-                            <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                            <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                        </DialogActions>
-                    </Dialog>
-                </div>)
-                :
-                <></>
+                {loading && <Backdrop text={commonStrings.LOADING} />}
+            </div>
         );
     }
 }

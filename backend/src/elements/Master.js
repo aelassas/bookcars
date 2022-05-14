@@ -13,7 +13,7 @@ export default class Master extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
+            loading: true,
             user: null,
             error: false,
             unauthorized: false
@@ -36,7 +36,7 @@ export default class Master extends Component {
     };
 
     error = () => {
-        this.setState({ error: true, isLoading: false }, () => {
+        this.setState({ error: true, loading: false }, () => {
             if (this.props.onError) {
                 this.props.onError();
             }
@@ -53,16 +53,16 @@ export default class Master extends Component {
                         if (user) {
 
                             if (user.blacklisted) {
-                                this.setState({ user, unauthorized: true, isLoading: false });
+                                this.setState({ user, unauthorized: true, loading: false });
                                 return;
                             }
 
                             if (this.props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
-                                this.setState({ user, unauthorized: true, isLoading: false });
+                                this.setState({ user, unauthorized: true, loading: false });
                                 return;
                             }
 
-                            this.setState({ isLoading: false, user }, () => {
+                            this.setState({ loading: false, user }, () => {
                                 if (this.props.onLoad) {
                                     this.props.onLoad(user);
                                 }
@@ -83,21 +83,21 @@ export default class Master extends Component {
             if (this.props.strict) {
                 UserService.signout();
             } else {
-                this.setState({ isLoading: false });
+                this.setState({ loading: false });
             }
         }
     }
 
     render() {
-        const { isLoading, user, error, unauthorized } = this.state;
+        const { loading, user, error, unauthorized } = this.state;
 
         return (
             (<div>
-                <Header user={this.props.user || user} hidden={isLoading} />
-                {(((!user && !isLoading) || (user && user.verified) || !this.props.strict)) && !error && !unauthorized ? (
+                <Header user={this.props.user || user} hidden={loading} />
+                {(((!user && !loading) || (user && user.verified) || !this.props.strict)) && !error && !unauthorized ? (
                     <div className='content' style={this.props.style}>{this.props.children}</div>
                 ) :
-                    (!isLoading && !unauthorized && !error &&
+                    (!loading && !unauthorized && !error &&
                         <div className="validate-email">
                             <span>{strings.VALIDATE_EMAIL}</span>
                             <Button

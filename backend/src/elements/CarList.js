@@ -56,19 +56,19 @@ class CarList extends Component {
         const { carId, carIndex, cars } = this.state;
 
         if (carId !== '' && carIndex > -1) {
-            this.setState({ isLoading: true, openDeleteDialog: false });
+            this.setState({ loading: true, openDeleteDialog: false });
             CarService.delete(carId).then(status => {
                 if (status === 200) {
                     const _cars = [...cars];
                     _cars.splice(carIndex, 1);
-                    this.setState({ cars: _cars, isLoading: false, carId: '', carIndex: -1 });
+                    this.setState({ cars: _cars, loading: false, carId: '', carIndex: -1 });
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ isLoading: false, carId: '', carIndex: -1 });
+                    this.setState({ loading: false, carId: '', carIndex: -1 });
                 }
             }).catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ isLoading: false, carId: '', carIndex: -1 });
+                this.setState({ loading: false, carId: '', carIndex: -1 });
             });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -285,7 +285,7 @@ class CarList extends Component {
                     </Dialog>
                 </section>
                 :
-                this.props.isLoading ?
+                this.props.loading ?
                     <></>
                     :
                     <Card variant="outlined" className="cars-card">

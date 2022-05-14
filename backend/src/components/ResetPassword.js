@@ -32,7 +32,7 @@ export default class ResetPassword extends Component {
             confirmPasswordError: false,
             passwordLengthError: false,
             error: false,
-            isLoading: false,
+            loading: false,
             noMatch: false,
             currentPassword: '',
             currentPasswordError: false,
@@ -160,40 +160,40 @@ export default class ResetPassword extends Component {
             const id = params.get('u');
             if (id && id !== '') {
                 if (id === user._id) {
-                    this.setState({ userId: user._id, visible: true, isLoading: false });
+                    this.setState({ userId: user._id, visible: true, loading: false });
                 } else {
                     if (user.type === Env.RECORD_TYPE.ADMIN) {
                         UserService.getUser(id)
                             .then(_user => {
                                 if (_user) {
-                                    this.setState({ userId: _user._id, visible: true, isLoading: false });
+                                    this.setState({ userId: _user._id, visible: true, loading: false });
                                 } else {
-                                    this.setState({ isLoading: false, noMatch: true });
+                                    this.setState({ loading: false, noMatch: true });
                                 }
                             })
                             .catch(err => {
-                                this.setState({ isLoading: false, error: true, visible: false });
+                                this.setState({ loading: false, error: true, visible: false });
                             });
                     } else {
-                        this.setState({ isLoading: false, noMatch: true });
+                        this.setState({ loading: false, noMatch: true });
                     }
                 }
             } else {
-                this.setState({ isLoading: false, noMatch: true });
+                this.setState({ loading: false, noMatch: true });
             }
         } else {
-            this.setState({ isLoading: false, noMatch: true });
+            this.setState({ loading: false, noMatch: true });
         }
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true, visible: false });
+        this.setState({ loading: true, visible: false });
     }
 
     render() {
         const { userId, user, visible, currentPassword, newPassword, confirmPassword,
             currentPasswordError, newPasswordError, confirmPasswordError,
-            passwordLengthError, isLoading, error, noMatch } = this.state;
+            passwordLengthError, loading, error, noMatch } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -292,7 +292,7 @@ export default class ResetPassword extends Component {
                         </form>
                     </Paper>
                 </div>
-                {isLoading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
                 {noMatch && <NoMatch />}
             </Master>
