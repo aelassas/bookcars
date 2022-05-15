@@ -1,0 +1,130 @@
+import React, { Component } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import UserService from '../services/UserService';
+import Helper from '../common/Helper';
+import { toast } from 'react-toastify';
+import MultipleSelect from './MultipleSelect';
+
+class UserList extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            init: false,
+            loading: false,
+            users: [],
+            fetch: false,
+            page: 1,
+            keyword: '',
+            selectedOptions: []
+        };
+    }
+
+    getUsers = (data) => {
+        const result = [];
+        for (const { _id, fullName, avatar } of data) {
+            result.push({ _id, name: fullName, image: avatar });
+        }
+        return result;
+    };
+
+    fetch = (onFetch) => {
+        const { users, keyword, page } = this.state;
+        
+        this.setState({ loading: true });
+        UserService.getUsers(keyword, page, Env.PAGE_SIZE)
+            .then(data => {
+                const _data = this.getUsers(data);
+                const _users = page === 1 ? _data : [...users, ..._data];
+                this.setState({ users: _users, loading: false, fetch: data.length > 0 }, () => {
+                    if (onFetch) {
+                        onFetch();
+                    }
+                });
+            })
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+    };
+
+    handleChange = (values, key, reference) => {
+        if (this.props.onChange) {
+            this.props.onChange(values);
+        }
+    };
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { selectedOptions } = prevState;
+
+        const _value = nextProps.multiple ? nextProps.value : [nextProps.value];
+        if (nextProps.value && !Helper.arrayEqual(selectedOptions, _value)) {
+            return { selectedOptions: _value };
+        }
+
+        return null;
+    }
+
+    render() {
+        const { init,
+            loading,
+            users,
+            fetch,
+            page,
+            keyword,
+            selectedOptions } = this.state;
+        return (
+            <MultipleSelect
+                loading={loading}
+                label={this.props.label || ''}
+                callbackFromMultipleSelect={this.handleChange}
+                options={users}
+                selectedOptions={selectedOptions}
+                required={this.props.required || false}
+                multiple={this.props.multiple}
+                type={Env.RECORD_TYPE.USER}
+                variant={this.props.variant || 'standard'}
+                ListboxProps={{
+                    onScroll: (event) => {
+                        const listboxNode = event.currentTarget;
+                        if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                            const p = page + 1;
+                            this.setState({ page: p }, () => {
+                                this.fetch();
+                            });
+                        }
+                    }
+                }}
+                onFocus={
+                    (event) => {
+                        if (!init) {
+                            const p = 1;
+                            this.setState({ users: [], page: p }, () => {
+                                this.fetch(() => { this.setState({ init: true }) });
+                            });
+                        }
+                    }
+                }
+                onInputChange={
+                    (event) => {
+                        const value = (event && event.target ? event.target.value : null) || '';
+
+                        //if (event.target.type === 'text' && value !== keyword) {
+                        if (value !== keyword) {
+                            this.setState({ users: [], page: 1, keyword: value }, () => {
+                                this.fetch();
+                            });
+                        }
+                    }
+                }
+                onClear={
+                    (event) => {
+                        this.setState({ users: [], page: 1, keyword: '', fetch: true }, () => {
+                            this.fetch();
+                        });
+                    }
+                }
+            />
+        );
+    }
+}
+
+export default UserList;

@@ -5,7 +5,7 @@ import UserService from './UserService';
 export default class BookingService {
 
     static create(data) {
-        return axios.post(`${Env.API_HOST}/api/create-booking`, data, { headers: UserService.authHeader() }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/create-booking`, data, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static update(data) {
@@ -21,11 +21,11 @@ export default class BookingService {
     }
 
     static getBooking(id) {
-        return axios.get(`${Env.API_HOST}/api/get-booking/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getBookings(companies, statuses, filter, page, size) {
-        return axios.post(`${Env.API_HOST}/api/get-bookings/${page}/${size}}`, { companies, statuses, filter }, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}}`, { companies, statuses, filter }, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
 }

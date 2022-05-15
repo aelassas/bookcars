@@ -21,11 +21,11 @@ export default class LocationService {
     }
 
     static getLocation(id) {
-        return axios.get(`${Env.API_HOST}/api/get-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getLocations(keyword, page, size) {
-        return axios.get(`${Env.API_HOST}/api/get-locations/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static check(id) {

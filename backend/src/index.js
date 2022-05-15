@@ -90,15 +90,16 @@ root.render(
         <CssBaseline>
             <App />
             <ToastContainer
-                position="bottom-left"
+                position="bottom-right"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
                 pauseOnFocusLoss={false}
                 draggable={false}
-                pauseOnHover={false}
-            // toastStyle={{ backgroundColor: "#131519", color: "#DDDDDD" }}
+                pauseOnHover={true}
+                icon={true}
+                theme="dark"
             />
         </CssBaseline>
     </ThemeProvider>

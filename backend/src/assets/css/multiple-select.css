@@ -18,7 +18,7 @@ li.ms-option:hover {
 }
 
 .option-name {
-    color: #a8a8a8;
+    color: #333;
     display: inline-block;
     font-size: .9em;
     line-height: 1em;
@@ -35,4 +35,8 @@ li.ms-option:hover {
     white-space: nowrap;
     margin-left: 5px;
     margin-bottom: 5px;
+}
+
+.suo {
+    margin-bottom: 3px;
 }

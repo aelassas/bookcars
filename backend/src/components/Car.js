@@ -4,9 +4,9 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import CarService from '../services/CarService';
-import Error from './Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
+import Error from './Error';
 import { Avatar } from '../elements/Avatar';
 import { toast } from 'react-toastify';
 import Helper from '../common/Helper';
@@ -272,10 +272,10 @@ export default class Car extends Component {
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={Helper.getAdditionalDriver(car.addionaldriver, fr)} placement='left'>
+                                            <Tooltip title={Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.addionaldriver > -1 ? <CheckIcon /> : <UncheckIcon />}
-                                                    <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.addionaldriver, fr)}</span>
+                                                    {car.additionalDriver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>

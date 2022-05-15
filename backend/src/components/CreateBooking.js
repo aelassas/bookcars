@@ -10,7 +10,9 @@ import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
 import Backdrop from '../elements/SimpleBackdrop';
 import CompanyList from '../elements/CompanyList';
+import UserList from '../elements/UserList';
 import LocationList from '../elements/LocationList';
+import BookingCarList from '../elements/BookingCarList';
 import StatusList from '../elements/StatusList';
 import { toast } from 'react-toastify';
 import {
@@ -27,7 +29,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-booking.css';
-import BookingCarList from '../elements/BookingCarList';
 
 export default class CreateBooking extends Component {
 
@@ -59,12 +60,20 @@ export default class CreateBooking extends Component {
         this.setState({ company: values.length > 0 ? values[0]._id : '-1' });
     };
 
+    handleDriverChange = (values) => {
+        this.setState({ driver: values.length > 0 ? values[0]._id : null });
+    };
+
     handlePickupLocationChange = (values) => {
         this.setState({ pickupLocation: values.length > 0 ? values[0]._id : '-1' });
     };
 
     handleDropOffLocationChange = (values) => {
         this.setState({ dropOffLocation: values.length > 0 ? values[0]._id : null });
+    };
+
+    handleBookingCarListChange = (values) => {
+        this.setState({ car: values.length > 0 ? values[0]._id : null });
     };
 
     handleStatusChange = (value) => {
@@ -93,10 +102,6 @@ export default class CreateBooking extends Component {
 
     handleAdditionalDriverChange = (e) => {
         this.setState({ additionalDriver: e.target.checked });
-    };
-
-    handleBookingCarListChange = (values) => {
-        this.setState({ car: values.length > 0 ? values[0]._id : null });
     };
 
     handleSubmit = (e) => {
@@ -137,13 +142,14 @@ export default class CreateBooking extends Component {
 
         Helper.calculateBookingPrice(
             data,
+            null,
             (price) => {
                 data.price = price;
 
                 BookingService.create(data)
                     .then(booking => {
                         if (booking && booking._id) {
-                            window.location = `/booking?c=${booking._id}`;
+                            window.location = `/booking?b=${booking._id}`;
                         } else {
                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
@@ -196,14 +202,18 @@ export default class CreateBooking extends Component {
                                         label={blStrings.COMPANY}
                                         required
                                         multiple={false}
-                                        type={Env.RECORD_TYPE.COMPANY}
                                         variant='standard'
                                         onChange={this.handleCompanyChange}
                                     />
                                 </FormControl>
                             }
 
-                            {/* TODO: UserList component */}
+                            <UserList
+                                label={blStrings.DRIVER}
+                                required
+                                multiple={false}
+                                variant='standard'
+                                onChange={this.handleDriverChange} />
 
                             <FormControl fullWidth margin="dense">
                                 <LocationList
@@ -240,9 +250,9 @@ export default class CreateBooking extends Component {
                                         required
                                         value={from}
                                         onChange={(from) => {
-                                            this.setState({ from })
+                                            this.setState({ from });
                                         }}
-                                        renderInput={(params) => <TextField {...params} variant='standard' fullWidth required />}
+                                        renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
@@ -255,9 +265,9 @@ export default class CreateBooking extends Component {
                                         required
                                         value={to}
                                         onChange={(to) => {
-                                            this.setState({ to })
+                                            this.setState({ to });
                                         }}
-                                        renderInput={(params) => <TextField {...params} variant='standard' fullWidth required />}
+                                        renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
                                     />
                                 </LocalizationProvider>
                             </FormControl>
@@ -342,7 +352,7 @@ export default class CreateBooking extends Component {
                                             onChange={this.handleAdditionalDriverChange}
                                             color="primary" />
                                     }
-                                    label={csStrings.FULL_INSURANCE}
+                                    label={csStrings.ADDITIONAL_DRIVER}
                                     className='checkbox-fcl'
                                 />
                             </FormControl>

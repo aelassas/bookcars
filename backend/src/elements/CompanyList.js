@@ -67,6 +67,7 @@ class CompanyList extends Component {
                 multiple={this.props.multiple}
                 type={Env.RECORD_TYPE.COMPANY}
                 variant={this.props.variant || 'standard'}
+                readOnly={this.props.readOnly}
             />
         );
     }

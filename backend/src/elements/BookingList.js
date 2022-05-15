@@ -124,7 +124,7 @@ class BookingList extends Component {
                     return (
                         <div>
                             <Tooltip title={commonStrings.UPDATE}>
-                                <IconButton href={`update-booking?b=${params.row._id}`}>
+                                <IconButton href={`booking?b=${params.row._id}`}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>

@@ -15,5 +15,5 @@ export default {
     updateAvatar: '/api/update-avatar/:userId',
     deleteAvatar: '/api/delete-avatar/:userId',
     deleteTempAvatar: '/api/delete-temp-avatar/:avatar',
-    search: '/api/users/:name/:page/:pageSize'
+    getUsers: '/api/users/:page/:pageSize'
 };

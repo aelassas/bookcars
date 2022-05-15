@@ -5,7 +5,6 @@ import './assets/css/index.css';
 
 const Signin = lazy(() => import('./components/Signin'));
 // const Signup = lazy(() => import('./components/Signup'));
-// const Dashboard = lazy(() => import('./components/Dashboard'));
 const Companies = lazy(() => import('./components/Companies'));
 const Company = lazy(() => import('./components/Company'));
 const CreateCompany = lazy(() => import('./components/CreateCompany'));
@@ -20,7 +19,6 @@ const UpdateCar = lazy(() => import('./components/UpdateCar'));
 const Bookings = lazy(() => import('./components/Bookings'));
 const Booking = lazy(() => import('./components/Booking'));
 const CreateBooking = lazy(() => import('./components/CreateBooking'));
-const UpdateBooking = lazy(() => import('./components/UpdateBooking'));
 const Users = lazy(() => import('./components/Users'));
 const User = lazy(() => import('./components/User'));
 const CreateUser = lazy(() => import('./components/CreateUser'));
@@ -56,7 +54,6 @@ const App = () => {
 						<Route exact path='/update-car' element={<UpdateCar />} />
 						<Route exact path='/booking' element={<Booking />} />
 						<Route exact path='/create-booking' element={<CreateBooking />} />
-						<Route exact path='/update-booking' element={<UpdateBooking />} />
 						<Route exact path='/users' element={<Users />} />
 						<Route exact path='/user' element={<User />} />
 						<Route exact path='/create-user' element={<CreateUser />} />

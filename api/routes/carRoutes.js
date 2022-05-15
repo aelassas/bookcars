@@ -1,6 +1,5 @@
 import express from 'express';
 import routeNames from '../config/carRoutes.config.js';
-import Env from '../config/env.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import Car from '../schema/Car.js';
@@ -125,7 +124,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                         res.status(400).send(strings.DB_ERROR + err);
                     });
             } else {
-                console.error('[car.update] Car not found:', req.body);
+                console.error('[car.update] Car not found:', req.body._id);
                 res.sendStatus(204);
             }
         })
@@ -277,7 +276,7 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
             }
         })
         .catch(err => {
-            console.error(`[car.getCar]  ${strings.DB_ERROR} ${req.params.id}`, err);
+            console.error(`[car.getCar] ${strings.DB_ERROR} ${req.params.id}`, err);
             res.status(400).send(strings.DB_ERROR + err);
         });
 });
@@ -310,12 +309,12 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         //     await new Car(car).save();
         // }
 
-        Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
-            if (err) {
-                console.error(strings.DB_ERROR + err);
-                res.status(400).send(strings.DB_ERROR + err);
-            }
-        });
+        // Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
+        //     if (err) {
+        //         console.error(strings.DB_ERROR + err);
+        //         res.status(400).send(strings.DB_ERROR + err);
+        //     }
+        // });
 
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';

@@ -6,7 +6,6 @@ import { strings as blStrings } from '../lang/booking-list';
 import { strings } from '../lang/booking-car-list';
 import CarService from '../services/CarService';
 import { toast } from 'react-toastify';
-import Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelect';
 import {
     Dialog,
@@ -24,8 +23,8 @@ class BookingCarList extends Component {
             loading: false,
             init: false,
             fetch: false,
-            company: '-1',
-            pickupLocation: '-1',
+            company: props.company ? props.company : '-1',
+            pickupLocation: props.pickupLocation ? props.pickupLocation : '-1',
             keyword: '',
             page: 1,
             cars: [],
@@ -63,7 +62,7 @@ class BookingCarList extends Component {
         }
 
         this.setState({ loading: true });
-        console.log('fetch!')
+
         CarService.getBookingCars(keyword, data, page, Env.PAGE_SIZE)
             .then(data => {
                 const _data = this.getCars(data);
@@ -82,7 +81,7 @@ class BookingCarList extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { company, pickupLocation, selectedOptions } = prevState;
+        const { company, pickupLocation } = prevState;
 
         if (nextProps.company && company !== nextProps.company) {
             return { company: nextProps.company };
@@ -90,13 +89,6 @@ class BookingCarList extends Component {
 
         if (nextProps.pickupLocation && pickupLocation !== nextProps.pickupLocation) {
             return { pickupLocation: nextProps.pickupLocation };
-        }
-
-        const _value = nextProps.multiple ? nextProps.value : [nextProps.value];
-        if (nextProps.value && !Helper.arrayEqual(selectedOptions, _value)) {
-            console.log('getDerivedStateFromProps.value', nextProps.value)
-            console.log('getDerivedStateFromProps.selectedOptions', selectedOptions)
-            return { selectedOptions: _value };
         }
 
         return null;
@@ -113,10 +105,9 @@ class BookingCarList extends Component {
             });
         }
 
-        if (this.state.init
-            && ((this.state.company !== '-1' && this.state.pickupLocation !== '-1')
-                && (this.state.company !== prevState.company || this.state.pickupLocation !== prevState.pickupLocation))) {
-            return this.setState({ reload: true });
+        if (((this.state.company !== '-1' && this.state.pickupLocation !== '-1')
+            && (this.state.company !== prevState.company || this.state.pickupLocation !== prevState.pickupLocation))) {
+            return this.setState({ reload: true, selectedOptions: [] });
         }
     }
 
@@ -156,16 +147,6 @@ class BookingCarList extends Component {
                             }
                         }
                     }
-                    // onFocus={
-                    //     (event) => {
-                    //         if (!init) {
-                    //             const p = 1;
-                    //             this.setState({ cars: [], page: p }, () => {
-                    //                 this.fetch(() => { this.setState({ init: true }) });
-                    //             });
-                    //         }
-                    //     }
-                    // }
                     onInputChange={
                         (event) => {
                             const value = (event && event.target ? event.target.value : null) || '';
@@ -179,7 +160,6 @@ class BookingCarList extends Component {
                     }
                     onClear={
                         (event) => {
-                            console.log('onClear')
                             this.setState({ cars: [], page: 1, keyword: '', fetch: true }, () => {
                                 this.fetch();
                             });

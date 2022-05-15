@@ -3,7 +3,7 @@ export default {
     create: '/api/create-location',
     update: '/api/update-location',
     delete: '/api/delete-location/:id',
-    getLocation: '/api/get-location/:id',
-    getLocations: '/api/get-locations/:page/:size',
+    getLocation: '/api/location/:id',
+    getLocations: '/api/locations/:page/:size',
     checkLocation: '/api/check-location/:id',
 }

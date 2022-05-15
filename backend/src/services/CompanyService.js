@@ -17,11 +17,11 @@ export default class CompanyService {
     }
 
     static getCompany(id) {
-        return axios.get(`${Env.API_HOST}/api/get-company/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/company/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getCompanies(keyword) {
-        return axios.get(`${Env.API_HOST}/api/get-companies/?s=${encodeURIComponent(keyword || '')}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/companies/?s=${encodeURIComponent(keyword || '')}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
 }

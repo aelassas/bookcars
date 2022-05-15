@@ -148,14 +148,14 @@ export default class Helper {
         }
     }
 
-    static getAdditionalDriver(addionaldriver, fr) {
-        if (addionaldriver === -1) {
+    static getAdditionalDriver(additionalDriver, fr) {
+        if (additionalDriver === -1) {
             return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`;
         }
-        else if (addionaldriver === 0) {
+        else if (additionalDriver === 0) {
             return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`;
         } else {
-            return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${addionaldriver} ${strings.CAR_CURRENCY}`;
+            return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${additionalDriver} ${strings.CAR_CURRENCY}`;
         }
     }
 
@@ -306,28 +306,30 @@ export default class Helper {
         ];
     }
 
-    static calculateBookingPrice(booking, onSucess, onError) {
-        CarService.getCar(booking.car)
-            .then(car => {
-                if (car) {
-                    const days = intervalToDuration({ start: booking.from, end: booking.to }).days;
-                    
-                    let price = car.price * days;
-                    if (booking.cancellation) price += car.cancellation;
-                    if (booking.amendments) price += car.amendments;
-                    if (booking.theftProtection) price += car.theftProtection * days;
-                    if (booking.collisionDamageWaiver) price += car.collisionDamageWaiver * days;
-                    if (booking.fullInsurance) price += car.fullInsurance * days;
-                    if (booking.additionalDriver) price += car.additionalDriver * days;
+    static async calculateBookingPrice(booking, car, onSucess, onError) {
+        try {
+            if (!car) {
+                car = await CarService.getCar(booking.car);
+            }
 
-                    if (onSucess) onSucess(price);
-                } else {
-                    if (onError) onError(`Car ${booking.car} not found.`);
-                }
-            })
-            .catch(err => {
-                if (onError) onError(err);
-            })
+            if (car) {
+                const start = new Date(booking.from), end = new Date(booking.to);
+                const days = intervalToDuration({ start, end }).days;
 
+                let price = car.price * days;
+                if (booking.cancellation && car.cancellation > 0) price += car.cancellation;
+                if (booking.amendments && car.amendments > 0) price += car.amendments;
+                if (booking.theftProtection && car.theftProtection > 0) price += car.theftProtection * days;
+                if (booking.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * days;
+                if (booking.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * days;
+                if (booking.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * days;
+
+                if (onSucess) onSucess(price);
+            } else {
+                if (onError) onError(`Car ${booking.car} not found.`);
+            }
+        } catch (err) {
+            if (onError) onError(err);
+        }
     }
 }

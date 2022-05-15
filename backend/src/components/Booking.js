@@ -1,5 +1,35 @@
 import React, { Component } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as blStrings } from '../lang/booking-list';
+import { strings as bfStrings } from '../lang/booking-filter';
+import { strings as csStrings } from '../lang/cars';
+import { strings } from '../lang/booking';
+import Helper from '../common/Helper';
 import Master from '../elements/Master';
+import BookingService from '../services/BookingService';
+import CarService from '../services/CarService';
+import Backdrop from '../elements/SimpleBackdrop';
+import NoMatch from './NoMatch';
+import Error from './Error';
+import CarList from '../elements/CarList';
+import CompanyList from '../elements/CompanyList';
+import UserList from '../elements/UserList';
+import LocationList from '../elements/LocationList';
+import BookingCarList from '../elements/BookingCarList';
+import StatusList from '../elements/StatusList';
+import {
+    FormControl,
+    FormControlLabel,
+    Switch,
+    TextField,
+    Button
+} from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Info as InfoIcon } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 import '../assets/css/booking.css';
 
@@ -8,22 +38,542 @@ export default class Booking extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: null
+            user: null,
+            loading: false,
+            noMatch: false,
+            error: false,
+            booking: null,
+            visible: false,
+            isCompany: false,
+
+            company: null,
+            car: null,
+            driver: null,
+            pickupLocation: null,
+            dropOffLocation: null,
+            from: null,
+            to: null,
+            status: null,
+            cancellation: false,
+            amendments: false,
+            theftProtection: false,
+            collisionDamageWaiver: false,
+            fullInsurance: false,
+            additionalDriver: false
         };
     }
 
+    handleCompanyChange = (values) => {
+        this.setState({ company: values.length > 0 ? values[0] : null, companyId: values.length > 0 ? values[0]._id : '-1' });
+    };
+
+    handleDriverChange = (values) => {
+        this.setState({ driver: values.length > 0 ? values[0] : null });
+    };
+
+    handlePickupLocationChange = (values) => {
+        this.setState({ pickupLocation: values.length > 0 ? values[0] : null, pickupLocationId: values.length > 0 ? values[0]._id : '-1' });
+    };
+
+    handleDropOffLocationChange = (values) => {
+        this.setState({ dropOffLocation: values.length > 0 ? values[0] : null });
+    };
+
+    handleBookingCarListChange = (values) => {
+        const { booking, car } = this.state, newCar = values.length > 0 ? values[0] : null;
+
+        if ((newCar && car._id !== newCar._id) || (car === null && newCar !== null)) { // car changed
+            CarService.getCar(newCar._id)
+                .then(car => {
+                    if (car) {
+                        booking.car = car;
+
+                        Helper.calculateBookingPrice(
+                            booking,
+                            booking.car,
+                            (price) => {
+                                booking.price = price;
+
+                                this.setState({ booking, price, car: newCar });
+                            },
+                            (err) => {
+                                this.error();
+                            });
+                    } else {
+                        this.error();
+                    }
+                })
+                .catch((err) => {
+                    this.error();
+                });
+        } else if (!newCar) {
+            this.setState({ car: newCar, price: 0 });
+        } else {
+            this.setState({ car: newCar });
+        }
+    };
+
+    handleStatusChange = (value) => {
+        this.setState({ status: value });
+    };
+
+    handleCancellationChange = (e) => {
+        const { booking } = this.state;
+        booking.cancellation = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, cancellation: booking.cancellation });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    handleAmendmentsChange = (e) => {
+        const { booking } = this.state;
+        booking.amendments = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, amendments: booking.amendments });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    handleTheftProtectionChange = (e) => {
+        const { booking } = this.state;
+        booking.theftProtection = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, theftProtection: booking.theftProtection });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    handleCollisionDamageWaiverChange = (e) => {
+        const { booking } = this.state;
+        booking.collisionDamageWaiver = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, collisionDamageWaiver: booking.collisionDamageWaiver });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    handleFullInsuranceChange = (e) => {
+        const { booking } = this.state;
+        booking.fullInsurance = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, fullInsurance: booking.fullInsurance });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    handleAdditionalDriverChange = (e) => {
+        const { booking } = this.state;
+        booking.additionalDriver = e.target.checked;
+
+        Helper.calculateBookingPrice(
+            booking,
+            booking.car,
+            (price) => {
+                this.setState({ booking, price, additionalDriver: booking.additionalDriver });
+            },
+            (err) => {
+                this.error();
+            });
+    };
+
+    error = () => {
+        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        this.setState({ loading: false });
+    };
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        this.setState({ loading: true });
+
+        const {
+            booking,
+            company,
+            car,
+            driver,
+            pickupLocation,
+            dropOffLocation,
+            from,
+            to,
+            status,
+            cancellation,
+            amendments,
+            theftProtection,
+            collisionDamageWaiver,
+            fullInsurance,
+            additionalDriver,
+            price
+        } = this.state;
+
+        const data = {
+            _id: booking._id,
+            company: company._id,
+            car: car._id,
+            driver: driver._id,
+            pickupLocation: pickupLocation._id,
+            dropOffLocation: dropOffLocation._id,
+            from,
+            to,
+            status,
+            cancellation,
+            amendments,
+            theftProtection,
+            collisionDamageWaiver,
+            fullInsurance,
+            additionalDriver,
+            price
+        };
+
+        BookingService.update(data)
+            .then(status => {
+                if (status === 200) {
+                    this.setState({ loading: false });
+                    toast(commonStrings.UPDATED, { type: 'info' });
+                } else {
+                    this.error();
+                }
+            })
+            .catch((err) => {
+                this.error();
+            });
+    };
+
     onLoad = (user) => {
-        this.setState({ user });
+        this.setState({ user, loading: true }, () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('b')) {
+                const id = params.get('b');
+                if (id && id !== '') {
+                    BookingService.getBooking(id)
+                        .then(booking => {
+                            if (booking) {
+
+                                if (!Helper.isAdmin(user) && booking.company._id !== user._id) {
+                                    return this.setState({ loading: false, noMatch: true });
+                                }
+
+                                this.setState({
+                                    booking,
+                                    price: booking.price,
+                                    loading: false,
+                                    visible: true,
+                                    isCompany: user.type === Env.RECORD_TYPE.COMPANY,
+                                    company: { _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar },
+                                    car: { _id: booking.car._id, name: booking.car.name, image: booking.car.image },
+                                    driver: { _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar },
+                                    pickupLocation: { _id: booking.pickupLocation._id, name: booking.pickupLocation.name },
+                                    dropOffLocation: { _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name },
+                                    from: booking.from,
+                                    to: booking.to,
+                                    status: booking.status,
+                                    cancellation: booking.cancellation,
+                                    amendments: booking.amendments,
+                                    theftProtection: booking.theftProtection,
+                                    collisionDamageWaiver: booking.collisionDamageWaiver,
+                                    fullInsurance: booking.fullInsurance,
+                                    additionalDriver: booking.additionalDriver
+                                });
+
+                            } else {
+                                this.setState({ loading: false, noMatch: true });
+                            }
+                        })
+                        .catch(() => {
+                            this.setState({ loading: false, error: true, visible: false });
+                        });
+                } else {
+                    this.setState({ loading: false, noMatch: true });
+                }
+            } else {
+                this.setState({ loading: false, noMatch: true });
+            }
+        });
     }
 
     componentDidMount() {
     }
 
     render() {
+        const {
+            visible,
+            loading,
+            noMatch,
+            error,
+            user,
+            booking,
+            isCompany,
+            company,
+            car,
+            driver,
+            pickupLocation,
+            dropOffLocation,
+            from,
+            to,
+            status,
+            cancellation,
+            amendments,
+            theftProtection,
+            collisionDamageWaiver,
+            fullInsurance,
+            additionalDriver,
+            price
+        } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                Booking!
+                {visible && booking &&
+                    <div className='booking'>
+                        <div className='col-1'>
+                            <form onSubmit={this.handleSubmit}>
+
+                                {!isCompany &&
+                                    <FormControl fullWidth margin="dense">
+                                        <CompanyList
+                                            label={blStrings.COMPANY}
+                                            required
+                                            multiple={false}
+                                            variant='standard'
+                                            onChange={this.handleCompanyChange}
+                                            value={company}
+                                        />
+                                    </FormControl>
+                                }
+
+                                <UserList
+                                    label={blStrings.DRIVER}
+                                    required
+                                    multiple={false}
+                                    variant='standard'
+                                    onChange={this.handleDriverChange}
+                                    value={driver}
+                                />
+
+                                <FormControl fullWidth margin="dense">
+                                    <LocationList
+                                        label={bfStrings.PICKUP_LOCATION}
+                                        required
+                                        variant='standard'
+                                        onChange={this.handlePickupLocationChange}
+                                        value={pickupLocation}
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense">
+                                    <LocationList
+                                        label={bfStrings.DROP_OFF_LOCATION}
+                                        required
+                                        variant='standard'
+                                        onChange={this.handleDropOffLocationChange}
+                                        value={dropOffLocation}
+                                    />
+                                </FormControl>
+
+                                <BookingCarList
+                                    label={blStrings.CAR}
+                                    company={company._id}
+                                    pickupLocation={pickupLocation._id}
+                                    onChange={this.handleBookingCarListChange}
+                                    required
+                                    value={car}
+                                />
+
+                                <FormControl fullWidth margin="dense">
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label={commonStrings.FROM}
+                                            inputFormat='dd-MM-yyyy'
+                                            mask='__-__-____'
+                                            required
+                                            value={from}
+                                            onChange={(from) => {
+                                                const { booking } = this.state;
+                                                booking.from = from;
+                                                this.setState({ booking, from });
+                                            }}
+                                            renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                        />
+                                    </LocalizationProvider>
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label={commonStrings.TO}
+                                            inputFormat='dd-MM-yyyy'
+                                            mask='__-__-____'
+                                            required
+                                            value={to}
+                                            onChange={(to) => {
+                                                const { booking } = this.state;
+                                                booking.to = to;
+                                                this.setState({ booking, to });
+                                            }}
+                                            renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                        />
+                                    </LocalizationProvider>
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense">
+                                    <StatusList
+                                        label={blStrings.STATUS}
+                                        onChange={this.handleStatusChange}
+                                        required
+                                        value={status}
+                                    />
+                                </FormControl>
+
+                                <div className='info'>
+                                    <InfoIcon />
+                                    <label>{commonStrings.OPTIONAL}</label>
+                                </div>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={cancellation}
+                                                onChange={this.handleCancellationChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.CANCELLATION}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={amendments}
+                                                onChange={this.handleAmendmentsChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.AMENDMENTS}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={theftProtection}
+                                                onChange={this.handleTheftProtectionChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.THEFT_PROTECTION}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={collisionDamageWaiver}
+                                                onChange={this.handleCollisionDamageWaiverChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.COLLISION_DAMAGE_WAVER}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={fullInsurance}
+                                                onChange={this.handleFullInsuranceChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.FULL_INSURANCE}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={additionalDriver}
+                                                onChange={this.handleAdditionalDriverChange}
+                                                color="primary" />
+                                        }
+                                        label={csStrings.ADDITIONAL_DRIVER}
+                                        className='checkbox-fcl'
+                                    />
+                                </FormControl>
+
+                                <div>
+                                    <div className="buttons">
+                                        <Button
+                                            variant="contained"
+                                            className='btn-primary btn-margin-bottom'
+                                            size="small"
+                                            type="submit"
+                                        >
+                                            {commonStrings.UPDATE}
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className='btn-margin-bottom'
+                                            color='error'
+                                            size="small"
+                                        >
+                                            {commonStrings.DELETE}
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className='btn-secondary btn-margin-bottom'
+                                            size="small"
+                                            href='/'
+                                        >
+                                            {commonStrings.CANCEL}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div className='col-2'>
+                            <div className='col-2-header'>
+                                <h2> {`${strings.TOTAL} ${price} ${commonStrings.CURRENCY}`} </h2>
+                            </div>
+                            <CarList
+                                user={user}
+                                cars={[booking.car]}
+                            />
+                        </div>
+                    </div>
+                }
+
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+                {noMatch && <NoMatch />}
+                {error && <Error />}
             </Master>
         );
     }

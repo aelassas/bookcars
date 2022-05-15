@@ -1,0 +1,54 @@
+div.booking {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: auto;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.booking div.col-1 {
+        width: 100%;
+        padding-top: 5px;
+        background: #fefefe;
+        border-bottom: #eee solid 1px;
+    }
+
+    div.booking div.col-2 {
+        width: 100%;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.booking div.col-1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 450px;
+        background: #fefefe;
+        border-right: #eee solid 1px;
+        padding: 25px;
+        overflow: auto;
+    }
+
+    div.booking div.col-2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 450px;
+        overflow: auto;
+        padding-top: 10px;
+    }
+
+    div.booking div.col-2 div.col-2-header {
+        text-align: right;
+        padding-right: 25px;
+    }
+}

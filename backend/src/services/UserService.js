@@ -125,6 +125,10 @@ export default class UserService {
         return axios.get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), { headers: UserService.authHeader() }).then(res => res.data);
     }
 
+    static getUsers(keyword, page, size) {
+        return axios.get(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+    }
+
     static updateUser(data) {
         return axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: UserService.authHeader() }).then(res => res.status);
     }

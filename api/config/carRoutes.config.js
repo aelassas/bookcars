@@ -6,7 +6,7 @@ export default {
     updateImage: '/api/update-car-image/:id',
     deleteImage: '/api/delete-car-image/:id',
     deleteTempImage: '/api/delete-temp-car-image/:image',
-    getCar: '/api/get-car/:id',
-    getCars: '/api/get-cars/:page/:size',
-    getBookingCars: '/api/get-booking-cars/:page/:size',
+    getCar: '/api/car/:id',
+    getCars: '/api/cars/:page/:size',
+    getBookingCars: '/api/booking-cars/:page/:size',
 }

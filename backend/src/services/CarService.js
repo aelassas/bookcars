@@ -43,16 +43,16 @@ export default class CarService {
     }
 
     static getCar(id) {
-        return axios.get(`${Env.API_HOST}/api/get-car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.get(`${Env.API_HOST}/api/car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getCars(keyword, data, page, size) {
-        return axios.post(`${Env.API_HOST}/api/get-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader(), }
+        return axios.post(`${Env.API_HOST}/api/cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader(), }
         ).then(res => res.data);
     }
 
     static getBookingCars(keyword, data, page, size) {
-        return axios.post(`${Env.API_HOST}/api/get-booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader(), }
+        return axios.post(`${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader(), }
         ).then(res => res.data);
     }
 

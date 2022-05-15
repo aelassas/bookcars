@@ -4,10 +4,12 @@ import Helper from '../common/Helper';
 import {
     Autocomplete,
     TextField,
-    InputAdornment
+    InputAdornment,
+    Avatar
 } from '@mui/material';
 import {
-    LocationOn as LocationIcon
+    LocationOn as LocationIcon,
+    AccountCircle
 } from '@mui/icons-material';
 
 import '../assets/css/multiple-select.css';
@@ -43,7 +45,8 @@ export default function MultipleSelect({
     multiple,
     type,
     variant,
-    onOpen
+    onOpen,
+    readOnly
 }) {
     // const [init, setInit] = useState(false);
     const [values, setValues] = useState([]);
@@ -57,6 +60,7 @@ export default function MultipleSelect({
     return (
         <div className='multiple-select'>
             <Autocomplete
+                readOnly={readOnly}
                 options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
                 getOptionLabel={(option) => (option && option.name) || ''}
@@ -84,6 +88,37 @@ export default function MultipleSelect({
                 loading={loading}
                 multiple={multiple}
                 renderInput={(params) => {
+                    if (type === Env.RECORD_TYPE.USER && !multiple && values.length === 1 && values[0]) {
+                        const option = values[0];
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                {option.image ?
+                                                    < Avatar
+                                                        src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                        className='avatar-small suo'
+                                                    />
+                                                    :
+                                                    <AccountCircle className='avatar-small suo' color='disabled' />
+                                                }
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
+                        );
+                    }
+
                     if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
                         const option = values[0];
 
@@ -104,6 +139,29 @@ export default function MultipleSelect({
                                                         width: Env.COMPANY_IMAGE_WIDTH,
                                                         // height: Env.COMPANY_IMAGE_HEIGHT
                                                     }} />
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
+                        );
+                    }
+
+                    if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 1 && values[0]) {
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                <LocationIcon />
                                             </InputAdornment>
                                             {params.InputProps.startAdornment}
                                         </>
@@ -156,7 +214,23 @@ export default function MultipleSelect({
                     if (onInputChange) onInputChange(event);
                 }}
                 renderOption={(props, option, { selected }) => {
-                    if (type === Env.RECORD_TYPE.COMPANY) {
+                    if (type === Env.RECORD_TYPE.USER) {
+                        return (
+                            <li {...props} className={`${props.className} ms-option`}>
+                                <span className='option-image'>
+                                    {option.image ?
+                                        < Avatar
+                                            src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                            className='avatar-medium'
+                                        />
+                                        :
+                                        <AccountCircle className='avatar-medium' color='disabled' />
+                                    }
+                                </span>
+                                <span className='option-name'>{option.name}</span>
+                            </li>
+                        );
+                    } else if (type === Env.RECORD_TYPE.COMPANY) {
                         return (
                             <li {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>

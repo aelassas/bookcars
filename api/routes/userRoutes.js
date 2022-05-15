@@ -7,6 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
 import { v1 as uuid } from 'uuid';
+import escapeStringRegexp from 'escape-string-regexp';
 import routeNames from '../config/userRoutes.config.js';
 import strings from '../config/app.config.js';
 import Env from '../config/env.config.js';
@@ -129,11 +130,33 @@ routes.route(routeNames.signin).post((req, res) => {
                 || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)) {
                 res.sendStatus(204);
             } else {
-                bcrypt.compare(req.body.password, user.password).then(passwordMatch => {
+                bcrypt.compare(req.body.password, user.password).then(async passwordMatch => {
                     if (passwordMatch) {
                         const payload = { id: user.id };
 
                         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE_AT });
+
+                        // for (let i = 1; i <= 60; i++) {
+                        //     const _user = new User({
+                        //         email: `user${i}@bookcars.ma`,
+                        //         fullName: `User ${i}`,
+                        //         password: '$2a$10$6lsV6VfIesiQMPcqTHly7ed0B7OWs3s6QKRRMhyZBTn8ALdtH9CbO',
+                        //         verified: true,
+                        //         language: 'fr',
+                        //         enableEmailNotifications: true,
+                        //         type: 'user',
+                        //         blacklisted: false,
+                        //         avatar: 'john.jpg'
+                        //     });
+                        //     await _user.save();
+                        // }
+
+                        // User.deleteMany({ email: { $regex: /user/ } }, (err, response) => {
+                        //     if (err) {
+                        //         console.error(strings.DB_ERROR + err);
+                        //         res.status(400).send(strings.DB_ERROR + err);
+                        //     }
+                        // });
 
                         res.status(200).send({
                             id: user._id,
@@ -493,6 +516,41 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
             console.error(strings.DB_ERROR, err);
             res.status(400).send(strings.DB_ERROR + err);
         });;
+});
+
+// Search users route
+routes.route(routeNames.getUsers).get(authJwt.verifyToken, async (req, res) => {
+
+    try {
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+        const page = parseInt(req.params.page);
+        const pageSize = parseInt(req.params.pageSize);
+        const type = Env.USER_TYPE.USER;
+
+        const users = await User.aggregate([
+            {
+                $match: {
+                    $and: [
+                        {
+                            type: { $eq: type }
+                        },
+                        {
+                            fullName: { $regex: keyword, $options: options }
+                        }
+                    ]
+                }
+            },
+            { $sort: { fullName: 1 } },
+            { $skip: ((page - 1) * pageSize) },
+            { $limit: pageSize }
+        ]);
+
+        res.json(users);
+    } catch (err) {
+        console.error(strings.DB_ERROR, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 export default routes;

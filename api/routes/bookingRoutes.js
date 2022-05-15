@@ -1,4 +1,5 @@
 import express from 'express';
+import strings from '../config/app.config.js';
 import routeNames from '../config/bookingRoutes.config.js';
 import Booking from '../schema/Booking.js';
 import authJwt from '../middlewares/authJwt.js';
@@ -8,31 +9,69 @@ const routes = express.Router();
 
 routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
     const booking = new Booking(req.body);
-    // TODO
-    return res.sendStatus(200);
+
+    booking.save()
+        .then((booking) => res.json(booking))
+        .catch(err => {
+            console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
-    const {
-        company,
-        car,
-        driver,
-        pickupLocation,
-        dropOffLocation,
-        from,
-        to,
-        status,
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-        price
-    } = req.body;
 
-    // TODO
-    return res.sendStatus(200);
+    Booking.findById(req.body._id)
+        .then(booking => {
+            if (booking) {
+                const {
+                    company,
+                    car,
+                    driver,
+                    pickupLocation,
+                    dropOffLocation,
+                    from,
+                    to,
+                    status,
+                    cancellation,
+                    amendments,
+                    theftProtection,
+                    collisionDamageWaiver,
+                    fullInsurance,
+                    additionalDriver,
+                    price
+                } = req.body;
+
+                booking.company = company;
+                booking.car = car;
+                booking.driver = driver;
+                booking.pickupLocation = pickupLocation;
+                booking.dropOffLocation = dropOffLocation;
+                booking.from = from;
+                booking.to = to;
+                booking.status = status;
+                booking.cancellation = cancellation;
+                booking.amendments = amendments;
+                booking.theftProtection = theftProtection;
+                booking.collisionDamageWaiver = collisionDamageWaiver;
+                booking.fullInsurance = fullInsurance;
+                booking.additionalDriver = additionalDriver;
+                booking.price = price;
+
+                booking.save()
+                    .then(() => res.sendStatus(200))
+                    .catch(err => {
+                        console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
+                        res.status(400).send(strings.DB_ERROR + err);
+                    });
+            } else {
+                console.error('[booking.update] Booking not found:', req.body._id);
+                res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 routes.route(routeNames.updateStatus).post(authJwt.verifyToken, (req, res) => {
@@ -50,10 +89,46 @@ routes.route(routeNames.delete).post(authJwt.verifyToken, (req, res) => {
 });
 
 routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
-    const id = req.params.id;
-
-    // TODO
-    return res.sendStatus(200);
+    Booking.findById(req.params.id)
+        .populate('company')
+        .populate({
+            path: 'car',
+            populate: {
+                path: 'company',
+                model: 'User'
+            }
+        })
+        .populate({
+            path: 'car',
+            populate: {
+                path: 'locations',
+                model: 'Location'
+            }
+        })
+        .populate('driver')
+        .populate('pickupLocation')
+        .populate('dropOffLocation')
+        .lean()
+        .then(booking => {
+            if (booking) {
+                if (booking.company) {
+                    const { _id, fullName, avatar } = booking.company;
+                    booking.company = { _id, fullName, avatar };
+                }
+                if (booking.car.company) {
+                    const { _id, fullName, avatar } = booking.car.company;
+                    booking.car.company = { _id, fullName, avatar };
+                }
+                res.json(booking);
+            } else {
+                console.error('[booking.getBooking] Car not found:', req.params.id);
+                res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(`[cbookingar.getBooking] ${strings.DB_ERROR} ${req.params.id}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 routes.route(routeNames.getBookings).post(authJwt.verifyToken, (req, res) => {
@@ -65,8 +140,6 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, (req, res) => {
     const to = (req.body.filter && req.body.filter.to) || null;
     const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
     const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null;
-    console.log(req.params);
-    console.log(req.body);
 
     const now = new Date();
 

@@ -7,7 +7,7 @@ const bookingSchema = new Schema({
     company: {
         type: Schema.Types.ObjectId,
         required: [true, "can't be blank"],
-        ref: 'Company'
+        ref: 'User'
     },
     car: {
         type: Schema.Types.ObjectId,
@@ -50,32 +50,32 @@ const bookingSchema = new Schema({
         required: [true, "can't be blank"],
     },
     cancellation: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     amendments: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     theftProtection: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     collisionDamageWaiver: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     fullInsurance: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     additionalDriver: {
-        type: Number,
-        required: [true, "can't be blank"]
+        type: Boolean,
+        default: false
     },
     price: {
         type: Number,
-        required: [true, "can't be blank"]
+        required: [true, "can't be blank"],
     }
 }, {
     timestamps: true,
