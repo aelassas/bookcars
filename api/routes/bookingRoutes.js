@@ -4,6 +4,7 @@ import routeNames from '../config/bookingRoutes.config.js';
 import Booking from '../schema/Booking.js';
 import authJwt from '../middlewares/authJwt.js';
 import Env from '../config/env.config.js';
+import mongoose from 'mongoose';
 
 const routes = express.Router();
 
@@ -82,10 +83,26 @@ routes.route(routeNames.updateStatus).post(authJwt.verifyToken, (req, res) => {
 });
 
 routes.route(routeNames.delete).post(authJwt.verifyToken, (req, res) => {
-    const ids = req.body;
+    try {
+        const ids = [];
 
-    // TODO
-    return res.sendStatus(200);
+        for (const id of req.body) {
+            ids.push(mongoose.Types.ObjectId(id));
+        }
+
+        Booking.deleteMany({ _id: { $in: ids } }, (err, response) => {
+            if (err) {
+                console.error(strings.DB_ERROR + err);
+                return res.status(400).send(strings.DB_ERROR + err);
+            }
+
+            return res.sendStatus(200);
+        });
+
+    } catch (err) {
+        console.error(`[booking.delete]  ${strings.DB_ERROR} ${req.body}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {

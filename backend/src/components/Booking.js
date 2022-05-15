@@ -23,7 +23,11 @@ import {
     FormControlLabel,
     Switch,
     TextField,
-    Button
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -45,7 +49,6 @@ export default class Booking extends Component {
             booking: null,
             visible: false,
             isCompany: false,
-
             company: null,
             car: null,
             driver: null,
@@ -59,7 +62,8 @@ export default class Booking extends Component {
             theftProtection: false,
             collisionDamageWaiver: false,
             fullInsurance: false,
-            additionalDriver: false
+            additionalDriver: false,
+            openDeleteDialog: false
         };
     }
 
@@ -82,7 +86,7 @@ export default class Booking extends Component {
     handleBookingCarListChange = (values) => {
         const { booking, car } = this.state, newCar = values.length > 0 ? values[0] : null;
 
-        if ((newCar && car._id !== newCar._id) || (car === null && newCar !== null)) { // car changed
+        if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
             CarService.getCar(newCar._id)
                 .then(car => {
                     if (car) {
@@ -269,6 +273,32 @@ export default class Booking extends Component {
             });
     };
 
+    handleDelete= () => {
+        this.setState({ openDeleteDialog: true });
+    };
+
+    handleCancelDelete = () => {
+        this.setState({ openDeleteDialog: false });
+    };
+
+    handleConfirmDelete = () => {
+        const { booking } = this.state;
+
+        this.setState({ loading: true, openDeleteDialog: false }, () => {
+            BookingService.delete([booking._id]).then(status => {
+                if (status === 200) {
+                    window.location.href = '/';
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ loading: false });
+                }
+            }).catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
+                this.setState({ loading: false });
+            });
+        });
+    };
+
     onLoad = (user) => {
         this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
@@ -347,7 +377,8 @@ export default class Booking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             additionalDriver,
-            price
+            price,
+            openDeleteDialog
         } = this.state;
 
         return (
@@ -544,6 +575,7 @@ export default class Booking extends Component {
                                             className='btn-margin-bottom'
                                             color='error'
                                             size="small"
+                                            onClick={this.handleDelete}
                                         >
                                             {commonStrings.DELETE}
                                         </Button>
@@ -568,6 +600,19 @@ export default class Booking extends Component {
                                 cars={[booking.car]}
                             />
                         </div>
+
+                        <Dialog
+                            disableEscapeKeyDown
+                            maxWidth="xs"
+                            open={openDeleteDialog}
+                        >
+                            <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                            <DialogContent>{strings.DELETE_BOOKING}</DialogContent>
+                            <DialogActions className='dialog-actions'>
+                                <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                                <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                            </DialogActions>
+                        </Dialog>
                     </div>
                 }
 
