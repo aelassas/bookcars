@@ -19,6 +19,8 @@ const Env = {
     COMPANY_IMAGE_HEIGHT: parseInt(process.env.REACT_APP_BC_COMAPANY_IMAGE_HEIGHT),
     CAR_IMAGE_WIDTH: parseInt(process.env.REACT_APP_BC_CAR_IMAGE_WIDTH),
     CAR_IMAGE_HEIGHT: parseInt(process.env.REACT_APP_BC_CAR_IMAGE_HEIGHT),
+    CAR_OPTION_IMAGE_HEIGHT: 85,
+    SELECTED_CAR_OPTION_IMAGE_HEIGHT: 30,
     RECORD_TYPE: {
         ADMIN: 'admin',
         COMPANY: 'company',

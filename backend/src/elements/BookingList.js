@@ -99,7 +99,7 @@ class BookingList extends Component {
                     `${params.value} ${strings.CURRENCY}`
                 ),
                 renderCell: (params) => (
-                    <span style={{ fontWeight: 500 }}>{params.value}</span>
+                    <span className='bp'>{params.value}</span>
                 )
             },
             {

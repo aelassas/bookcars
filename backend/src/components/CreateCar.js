@@ -40,7 +40,6 @@ export default class CreateCar extends Component {
             isCompany: false,
             loading: false,
             visible: false,
-            error: false,
             imageError: false,
             imageSizeError: false,
             image: null,
@@ -255,7 +254,6 @@ export default class CreateCar extends Component {
         const {
             isCompany,
             visible,
-            error,
             imageError,
             imageSizeError,
             loading,
@@ -525,7 +523,6 @@ export default class CreateCar extends Component {
                             </div>
 
                             <div className="form-error">
-                                {error && <Error message={commonStrings.GENERIC_ERROR} />}
                                 {imageError && <Error message={commonStrings.IMAGE_REQUIRED} />}
                                 {imageSizeError && <Error message={strings.CAR_IMAGE_SIZE_ERROR} />}
                             </div>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import CompanyService from '../services/CompanyService';
+import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
@@ -11,7 +12,8 @@ class CompanyList extends Component {
         super(props);
         this.state = {
             loading: false,
-            companies: []
+            companies: [],
+            selectedOptions: []
         }
     }
 
@@ -40,15 +42,26 @@ class CompanyList extends Component {
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { selectedOptions } = prevState;
+
+        const _value = nextProps.multiple ? nextProps.value : [nextProps.value];
+        if (nextProps.value && !Helper.arrayEqual(selectedOptions, _value)) {
+            return { selectedOptions: _value };
+        }
+
+        return null;
+    }
+
     render() {
-        const { loading, companies } = this.state;
+        const { loading, companies, selectedOptions } = this.state;
 
         return (
             <MultipleSelect
                 label={this.props.label}
                 callbackFromMultipleSelect={this.handleChange}
                 options={companies}
-                selectedOptions={this.props.value ? [this.props.value] : []}
+                selectedOptions={selectedOptions}
                 loading={loading}
                 required={this.props.required}
                 multiple={this.props.multiple}

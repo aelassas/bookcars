@@ -42,19 +42,17 @@ export default function MultipleSelect({
     loading,
     multiple,
     type,
-    variant
+    variant,
+    onOpen
 }) {
     // const [init, setInit] = useState(false);
     const [values, setValues] = useState([]);
+    const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
-        // if (!init) {
-        if (selectedOptions && selectedOptions.length > 0) {
-            setValues(selectedOptions || []);
-        }
-        // setInit(true);
-        // }
-    }, [selectedOptions]);
+        setValues(selectedOptions);
+        if (selectedOptions && selectedOptions.length === 0) setInputValue('')
+    }, [selectedOptions, type]);
 
     return (
         <div className='multiple-select'>
@@ -62,7 +60,7 @@ export default function MultipleSelect({
                 options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
                 getOptionLabel={(option) => (option && option.name) || ''}
-                isOptionEqualToValue={(option, value) => value._id && option._id === value._id}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                     if (multiple) {
                         setValues(newValue);
@@ -115,6 +113,34 @@ export default function MultipleSelect({
                         );
                     }
 
+                    if (type === Env.RECORD_TYPE.CAR && !multiple && values.length === 1 && values[0]) {
+                        const option = values[0];
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                                    alt={option.name}
+                                                    style={{
+                                                        height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT
+                                                    }} />
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
+                        );
+                    }
+
                     return (
                         <TextField
                             {...params}
@@ -124,10 +150,15 @@ export default function MultipleSelect({
                         />
                     );
                 }}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                    if (onInputChange) onInputChange(event);
+                }}
                 renderOption={(props, option, { selected }) => {
                     if (type === Env.RECORD_TYPE.COMPANY) {
                         return (
-                            <li {...props}>
+                            <li {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>
                                     <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                         alt={option.name}
@@ -141,17 +172,30 @@ export default function MultipleSelect({
                         );
                     } else if (type === Env.RECORD_TYPE.LOCATION) {
                         return (
-                            <li {...props}>
+                            <li {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>
                                     <LocationIcon />
                                 </span>
                                 <span className='option-name'>{option.name}</span>
                             </li>
                         );
+                    } else if (type === Env.RECORD_TYPE.CAR) {
+                        return (
+                            <li  {...props} className={`${props.className} ms-option`}>
+                                <span className='option-image'>
+                                    <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                        alt={option.name}
+                                        style={{
+                                            height: Env.CAR_OPTION_IMAGE_HEIGHT
+                                        }} />
+                                </span>
+                                <span className='car-option-name'>{option.name}</span>
+                            </li>
+                        );
                     }
 
                     return (
-                        <li {...props}>
+                        <li {...props} className={`${props.className} ms-option`}>
                             <span>{option.name}</span>
                         </li>
                     );
@@ -159,8 +203,8 @@ export default function MultipleSelect({
                 }}
                 ListboxProps={ListboxProps || null}
                 onFocus={onFocus || null}
-                onInputChange={onInputChange || null}
                 ListboxComponent={ListBox}
+                onOpen={onOpen || null}
             />
         </div>
     );

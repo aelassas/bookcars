@@ -342,7 +342,6 @@ export default class CreateCar extends Component {
                 {!error && !noMatch &&
                     <div className='update-car'>
                         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                            <h1 className="car-form-title"> {strings.NEW_CAR_HEADING} </h1>
                             <form onSubmit={this.handleSubmit}>
                                 <Avatar
                                     type={Env.RECORD_TYPE.CAR}

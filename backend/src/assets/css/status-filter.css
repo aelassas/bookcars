@@ -37,7 +37,7 @@ div.status-filter ul.status-list li label.bs {
     overflow: hidden;
     margin-bottom: 0;
     display: inline-block;
-    opacity: 0.95;
+    opacity: 0.85;
 }
 
 div.status-filter ul.status-list li label.bs:hover {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import LocationService from '../services/LocationService';
+import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
@@ -13,20 +14,21 @@ class LocationList extends Component {
             init: false,
             loading: false,
             locations: [],
-            fetchLocations: false,
+            fetch: false,
             page: 1,
-            keyword: ''
+            keyword: '',
+            selectedOptions: []
         };
     }
 
-    fetchLocations = (onFetch) => {
+    fetch = (onFetch) => {
         const { locations, keyword, page } = this.state;
         this.setState({ loading: true });
 
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _locations = page === 1 ? data : [...locations, ...data];
-                this.setState({ locations: _locations, loading: false, fetchLocations: data.length > 0 }, () => {
+                this.setState({ locations: _locations, loading: false, fetch: data.length > 0 }, () => {
                     if (onFetch) {
                         onFetch();
                     }
@@ -41,20 +43,32 @@ class LocationList extends Component {
         }
     };
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { selectedOptions } = prevState;
+
+        const _value = nextProps.multiple ? nextProps.value : [nextProps.value];
+        if (nextProps.value && !Helper.arrayEqual(selectedOptions, _value)) {
+            return { selectedOptions: _value };
+        }
+
+        return null;
+    }
+
     render() {
         const { init,
             loading,
             locations,
-            fetchLocations,
+            fetch,
             page,
-            keyword } = this.state;
+            keyword,
+            selectedOptions } = this.state;
         return (
             <MultipleSelect
                 loading={loading}
                 label={this.props.label || ''}
                 callbackFromMultipleSelect={this.handleChange}
                 options={locations}
-                selectedOptions={this.props.value && this.props.value.length > 0 ? this.props.value : []}
+                selectedOptions={selectedOptions}
                 required={this.props.required || false}
                 multiple={this.props.multiple}
                 type={Env.RECORD_TYPE.LOCATION}
@@ -62,10 +76,10 @@ class LocationList extends Component {
                 ListboxProps={{
                     onScroll: (event) => {
                         const listboxNode = event.currentTarget;
-                        if (fetchLocations && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                        if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
                             const p = page + 1;
                             this.setState({ page: p }, () => {
-                                this.fetchLocations();
+                                this.fetch();
                             });
                         }
                     }
@@ -75,7 +89,7 @@ class LocationList extends Component {
                         if (!init) {
                             const p = 1;
                             this.setState({ locations: [], page: p }, () => {
-                                this.fetchLocations(() => { this.setState({ init: true }) });
+                                this.fetch(() => { this.setState({ init: true }) });
                             });
                         }
                     }
@@ -87,15 +101,15 @@ class LocationList extends Component {
                         //if (event.target.type === 'text' && value !== keyword) {
                         if (value !== keyword) {
                             this.setState({ locations: [], page: 1, keyword: value }, () => {
-                                this.fetchLocations();
+                                this.fetch();
                             });
                         }
                     }
                 }
                 onClear={
                     (event) => {
-                        this.setState({ locations: [], page: 1, keyword: '', fetchLocations: true }, () => {
-                            this.fetchLocations();
+                        this.setState({ locations: [], page: 1, keyword: '', fetch: true }, () => {
+                            this.fetch();
                         });
                     }
                 }

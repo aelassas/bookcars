@@ -29,8 +29,8 @@ import {
     More as MoreIcon,
     Language as LanguageIcon,
     Settings as SettingsIcon,
-    //Dashboard as DashboardIcon,
-    Home as HomeIcon,
+    Dashboard as DashboardIcon,
+    // Home as HomeIcon,
     CorporateFare as CompaniesIcon,
     LocationOn as LocationsIcon,
     DirectionsCar as CarsIcon,
@@ -330,8 +330,8 @@ export default function Header(props) {
                         <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
                             <List sx={classes.list}>
                                 <ListItemLink href="/">
-                                    <ListItemIcon>{<HomeIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.HOME} />
+                                    <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
+                                    <ListItemText primary={strings.DASHBOARD} />
                                 </ListItemLink>
                                 <ListItemLink href="/companies">
                                     <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>

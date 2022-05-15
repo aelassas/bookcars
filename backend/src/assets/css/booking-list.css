@@ -15,6 +15,7 @@ div.bs-list span.bs {
     width: 75px;
     text-align: center;
     color: #fff;
+    opacity: .85;
 }
 
 div.bs-list span.bs-void {
@@ -45,4 +46,8 @@ div.bs-update-status {
     width: 444px;
     height: 70px;
     overflow: hidden;
+}
+
+div.bs-list span.bp {
+    font-weight: 600;
 }

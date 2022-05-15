@@ -8,4 +8,5 @@ export default {
     deleteTempImage: '/api/delete-temp-car-image/:image',
     getCar: '/api/get-car/:id',
     getCars: '/api/get-cars/:page/:size',
+    getBookingCars: '/api/get-booking-cars/:page/:size',
 }

@@ -46,6 +46,7 @@ export const strings = new LocalizedStrings({
         FROM: 'Début',
         TO: 'Fin',
         OPTIONAL: 'Paramètres optionnels',
+        AND: 'et',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -90,6 +91,7 @@ export const strings = new LocalizedStrings({
         FROM: 'From',
         TO: 'To',
         OPTIONAL: 'Optional Parameters',
+        AND: 'and',
     }
 });
 

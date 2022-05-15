@@ -7,6 +7,7 @@ import UserService from './services/UserService';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer, toast } from 'react-toastify';
+import { frFR, enUS } from '@mui/material/locale';
 
 import './assets/css/common.css';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -56,6 +57,8 @@ if (lang !== '') {
     commonStrings.setLanguage(language);
 }
 
+language = UserService.getLanguage();
+
 const theme = createTheme({
     typography: {
         fontFamily: [
@@ -79,8 +82,8 @@ const theme = createTheme({
                 }
             },
         },
-    },
-});
+    }
+}, language === 'fr' ? frFR : enUS);
 
 root.render(
     <ThemeProvider theme={theme}>
@@ -95,7 +98,7 @@ root.render(
                 pauseOnFocusLoss={false}
                 draggable={false}
                 pauseOnHover={false}
-                toastStyle={{ backgroundColor: "#131519", color: "#DDDDDD" }}
+            // toastStyle={{ backgroundColor: "#131519", color: "#DDDDDD" }}
             />
         </CssBaseline>
     </ThemeProvider>

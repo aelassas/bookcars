@@ -37,6 +37,7 @@
         margin-left: calc(50% - 180px) !important;
         width: 360px;
         padding: 30px;
+        display: inline-block;
     }
 }
 
@@ -48,5 +49,6 @@
         margin-left: calc(50% - 275px) !important;
         width: 550px;
         padding: 30px;
+        display: inline-block;
     }
 }

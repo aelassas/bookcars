@@ -8,7 +8,6 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-booking';
 import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
-import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import CompanyList from '../elements/CompanyList';
 import LocationList from '../elements/LocationList';
@@ -28,6 +27,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-booking.css';
+import BookingCarList from '../elements/BookingCarList';
 
 export default class CreateBooking extends Component {
 
@@ -38,7 +38,6 @@ export default class CreateBooking extends Component {
             isCompany: false,
             loading: false,
             visible: false,
-            error: false,
             company: null,
             car: null,
             driver: null,
@@ -57,7 +56,15 @@ export default class CreateBooking extends Component {
     }
 
     handleCompanyChange = (values) => {
-        this.setState({ company: values.length > 0 ? values[0]._id : null });
+        this.setState({ company: values.length > 0 ? values[0]._id : '-1' });
+    };
+
+    handlePickupLocationChange = (values) => {
+        this.setState({ pickupLocation: values.length > 0 ? values[0]._id : '-1' });
+    };
+
+    handleDropOffLocationChange = (values) => {
+        this.setState({ dropOffLocation: values.length > 0 ? values[0]._id : null });
     };
 
     handleStatusChange = (value) => {
@@ -88,6 +95,9 @@ export default class CreateBooking extends Component {
         this.setState({ additionalDriver: e.target.checked });
     };
 
+    handleBookingCarListChange = (values) => {
+        this.setState({ car: values.length > 0 ? values[0]._id : null });
+    };
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -129,7 +139,7 @@ export default class CreateBooking extends Component {
             data,
             (price) => {
                 data.price = price;
-                
+
                 BookingService.create(data)
                     .then(booking => {
                         if (booking && booking._id) {
@@ -159,8 +169,10 @@ export default class CreateBooking extends Component {
         const {
             loading,
             isCompany,
+            company,
+            pickupLocation,
             visible,
-            error,
+
             from,
             to,
             cancellation,
@@ -191,8 +203,6 @@ export default class CreateBooking extends Component {
                                 </FormControl>
                             }
 
-                            {/* TODO: CarList component */}
-
                             {/* TODO: UserList component */}
 
                             <FormControl fullWidth margin="dense">
@@ -200,7 +210,7 @@ export default class CreateBooking extends Component {
                                     label={bfStrings.PICKUP_LOCATION}
                                     required
                                     variant='standard'
-                                    onChange={this.handleLocationsChange}
+                                    onChange={this.handlePickupLocationChange}
                                 />
                             </FormControl>
 
@@ -209,9 +219,17 @@ export default class CreateBooking extends Component {
                                     label={bfStrings.DROP_OFF_LOCATION}
                                     required
                                     variant='standard'
-                                    onChange={this.handleLocationsChange}
+                                    onChange={this.handleDropOffLocationChange}
                                 />
                             </FormControl>
+
+                            <BookingCarList
+                                label={blStrings.CAR}
+                                company={company}
+                                pickupLocation={pickupLocation}
+                                onChange={this.handleBookingCarListChange}
+                                required
+                            />
 
                             <FormControl fullWidth margin="dense">
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -329,30 +347,28 @@ export default class CreateBooking extends Component {
                                 />
                             </FormControl>
 
-                            <div className="buttons">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary btn-margin-bottom'
-                                    size="small"
-                                >
-                                    {commonStrings.CREATE}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className='btn-secondary btn-margin-bottom'
-                                    size="small"
-                                    href='/'
-                                >
-                                    {commonStrings.CANCEL}
-                                </Button>
+                            <div>
+                                <div className="buttons">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-primary btn-margin-bottom'
+                                        size="small"
+                                    >
+                                        {commonStrings.CREATE}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        className='btn-secondary btn-margin-bottom'
+                                        size="small"
+                                        href='/'
+                                    >
+                                        {commonStrings.CANCEL}
+                                    </Button>
+                                </div>
                             </div>
 
-                            <div className="form-error">
-                                {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                            </div>
                         </form>
-
                     </Paper>
                 </div>
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}

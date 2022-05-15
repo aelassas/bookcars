@@ -284,7 +284,7 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
     try {
-        // for (let i = 1; i <= 60; i++) {
+        // for (let i = 1; i <= 120; i++) {
         //     const car = {
         //         "name": "Car " + i,
         //         "company": "62794b5121c117948f2a9b2e",
@@ -310,12 +310,12 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         //     await new Car(car).save();
         // }
 
-        // Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
-        //     if (err) {
-        //         console.error(strings.DB_ERROR + err);
-        //         res.status(400).send(strings.DB_ERROR + err);
-        //     }
-        // });
+        Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
+            if (err) {
+                console.error(strings.DB_ERROR + err);
+                res.status(400).send(strings.DB_ERROR + err);
+            }
+        });
 
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
@@ -358,10 +358,41 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
 
         res.json(cars);
     } catch (err) {
-        console.error(`[location.getLocations]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        console.error(`[location.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
         res.status(400).send(strings.DB_ERROR + err);
     }
 });
 
+routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, res) => {
+    try {
+        const company = mongoose.Types.ObjectId(req.body.company);
+        const pickupLocation = mongoose.Types.ObjectId(req.body.pickupLocation);
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+        const page = parseInt(req.params.page);
+        const size = parseInt(req.params.size);
+
+        const cars = await Car.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { company: { $eq: company } },
+                        { locations: pickupLocation },
+                        { available: true },
+                        { name: { $regex: keyword, $options: options } }
+                    ]
+                }
+            },
+            { $sort: { name: 1 } },
+            { $skip: ((page - 1) * size) },
+            { $limit: size }
+        ]);
+
+        res.json(cars);
+    } catch (err) {
+        console.error(`[location.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
+});
 
 export default routes;

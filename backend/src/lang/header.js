@@ -4,7 +4,7 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        // DASHBOARD: 'Tableau de bord',
+        DASHBOARD: 'Tableau de bord',
         HOME: 'Accueil',
         COMPANIES: 'Sociétés de location',
         LOCATIONS: 'Lieux',
@@ -21,7 +21,7 @@ export const strings = new LocalizedStrings({
         SIGN_OUT: 'Déconnexion'
     },
     en: {
-        // DASHBOARD: 'Dashboard',
+        DASHBOARD: 'Dashboard',
         HOME: 'Home',
         COMPANIES: 'Booking companies',
         LOCATIONS: 'Locations',
