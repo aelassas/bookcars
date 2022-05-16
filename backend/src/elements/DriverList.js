@@ -6,14 +6,14 @@ import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
-class UserList extends Component {
+class DriverList extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             init: false,
             loading: false,
-            users: [],
+            drivers: [],
             fetch: false,
             page: 1,
             keyword: '',
@@ -21,7 +21,7 @@ class UserList extends Component {
         };
     }
 
-    getUsers = (data) => {
+    getDrivers = (data) => {
         const result = [];
         for (const { _id, fullName, avatar } of data) {
             result.push({ _id, name: fullName, image: avatar });
@@ -30,14 +30,14 @@ class UserList extends Component {
     };
 
     fetch = (onFetch) => {
-        const { users, keyword, page } = this.state;
+        const { drivers, keyword, page } = this.state;
         
         this.setState({ loading: true });
-        UserService.getUsers(keyword, page, Env.PAGE_SIZE)
+        UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = this.getUsers(data);
-                const _users = page === 1 ? _data : [...users, ..._data];
-                this.setState({ users: _users, loading: false, fetch: data.length > 0 }, () => {
+                const _data = this.getDrivers(data);
+                const _drivers = page === 1 ? _data : [...drivers, ..._data];
+                this.setState({ drivers: _drivers, loading: false, fetch: data.length > 0 }, () => {
                     if (onFetch) {
                         onFetch();
                     }
@@ -66,7 +66,7 @@ class UserList extends Component {
     render() {
         const { init,
             loading,
-            users,
+            drivers,
             fetch,
             page,
             keyword,
@@ -76,7 +76,7 @@ class UserList extends Component {
                 loading={loading}
                 label={this.props.label || ''}
                 callbackFromMultipleSelect={this.handleChange}
-                options={users}
+                options={drivers}
                 selectedOptions={selectedOptions}
                 required={this.props.required || false}
                 multiple={this.props.multiple}
@@ -97,7 +97,7 @@ class UserList extends Component {
                     (event) => {
                         if (!init) {
                             const p = 1;
-                            this.setState({ users: [], page: p }, () => {
+                            this.setState({ drivers: [], page: p }, () => {
                                 this.fetch(() => { this.setState({ init: true }) });
                             });
                         }
@@ -109,7 +109,7 @@ class UserList extends Component {
 
                         //if (event.target.type === 'text' && value !== keyword) {
                         if (value !== keyword) {
-                            this.setState({ users: [], page: 1, keyword: value }, () => {
+                            this.setState({ drivers: [], page: 1, keyword: value }, () => {
                                 this.fetch();
                             });
                         }
@@ -117,7 +117,7 @@ class UserList extends Component {
                 }
                 onClear={
                     (event) => {
-                        this.setState({ users: [], page: 1, keyword: '', fetch: true }, () => {
+                        this.setState({ drivers: [], page: 1, keyword: '', fetch: true }, () => {
                             this.fetch();
                         });
                     }
@@ -127,4 +127,4 @@ class UserList extends Component {
     }
 }
 
-export default UserList;
+export default DriverList;

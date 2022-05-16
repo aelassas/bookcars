@@ -10,7 +10,7 @@ import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
 import Backdrop from '../elements/SimpleBackdrop';
 import CompanyList from '../elements/CompanyList';
-import UserList from '../elements/UserList';
+import DriverList from '../elements/DriverList';
 import LocationList from '../elements/LocationList';
 import BookingCarList from '../elements/BookingCarList';
 import StatusList from '../elements/StatusList';
@@ -208,7 +208,7 @@ export default class CreateBooking extends Component {
                                 </FormControl>
                             }
 
-                            <UserList
+                            <DriverList
                                 label={blStrings.DRIVER}
                                 required
                                 multiple={false}

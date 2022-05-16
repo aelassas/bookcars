@@ -14,7 +14,7 @@ import NoMatch from './NoMatch';
 import Error from './Error';
 import CarList from '../elements/CarList';
 import CompanyList from '../elements/CompanyList';
-import UserList from '../elements/UserList';
+import DriverList from '../elements/DriverList';
 import LocationList from '../elements/LocationList';
 import BookingCarList from '../elements/BookingCarList';
 import StatusList from '../elements/StatusList';
@@ -396,7 +396,7 @@ export default class Booking extends Component {
                                     </FormControl>
                                 }
 
-                                <UserList
+                                <DriverList
                                     label={blStrings.DRIVER}
                                     required
                                     multiple={false}
