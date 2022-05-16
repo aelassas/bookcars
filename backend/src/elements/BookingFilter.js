@@ -34,11 +34,10 @@ class BookingFilter extends Component {
         e.preventDefault();
 
         const { from, to, pickupLocation, dropOffLocation } = this.state;
-        const filter = { from, to, pickupLocation, dropOffLocation };
+        let filter = { from, to, pickupLocation, dropOffLocation };
 
-        if (this.props.onSubmit) {
-            this.props.onSubmit(filter);
-        }
+        if (!from && !to && !pickupLocation && !dropOffLocation) filter = null;
+        if (this.props.onSubmit) this.props.onSubmit(filter);
     }
 
     render() {

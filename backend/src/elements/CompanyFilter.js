@@ -59,7 +59,7 @@ class CompanyFilter extends Component {
                 checkbox.checked = true;
             });
 
-            const { companies } = this.state, companyIds = this.flattenCompanies(companies);
+            const { companies } = this.state, companyIds = Helper.flattenCompanies(companies);
             this.setState({ allCompaniesChecked: true, checkedCompanies: companyIds }, () => {
                 if (this.props.onChange) {
                     this.props.onChange(companyIds);
@@ -68,14 +68,10 @@ class CompanyFilter extends Component {
         }
     };
 
-    flattenCompanies = (companies) => (
-        companies.map(company => company._id)
-    )
-
     componentDidMount() {
         CompanyService.getCompanies()
             .then(companies => {
-                const companyIds = this.flattenCompanies(companies);
+                const companyIds = Helper.flattenCompanies(companies);
                 this.setState({ companies, checkedCompanies: companyIds }, () => {
                     const { checkedCompanies } = this.state;
                     const checkboxes = document.querySelectorAll('.company-checkbox');

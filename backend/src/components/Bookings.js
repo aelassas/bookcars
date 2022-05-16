@@ -19,6 +19,7 @@ export default class Bookings extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             user: null,
             leftPanel: false,
@@ -36,15 +37,16 @@ export default class Bookings extends Component {
     };
 
     handleCompanyFilterChange = (companies) => {
-        this.setState({ companies, reload: true });
+        this.setState({ companies });
     };
 
     handleStatusFilterChange = (statuses) => {
-        this.setState({ statuses, reload: true });
+        this.setState({ statuses });
     };
 
-    handleBookingFilterSubmit = (filter) => {
-        this.setState({ filter, reload: true });
+    handleBookingFilterSubmit = (newFilter) => {
+        const { filter } = this.state, reload = Helper.filterEqual(filter, newFilter);
+        this.setState({ filter: newFilter, reload });
     };
 
     handleBookingListLoad = () => {

@@ -318,11 +318,5 @@ div.car {
         bottom: 0;
         right: 0;
         left: 400px;
-        overflow: auto;
-    }
-
-    div.car div.col-2 .bookings-sec {
-        width: 350px;
-        margin-left: calc(50% - 175px) !important;
     }
 }

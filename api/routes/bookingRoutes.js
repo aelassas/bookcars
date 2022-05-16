@@ -162,6 +162,7 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
     const size = parseInt(req.params.size);
     const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id));
     const statuses = req.body.statuses;
+    const car = req.body.car;
     const from = (req.body.filter && req.body.filter.from && new Date(req.body.filter.from)) || null;
     const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null;
     const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
@@ -173,28 +174,11 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
             { $expr: { $in: ['$status', statuses] } },
         ]
     };
+    if (car) $match.$and.push({ $expr: { $eq: ['$car', mongoose.Types.ObjectId(car)] } });
     if (from) $match.$and.push({ $expr: { $gte: ['$from', from] } }); // $from > from
     if (to) $match.$and.push({ $expr: { $lte: ['$to', to] } }); // $to < to
     if (pickupLocation) $match.$and.push({ $expr: { $eq: ['$pickupLocation', mongoose.Types.ObjectId(pickupLocation)] } });
     if (dropOffLocation) $match.$and.push({ $expr: { $eq: ['$dropOffLocation', mongoose.Types.ObjectId(dropOffLocation)] } });
-
-    const booking = {
-        company: '62794b5121c117948f2a9b2e',
-        car: '627b577c8392253f86eb25a5',
-        driver: '6280f28a864c93af021f397d',
-        pickupLocation: '6273e2f9f036f83c05e47b0d',
-        dropOffLocation: '6273e2f9f036f83c05e47b0d',
-        from: '2022-05-15T23:00:00.000Z',
-        to: '2022-05-17T23:00:00.000Z',
-        status: 'pending',
-        cancellation: false,
-        amendments: false,
-        theftProtection: false,
-        collisionDamageWaiver: false,
-        fullInsurance: false,
-        additionalDriver: false,
-        price: 560
-    };
 
     // for (let i = 0; i < 79; i++) {
     //     const booking = new Booking({

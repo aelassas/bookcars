@@ -4,10 +4,12 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import CarService from '../services/CarService';
+import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
 import { Avatar } from '../elements/Avatar';
+import BookingList from '../elements/BookingList';
 import { toast } from 'react-toastify';
 import Helper from '../common/Helper';
 import {
@@ -43,7 +45,9 @@ export default class Car extends Component {
             visible: false,
             loading: false,
             noMatch: false,
-            openDeleteDialog: false
+            openDeleteDialog: false,
+            companies: [],
+            statuses: Helper.getBookingStatuses().map(status => status.value),
         };
     }
 
@@ -90,11 +94,18 @@ export default class Car extends Component {
                     CarService.getCar(id)
                         .then(car => {
                             if (car) {
-                                this.setState({
-                                    car,
-                                    loading: false,
-                                    visible: true
-                                });
+
+                                if (user.type === Env.RECORD_TYPE.ADMIN) {
+                                    CompanyService.getCompanies()
+                                        .then(companies => {
+                                            const companyIds = Helper.flattenCompanies(companies);
+                                            this.setState({ companies: companyIds, car, loading: false, visible: true });
+                                        })
+                                        .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                                } else {
+                                    this.setState({ companies: [user._id], car, loading: false, visible: true });
+                                }
+
                             } else {
                                 this.setState({ loading: false, noMatch: true });
                             }
@@ -115,7 +126,7 @@ export default class Car extends Component {
     }
 
     render() {
-        const { visible, loading, error, noMatch, user, car, openDeleteDialog } = this.state;
+        const { visible, loading, error, noMatch, user, car, openDeleteDialog, companies, statuses } = this.state;
         const edit = (user && car && car.company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id);
         const fr = user && user.language === 'fr';
 
@@ -314,9 +325,16 @@ export default class Car extends Component {
                                 </section>}
                         </div>
                         <div className='col-2'>
-                            <section className='bookings-sec'>
-                                TODO
-                            </section>
+                            <BookingList
+                                width='100%'
+                                height='100%'
+                                user={user}
+                                companies={companies}
+                                statuses={statuses}
+                                car={car._id}
+                                hideCompanyColumn={true}
+                                hideCarColumn={true}
+                            />
                         </div>
                     </div>
                 }

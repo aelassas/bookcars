@@ -332,4 +332,9 @@ export default class Helper {
             if (onError) onError(err);
         }
     }
+
+    static flattenCompanies(companies) {
+        return companies.map(company => company._id);
+    }
 }
+

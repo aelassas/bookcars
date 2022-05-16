@@ -46,10 +46,11 @@ class BookingList extends Component {
             openUpdateDialog: false,
             openDeleteDialog: false,
             status: '',
-            companies: [],
-            statuses: Helper.getBookingStatuses(),
-            filter: null,
-            reload: false
+            companies: props.companies,
+            statuses: props.statuses,
+            filter: props.filter,
+            reload: props.reload,
+            car: props.car
         };
     }
 
@@ -60,14 +61,6 @@ class BookingList extends Component {
 
     getColumns = (user) => {
         const columns = [
-            {
-                field: 'car',
-                headerName: strings.CAR,
-                flex: 1,
-                renderCell: (params) => (
-                    <Link href={`/car?c=${params.value._id}`}>{params.value.name}</Link>
-                ),
-            },
             {
                 field: 'driver',
                 headerName: strings.DRIVER,
@@ -166,18 +159,24 @@ class BookingList extends Component {
                     );
                 }
             }
-
-
         ];
 
-        if (Helper.isAdmin(user)) {
+        if (!this.props.hideCarColumn) {
+            columns.unshift({
+                field: 'car',
+                headerName: strings.CAR,
+                flex: 1,
+                renderCell: (params) => (
+                    <Link href={`/car?c=${params.value._id}`}>{params.value.name}</Link>
+                ),
+            });
+        }
+
+        if (Helper.isAdmin(user) && !this.props.hideCompanyColumn) {
             columns.unshift({
                 field: 'company',
                 headerName: strings.COMPANY,
                 flex: 1,
-                // valueGetter: (params) => (
-                //     params.value
-                // ),
                 renderCell: (params) => (
                     <Link href={`/company?c=${params.value._id}`} className='cell-company'>
                         <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
@@ -254,28 +253,32 @@ class BookingList extends Component {
     };
 
     fetch = () => {
-        const { companies, statuses, filter, page, pageSize } = this.state;
+        const { companies, statuses, filter, car, page, pageSize } = this.state;
 
-        this.setState({ loading: true });
-        BookingService.getBookings(companies, statuses, filter, page, pageSize)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
-                    this.setState({ loading: false });
+        if (companies.length > 0) {
+            this.setState({ loading: true });
 
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                    }
+            BookingService.getBookings(companies, statuses, filter, car, page, pageSize)
+                .then(data => {
+                    // console.log('!');
+                    const _data = data.length > 0 ? data[0] : {};
+                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                    this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
+                        this.setState({ loading: false });
+
+                        if (this.props.onLoad) {
+                            this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                        }
+                    });
+                })
+                .catch((err) => {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 });
-            })
-            .catch((err) => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-            });
+        }
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, statuses, filter, reload } = prevState;
+        const { companies, statuses, filter, reload, car } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -285,12 +288,16 @@ class BookingList extends Component {
             return { statuses: Helper.clone(nextProps.statuses) };
         }
 
-        if (nextProps.filter && !Helper.filterEqual(filter, nextProps.filter)) {
+        if ((nextProps.filter || (filter && !nextProps.filter)) && !Helper.filterEqual(filter, nextProps.filter)) {
             return { filter: Helper.clone(nextProps.filter) };
         }
 
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
+        }
+
+        if (nextProps.car && car !== nextProps.car) {
+            return { car: nextProps.car };
         }
 
         return null;
@@ -305,11 +312,15 @@ class BookingList extends Component {
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
-        if (!Helper.filterEqual(this.state.filter, prevState.filter)) {
+        if ((prevState.filter && !this.state.filter) || !Helper.filterEqual(this.state.filter, prevState.filter)) {
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
         if (this.state.reload && !prevState.reload) {
+            return this.setState({ page: 0 }, () => this.fetch());
+        }
+
+        if (this.state.car !== prevState.car) {
             return this.setState({ page: 0 }, () => this.fetch());
         }
     }
@@ -318,7 +329,7 @@ class BookingList extends Component {
 
         if (this.props.user) {
             const columns = this.getColumns(this.props.user);
-            this.setState({ user: this.props.user, columns });
+            this.setState({ user: this.props.user, columns }, () => this.fetch());
         }
     }
 
