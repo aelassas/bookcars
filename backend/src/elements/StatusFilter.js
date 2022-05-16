@@ -30,10 +30,8 @@ class StatusFilter extends Component {
         if (e.currentTarget.checked) {
             checkedStatuses.push(status);
         } else {
-            const index = checkedStatuses.findIndex(s => s.value === status);
+            const index = checkedStatuses.findIndex(s => s === status);
             checkedStatuses.splice(index, 1);
-            console.log(index)
-            console.log(checkedStatuses)
         }
 
         this.setState({ checkedStatuses }, () => {
@@ -58,9 +56,10 @@ class StatusFilter extends Component {
                 checkbox.checked = true;
             });
 
-            this.setState({ allStatusesChecked: true, checkedStatuses: this.state.statuses }, () => {
+            const statuses = this.state.statuses.map(status => status.value);
+            this.setState({ allStatusesChecked: true, checkedStatuses: statuses }, () => {
                 if (this.props.onChange) {
-                    this.props.onChange(this.state.statuses);
+                    this.props.onChange(statuses);
                 }
             });
         }
@@ -69,7 +68,7 @@ class StatusFilter extends Component {
     componentDidMount() {
         const statuses = Helper.getBookingStatuses();
 
-        this.setState({ statuses, checkedStatuses: Helper.clone(statuses) }, () => {
+        this.setState({ statuses, checkedStatuses: Helper.clone(statuses.map(status => status.value)) }, () => {
             const checkboxes = document.querySelectorAll('.status-checkbox');
 
             checkboxes.forEach(checkbox => {
@@ -77,7 +76,7 @@ class StatusFilter extends Component {
             });
 
             if (this.props.onLoad) {
-                this.props.onLoad(statuses);
+                this.props.onLoad(this.state.checkedStatuses);
             }
         });
     }

@@ -320,11 +320,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         const options = 'i';
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
-
-        const companies = [];
-        for (const id of req.body) {
-            companies.push(mongoose.Types.ObjectId(id));
-        }
+        const companies = req.body.map(id => mongoose.Types.ObjectId(id));
 
         const cars = await Car.aggregate([
             { $match: { name: { $regex: keyword, $options: options }, company: { $in: companies } } },

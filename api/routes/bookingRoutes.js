@@ -76,19 +76,28 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
 });
 
 routes.route(routeNames.updateStatus).post(authJwt.verifyToken, (req, res) => {
-    const { ids, status } = req.body;
+    try {
+        const { ids: _ids, status } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
+        const bulk = Booking.collection.initializeOrderedBulkOp();
 
-    // TODO
-    return res.sendStatus(200);
+        bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } });
+        bulk.execute((err, response) => {
+            if (err) {
+                console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err);
+                return res.status(400).send(strings.DB_ERROR + err);
+            }
+
+            return res.sendStatus(200);
+        });
+    } catch (err) {
+        console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 routes.route(routeNames.delete).post(authJwt.verifyToken, (req, res) => {
     try {
-        const ids = [];
-
-        for (const id of req.body) {
-            ids.push(mongoose.Types.ObjectId(id));
-        }
+        const ids = req.body.map(id => mongoose.Types.ObjectId(id));
 
         Booking.deleteMany({ _id: { $in: ids } }, (err, response) => {
             if (err) {
@@ -148,91 +157,147 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.getBookings).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) => {
     const page = parseInt(req.params.page) + 1;
     const size = parseInt(req.params.size);
-    const companies = req.body.companies;
+    const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id));
     const statuses = req.body.statuses;
-    const from = (req.body.filter && req.body.filter.from) || null;
-    const to = (req.body.filter && req.body.filter.to) || null;
+    const from = (req.body.filter && req.body.filter.from && new Date(req.body.filter.from)) || null;
+    const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null;
     const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
     const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null;
 
-    const now = new Date();
+    const $match = {
+        $and: [
+            { $expr: { $in: ['$company', companies] } },
+            { $expr: { $in: ['$status', statuses] } },
+        ]
+    };
+    if (from) $match.$and.push({ $expr: { $gte: ['$from', from] } }); // $from > from
+    if (to) $match.$and.push({ $expr: { $lte: ['$to', to] } }); // $to < to
+    if (pickupLocation) $match.$and.push({ $expr: { $eq: ['$pickupLocation', mongoose.Types.ObjectId(pickupLocation)] } });
+    if (dropOffLocation) $match.$and.push({ $expr: { $eq: ['$dropOffLocation', mongoose.Types.ObjectId(dropOffLocation)] } });
 
-    const getDate = (date) => {
-        return new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+    const booking = {
+        company: '62794b5121c117948f2a9b2e',
+        car: '627b577c8392253f86eb25a5',
+        driver: '6280f28a864c93af021f397d',
+        pickupLocation: '6273e2f9f036f83c05e47b0d',
+        dropOffLocation: '6273e2f9f036f83c05e47b0d',
+        from: '2022-05-15T23:00:00.000Z',
+        to: '2022-05-17T23:00:00.000Z',
+        status: 'pending',
+        cancellation: false,
+        amendments: false,
+        theftProtection: false,
+        collisionDamageWaiver: false,
+        fullInsurance: false,
+        additionalDriver: false,
+        price: 560
     };
 
-    const addDays = (date, days) => {
-        const d = new Date(date.valueOf());
-        d.setDate(d.getDate() + days);
-        return d;
-    };
+    // for (let i = 0; i < 79; i++) {
+    //     const booking = new Booking({
+    //         company: i % 2 === 0 ? '62794b5121c117948f2a9b2e' : i % 3 === 0 ? '62756aae039367a61924c447' : '626e92c69acb065aa8e00459',
+    //         car: i % 2 === 0 ? '627b577c8392253f86eb25a5' : i % 3 === 0 ? '627d296374bea00da87fa67f' : '627fce9e664271c94428aafd',
+    //         driver: '6280f28a864c93af021f397d',
+    //         pickupLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
+    //         dropOffLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
+    //         from: '2022-05-15T23:00:00.000Z',
+    //         to: '2022-05-17T23:00:00.000Z',
+    //         status: i % 2 === 0 ? 'pending' : i % 3 === 0 ? 'paid' : 'reserved',
+    //         cancellation: false,
+    //         amendments: false,
+    //         theftProtection: false,
+    //         collisionDamageWaiver: false,
+    //         fullInsurance: false,
+    //         additionalDriver: false,
+    //         price: 1777
+    //     });
+    //     await booking.save();
+    // }
 
-    const getBookings = (page, size) => {
-        const bookings = [];
-        for (let i = (page - 1) * size; i < page * size; i++) {
-            const booking = {
-                _id: i,
-                company: i % 2 === 0 ?
-                    {
-                        _id: '62794b5121c117948f2a9b2e',
-                        fullName: 'dollar',
-                        avatar: '62794b5121c117948f2a9b2e_1652116388565.png'
-                    } :
-                    {
-                        _id: '626e92c69acb065aa8e00459',
-                        fullName: 'Hertz',
-                        avatar: '626e92c69acb065aa8e00459_1652270308783.png'
-                    },
-                car: i % 2 === 0 ?
-                    {
-                        _id: '627b577c8392253f86eb25a5',
-                        name: 'Ford Fiesta'
-                    } :
-                    {
-                        _id: '627d296374bea00da87fa67f',
-                        name: 'Dacia Logan'
-                    },
-                driver: { _id: '6266dcd1680298fa6ae8c75c', fullName: 'Akram El Assas' },
-                pickupLocation: i % 2 === 0 ?
-                    {
-                        _id: '6273e2d9f036f83c05e47b05',
-                        name: 'Rabat'
-                    } :
-                    {
-                        _id: '6273e2f9f036f83c05e47b0d',
-                        name: 'Casablanca'
-                    },
-                dropOffLocation: i % 2 === 0 ?
-                    {
-                        _id: '6273e2d9f036f83c05e47b05',
-                        name: 'Rabat'
-                    } :
-                    {
-                        _id: '6273e2f9f036f83c05e47b0d',
-                        name: 'Casablanca'
-                    },
-                from: i % 2 === 0 ? getDate(now) : getDate(addDays(now, 3)),
-                to: i % 2 === 0 ? getDate(addDays(now, 5)) : getDate(addDays(now, 19)),
-                status: i % 2 === 0 ? Env.BOOKING_STATUS.PAID : Env.BOOKING_STATUS.RESERVED,
-                cancellation: i % 2 === 0 ? -1 : 1,
-                amendments: i % 2 === 0 ? -1 : 2,
-                theftProtection: i % 2 === 0 ? -1 : 3,
-                collisionDamageWaiver: i % 2 === 0 ? -1 : 4,
-                fullInsurance: i % 2 === 0 ? -1 : 5,
-                additionalDriver: i % 2 === 0 ? -1 : 6,
-                price: i % 2 === 0 ? 1500 : 1000
-            };
+    // Booking.deleteMany({ price: 1777 }, (err, response) => {
+    //     if (err) {
+    //         console.error(strings.DB_ERROR + err);
+    //     }
+    // });
 
-            bookings.push(booking);
+    const data = await Booking.aggregate([
+        {
+            $match
+        },
+        {
+            $lookup: {
+                from: 'User',
+                let: { companyId: '$company' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ['$_id', '$$companyId'] }
+                        }
+                    }
+                ],
+                as: 'company'
+            }
+        },
+        { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+        {
+            $lookup: {
+                from: 'Car',
+                let: { carId: '$car' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ['$_id', '$$carId'] }
+                        }
+                    }
+                ],
+                as: 'car'
+            }
+        },
+        { $unwind: { path: '$car', preserveNullAndEmptyArrays: false } },
+        {
+            $lookup: {
+                from: 'User',
+                let: { driverId: '$driver' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ['$_id', '$$driverId'] }
+                        }
+                    }
+                ],
+                as: 'driver'
+            }
+        },
+        { $unwind: { path: '$driver', preserveNullAndEmptyArrays: false } },
+        {
+            $facet: {
+                resultData: [
+                    { $sort: { createdAt: -1 } },
+                    { $skip: ((page - 1) * size) },
+                    { $limit: size },
+                ],
+                pageInfo: [
+                    {
+                        $count: 'totalRecords'
+                    }
+                ]
+            }
         }
-        return bookings;
-    };
+    ]);
 
-    const rows = getBookings(page, size);
-    return res.json({ rows, count: 100 });
+    if (data.length > 0) {
+        const bookings = data[0].resultData;
+
+        for (const booking of bookings) {
+            const { _id, fullName, avatar } = booking.company;
+            booking.company = { _id, fullName, avatar };
+        }
+    }
+
+    return res.json(data);
 });
 
 export default routes;

@@ -12,7 +12,6 @@ class CompanyFilter extends Component {
         super(props);
         this.state = {
             companies: [],
-            companyIds: [],
             checkedCompanies: [],
             allCompaniesChecked: true
         }
@@ -60,27 +59,24 @@ class CompanyFilter extends Component {
                 checkbox.checked = true;
             });
 
-            this.setState({ allCompaniesChecked: true, checkedCompanies: this.state.companyIds }, () => {
+            const { companies } = this.state, companyIds = this.flattenCompanies(companies);
+            this.setState({ allCompaniesChecked: true, checkedCompanies: companyIds }, () => {
                 if (this.props.onChange) {
-                    this.props.onChange(this.state.companyIds);
+                    this.props.onChange(companyIds);
                 }
             });
         }
     };
 
-    flattenCompanies = (companies) => {
-        const result = [];
-        for (const { _id } of companies) {
-            result.push(_id);
-        }
-        return result;
-    };
+    flattenCompanies = (companies) => (
+        companies.map(company => company._id)
+    )
 
     componentDidMount() {
         CompanyService.getCompanies()
             .then(companies => {
                 const companyIds = this.flattenCompanies(companies);
-                this.setState({ companies, companyIds, checkedCompanies: companyIds }, () => {
+                this.setState({ companies, checkedCompanies: companyIds }, () => {
                     const { checkedCompanies } = this.state;
                     const checkboxes = document.querySelectorAll('.company-checkbox');
 

@@ -211,15 +211,37 @@ export default class Booking extends Component {
             });
     };
 
-    error = () => {
+    error = (hideLoading) => {
         toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-        this.setState({ loading: false });
+        if (hideLoading) this.setState({ loading: false });
+    };
+
+    handleDelete = () => {
+        this.setState({ openDeleteDialog: true });
+    };
+
+    handleCancelDelete = () => {
+        this.setState({ openDeleteDialog: false });
+    };
+
+    handleConfirmDelete = () => {
+        const { booking } = this.state;
+
+        this.setState({ loading: true, openDeleteDialog: false }, () => {
+            BookingService.delete([booking._id]).then(status => {
+                if (status === 200) {
+                    window.location.href = '/';
+                } else {
+                    this.error(true);
+                }
+            }).catch(() => {
+                this.error(true);
+            });
+        });
     };
 
     handleSubmit = (e) => {
         e.preventDefault();
-
-        this.setState({ loading: true });
 
         const {
             booking,
@@ -262,7 +284,6 @@ export default class Booking extends Component {
         BookingService.update(data)
             .then(status => {
                 if (status === 200) {
-                    this.setState({ loading: false });
                     toast(commonStrings.UPDATED, { type: 'info' });
                 } else {
                     this.error();
@@ -271,32 +292,6 @@ export default class Booking extends Component {
             .catch((err) => {
                 this.error();
             });
-    };
-
-    handleDelete= () => {
-        this.setState({ openDeleteDialog: true });
-    };
-
-    handleCancelDelete = () => {
-        this.setState({ openDeleteDialog: false });
-    };
-
-    handleConfirmDelete = () => {
-        const { booking } = this.state;
-
-        this.setState({ loading: true, openDeleteDialog: false }, () => {
-            BookingService.delete([booking._id]).then(status => {
-                if (status === 200) {
-                    window.location.href = '/';
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ loading: false });
-                }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ loading: false });
-            });
-        });
     };
 
     onLoad = (user) => {

@@ -34,21 +34,22 @@ class BookingList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined,
+            user: null,
             page: 0,
             pageSize: Env.BOOKINGS_PAGE_SIZE,
             columns: [],
             rows: [],
             rowCount: 0,
             loading: true,
-            selectedId: undefined,
+            selectedId: null,
             selectedIds: [],
             openUpdateDialog: false,
             openDeleteDialog: false,
             status: '',
             companies: [],
             statuses: Helper.getBookingStatuses(),
-            filter: undefined
+            filter: null,
+            reload: false
         };
     }
 
@@ -222,6 +223,7 @@ class BookingList extends Component {
             })
             .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                this.setState({ openUpdateDialog: false });
             });
     };
 
@@ -257,15 +259,23 @@ class BookingList extends Component {
         this.setState({ loading: true });
         BookingService.getBookings(companies, statuses, filter, page, pageSize)
             .then(data => {
-                this.setState({ rows: data.rows, rowCount: data.count }, () => this.setState({ loading: false }));
+                const _data = data.length > 0 ? data[0] : {};
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
+                    this.setState({ loading: false });
+
+                    if (this.props.onLoad) {
+                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    }
+                });
             })
-            .catch(() => {
+            .catch((err) => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, statuses, filter } = prevState;
+        const { companies, statuses, filter, reload } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -279,20 +289,28 @@ class BookingList extends Component {
             return { filter: Helper.clone(nextProps.filter) };
         }
 
+        if (reload !== nextProps.reload) {
+            return { reload: nextProps.reload };
+        }
+
         return null;
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (!Helper.arrayEqual(this.state.companies, prevState.companies)) {
-            this.setState({ page: 0 }, () => this.fetch());
+            return this.setState({ page: 0 }, () => this.fetch());
         }
 
         if (!Helper.statusArrayEqual(this.state.statuses, prevState.statuses)) {
-            this.setState({ page: 0 }, () => this.fetch());
+            return this.setState({ page: 0 }, () => this.fetch());
         }
 
         if (!Helper.filterEqual(this.state.filter, prevState.filter)) {
-            this.setState({ page: 0 }, () => this.fetch());
+            return this.setState({ page: 0 }, () => this.fetch());
+        }
+
+        if (this.state.reload && !prevState.reload) {
+            return this.setState({ page: 0 }, () => this.fetch());
         }
     }
 

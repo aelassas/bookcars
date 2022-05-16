@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
+import Helper from '../common/Helper';
 import { strings } from '../lang/bookings';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
@@ -12,19 +13,21 @@ import {
 } from '@mui/icons-material';
 
 import '../assets/css/bookings.css';
-import Helper from '../common/Helper';
+
 
 export default class Bookings extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined,
+            user: null,
             leftPanel: false,
             companies: [],
-            statuses: Helper.getBookingStatuses(),
-            filter: undefined,
-            loading: true
+            statuses: Helper.getBookingStatuses().map(status => status.value),
+            filter: null,
+            loading: true,
+            admin: false,
+            reload: false
         };
     }
 
@@ -33,26 +36,31 @@ export default class Bookings extends Component {
     };
 
     handleCompanyFilterChange = (companies) => {
-        this.setState({ companies });
+        this.setState({ companies, reload: true });
     };
 
     handleStatusFilterChange = (statuses) => {
-        this.setState({ statuses });
+        this.setState({ statuses, reload: true });
     };
 
     handleBookingFilterSubmit = (filter) => {
-        this.setState({ filter });
+        this.setState({ filter, reload: true });
     };
 
+    handleBookingListLoad = () => {
+        this.setState({ reload: false });
+    }
+
     onLoad = (user) => {
-        this.setState({ user });
+        const admin = Helper.isAdmin(user);
+        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin });
     };
 
     componentDidMount() {
     }
 
     render() {
-        const { user, companies, statuses, filter, leftPanel } = this.state;
+        const { user, admin, companies, statuses, filter, leftPanel, reload } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -69,11 +77,11 @@ export default class Bookings extends Component {
                                     {strings.NEW_BOOKING}
                                 </Button>
                             )}
-                            <CompanyFilter
+                            {admin && <CompanyFilter
                                 onLoad={this.handleCompanyFilterLoad}
                                 onChange={this.handleCompanyFilterChange}
                                 className='cl-company-filter'
-                            />
+                            />}
                             {leftPanel && (
                                 <div>
                                     <StatusFilter
@@ -89,12 +97,14 @@ export default class Bookings extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
+                                width='100%'
+                                height='100%'
                                 user={user}
                                 companies={companies}
                                 statuses={statuses}
                                 filter={filter}
-                                width='100%'
-                                height='100%'
+                                reload={reload}
+                                onLoad={this.handleBookingListLoad}
                             />
                         </div>
                     </div>}
