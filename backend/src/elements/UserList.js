@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/booking-list';
+import { strings } from '../lang/user-list';
 import Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
-import StatusList from './StatusList';
+import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
 import {
@@ -20,14 +20,17 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button
+    Button,
+    Avatar
 } from '@mui/material';
 import {
     Edit as EditIcon,
-    Delete as DeleteIcon
+    Delete as DeleteIcon,
+    AccountCircle,
+    Block as BlacklistIcon
 } from '@mui/icons-material';
 
-import '../assets/css/booking-list.css';
+import '../assets/css/user-list.css';
 
 class BookingList extends Component {
 
@@ -36,72 +39,64 @@ class BookingList extends Component {
         this.state = {
             user: null,
             page: 0,
-            pageSize: Env.BOOKINGS_PAGE_SIZE,
+            pageSize: Env.PAGE_SIZE,
             columns: [],
             rows: [],
             rowCount: 0,
             loading: true,
             selectedId: null,
             selectedIds: [],
-            openUpdateDialog: false,
+            openBlacklistDialog: false,
             openDeleteDialog: false,
-            status: '',
-            companies: props.companies,
-            statuses: props.statuses,
-            filter: props.filter,
-            reload: props.reload,
-            car: props.car
+            types: props.types,
+            keyword: props.keyword
         };
     }
 
-    getDate = (date) => {
-        const d = new Date(date);
-        return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`;
-    };
-
-    getColumns = (user) => {
+    getColumns = () => {
         const columns = [
             {
-                field: 'driver',
-                headerName: strings.DRIVER,
+                field: 'fullName',
+                headerName: commonStrings.USER,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/user?u=${params.value._id}`}>{params.value.fullName}</Link>
-                ),
-            },
-            {
-                field: 'from',
-                headerName: commonStrings.FROM,
-                flex: 1,
-                valueGetter: (params) => (
-                    this.getDate(params.value)
-                ),
-            },
-            {
-                field: 'to',
-                headerName: commonStrings.TO,
-                flex: 1,
-                valueGetter: (params) => (
-                    this.getDate(params.value)
-                ),
-            },
-            {
-                field: 'price',
-                headerName: strings.PRICE,
-                flex: 1,
-                valueGetter: (params) => (
-                    `${params.value} ${strings.CURRENCY}`
-                ),
-                renderCell: (params) => (
-                    <span className='bp'>{params.value}</span>
+                    <Link href={`/user?u=${params.row._id}`} className='us-user'>
+                        <span className='us-avatar'>
+                            {params.row.avatar ?
+                                params.row.type === Env.RECORD_TYPE.COMPANY ?
+                                    <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                                        alt={params.row.fullName}
+                                        style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                    />
+                                    :
+                                    < Avatar
+                                        src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                                        className='avatar-small'
+                                    />
+                                :
+                                <AccountCircle className='avatar-small' color='disabled' />
+                            }
+                        </span>
+                        <span>{params.value}</span>
+                    </Link>
                 )
             },
             {
-                field: 'status',
-                headerName: strings.STATUS,
+                field: 'email',
+                headerName: commonStrings.EMAIL,
+                flex: 1
+            },
+            {
+                field: 'phone',
+                headerName: commonStrings.PHONE,
+                flex: 1
+            },
+            {
+                field: 'type',
+                headerName: commonStrings.TYPE,
                 flex: 1,
                 renderCell: (params) => (
-                    <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>
+                    <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>
                 ),
             },
             {
@@ -118,7 +113,7 @@ class BookingList extends Component {
                     return (
                         <div>
                             <Tooltip title={commonStrings.UPDATE}>
-                                <IconButton href={`booking?b=${params.row._id}`}>
+                                <IconButton href={`update-user?u=${params.row._id}`}>
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>
@@ -138,11 +133,11 @@ class BookingList extends Component {
                     return (
                         selectedIds.length > 0 ?
                             <div>
-                                <Tooltip title={strings.UPDATE_SELECTION}>
+                                <Tooltip title={strings.BLACKLIST_SELECTION}>
                                     <IconButton onClick={() => {
-                                        this.setState({ openUpdateDialog: true });
+                                        this.setState({ openBlacklistDialog: true });
                                     }}>
-                                        <EditIcon />
+                                        <BlacklistIcon />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title={strings.DELETE_SELECTION}>
@@ -161,49 +156,18 @@ class BookingList extends Component {
             }
         ];
 
-        if (this.props.hideDates) columns.splice(1, 2);
-
-        if (!this.props.hideCarColumn) {
-            columns.unshift({
-                field: 'car',
-                headerName: strings.CAR,
-                flex: 1,
-                renderCell: (params) => (
-                    <Link href={`/car?c=${params.value._id}`}>{params.value.name}</Link>
-                ),
-            });
-        }
-
-        if (Helper.isAdmin(user) && !this.props.hideCompanyColumn) {
-            columns.unshift({
-                field: 'company',
-                headerName: strings.COMPANY,
-                flex: 1,
-                renderCell: (params) => (
-                    <Link href={`/company?c=${params.value._id}`} className='cell-company'>
-                        <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                            alt={params.value.fullName}
-                            style={{
-                                width: Env.COMPANY_IMAGE_WIDTH,
-                                // height: Env.COMPANY_IMAGE_HEIGHT
-                            }} />
-                    </Link>
-                ),
-            });
+        if (this.props.hideTypeColumn) {
+            columns.splice(3, 1);
         }
 
         return columns;
     }
 
-    handleCancelUpdate = () => {
-        this.setState({ openUpdateDialog: false });
+    handleCancelBlacklist = () => {
+        this.setState({ openBlacklistDialog: false });
     };
 
-    handleStatusChange = (status) => {
-        this.setState({ status });
-    };
-
-    handleConfirmUpdate = () => {
+    handleConfirmBlacklist = () => {
         const { selectedIds, status, rows } = this.state;
         const data = { ids: selectedIds, status };
 
@@ -220,11 +184,11 @@ class BookingList extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
 
-                this.setState({ openUpdateDialog: false });
+                this.setState({ openBlacklistDialog: false });
             })
             .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ openUpdateDialog: false });
+                this.setState({ openBlacklistDialog: false });
             });
     };
 
@@ -255,74 +219,50 @@ class BookingList extends Component {
     };
 
     fetch = () => {
-        const { companies, statuses, filter, car, page, pageSize } = this.state;
+        const { types, keyword, page, pageSize } = this.state;
 
-        if (companies.length > 0) {
-            this.setState({ loading: true });
+        this.setState({ loading: true });
 
-            BookingService.getBookings({ companies, statuses, filter, car }, page, pageSize)
-                .then(data => {
-                    // console.log('!');
-                    const _data = data.length > 0 ? data[0] : {};
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                    this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
-                        this.setState({ loading: false });
+        UserService.getUsers(types, keyword, page + 1, pageSize)
+            .then(data => {
+                console.log('!');
+                const _data = data.length > 0 ? data[0] : {};
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
+                    this.setState({ loading: false });
 
-                        if (this.props.onLoad) {
-                            this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                        }
-                    });
-                })
-                .catch((err) => {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    if (this.props.onLoad) {
+                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    }
                 });
-        }
+            })
+            .catch((err) => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, statuses, filter, reload, car } = prevState;
+        const { types, keyword } = prevState;
 
-        if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
-            return { companies: Helper.clone(nextProps.companies) };
+        if (nextProps.types && !Helper.arrayEqual(types, nextProps.types)) {
+            return { types: Helper.clone(nextProps.types) };
         }
 
-        if (nextProps.statuses && !Helper.arrayEqual(statuses, nextProps.statuses)) {
-            return { statuses: Helper.clone(nextProps.statuses) };
-        }
-
-        if ((nextProps.filter || (filter && !nextProps.filter)) && !Helper.filterEqual(filter, nextProps.filter)) {
-            return { filter: Helper.clone(nextProps.filter) };
-        }
-
-        if (reload !== nextProps.reload) {
-            return { reload: nextProps.reload };
-        }
-
-        if (nextProps.car && car !== nextProps.car) {
-            return { car: nextProps.car };
+        if (keyword !== nextProps.keyword) {
+            return { keyword: nextProps.keyword };
         }
 
         return null;
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (!Helper.arrayEqual(this.state.companies, prevState.companies)) {
+        if (!Helper.arrayEqual(this.state.types, prevState.types)) {
+            console.log('1')
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
-        if (!Helper.arrayEqual(this.state.statuses, prevState.statuses)) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-
-        if ((prevState.filter && !this.state.filter) || !Helper.filterEqual(this.state.filter, prevState.filter)) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-
-        if (this.state.reload && !prevState.reload) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-
-        if (this.state.car !== prevState.car) {
+        if (this.state.keyword !== prevState.keyword) {
+            console.log('2')
             return this.setState({ page: 0 }, () => this.fetch());
         }
     }
@@ -330,7 +270,7 @@ class BookingList extends Component {
     componentDidMount() {
 
         if (this.props.user) {
-            const columns = this.getColumns(this.props.user);
+            const columns = this.getColumns();
             this.setState({ user: this.props.user, columns }, () => this.fetch());
         }
     }
@@ -345,12 +285,12 @@ class BookingList extends Component {
             page,
             pageSize,
             openDeleteDialog,
-            openUpdateDialog,
+            openBlacklistDialog,
             selectedIds,
         } = this.state;
 
         return (
-            <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
+            <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='us-list' >
                 {user && columns.length > 0 &&
                     <DataGrid
                         checkboxSelection={this.props.checkboxSelection}
@@ -359,7 +299,7 @@ class BookingList extends Component {
                         rows={rows}
                         rowCount={rowCount}
                         // loading={loading}
-                        rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
+                        rowsPerPageOptions={[Env.PAGE_SIZE, 50, 100]}
                         pagination
                         page={page}
                         pageSize={pageSize}
@@ -376,18 +316,15 @@ class BookingList extends Component {
                 <Dialog
                     disableEscapeKeyDown
                     maxWidth="xs"
-                    open={openUpdateDialog}
+                    open={openBlacklistDialog}
                 >
-                    <DialogTitle className='dialog-header'>{strings.UPDATE_STATUS}</DialogTitle>
-                    <DialogContent className='bs-update-status'>
-                        <StatusList
-                            label={strings.NEW_STATUS}
-                            onChange={this.handleStatusChange}
-                        />
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent className='us-blacklist-user'>
+                        {strings.BLACKLIST_USERS}
                     </DialogContent>
                     <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
+                        <Button onClick={this.handleCancelBlacklist} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={this.handleConfirmBlacklist} variant='contained' className='btn-primary'>{commonStrings.CONFIRM}</Button>
                     </DialogActions>
                 </Dialog>
 
@@ -397,7 +334,7 @@ class BookingList extends Component {
                     open={openDeleteDialog}
                 >
                     <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
+                    <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_USER : strings.DELETE_USERS}</DialogContent>
                     <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>

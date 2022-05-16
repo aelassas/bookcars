@@ -1,0 +1,49 @@
+div.us-list {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+div.us-list a.cell-company {
+    display: flex;
+    align-items: center;
+}
+
+div.us-list span.bs {
+    padding: 3px;
+    width: 80px;
+    text-align: center;
+    color: #fff;
+}
+
+div.us-list span.us-admin {
+    background: #121212;
+}
+
+div.us-list span.us-company {
+    background: #e98003;
+}
+
+div.us-list span.us-user {
+    background: #22bba7;
+}
+
+div.us-list span.bp {
+    font-weight: 600;
+}
+
+div.us-list a.us-user {
+    display: flex;
+    align-items: center;
+}
+
+div.us-list span.us-avatar {
+    margin-right: 5px;
+}
+
+div.us-blacklist-user {
+    width: 444px;
+    height: 70px;
+    overflow: hidden;
+}

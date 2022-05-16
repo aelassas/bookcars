@@ -519,21 +519,21 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
 });
 
 // Search users route
-routes.route(routeNames.getUsers).get(authJwt.verifyToken, async (req, res) => {
+routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => {
 
     try {
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
         const page = parseInt(req.params.page);
-        const pageSize = parseInt(req.params.pageSize);
-        const type = Env.USER_TYPE.USER;
+        const size = parseInt(req.params.size);
+        const types = req.body;
 
         const users = await User.aggregate([
             {
                 $match: {
                     $and: [
                         {
-                            type: { $eq: type }
+                            type: { $in: types }
                         },
                         {
                             fullName: { $regex: keyword, $options: options }
@@ -541,10 +541,24 @@ routes.route(routeNames.getUsers).get(authJwt.verifyToken, async (req, res) => {
                     ]
                 }
             },
-            { $sort: { fullName: 1 } },
-            { $skip: ((page - 1) * pageSize) },
-            { $limit: pageSize }
-        ]);
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { fullName: 1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
+            }
+            // { $sort: { fullName: 1 } },
+            // { $skip: ((page - 1) * pageSize) },
+            // { $limit: pageSize }
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
         res.json(users);
     } catch (err) {

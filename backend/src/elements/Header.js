@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings } from '../lang/header';
+// import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
 import MessageService from '../services/MessageService';
@@ -60,7 +61,7 @@ export default function Header(props) {
     const [init, setInit] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
+    // const [isAdmin, setIsAdmin] = useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -227,7 +228,7 @@ export default function Header(props) {
                         MessageService.getMessageCounter(props.user._id)
                             .then(messageCounter => {
                                 setIsSignedIn(true);
-                                setIsAdmin(props.user.type === 'admin');
+                                // setIsAdmin(Helper.isAdmin(props.user));
                                 setNotificationsCount(notificationCounter.count);
                                 setMessagesCount(messageCounter.count);
                                 setIsLoading(false);
@@ -349,10 +350,10 @@ export default function Header(props) {
                                     <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.BOOKINGS} />
                                 </ListItemLink> */}
-                                {isAdmin && <ListItemLink href="/users">
+                                <ListItemLink href="/users">
                                     <ListItemIcon>{<UsersIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.USERS} />
-                                </ListItemLink>}
+                                </ListItemLink>
                                 <ListItemLink href="/about">
                                     <ListItemIcon>{<AboutIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.ABOUT} />

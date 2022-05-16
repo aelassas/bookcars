@@ -31,11 +31,11 @@ class DriverList extends Component {
 
     fetch = (onFetch) => {
         const { drivers, keyword, page } = this.state;
-        
+
         this.setState({ loading: true });
         UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = this.getDrivers(data);
+                const _data = data.length > 0 ? this.getDrivers(data[0].resultData) : [];
                 const _drivers = page === 1 ? _data : [...drivers, ..._data];
                 this.setState({ drivers: _drivers, loading: false, fetch: data.length > 0 }, () => {
                     if (onFetch) {

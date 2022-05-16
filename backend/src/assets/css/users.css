@@ -1,0 +1,56 @@
+div.users {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+/* Device width is lower than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.users div.col-1 {
+        display: none;
+    }
+
+    div.users div.col-2 {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.users div.col-1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 300px;
+        padding: 20px 0 0 12px;
+        background: #fefefe;
+    }
+
+    div.users div.col-1 .cl-user-filter {
+        margin-left: 5px;
+    }
+
+    div.users div.col-1 .cl-new-user {
+        width: 265px;
+        margin-left: 5px;
+    }
+
+    div.users div.col-1 .cl-user-type-filter {
+        margin-bottom: 15px;
+    }
+
+    div.users div.col-2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 300px;
+    }
+
+}

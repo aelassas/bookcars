@@ -47,6 +47,12 @@ export const strings = new LocalizedStrings({
         TO: 'Fin',
         OPTIONAL: 'Paramètres optionnels',
         AND: 'et',
+        RECORD_TYPE_ADMIN: 'Admin',
+        RECORD_TYPE_COMPANY: 'Société',
+        RECORD_TYPE_USER: 'Conducteur',
+        TYPE: 'Type',
+        CONFIRM: 'Confirmer',
+        USER: 'Utilisateur'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -92,6 +98,12 @@ export const strings = new LocalizedStrings({
         TO: 'To',
         OPTIONAL: 'Optional Parameters',
         AND: 'and',
+        RECORD_TYPE_ADMIN: 'Admin',
+        RECORD_TYPE_COMPANY: 'Company',
+        RECORD_TYPE_USER: 'Driver',
+        TYPE: 'Type',
+        CONFIRM: 'Confirm',
+        USER: 'User'
     }
 });
 

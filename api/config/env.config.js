@@ -1,4 +1,5 @@
 const Env = {
+    DEFAULT_LANGUAGE: 'fr',
     USER_TYPE: {
         ADMIN: 'admin',
         COMPANY: 'company',

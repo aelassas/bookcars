@@ -12,10 +12,9 @@ div.bs-list a.cell-company {
 
 div.bs-list span.bs {
     padding: 3px;
-    width: 75px;
+    width: 80px;
     text-align: center;
     color: #fff;
-    opacity: .85;
 }
 
 div.bs-list span.bs-void {

@@ -126,7 +126,11 @@ export default class UserService {
     }
 
     static getDrivers(keyword, page, size) {
-        return axios.get(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, [Env.RECORD_TYPE.USER], { headers: UserService.authHeader() }).then(res => res.data);
+    }
+
+    static getUsers(types, keyword, page, size) {
+        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, types, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static updateUser(data) {

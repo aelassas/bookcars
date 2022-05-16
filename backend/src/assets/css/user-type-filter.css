@@ -1,4 +1,4 @@
-div.status-filter {
+div.user-type-filter {
     background: #fafafa;
     margin: 10px 10px 0 0;
     padding: 5px;
@@ -6,7 +6,7 @@ div.status-filter {
     font-size: 13px;
 }
 
-div.status-filter ul.status-list {
+div.user-type-filter ul.user-type-list {
     list-style-type: none;
     font-size: 13px;
     margin: 15px 0 0 0;
@@ -14,7 +14,7 @@ div.status-filter ul.status-list {
     display: inline-block;
 }
 
-div.status-filter ul.status-list li {
+div.user-type-filter ul.user-type-list li {
     width: 42%;
     float: left;
     margin-bottom: 12px;
@@ -23,7 +23,7 @@ div.status-filter ul.status-list li {
     clear: none;
 }
 
-div.status-filter ul.status-list li label.bs {
+div.user-type-filter ul.user-type-list li label.bs {
     padding: 3px;
     width: 80px;
     text-align: center;
@@ -40,39 +40,27 @@ div.status-filter ul.status-list li label.bs {
     opacity: 1;
 }
 
-div.status-filter ul.status-list li label.bs:hover {
+div.user-type-filter ul.user-type-list li label.bs:hover {
     opacity: .9;
 }
 
-div.status-filter ul.status-list li label.bs-void {
-    background: #999;
+div.user-type-filter ul.user-type-list li label.bs-admin {
+    background: #121212;
 }
 
-div.status-filter ul.status-list li label.bs-pending {
+div.user-type-filter ul.user-type-list li label.bs-company {
     background: #e98003;
 }
 
-div.status-filter ul.status-list li label.bs-deposit {
+div.user-type-filter ul.user-type-list li label.bs-user {
     background: #22bba7;
 }
 
-div.status-filter ul.status-list li label.bs-paid {
-    background: #77bc23;
-}
-
-div.status-filter ul.status-list li label.bs-reserved {
-    background: #188ace;
-}
-
-div.status-filter ul.status-list li label.bs-cancelled {
-    background: #bc2143;
-}
-
-div.status-filter div.filter-actions {
+div.user-type-filter div.filter-actions {
     text-align: center;
 }
 
-div.status-filter div.filter-actions span.uncheckall {
+div.user-type-filter div.filter-actions span.uncheckall {
     text-decoration: underline;
     cursor: pointer;
     color: #0064C8;
