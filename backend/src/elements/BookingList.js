@@ -161,6 +161,8 @@ class BookingList extends Component {
             }
         ];
 
+        if (this.props.hideDates) columns.splice(1, 2);
+
         if (!this.props.hideCarColumn) {
             columns.unshift({
                 field: 'car',
@@ -351,7 +353,7 @@ class BookingList extends Component {
             <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
                 {user && columns.length > 0 &&
                     <DataGrid
-                        checkboxSelection
+                        checkboxSelection={this.props.checkboxSelection}
                         getRowId={(row) => row._id}
                         columns={columns}
                         rows={rows}

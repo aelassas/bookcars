@@ -334,6 +334,8 @@ export default class Car extends Component {
                                 car={car._id}
                                 hideCompanyColumn={true}
                                 hideCarColumn={true}
+                                hideDates={Env.isMobile()}
+                                checkboxSelection={!Env.isMobile()}
                             />
                         </div>
                     </div>

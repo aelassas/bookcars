@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import Helper from '../common/Helper';
+import Env from '../config/env.config';
 import { strings } from '../lang/bookings';
+import Helper from '../common/Helper';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import StatusFilter from '../elements/StatusFilter';
@@ -107,6 +108,8 @@ export default class Bookings extends Component {
                                 filter={filter}
                                 reload={reload}
                                 onLoad={this.handleBookingListLoad}
+                                hideDates={Env.isMobile()}
+                                checkboxSelection={!Env.isMobile()}
                             />
                         </div>
                     </div>}

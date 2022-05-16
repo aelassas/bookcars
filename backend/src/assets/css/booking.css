@@ -7,18 +7,29 @@ div.booking {
     overflow: auto;
 }
 
+
+div.booking div.col-2 div.col-2-header {
+    text-align: right;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
     div.booking div.col-1 {
         width: 100%;
-        padding-top: 5px;
+        padding: 20px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
     }
 
     div.booking div.col-2 {
         width: 100%;
+        padding: 5px;
+        margin-bottom: 15px;
+    }
+
+    div.booking div.col-2 div.col-2-header {
+        padding-right: 15px;
     }
 }
 
@@ -48,7 +59,6 @@ div.booking {
     }
 
     div.booking div.col-2 div.col-2-header {
-        text-align: right;
         padding-right: 25px;
     }
 }

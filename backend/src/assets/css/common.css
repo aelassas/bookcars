@@ -9,12 +9,6 @@
     padding: 0;
 }
 
-.buttons {
-    float: right;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
 .buttons button {
     margin-right: 15px;
     margin-left: 0 !important;
@@ -172,4 +166,11 @@
     }
 }
 
-@media only screen and (min-width: 960px) {}
+@media only screen and (min-width: 960px) {
+    .buttons {
+        float: right;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+}

@@ -155,10 +155,7 @@ div.car {
 
     div.car div.col-2 {
         width: 100%;
-    }
-
-    div.car div.col-2 .bookings-sec {
-        width: 100%;
+        height: 500px;
     }
 }
 
