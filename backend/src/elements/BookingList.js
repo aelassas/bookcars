@@ -260,7 +260,7 @@ class BookingList extends Component {
         if (companies.length > 0) {
             this.setState({ loading: true });
 
-            BookingService.getBookings(companies, statuses, filter, car, page, pageSize)
+            BookingService.getBookings({ companies, statuses, filter, car }, page, pageSize)
                 .then(data => {
                     // console.log('!');
                     const _data = data.length > 0 ? data[0] : {};
