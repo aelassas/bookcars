@@ -18,16 +18,23 @@ export default class Users extends Component {
             user: null,
             isAdmin: false,
             types: [],
-            keyword: ''
+            keyword: '',
+            reload: false
         };
     }
 
-    handleUserTypeFilterChange = (types) => {
-        this.setState({ types });
+    handleUserListLoad = () => {
+        this.setState({ reload: false });
+    }
+
+    handleUserTypeFilterChange = (newTypes) => {
+        const { types } = this.state;
+        this.setState({ types: newTypes, reload: Helper.arrayEqual(types, newTypes) });
     };
 
-    handleUserFilterSubmit = (keyword) => {
-        this.setState({ keyword });
+    handleUserFilterSubmit = (newKeyword) => {
+        const { keyword } = this.state;
+        this.setState({ keyword: newKeyword, reload: keyword === newKeyword });
     }
 
     onLoad = (user) => {
@@ -39,7 +46,7 @@ export default class Users extends Component {
     }
 
     render() {
-        const { user, isAdmin, types, keyword } = this.state;
+        const { user, isAdmin, types, keyword, reload } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -53,7 +60,6 @@ export default class Users extends Component {
 
                         {isAdmin && <UserTypeFilter
                             onChange={this.handleUserTypeFilterChange}
-                            className='cl-user-type-filter'
                         />
                         }
                         <Button
@@ -75,6 +81,8 @@ export default class Users extends Component {
                             keyword={keyword}
                             checkboxSelection={!Env.isMobile()}
                             hideTypeColumn={!isAdmin}
+                            reload={reload}
+                            onLoad={this.handleUserListLoad}
                         />
                     </div>
                 </div>}

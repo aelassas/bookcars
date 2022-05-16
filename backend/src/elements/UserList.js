@@ -49,11 +49,12 @@ class BookingList extends Component {
             openBlacklistDialog: false,
             openDeleteDialog: false,
             types: props.types,
-            keyword: props.keyword
+            keyword: props.keyword,
+            reload: false
         };
     }
 
-    getColumns = () => {
+    getColumns = (user) => {
         const columns = [
             {
                 field: 'fullName',
@@ -98,8 +99,15 @@ class BookingList extends Component {
                 renderCell: (params) => (
                     <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>
                 ),
-            },
-            {
+            }
+        ];
+
+        if (this.props.hideTypeColumn) {
+            columns.splice(3, 1);
+        }
+
+        if (Helper.isAdmin(user)) {
+            columns.push({
                 field: 'action',
                 headerName: '',
                 sortable: false,
@@ -153,11 +161,7 @@ class BookingList extends Component {
                             : <></>
                     );
                 }
-            }
-        ];
-
-        if (this.props.hideTypeColumn) {
-            columns.splice(3, 1);
+            });
         }
 
         return columns;
@@ -242,7 +246,7 @@ class BookingList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { types, keyword } = prevState;
+        const { types, keyword, reload } = prevState;
 
         if (nextProps.types && !Helper.arrayEqual(types, nextProps.types)) {
             return { types: Helper.clone(nextProps.types) };
@@ -250,6 +254,10 @@ class BookingList extends Component {
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
+        }
+
+        if (reload !== nextProps.reload) {
+            return { reload: nextProps.reload };
         }
 
         return null;
@@ -265,12 +273,17 @@ class BookingList extends Component {
             console.log('2')
             return this.setState({ page: 0 }, () => this.fetch());
         }
+
+        if (this.state.reload && !prevState.reload) {
+            console.log('3')
+            return this.setState({ page: 0 }, () => this.fetch());
+        }
     }
 
     componentDidMount() {
 
         if (this.props.user) {
-            const columns = this.getColumns();
+            const columns = this.getColumns(this.props.user);
             this.setState({ user: this.props.user, columns }, () => this.fetch());
         }
     }

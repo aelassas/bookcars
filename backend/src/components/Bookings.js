@@ -37,17 +37,19 @@ export default class Bookings extends Component {
         this.setState({ companies, leftPanel: true });
     };
 
-    handleCompanyFilterChange = (companies) => {
-        this.setState({ companies });
+    handleCompanyFilterChange = (newCompanies) => {
+        const { companies } = this.state;
+        this.setState({ companies: newCompanies, reload: Helper.arrayEqual(companies, newCompanies) });
     };
 
-    handleStatusFilterChange = (statuses) => {
-        this.setState({ statuses });
+    handleStatusFilterChange = (newStatuses) => {
+        const { statuses } = this.state;
+        this.setState({ statuses: newStatuses, reload: Helper.arrayEqual(statuses, newStatuses) });
     };
 
     handleBookingFilterSubmit = (newFilter) => {
-        const { filter } = this.state, reload = Helper.filterEqual(filter, newFilter);
-        this.setState({ filter: newFilter, reload });
+        const { filter } = this.state;
+        this.setState({ filter: newFilter, reload: Helper.filterEqual(filter, newFilter) });
     };
 
     handleBookingListLoad = () => {
