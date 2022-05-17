@@ -52,7 +52,10 @@ export const strings = new LocalizedStrings({
         RECORD_TYPE_USER: 'Conducteur',
         TYPE: 'Type',
         CONFIRM: 'Confirmer',
-        USER: 'Utilisateur'
+        USER: 'Utilisateur',
+        INFO: 'Information',
+        USER_TYPE_REQUIRED: 'Veuillez renseigner le champ : Type',
+        FIX_ERRORS: 'Veuillez corriger les erreurs.',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -103,7 +106,10 @@ export const strings = new LocalizedStrings({
         RECORD_TYPE_USER: 'Driver',
         TYPE: 'Type',
         CONFIRM: 'Confirm',
-        USER: 'User'
+        USER: 'User',
+        INFO: 'Information',
+        USER_TYPE_REQUIRED: 'Please fill in the field: Type',
+        FIX_ERRORS: 'Please fix errors.'
     }
 });
 

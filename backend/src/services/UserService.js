@@ -189,4 +189,8 @@ export default class UserService {
     static compare(pass, hash) {
         return bcrypt.compare(pass, hash);
     }
+
+    static delete(ids) {
+        return axios.post(`${Env.API_HOST}/api/delete-users`, ids, { headers: UserService.authHeader() }).then(res => res.status);
+    }
 }

@@ -12,8 +12,10 @@ import routeNames from '../config/userRoutes.config.js';
 import strings from '../config/app.config.js';
 import Env from '../config/env.config.js';
 import User from '../schema/User.js';
+import Booking from '../schema/Booking.js';
 import Token from '../schema/Token.js';
 import authJwt from '../middlewares/authJwt.js';
+import mongoose from 'mongoose';
 
 const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE;
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true';
@@ -564,6 +566,28 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
     } catch (err) {
         console.error(strings.DB_ERROR, err);
         res.status(400).send(strings.DB_ERROR + err);
+    }
+});
+
+routes.route(routeNames.delete).post(authJwt.verifyToken, async (req, res) => {
+    try {
+        const ids = req.body.map(id => mongoose.Types.ObjectId(id));
+
+        for (const id of ids) {
+            const user = await User.findByIdAndDelete(id);
+            if (user.avatar) {
+                const avatar = path.join(CDN, user.avatar);
+                if (fs.existsSync(avatar)) {
+                    fs.unlinkSync(avatar);
+                }
+            }
+            await Booking.deleteMany({ driver: id });
+        }
+
+        return res.sendStatus(200);
+    } catch (err) {
+        console.error(`[user.delete]  ${strings.DB_ERROR} ${req.body}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
     }
 });
 

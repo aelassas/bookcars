@@ -62,14 +62,14 @@ export default class Users extends Component {
                             onChange={this.handleUserTypeFilterChange}
                         />
                         }
-                        <Button
+                        {isAdmin && <Button
                             variant="contained"
                             className='btn-primary cl-new-user'
                             size="small"
                             href='/create-user'
                         >
                             {strings.NEW_USER}
-                        </Button>
+                        </Button>}
 
                     </div>
                     <div className='col-2'>

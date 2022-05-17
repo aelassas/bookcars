@@ -3,7 +3,6 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/user-list';
 import Helper from '../common/Helper';
-import BookingService from '../services/BookingService';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
@@ -26,8 +25,7 @@ import {
 import {
     Edit as EditIcon,
     Delete as DeleteIcon,
-    AccountCircle,
-    Block as BlacklistIcon
+    AccountCircle
 } from '@mui/icons-material';
 
 import '../assets/css/user-list.css';
@@ -46,7 +44,6 @@ class BookingList extends Component {
             loading: true,
             selectedId: null,
             selectedIds: [],
-            openBlacklistDialog: false,
             openDeleteDialog: false,
             types: props.types,
             keyword: props.keyword,
@@ -141,13 +138,7 @@ class BookingList extends Component {
                     return (
                         selectedIds.length > 0 ?
                             <div>
-                                <Tooltip title={strings.BLACKLIST_SELECTION}>
-                                    <IconButton onClick={() => {
-                                        this.setState({ openBlacklistDialog: true });
-                                    }}>
-                                        <BlacklistIcon />
-                                    </IconButton>
-                                </Tooltip>
+                                <div style={{ width: 40, display: 'inline-block' }}></div>
                                 <Tooltip title={strings.DELETE_SELECTION}>
                                     <IconButton
                                         onClick={() => {
@@ -167,35 +158,6 @@ class BookingList extends Component {
         return columns;
     }
 
-    handleCancelBlacklist = () => {
-        this.setState({ openBlacklistDialog: false });
-    };
-
-    handleConfirmBlacklist = () => {
-        const { selectedIds, status, rows } = this.state;
-        const data = { ids: selectedIds, status };
-
-        BookingService.updateStatus(data)
-            .then(s => {
-                if (s === 200) {
-                    rows.forEach(row => {
-                        if (selectedIds.includes(row._id)) {
-                            row.status = status;
-                        }
-                    });
-                    this.setState({ rows });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                }
-
-                this.setState({ openBlacklistDialog: false });
-            })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ openBlacklistDialog: false });
-            });
-    };
-
     handleCancelDelete = () => {
         this.setState({ openDeleteDialog: false, selectedId: undefined });
     };
@@ -203,7 +165,7 @@ class BookingList extends Component {
     handleConfirmDelete = () => {
         const { selectedIds, selectedId, rows } = this.state;
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
-        BookingService.delete(ids)
+        UserService.delete(ids)
             .then(status => {
                 if (status === 200) {
                     if (selectedIds.length > 0) {
@@ -298,7 +260,6 @@ class BookingList extends Component {
             page,
             pageSize,
             openDeleteDialog,
-            openBlacklistDialog,
             selectedIds,
         } = this.state;
 
@@ -324,22 +285,9 @@ class BookingList extends Component {
                             NoRowsOverlay: () => ''
                         }}
                         onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
+                        getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
                     />
                 }
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openBlacklistDialog}
-                >
-                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent className='us-blacklist-user'>
-                        {strings.BLACKLIST_USERS}
-                    </DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelBlacklist} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmBlacklist} variant='contained' className='btn-primary'>{commonStrings.CONFIRM}</Button>
-                    </DialogActions>
-                </Dialog>
 
                 <Dialog
                     disableEscapeKeyDown

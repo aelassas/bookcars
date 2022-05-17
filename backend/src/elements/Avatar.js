@@ -27,6 +27,7 @@ import {
 export const Avatar = (props) => {
     const [error, setError] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openTypeDialog, setOpenTypeDialog] = useState(false);
     const [record, setRecord] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const [loading, setIsLoading] = useState(true);
@@ -71,7 +72,8 @@ export const Avatar = (props) => {
 
         reader.onloadend = () => {
             if (props.type === Env.RECORD_TYPE.ADMIN
-                || props.type === Env.RECORD_TYPE.COMPANY) {
+                || props.type === Env.RECORD_TYPE.COMPANY
+                || props.type === Env.RECORD_TYPE.USER) {
                 if (props.mode === 'create') {
                     const createAvatar = () => {
                         UserService.createAvatar(file)
@@ -180,12 +182,17 @@ export const Avatar = (props) => {
     };
 
     const handleUpload = (e) => {
+        if (!props.type) return setOpenTypeDialog(true);
         const upload = document.getElementById('upload');
         upload.value = '';
         setTimeout(() => {
             upload.click(e);
         }, 0);
     };
+
+    const handleCloseDialog = () => {
+        setOpenTypeDialog(false);
+    }
 
     const openDialog = () => {
         setOpen(true);
@@ -206,7 +213,7 @@ export const Avatar = (props) => {
 
     const handleDelete = (e) => {
 
-        if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY) {
+        if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
             if (record && props.mode === 'update') {
                 const { _id } = record;
                 UserService.deleteAvatar(_id)
@@ -446,6 +453,17 @@ export const Avatar = (props) => {
                             </Badge>
                         </Badge>
                 }
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openTypeDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
+                    <DialogContent>{commonStrings.USER_TYPE_REQUIRED}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    </DialogActions>
+                </Dialog>
                 <Dialog
                     disableEscapeKeyDown
                     maxWidth="xs"

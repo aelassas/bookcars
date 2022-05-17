@@ -42,8 +42,7 @@ div.us-list span.us-avatar {
     margin-right: 5px;
 }
 
-div.us-blacklist-user {
-    width: 444px;
-    height: 70px;
-    overflow: hidden;
+div.us-list .us-blacklisted,
+div.us-list .us-blacklisted:hover {
+    background: #f0f0f0;
 }

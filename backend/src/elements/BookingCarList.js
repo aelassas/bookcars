@@ -172,7 +172,7 @@ class BookingCarList extends Component {
                     maxWidth="xs"
                     open={openDialog}
                 >
-                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
                     <DialogContent className='dialog-content'>
                         {(company === '-1' && pickupLocation === '-1')
                             ? `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
