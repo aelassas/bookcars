@@ -104,7 +104,7 @@ export const Avatar = (props) => {
                                             setAvatar(user.avatar);
 
                                             if (props.onChange) {
-                                                props.onChange(user);
+                                                props.onChange(user.avatar);
                                             }
                                         } else {
                                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -212,27 +212,28 @@ export const Avatar = (props) => {
     };
 
     const handleDelete = (e) => {
-
         if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
             if (record && props.mode === 'update') {
                 const { _id } = record;
                 UserService.deleteAvatar(_id)
                     .then(status => {
                         if (status === 200) {
-                            UserService.getUser(_id).then(user => {
-                                if (user) {
-                                    setRecord(user);
-                                    setAvatar(null);
-                                    if (props.onChange) {
-                                        props.onChange(user);
+                            UserService.getUser(_id)
+                                .then(user => {
+                                    if (user) {
+                                        setRecord(user);
+                                        setAvatar(null);
+
+                                        if (props.onChange) {
+                                            props.onChange(null);
+                                        }
+                                        closeDialog();
+                                    } else {
+                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                     }
-                                    closeDialog();
-                                } else {
+                                }).catch(err => {
                                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                }
-                            }).catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                            });
+                                });
                         } else {
                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
@@ -284,7 +285,7 @@ export const Avatar = (props) => {
                                     setRecord(car);
                                     setAvatar(null);
                                     if (props.onChange) {
-                                        props.onChange(car);
+                                        props.onChange(null);
                                     }
                                     closeDialog();
                                 } else {

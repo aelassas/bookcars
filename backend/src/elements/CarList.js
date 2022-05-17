@@ -243,14 +243,14 @@ class CarList extends Component {
                                 </div>
                                 <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>
                                 <div className='action'>
-                                    <Tooltip title={strings.VIEW_CAR_TOOLTIP}>
+                                    <Tooltip title={strings.VIEW_CAR}>
                                         <IconButton href={`/car?c=${car._id}`}>
                                             <ViewIcon />
                                         </IconButton>
                                     </Tooltip>
 
                                     {canEdit &&
-                                        <Tooltip title={strings.UPDATE_CAR_TOOLTIP}>
+                                        <Tooltip title={commonStrings.UPDATE}>
                                             <IconButton href={`/update-car?c=${car._id}`}>
                                                 <EditIcon />
                                             </IconButton>
@@ -258,7 +258,7 @@ class CarList extends Component {
                                     }
 
                                     {canEdit &&
-                                        <Tooltip title={strings.DELETE_CAR_TOOLTIP}>
+                                        <Tooltip title={commonStrings.DELETE}>
                                             <IconButton data-id={car._id}
                                                 data-index={index}
                                                 onClick={this.handleDelete}>

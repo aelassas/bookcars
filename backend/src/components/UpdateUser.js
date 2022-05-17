@@ -166,7 +166,6 @@ export default class CreateUser extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log('!')
 
         if (!this.state.avatar && this.state.type === Env.RECORD_TYPE.COMPANY) {
             return this.setState({
@@ -224,8 +223,12 @@ export default class CreateUser extends Component {
     };
 
     onAvatarChange = (avatar) => {
-        this.setState({ loading: false, avatar });
-        if (avatar !== null) {
+        const { user, type } = this.state;
+        user.avatar = avatar;
+
+        this.setState({ loading: false, user, avatar });
+
+        if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
             this.setState({ avatarError: false });
         }
     };

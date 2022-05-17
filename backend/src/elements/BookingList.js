@@ -34,6 +34,7 @@ class BookingList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loggedUser: null,
             user: null,
             page: 0,
             pageSize: Env.BOOKINGS_PAGE_SIZE,
@@ -255,14 +256,13 @@ class BookingList extends Component {
     };
 
     fetch = () => {
-        const { companies, statuses, filter, car, page, pageSize } = this.state;
+        const { companies, statuses, filter, car, page, pageSize, user } = this.state;
 
         if (companies.length > 0) {
             this.setState({ loading: true });
 
-            BookingService.getBookings({ companies, statuses, filter, car }, page, pageSize)
+            BookingService.getBookings({ companies, statuses, filter, car, user }, page, pageSize)
                 .then(data => {
-                    // console.log('!');
                     const _data = data.length > 0 ? data[0] : {};
                     const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                     this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
@@ -329,15 +329,15 @@ class BookingList extends Component {
 
     componentDidMount() {
 
-        if (this.props.user) {
-            const columns = this.getColumns(this.props.user);
-            this.setState({ user: this.props.user, columns }, () => this.fetch());
+        if (this.props.loggedUser) {
+            const columns = this.getColumns(this.props.loggedUser);
+            this.setState({ loggedUser: this.props.loggedUser, user: this.props.user, columns }, () => this.fetch());
         }
     }
 
     render() {
         const {
-            user,
+            loggedUser,
             columns,
             rows,
             rowCount,
@@ -351,7 +351,7 @@ class BookingList extends Component {
 
         return (
             <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
-                {user && columns.length > 0 &&
+                {loggedUser && columns.length > 0 &&
                     <DataGrid
                         checkboxSelection={this.props.checkboxSelection}
                         getRowId={(row) => row._id}
@@ -366,11 +366,12 @@ class BookingList extends Component {
                         paginationMode='server'
                         onPageChange={(page) => this.setState({ page }, () => this.fetch())}
                         onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
-                        localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                        localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
                         components={{
                             NoRowsOverlay: () => ''
                         }}
                         onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
+                        disableSelectionOnClick
                     />
                 }
                 <Dialog

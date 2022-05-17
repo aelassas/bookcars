@@ -110,7 +110,9 @@ export default class Settings extends Component {
         this.setState({ loading: true });
     };
 
-    onAvatarChange = (user) => {
+    onAvatarChange = (avatar) => {
+        const { user } = this.state;
+        user.avatar = avatar;
         this.setState({ loading: false, user });
     };
 

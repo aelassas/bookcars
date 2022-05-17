@@ -56,6 +56,7 @@ export const strings = new LocalizedStrings({
         INFO: 'Information',
         USER_TYPE_REQUIRED: 'Veuillez renseigner le champ : Type',
         FIX_ERRORS: 'Veuillez corriger les erreurs.',
+        SEND_MESSAGE: 'Envoyer un message',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -109,7 +110,8 @@ export const strings = new LocalizedStrings({
         USER: 'User',
         INFO: 'Information',
         USER_TYPE_REQUIRED: 'Please fill in the field: Type',
-        FIX_ERRORS: 'Please fix errors.'
+        FIX_ERRORS: 'Please fix errors.',
+        SEND_MESSAGE: 'Send a message',
     }
 });
 

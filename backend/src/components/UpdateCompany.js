@@ -127,11 +127,14 @@ export default class UpdateCompany extends Component {
         this.setState({ loading: true });
     };
 
-    onAvatarChange = (company) => {
-        if (company.avatar) {
+    onAvatarChange = (avatar) => {
+        const { company } = this.state;
+        company.avatar = avatar;
+        this.setState({ company, avatar, loading: false });
+
+        if (avatar) {
             this.setState({ avatarError: false });
         }
-        this.setState({ avatar: company.avatar, loading: false });
     };
 
     onAvatarValidate = (valid) => {

@@ -192,7 +192,6 @@ class BookingList extends Component {
 
         UserService.getUsers(types, keyword, page + 1, pageSize)
             .then(data => {
-                console.log('!');
                 const _data = data.length > 0 ? data[0] : {};
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
@@ -228,17 +227,14 @@ class BookingList extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (!Helper.arrayEqual(this.state.types, prevState.types)) {
-            console.log('1')
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
         if (this.state.keyword !== prevState.keyword) {
-            console.log('2')
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
         if (this.state.reload && !prevState.reload) {
-            console.log('3')
             return this.setState({ page: 0 }, () => this.fetch());
         }
     }
@@ -287,6 +283,7 @@ class BookingList extends Component {
                         }}
                         onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
                         getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
+                        disableSelectionOnClick
                     />
                 }
 

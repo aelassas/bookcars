@@ -49,9 +49,7 @@ export const strings = new LocalizedStrings({
         CAR_AVAILABLE_TOOLTIP: 'Cette voiture est disponible pour la location.',
         CAR_UNAVAILABLE: 'Indisponible pour la location',
         CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas disponible pour la location.",
-        VIEW_CAR_TOOLTIP: 'Voir cette voiture',
-        UPDATE_CAR_TOOLTIP: 'Modifier cette voiture',
-        DELETE_CAR_TOOLTIP: 'Supprimer cette voiture',
+        VIEW_CAR: 'Voir cette voiture',
         EMPTY_CARS_LIST: 'Pas de voitures.',
     },
     en: {
@@ -100,10 +98,8 @@ export const strings = new LocalizedStrings({
         CAR_AVAILABLE_TOOLTIP: 'This car is available for rental.',
         CAR_UNAVAILABLE: 'Unavailable for rental',
         CAR_UNAVAILABLE_TOOLTIP: 'This car is unavailable for rental.',
-        VIEW_CAR_TOOLTIP: 'View this car',
-        UPDATE_CAR_TOOLTIP: 'Edit this car',
-        DELETE_CAR_TOOLTIP: 'Delete this car',
-        EMPTY_CARS_LIST: 'No cars.',
+        VIEW_CAR: 'View this car',
+        EMPTY_CARS_LIST: 'No cars.'
     }
 });
 

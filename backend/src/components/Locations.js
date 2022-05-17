@@ -5,6 +5,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/locations';
 import LocationService from '../services/LocationService';
 import Backdrop from '../elements/SimpleBackdrop';
+import Search from '../elements/Search';
 import { toast } from 'react-toastify';
 import {
     List,
@@ -14,7 +15,6 @@ import {
     Avatar,
     IconButton,
     Typography,
-    Input,
     Button,
     Dialog,
     DialogTitle,
@@ -24,8 +24,7 @@ import {
 import {
     LocationOn as LocationIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon,
-    Search as SearchIcon
+    Delete as DeleteIcon
 } from '@mui/icons-material';
 
 import '../assets/css/locations.css';
@@ -95,19 +94,9 @@ export default class Locations extends Component {
         this.setState({ openDeleteDialog: false, locationId: '' });
     };
 
-    handleSearchChange = (e) => {
-        this.setState({ keyword: e.target.value });
-    };
-
-    handleSearchKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            this.handleSearch();
-        }
-    }
-
-    handleSearch = (e) => {
-        document.querySelector('.col-2').scrollTo(0, 0);
-        this.setState({ page: 1 }, () => {
+    handleSearch = (keyword) => {
+        this.setState({ keyword, page: 1 }, () => {
+            document.querySelector('.col-2').scrollTo(0, 0);
             this.fetch();
         });
     };
@@ -150,16 +139,8 @@ export default class Locations extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='locations'>
                     <div className='col-1'>
-                        <Input
-                            type="text"
-                            className='search'
-                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                            onKeyDown={this.handleSearchKeyDown}
-                            onChange={this.handleSearchChange}
-                        />
-                        <IconButton onClick={this.handleSearch}>
-                            <SearchIcon />
-                        </IconButton>
+                        <Search onSubmit={this.handleSearch} />
+                        
                         <Button
                             variant="contained"
                             className='btn-primary new-location'

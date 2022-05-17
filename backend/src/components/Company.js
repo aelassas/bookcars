@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import { strings as companiesStrings } from '../lang/companies';
+import { strings as csStrings } from '../lang/companies';
 import CompanyService from '../services/CompanyService';
 import CarService from '../services/CarService';
 import Helper from '../common/Helper';
@@ -20,6 +20,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Tooltip
 } from '@mui/material';
 import {
     Edit as EditIcon,
@@ -187,17 +188,30 @@ export default class Company extends Component {
                             {company.bio && company.bio !== '' && <Typography variant="h6" className="company-info">{company.bio}</Typography>}
                             {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}
                             {company.phone && company.phone !== '' && <Typography variant="h6" className="company-info">{company.phone}</Typography>}
-                            {edit && <div className="company-actions">
-                                <IconButton href={`/update-company?c=${company._id}`}>
-                                    <EditIcon />
-                                </IconButton>
-                                {user._id !== company._id && <IconButton>
-                                    <MailIcon />
-                                </IconButton>}
-                                <IconButton data-id={company._id} onClick={this.handleDelete}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </div>}
+                            <div className="company-actions">
+
+                                {edit &&
+                                    <Tooltip title={commonStrings.UPDATE}>
+                                        <IconButton href={`/update-company?c=${company._id}`}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                                {user._id !== company._id &&
+                                    <Tooltip title={commonStrings.SEND_MESSAGE}>
+                                        <IconButton>
+                                            <MailIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                                {edit &&
+                                    <Tooltip title={commonStrings.DELETE}>
+                                        <IconButton data-id={company._id} onClick={this.handleDelete}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            </div>
                         </div>
                         <div className='col-2'>
                             <CarList
@@ -215,7 +229,7 @@ export default class Company extends Component {
                     open={openDeleteDialog}
                 >
                     <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{companiesStrings.DELETE_COMPANY}</DialogContent>
+                    <DialogContent>{csStrings.DELETE_COMPANY}</DialogContent>
                     <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>

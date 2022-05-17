@@ -4,7 +4,7 @@ import Env from '../config/env.config';
 import { strings } from '../lang/users';
 import Helper from '../common/Helper';
 import UserTypeFilter from '../elements/UserTypeFilter';
-import UserFilter from '../elements/UserFilter';
+import Search from '../elements/Search';
 import UserList from '../elements/UserList';
 import { Button } from '@mui/material';
 
@@ -32,7 +32,7 @@ export default class Users extends Component {
         this.setState({ types: newTypes, reload: Helper.arrayEqual(types, newTypes) });
     };
 
-    handleUserFilterSubmit = (newKeyword) => {
+    handleSearch = (newKeyword) => {
         const { keyword } = this.state;
         this.setState({ keyword: newKeyword, reload: keyword === newKeyword });
     }
@@ -53,8 +53,8 @@ export default class Users extends Component {
                 {user && <div className='users'>
                     <div className='col-1'>
 
-                        <UserFilter
-                            onSubmit={this.handleUserFilterSubmit}
+                        <Search
+                            onSubmit={this.handleSearch}
                             className='cl-user-filter'
                         />
 

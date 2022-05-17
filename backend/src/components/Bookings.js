@@ -104,7 +104,7 @@ export default class Bookings extends Component {
                             <BookingList
                                 width='100%'
                                 height='100%'
-                                user={user}
+                                loggedUser={user}
                                 companies={companies}
                                 statuses={statuses}
                                 filter={filter}

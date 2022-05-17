@@ -1,4 +1,4 @@
-.company {
+div.company {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -60,7 +60,7 @@
         border-bottom: #eee solid 1px;
     }
 
-    .company div.col-1 .company-avatar-sec {
+    .company div.col-1 section.company-avatar-sec {
         position: relative;
         left: 50%;
         transform: translateX(-22%);
@@ -94,7 +94,7 @@
         border-right: #eee solid 1px;
     }
 
-    .company div.col-1 .company-avatar-sec {
+    .company div.col-1 section.company-avatar-sec {
         position: relative;
         left: 50%;
         transform: translateX(-30%);

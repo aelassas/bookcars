@@ -6,9 +6,9 @@ import { strings } from '../lang/companies';
 import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
+import Search from '../elements/Search';
 import { toast } from 'react-toastify';
 import {
-    Input,
     IconButton,
     Button,
     Tooltip,
@@ -18,7 +18,6 @@ import {
     DialogActions,
 } from '@mui/material';
 import {
-    Search as SearchIcon,
     Visibility as ViewIcon,
     Edit as EditIcon,
     Mail as MailIcon,
@@ -44,19 +43,11 @@ export default class Companies extends Component {
         };
     }
 
-    handleSearchChange = (e) => {
-        this.setState({ keyword: e.target.value });
-    };
-
-    handleSearchKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            this.handleSearch();
-        }
-    }
-
-    handleSearch = (e) => {
-        document.querySelector('.col-2').scrollTo(0, 0);
-        this.fetch();
+    handleSearch = (keyword) => {
+        this.setState({ keyword }, () => {
+            document.querySelector('.col-2').scrollTo(0, 0);
+            this.fetch();
+        });
     };
 
     fetch = () => {
@@ -119,16 +110,8 @@ export default class Companies extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='companies'>
                     <div className='col-1'>
-                        <Input
-                            type="text"
-                            className='search'
-                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                            onKeyDown={this.handleSearchKeyDown}
-                            onChange={this.handleSearchChange}
-                        />
-                        <IconButton onClick={this.handleSearch}>
-                            <SearchIcon />
-                        </IconButton>
+                        <Search onSubmit={this.handleSearch} />
+
                         <Button
                             type="submit"
                             variant="contained"
@@ -142,7 +125,7 @@ export default class Companies extends Component {
                     <div className='col-2'>
                         <section className='list'>
                             {companies.map((company, index) => {
-                                const canEdit = admin || (user && user._id === company._id);
+                                const edit = admin || (user && user._id === company._id);
                                 const canMessage = admin || (user && user.type === Env.RECORD_TYPE.COMPANY && user._id !== company._id);
                                 const canDelete = admin;
 
@@ -150,43 +133,42 @@ export default class Companies extends Component {
                                     <article key={company._id}>
                                         <div className='company-item'>
                                             <div>
-                                                {/* <Avatar
-                                                    record={company}
-                                                    type={Env.RECORD_TYPE.COMPANY}
-                                                    readonly
-                                                    className='company-item-avatar'
-                                                /> */}
                                                 <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                                     alt={company.fullName}
                                                     className='company-item-avatar'
                                                     style={{
                                                         width: Env.COMPANY_IMAGE_WIDTH,
-                                                        // height: Env.COMPANY_IMAGE_HEIGHT
                                                     }} />
                                                 <span className='company-item-title'>{company.fullName}</span>
                                             </div>
                                         </div>
                                         <div className='company-actions'>
-                                            <Tooltip title={strings.VIEW_COMPANY_TOOLTIP}>
+                                            <Tooltip title={strings.VIEW_COMPANY}>
                                                 <IconButton href={`/company?c=${company._id}`}>
                                                     <ViewIcon />
                                                 </IconButton>
                                             </Tooltip>
-                                            {canEdit && <Tooltip title={strings.UPDATE_COMPANY_TOOLTIP}>
-                                                <IconButton href={`/update-company?c=${company._id}`}>
-                                                    <EditIcon />
-                                                </IconButton>
-                                            </Tooltip>}
-                                            {canMessage && <Tooltip title={strings.MESSAGE_COMPANY_TOOLTIP}>
-                                                <IconButton>
-                                                    <MailIcon />
-                                                </IconButton>
-                                            </Tooltip>}
-                                            {canDelete && <Tooltip title={strings.DELETE_COMPANY_TOOLTIP}>
-                                                <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Tooltip>}
+                                            {edit &&
+                                                <Tooltip title={commonStrings.UPDATE}>
+                                                    <IconButton href={`/update-company?c=${company._id}`}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                            {canMessage &&
+                                                <Tooltip title={commonStrings.SEND_MESSAGE}>
+                                                    <IconButton>
+                                                        <MailIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                            {canDelete &&
+                                                <Tooltip title={commonStrings.DELETE}>
+                                                    <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
                                         </div>
                                     </article>
                                 );

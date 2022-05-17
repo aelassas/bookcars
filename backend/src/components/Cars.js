@@ -6,15 +6,9 @@ import { strings } from '../lang/cars';
 import CarService from '../services/CarService';
 import Backdrop from '../elements/SimpleBackdrop';
 import CompanyFilter from '../elements/CompanyFilter';
+import Search from '../elements/Search';
 import { toast } from 'react-toastify';
-import {
-    IconButton,
-    Input,
-    Button
-} from '@mui/material';
-import {
-    Search as SearchIcon
-} from '@mui/icons-material';
+import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';
 import CarList from '../elements/CarList';
@@ -39,19 +33,10 @@ export default class Cars extends Component {
         };
     }
 
-    handleSearchChange = (e) => {
-        this.setState({ keyword: e.target.value });
-    };
 
-    handleSearchKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            this.handleSearch();
-        }
-    }
-
-    handleSearch = (e) => {
-        document.querySelector('.col-2').scrollTo(0, 0);
-        this.setState({ page: 1 }, () => {
+    handleSearch = (keyword) => {
+        this.setState({ keyword, page: 1 }, () => {
+            document.querySelector('.col-2').scrollTo(0, 0);
             this.fetch();
         });
     };
@@ -108,20 +93,13 @@ export default class Cars extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='cars'>
                     <div className='col-1'>
-                        <Input
-                            type="text"
-                            className='search'
-                            placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                            onKeyDown={this.handleSearchKeyDown}
-                            onChange={this.handleSearchChange}
-                        />
-                        <IconButton onClick={this.handleSearch}>
-                            <SearchIcon />
-                        </IconButton>
+                        <Search onSubmit={this.handleSearch} />
+
                         <CompanyFilter
                             onLoad={this.handleCompanyFilterLoad}
                             onChange={this.handleCompanyFilterChange}
                         />
+
                         {newCar && <Button
                             type="submit"
                             variant="contained"

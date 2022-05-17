@@ -244,8 +244,11 @@ export default class CreateUser extends Component {
     };
 
     onAvatarChange = (avatar) => {
+        const { type } = this.state;
+
         this.setState({ loading: false, avatar });
-        if (avatar !== null) {
+
+        if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
             this.setState({ avatarError: false });
         }
     };

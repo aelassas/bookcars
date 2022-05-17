@@ -376,11 +376,11 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 res.sendStatus(204);
             } else {
                 const { fullName, phone, bio, location, type } = req.body;
-                user.fullName = fullName;
+                if (fullName) user.fullName = fullName;
                 user.phone = phone;
                 user.location = location;
                 user.bio = bio;
-                user.type = type;
+                if (type) user.type = type;
 
                 user.save()
                     .then(() => {
@@ -633,9 +633,6 @@ routes.route(routeNames.checkPassword).get(authJwt.verifyToken, (req, res) => {
     User.findById(req.params.id)
         .then(user => {
             if (user) {
-                console.log('------------user._id', user._id)
-                console.log('------------req.params.password', req.params.password)
-                console.log('------------user.password', user.password)
                 bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
                     console.log('------------passwordMatch', passwordMatch)
                     if (passwordMatch) {

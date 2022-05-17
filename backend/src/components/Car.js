@@ -147,11 +147,8 @@ export default class Car extends Component {
                                         hideDelete={true}
                                         onBeforeUpload={this.handleBeforeUpload}
                                         onChange={this.handleImageChange}
-                                        // onValidate={this.handleImageValidate}
                                         color='disabled'
                                         className='avatar-ctn'
-                                    // width={Env.CAR_IMAGE_WIDTH}
-                                    // height={Env.CAR_IMAGE_HEIGHT} 
                                     />
                                     <div className='car-company'>
                                         <span className='car-company-logo'>
@@ -159,7 +156,6 @@ export default class Car extends Component {
                                                 alt={car.company.fullName}
                                                 style={{
                                                     width: Env.COMPANY_IMAGE_WIDTH,
-                                                    // height: Env.COMPANY_IMAGE_HEIGHT
                                                 }}
                                             />
                                         </span>
@@ -322,13 +318,14 @@ export default class Car extends Component {
                                     >
                                         {commonStrings.DELETE}
                                     </Button>
-                                </section>}
+                                </section>
+                            }
                         </div>
                         <div className='col-2'>
                             <BookingList
                                 width='100%'
                                 height='100%'
-                                user={user}
+                                loggedUser={user}
                                 companies={companies}
                                 statuses={statuses}
                                 car={car._id}
