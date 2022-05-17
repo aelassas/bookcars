@@ -53,36 +53,37 @@ export default class SignIn extends Component {
         const { email, password } = this.state;
         const data = { email, password };
 
-        UserService.signin(data).then(res => {
-            if (res.status === 200) {
-                if (res.data.blacklisted) {
-                    UserService.signout(false);
-                    this.setState({
-                        error: false,
-                        blacklisted: true,
-                        loginSuccess: false
-                    });
+        UserService.signin(data)
+            .then(res => {
+                if (res.status === 200) {
+                    if (res.data.blacklisted) {
+                        UserService.signout(false);
+                        this.setState({
+                            error: false,
+                            blacklisted: true,
+                            loginSuccess: false
+                        });
+                    } else {
+                        this.setState({
+                            error: false
+                        }, () => {
+                            window.location = '/' + window.location.search;
+                        });
+                    }
                 } else {
                     this.setState({
-                        error: false
-                    }, () => {
-                        window.location = '/' + window.location.search;
+                        error: true,
+                        blacklisted: false,
+                        loginSuccess: false
                     });
                 }
-            } else {
+            }).catch(() => {
                 this.setState({
                     error: true,
                     blacklisted: false,
                     loginSuccess: false
                 });
-            }
-        }).catch(() => {
-            this.setState({
-                error: true,
-                blacklisted: false,
-                loginSuccess: false
             });
-        });
     };
 
 

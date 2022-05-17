@@ -240,7 +240,7 @@ export default class SignUp extends Component {
         return (
             <Master strict={false} hideSignin={true} onLoad={this.onLoad}>
                 <div className="signup">
-                    <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                    <Paper className="signup-form" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <div>

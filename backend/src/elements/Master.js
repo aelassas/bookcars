@@ -47,43 +47,48 @@ export default class Master extends Component {
         const currentUser = UserService.getCurrentUser();
 
         if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                if (status === 200) {
-                    UserService.getUser(currentUser.id).then(user => {
-                        if (user) {
+            UserService.validateAccessToken()
+                .then(status => {
+                    if (status === 200) {
+                        UserService.getUser(currentUser.id).then(user => {
+                            if (user) {
 
-                            if (user.blacklisted) {
-                                this.setState({ user, unauthorized: true, loading: false });
-                                return;
-                            }
-
-                            if (this.props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
-                                this.setState({ user, unauthorized: true, loading: false });
-                                return;
-                            }
-
-                            this.setState({ loading: false, user }, () => {
-                                if (this.props.onLoad) {
-                                    this.props.onLoad(user);
+                                if (user.blacklisted) {
+                                    this.setState({ user, unauthorized: true, loading: false });
+                                    return;
                                 }
-                            });
-                        } else {
+
+                                if (this.props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
+                                    this.setState({ user, unauthorized: true, loading: false });
+                                    return;
+                                }
+
+                                this.setState({ loading: false, user }, () => {
+                                    if (this.props.onLoad) {
+                                        this.props.onLoad(user);
+                                    }
+                                });
+                            } else {
+                                this.error();
+                            }
+                        }).catch(() => {
                             this.error();
-                        }
-                    }).catch(() => {
-                        this.error();
-                    });
-                } else {
+                        });
+                    } else {
+                        UserService.signout();
+                    }
+                }).catch(() => {
                     UserService.signout();
-                }
-            }).catch(() => {
-                UserService.signout();
-            });
+                });
         } else {
             if (this.props.strict) {
                 UserService.signout();
             } else {
-                this.setState({ loading: false });
+                this.setState({ loading: false }, () => {
+                    if (this.props.onLoad) {
+                        this.props.onLoad();
+                    }
+                });
             }
         }
     }

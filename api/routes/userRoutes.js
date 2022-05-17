@@ -215,47 +215,48 @@ routes.route(routeNames.signin).post((req, res) => {
                 || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)) {
                 res.sendStatus(204);
             } else {
-                bcrypt.compare(req.body.password, user.password).then(async passwordMatch => {
-                    if (passwordMatch) {
-                        const payload = { id: user.id };
+                bcrypt.compare(req.body.password, user.password)
+                    .then(async passwordMatch => {
+                        if (passwordMatch) {
+                            const payload = { id: user.id };
 
-                        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE_AT });
+                            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE_AT });
 
-                        // for (let i = 1; i <= 60; i++) {
-                        //     const _user = new User({
-                        //         email: `user${i}@bookcars.ma`,
-                        //         fullName: `User ${i}`,
-                        //         password: '$2a$10$6lsV6VfIesiQMPcqTHly7ed0B7OWs3s6QKRRMhyZBTn8ALdtH9CbO',
-                        //         verified: true,
-                        //         language: 'fr',
-                        //         enableEmailNotifications: true,
-                        //         type: 'user',
-                        //         blacklisted: false,
-                        //         avatar: 'john.jpg'
-                        //     });
-                        //     await _user.save();
-                        // }
+                            // for (let i = 1; i <= 60; i++) {
+                            //     const _user = new User({
+                            //         email: `user${i}@bookcars.ma`,
+                            //         fullName: `User ${i}`,
+                            //         password: '$2a$10$6lsV6VfIesiQMPcqTHly7ed0B7OWs3s6QKRRMhyZBTn8ALdtH9CbO',
+                            //         verified: true,
+                            //         language: 'fr',
+                            //         enableEmailNotifications: true,
+                            //         type: 'user',
+                            //         blacklisted: false,
+                            //         avatar: 'john.jpg'
+                            //     });
+                            //     await _user.save();
+                            // }
 
-                        // User.deleteMany({ email: { $regex: /user/ } }, (err, response) => {
-                        //     if (err) {
-                        //         console.error(strings.DB_ERROR + err);
-                        //         res.status(400).send(strings.DB_ERROR + err);
-                        //     }
-                        // });
+                            // User.deleteMany({ email: { $regex: /user/ } }, (err, response) => {
+                            //     if (err) {
+                            //         console.error(strings.DB_ERROR + err);
+                            //         res.status(400).send(strings.DB_ERROR + err);
+                            //     }
+                            // });
 
-                        res.status(200).send({
-                            id: user._id,
-                            email: user.email,
-                            fullName: user.fullName,
-                            language: user.language,
-                            enableEmailNotifications: user.enableEmailNotifications,
-                            accessToken: token,
-                            blacklisted: user.blacklisted
-                        });
-                    } else {
-                        res.sendStatus(204);
-                    }
-                });
+                            res.status(200).send({
+                                id: user._id,
+                                email: user.email,
+                                fullName: user.fullName,
+                                language: user.language,
+                                enableEmailNotifications: user.enableEmailNotifications,
+                                accessToken: token,
+                                blacklisted: user.blacklisted
+                            });
+                        } else {
+                            res.sendStatus(204);
+                        }
+                    });
             }
         });
 });

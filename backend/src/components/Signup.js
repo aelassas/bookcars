@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-up';
 import UserService from '../services/UserService';
-import Header from '../elements/Header';
+import Master from '../elements/Master';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -167,21 +167,32 @@ export default class SignUp extends Component {
                     type: Env.RECORD_TYPE.ADMIN
                 };
 
-                UserService.signup(data).then(registerStatus => {
-                    if (registerStatus === 200) {
-                        UserService.signin({ email: this.state.email, password: this.state.password }).then(signInResult => {
-                            if (signInResult.status === 200) {
-                                window.location = '/' + window.location.search;
-                            } else {
-                                this.setState({
-                                    error: true,
-                                    passwordError: false,
-                                    passwordsDontMatch: false,
-                                    register: false,
-                                    loading: false
+                UserService.create(data)
+                    .then(data => {
+                        if (data && data._id) {
+                            UserService.signin({ email: this.state.email, password: this.state.password })
+                                .then(signInResult => {
+                                    if (signInResult.status === 200) {
+                                        window.location = '/' + window.location.search;
+                                    } else {
+                                        this.setState({
+                                            error: true,
+                                            passwordError: false,
+                                            passwordsDontMatch: false,
+                                            register: false,
+                                            loading: false
+                                        });
+                                    }
+                                }).catch(err => {
+                                    this.setState({
+                                        error: true,
+                                        passwordError: false,
+                                        passwordsDontMatch: false,
+                                        register: false,
+                                        loading: false
+                                    });
                                 });
-                            }
-                        }).catch(err => {
+                        } else
                             this.setState({
                                 error: true,
                                 passwordError: false,
@@ -189,16 +200,7 @@ export default class SignUp extends Component {
                                 register: false,
                                 loading: false
                             });
-                        });
-                    } else
-                        this.setState({
-                            error: true,
-                            passwordError: false,
-                            passwordsDontMatch: false,
-                            register: false,
-                            loading: false
-                        });
-                })
+                    })
                     .catch(err => {
                         this.setState({
                             error: true,
@@ -219,34 +221,13 @@ export default class SignUp extends Component {
         e.preventDefault();
     };
 
-    componentDidMount() {
-        let language = UserService.getQueryLanguage();
-
-        if (!Env.LANGUAGES.includes(language)) {
-            language = UserService.getLanguage();
-        }
-        strings.setLanguage(language);
-        this.setState({ language });
-
-        const currentUser = UserService.getCurrentUser();
-        if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                UserService.getUser(currentUser.id).then(user => {
-                    if (user) {
-                        window.location.href = '/';
-                    } else {
-                        UserService.signout();
-                    }
-                }).catch(err => {
-                    UserService.signout();
-                });
-            }).catch(err => {
-                UserService.signout();
-            });
+    onLoad = (user) => {
+        if (user) {
+            window.location.href = '/';
         } else {
-            this.setState({ visible: true });
+            this.setState({ visible: true }, () => console.log(this.state.visible));
         }
-    }
+    };
 
     render() {
         const { error,
@@ -260,10 +241,9 @@ export default class SignUp extends Component {
             loading } = this.state;
 
         return (
-            <div>
-                <Header />
-                <Paper className="signup-form signup-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                    <div className="signup">
+            <Master strict={false} onLoad={this.onLoad}>
+                <div className="signup">
+                    <Paper className="signup-form" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
                             <div>
@@ -366,7 +346,7 @@ export default class SignUp extends Component {
                                     <Button
                                         type="submit"
                                         variant="contained"
-                                        className='btn-primary'
+                                        className='btn-primary btn-margin-bottom'
                                         size="small"
                                         disabled={emailError || !tosChecked}
                                     >
@@ -374,7 +354,7 @@ export default class SignUp extends Component {
                                     </Button>
                                     <Button
                                         variant="contained"
-                                        className='btn-secondary'
+                                        className='btn-secondary btn-margin-bottom'
                                         size="small"
                                         href="/"> {commonStrings.CANCEL}
                                     </Button>
@@ -391,10 +371,10 @@ export default class SignUp extends Component {
                                     : null}
                             </div>
                         </form>
-                    </div>
-                </Paper>
+                    </Paper>
+                </div>
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-            </div>
+            </Master>
         );
     }
 }
