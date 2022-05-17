@@ -190,10 +190,10 @@ export default class CreateCompany extends Component {
                     avatar: this.state.avatar
                 };
 
-                UserService.signup(data)
-                    .then(registerStatus => {
-                        if (registerStatus === 200) {
-                            window.location = '/companies';
+                UserService.create(data)
+                    .then(data => {
+                        if (data && data._id) {
+                            window.location = `/company?c=${data._id}`;
                         } else
                             this.setState({
                                 error: true,
@@ -306,10 +306,8 @@ export default class CreateCompany extends Component {
                                 onValidate={this.onAvatarValidate}
                                 color='disabled'
                                 className='avatar-ctn'
-                            // width={Env.COMPANY_IMAGE_WIDTH}
-                            // height={Env.COMPANY_IMAGE_HEIGHT} 
                             />
-                            
+
                             <div className='info'>
                                 <InfoIcon />
                                 <label>
@@ -332,6 +330,7 @@ export default class CreateCompany extends Component {
                                     {fullNameError ? strings.INVALID_COMPANY_NAME : ''}
                                 </FormHelperText>
                             </FormControl>
+
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
                                 <Input
@@ -352,38 +351,7 @@ export default class CreateCompany extends Component {
                                     {emailError ? commonStrings.INVALID_EMAIL : ''}
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.PHONE}</InputLabel>
-                                <Input
-                                    id="phone"
-                                    type="text"
-                                    onChange={this.handleOnChangePhone}
-                                    inputProps={{
-                                        autoComplete: 'new-phone',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
-                                />
-                            </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                                <Input
-                                    id="location"
-                                    type="text"
-                                    onChange={this.handleOnChangeLocation}
-                                    autoComplete="off"
-                                />
-                            </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.BIO}</InputLabel>
-                                <Input
-                                    id="bio"
-                                    type="text"
-                                    onChange={this.handleOnChangeBio}
-                                    autoComplete="off"
-                                />
-                            </FormControl>
+
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
                                 <Input
@@ -399,6 +367,7 @@ export default class CreateCompany extends Component {
                                     }}
                                 />
                             </FormControl>
+
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                                 <Input
@@ -414,6 +383,47 @@ export default class CreateCompany extends Component {
                                     }}
                                 />
                             </FormControl>
+
+                            <div className='info'>
+                                <InfoIcon />
+                                <label>{commonStrings.OPTIONAL}</label>
+                            </div>
+
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{commonStrings.PHONE}</InputLabel>
+                                <Input
+                                    id="phone"
+                                    type="text"
+                                    onChange={this.handleOnChangePhone}
+                                    inputProps={{
+                                        autoComplete: 'new-phone',
+                                        form: {
+                                            autoComplete: 'off',
+                                        },
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{commonStrings.LOCATION}</InputLabel>
+                                <Input
+                                    id="location"
+                                    type="text"
+                                    onChange={this.handleOnChangeLocation}
+                                    autoComplete="off"
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{commonStrings.BIO}</InputLabel>
+                                <Input
+                                    id="bio"
+                                    type="text"
+                                    onChange={this.handleOnChangeBio}
+                                    autoComplete="off"
+                                />
+                            </FormControl>
+
                             <div className="buttons">
                                 <Button
                                     type="submit"
@@ -435,15 +445,11 @@ export default class CreateCompany extends Component {
                             </div>
 
                             <div className="form-error">
-                                {(passwordError || passwordsDontMatch || error || avatarError || avatarSizeError) ?
-                                    <div>
-                                        {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
-                                        {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                        {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                                        {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                                        {avatarSizeError && <Error message={strings.COMPANY_IMAGE_SIZE_ERROR} />}
-                                    </div>
-                                    : null}
+                                {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                                {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
+                                {avatarSizeError && <Error message={strings.COMPANY_IMAGE_SIZE_ERROR} />}
                             </div>
                         </form>
 

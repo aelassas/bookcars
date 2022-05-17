@@ -63,12 +63,11 @@ export default class ResetPassword extends Component {
         const submit = () => {
 
             if (this.state.newPassword.length < 6) {
-                this.setState({
+                return this.setState({
                     passwordLengthError: true,
                     confirmPasswordError: false,
                     newPasswordError: false
                 });
-                return;
             } else {
                 this.setState({
                     passwordLengthError: false,
@@ -77,11 +76,10 @@ export default class ResetPassword extends Component {
             }
 
             if (this.state.newPassword !== this.state.confirmPassword) {
-                this.setState({
+                return this.setState({
                     confirmPasswordError: true,
                     newPasswordError: false
                 });
-                return;
             } else {
                 this.setState({
                     confirmPasswordError: false,
@@ -89,22 +87,22 @@ export default class ResetPassword extends Component {
                 });
             }
 
-            const { user, userId, currentPassword, newPassword, strict } = this.state;
+            const { user, userId, currentPassword, newPassword } = this.state;
+
+            // if (userId === user._id && currentPassword === newPassword) {
+            //     return this.setState({
+            //         newPasswordError: true,
+            //         passwordLengthError: false,
+            //         confirmPasswordError: false,
+            //     });
+            // }
+
             const data = {
                 _id: userId,
-                password: user.password,
+                password: currentPassword,
                 newPassword,
-                strict
+                strict: userId === user._id
             };
-
-            if (userId === user._id && currentPassword === newPassword) {
-                this.setState({
-                    newPasswordError: true,
-                    passwordLengthError: false,
-                    confirmPasswordError: false,
-                });
-                return;
-            }
 
             UserService.resetPassword(data)
                 .then(status => {
@@ -137,24 +135,26 @@ export default class ResetPassword extends Component {
 
         const { user, currentPassword } = this.state;
 
-        UserService.compare(currentPassword, user.password).then((passwordMatch) => {
-            this.setState({
-                currentPasswordError: !passwordMatch,
-                newPasswordError: false,
-                passwordLengthError: false,
-                confirmPasswordError: false
-            });
+        UserService.checkPassword(user._id, currentPassword)
+            .then((status) => {
+                this.setState({
+                    currentPasswordError: status !== 200,
+                    newPasswordError: false,
+                    passwordLengthError: false,
+                    confirmPasswordError: false
+                });
 
-            if (passwordMatch) {
-                submit();
-            }
-        });
+                if (status === 200) {
+                    submit();
+                }
+            })
+            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
 
     };
 
     onLoad = (user) => {
         this.setState({ user });
-
+        console.log(user);
         const params = new URLSearchParams(window.location.search);
         if (params.has('u')) {
             const id = params.get('u');

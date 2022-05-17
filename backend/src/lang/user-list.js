@@ -4,7 +4,7 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        DELETE_USER: 'Êtes-vous sûr de vouloir supprimer cette utilisateur et toutes ses données ?',
+        DELETE_USER: 'Êtes-vous sûr de vouloir supprimer cet utilisateur et toutes ses données ?',
         DELETE_USERS: 'Êtes-vous sûr de vouloir supprimer les utilisateurs sélectionnés et toutes leurs données ?',
         DELETE_SELECTION: 'Supprimer les utilisateurs sélectionnés',
         BLACKLIST: 'Ajouter à la liste noire',

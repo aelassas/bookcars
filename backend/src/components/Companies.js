@@ -113,7 +113,7 @@ export default class Companies extends Component {
 
     render() {
         const { user, companies, loading, openDeleteDialog } = this.state;
-        const isAdmin = Helper.isAdmin(user);
+        const admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -142,9 +142,9 @@ export default class Companies extends Component {
                     <div className='col-2'>
                         <section className='list'>
                             {companies.map((company, index) => {
-                                const canEdit = isAdmin || (user && user._id === company._id);
-                                const canMessage = isAdmin || (user && user.type === Env.RECORD_TYPE.COMPANY && user._id !== company._id);
-                                const canDelete = isAdmin;
+                                const canEdit = admin || (user && user._id === company._id);
+                                const canMessage = admin || (user && user.type === Env.RECORD_TYPE.COMPANY && user._id !== company._id);
+                                const canDelete = admin;
 
                                 return (
                                     <article key={company._id}>

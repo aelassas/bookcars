@@ -214,7 +214,7 @@ export default class Helper {
         }
     }
 
-    static isAdmin(user) {
+    static admin(user) {
         return user && user.type === Env.RECORD_TYPE.ADMIN;
     }
 

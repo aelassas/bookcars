@@ -85,14 +85,14 @@ class CarList extends Component {
         const { openDeleteDialog } = this.state;
         const user = this.props.user;
         const cars = this.props.cars;
-        const isAdmin = user && user.type === Env.RECORD_TYPE.ADMIN;
+        const admin = user && user.type === Env.RECORD_TYPE.ADMIN;
         const fr = user && user.language === 'fr';
 
         return (
             cars && cars.length > 0 ?
                 <section className='cars-list'>
                     {cars.map((car, index) => {
-                        const canEdit = isAdmin || car.company._id === user._id;
+                        const canEdit = admin || car.company._id === user._id;
                         return (
                             <article key={car._id}>
                                 <div className='name'><h2>{car.name}</h2></div>

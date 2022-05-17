@@ -174,7 +174,7 @@ class BookingList extends Component {
             });
         }
 
-        if (Helper.isAdmin(user) && !this.props.hideCompanyColumn) {
+        if (Helper.admin(user) && !this.props.hideCompanyColumn) {
             columns.unshift({
                 field: 'company',
                 headerName: strings.COMPANY,

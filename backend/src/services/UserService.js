@@ -14,14 +14,14 @@ export default class UserService {
         }
     }
 
-    static signup(data) {
+    static create(data) {
         const password = data.password;
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
         data['password'] = hash;
 
-        return axios.post(`${Env.API_HOST}/api/sign-up`, data).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/create-user`, data).then(res => res.data);
     }
 
     static validateEmail(data) {
@@ -186,8 +186,8 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/reset-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
-    static compare(pass, hash) {
-        return bcrypt.compare(pass, hash);
+    static checkPassword(id, pass) {
+        return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static delete(ids) {

@@ -6,6 +6,7 @@ import { strings as ccStrings } from '../lang/create-company';
 import { strings } from '../lang/create-user';
 import Helper from '../common/Helper';
 import UserService from '../services/UserService';
+import CompanyService from '../services/CompanyService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
@@ -22,7 +23,6 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-user.css';
-import CompanyService from '../services/CompanyService';
 
 export default class CreateUser extends Component {
 
@@ -30,6 +30,7 @@ export default class CreateUser extends Component {
         super(props);
         this.state = {
             user: null,
+            admin: false,
             fullName: '',
             email: '',
             phone: '',
@@ -202,21 +203,27 @@ export default class CreateUser extends Component {
             fullName: this.state.fullName,
             language: UserService.getLanguage(),
             type: this.state.type,
-            avatar: this.state.avatar
+            avatar: this.state.avatar,
+            company: this.state.admin ? undefined : this.state.user._id
         };
 
-        UserService.signup(data)
-            .then(status => {
-                if (status === 200) {
-                    if (this.state.type === Env.RECORD_TYPE.COMPANY) window.location = '/companies';
-                    else window.location = '/users';
-                } else
+        UserService.create(data)
+            .then(data => {
+                if (data && data._id) {
+                    if (this.state.type === Env.RECORD_TYPE.COMPANY) {
+                        window.location = `/company?c=${data._id}`;
+                    }
+                    else {
+                        window.location = `/user?u=${data._id}`;
+                    }
+                } else {
                     this.setState({
                         error: true,
                         passwordError: false,
                         passwordsDontMatch: false,
                         loading: false
                     });
+                }
             }).catch(() => {
                 this.setState({
                     error: true,
@@ -262,7 +269,8 @@ export default class CreateUser extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user: user, visible: true });
+        const admin = Helper.admin(user);
+        this.setState({ user: user, admin, visible: true, type: admin ? '' : Env.RECORD_TYPE.USER });
     }
 
     componentDidMount() {
@@ -271,6 +279,7 @@ export default class CreateUser extends Component {
     render() {
         const {
             user,
+            admin,
             type,
             error,
             passwordError,
@@ -281,10 +290,11 @@ export default class CreateUser extends Component {
             visible,
             loading,
             fixFullNameError,
-            fixEmailError } = this.state, company = type === Env.RECORD_TYPE.COMPANY;
+            fixEmailError } = this.state,
+            company = type === Env.RECORD_TYPE.COMPANY;
 
         return (
-            <Master onLoad={this.onLoad} strict={true} admin={true}>
+            <Master onLoad={this.onLoad} strict={true}>
                 {user && <div className='create-user'>
                     <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
@@ -308,21 +318,23 @@ export default class CreateUser extends Component {
                                 </label>
                             </div>}
 
-                            <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
-                                <InputLabel className='required'>{commonStrings.TYPE}</InputLabel>
-                                <Select
-                                    label={commonStrings.TYPE}
-                                    value={type}
-                                    onChange={this.handleUserTypeChange}
-                                    variant='standard'
-                                    required
-                                    fullWidth
-                                >
-                                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
-                                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
-                                    <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
-                                </Select>
-                            </FormControl>
+                            {admin &&
+                                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                                    <InputLabel className='required'>{commonStrings.TYPE}</InputLabel>
+                                    <Select
+                                        label={commonStrings.TYPE}
+                                        value={type}
+                                        onChange={this.handleUserTypeChange}
+                                        variant='standard'
+                                        required
+                                        fullWidth
+                                    >
+                                        <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
+                                        <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
+                                        <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            }
 
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>

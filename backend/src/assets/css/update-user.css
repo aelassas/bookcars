@@ -1,6 +1,6 @@
 /* Create Company */
 
-div.create-user {
+div.update-user {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -9,11 +9,11 @@ div.create-user {
 	overflow: auto;
 }
 
-.user-form-wrapper {
+div.update-user .user-form-wrapper {
 	margin: 32px 0;
 }
 
-.user-form-title {
+div.update-user .user-form-title {
 	text-align: center;
 	text-transform: capitalize;
 	color: #121212;
@@ -22,11 +22,11 @@ div.create-user {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-	.user-form {
+	div.update-user .user-form {
 		margin-top: 45px !important;
 		margin-left: calc(50% - 180px) !important;
 		width: 360px;
-		height: 1000px;
+		height: 900px;
 		padding: 30px;
 	}
 }
@@ -34,11 +34,11 @@ div.create-user {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-	.user-form {
+	div.update-user .user-form {
 		margin-top: 45px !important;
 		margin-left: calc(50% - 275px) !important;
 		width: 550px;
-		height: 970px;
+		height: 830px;
 		padding: 30px;
 	}
 }

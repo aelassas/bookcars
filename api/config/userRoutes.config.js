@@ -1,4 +1,5 @@
 export default {
+    create: '/api/create-user',
     signup: '/api/sign-up',
     confirmEmail: '/api/confirm-email/:email/:token',
     resendLink: '/api/resend-link',
@@ -15,5 +16,6 @@ export default {
     deleteAvatar: '/api/delete-avatar/:userId',
     deleteTempAvatar: '/api/delete-temp-avatar/:avatar',
     getUsers: '/api/users/:page/:size',
-    delete: '/api/delete-users'
+    delete: '/api/delete-users',
+    checkPassword: '/api/check-password/:id/:password'
 };

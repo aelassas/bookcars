@@ -16,7 +16,7 @@ export default class Users extends Component {
         super(props);
         this.state = {
             user: null,
-            isAdmin: false,
+            admin: false,
             types: [],
             keyword: '',
             reload: false
@@ -38,15 +38,15 @@ export default class Users extends Component {
     }
 
     onLoad = (user) => {
-        const isAdmin = Helper.isAdmin(user), types = isAdmin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.USER];
-        this.setState({ user, isAdmin, types });
+        const admin = Helper.admin(user), types = admin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.USER];
+        this.setState({ user, admin, types });
     }
 
     componentDidMount() {
     }
 
     render() {
-        const { user, isAdmin, types, keyword, reload } = this.state;
+        const { user, admin, types, keyword, reload } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -58,18 +58,19 @@ export default class Users extends Component {
                             className='cl-user-filter'
                         />
 
-                        {isAdmin && <UserTypeFilter
-                            onChange={this.handleUserTypeFilterChange}
-                        />
+                        {admin &&
+                            <UserTypeFilter
+                                onChange={this.handleUserTypeFilterChange}
+                            />
                         }
-                        {isAdmin && <Button
+                        <Button
                             variant="contained"
                             className='btn-primary cl-new-user'
                             size="small"
                             href='/create-user'
                         >
                             {strings.NEW_USER}
-                        </Button>}
+                        </Button>
 
                     </div>
                     <div className='col-2'>
@@ -79,8 +80,8 @@ export default class Users extends Component {
                             user={user}
                             types={types}
                             keyword={keyword}
-                            checkboxSelection={!Env.isMobile()}
-                            hideTypeColumn={!isAdmin}
+                            checkboxSelection={!Env.isMobile() && admin}
+                            hideTypeColumn={!admin}
                             reload={reload}
                             onLoad={this.handleUserListLoad}
                         />

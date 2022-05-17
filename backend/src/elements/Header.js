@@ -61,7 +61,7 @@ export default function Header(props) {
     const [init, setInit] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
-    // const [isAdmin, setIsAdmin] = useState(false);
+    // const [admin, setIsAdmin] = useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -228,7 +228,7 @@ export default function Header(props) {
                         MessageService.getMessageCounter(props.user._id)
                             .then(messageCounter => {
                                 setIsSignedIn(true);
-                                // setIsAdmin(Helper.isAdmin(props.user));
+                                // setIsAdmin(Helper.admin(props.user));
                                 setNotificationsCount(notificationCounter.count);
                                 setMessagesCount(messageCounter.count);
                                 setIsLoading(false);

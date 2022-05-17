@@ -304,7 +304,7 @@ export default class Booking extends Component {
                         .then(booking => {
                             if (booking) {
 
-                                if (!Helper.isAdmin(user) && booking.company._id !== user._id) {
+                                if (!Helper.admin(user) && booking.company._id !== user._id) {
                                     return this.setState({ loading: false, noMatch: true });
                                 }
 

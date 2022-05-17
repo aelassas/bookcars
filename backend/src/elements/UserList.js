@@ -96,15 +96,8 @@ class BookingList extends Component {
                 renderCell: (params) => (
                     <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>
                 ),
-            }
-        ];
-
-        if (this.props.hideTypeColumn) {
-            columns.splice(3, 1);
-        }
-
-        if (Helper.isAdmin(user)) {
-            columns.push({
+            },
+            {
                 field: 'action',
                 headerName: '',
                 sortable: false,
@@ -115,21 +108,24 @@ class BookingList extends Component {
                         this.setState({ selectedId: params.row._id, openDeleteDialog: true });
                     };
 
+                    const _user = params.row;
                     return (
-                        <div>
-                            <Tooltip title={commonStrings.UPDATE}>
-                                <IconButton href={`update-user?u=${params.row._id}`}>
-                                    <EditIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title={commonStrings.DELETE}>
-                                <IconButton
-                                    onClick={handleDelete}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Tooltip>
+                        user.type === Env.RECORD_TYPE.ADMIN || _user.company === user._id ?
+                            <div>
+                                <Tooltip title={commonStrings.UPDATE}>
+                                    <IconButton href={`update-user?u=${params.row._id}`}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={commonStrings.DELETE}>
+                                    <IconButton
+                                        onClick={handleDelete}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                            : <></>
 
-                        </div>
                     );
                 },
                 renderHeader: () => {
@@ -152,8 +148,13 @@ class BookingList extends Component {
                             : <></>
                     );
                 }
-            });
+            }
+        ];
+
+        if (this.props.hideTypeColumn) {
+            columns.splice(3, 1);
         }
+
 
         return columns;
     }

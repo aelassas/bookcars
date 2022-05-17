@@ -122,6 +122,89 @@ routes.route(routeNames.signup).post((req, res) => {
         });
 });
 
+routes.route(routeNames.create).post((req, res) => {
+    const { body } = req;
+    body.verified = false;
+    body.blacklisted = false;
+
+    const user = new User(body);
+    user.save()
+        .then(user => {
+            // avatar
+            if (body.avatar) {
+                const avatar = path.join(CDN_TEMP, body.avatar);
+                if (fs.existsSync(avatar)) {
+                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`;
+                    const newPath = path.join(CDN, filename);
+
+                    try {
+                        fs.renameSync(avatar, newPath);
+                        user.avatar = filename;
+                        user.save()
+                            .catch(err => {
+                                console.error(strings.DB_ERROR, err);
+                                res.status(400).send(strings.DB_ERROR + err);
+                            });
+                    } catch (err) {
+                        console.error(strings.ERROR, err);
+                        res.status(400).send(strings.ERROR + err);
+                    }
+                }
+            }
+
+            // generate token and save
+            const token = new Token({ user: user._id, token: uuid() });
+
+            token.save()
+                .then(token => {
+                    // Send email
+                    strings.setLanguage(user.language);
+
+                    const transporter = nodemailer.createTransport({
+                        host: SMTP_HOST,
+                        port: SMTP_PORT,
+                        auth: {
+                            user: SMTP_USER,
+                            pass: SMTP_PASS
+                        }
+                    });
+                    const mailOptions = {
+                        from: SMTP_FROM,
+                        to: user.email,
+                        subject: strings.ACCOUNT_VALIDATION_SUBJECT,
+                        html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>'
+                            + strings.ACCOUNT_VALIDATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>'
+                            + '</p>'
+                    };
+                    transporter.sendMail(mailOptions, (err, info) => {
+                        if (err) {
+                            console.error(strings.SMTP_ERROR, err);
+
+                            User.deleteOne({ _id: user._id }, (error, response) => {
+                                if (error) {
+                                    console.error(strings.DB_ERROR, error);
+                                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + error));
+                                } else {
+                                    res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_TECHNICAL_ISSUE + ' ' + err.response));
+                                }
+                            });
+                        } else {
+                            return res.json({ _id: user._id });
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error(strings.DB_ERROR, err);
+                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
+                });
+
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
 // Sign in Router
 routes.route(routeNames.signin).post((req, res) => {
     User.findOne({ email: req.body.email })
@@ -172,7 +255,7 @@ routes.route(routeNames.signin).post((req, res) => {
                     } else {
                         res.sendStatus(204);
                     }
-                })
+                });
             }
         });
 });
@@ -292,11 +375,12 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 console.error('[user.update] User not found:', req.body.email);
                 res.sendStatus(204);
             } else {
-                const { fullName, phone, bio, location } = req.body;
+                const { fullName, phone, bio, location, type } = req.body;
                 user.fullName = fullName;
                 user.phone = phone;
                 user.location = location;
                 user.bio = bio;
+                user.type = type;
 
                 user.save()
                     .then(() => {
@@ -366,7 +450,20 @@ routes.route(routeNames.updateLanguage).post(authJwt.verifyToken, (req, res) => 
 
 // Get User by Id Router
 routes.route(routeNames.getUser).get(authJwt.verifyToken, (req, res) => {
-    User.findById(req.params.id)
+    User.findById(req.params.id, {
+        company: 1,
+        email: 1,
+        phone: 1,
+        fullName: 1,
+        verified: 1,
+        language: 1,
+        enableEmailNotifications: 1,
+        avatar: 1,
+        bio: 1,
+        location: 1,
+        type: 1,
+        blacklisted: 1,
+    })
         .lean()
         .then(user => {
             if (!user) {
@@ -494,24 +591,36 @@ routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, (req, res) =
 routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
     User.findOne({ _id: req.body._id })
         .then(user => {
-            if (req.body.strict && req.body.password !== user.password) {
-                res.sendStatus(204);
-                return;
-            }
 
             if (!user) {
                 console.error('[user.resetPassword] User not found:', req.body._id);
-                res.sendStatus(204);
-            } else {
+                return res.sendStatus(204);
+            }
+
+            const resetPassword = () => {
                 user.password = req.body.newPassword;
                 user.save()
                     .then(() => {
-                        res.sendStatus(200);
+                        return res.sendStatus(200);
                     })
                     .catch(err => {
                         console.error(strings.DB_ERROR, err);
-                        res.status(400).send(strings.DB_ERROR + err);
+                        return res.status(400).send(strings.DB_ERROR + err);
                     });
+            };
+
+            if (req.body.strict) {
+                bcrypt.compare(req.body.password, user.password).then(async passwordMatch => {
+                    if (passwordMatch) {
+                        resetPassword();
+                    }
+                    else {
+                        return res.sendStatus(204);
+                    }
+                });
+            }
+            else {
+                resetPassword();
             }
         })
         .catch(err => {
@@ -519,6 +628,34 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
             res.status(400).send(strings.DB_ERROR + err);
         });;
 });
+
+routes.route(routeNames.checkPassword).get(authJwt.verifyToken, (req, res) => {
+    User.findById(req.params.id)
+        .then(user => {
+            if (user) {
+                console.log('------------user._id', user._id)
+                console.log('------------req.params.password', req.params.password)
+                console.log('------------user.password', user.password)
+                bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
+                    console.log('------------passwordMatch', passwordMatch)
+                    if (passwordMatch) {
+                        return res.sendStatus(200);
+                    }
+                    else {
+                        return res.sendStatus(204);
+                    }
+                });
+            } else {
+                console.error('[user.checkPassword] User not found:', req.params.id);
+                return res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });;
+});
+
 
 // Search users route
 routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => {
@@ -544,6 +681,22 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
                 }
             },
             {
+                $project: {
+                    company: 1,
+                    email: 1,
+                    phone: 1,
+                    fullName: 1,
+                    verified: 1,
+                    language: 1,
+                    enableEmailNotifications: 1,
+                    avatar: 1,
+                    bio: 1,
+                    location: 1,
+                    type: 1,
+                    blacklisted: 1,
+                }
+            },
+            {
                 $facet: {
                     resultData: [
                         { $sort: { fullName: 1 } },
@@ -557,9 +710,6 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
                     ]
                 }
             }
-            // { $sort: { fullName: 1 } },
-            // { $skip: ((page - 1) * pageSize) },
-            // { $limit: pageSize }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
         res.json(users);

@@ -5,6 +5,10 @@ import Env from '../config/env.config.js';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    company: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     email: {
         type: String,
         lowercase: true,
