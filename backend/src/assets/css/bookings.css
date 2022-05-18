@@ -30,6 +30,7 @@ div.bookings {
         width: 300px;
         padding: 20px 0 0 12px;
         background: #fefefe;
+        overflow: auto;
     }
 
     div.bookings div.col-1 .cl-company-filter,
