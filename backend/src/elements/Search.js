@@ -43,16 +43,16 @@ class Search extends Component {
                     InputProps={{
                         endAdornment: keyword ? (
                             <IconButton size='small' onClick={() => this.setState({ keyword: '' })}>
-                                <ClearIcon style={{ width: 18, height: 18 }} />
+                                <ClearIcon style={{ width: 20, height: 20 }} />
                             </IconButton>
                         ) : <></>
                     }}
                     autoComplete='off'
                     className='sc-search'
                 />
-                < IconButton onClick={this.handleSearch} >
+                <IconButton onClick={this.handleSearch} >
                     <SearchIcon />
-                </IconButton >
+                </IconButton>
             </div>
         );
     }

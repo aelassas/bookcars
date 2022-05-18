@@ -275,6 +275,7 @@ export default class Helper {
         if (a.to !== b.to) return false;
         if (a.pickupLocation !== b.pickupLocation) return false;
         if (a.dropOffLocation !== b.dropOffLocation) return false;
+        if (a.keyword !== b.keyword) return false;
 
         return true;
     }

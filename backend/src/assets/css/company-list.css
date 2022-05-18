@@ -1,0 +1,59 @@
+section.company-list .empty-list {
+    margin-top: 15px;
+    text-align: center;
+    width: 250px;
+    margin-left: calc(50% - 125px);
+}
+
+
+section.company-list {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-top: 10px;
+}
+
+section.company-list article {
+    position: relative;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    color: #333;
+    font-size: 12px;
+    height: 100px;
+    padding: 25px;
+    margin-bottom: 15px;
+    width: 500px;
+    height: 75px;
+    margin-left: calc(50% - 250px);
+    word-break: break-word;
+}
+
+section.company-list article .company-item .company-item-avatar {
+    float: left;
+    margin-top: 3px;
+    color: #333;
+}
+
+section.company-list article .company-item .company-item-title {
+    float: left;
+    display: inline;
+    font-size: 1.7em;
+    margin-left: 20px;
+    text-size-adjust: none;
+    line-height: 1.3em;
+    text-decoration: none;
+    color: #333;
+}
+
+section.company-list article .company-actions {
+    float: right;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {}

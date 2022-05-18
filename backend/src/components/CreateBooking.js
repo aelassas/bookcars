@@ -10,9 +10,9 @@ import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
 import Backdrop from '../elements/SimpleBackdrop';
 import CompanySelectList from '../elements/CompanySelectList';
-import DriverList from '../elements/DriverList';
+import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
-import BookingCarList from '../elements/BookingCarList';
+import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
 import { toast } from 'react-toastify';
 import {
@@ -72,7 +72,7 @@ export default class CreateBooking extends Component {
         this.setState({ dropOffLocation: values.length > 0 ? values[0]._id : null });
     };
 
-    handleBookingCarListChange = (values) => {
+    handleCarSelectListChange = (values) => {
         this.setState({ car: values.length > 0 ? values[0]._id : null });
     };
 
@@ -208,7 +208,7 @@ export default class CreateBooking extends Component {
                                 </FormControl>
                             }
 
-                            <DriverList
+                            <UserSelectList
                                 label={blStrings.DRIVER}
                                 required
                                 multiple={false}
@@ -233,11 +233,11 @@ export default class CreateBooking extends Component {
                                 />
                             </FormControl>
 
-                            <BookingCarList
+                            <CarSelectList
                                 label={blStrings.CAR}
                                 company={company}
                                 pickupLocation={pickupLocation}
-                                onChange={this.handleBookingCarListChange}
+                                onChange={this.handleCarSelectListChange}
                                 required
                             />
 

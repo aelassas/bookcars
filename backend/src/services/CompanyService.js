@@ -20,8 +20,12 @@ export default class CompanyService {
         return axios.get(`${Env.API_HOST}/api/company/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
-    static getCompanies(keyword) {
-        return axios.get(`${Env.API_HOST}/api/companies/?s=${encodeURIComponent(keyword || '')}`, { headers: UserService.authHeader() }).then(res => res.data);
+    static getCompanies(keyword, page, size) {
+        return axios.get(`${Env.API_HOST}/api/companies/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
+    }
+
+    static getAllCompanies() {
+        return axios.get(`${Env.API_HOST}/api/all-companies`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
 }

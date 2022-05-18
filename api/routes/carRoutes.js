@@ -310,12 +310,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         //     await new Car(car).save();
         // }
 
-        // Car.deleteMany({ name: { $regex: /Car/ } }, (err, response) => {
-        //     if (err) {
-        //         console.error(strings.DB_ERROR + err);
-        //         res.status(400).send(strings.DB_ERROR + err);
-        //     }
-        // });
+        // await Car.deleteMany({ name: { $regex: /Car/ } });
 
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';

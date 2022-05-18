@@ -188,7 +188,7 @@ export default class Company extends Component {
                                     </Tooltip>
                                 }
                             </div>
-                            {rowCount > -1 &&
+                            {rowCount > 0 &&
                                 <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
                             }
                         </div>

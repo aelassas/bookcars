@@ -48,7 +48,7 @@ export default class Locations extends Component {
                     <div className='col-1'>
                         <Search onSubmit={this.handleSearch} />
 
-                        {rowCount > -1 &&
+                        {rowCount > 0 &&
                             <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} />
                         }
 

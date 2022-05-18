@@ -94,9 +94,8 @@ export default class Car extends Component {
                     CarService.getCar(id)
                         .then(car => {
                             if (car) {
-
                                 if (user.type === Env.RECORD_TYPE.ADMIN) {
-                                    CompanyService.getCompanies()
+                                    CompanyService.getAllCompanies()
                                         .then(companies => {
                                             const companyIds = Helper.flattenCompanies(companies);
                                             this.setState({ companies: companyIds, car, loading: false, visible: true });

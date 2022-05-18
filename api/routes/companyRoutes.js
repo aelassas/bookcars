@@ -95,25 +95,82 @@ routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
 });
 
 // Get Companies Router
-routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
-    const keyword = escapeStringRegexp(req.query.s || '');
-    const options = 'i';
+routes.route(routeNames.getCompanies).get(authJwt.verifyToken, async (req, res) => {
+    try {
+        // for (let i = 1; i < 60; i++) {
+        //     const company = new User({
+        //         email: `company${i}@bookcars.ma`,
+        //         fullName: `Company ${i}`,
+        //         password: '$2a$10$6lsV6VfIesiQMPcqTHly7ed0B7OWs3s6QKRRMhyZBTn8ALdtH9CbO',
+        //         verified: true,
+        //         language: 'fr',
+        //         enableEmailNotifications: true,
+        //         type: 'company',
+        //         blacklisted: false,
+        //         avatar: '62794b5121c117948f2a9b2e_1652116388565.png'
+        //     });
+        //     await new User(company).save();
+        // }
 
-    User.find({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: keyword, $options: options } })
-        .collation({ locale: Env.DEFAULT_LANGUAGE, strength: 2 })
-        .sort({ fullName: 1 })
-        .lean()
-        .then(data => {
-            const companies = [];
-            for (const { _id, fullName, avatar } of data) {
-                companies.push({ _id, fullName, avatar });
+        await User.deleteMany({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: 'Company', $options: 'i' } });
+
+        const page = parseInt(req.params.page);
+        const size = parseInt(req.params.size);
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+
+        const data = await User.aggregate([
+            { $match: { type: Env.USER_TYPE.COMPANY, fullName: { $regex: keyword, $options: options } } },
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { fullName: 1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
             }
-            res.json(companies);
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err);
-            res.status(400).send(strings.DB_ERROR + err);
-        });
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
+
+        if (data.length > 0) {
+            data[0].resultData = data[0].resultData.map(company => {
+                const { _id, fullName, avatar } = company;
+                return { _id, fullName, avatar };
+            });
+        }
+
+        res.json(data);
+    } catch (err) {
+        console.error(`[company.getCompanies] ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
+});
+
+// Get All Companies Router
+routes.route(routeNames.getAllCompanies).get(authJwt.verifyToken, async (req, res) => {
+    try {
+        let data = await User.aggregate([
+            { $match: { type: Env.USER_TYPE.COMPANY } },
+            { $sort: { fullName: 1 } }
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
+
+        if (data.length > 0) {
+            data = data.map(company => {
+                const { _id, fullName, avatar } = company;
+                return { _id, fullName, avatar };
+            });
+        }
+
+        res.json(data);
+    } catch (err) {
+        console.error(`[company.getAllCompanies] ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 export default routes;

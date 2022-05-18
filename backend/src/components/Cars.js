@@ -67,7 +67,7 @@ export default class Cars extends Component {
                                 onChange={this.handleCompanyFilterChange}
                             />
 
-                            {rowCount > -1 &&
+                            {rowCount > 0 &&
                                 <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} />
                             }
 
@@ -97,8 +97,7 @@ export default class Cars extends Component {
                         </div>
                     </div>
                 }
-
-            </Master >
+            </Master>
         );
     }
 }

@@ -108,7 +108,7 @@ export default class User extends Component {
                                     });
                                 };
                                 if (Helper.admin(loggedUser)) {
-                                    CompanyService.getCompanies()
+                                    CompanyService.getAllCompanies()
                                         .then(companies => {
                                             const companyIds = Helper.flattenCompanies(companies);
                                             setState(companyIds);

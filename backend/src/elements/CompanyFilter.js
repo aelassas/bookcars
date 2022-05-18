@@ -69,7 +69,7 @@ class CompanyFilter extends Component {
     };
 
     componentDidMount() {
-        CompanyService.getCompanies()
+        CompanyService.getAllCompanies()
             .then(companies => {
                 const companyIds = Helper.flattenCompanies(companies);
                 this.setState({ companies, checkedCompanies: companyIds }, () => {

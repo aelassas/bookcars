@@ -77,6 +77,8 @@ export default class SignIn extends Component {
                                 window.location = '/car' + window.location.search;
                             } else if (params.has('b')) {
                                 window.location = '/booking' + window.location.search;
+                            } else {
+                                window.location = '/';
                             }
                         });
                     }

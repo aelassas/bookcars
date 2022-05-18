@@ -14,9 +14,9 @@ import NoMatch from './NoMatch';
 import Error from './Error';
 import CarList from '../elements/CarList';
 import CompanySelectList from '../elements/CompanySelectList';
-import DriverList from '../elements/DriverList';
+import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
-import BookingCarList from '../elements/BookingCarList';
+import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
 import {
     FormControl,
@@ -83,7 +83,7 @@ export default class Booking extends Component {
         this.setState({ dropOffLocation: values.length > 0 ? values[0] : null });
     };
 
-    handleBookingCarListChange = (values) => {
+    handleCarSelectListChange = (values) => {
         const { booking, car } = this.state, newCar = values.length > 0 ? values[0] : null;
 
         if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
@@ -396,7 +396,7 @@ export default class Booking extends Component {
                                     </FormControl>
                                 }
 
-                                <DriverList
+                                <UserSelectList
                                     label={blStrings.DRIVER}
                                     required
                                     multiple={false}
@@ -425,11 +425,11 @@ export default class Booking extends Component {
                                     />
                                 </FormControl>
 
-                                <BookingCarList
+                                <CarSelectList
                                     label={blStrings.CAR}
                                     company={company._id}
                                     pickupLocation={pickupLocation._id}
-                                    onChange={this.handleBookingCarListChange}
+                                    onChange={this.handleCarSelectListChange}
                                     required
                                     value={car}
                                 />

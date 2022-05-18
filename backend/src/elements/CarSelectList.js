@@ -15,7 +15,7 @@ import {
     Button
 } from '@mui/material';
 
-class BookingCarList extends Component {
+class CarSelectList extends Component {
 
     constructor(props) {
         super(props);
@@ -41,13 +41,10 @@ class BookingCarList extends Component {
         }
     };
 
-    getCars = (data) => {
-        const result = [];
-        for (const { _id, name, image } of data) {
-            result.push({ _id, name, image });
-        }
-        return result;
-    };
+    getCars = (cars) => cars.map(car => {
+        const { _id, name, image } = car;
+        return { _id, name, image };
+    });
 
     fetch = (onFetch) => {
         const { company, pickupLocation, keyword, page, cars, closeDialog } = this.state;
@@ -193,4 +190,4 @@ class BookingCarList extends Component {
     }
 }
 
-export default BookingCarList;
+export default CarSelectList;

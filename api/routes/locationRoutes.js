@@ -94,12 +94,7 @@ routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) 
         //     await new Location({ name }).save();
         // }
 
-        // Location.deleteMany({ name: { $regex: 'location', $options: 'i' } }, (err, response) => {
-        //     if (err) {
-        //         console.error(strings.DB_ERROR + err);
-        //         res.status(400).send(strings.DB_ERROR + err);
-        //     }
-        // });
+        // await Location.deleteMany({ name: { $regex: 'location', $options: 'i' } });
 
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);

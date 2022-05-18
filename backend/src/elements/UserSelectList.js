@@ -6,7 +6,7 @@ import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
-class DriverList extends Component {
+class UserSelectList extends Component {
 
     constructor(props) {
         super(props);
@@ -21,13 +21,10 @@ class DriverList extends Component {
         };
     }
 
-    getDrivers = (data) => {
-        const result = [];
-        for (const { _id, fullName, avatar } of data) {
-            result.push({ _id, name: fullName, image: avatar });
-        }
-        return result;
-    };
+    getDrivers = (users) => users.map(user => {
+        const { _id, fullName, avatar } = user;
+        return { _id, name: fullName, image: avatar };
+    });
 
     fetch = (onFetch) => {
         const { drivers, keyword, page } = this.state;
@@ -127,4 +124,4 @@ class DriverList extends Component {
     }
 }
 
-export default DriverList;
+export default UserSelectList;

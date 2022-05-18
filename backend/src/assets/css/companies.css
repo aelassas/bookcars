@@ -39,43 +39,6 @@
         left: 0;
         overflow: auto;
     }
-
-    .companies section.list {
-        width: 100%;
-    }
-
-    .companies section.list article {
-        position: relative;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 2px;
-        color: #333;
-        font-size: 12px;
-        height: 100px;
-        padding: 25px;
-        margin: 0 1px 10px;
-    }
-
-    .companies section.list article .company-item .company-item-avatar {
-        float: left;
-        margin-top: 3px;
-        color: #333;
-    }
-
-    .companies section.list article .company-item .company-item-title {
-        float: left;
-        display: inline;
-        font-size: 1.7em;
-        margin-left: 20px;
-        text-size-adjust: none;
-        line-height: 1.3em;
-        text-decoration: none;
-        color: #333;
-    }
-
-    .companies section.list article .company-actions {
-        float: right;
-    }
 }
 
 /* Device width is greater than or equal to 960px */
@@ -99,44 +62,5 @@
         right: 0;
         left: 300px;
         overflow: auto;
-    }
-
-    .companies section.list {
-        width: 500px;
-        margin-left: calc(50% - 250px) !important;
-        margin-top: 15px;
-    }
-
-    .companies section.list article {
-        position: relative;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 2px;
-        color: #333;
-        font-size: 12px;
-        height: 100px;
-        padding: 25px;
-        margin-bottom: 15px;
-    }
-
-    .companies section.list article .company-item .company-item-avatar {
-        float: left;
-        margin-top: 3px;
-        color: #333;
-    }
-
-    .companies section.list article .company-item .company-item-title {
-        float: left;
-        display: inline;
-        font-size: 1.7em;
-        margin-left: 20px;
-        text-size-adjust: none;
-        line-height: 1.3em;
-        text-decoration: none;
-        color: #333;
-    }
-
-    .companies section.list article .company-actions {
-        float: right;
     }
 }
