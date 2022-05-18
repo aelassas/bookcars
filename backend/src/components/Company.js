@@ -3,12 +3,12 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/companies';
 import CompanyService from '../services/CompanyService';
-import CarService from '../services/CarService';
 import Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
 import CarList from '../elements/CarList';
+import InfoBox from '../elements/InfoBox';
 import Error from './Error';
 import NoMatch from './NoMatch';
 import { toast } from 'react-toastify';
@@ -39,12 +39,10 @@ export default class Company extends Component {
             company: null,
             error: false,
             visible: false,
-            loading: true,
+            loading: false,
             noMatch: false,
             openDeleteDialog: false,
-            cars: [],
-            page: 1,
-            checkedCompanies: []
+            rowCount: -1
         };
     }
 
@@ -82,17 +80,12 @@ export default class Company extends Component {
         this.setState({ openDeleteDialog: false });
     };
 
-    fetch = () => {
-        const { page, checkedCompanies, cars } = this.state;
-        const payload = checkedCompanies;
+    handleCarListLoad = (data) => {
+        this.setState({ rowCount: data.rowCount });
+    };
 
-        this.setState({ loading: true });
-        CarService.getCars('', payload, page, Env.CARS_PAGE_SIZE)
-            .then(data => {
-                const _cars = page === 1 ? data : [...cars, ...data];
-                this.setState({ cars: _cars, loading: false, fetch: data.length > 0 });
-            })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+    handleCarDelete = (rowCount) => {
+        this.setState({ rowCount });
     };
 
     onLoad = (user) => {
@@ -106,26 +99,12 @@ export default class Company extends Component {
                             if (company) {
                                 this.setState({
                                     company,
-                                    checkedCompanies: [company._id],
                                     fullName: company.fullName,
                                     phone: company.phone,
                                     location: company.location,
                                     bio: company.bio,
-                                    visible: true
-                                }, () => {
-                                    this.fetch();
-
-                                    const div = document.querySelector('.col-2');
-                                    if (div) {
-                                        div.onscroll = (event) => {
-                                            const { fetch, loading, page } = this.state;
-                                            if (fetch && !loading && (window.innerHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.PAGE_FETCH_OFFSET)) {
-                                                this.setState({ page: page + 1 }, () => {
-                                                    this.fetch();
-                                                });
-                                            }
-                                        };
-                                    }
+                                    visible: true,
+                                    loading: false
                                 });
                             } else {
                                 this.setState({ loading: false, noMatch: true });
@@ -141,18 +120,15 @@ export default class Company extends Component {
                 this.setState({ loading: false, noMatch: true });
             }
         });
-    }
-
-    componentDidMount() {
-    }
+    };
 
     render() {
-        const { visible, loading, error, noMatch, user, company, cars, openDeleteDialog } = this.state;
+        const { visible, loading, error, noMatch, user, company, openDeleteDialog, rowCount } = this.state;
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
-                {visible &&
+                {visible && company &&
                     <div className='company'>
                         <div className='col-1'>
                             <section className='company-avatar-sec'>
@@ -212,13 +188,18 @@ export default class Company extends Component {
                                     </Tooltip>
                                 }
                             </div>
+                            {rowCount > -1 &&
+                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
+                            }
                         </div>
                         <div className='col-2'>
                             <CarList
                                 user={user}
-                                cars={cars}
-                                loading={loading}
-                                hideCompany
+                                companies={[company._id]}
+                                keyword={''}
+                                reload={false}
+                                onLoad={this.handleCarListLoad}
+                                onDelete={this.handleCarDelete}
                             />
                         </div>
                     </div>

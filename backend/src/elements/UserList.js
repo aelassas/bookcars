@@ -220,6 +220,7 @@ class BookingList extends Component {
     handleConfirmDelete = () => {
         const { selectedIds, selectedId, rows } = this.state;
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
+        
         UserService.delete(ids)
             .then(status => {
                 if (status === 200) {

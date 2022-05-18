@@ -16,7 +16,7 @@ export const strings = new LocalizedStrings({
         PHONE: 'Téléphone',
         LOCATION: 'Localisation',
         BIO: 'Bio',
-        IMAGE_REQUIRED: "L'image est obligatoire.",
+        IMAGE_REQUIRED: "Image requise",
         LOADING: 'Chargement...',
         PLEASE_WAIT: 'Veuillez patienter...',
         SEARCH: 'Rechercher',
@@ -57,7 +57,8 @@ export const strings = new LocalizedStrings({
         USER_TYPE_REQUIRED: 'Veuillez renseigner le champ : Type',
         FIX_ERRORS: 'Veuillez corriger les erreurs.',
         SEND_MESSAGE: 'Envoyer un message',
-        VERIFIED: 'Compte vérifié'
+        VERIFIED: 'Compte vérifié',
+        CAR: 'voiture'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -72,7 +73,7 @@ export const strings = new LocalizedStrings({
         PHONE: 'Phone',
         LOCATION: 'Location',
         BIO: 'Bio',
-        IMAGE_REQUIRED: 'The picture is required.',
+        IMAGE_REQUIRED: 'Image required',
         LOADING: 'Loading...',
         PLEASE_WAIT: 'Please wait...',
         SEARCH: 'Search',
@@ -113,7 +114,8 @@ export const strings = new LocalizedStrings({
         USER_TYPE_REQUIRED: 'Please fill in the field: Type',
         FIX_ERRORS: 'Please fix errors.',
         SEND_MESSAGE: 'Send a message',
-        VERIFIED: 'Verified account'
+        VERIFIED: 'Verified account',
+        CAR: 'car'
     }
 });
 

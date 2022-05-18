@@ -154,7 +154,7 @@ export default class ResetPassword extends Component {
 
     onLoad = (user) => {
         this.setState({ user });
-        console.log(user);
+        
         const params = new URLSearchParams(window.location.search);
         if (params.has('u')) {
             const id = params.get('u');

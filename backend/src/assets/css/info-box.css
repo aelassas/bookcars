@@ -1,0 +1,10 @@
+div.info-box {
+    background: #fafafa;
+    margin: 10px 10px 0 0;
+    padding: 15px;
+    border: 1px solid #dadada;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

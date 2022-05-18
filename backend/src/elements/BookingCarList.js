@@ -129,7 +129,7 @@ class BookingCarList extends Component {
                     ListboxProps={{
                         onScroll: (event) => {
                             const listboxNode = event.currentTarget;
-                            if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_FETCH_OFFSET))) {
+                            if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
                                 const p = page + 1;
                                 this.setState({ page: p }, () => {
                                     this.fetch();

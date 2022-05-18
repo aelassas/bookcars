@@ -16,11 +16,10 @@ div.company-filter ul.company-list {
 
 div.company-filter ul.company-list li {
     width: 42%;
-    float: left;
     margin-bottom: 12px;
     margin-left: 4%;
     margin-right: 4%;
-    clear: none;
+    display: inline-block;
 }
 
 div.company-filter ul.company-list li label {

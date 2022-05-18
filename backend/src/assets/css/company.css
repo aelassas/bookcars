@@ -45,6 +45,10 @@ div.company {
     margin-left: 5px;
 }
 
+.company div.col-1 .car-count {
+    margin-left: 10px;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -72,11 +76,6 @@ div.company {
         bottom: 0;
         right: 0;
         left: 0;
-        overflow: auto;
-    }
-
-    .company div.col-2 .cars {
-        width: 100%;
     }
 }
 
@@ -106,7 +105,5 @@ div.company {
         bottom: 0;
         right: 0;
         left: 300px;
-        overflow: auto;
-        padding-top: 10px;
     }
 }

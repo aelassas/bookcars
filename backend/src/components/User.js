@@ -139,7 +139,10 @@ export default class User extends Component {
 
     render() {
         const { visible, loading, error, noMatch, loggedUser, user, openDeleteDialog, companies, statuses } = this.state;
-        const edit = (loggedUser && user) && (loggedUser.type === Env.RECORD_TYPE.ADMIN || loggedUser._id === user._id);
+        const edit = (loggedUser && user) &&
+            (loggedUser.type === Env.RECORD_TYPE.ADMIN
+                || loggedUser._id === user._id
+                || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company));
         const company = user && user.type === Env.RECORD_TYPE.COMPANY;
 
         return (

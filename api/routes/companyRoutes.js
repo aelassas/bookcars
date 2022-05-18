@@ -100,6 +100,8 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, (req, res) => {
     const options = 'i';
 
     User.find({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: keyword, $options: options } })
+        .collation({ locale: Env.DEFAULT_LANGUAGE, strength: 2 })
+        .sort({ fullName: 1 })
         .lean()
         .then(data => {
             const companies = [];

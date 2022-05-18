@@ -263,12 +263,7 @@ export default class SignUp extends Component {
                                         onBlur={this.handleOnBlur}
                                         onChange={this.handleOnChangeEmail}
                                         required
-                                        inputProps={{
-                                            autoComplete: 'new-email',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        autoComplete="off"
                                     />
                                     <FormHelperText error={emailError}>
                                         {emailError ? strings.INVALID_EMAIL : ''}

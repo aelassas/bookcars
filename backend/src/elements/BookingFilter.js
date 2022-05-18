@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/booking-filter'
-import LocationList from '../elements/LocationList';
+import LocationSelectList from './LocationSelectList';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -76,7 +76,7 @@ class BookingFilter extends Component {
                         </LocalizationProvider>
                     </FormControl>
                     <FormControl fullWidth margin="dense">
-                        <LocationList
+                        <LocationSelectList
                             label={strings.PICKUP_LOCATION}
                             required={false}
                             multiple={false}
@@ -85,7 +85,7 @@ class BookingFilter extends Component {
                         />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
-                        <LocationList
+                        <LocationSelectList
                             label={strings.DROP_OFF_LOCATION}
                             required={false}
                             multiple={false}

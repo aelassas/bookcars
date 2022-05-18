@@ -15,6 +15,7 @@ div.locations .new-location {
     width: 270px;
 }
 
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -37,11 +38,6 @@ div.locations .new-location {
         bottom: 0;
         right: 0;
         left: 0;
-        overflow: auto;
-    }
-
-    div.locations .list {
-        width: 100%;
     }
 }
 
@@ -65,11 +61,5 @@ div.locations .new-location {
         bottom: 0;
         right: 0;
         left: 300px;
-        overflow: auto;
-    }
-
-    div.locations .list {
-        width: 350px;
-        margin-left: calc(50% - 175px) !important;
     }
 }

@@ -225,7 +225,7 @@ export default class SignUp extends Component {
         if (user) {
             window.location.href = '/';
         } else {
-            this.setState({ visible: true }, () => console.log(this.state.visible));
+            this.setState({ visible: true });
         }
     };
 
@@ -270,12 +270,7 @@ export default class SignUp extends Component {
                                         onBlur={this.handleOnBlur}
                                         onChange={this.handleOnChangeEmail}
                                         required
-                                        inputProps={{
-                                            autoComplete: 'new-email',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        autoComplete="off"
                                     />
                                     <FormHelperText error={emailError}>
                                         {emailError ? commonStrings.INVALID_EMAIL : ''}

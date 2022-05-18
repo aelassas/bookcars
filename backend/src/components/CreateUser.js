@@ -364,12 +364,7 @@ export default class CreateUser extends Component {
                                     onBlur={this.handleEmailOnBlur}
                                     onChange={this.handleOnChangeEmail}
                                     required
-                                    inputProps={{
-                                        autoComplete: 'new-email',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
+                                    autoComplete="off"
                                 />
                                 <FormHelperText error={emailError}>
                                     {emailError ? commonStrings.INVALID_EMAIL : ''}

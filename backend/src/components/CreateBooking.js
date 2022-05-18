@@ -9,9 +9,9 @@ import { strings } from '../lang/create-booking';
 import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
 import Backdrop from '../elements/SimpleBackdrop';
-import CompanyList from '../elements/CompanyList';
+import CompanySelectList from '../elements/CompanySelectList';
 import DriverList from '../elements/DriverList';
-import LocationList from '../elements/LocationList';
+import LocationSelectList from '../elements/LocationSelectList';
 import BookingCarList from '../elements/BookingCarList';
 import StatusList from '../elements/StatusList';
 import { toast } from 'react-toastify';
@@ -198,7 +198,7 @@ export default class CreateBooking extends Component {
 
                             {!isCompany &&
                                 <FormControl fullWidth margin="dense">
-                                    <CompanyList
+                                    <CompanySelectList
                                         label={blStrings.COMPANY}
                                         required
                                         multiple={false}
@@ -216,7 +216,7 @@ export default class CreateBooking extends Component {
                                 onChange={this.handleDriverChange} />
 
                             <FormControl fullWidth margin="dense">
-                                <LocationList
+                                <LocationSelectList
                                     label={bfStrings.PICKUP_LOCATION}
                                     required
                                     variant='standard'
@@ -225,7 +225,7 @@ export default class CreateBooking extends Component {
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">
-                                <LocationList
+                                <LocationSelectList
                                     label={bfStrings.DROP_OFF_LOCATION}
                                     required
                                     variant='standard'

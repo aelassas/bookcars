@@ -9,8 +9,8 @@ import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
-import CompanyList from '../elements/CompanyList';
-import LocationList from '../elements/LocationList';
+import CompanySelectList from '../elements/CompanySelectList';
+import LocationSelectList from '../elements/LocationSelectList';
 import CarTypeList from '../elements/CarTypeList';
 import GearboxList from '../elements/GearboxList';
 import SeatsList from '../elements/SeatsList';
@@ -311,7 +311,7 @@ export default class CreateCar extends Component {
 
                             {!isCompany &&
                                 <FormControl fullWidth margin="dense">
-                                    <CompanyList
+                                    <CompanySelectList
                                         label={strings.COMPANY}
                                         required
                                         multiple={false}
@@ -323,7 +323,7 @@ export default class CreateCar extends Component {
                             }
 
                             <FormControl fullWidth margin="dense">
-                                <LocationList
+                                <LocationSelectList
                                     label={strings.LOCATIONS}
                                     required
                                     multiple

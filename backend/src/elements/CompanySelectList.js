@@ -6,7 +6,7 @@ import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
-class CompanyList extends Component {
+class CompanySelectList extends Component {
 
     constructor(props) {
         super(props);
@@ -73,4 +73,4 @@ class CompanyList extends Component {
     }
 }
 
-export default CompanyList;
+export default CompanySelectList;

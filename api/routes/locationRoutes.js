@@ -1,4 +1,5 @@
 import express from 'express';
+import Env from '../config/env.config.js';
 import routeNames from '../config/locationRoutes.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
@@ -88,6 +89,18 @@ routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
     try {
+        // for (let i = 1; i < 60; i++) {
+        //     const name = `Location ${i}`;
+        //     await new Location({ name }).save();
+        // }
+
+        // Location.deleteMany({ name: { $regex: 'location', $options: 'i' } }, (err, response) => {
+        //     if (err) {
+        //         console.error(strings.DB_ERROR + err);
+        //         res.status(400).send(strings.DB_ERROR + err);
+        //     }
+        // });
+
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
         const keyword = escapeStringRegexp(req.query.s || '');
@@ -95,10 +108,21 @@ routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) 
 
         const locations = await Location.aggregate([
             { $match: { name: { $regex: keyword, $options: options } } },
-            { $sort: { name: 1 } },
-            { $skip: ((page - 1) * size) },
-            { $limit: size }
-        ]);
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { name: 1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
+            }
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
         res.json(locations);
     } catch (err) {

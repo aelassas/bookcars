@@ -37,7 +37,6 @@
         bottom: 0;
         right: 0;
         left: 0;
-        overflow: auto;
     }
 
     .company-filter {
@@ -66,7 +65,5 @@
         bottom: 0;
         right: 0;
         left: 300px;
-        overflow: auto;
-        padding-top: 10px;
     }
 }

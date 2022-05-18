@@ -13,9 +13,9 @@ import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
 import CarList from '../elements/CarList';
-import CompanyList from '../elements/CompanyList';
+import CompanySelectList from '../elements/CompanySelectList';
 import DriverList from '../elements/DriverList';
-import LocationList from '../elements/LocationList';
+import LocationSelectList from '../elements/LocationSelectList';
 import BookingCarList from '../elements/BookingCarList';
 import StatusList from '../elements/StatusList';
 import {
@@ -385,7 +385,7 @@ export default class Booking extends Component {
 
                                 {!isCompany &&
                                     <FormControl fullWidth margin="dense">
-                                        <CompanyList
+                                        <CompanySelectList
                                             label={blStrings.COMPANY}
                                             required
                                             multiple={false}
@@ -406,7 +406,7 @@ export default class Booking extends Component {
                                 />
 
                                 <FormControl fullWidth margin="dense">
-                                    <LocationList
+                                    <LocationSelectList
                                         label={bfStrings.PICKUP_LOCATION}
                                         required
                                         variant='standard'
@@ -416,7 +416,7 @@ export default class Booking extends Component {
                                 </FormControl>
 
                                 <FormControl fullWidth margin="dense">
-                                    <LocationList
+                                    <LocationSelectList
                                         label={bfStrings.DROP_OFF_LOCATION}
                                         required
                                         variant='standard'

@@ -1,45 +1,40 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import UserService from '../services/UserService';
+import LocationService from '../services/LocationService';
 import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
-class DriverList extends Component {
+class LocationSelectList extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             init: false,
             loading: false,
-            drivers: [],
+            rows: [],
             fetch: false,
             page: 1,
             keyword: '',
-            selectedOptions: []
+            selectedOptions: [],
+            rowCount: 0
         };
     }
 
-    getDrivers = (data) => {
-        const result = [];
-        for (const { _id, fullName, avatar } of data) {
-            result.push({ _id, name: fullName, image: avatar });
-        }
-        return result;
-    };
-
     fetch = (onFetch) => {
-        const { drivers, keyword, page } = this.state;
-
+        const { rows, keyword, page } = this.state;
         this.setState({ loading: true });
-        UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
+
+        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? this.getDrivers(data[0].resultData) : [];
-                const _drivers = page === 1 ? _data : [...drivers, ..._data];
-                this.setState({ drivers: _drivers, loading: false, fetch: _data.length > 0 }, () => {
+                const _data = data.length > 0 ? data[0] : {};
+                if (_data.length === 0) _data.resultData = [];
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                this.setState({ rows: _rows, loading: false, fetch: _data.resultData.length > 0 }, () => {
                     if (onFetch) {
-                        onFetch();
+                        onFetch({ rows: _data.resultData, rowCount: totalRecords });
                     }
                 });
             })
@@ -66,7 +61,7 @@ class DriverList extends Component {
     render() {
         const { init,
             loading,
-            drivers,
+            rows,
             fetch,
             page,
             keyword,
@@ -76,11 +71,11 @@ class DriverList extends Component {
                 loading={loading}
                 label={this.props.label || ''}
                 callbackFromMultipleSelect={this.handleChange}
-                options={drivers}
+                options={rows}
                 selectedOptions={selectedOptions}
                 required={this.props.required || false}
                 multiple={this.props.multiple}
-                type={Env.RECORD_TYPE.USER}
+                type={Env.RECORD_TYPE.LOCATION}
                 variant={this.props.variant || 'standard'}
                 ListboxProps={{
                     onScroll: (event) => {
@@ -97,7 +92,7 @@ class DriverList extends Component {
                     (event) => {
                         if (!init) {
                             const p = 1;
-                            this.setState({ drivers: [], page: p }, () => {
+                            this.setState({ rows: [], page: p }, () => {
                                 this.fetch(() => { this.setState({ init: true }) });
                             });
                         }
@@ -109,7 +104,7 @@ class DriverList extends Component {
 
                         //if (event.target.type === 'text' && value !== keyword) {
                         if (value !== keyword) {
-                            this.setState({ drivers: [], page: 1, keyword: value }, () => {
+                            this.setState({ rows: [], page: 1, keyword: value }, () => {
                                 this.fetch();
                             });
                         }
@@ -117,7 +112,7 @@ class DriverList extends Component {
                 }
                 onClear={
                     (event) => {
-                        this.setState({ drivers: [], page: 1, keyword: '', fetch: true }, () => {
+                        this.setState({ rows: [], page: 1, keyword: '', fetch: true }, () => {
                             this.fetch();
                         });
                     }
@@ -127,4 +122,4 @@ class DriverList extends Component {
     }
 }
 
-export default DriverList;
+export default LocationSelectList;

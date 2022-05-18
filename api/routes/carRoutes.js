@@ -1,5 +1,6 @@
 import express from 'express';
 import routeNames from '../config/carRoutes.config.js';
+import Env from '../config/env.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import Car from '../schema/Car.js';
@@ -339,10 +340,21 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
                 }
             },
             { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
-            { $sort: { name: 1 } },
-            { $skip: ((page - 1) * size) },
-            { $limit: size }
-        ]);
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { name: 1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
+            }
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
         cars.forEach(car => {
             if (car.company) {
