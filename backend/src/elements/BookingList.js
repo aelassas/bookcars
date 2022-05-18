@@ -20,7 +20,10 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button
+    Button,
+    Card,
+    CardContent,
+    Typography
 } from '@mui/material';
 import {
     Edit as EditIcon,
@@ -261,7 +264,7 @@ class BookingList extends Component {
         if (companies.length > 0) {
             this.setState({ loading: true });
 
-            BookingService.getBookings({ companies, statuses, filter, car, user }, page, pageSize)
+            BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, pageSize)
                 .then(data => {
                     const _data = data.length > 0 ? data[0] : {};
                     const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
@@ -347,32 +350,42 @@ class BookingList extends Component {
             openDeleteDialog,
             openUpdateDialog,
             selectedIds,
-        } = this.state;
+            user
+        } = this.state, admin = Helper.admin(user);
 
         return (
             <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
-                {loggedUser && columns.length > 0 &&
-                    <DataGrid
-                        checkboxSelection={this.props.checkboxSelection}
-                        getRowId={(row) => row._id}
-                        columns={columns}
-                        rows={rows}
-                        rowCount={rowCount}
-                        // loading={loading}
-                        rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
-                        pagination
-                        page={page}
-                        pageSize={pageSize}
-                        paginationMode='server'
-                        onPageChange={(page) => this.setState({ page }, () => this.fetch())}
-                        onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
-                        localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                        components={{
-                            NoRowsOverlay: () => ''
-                        }}
-                        onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
-                        disableSelectionOnClick
-                    />
+
+                {loggedUser && (
+                    rows.length === 0 ?
+                        !loading && !admin &&
+                        <Card variant="outlined" className="empty-list">
+                            <CardContent>
+                                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                            </CardContent>
+                        </Card>
+                        :
+                        <DataGrid
+                            checkboxSelection={this.props.checkboxSelection}
+                            getRowId={(row) => row._id}
+                            columns={columns}
+                            rows={rows}
+                            rowCount={rowCount}
+                            // loading={loading}
+                            rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
+                            pagination
+                            page={page}
+                            pageSize={pageSize}
+                            paginationMode='server'
+                            onPageChange={(page) => this.setState({ page }, () => this.fetch())}
+                            onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
+                            localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                            components={{
+                                NoRowsOverlay: () => ''
+                            }}
+                            onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
+                            disableSelectionOnClick
+                        />)
                 }
                 <Dialog
                     disableEscapeKeyDown

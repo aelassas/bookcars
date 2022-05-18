@@ -5,6 +5,13 @@ div.bs-list {
     padding: 0;
 }
 
+div.bs-list .empty-list {
+    margin-top: 15px;
+    text-align: center;
+    width: 250px;
+    margin-left: calc(50% - 125px);
+}
+
 div.bs-list a.cell-company {
     display: flex;
     align-items: center;

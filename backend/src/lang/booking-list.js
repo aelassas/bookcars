@@ -16,6 +16,7 @@ export const strings = new LocalizedStrings({
         NEW_STATUS: 'Nouveau statut',
         DELETE_BOOKING: 'Êtes-vous sûr de vouloir supprimer cette réservation ?',
         DELETE_BOOKINGS: 'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
+        EMPTY_LIST: 'Pas de réservations.',
     },
     en: {
         CAR: 'Car',
@@ -30,6 +31,7 @@ export const strings = new LocalizedStrings({
         NEW_STATUS: 'New status',
         DELETE_BOOKING: 'Are you sure you want to delete this reservation?',
         DELETE_BOOKINGS: 'Are you sure you want to delete the selected reservations?',
+        EMPTY_LIST: 'No bookings.',
     }
 });
 

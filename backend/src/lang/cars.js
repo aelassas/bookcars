@@ -50,7 +50,7 @@ export const strings = new LocalizedStrings({
         CAR_UNAVAILABLE: 'Indisponible pour la location',
         CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas disponible pour la location.",
         VIEW_CAR: 'Voir cette voiture',
-        EMPTY_CARS_LIST: 'Pas de voitures.',
+        EMPTY_LIST: 'Pas de voitures.',
     },
     en: {
         NEW_CAR: 'New car',
@@ -99,7 +99,7 @@ export const strings = new LocalizedStrings({
         CAR_UNAVAILABLE: 'Unavailable for rental',
         CAR_UNAVAILABLE_TOOLTIP: 'This car is unavailable for rental.',
         VIEW_CAR: 'View this car',
-        EMPTY_CARS_LIST: 'No cars.'
+        EMPTY_LIST: 'No cars.'
     }
 });
 

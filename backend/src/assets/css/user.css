@@ -38,7 +38,7 @@ div.user div.col-1 .user-actions {
         border-bottom: #eee solid 1px;
     }
 
-    div.user div.col-1 div.user-avatar-sec {
+    div.user div.col-1 section.user-avatar-sec {
         position: relative;
         left: 50%;
         transform: translateX(-22%);

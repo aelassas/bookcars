@@ -195,11 +195,12 @@ export default class User extends Component {
                                 width='100%'
                                 height='100%'
                                 loggedUser={loggedUser}
-                                user={company ? undefined : user._id}
-                                companies={companies}
+                                user={company ? undefined : user}
+                                companies={company ? [user._id] : companies}
                                 statuses={statuses}
                                 hideDates={Env.isMobile()}
                                 checkboxSelection={!Env.isMobile()}
+                                hideCompanyColumn={company}
                             />
                         </div>
                     </div>
