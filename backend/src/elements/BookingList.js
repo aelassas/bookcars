@@ -170,7 +170,7 @@ class BookingList extends Component {
                 headerName: strings.CAR,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/car?c=${params.value._id}`}>{params.value.name}</Link>
+                    <Link href={`/car?cr=${params.value._id}`}>{params.value.name}</Link>
                 ),
             });
         }

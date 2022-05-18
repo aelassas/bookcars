@@ -232,7 +232,7 @@ export default class CreateCar extends Component {
         CarService.create(data)
             .then(car => {
                 if (car && car._id) {
-                    window.location = `/car?c=${car._id}`;
+                    window.location = `/car?cr=${car._id}`;
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }

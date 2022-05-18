@@ -21,7 +21,8 @@ import {
     PhotoCamera as PhotoCameraIcon,
     BrokenImageTwoTone as DeleteIcon,
     CorporateFare as CompanyIcon,
-    DirectionsCar as CarIcon
+    DirectionsCar as CarIcon,
+    Check as VerifiedIcon
 } from '@mui/icons-material';
 
 export const Avatar = (props) => {
@@ -347,6 +348,19 @@ export const Avatar = (props) => {
         // height: Env.CAR_IMAGE_HEIGHT
     };
 
+    const userAvatar = (
+        avatar ?
+            <MaterialAvatar
+                src={Helper.joinURL(cdn(), avatar)}
+                className={size ? 'avatar-' + size : 'avatar'}
+            />
+            : <></>
+    );
+
+    const emptyAvatar = (
+        <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+    );
+
     return (
         !error && !loading ?
             <div className={className}>
@@ -358,10 +372,25 @@ export const Avatar = (props) => {
                             (props.type === Env.RECORD_TYPE.COMPANY ?
                                 <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
                                 :
-                                <MaterialAvatar
-                                    src={Helper.joinURL(cdn(), avatar)}
-                                    className={size ? 'avatar-' + size : 'avatar'}
-                                />
+                                props.verified && record.verified ?
+                                    <Badge
+                                        overlap="circular"
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'right',
+                                        }}
+                                        badgeContent={
+                                            <Tooltip title={commonStrings.VERIFIED}>
+                                                <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                                                    <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
+                                                </Box>
+                                            </Tooltip>
+                                        }
+                                    >
+                                        {userAvatar}
+                                    </Badge>
+                                    :
+                                    userAvatar
                             )
                         : //!readonly
                         <Badge
@@ -416,7 +445,26 @@ export const Avatar = (props) => {
                             (
                                 props.type === Env.RECORD_TYPE.COMPANY ?
                                     <CompanyIcon style={companyImageStyle} color={props.color || 'inherit'} />
-                                    : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                    :
+                                    props.verified && record.verified ?
+                                        <Badge
+                                            overlap="circular"
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right',
+                                            }}
+                                            badgeContent={
+                                                <Tooltip title={commonStrings.VERIFIED}>
+                                                    <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                                                        <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
+                                                    </Box>
+                                                </Tooltip>
+                                            }
+                                        >
+                                            {emptyAvatar}
+                                        </Badge>
+                                        :
+                                        emptyAvatar
                             )
                         )
                         ://!readonly

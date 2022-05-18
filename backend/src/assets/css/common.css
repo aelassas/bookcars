@@ -119,6 +119,43 @@
     justify-content: center;
 }
 
+.user-avatar-verified-small,
+.user-avatar-verified-medium,
+.user-avatar-verified-large {
+    color: #ffff;
+    background: #07ac51;
+}
+
+.user-avatar-verified-small {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.user-avatar-verified-icon-small {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.user-avatar-verified-medium {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+.user-avatar-verified-icon-medium {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+.user-avatar-verified-large {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.user-avatar-verified-icon-large {
+    width: 32px !important;
+    height: 32px !important;
+}
+
 .info {
     display: flex;
     align-items: center;

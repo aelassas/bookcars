@@ -57,7 +57,7 @@ export default class UserService {
             deleteAllCookies();
 
             if (redirect) {
-                window.location.href = '/sign-in';
+                window.location.href = '/sign-in' + window.location.search;
             }
         };
 

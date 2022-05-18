@@ -244,14 +244,14 @@ class CarList extends Component {
                                 <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>
                                 <div className='action'>
                                     <Tooltip title={strings.VIEW_CAR}>
-                                        <IconButton href={`/car?c=${car._id}`}>
+                                        <IconButton href={`/car?cr=${car._id}`}>
                                             <ViewIcon />
                                         </IconButton>
                                     </Tooltip>
 
                                     {canEdit &&
                                         <Tooltip title={commonStrings.UPDATE}>
-                                            <IconButton href={`/update-car?c=${car._id}`}>
+                                            <IconButton href={`/update-car?cr=${car._id}`}>
                                                 <EditIcon />
                                             </IconButton>
                                         </Tooltip>

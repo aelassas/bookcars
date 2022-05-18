@@ -88,8 +88,8 @@ export default class Car extends Component {
     onLoad = (user) => {
         this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
-            if (params.has('c')) {
-                const id = params.get('c');
+            if (params.has('cr')) {
+                const id = params.get('cr');
                 if (id && id !== '') {
                     CarService.getCar(id)
                         .then(car => {
@@ -305,7 +305,7 @@ export default class Car extends Component {
                                         variant="contained"
                                         className='btn-primary btn-margin btn-margin-bottom'
                                         size="small"
-                                        href={`/update-car?c=${car._id}`}
+                                        href={`/update-car?cr=${car._id}`}
                                     >
                                         {commonStrings.UPDATE}
                                     </Button>

@@ -20,12 +20,15 @@ import {
     DialogContent,
     DialogActions,
     Button,
-    Avatar
+    Avatar,
+    Badge,
+    Box
 } from '@mui/material';
 import {
     Edit as EditIcon,
     Delete as DeleteIcon,
-    AccountCircle
+    AccountCircle,
+    Check as VerifiedIcon
 } from '@mui/icons-material';
 
 import '../assets/css/user-list.css';
@@ -57,27 +60,78 @@ class BookingList extends Component {
                 field: 'fullName',
                 headerName: commonStrings.USER,
                 flex: 1,
-                renderCell: (params) => (
-                    <Link href={`/user?u=${params.row._id}`} className='us-user'>
-                        <span className='us-avatar'>
-                            {params.row.avatar ?
-                                params.row.type === Env.RECORD_TYPE.COMPANY ?
-                                    <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                                        alt={params.row.fullName}
-                                        style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                                    />
-                                    :
-                                    < Avatar
-                                        src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                                        className='avatar-small'
-                                    />
-                                :
-                                <AccountCircle className='avatar-small' color='disabled' />
+                renderCell: (params) => {
+                    const user = params.row;
+                    let userAvatar;
+
+                    if (user.avatar) {
+                        if (user.type === Env.RECORD_TYPE.COMPANY) {
+                            userAvatar = (
+                                <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                                    alt={params.row.fullName}
+                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                />
+                            );
+
+                        } else {
+                            const avatar = <Avatar
+                                src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                                className='avatar-small'
+
+                            />;
+                            if (user.verified) {
+                                userAvatar = <Badge
+                                    overlap="circular"
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                    }}
+                                    badgeContent={
+                                        <Tooltip title={commonStrings.VERIFIED}>
+                                            <Box borderRadius="50%" className="user-avatar-verified-small">
+                                                <VerifiedIcon className='user-avatar-verified-icon-small' />
+                                            </Box>
+                                        </Tooltip>
+                                    }
+                                >
+                                    {avatar}
+                                </Badge>;
+                            } else {
+                                userAvatar = avatar;
                             }
-                        </span>
-                        <span>{params.value}</span>
-                    </Link>
-                )
+                        }
+                    } else {
+                        const avatar = <AccountCircle className='avatar-small' color='disabled' />;
+
+                        if (user.verified) {
+                            userAvatar = <Badge
+                                overlap="circular"
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                badgeContent={
+                                    <Tooltip title={commonStrings.VERIFIED}>
+                                        <Box borderRadius="50%" className="user-avatar-verified-small">
+                                            <VerifiedIcon className='user-avatar-verified-icon-small' />
+                                        </Box>
+                                    </Tooltip>
+                                }
+                            >
+                                {avatar}
+                            </Badge>;
+                        } else {
+                            userAvatar = avatar;
+                        }
+                    }
+
+                    return (
+                        <Link href={`/user?u=${params.row._id}`} className='us-user'>
+                            <span className='us-avatar'>{userAvatar}</span>
+                            <span>{params.value}</span>
+                        </Link>);
+
+                }
             },
             {
                 field: 'email',

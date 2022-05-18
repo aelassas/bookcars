@@ -159,6 +159,7 @@ export default class User extends Component {
                                     color='disabled'
                                     className={company ? 'company-avatar' : 'user-avatar'}
                                     readonly
+                                    verified
                                 />
                             </section>
                             <Typography variant="h4" className="user-name">{user.fullName}</Typography>
