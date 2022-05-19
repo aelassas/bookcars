@@ -13,7 +13,9 @@ div.company-filter ul.company-list {
     font-size: 13px;
     margin: 15px 0 0 0;
     padding: 0;
-    display: inline-block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 div.company-filter ul.company-list li {
@@ -21,7 +23,7 @@ div.company-filter ul.company-list li {
     margin-bottom: 12px;
     margin-left: 4%;
     margin-right: 4%;
-    display: inline-block;
+    float: left;
 }
 
 div.company-filter ul.company-list li label {
@@ -37,13 +39,15 @@ div.company-filter ul.company-list li label {
     overflow: hidden;
     margin-bottom: 0;
     font-weight: 400;
-    display: inline-block;
+    display: inline-flex;
 }
 
 div.company-filter ul.company-list li label img {
-    display: block;
     margin: 0;
-    width: 62px;
+}
+
+div.company-filter ul.company-list li input[type='checkbox'] {
+    display: inline-flex;
 }
 
 div.company-filter div.filter-actions {

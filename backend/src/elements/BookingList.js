@@ -239,7 +239,7 @@ class BookingList extends Component {
     handleConfirmDelete = () => {
         const { selectedIds, selectedId, rows } = this.state;
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
-        
+
         BookingService.delete(ids)
             .then(status => {
                 if (status === 200) {
@@ -278,6 +278,12 @@ class BookingList extends Component {
                 .catch((err) => {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 });
+        } else {
+            this.setState({ rows: [], rowCount: 0, loading: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad({ rows: [], rowCount: 0 });
+                }
+            });
         }
     };
 

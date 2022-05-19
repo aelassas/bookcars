@@ -28,8 +28,7 @@ import {
     Clear as UncheckIcon,
     Visibility as ViewIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon,
-    LocationOn as LocationIcon
+    Delete as DeleteIcon
 } from '@mui/icons-material';
 
 import DoorsIcon from '../assets/img/car-door.png';
@@ -103,6 +102,7 @@ class CarList extends Component {
 
         CarService.getCars(keyword, companies, page, size)
             .then(data => {
+                console.log('!', data);
                 const _data = data.length > 0 ? data[0] : {};
                 if (_data.length === 0) _data.resultData = [];
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
@@ -171,10 +171,22 @@ class CarList extends Component {
 
         const { companies, cars } = this.props;
 
-        if (companies && companies.length > 0) {
-            this.fetch();
+        if (companies) {
+            if (companies.length > 0) {
+                this.fetch();
+            } else {
+                this.setState({ rows: [], rowCount: 0, loading: false, fetch: false }, () => {
+                    if (this.props.onLoad) {
+                        this.props.onLoad({ rows: [], rowCount: 0 });
+                    }
+                });
+            }
         } else if (cars) {
-            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false });
+            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad({ rows: cars, rowCount: cars.length });
+                }
+            });
         }
     }
 

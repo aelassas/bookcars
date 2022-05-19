@@ -85,16 +85,14 @@ export default class Cars extends Component {
                             }
                         </div>
                         <div className='col-2'>
-                            {companies.length > 0 &&
-                                <CarList
-                                    user={user}
-                                    companies={companies}
-                                    keyword={keyword}
-                                    reload={reload}
-                                    onLoad={this.handleCarListLoad}
-                                    onDelete={this.handleCarDelete}
-                                />
-                            }
+                            <CarList
+                                user={user}
+                                companies={companies}
+                                keyword={keyword}
+                                reload={reload}
+                                onLoad={this.handleCarListLoad}
+                                onDelete={this.handleCarDelete}
+                            />
                         </div>
                     </div>
                 }

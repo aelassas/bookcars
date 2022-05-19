@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import { strings as csStrings } from '../lang/companies';
+import { strings as clStrings } from '../lang/company-list';
 import CompanyService from '../services/CompanyService';
 import Helper from '../common/Helper';
 import Master from '../elements/Master';
@@ -210,7 +210,7 @@ export default class Company extends Component {
                     open={openDeleteDialog}
                 >
                     <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{csStrings.DELETE_COMPANY}</DialogContent>
+                    <DialogContent>{clStrings.DELETE_COMPANY}</DialogContent>
                     <DialogActions className='dialog-actions'>
                         <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
                         <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
