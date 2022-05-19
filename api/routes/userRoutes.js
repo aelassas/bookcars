@@ -641,12 +641,16 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
         const options = 'i';
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
-        const types = req.body;
+        const types = req.body.types;
+        const userId = req.body.user;
 
         const users = await User.aggregate([
             {
                 $match: {
                     $and: [
+                        {
+                            _id: { $ne: mongoose.Types.ObjectId(userId) }
+                        },
                         {
                             type: { $in: types }
                         },

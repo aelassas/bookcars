@@ -177,15 +177,14 @@ class CompanyList extends Component {
                         return (
                             <article key={company._id}>
                                 <div className='company-item'>
-                                    <div>
+                                    <div className='company-item-avatar'>
                                         <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                             alt={company.fullName}
-                                            className='company-item-avatar'
                                             style={{
                                                 width: Env.COMPANY_IMAGE_WIDTH,
                                             }} />
-                                        <span className='company-item-title'>{company.fullName}</span>
                                     </div>
+                                    <span className='company-item-title'>{company.fullName}</span>
                                 </div>
                                 <div className='company-actions'>
                                     <Tooltip title={strings.VIEW_COMPANY}>

@@ -129,8 +129,8 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, [Env.RECORD_TYPE.USER], { headers: UserService.authHeader() }).then(res => res.data);
     }
 
-    static getUsers(types, keyword, page, size) {
-        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, types, { headers: UserService.authHeader() }).then(res => res.data);
+    static getUsers(payload, keyword, page, size) {
+        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, payload, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static updateUser(data) {

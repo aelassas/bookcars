@@ -54,7 +54,7 @@ export default class Companies extends Component {
                             <Search onSubmit={this.handleSearch} />
 
                             {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} />
+                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
                             }
 
                             {rowCount > -1 &&

@@ -65,10 +65,11 @@ export default class Cars extends Component {
                             <CompanyFilter
                                 onLoad={this.handleCompanyFilterLoad}
                                 onChange={this.handleCompanyFilterChange}
+                                className='filter'
                             />
 
                             {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} />
+                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
                             }
 
                             {rowCount > -1 &&

@@ -220,7 +220,7 @@ class BookingList extends Component {
     handleConfirmDelete = () => {
         const { selectedIds, selectedId, rows } = this.state;
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
-        
+
         UserService.delete(ids)
             .then(status => {
                 if (status === 200) {
@@ -241,15 +241,19 @@ class BookingList extends Component {
     };
 
     fetch = () => {
-        const { types, keyword, page, pageSize } = this.state;
+        const { user, types, keyword, page, pageSize } = this.state;
 
         this.setState({ loading: true });
 
-        UserService.getUsers(types, keyword, page + 1, pageSize)
+        const payload = { user: user._id, types };
+
+        UserService.getUsers(payload, keyword, page + 1, pageSize)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {};
+                if (_data.length === 0) _data.resultData = [];
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
+                const _rows = _data.resultData;
+                this.setState({ rows: _rows, rowCount: totalRecords }, () => {
                     this.setState({ loading: false });
 
                     if (this.props.onLoad) {

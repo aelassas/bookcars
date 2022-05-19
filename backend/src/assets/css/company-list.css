@@ -23,20 +23,23 @@ section.company-list article {
     height: 100px;
     padding: 25px;
     margin-bottom: 15px;
-    width: 500px;
-    height: 75px;
-    margin-left: calc(50% - 250px);
-    word-break: break-word;
+    height: 85px;
+}
+
+section.company-list article .company-item {
+    position: absolute;
+    left: 15px;
+    top: 25px;
 }
 
 section.company-list article .company-item .company-item-avatar {
     float: left;
+    display: inline;
     margin-top: 3px;
     color: #333;
 }
 
 section.company-list article .company-item .company-item-title {
-    float: left;
     display: inline;
     font-size: 1.7em;
     margin-left: 20px;
@@ -44,16 +47,37 @@ section.company-list article .company-item .company-item-title {
     line-height: 1.3em;
     text-decoration: none;
     color: #333;
+    word-break: break-word;
 }
 
 section.company-list article .company-actions {
-    float: right;
+    position: absolute;
+    right: 10px;
+    width: 160px;
 }
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {}
+@media only screen and (max-width: 960px) {
+    section.company-list article {
+        width: 380px;
+        margin-left: calc(50% - 190px);
+    }
+
+    section.company-list article .company-item {
+        width: 200px;
+    }
+}
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {}
+@media only screen and (min-width: 960px) {
+    section.company-list article {
+        width: 550px;
+        margin-left: calc(50% - 275px);
+    }
+
+    section.company-list article .company-item {
+        width: 370px;
+    }
+}

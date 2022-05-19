@@ -49,7 +49,7 @@ export default class Locations extends Component {
                         <Search onSubmit={this.handleSearch} />
 
                         {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} />
+                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
                         }
 
                         {rowCount > -1 &&

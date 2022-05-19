@@ -32,6 +32,10 @@ div.locations .new-location {
         border-bottom: #eee solid 1px;
     }
 
+    div.locations div.col-1 .location-count {
+        display: none;
+    }
+
     div.locations div.col-2 {
         position: absolute;
         top: 120px;

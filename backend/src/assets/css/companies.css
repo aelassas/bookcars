@@ -31,6 +31,10 @@
         border-bottom: #eee solid 1px;
     }
 
+    .companies div.col-1 .company-count {
+        display: none;
+    }
+
     .companies div.col-2 {
         position: absolute;
         top: 125px;
