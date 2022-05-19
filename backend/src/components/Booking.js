@@ -631,7 +631,7 @@ export default class Booking extends Component {
                                             size="small"
                                             type="submit"
                                         >
-                                            {commonStrings.UPDATE}
+                                            {commonStrings.SAVE}
                                         </Button>
                                         <Button
                                             variant="contained"

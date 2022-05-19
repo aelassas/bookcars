@@ -284,17 +284,17 @@ routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
     try {
-        // for (let i = 1; i <= 120; i++) {
+        // for (let i = 1; i <= 30; i++) {
         //     const car = {
         //         "name": "Car " + i,
         //         "company": "62794b5121c117948f2a9b2e",
-        //         "location": i % 2 === 0 "6273e2f9f036f83c05e47b0d": "6273e2d9f036f83c05e47b05",
+        //         "location": i % 2 === 0 ? "6273e2f9f036f83c05e47b0d" : "6273e2d9f036f83c05e47b05",
         //         "price": 350 + i,
         //         "available": i % 2 === 0,
         //         "type": i % 2 === 0 ? "diesel" : "gasoline",
         //         "gearbox": i % 2 === 0 ? "manual" : "automatic",
         //         "aircon": i % 2 === 0,
-        //         "image": "627b577c8392253f86eb25a5_1652290815644.jpg",
+        //         "image": "62865e94d6c6974c9c33cdb2_1652973204848.jpg",
         //         "seats": 5,
         //         "doors": 4,
         //         "fuelPolicy": i % 2 === 0 ? "likeForlike" : "freeTank",

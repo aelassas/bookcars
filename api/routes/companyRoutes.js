@@ -112,7 +112,8 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, async (req, res) 
         //     await new User(company).save();
         // }
 
-        await User.deleteMany({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: 'Company', $options: 'i' } });
+        // await User.deleteMany({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: 'Company', $options: 'i' } });
+        // await User.deleteMany({ type: Env.USER_TYPE.USER, fullName: { $regex: 'User', $options: 'i' } });
 
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);

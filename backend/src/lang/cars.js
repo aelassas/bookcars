@@ -89,7 +89,7 @@ export const strings = new LocalizedStrings({
         THEFT_PROTECTION_TOOLTIP: 'Rental may include theft protection.',
         COLLISION_DAMAGE_WAVER: 'Collision damage waiver',
         COLLISION_DAMAGE_WAVER_TOOLTIP: 'Rental may include collision damage waiver.',
-        FULL_INSURANCE: 'Fill insurance',
+        FULL_INSURANCE: 'Full insurance',
         FULL_INSURANCE_TOOLTIP: 'The rental may include collision damage waiver and theft protection of the vehicle.',
         ADDITIONAL_DRIVER: 'Additional driver',
         INCLUDED: 'Included',

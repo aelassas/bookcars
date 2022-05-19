@@ -645,7 +645,6 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
         const size = parseInt(req.params.size);
         const types = req.body.types;
         const userId = req.body.user;
-        console.log('--------------req.body', req.body)
 
         const $match = {
             $and: [

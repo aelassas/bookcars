@@ -514,7 +514,7 @@ export default class CreateUser extends Component {
                                         size="small"
                                         disabled={emailError || fullNameError}
                                     >
-                                        {commonStrings.UPDATE}
+                                        {commonStrings.SAVE}
                                     </Button>
 
                                     <Button

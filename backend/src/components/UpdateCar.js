@@ -580,7 +580,7 @@ export default class CreateCar extends Component {
                                         className='btn-primary btn-margin-bottom'
                                         size="small"
                                     >
-                                        {commonStrings.UPDATE}
+                                        {commonStrings.SAVE}
                                     </Button>
                                     <Button
                                         variant="contained"

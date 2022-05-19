@@ -175,18 +175,10 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
 
         const $match = {
             $and: [
-                // { $expr: { $in: ['$company', companies] } },
-                // { $expr: { $in: ['$status', statuses] } },
                 { 'company._id': { $in: companies } },
-                { 'status': { $in: statuses } },
+                { 'status': { $in: statuses } }
             ]
         };
-        // if (user) $match.$and.push({ $expr: { $eq: ['$driver', mongoose.Types.ObjectId(user)] } });
-        // if (car) $match.$and.push({ $expr: { $eq: ['$car', mongoose.Types.ObjectId(car)] } });
-        // if (from) $match.$and.push({ $expr: { $gte: ['$from', from] } }); // $from > from
-        // if (to) $match.$and.push({ $expr: { $lte: ['$to', to] } }); // $to < to
-        // if (pickupLocation) $match.$and.push({ $expr: { $eq: ['$pickupLocation', mongoose.Types.ObjectId(pickupLocation)] } });
-        // if (dropOffLocation) $match.$and.push({ $expr: { $eq: ['$dropOffLocation', mongoose.Types.ObjectId(dropOffLocation)] } });
         if (user) $match.$and.push({ 'driver._id': { $eq: mongoose.Types.ObjectId(user) } });
         if (car) $match.$and.push({ 'car._id': { $eq: mongoose.Types.ObjectId(car) } });
         if (from) $match.$and.push({ 'from': { $gte: from } }); // $from > from
@@ -195,14 +187,6 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
         if (dropOffLocation) $match.$and.push({ 'dropOffLocation': { $eq: mongoose.Types.ObjectId(dropOffLocation) } });
         if (keyword) {
             $match.$and.push({
-                // $or: [
-                //     // { 'company.fullName': { $regex: keyword, $options: options } },
-                //     // { 'driver.fullName': { $regex: keyword, $options: options } },
-                //     // { 'car.name': { $regex: keyword, $options: options } },
-                //     { company: { fullName: { $regex: keyword, $options: options } } },
-                //     { driver: { fullName: { $regex: keyword, $options: options } } }
-                // ]
-                // driver: { fullName: { $regex: keyword, $options: options } }
                 $or: [
                     { 'company.fullName': { $regex: keyword, $options: options } },
                     { 'driver.fullName': { $regex: keyword, $options: options } },
@@ -213,8 +197,8 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
 
         // for (let i = 0; i < 79; i++) {
         //     const booking = new Booking({
-        //         company: i % 2 === 0 ? '62794b5121c117948f2a9b2e' : i % 3 === 0 ? '62756aae039367a61924c447' : '626e92c69acb065aa8e00459',
-        //         car: i % 2 === 0 ? '627b577c8392253f86eb25a5' : i % 3 === 0 ? '627d296374bea00da87fa67f' : '627fce9e664271c94428aafd',
+        //         company: i % 2 === 0 ? '6284b492eabdb8113b02e9f9' : '6284b492eabdb8113b02e9f9',
+        //         car: i % 2 === 0 ? '6286514e3268569a5f60ce91' : '62865e94d6c6974c9c33cdb2',
         //         driver: '6280f28a864c93af021f397d',
         //         pickupLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
         //         dropOffLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
