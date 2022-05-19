@@ -74,18 +74,6 @@ section.car-list .empty-list {
         left: 5px;
     }
 
-    section.car-list article div.car-location {
-        position: absolute;
-        bottom: 10px;
-        margin: 5px;
-    }
-
-    section.car-list article div.car-location span.car-location-text {
-        vertical-align: super;
-        margin-left: 3px;
-    }
-
-
     section.car-list article div.car div.car-company span.car-company-logo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
@@ -257,17 +245,6 @@ section.car-list .empty-list {
     section.car-list article div.car div.car-company {
         display: flex;
         align-items: center;
-    }
-
-    section.car-list article div.car-location {
-        position: absolute;
-        bottom: 15px;
-        margin: 5px;
-    }
-
-    section.car-list article div.car-location span.car-location-text {
-        vertical-align: super;
-        margin-left: 3px;
     }
 
     section.car-list article div.car div.car-company span.car-company-logo {

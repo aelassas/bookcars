@@ -286,10 +286,16 @@ export default class Car extends Component {
                                             </Tooltip>
                                         </li>
                                     </ul>
-                                    <div className='location'>
-                                        <LocationIcon />
-                                        <span className='location-text'>{car.location.name}</span>
-                                    </div>
+                                    <ul className='locations-list'>
+                                        {car.locations.map(location => (
+                                            <li key={location._id}>
+                                                <div className='car-info-list-item'>
+                                                    <LocationIcon />
+                                                    <span className='car-info-list-text'>{location.name}</span>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </section>
                             {edit &&

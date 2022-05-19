@@ -45,7 +45,7 @@ export default class CreateCar extends Component {
             image: null,
             name: '',
             company: '',
-            location: null,
+            locations: [],
             available: false,
             type: '',
             gearbox: '',
@@ -100,8 +100,8 @@ export default class CreateCar extends Component {
         this.setState({ company: values.length > 0 ? values[0]._id : null });
     };
 
-    handleLocationChange = (values) => {
-        this.setState({ location: values.length > 0 ? values[0]._id : null });
+    handleLocationsChange = (locations) => {
+        this.setState({ locations });
     };
 
     handleAvailableChange = (e) => {
@@ -183,7 +183,7 @@ export default class CreateCar extends Component {
         const {
             name,
             company,
-            location,
+            locations,
             price,
             available,
             type,
@@ -205,7 +205,7 @@ export default class CreateCar extends Component {
         const data = {
             name,
             company,
-            location,
+            locations: locations.map(l => l._id),
             price,
             available,
             type,
@@ -282,8 +282,6 @@ export default class CreateCar extends Component {
                                 onValidate={this.handleImageValidate}
                                 color='disabled'
                                 className='avatar-ctn'
-                            // width={Env.CAR_IMAGE_WIDTH}
-                            // height={Env.CAR_IMAGE_HEIGHT} 
                             />
 
                             <div className='info'>
@@ -318,10 +316,11 @@ export default class CreateCar extends Component {
 
                             <FormControl fullWidth margin="dense">
                                 <LocationSelectList
-                                    label={strings.LOCATION}
+                                    label={strings.LOCATIONS}
+                                    multiple
                                     required
                                     variant='standard'
-                                    onChange={this.handleLocationChange}
+                                    onChange={this.handleLocationsChange}
                                 />
                             </FormControl>
 

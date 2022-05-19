@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
-import { strings as ccStrings } from '../lang/create-car';
 import Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import { toast } from 'react-toastify';
@@ -218,12 +217,6 @@ class CarList extends Component {
                                             {car.company.fullName}
                                         </a>
                                     </div>}
-                                    <Tooltip title={ccStrings.LOCATION}>
-                                        <div className='car-location'>
-                                            <LocationIcon />
-                                            <span className='car-location-text'>{car.location.name}</span>
-                                        </div>
-                                    </Tooltip>
                                 </div>
                                 <div className='car-info'>
                                     <ul className='car-info-list'>

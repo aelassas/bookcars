@@ -83,7 +83,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                     name,
                     available,
                     type,
-                    location,
+                    locations,
                     price,
                     seats,
                     doors,
@@ -100,7 +100,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 } = req.body;
 
                 car.company = company._id;
-                car.location = location._id;
+                car.locations = locations;
                 car.name = name;
                 car.available = available;
                 car.type = type;
@@ -262,7 +262,7 @@ routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) =>
 routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
     Car.findById(req.params.id)
         .populate('company')
-        .populate('location')
+        .populate('locations')
         .lean()
         .then(car => {
             if (car) {
@@ -288,7 +288,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         //     const car = {
         //         "name": "Car " + i,
         //         "company": "62794b5121c117948f2a9b2e",
-        //         "location": i % 2 === 0 ? "6273e2f9f036f83c05e47b0d" : "6273e2d9f036f83c05e47b05",
+        //         "locations": ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
         //         "price": 350 + i,
         //         "available": i % 2 === 0,
         //         "type": i % 2 === 0 ? "diesel" : "gasoline",
@@ -338,18 +338,17 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
             {
                 $lookup: {
                     from: 'Location',
-                    let: { locationId: '$location' },
+                    let: { locations: '$locations' },
                     pipeline: [
                         {
                             $match: {
-                                $expr: { $eq: ['$_id', '$$locationId'] }
+                                $expr: { $in: ['$_id', '$$locations'] }
                             }
                         }
                     ],
-                    as: 'location'
+                    as: 'locations'
                 }
             },
-            { $unwind: { path: '$location', preserveNullAndEmptyArrays: false } },
             {
                 $facet: {
                     resultData: [
@@ -394,7 +393,7 @@ routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, re
                 $match: {
                     $and: [
                         { company: { $eq: company } },
-                        { location: { $eq: pickupLocation } },
+                        { locations: pickupLocation },
                         { available: true },
                         { name: { $regex: keyword, $options: options } }
                     ]

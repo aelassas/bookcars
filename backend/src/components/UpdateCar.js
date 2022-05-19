@@ -51,7 +51,7 @@ export default class CreateCar extends Component {
             companies: [],
             name: '',
             company: null,
-            location: null,
+            locations: [],
             available: false,
             type: '',
             gearbox: '',
@@ -106,8 +106,8 @@ export default class CreateCar extends Component {
         this.setState({ company: values.length > 0 ? values[0] : null });
     };
 
-    handleLocationChange = (values) => {
-        this.setState({ location: values.length > 0 ? values[0] : null });
+    handleLocationsChange = (locations) => {
+        this.setState({ locations });
     };
 
     handleAvailableChange = (e) => {
@@ -185,7 +185,7 @@ export default class CreateCar extends Component {
             car,
             name,
             company,
-            location,
+            locations,
             price,
             available,
             type,
@@ -208,7 +208,7 @@ export default class CreateCar extends Component {
             _id: car._id,
             name,
             company,
-            location,
+            locations: locations.map(l => l._id),
             price,
             available,
             type,
@@ -265,7 +265,10 @@ export default class CreateCar extends Component {
                                     imageRequired: !car.image,
                                     name: car.name,
                                     company,
-                                    location: { _id: car.location._id, name: car.location.name },
+                                    locations: car.locations.map(l => {
+                                        const { _id, name } = l;
+                                        return { _id, name };
+                                    }),
                                     price: car.price,
                                     available: car.available,
                                     type: car.type,
@@ -312,7 +315,7 @@ export default class CreateCar extends Component {
 
             name,
             company,
-            location,
+            locations,
             price,
             available,
             type,
@@ -350,8 +353,6 @@ export default class CreateCar extends Component {
                                     onValidate={this.handleImageValidate}
                                     color='disabled'
                                     className='avatar-ctn'
-                                // width={Env.CAR_IMAGE_WIDTH}
-                                // height={Env.CAR_IMAGE_HEIGHT} 
                                 />
 
                                 <div className='info'>
@@ -387,11 +388,12 @@ export default class CreateCar extends Component {
 
                                 <FormControl fullWidth margin="dense">
                                     <LocationSelectList
-                                        label={strings.LOCATION}
+                                        label={strings.LOCATIONS}
+                                        multiple
                                         required
                                         variant='standard'
-                                        value={location}
-                                        onChange={this.handleLocationChange}
+                                        value={locations}
+                                        onChange={this.handleLocationsChange}
                                     />
                                 </FormControl>
 
