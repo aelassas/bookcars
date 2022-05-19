@@ -51,7 +51,7 @@ export default class CreateCar extends Component {
             companies: [],
             name: '',
             company: null,
-            locations: [],
+            location: null,
             available: false,
             type: '',
             gearbox: '',
@@ -106,8 +106,8 @@ export default class CreateCar extends Component {
         this.setState({ company: values.length > 0 ? values[0] : null });
     };
 
-    handleLocationsChange = (values) => {
-        this.setState({ locations: values });
+    handleLocationChange = (values) => {
+        this.setState({ location: values.length > 0 ? values[0] : null });
     };
 
     handleAvailableChange = (e) => {
@@ -185,7 +185,7 @@ export default class CreateCar extends Component {
             car,
             name,
             company,
-            locations,
+            location,
             price,
             available,
             type,
@@ -208,7 +208,7 @@ export default class CreateCar extends Component {
             _id: car._id,
             name,
             company,
-            locations,
+            location,
             price,
             available,
             type,
@@ -257,11 +257,6 @@ export default class CreateCar extends Component {
 
                                 const company = { _id: car.company._id, name: car.company.fullName, image: car.company.avatar };
 
-                                const locations = [];
-                                for (const { _id, name } of car.locations) {
-                                    locations.push({ _id, name });
-                                }
-
                                 this.setState({
                                     car,
                                     loading: false,
@@ -270,7 +265,7 @@ export default class CreateCar extends Component {
                                     imageRequired: !car.image,
                                     name: car.name,
                                     company,
-                                    locations,
+                                    location: { _id: car.location._id, name: car.location.name },
                                     price: car.price,
                                     available: car.available,
                                     type: car.type,
@@ -317,7 +312,7 @@ export default class CreateCar extends Component {
 
             name,
             company,
-            locations,
+            location,
             price,
             available,
             type,
@@ -382,7 +377,6 @@ export default class CreateCar extends Component {
                                         <CompanySelectList
                                             label={strings.COMPANY}
                                             required
-                                            multiple={false}
                                             value={company}
                                             type={Env.RECORD_TYPE.COMPANY}
                                             variant='standard'
@@ -393,12 +387,11 @@ export default class CreateCar extends Component {
 
                                 <FormControl fullWidth margin="dense">
                                     <LocationSelectList
-                                        label={strings.LOCATIONS}
+                                        label={strings.LOCATION}
                                         required
-                                        multiple
-                                        value={locations}
                                         variant='standard'
-                                        onChange={this.handleLocationsChange}
+                                        value={location}
+                                        onChange={this.handleLocationChange}
                                     />
                                 </FormControl>
 

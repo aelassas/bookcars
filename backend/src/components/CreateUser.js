@@ -18,9 +18,15 @@ import {
     Button,
     Paper,
     Select,
-    MenuItem
+    MenuItem,
+    InputAdornment,
+    IconButton, 
+    TextField
 } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import '../assets/css/create-user.css';
 
@@ -49,7 +55,8 @@ export default class CreateUser extends Component {
             avatarError: false,
             type: '',
             fixFullNameError: false,
-            fixEmailError: false
+            fixEmailError: false,
+            birthDate: null
         };
     }
 
@@ -194,18 +201,23 @@ export default class CreateUser extends Component {
 
         this.setState({ loading: true });
 
-        const data = {
-            email: this.state.email,
-            phone: this.state.phone,
-            location: this.state.location,
-            bio: this.state.bio,
-            password: this.state.password,
-            fullName: this.state.fullName,
-            language: UserService.getLanguage(),
-            type: this.state.type,
-            avatar: this.state.avatar,
-            company: this.state.admin ? undefined : this.state.user._id
-        };
+        const {
+            admin,
+            user,
+            email,
+            phone,
+            location,
+            bio,
+            fullName,
+            password,
+            type,
+            avatar,
+            birthDate } = this.state;
+
+        const language = UserService.getLanguage();
+        const company = admin ? undefined : user._id;
+
+        const data = { email, phone, location, bio, fullName, password, type, avatar, birthDate, language, company };
 
         UserService.create(data)
             .then(data => {
@@ -293,8 +305,10 @@ export default class CreateUser extends Component {
             visible,
             loading,
             fixFullNameError,
-            fixEmailError } = this.state,
-            company = type === Env.RECORD_TYPE.COMPANY;
+            fixEmailError,
+            birthDate } = this.state,
+            company = type === Env.RECORD_TYPE.COMPANY,
+            driver = type === Env.RECORD_TYPE.USER;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -370,6 +384,45 @@ export default class CreateUser extends Component {
                                     {emailError ? commonStrings.INVALID_EMAIL : ''}
                                 </FormHelperText>
                             </FormControl>
+
+                            {driver &&
+                                <FormControl fullWidth margin="dense">
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label={strings.BIRTH_DATE}
+                                            inputFormat='dd-MM-yyyy'
+                                            mask='__-__-____'
+                                            required
+                                            value={birthDate}
+                                            onChange={(birthDate) => {
+                                                this.setState({ birthDate });
+                                            }}
+                                            renderInput={(params) =>
+                                                <TextField {...params}
+                                                    variant='standard'
+                                                    fullWidth
+                                                    required
+                                                    autoComplete='off'
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment:
+                                                            <>
+                                                                {
+                                                                    birthDate && (
+                                                                        <InputAdornment position='end' className='d-adornment'>
+                                                                            <IconButton size='small' onClick={() => this.setState({ birthDate: null })}>
+                                                                                <ClearIcon className='d-adornment-icon' />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }
+                                                                {params.InputProps.endAdornment}
+                                                            </>
+                                                    }} />
+                                            }
+                                        />
+                                    </LocalizationProvider>
+                                </FormControl>}
 
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>

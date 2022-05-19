@@ -128,7 +128,7 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
         .populate({
             path: 'car',
             populate: {
-                path: 'locations',
+                path: 'location',
                 model: 'Location'
             }
         })

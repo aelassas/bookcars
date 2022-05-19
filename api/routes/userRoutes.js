@@ -354,11 +354,12 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 console.error('[user.update] User not found:', req.body.email);
                 res.sendStatus(204);
             } else {
-                const { fullName, phone, bio, location, type } = req.body;
+                const { fullName, phone, bio, location, type, birthDate } = req.body;
                 if (fullName) user.fullName = fullName;
                 user.phone = phone;
                 user.location = location;
                 user.bio = bio;
+                user.birthDate = birthDate;
                 if (type) user.type = type;
 
                 user.save()
@@ -442,6 +443,7 @@ routes.route(routeNames.getUser).get(authJwt.verifyToken, (req, res) => {
         location: 1,
         type: 1,
         blacklisted: 1,
+        birthDate: 1
     })
         .lean()
         .then(user => {
@@ -643,22 +645,26 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
         const size = parseInt(req.params.size);
         const types = req.body.types;
         const userId = req.body.user;
+        console.log('--------------req.body', req.body)
+
+        const $match = {
+            $and: [
+                {
+                    type: { $in: types }
+                },
+                {
+                    fullName: { $regex: keyword, $options: options }
+                }
+            ]
+        };
+
+        if (userId) {
+            $match.$and.push({ _id: { $ne: mongoose.Types.ObjectId(userId) } });
+        }
 
         const users = await User.aggregate([
             {
-                $match: {
-                    $and: [
-                        {
-                            _id: { $ne: mongoose.Types.ObjectId(userId) }
-                        },
-                        {
-                            type: { $in: types }
-                        },
-                        {
-                            fullName: { $regex: keyword, $options: options }
-                        }
-                    ]
-                }
+                $match
             },
             {
                 $project: {
@@ -674,6 +680,7 @@ routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => 
                     location: 1,
                     type: 1,
                     blacklisted: 1,
+                    birthDate: 1
                 }
             },
             {

@@ -131,7 +131,7 @@ routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) 
 routes.route(routeNames.checkLocation).get(authJwt.verifyToken, (req, res) => {
     const id = mongoose.Types.ObjectId(req.params.id);
 
-    Car.find({ locations: id })
+    Car.find({ location: id })
         .limit(1)
         .count()
         .then(count => {

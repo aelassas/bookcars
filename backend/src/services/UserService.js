@@ -126,7 +126,8 @@ export default class UserService {
     }
 
     static getDrivers(keyword, page, size) {
-        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, [Env.RECORD_TYPE.USER], { headers: UserService.authHeader() }).then(res => res.data);
+        const payload = { types: [Env.RECORD_TYPE.USER] };
+        return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, payload, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getUsers(payload, keyword, page, size) {

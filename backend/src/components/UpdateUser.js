@@ -20,9 +20,15 @@ import {
     Button,
     Paper,
     Select,
-    MenuItem
+    MenuItem,
+    InputAdornment,
+    IconButton,
+    TextField
 } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import '../assets/css/update-user.css';
 
@@ -51,7 +57,8 @@ export default class CreateUser extends Component {
             avatarError: false,
             type: '',
             fixFullNameError: false,
-            fixEmailError: false
+            fixEmailError: false,
+            birthDate: null
         };
     }
 
@@ -176,9 +183,8 @@ export default class CreateUser extends Component {
             });
         }
 
-        const { user, phone, location, bio, fullName, type, avatar } = this.state, language = UserService.getLanguage();
+        const { user, phone, location, bio, fullName, type, avatar, birthDate } = this.state, language = UserService.getLanguage();
         const data = {
-            // email: this.state.email,
             _id: user._id,
             phone,
             location,
@@ -186,7 +192,8 @@ export default class CreateUser extends Component {
             fullName,
             language,
             type,
-            avatar
+            avatar,
+            birthDate
         };
 
         UserService.updateUser(data)
@@ -272,8 +279,9 @@ export default class CreateUser extends Component {
                                     phone: user.phone,
                                     location: user.location,
                                     bio: user.bio,
+                                    birthDate: user.birthDate ? new Date(user.birthDate) : null,
                                     loading: false,
-                                    visible: true,
+                                    visible: true
                                 });
                             } else {
                                 this.setState({ loading: false, noMatch: true });
@@ -315,9 +323,10 @@ export default class CreateUser extends Component {
             phone,
             location,
             bio,
-
+            birthDate
         } = this.state,
-            company = type === Env.RECORD_TYPE.COMPANY;
+            company = type === Env.RECORD_TYPE.COMPANY,
+            driver = type === Env.RECORD_TYPE.USER;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -403,6 +412,46 @@ export default class CreateUser extends Component {
                                         {emailError ? commonStrings.INVALID_EMAIL : ''}
                                     </FormHelperText>
                                 </FormControl>
+
+                                {driver &&
+                                    <FormControl fullWidth margin="dense">
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <DatePicker
+                                                label={strings.BIRTH_DATE}
+                                                inputFormat='dd-MM-yyyy'
+                                                mask='__-__-____'
+                                                required
+                                                value={birthDate}
+                                                onChange={(birthDate) => {
+                                                    console.log(birthDate)
+                                                    this.setState({ birthDate });
+                                                }}
+                                                renderInput={(params) =>
+                                                    <TextField {...params}
+                                                        variant='standard'
+                                                        fullWidth
+                                                        required
+                                                        autoComplete='off'
+                                                        InputProps={{
+                                                            ...params.InputProps,
+                                                            endAdornment:
+                                                                <>
+                                                                    {
+                                                                        birthDate && (
+                                                                            <InputAdornment position='end' className='d-adornment'>
+                                                                                <IconButton size='small' onClick={() => this.setState({ birthDate: null })}>
+                                                                                    <ClearIcon className='d-adornment-icon' />
+                                                                                </IconButton>
+                                                                            </InputAdornment>
+                                                                        )
+                                                                    }
+                                                                    {params.InputProps.endAdornment}
+                                                                </>
+                                                        }} />
+                                                }
+                                            />
+                                        </LocalizationProvider>
+                                    </FormControl>}
 
                                 <div className='info'>
                                     <InfoIcon />

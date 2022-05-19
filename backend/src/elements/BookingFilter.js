@@ -54,8 +54,7 @@ class BookingFilter extends Component {
 
     render() {
         const { from, to, keyword } = this.state;
-        const inputAdornmentStyle = { marginRight: -13 };
-        const iconStyle = { width: 20, height: 20, color: 'rgba(0, 0, 0, 0.54)' };
+
 
         return (
             <div className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}>
@@ -82,9 +81,9 @@ class BookingFilter extends Component {
                                                 <>
                                                     {
                                                         from && (
-                                                            <InputAdornment position='end' style={inputAdornmentStyle}>
+                                                            <InputAdornment position='end' className='d-adornment'>
                                                                 <IconButton size='small' onClick={() => this.setState({ from: null })}>
-                                                                    <ClearIcon style={iconStyle} />
+                                                                    <ClearIcon className='d-adornment-icon' />
                                                                 </IconButton>
                                                             </InputAdornment>
                                                         )
@@ -117,9 +116,9 @@ class BookingFilter extends Component {
                                                 <>
                                                     {
                                                         to && (
-                                                            <InputAdornment position='end' style={inputAdornmentStyle}>
+                                                            <InputAdornment position='end' className='d-adornment'>
                                                                 <IconButton size='small' onClick={() => this.setState({ to: null })}>
-                                                                    <ClearIcon style={iconStyle} />
+                                                                    <ClearIcon className='d-adornment-icon' />
                                                                 </IconButton>
                                                             </InputAdornment>
                                                         )
@@ -135,7 +134,7 @@ class BookingFilter extends Component {
                         <LocationSelectList
                             label={strings.PICKUP_LOCATION}
                             required={false}
-                            multiple={false}
+
                             variant='standard'
                             onChange={this.handlePickupLocationChange}
                         />
@@ -144,7 +143,7 @@ class BookingFilter extends Component {
                         <LocationSelectList
                             label={strings.DROP_OFF_LOCATION}
                             required={false}
-                            multiple={false}
+
                             variant='standard'
                             onChange={this.handleDropOffLocationChange}
                         />
@@ -159,9 +158,9 @@ class BookingFilter extends Component {
                             InputProps={{
                                 endAdornment: keyword ? (
                                     <IconButton size='small' onClick={() => this.setState({ keyword: '' })}>
-                                        <ClearIcon style={iconStyle} />
+                                        <ClearIcon className='d-adornment-icon' />
                                     </IconButton>
-                                ) : <SearchIcon style={iconStyle} />
+                                ) : <SearchIcon className='d-adornment-icon' />
                             }}
                             autoComplete='off'
                             className='bf-search'

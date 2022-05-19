@@ -14,10 +14,10 @@ const carSchema = new Schema({
         required: [true, "can't be blank"],
         ref: 'User'
     },
-    locations: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Location',
-        validate: v => Array.isArray(v) && v.length > 0
+    location: {
+        type: Schema.Types.ObjectId,
+        required: [true, "can't be blank"],
+        ref: 'Location'
     },
     price: {
         type: Number,

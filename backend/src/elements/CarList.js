@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
+import { strings as ccStrings } from '../lang/create-car';
 import Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import { toast } from 'react-toastify';
@@ -28,7 +29,8 @@ import {
     Clear as UncheckIcon,
     Visibility as ViewIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon
+    Delete as DeleteIcon,
+    LocationOn as LocationIcon
 } from '@mui/icons-material';
 
 import DoorsIcon from '../assets/img/car-door.png';
@@ -202,7 +204,6 @@ class CarList extends Component {
                                         alt={car.name} className='car-img'
                                         style={{
                                             maxWidth: Env.CAR_IMAGE_WIDTH,
-                                            // maxHeight: Env.CAR_IMAGE_HEIGHT
                                         }} />
                                     {!this.props.hideCompany && <div className='car-company'>
                                         <span className='car-company-logo'>
@@ -210,7 +211,6 @@ class CarList extends Component {
                                                 alt={car.company.fullName}
                                                 style={{
                                                     width: Env.COMPANY_IMAGE_WIDTH,
-                                                    // height: Env.COMPANY_IMAGE_HEIGHT
                                                 }}
                                             />
                                         </span>
@@ -218,6 +218,12 @@ class CarList extends Component {
                                             {car.company.fullName}
                                         </a>
                                     </div>}
+                                    <Tooltip title={ccStrings.LOCATION}>
+                                        <div className='car-location'>
+                                            <LocationIcon />
+                                            <span className='car-location-text'>{car.location.name}</span>
+                                        </div>
+                                    </Tooltip>
                                 </div>
                                 <div className='car-info'>
                                     <ul className='car-info-list'>

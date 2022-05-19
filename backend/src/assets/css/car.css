@@ -131,18 +131,11 @@ div.car {
         margin-left: 3px;
     }
 
-    div.car section.car-sec div.car-info ul.locations-list {
-        position: relative;
-        list-style: none;
-        padding: 0;
-    }
-
-    div.car section.car-sec div.car-info ul.locations-list li {
+    div.car section.car-sec div.car-info div.location {
         margin: 5px;
-        width: fit-content;
     }
 
-    div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
+    div.car section.car-sec div.car-info div.location span.location-text {
         vertical-align: super;
         margin-left: 3px;
     }
@@ -288,18 +281,11 @@ div.car {
         margin-left: 3px;
     }
 
-    div.car section.car-sec div.car-info ul.locations-list {
-        position: relative;
-        list-style: none;
-        padding: 0;
-    }
-
-    div.car section.car-sec div.car-info ul.locations-list li {
+    div.car section.car-sec div.car-info div.location {
         margin: 5px;
-        width: fit-content;
     }
 
-    div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
+    div.car section.car-sec div.car-info div.location span.location-text {
         vertical-align: super;
         margin-left: 3px;
     }

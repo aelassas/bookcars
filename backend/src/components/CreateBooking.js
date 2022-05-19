@@ -21,12 +21,14 @@ import {
     Paper,
     FormControlLabel,
     Switch,
-    TextField
+    TextField,
+    InputAdornment,
+    IconButton
 } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import '../assets/css/create-booking.css';
 
@@ -173,6 +175,7 @@ export default class CreateBooking extends Component {
 
     render() {
         const {
+            user,
             loading,
             isCompany,
             company,
@@ -201,7 +204,7 @@ export default class CreateBooking extends Component {
                                     <CompanySelectList
                                         label={blStrings.COMPANY}
                                         required
-                                        multiple={false}
+
                                         variant='standard'
                                         onChange={this.handleCompanyChange}
                                     />
@@ -211,8 +214,8 @@ export default class CreateBooking extends Component {
                             <UserSelectList
                                 label={blStrings.DRIVER}
                                 required
-                                multiple={false}
                                 variant='standard'
+                                user={user}
                                 onChange={this.handleDriverChange} />
 
                             <FormControl fullWidth margin="dense">
@@ -252,7 +255,29 @@ export default class CreateBooking extends Component {
                                         onChange={(from) => {
                                             this.setState({ from });
                                         }}
-                                        renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                        renderInput={(params) =>
+                                            <TextField {...params}
+                                                variant='standard'
+                                                fullWidth
+                                                required
+                                                autoComplete='off'
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment:
+                                                        <>
+                                                            {
+                                                                from && (
+                                                                    <InputAdornment position='end' className='d-adornment'>
+                                                                        <IconButton size='small' onClick={() => this.setState({ from: null })}>
+                                                                            <ClearIcon className='d-adornment-icon' />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                )
+                                                            }
+                                                            {params.InputProps.endAdornment}
+                                                        </>
+                                                }} />
+                                        }
                                     />
                                 </LocalizationProvider>
                             </FormControl>
@@ -267,7 +292,29 @@ export default class CreateBooking extends Component {
                                         onChange={(to) => {
                                             this.setState({ to });
                                         }}
-                                        renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                        renderInput={(params) =>
+                                            <TextField {...params}
+                                                variant='standard'
+                                                fullWidth
+                                                required
+                                                autoComplete='off'
+                                                InputProps={{
+                                                    ...params.InputProps,
+                                                    endAdornment:
+                                                        <>
+                                                            {
+                                                                to && (
+                                                                    <InputAdornment position='end' className='d-adornment'>
+                                                                        <IconButton size='small' onClick={() => this.setState({ to: null })}>
+                                                                            <ClearIcon className='d-adornment-icon' />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                )
+                                                            }
+                                                            {params.InputProps.endAdornment}
+                                                        </>
+                                                }} />
+                                        }
                                     />
                                 </LocalizationProvider>
                             </FormControl>

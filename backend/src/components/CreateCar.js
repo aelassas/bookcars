@@ -45,7 +45,7 @@ export default class CreateCar extends Component {
             image: null,
             name: '',
             company: '',
-            locations: [],
+            location: null,
             available: false,
             type: '',
             gearbox: '',
@@ -100,13 +100,8 @@ export default class CreateCar extends Component {
         this.setState({ company: values.length > 0 ? values[0]._id : null });
     };
 
-    handleLocationsChange = (values) => {
-        const locations = [];
-        for (const { _id } of values) {
-            locations.push(_id);
-        }
-        this.setState({ locations });
-
+    handleLocationChange = (values) => {
+        this.setState({ location: values.length > 0 ? values[0]._id : null });
     };
 
     handleAvailableChange = (e) => {
@@ -188,7 +183,7 @@ export default class CreateCar extends Component {
         const {
             name,
             company,
-            locations,
+            location,
             price,
             available,
             type,
@@ -210,7 +205,7 @@ export default class CreateCar extends Component {
         const data = {
             name,
             company,
-            locations,
+            location,
             price,
             available,
             type,
@@ -314,7 +309,6 @@ export default class CreateCar extends Component {
                                     <CompanySelectList
                                         label={strings.COMPANY}
                                         required
-                                        multiple={false}
                                         type={Env.RECORD_TYPE.COMPANY}
                                         variant='standard'
                                         onChange={this.handleCompanyChange}
@@ -324,11 +318,10 @@ export default class CreateCar extends Component {
 
                             <FormControl fullWidth margin="dense">
                                 <LocationSelectList
-                                    label={strings.LOCATIONS}
+                                    label={strings.LOCATION}
                                     required
-                                    multiple
                                     variant='standard'
-                                    onChange={this.handleLocationsChange}
+                                    onChange={this.handleLocationChange}
                                 />
                             </FormControl>
 

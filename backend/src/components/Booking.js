@@ -27,12 +27,14 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions
+    DialogActions,
+    InputAdornment,
+    IconButton
 } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 
 import '../assets/css/booking.css';
@@ -319,8 +321,8 @@ export default class Booking extends Component {
                                     driver: { _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar },
                                     pickupLocation: { _id: booking.pickupLocation._id, name: booking.pickupLocation.name },
                                     dropOffLocation: { _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name },
-                                    from: booking.from,
-                                    to: booking.to,
+                                    from: new Date(booking.from),
+                                    to: new Date(booking.to),
                                     status: booking.status,
                                     cancellation: booking.cancellation,
                                     amendments: booking.amendments,
@@ -388,7 +390,7 @@ export default class Booking extends Component {
                                         <CompanySelectList
                                             label={blStrings.COMPANY}
                                             required
-                                            multiple={false}
+
                                             variant='standard'
                                             onChange={this.handleCompanyChange}
                                             value={company}
@@ -399,7 +401,7 @@ export default class Booking extends Component {
                                 <UserSelectList
                                     label={blStrings.DRIVER}
                                     required
-                                    multiple={false}
+
                                     variant='standard'
                                     onChange={this.handleDriverChange}
                                     value={driver}
@@ -443,11 +445,44 @@ export default class Booking extends Component {
                                             required
                                             value={from}
                                             onChange={(from) => {
-                                                const { booking } = this.state;
-                                                booking.from = from;
-                                                this.setState({ booking, from });
+                                                if (from) {
+                                                    const { booking } = this.state;
+                                                    booking.from = from;
+
+                                                    Helper.calculateBookingPrice(
+                                                        booking,
+                                                        booking.car,
+                                                        (price) => {
+                                                            this.setState({ booking, price, from });
+                                                        },
+                                                        (err) => {
+                                                            this.error();
+                                                        });
+                                                }
                                             }}
-                                            renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                            renderInput={(params) =>
+                                                <TextField {...params}
+                                                    variant='standard'
+                                                    fullWidth
+                                                    required
+                                                    autoComplete='off'
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment:
+                                                            <>
+                                                                {
+                                                                    from && (
+                                                                        <InputAdornment position='end' className='d-adornment'>
+                                                                            <IconButton size='small' onClick={() => this.setState({ from: null })}>
+                                                                                <ClearIcon className='d-adornment-icon' />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }
+                                                                {params.InputProps.endAdornment}
+                                                            </>
+                                                    }} />
+                                            }
                                         />
                                     </LocalizationProvider>
                                 </FormControl>
@@ -460,11 +495,44 @@ export default class Booking extends Component {
                                             required
                                             value={to}
                                             onChange={(to) => {
-                                                const { booking } = this.state;
-                                                booking.to = to;
-                                                this.setState({ booking, to });
+                                                if (to) {
+                                                    const { booking } = this.state;
+                                                    booking.to = to;
+
+                                                    Helper.calculateBookingPrice(
+                                                        booking,
+                                                        booking.car,
+                                                        (price) => {
+                                                            this.setState({ booking, price, to });
+                                                        },
+                                                        (err) => {
+                                                            this.error();
+                                                        });
+                                                }
                                             }}
-                                            renderInput={(params) => <TextField {...params} variant='standard' autoComplete='off' fullWidth required />}
+                                            renderInput={(params) =>
+                                                <TextField {...params}
+                                                    variant='standard'
+                                                    fullWidth
+                                                    required
+                                                    autoComplete='off'
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        endAdornment:
+                                                            <>
+                                                                {
+                                                                    to && (
+                                                                        <InputAdornment position='end' className='d-adornment'>
+                                                                            <IconButton size='small' onClick={() => this.setState({ to: null })}>
+                                                                                <ClearIcon className='d-adornment-icon' />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    )
+                                                                }
+                                                                {params.InputProps.endAdornment}
+                                                            </>
+                                                    }} />
+                                            }
                                         />
                                     </LocalizationProvider>
                                 </FormControl>

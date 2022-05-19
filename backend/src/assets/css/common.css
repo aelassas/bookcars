@@ -186,6 +186,16 @@
     margin-bottom: 10px;
 }
 
+.d-adornment {
+    margin-right: -13px;
+}
+
+.d-adornment-icon {
+    color: rgba(0, 0, 0, 0.54);
+    width: 20px !important;
+    height: 20px !important;
+}
+
 @media only screen and (max-width: 960px) {
     .buttons {
         margin-top: 15px;
