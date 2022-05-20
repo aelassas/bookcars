@@ -26,12 +26,11 @@ div.company {
 .company div.col-1 div.car-company {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
 }
 
 .company div.col-1 div.car-company span.car-company-logo {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-    display: inline-block;
+    display: flex;
     overflow: hidden;
     vertical-align: text-bottom;
 }
