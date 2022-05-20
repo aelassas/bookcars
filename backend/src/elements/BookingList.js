@@ -187,10 +187,7 @@ class BookingList extends Component {
                     <Link href={`/company?c=${params.value._id}`} className='cell-company'>
                         <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
                             alt={params.value.fullName}
-                            style={{
-                                width: Env.COMPANY_IMAGE_WIDTH,
-                                // height: Env.COMPANY_IMAGE_HEIGHT
-                            }} />
+                            style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                     </Link>
                 ),
             });

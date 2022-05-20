@@ -102,10 +102,8 @@ class CompanyFilter extends Component {
                                     <label onClick={this.handleCompanyClick}>
                                         <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                             alt={company.fullName}
-                                            style={{
-                                                width: Env.COMPANY_IMAGE_WIDTH,
-                                                // height: Env.COMPANY_IMAGE_HEIGHT
-                                            }} />
+                                            style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                        />
                                     </label>
                                 </li>
                             ))

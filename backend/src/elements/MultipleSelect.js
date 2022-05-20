@@ -135,10 +135,8 @@ export default function MultipleSelect({
                                             <InputAdornment position='start'>
                                                 <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                                     alt={option.name}
-                                                    style={{
-                                                        width: Env.COMPANY_IMAGE_WIDTH,
-                                                        // height: Env.COMPANY_IMAGE_HEIGHT
-                                                    }} />
+                                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                                />
                                             </InputAdornment>
                                             {params.InputProps.startAdornment}
                                         </>
@@ -236,10 +234,8 @@ export default function MultipleSelect({
                                 <span className='option-image'>
                                     <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                         alt={option.name}
-                                        style={{
-                                            width: Env.COMPANY_IMAGE_WIDTH,
-                                            // height: Env.COMPANY_IMAGE_HEIGHT
-                                        }} />
+                                        style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                    />
                                 </span>
                                 <span className='option-name'>{option.name}</span>
                             </li>

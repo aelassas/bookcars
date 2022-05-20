@@ -338,15 +338,9 @@ export const Avatar = (props) => {
 
     const { size, readonly, className } = props;
 
-    const companyImageStyle = {
-        width: Env.COMPANY_IMAGE_WIDTH,
-        // height: Env.COMPANY_IMAGE_HEIGHT
-    };
+    const companyImageStyle = { width: Env.COMPANY_IMAGE_WIDTH };
 
-    const carImageStyle = {
-        width: Env.CAR_IMAGE_WIDTH,
-        // height: Env.CAR_IMAGE_HEIGHT
-    };
+    const carImageStyle = { width: Env.CAR_IMAGE_WIDTH };
 
     const userAvatar = (
         avatar ?

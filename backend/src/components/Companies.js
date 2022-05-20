@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 
 import '../assets/css/companies.css';
+import Helper from '../common/Helper';
 
 export default class Companies extends Component {
 
@@ -44,7 +45,7 @@ export default class Companies extends Component {
     }
 
     render() {
-        const { user, keyword, reload, rowCount } = this.state;
+        const { user, keyword, reload, rowCount } = this.state, admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -57,7 +58,7 @@ export default class Companies extends Component {
                                 <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
                             }
 
-                            {rowCount > -1 &&
+                            {rowCount > -1 && admin &&
                                 <Button
                                     type="submit"
                                     variant="contained"
