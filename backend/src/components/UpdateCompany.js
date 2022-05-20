@@ -263,12 +263,7 @@ export default class UpdateCompany extends Component {
                                         id="phone"
                                         type="text"
                                         onChange={this.handleOnChangePhone}
-                                        inputProps={{
-                                            autoComplete: 'new-phone',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        autoComplete="off"
                                         value={phone}
                                     />
                                 </FormControl>

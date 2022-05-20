@@ -59,7 +59,7 @@ export default class Bookings extends Component {
 
     onLoad = (user) => {
         const admin = Helper.admin(user);
-        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin });
+        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin });
     };
 
     componentDidMount() {

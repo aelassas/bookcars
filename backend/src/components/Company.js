@@ -170,7 +170,7 @@ export default class Company extends Component {
                                         </IconButton>
                                     </Tooltip>
                                 }
-                                {user._id !== company._id &&
+                                {edit && user._id !== company._id &&
                                     <Tooltip title={commonStrings.SEND_MESSAGE}>
                                         <IconButton>
                                             <MailIcon />
