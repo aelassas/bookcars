@@ -402,7 +402,7 @@ routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, re
             { $sort: { name: 1 } },
             { $skip: ((page - 1) * size) },
             { $limit: size }
-        ]);
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
         res.json(cars);
     } catch (err) {
