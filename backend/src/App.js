@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/css/index.css';
 
 const Signin = lazy(() => import('./components/Signin'));
-const Signup = lazy(() => import('./components/Signup'));
+// const Signup = lazy(() => import('./components/Signup'));
 const Companies = lazy(() => import('./components/Companies'));
 const Company = lazy(() => import('./components/Company'));
 const CreateCompany = lazy(() => import('./components/CreateCompany'));
@@ -39,7 +39,7 @@ const App = () => {
 				<Suspense fallback={<></>}>
 					<Routes>
 						<Route exact path='/sign-in' element={<Signin />} />
-						<Route exact path='/sign-up' element={<Signup />} />
+						{/* <Route exact path='/sign-up' element={<Signup />} /> */}
 						<Route exact path='/' element={<Bookings />} />
 						<Route exact path='/companies' element={<Companies />} />
 						<Route exact path='/company' element={<Company />} />
