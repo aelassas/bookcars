@@ -14,21 +14,16 @@ import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
+import DatePicker from '../elements/DatePicker';
 import { toast } from 'react-toastify';
 import {
     FormControl,
     Button,
     Paper,
     FormControlLabel,
-    Switch,
-    TextField,
-    InputAdornment,
-    IconButton
+    Switch
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/create-booking.css';
 
@@ -245,78 +240,25 @@ export default class CreateBooking extends Component {
                             />
 
                             <FormControl fullWidth margin="dense">
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label={commonStrings.FROM}
-                                        inputFormat='dd-MM-yyyy'
-                                        mask='__-__-____'
-                                        required
-                                        value={from}
-                                        onChange={(from) => {
-                                            this.setState({ from });
-                                        }}
-                                        renderInput={(params) =>
-                                            <TextField {...params}
-                                                variant='standard'
-                                                fullWidth
-                                                required
-                                                autoComplete='off'
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment:
-                                                        <>
-                                                            {
-                                                                from && (
-                                                                    <InputAdornment position='end' className='d-adornment'>
-                                                                        <IconButton size='small' onClick={() => this.setState({ from: null })}>
-                                                                            <ClearIcon className='d-adornment-icon' />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                )
-                                                            }
-                                                            {params.InputProps.endAdornment}
-                                                        </>
-                                                }} />
-                                        }
-                                    />
-                                </LocalizationProvider>
+                                <DatePicker
+                                    label={commonStrings.FROM}
+                                    value={from}
+                                    required
+                                    onChange={(from) => {
+                                        this.setState({ from });
+                                    }}
+                                />
                             </FormControl>
+
                             <FormControl fullWidth margin="dense">
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label={commonStrings.TO}
-                                        inputFormat='dd-MM-yyyy'
-                                        mask='__-__-____'
-                                        required
-                                        value={to}
-                                        onChange={(to) => {
-                                            this.setState({ to });
-                                        }}
-                                        renderInput={(params) =>
-                                            <TextField {...params}
-                                                variant='standard'
-                                                fullWidth
-                                                required
-                                                autoComplete='off'
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment:
-                                                        <>
-                                                            {
-                                                                to && (
-                                                                    <InputAdornment position='end' className='d-adornment'>
-                                                                        <IconButton size='small' onClick={() => this.setState({ to: null })}>
-                                                                            <ClearIcon className='d-adornment-icon' />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                )
-                                                            }
-                                                            {params.InputProps.endAdornment}
-                                                        </>
-                                                }} />
-                                        }
-                                    />
-                                </LocalizationProvider>
+                                <DatePicker
+                                    label={commonStrings.TO}
+                                    value={to}
+                                    required
+                                    onChange={(to) => {
+                                        this.setState({ to });
+                                    }}
+                                />
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">

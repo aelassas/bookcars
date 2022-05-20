@@ -20,7 +20,8 @@ export default class Cars extends Component {
             companies: [],
             keyword: '',
             reload: false,
-            rowCount: -1
+            rowCount: -1,
+            loading: true
         };
     }
 
@@ -31,7 +32,7 @@ export default class Cars extends Component {
     };
 
     handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies });
+        this.setState({ companies, loading: false });
     };
 
     handleCompanyFilterChange = (newCompanies) => {
@@ -53,7 +54,7 @@ export default class Cars extends Component {
     };
 
     render() {
-        const { user, keyword, companies, reload, rowCount } = this.state;
+        const { user, keyword, companies, reload, rowCount, loading } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -90,6 +91,7 @@ export default class Cars extends Component {
                                 companies={companies}
                                 keyword={keyword}
                                 reload={reload}
+                                loading={loading}
                                 onLoad={this.handleCarListLoad}
                                 onDelete={this.handleCarDelete}
                             />

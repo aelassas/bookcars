@@ -18,23 +18,18 @@ import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
+import DatePicker from '../elements/DatePicker';
 import {
     FormControl,
     FormControlLabel,
     Switch,
-    TextField,
     Button,
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions,
-    InputAdornment,
-    IconButton
+    DialogActions
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Info as InfoIcon } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 
 import '../assets/css/booking.css';
@@ -401,7 +396,6 @@ export default class Booking extends Component {
                                 <UserSelectList
                                     label={blStrings.DRIVER}
                                     required
-
                                     variant='standard'
                                     onChange={this.handleDriverChange}
                                     value={driver}
@@ -437,104 +431,50 @@ export default class Booking extends Component {
                                 />
 
                                 <FormControl fullWidth margin="dense">
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <DatePicker
-                                            label={commonStrings.FROM}
-                                            inputFormat='dd-MM-yyyy'
-                                            mask='__-__-____'
-                                            required
-                                            value={from}
-                                            onChange={(from) => {
-                                                if (from) {
-                                                    const { booking } = this.state;
-                                                    booking.from = from;
+                                    <DatePicker
+                                        label={commonStrings.FROM}
+                                        value={from}
+                                        required
+                                        onChange={(from) => {
+                                            if (from) {
+                                                const { booking } = this.state;
+                                                booking.from = from;
 
-                                                    Helper.calculateBookingPrice(
-                                                        booking,
-                                                        booking.car,
-                                                        (price) => {
-                                                            this.setState({ booking, price, from });
-                                                        },
-                                                        (err) => {
-                                                            this.error();
-                                                        });
-                                                }
-                                            }}
-                                            renderInput={(params) =>
-                                                <TextField {...params}
-                                                    variant='standard'
-                                                    fullWidth
-                                                    required
-                                                    autoComplete='off'
-                                                    InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment:
-                                                            <>
-                                                                {
-                                                                    from && (
-                                                                        <InputAdornment position='end' className='d-adornment'>
-                                                                            <IconButton size='small' onClick={() => this.setState({ from: null })}>
-                                                                                <ClearIcon className='d-adornment-icon' />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    )
-                                                                }
-                                                                {params.InputProps.endAdornment}
-                                                            </>
-                                                    }} />
+                                                Helper.calculateBookingPrice(
+                                                    booking,
+                                                    booking.car,
+                                                    (price) => {
+                                                        this.setState({ booking, price, from });
+                                                    },
+                                                    (err) => {
+                                                        this.error();
+                                                    });
                                             }
-                                        />
-                                    </LocalizationProvider>
+                                        }}
+                                    />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <DatePicker
-                                            label={commonStrings.TO}
-                                            inputFormat='dd-MM-yyyy'
-                                            mask='__-__-____'
-                                            required
-                                            value={to}
-                                            onChange={(to) => {
-                                                if (to) {
-                                                    const { booking } = this.state;
-                                                    booking.to = to;
+                                    <DatePicker
+                                        label={commonStrings.TO}
+                                        value={to}
+                                        required
+                                        onChange={(to) => {
+                                            if (to) {
+                                                const { booking } = this.state;
+                                                booking.to = to;
 
-                                                    Helper.calculateBookingPrice(
-                                                        booking,
-                                                        booking.car,
-                                                        (price) => {
-                                                            this.setState({ booking, price, to });
-                                                        },
-                                                        (err) => {
-                                                            this.error();
-                                                        });
-                                                }
-                                            }}
-                                            renderInput={(params) =>
-                                                <TextField {...params}
-                                                    variant='standard'
-                                                    fullWidth
-                                                    required
-                                                    autoComplete='off'
-                                                    InputProps={{
-                                                        ...params.InputProps,
-                                                        endAdornment:
-                                                            <>
-                                                                {
-                                                                    to && (
-                                                                        <InputAdornment position='end' className='d-adornment'>
-                                                                            <IconButton size='small' onClick={() => this.setState({ to: null })}>
-                                                                                <ClearIcon className='d-adornment-icon' />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    )
-                                                                }
-                                                                {params.InputProps.endAdornment}
-                                                            </>
-                                                    }} />
+                                                Helper.calculateBookingPrice(
+                                                    booking,
+                                                    booking.car,
+                                                    (price) => {
+                                                        this.setState({ booking, price, to });
+                                                    },
+                                                    (err) => {
+                                                        this.error();
+                                                    });
                                             }
-                                        />
-                                    </LocalizationProvider>
+                                        }}
+                                    />
                                 </FormControl>
 
                                 <FormControl fullWidth margin="dense">

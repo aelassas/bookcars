@@ -363,7 +363,7 @@ class BookingList extends Component {
 
                 {loggedUser && (
                     rows.length === 0 ?
-                        !loading && !admin &&
+                        !loading && !this.props.loading && !admin &&
                         <Card variant="outlined" className="empty-list">
                             <CardContent>
                                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>

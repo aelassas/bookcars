@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/booking-filter'
 import LocationSelectList from './LocationSelectList';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { FormControl, TextField, Button, IconButton, InputAdornment } from '@mui/material';
-import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
+import DatePicker from './DatePicker';
+import { FormControl, TextField, Button, IconButton } from '@mui/material';
+import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import '../assets/css/booking-filter.css';
 
@@ -53,82 +51,27 @@ class BookingFilter extends Component {
     }
 
     render() {
-        const { from, to, keyword } = this.state;
+        const { keyword } = this.state;
 
 
         return (
             <div className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}>
                 <form onSubmit={this.handleSubmit}>
                     <FormControl fullWidth margin="dense">
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label={commonStrings.FROM}
-                                inputFormat='dd-MM-yyyy'
-                                mask='__-__-____'
-
-                                value={from}
-                                onChange={(from) => {
-                                    this.setState({ from })
-                                }}
-                                renderInput={(params) =>
-                                    <TextField {...params}
-                                        variant='standard'
-                                        fullWidth
-                                        autoComplete='off'
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment:
-                                                <>
-                                                    {
-                                                        from && (
-                                                            <InputAdornment position='end' className='d-adornment'>
-                                                                <IconButton size='small' onClick={() => this.setState({ from: null })}>
-                                                                    <ClearIcon className='d-adornment-icon' />
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        )
-                                                    }
-                                                    {params.InputProps.endAdornment}
-                                                </>
-                                        }} />
-                                }
-                            />
-                        </LocalizationProvider>
+                        <DatePicker
+                            label={commonStrings.FROM}
+                            onChange={(from) => {
+                                this.setState({ from });
+                            }}
+                        />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <DatePicker
-                                label={commonStrings.TO}
-                                inputFormat='dd-MM-yyyy'
-                                mask='__-__-____'
-                                value={to}
-                                onChange={(to) => {
-                                    this.setState({ to })
-                                }}
-                                renderInput={(params) =>
-                                    <TextField {...params}
-                                        variant='standard'
-                                        fullWidth
-                                        autoComplete='off'
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment:
-                                                <>
-                                                    {
-                                                        to && (
-                                                            <InputAdornment position='end' className='d-adornment'>
-                                                                <IconButton size='small' onClick={() => this.setState({ to: null })}>
-                                                                    <ClearIcon className='d-adornment-icon' />
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        )
-                                                    }
-                                                    {params.InputProps.endAdornment}
-                                                </>
-                                        }} />
-                                }
-                            />
-                        </LocalizationProvider>
+                        <DatePicker
+                            label={commonStrings.TO}
+                            onChange={(to) => {
+                                this.setState({ to });
+                            }}
+                        />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
                         <LocationSelectList

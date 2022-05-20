@@ -11,6 +11,7 @@ import NoMatch from './NoMatch';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
+import DatePicker from '../elements/DatePicker';
 import { toast } from 'react-toastify';
 import {
     Input,
@@ -20,15 +21,9 @@ import {
     Button,
     Paper,
     Select,
-    MenuItem,
-    InputAdornment,
-    IconButton,
-    TextField
+    MenuItem
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Info as InfoIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/update-user.css';
 
@@ -415,41 +410,14 @@ export default class CreateUser extends Component {
 
                                 {driver &&
                                     <FormControl fullWidth margin="dense">
-                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                            <DatePicker
-                                                label={strings.BIRTH_DATE}
-                                                inputFormat='dd-MM-yyyy'
-                                                mask='__-__-____'
-                                                required
-                                                value={birthDate}
-                                                onChange={(birthDate) => {
-                                                    this.setState({ birthDate });
-                                                }}
-                                                renderInput={(params) =>
-                                                    <TextField {...params}
-                                                        variant='standard'
-                                                        fullWidth
-                                                        required
-                                                        autoComplete='off'
-                                                        InputProps={{
-                                                            ...params.InputProps,
-                                                            endAdornment:
-                                                                <>
-                                                                    {
-                                                                        birthDate && (
-                                                                            <InputAdornment position='end' className='d-adornment'>
-                                                                                <IconButton size='small' onClick={() => this.setState({ birthDate: null })}>
-                                                                                    <ClearIcon className='d-adornment-icon' />
-                                                                                </IconButton>
-                                                                            </InputAdornment>
-                                                                        )
-                                                                    }
-                                                                    {params.InputProps.endAdornment}
-                                                                </>
-                                                        }} />
-                                                }
-                                            />
-                                        </LocalizationProvider>
+                                        <DatePicker
+                                            label={strings.BIRTH_DATE}
+                                            value={birthDate}
+                                            required
+                                            onChange={(birthDate) => {
+                                                this.setState({ birthDate });
+                                            }}
+                                        />
                                     </FormControl>}
 
                                 <div className='info'>

@@ -198,7 +198,7 @@ class CarList extends Component {
             user &&
             <section className='car-list'>
                 {rows.length === 0 ?
-                    !loading && <Card variant="outlined" className="empty-list">
+                    !loading && !this.props.loading && <Card variant="outlined" className="empty-list">
                         <CardContent>
                             <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
                         </CardContent>

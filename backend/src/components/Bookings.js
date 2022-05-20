@@ -29,12 +29,13 @@ export default class Bookings extends Component {
             filter: null,
             loading: true,
             admin: false,
-            reload: false
+            reload: false,
+            loadingCompanies: true
         };
     }
 
     handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies, leftPanel: true });
+        this.setState({ companies, leftPanel: true, loadingCompanies: false });
     };
 
     handleCompanyFilterChange = (newCompanies) => {
@@ -65,7 +66,7 @@ export default class Bookings extends Component {
     }
 
     render() {
-        const { user, admin, companies, statuses, filter, leftPanel, reload } = this.state;
+        const { user, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -108,6 +109,7 @@ export default class Bookings extends Component {
                                 companies={companies}
                                 statuses={statuses}
                                 filter={filter}
+                                loading={loadingCompanies}
                                 reload={reload}
                                 onLoad={this.handleBookingListLoad}
                                 hideDates={Env.isMobile()}
