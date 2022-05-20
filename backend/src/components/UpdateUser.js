@@ -423,7 +423,6 @@ export default class CreateUser extends Component {
                                                 required
                                                 value={birthDate}
                                                 onChange={(birthDate) => {
-                                                    console.log(birthDate)
                                                     this.setState({ birthDate });
                                                 }}
                                                 renderInput={(params) =>
