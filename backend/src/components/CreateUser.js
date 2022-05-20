@@ -217,12 +217,13 @@ export default class CreateUser extends Component {
         UserService.create(data)
             .then(data => {
                 if (data && data._id) {
-                    if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-                        window.location = `/company?c=${data._id}`;
-                    }
-                    else {
-                        window.location = `/user?u=${data._id}`;
-                    }
+                    // if (this.state.type === Env.RECORD_TYPE.COMPANY) {
+                    //     window.location = `/company?c=${data._id}`;
+                    // }
+                    // else {
+                    //     window.location = `/user?u=${data._id}`;
+                    // }
+                    window.location = '/users';
                 } else {
                     this.setState({
                         error: true,

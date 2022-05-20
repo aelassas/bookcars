@@ -227,7 +227,8 @@ export default class CreateCar extends Component {
         CarService.create(data)
             .then(car => {
                 if (car && car._id) {
-                    window.location = `/car?cr=${car._id}`;
+                    // window.location = `/car?cr=${car._id}`;
+                    window.location = '/cars';
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }

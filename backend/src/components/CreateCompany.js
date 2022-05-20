@@ -193,7 +193,8 @@ export default class CreateCompany extends Component {
                 UserService.create(data)
                     .then(data => {
                         if (data && data._id) {
-                            window.location = `/company?c=${data._id}`;
+                            // window.location = `/company?c=${data._id}`;
+                            window.location = '/companies';
                         } else
                             this.setState({
                                 error: true,
