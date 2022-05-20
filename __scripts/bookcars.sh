@@ -5,4 +5,4 @@ cd /opt/bookcars/api
 
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
 echo "BookCars service started at ${DATE}"
-$SHELL
+#$SHELL
