@@ -9,8 +9,9 @@ sudo chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/backend
 sudo rm -rf build
-npm install
-npm update
+#npm install
+#npm update
+npm ci
 npm run build
 
 sudo systemctl restart bookcars-backend

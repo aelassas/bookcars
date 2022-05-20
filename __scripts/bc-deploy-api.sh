@@ -8,8 +8,9 @@ git pull
 chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/api
-npm install
-npm update
+#npm install
+#npm update
+npm ci
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
 
