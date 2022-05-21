@@ -17,6 +17,8 @@ import {
     Paper
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
+import validator from 'validator';
+import { toast } from 'react-toastify';
 
 import '../assets/css/create-company.css';
 
@@ -38,69 +40,106 @@ export default class CreateCompany extends Component {
             fullNameError: false,
             avatar: null,
             avatarError: false,
-            avatarSizeError: false
+            emailValid: true
         };
     }
 
-    handleOnChangeFullName = e => {
+    handleOnChangeFullName = (e) => {
         this.setState({
             fullName: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ fullNameError: false });
+        }
     };
 
-    handleOnChangeEmail = e => {
+    validateFullName = async (fullName) => {
+        if (fullName) {
+            try {
+                const status = await CompanyService.validate({ fullName });
+
+                if (status === 200) {
+                    this.setState({ fullNameError: false });
+                    return true;
+                } else {
+                    this.setState({ fullNameError: true });
+                    return false;
+                }
+            }
+            catch (err) {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                this.setState({ fullNameError: false });
+                return false;
+            }
+        } else {
+            this.setState({ fullNameError: false });
+            return false;
+        }
+    };
+
+    handleFullNameOnBlur = (e) => {
+        this.validateFullName(e.target.value);
+    };
+
+    handleOnChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ emailError: false, emailValid: true });
+        }
     };
 
-    handleOnChangePhone = e => {
+    validateEmail = async (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                try {
+                    const status = await UserService.validateEmail({ email });
+
+                    if (status === 200) {
+                        this.setState({ emailError: false, emailValid: true });
+                        return true;
+                    } else {
+                        this.setState({ emailError: true, emailValid: true });
+                        return false;
+                    }
+                }
+                catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ emailError: false, emailValid: true });
+                    return false;
+                }
+            } else {
+                this.setState({ emailError: false, emailValid: false });
+                return false;
+            }
+        } else {
+            this.setState({ emailError: false, emailValid: true });
+            return false;
+        }
+    };
+
+    handleEmailOnBlur = (e) => {
+        this.validateEmail(e.target.value);
+    };
+
+    handleOnChangePhone = (e) => {
         this.setState({
             phone: e.target.value,
         });
     };
 
-    handleOnChangeLocation = e => {
+    handleOnChangeLocation = (e) => {
         this.setState({
             location: e.target.value,
         });
     };
 
-    handleOnChangeBio = e => {
+    handleOnChangeBio = (e) => {
         this.setState({
             bio: e.target.value,
-        });
-    };
-
-    handleEmailOnBlur = e => {
-        const data = {
-            email: e.target.value,
-        };
-
-        UserService.validateEmail(data).then(status => {
-            if (status === 204) {
-                this.setState({ emailError: true });
-            } else {
-                this.setState({ emailError: false });
-            }
-        }).catch(() => {
-            this.setState({ emailError: false });
-        });
-    };
-
-    handleFullNameOnBlur = e => {
-        const data = {
-            fullName: e.target.value,
-        };
-
-        CompanyService.validate(data).then(status => {
-            if (status === 204) {
-                this.setState({ fullNameError: true });
-            } else {
-                this.setState({ fullNameError: false });
-            }
-        }).catch(() => {
-            this.setState({ fullNameError: false });
         });
     };
 
@@ -114,68 +153,73 @@ export default class CreateCompany extends Component {
 
     preventDefault = (event) => event.preventDefault();
 
-    handleSubmit = e => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
-        const data = {
-            email: this.state.email
-        };
+        const { email, fullName } = this.state;
 
-        UserService.validateEmail(data)
-            .then(emailStatus => {
-                if (emailStatus === 204) {
-                    this.setState({ emailError: true });
-                } else {
-                    this.setState({ emailError: false });
+        const emailValid = await this.validateEmail(email);
+        if (!emailValid) {
+            return;
+        }
 
-                    if (!this.state.avatar) {
-                        this.setState({
-                            avatarError: true,
-                            avatarSizeError: false,
-                            passwordsDontMatch: false,
-                            passwordError: false,
-                            error: false
-                        });
-                        return;
-                    }
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
 
-                    this.setState({ loading: true });
+        if (!this.state.avatar) {
+            this.setState({
+                avatarError: true,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false
+            });
+            return;
+        }
 
-                    const data = {
-                        email: this.state.email,
-                        phone: this.state.phone,
-                        location: this.state.location,
-                        bio: this.state.bio,
-                        fullName: this.state.fullName,
-                        language: UserService.getLanguage(),
-                        type: Env.RECORD_TYPE.COMPANY,
-                        avatar: this.state.avatar
-                    };
-
-                    UserService.create(data)
-                        .then(status => {
-                            if (status === 200) {
-                                window.location = '/companies';
-                            } else
-                                this.setState({
-                                    error: true,
-                                    passwordError: false,
-                                    passwordsDontMatch: false,
-                                    loading: false
-                                });
-                        }).catch(() => {
-                            this.setState({
-                                error: true,
-                                passwordError: false,
-                                passwordsDontMatch: false,
-                                loading: false
-                            });
-                        });
-                }
-
-            }).catch(() => {
+        try {
+            const status = await UserService.validateEmail({ email });
+            if (status === 204) {
                 this.setState({ emailError: true });
-            })
+                return;
+            }
+
+            this.setState({ emailError: false, loading: true });
+
+            const data = {
+                email: this.state.email,
+                phone: this.state.phone,
+                location: this.state.location,
+                bio: this.state.bio,
+                fullName: this.state.fullName,
+                language: UserService.getLanguage(),
+                type: Env.RECORD_TYPE.COMPANY,
+                avatar: this.state.avatar
+            };
+
+            UserService.create(data)
+                .then(status => {
+                    if (status === 200) {
+                        window.location = '/companies';
+                    } else
+                        this.setState({
+                            error: true,
+                            passwordError: false,
+                            passwordsDontMatch: false,
+                            loading: false
+                        });
+                }).catch(() => {
+                    this.setState({
+                        error: true,
+                        passwordError: false,
+                        passwordsDontMatch: false,
+                        loading: false
+                    });
+                });
+        } catch (err) {
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        }
     };
 
     handleChange = (e) => {
@@ -190,27 +234,6 @@ export default class CreateCompany extends Component {
         this.setState({ loading: false, avatar });
         if (avatar !== null) {
             this.setState({ avatarError: false });
-        }
-    };
-
-    onAvatarValidate = (valid) => {
-        if (!valid) {
-            this.setState({
-                avatarSizeError: true,
-                avatarError: false,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-                loading: false,
-            });
-        } else {
-            this.setState({
-                avatarSizeError: false,
-                avatarError: false,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-            });
         }
     };
 
@@ -247,9 +270,9 @@ export default class CreateCompany extends Component {
             emailError,
             fullNameError,
             avatarError,
-            avatarSizeError,
             visible,
-            loading } = this.state;
+            loading,
+            emailValid } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
@@ -265,7 +288,6 @@ export default class CreateCompany extends Component {
                                 readonly={false}
                                 onBeforeUpload={this.onBeforeUpload}
                                 onChange={this.onAvatarChange}
-                                onValidate={this.onAvatarValidate}
                                 color='disabled'
                                 className='avatar-ctn'
                             />
@@ -289,7 +311,7 @@ export default class CreateCompany extends Component {
                                     autoComplete="off"
                                 />
                                 <FormHelperText error={fullNameError}>
-                                    {fullNameError ? strings.INVALID_COMPANY_NAME : ''}
+                                    {(fullNameError && strings.INVALID_COMPANY_NAME) || ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -298,14 +320,15 @@ export default class CreateCompany extends Component {
                                 <Input
                                     id="email"
                                     type="text"
-                                    error={emailError}
+                                    error={!emailValid || emailError}
                                     onBlur={this.handleEmailOnBlur}
                                     onChange={this.handleOnChangeEmail}
-                                    required
                                     autoComplete="off"
+                                    required
                                 />
-                                <FormHelperText error={emailError}>
-                                    {emailError ? commonStrings.INVALID_EMAIL : ''}
+                                <FormHelperText error={!emailValid || emailError}>
+                                    {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -355,7 +378,6 @@ export default class CreateCompany extends Component {
                                     variant="contained"
                                     className='btn-primary btn-margin-bottom'
                                     size="small"
-                                    disabled={emailError}
                                 >
                                     {commonStrings.CREATE}
                                 </Button>
@@ -374,7 +396,6 @@ export default class CreateCompany extends Component {
                                 {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
                                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
                                 {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                                {avatarSizeError && <Error message={strings.COMPANY_IMAGE_SIZE_ERROR} />}
                             </div>
                         </form>
 

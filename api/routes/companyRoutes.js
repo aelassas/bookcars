@@ -16,8 +16,8 @@ const routes = express.Router();
 routes.route(routeNames.validate).post(authJwt.verifyToken, (req, res) => {
     const keyword = escapeStringRegexp(req.body.fullName);
     const options = 'i';
-    User.findOne({ fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
-        .then(user => user && user.type === Env.USER_TYPE.COMPANY ? res.sendStatus(204) : res.sendStatus(200))
+    User.findOne({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
+        .then(user => user ? res.sendStatus(204) : res.sendStatus(200))
         .catch(err => {
             console.error('[company.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.fullName, err);
             res.status(400).send(strings.DB_ERROR + err);

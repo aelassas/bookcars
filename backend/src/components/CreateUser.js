@@ -22,6 +22,8 @@ import {
     MenuItem
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
+import validator from 'validator';
+import { toast } from 'react-toastify';
 
 import '../assets/css/create-user.css';
 
@@ -45,9 +47,8 @@ export default class CreateUser extends Component {
             avatar: null,
             avatarError: false,
             type: '',
-            fixFullNameError: false,
-            fixEmailError: false,
-            birthDate: null
+            birthDate: null,
+            emailValid: true,
         };
     }
 
@@ -62,62 +63,78 @@ export default class CreateUser extends Component {
         this.setState({
             fullName: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ fullNameError: false });
+        }
+    };
+
+    validateFullName = async (fullName) => {
+        if (fullName) {
+            if (this.state.type === Env.RECORD_TYPE.COMPANY) {
+
+                const status = await CompanyService.validate({ fullName });
+                if (status === 200) {
+                    this.setState({ fullNameError: false });
+                    return true;
+                } else {
+                    this.setState({ fullNameError: true, avatarError: false, error: false });
+                    return false;
+                }
+
+            } else {
+                this.setState({ fullNameError: false });
+                return true;
+            }
+        } else {
+            this.setState({ fullNameError: false });
+            return true;
+        }
     };
 
     handleFullNameOnBlur = (e) => {
-        if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-            const data = {
-                fullName: e.target.value,
-            };
-
-            CompanyService.validate(data).then(status => {
-                if (status === 204) {
-                    this.setState({
-                        fullNameError: true,
-                        fixFullNameError: true,
-                        avatarError: false,
-                        passwordsDontMatch: false,
-                        passwordError: false,
-                        error: false
-                    });
-                } else {
-                    this.setState({ fullNameError: false, fixFullNameError: false });
-                }
-            }).catch(() => {
-                this.setState({ fullNameError: false, fixFullNameError: false });
-            });
-        } else {
-            this.setState({ fullNameError: false, fixFullNameError: false });
-        }
+        this.validateFullName(e.target.value);
     };
 
     handleOnChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ emailError: false, emailValid: true });
+        }
+    };
+
+    validateEmail = async (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                try {
+                    const status = await UserService.validateEmail({ email });
+                    if (status === 200) {
+                        this.setState({ emailError: false, emailValid: true });
+                        return true;
+                    } else {
+                        this.setState({ emailError: true, emailValid: true, avatarError: false, error: false });
+                        return false;
+                    }
+                } catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ emailError: false, emailValid: true });
+                    return false;
+                }
+            } else {
+                this.setState({ emailError: false, emailValid: false });
+                return false;
+            }
+        } else {
+            this.setState({ emailError: false, emailValid: true });
+            return false;
+        }
     };
 
     handleEmailOnBlur = (e) => {
-        const data = {
-            email: e.target.value,
-        };
-
-        UserService.validateEmail(data).then(status => {
-            if (status === 204) {
-                this.setState({
-                    emailError: true,
-                    fixEmailError: true,
-                    avatarError: false,
-                    passwordsDontMatch: false,
-                    passwordError: false,
-                    error: false
-                });
-            } else {
-                this.setState({ emailError: false, fixEmailError: false });
-            }
-        }).catch(() => {
-            this.setState({ emailError: false, fixEmailError: false });
-        });
+        this.validateEmail(e.target.value);
     };
 
     handleOnChangePhone = (e) => {
@@ -138,16 +155,27 @@ export default class CreateUser extends Component {
         });
     };
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!this.state.avatar && this.state.type === Env.RECORD_TYPE.COMPANY) {
-            return this.setState({
+        const { email, type, fullName } = this.state;
+
+        const emailValid = await this.validateEmail(email);
+        if (!emailValid) {
+            return;
+        }
+
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
+
+        if (type === Env.RECORD_TYPE.COMPANY && !this.state.avatar) {
+            this.setState({
                 avatarError: true,
-                passwordsDontMatch: false,
-                passwordError: false,
                 error: false
             });
+            return;
         }
 
         this.setState({ loading: true });
@@ -155,12 +183,9 @@ export default class CreateUser extends Component {
         const {
             admin,
             user,
-            email,
             phone,
             location,
             bio,
-            fullName,
-            type,
             avatar,
             birthDate } = this.state;
 
@@ -176,16 +201,12 @@ export default class CreateUser extends Component {
                 } else {
                     this.setState({
                         error: true,
-                        passwordError: false,
-                        passwordsDontMatch: false,
                         loading: false
                     });
                 }
             }).catch(() => {
                 this.setState({
                     error: true,
-                    passwordError: false,
-                    passwordsDontMatch: false,
                     loading: false
                 });
             });
@@ -242,16 +263,14 @@ export default class CreateUser extends Component {
             admin,
             type,
             error,
-            passwordError,
-            passwordsDontMatch,
             emailError,
             fullNameError,
             avatarError,
             visible,
             loading,
-            fixFullNameError,
-            fixEmailError,
-            birthDate } = this.state,
+            birthDate,
+            emailValid
+        } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER;
 
@@ -310,7 +329,7 @@ export default class CreateUser extends Component {
                                     autoComplete="off"
                                 />
                                 <FormHelperText error={fullNameError}>
-                                    {fullNameError ? ccStrings.INVALID_COMPANY_NAME : ''}
+                                    {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -319,14 +338,15 @@ export default class CreateUser extends Component {
                                 <Input
                                     id="email"
                                     type="text"
-                                    error={emailError}
+                                    error={!emailValid || emailError}
                                     onBlur={this.handleEmailOnBlur}
                                     onChange={this.handleOnChangeEmail}
-                                    required
                                     autoComplete="off"
+                                    required
                                 />
-                                <FormHelperText error={emailError}>
-                                    {emailError ? commonStrings.INVALID_EMAIL : ''}
+                                <FormHelperText error={!emailValid || emailError}>
+                                    {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                                 </FormHelperText>
                             </FormControl>
 
@@ -389,7 +409,6 @@ export default class CreateUser extends Component {
                                     variant="contained"
                                     className='btn-primary btn-margin-bottom'
                                     size="small"
-                                    disabled={emailError || fullNameError}
                                 >
                                     {commonStrings.CREATE}
                                 </Button>
@@ -404,11 +423,8 @@ export default class CreateUser extends Component {
                             </div>
 
                             <div className="form-error">
-                                {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
-                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
                                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
                                 {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                                {(fixFullNameError || fixEmailError) && <Error message={commonStrings.FIX_ERRORS} />}
                             </div>
                         </form>
 

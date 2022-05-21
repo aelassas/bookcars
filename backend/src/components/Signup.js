@@ -273,7 +273,7 @@ export default class SignUp extends Component {
                                         autoComplete="off"
                                     />
                                     <FormHelperText error={emailError}>
-                                        {emailError ? commonStrings.INVALID_EMAIL : ''}
+                                        {emailError ? commonStrings.EMAIL_ALREADY_REGISTERED : ''}
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">

@@ -129,8 +129,8 @@ export default class Activate extends Component {
                                             required
                                         />
                                         <FormHelperText error={error || !emailValid}>
+                                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                                             {(error && strings.EMAIL_ERROR) || ''}
-                                            {(!emailValid && strings.EMAIL_NOT_VALID) || ''}
                                         </FormHelperText>
                                     </FormControl>
 

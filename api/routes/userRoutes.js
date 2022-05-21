@@ -214,7 +214,7 @@ routes.route(routeNames.checkToken).get((req, res) => {
             if (user) {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
                     || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
-                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type === Env.USER_TYPE.COMPANY)
+                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
                     || user.verified
                 ) {
                     return res.sendStatus(403);
@@ -264,7 +264,7 @@ routes.route(routeNames.resend).post((req, res) => {
             if (user) {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
                     || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
-                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type === Env.USER_TYPE.COMPANY)
+                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
                 ) {
                     return res.sendStatus(403);
                 } else {
@@ -375,8 +375,8 @@ routes.route(routeNames.signin).post((req, res) => {
                 || !user
                 || !user.password
                 || (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type))
-                || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)
-                || (req.params.type === Env.APP_TYPE.FRONTEND && user && user.type === Env.USER_TYPE.COMPANY)
+                || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
+                || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
             ) {
                 res.sendStatus(204);
             } else {

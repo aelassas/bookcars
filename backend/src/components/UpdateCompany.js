@@ -42,89 +42,71 @@ export default class UpdateCompany extends Component {
             noMatch: false,
             avatar: null,
             avatarError: false,
-            avatarSizeError: false
+            email: ''
         };
     }
 
-    handleOnChangeFullName = e => {
+    handleOnChangeFullName = (e) => {
         this.setState({
             fullName: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ fullNameError: false });
+        }
     };
 
-    handleOnChangePhone = e => {
+    validateFullName = async (fullName) => {
+        const { company } = this.state;
+
+        if (fullName) {
+            if (company.fullName !== fullName) {
+                try {
+                    const status = await CompanyService.validate({ fullName });
+
+                    if (status === 200) {
+                        this.setState({ fullNameError: false });
+                        return true;
+                    } else {
+                        this.setState({ fullNameError: true, avatarError: false, error: false });
+                        return false;
+                    }
+                }
+                catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ fullNameError: false, avatarError: false, error: false });
+                    return false;
+                }
+            } else {
+                this.setState({ fullNameError: false, avatarError: false, error: false });
+                return true;
+            }
+        } else {
+            this.setState({ fullNameError: false, avatarError: false, error: false });
+            return false;
+        }
+    };
+
+    handleFullNameOnBlur = (e) => {
+        this.validateFullName(e.target.value);
+    };
+
+    handleOnChangePhone = (e) => {
         this.setState({
             phone: e.target.value,
         });
     };
 
-    handleOnChangeLocation = e => {
+    handleOnChangeLocation = (e) => {
         this.setState({
             location: e.target.value,
         });
     };
 
-    handleOnChangeBio = e => {
+    handleOnChangeBio = (e) => {
         this.setState({
             bio: e.target.value,
         });
-    };
-
-    handleFullNameOnBlur = e => {
-        const data = {
-            fullName: e.target.value,
-        };
-
-        CompanyService.validate(data).then(status => {
-            if (status === 204) {
-                this.setState({ fullNameError: true });
-            } else {
-                this.setState({ fullNameError: false });
-            }
-        }).catch(() => {
-            this.setState({ fullNameError: false });
-        });
-    };
-
-    preventDefault = (event) => event.preventDefault();
-
-    handleSubmit = e => {
-        e.preventDefault();
-
-        if (!this.state.avatar) {
-            this.setState({
-                avatarError: true,
-                avatarSizeError: false,
-                error: false
-            });
-            return;
-        }
-
-        const { company, fullName, phone, location, bio } = this.state;
-
-        const data = {
-            _id: company._id,
-            fullName,
-            phone,
-            location,
-            bio
-        };
-
-        CompanyService.update(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(commonStrings.UPDATED, { type: 'info' });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                }
-            })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-            });
-    };
-
-    handleChange = (e) => {
-        e.preventDefault();
     };
 
     onBeforeUpload = () => {
@@ -141,27 +123,6 @@ export default class UpdateCompany extends Component {
         }
     };
 
-    onAvatarValidate = (valid) => {
-        if (!valid) {
-            this.setState({
-                avatarSizeError: true,
-                avatarError: false,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-                loading: false,
-            });
-        } else {
-            this.setState({
-                avatarSizeError: false,
-                avatarError: false,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-            });
-        }
-    };
-
     handleResendActivationLink = () => {
         const { company } = this.state;
 
@@ -169,6 +130,49 @@ export default class UpdateCompany extends Component {
             .then(status => {
                 if (status === 200) {
                     toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
+    handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const { fullName } = this.state;
+
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
+
+        if (!this.state.avatar) {
+            this.setState({
+                avatarError: true,
+                error: false
+            });
+            return;
+        }
+
+        const { company, phone, location, bio } = this.state;
+
+        const data = {
+            _id: company._id,
+            fullName,
+            phone,
+            location,
+            bio
+        };
+
+        CompanyService.update(data)
+            .then(status => {
+                if (status === 200) {
+                    company.fullName = fullName;
+                    this.setState({ company });
+                    toast(commonStrings.UPDATED, { type: 'info' });
                 } else {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
@@ -189,6 +193,7 @@ export default class UpdateCompany extends Component {
                             if (company) {
                                 this.setState({
                                     company,
+                                    email: company.email,
                                     avatar: company.avatar,
                                     fullName: company.fullName,
                                     phone: company.phone,
@@ -220,6 +225,7 @@ export default class UpdateCompany extends Component {
         const {
             user,
             company,
+            email,
             fullName,
             phone,
             location,
@@ -229,8 +235,7 @@ export default class UpdateCompany extends Component {
             visible,
             loading,
             noMatch,
-            avatarError,
-            avatarSizeError
+            avatarError
         } = this.state, admin = Helper.admin(user);
 
         return (
@@ -248,11 +253,8 @@ export default class UpdateCompany extends Component {
                                     hideDelete={true}
                                     onBeforeUpload={this.onBeforeUpload}
                                     onChange={this.onAvatarChange}
-                                    onValidate={this.onAvatarValidate}
                                     color='disabled'
                                     className='avatar-ctn'
-                                // width={Env.COMPANY_IMAGE_WIDTH}
-                                // height={Env.COMPANY_IMAGE_HEIGHT} 
                                 />
 
                                 <div className='info'>
@@ -275,8 +277,18 @@ export default class UpdateCompany extends Component {
                                         value={fullName}
                                     />
                                     <FormHelperText error={fullNameError}>
-                                        {fullNameError ? commonStrings.INVALID_COMPANY_NAME : ''}
+                                        {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
                                     </FormHelperText>
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                    <Input
+                                        id="email"
+                                        type="text"
+                                        value={email}
+                                        disabled
+                                    />
                                 </FormControl>
 
                                 <div className='info'>
@@ -348,13 +360,8 @@ export default class UpdateCompany extends Component {
                                 </div>
 
                                 <div className="form-error">
-                                    {(error || avatarError || avatarSizeError) ?
-                                        <div>
-                                            {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                                            {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                                            {avatarSizeError && <Error message={ccStrings.COMPANY_IMAGE_SIZE_ERROR} />}
-                                        </div>
-                                        : null}
+                                    {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                                    {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
                                 </div>
                             </form>
                         </Paper>

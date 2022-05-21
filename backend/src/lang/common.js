@@ -11,7 +11,7 @@ export const strings = new LocalizedStrings({
         FULL_NAME: 'Nom complet',
         EMAIL: 'E-mail',
         PASSWORD: 'Mot de passe',
-        INVALID_EMAIL: 'Adresse e-mail invalide',
+        EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée',
         CONFIRM_PASSWORD: 'Confirmer le mot de passe',
         PHONE: 'Téléphone',
         LOCATION: 'Localisation',
@@ -61,6 +61,7 @@ export const strings = new LocalizedStrings({
         CAR: 'voiture',
         RESEND_ACTIVATION_LINK: "Renvoyer le lien d'activation du compte",
         ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
+        EMAIL_NOT_VALID: 'E-mail non valide',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -70,7 +71,7 @@ export const strings = new LocalizedStrings({
         FULL_NAME: 'Full name',
         EMAIL: 'Email',
         PASSWORD: 'Password',
-        INVALID_EMAIL: 'Invalid email address',
+        EMAIL_ALREADY_REGISTERED: 'This email address is already registered',
         CONFIRM_PASSWORD: 'Confirm Password',
         PHONE: 'Phone',
         LOCATION: 'Location',
@@ -120,6 +121,7 @@ export const strings = new LocalizedStrings({
         CAR: 'car',
         RESEND_ACTIVATION_LINK: "Resend account activation link",
         ACTIVATION_EMAIL_SENT: 'Activation email sent.',
+        EMAIL_NOT_VALID: 'Invalid email address',
     }
 });
 

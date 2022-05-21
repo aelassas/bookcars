@@ -52,8 +52,6 @@ export default class CreateUser extends Component {
             avatar: null,
             avatarError: false,
             type: '',
-            fixFullNameError: false,
-            fixEmailError: false,
             birthDate: null
         };
     }
@@ -69,62 +67,50 @@ export default class CreateUser extends Component {
         this.setState({
             fullName: e.target.value,
         });
-    };
 
-    handleFullNameOnBlur = (e) => {
-        if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-            const data = {
-                fullName: e.target.value,
-            };
-
-            CompanyService.validate(data).then(status => {
-                if (status === 204) {
-                    this.setState({
-                        fullNameError: true,
-                        fixFullNameError: true,
-                        avatarError: false,
-                        passwordsDontMatch: false,
-                        passwordError: false,
-                        error: false
-                    });
-                } else {
-                    this.setState({ fullNameError: false, fixFullNameError: false });
-                }
-            }).catch(() => {
-                this.setState({ fullNameError: false, fixFullNameError: false });
-            });
-        } else {
-            this.setState({ fullNameError: false, fixFullNameError: false });
+        if (!e.target.value) {
+            this.setState({ fullNameError: false });
         }
     };
 
-    handleOnChangeEmail = (e) => {
-        this.setState({
-            email: e.target.value,
-        });
+    validateFullName = async (fullName) => {
+        const { user, type } = this.state;
+
+        if (type === Env.RECORD_TYPE.COMPANY) {
+            if (user.fullName !== fullName || user.type !== type) {
+                try {
+                    const status = await CompanyService.validate({ fullName });
+                    console.log('--------status', status)
+                    if (status === 200) {
+                        this.setState({ fullNameError: false });
+                        return true;
+                    } else {
+                        this.setState({
+                            fullNameError: true,
+                            avatarError: false,
+                            passwordsDontMatch: false,
+                            passwordError: false,
+                            error: false
+                        });
+                        return false;
+                    }
+                } catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ fullNameError: false });
+                    return false;
+                }
+            } else {
+                this.setState({ fullNameError: false });
+                return true;
+            }
+        } else {
+            this.setState({ fullNameError: false });
+            return true;
+        }
     };
 
-    handleEmailOnBlur = (e) => {
-        const data = {
-            email: e.target.value,
-        };
-
-        UserService.validateEmail(data).then(status => {
-            if (status === 204) {
-                this.setState({
-                    emailError: true,
-                    fixEmailError: true,
-                    avatarError: false,
-                    passwordsDontMatch: false,
-                    passwordError: false,
-                    error: false
-                });
-            } else {
-                this.setState({ emailError: false, fixEmailError: false });
-            }
-        }).catch(() => {
-            this.setState({ emailError: false, fixEmailError: false });
-        });
+    handleFullNameOnBlur = (e) => {
+        this.validateFullName(e.target.value);
     };
 
     handleOnChangePhone = (e) => {
@@ -163,58 +149,6 @@ export default class CreateUser extends Component {
 
     handleMouseDownConfirmPassword = (event) => {
         event.preventDefault();
-    };
-
-    preventDefault = (event) => event.preventDefault();
-
-    handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (!this.state.avatar && this.state.type === Env.RECORD_TYPE.COMPANY) {
-            return this.setState({
-                avatarError: true,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false
-            });
-        }
-
-        const { user, phone, location, bio, fullName, type, avatar, birthDate } = this.state, language = UserService.getLanguage();
-        const data = {
-            _id: user._id,
-            phone,
-            location,
-            bio,
-            fullName,
-            language,
-            type,
-            avatar,
-            birthDate
-        };
-
-        UserService.updateUser(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(commonStrings.UPDATED, { type: 'info' });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-
-                    this.setState({
-                        error: false,
-                        passwordError: false,
-                        passwordsDontMatch: false,
-                        loading: false
-                    });
-                }
-            }).catch(() => {
-                this.setState({
-                    error: true,
-                    passwordError: false,
-                    passwordsDontMatch: false,
-                    loading: false
-                });
-            });
-
     };
 
     handleChange = (e) => {
@@ -270,6 +204,66 @@ export default class CreateUser extends Component {
             });
     };
 
+    handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const { type, fullName } = this.state;
+
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
+
+        if (type === Env.RECORD_TYPE.COMPANY && !this.state.avatar) {
+            return this.setState({
+                avatarError: true,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false
+            });
+        }
+
+        const { user, phone, location, bio, avatar, birthDate } = this.state, language = UserService.getLanguage();
+        const data = {
+            _id: user._id,
+            phone,
+            location,
+            bio,
+            fullName,
+            language,
+            type,
+            avatar,
+            birthDate
+        };
+
+        UserService.updateUser(data)
+            .then(status => {
+                if (status === 200) {
+                    user.fullName = fullName;
+                    user.type = type;
+                    this.setState({ user });
+                    toast(commonStrings.UPDATED, { type: 'info' });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+
+                    this.setState({
+                        error: false,
+                        passwordError: false,
+                        passwordsDontMatch: false,
+                        loading: false
+                    });
+                }
+            }).catch(() => {
+                this.setState({
+                    error: true,
+                    passwordError: false,
+                    passwordsDontMatch: false,
+                    loading: false
+                });
+            });
+
+    };
+
     onLoad = (loggedUser) => {
 
         this.setState({ loading: true }, () => {
@@ -311,9 +305,6 @@ export default class CreateUser extends Component {
         });
     }
 
-    componentDidMount() {
-    }
-
     render() {
         const {
             loggedUser,
@@ -323,12 +314,9 @@ export default class CreateUser extends Component {
             admin,
             type,
             error,
-            emailError,
             fullNameError,
             avatarError,
             loading,
-            fixFullNameError,
-            fixEmailError,
 
             fullName,
             email,
@@ -400,7 +388,7 @@ export default class CreateUser extends Component {
                                         value={fullName}
                                     />
                                     <FormHelperText error={fullNameError}>
-                                        {fullNameError ? ccStrings.INVALID_COMPANY_NAME : ''}
+                                        {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
                                     </FormHelperText>
                                 </FormControl>
 
@@ -409,22 +397,9 @@ export default class CreateUser extends Component {
                                     <Input
                                         id="email"
                                         type="text"
-                                        error={emailError}
-                                        onBlur={this.handleEmailOnBlur}
-                                        onChange={this.handleOnChangeEmail}
-                                        required
-                                        inputProps={{
-                                            autoComplete: 'new-email',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
                                         value={email}
                                         disabled
                                     />
-                                    <FormHelperText error={emailError}>
-                                        {emailError ? commonStrings.INVALID_EMAIL : ''}
-                                    </FormHelperText>
                                 </FormControl>
 
                                 {driver &&
@@ -504,7 +479,6 @@ export default class CreateUser extends Component {
                                         variant="contained"
                                         className='btn-primary btn-margin-bottom'
                                         size="small"
-                                        disabled={emailError || fullNameError}
                                     >
                                         {commonStrings.SAVE}
                                     </Button>
@@ -522,7 +496,6 @@ export default class CreateUser extends Component {
                                 <div className="form-error">
                                     {error && <Error message={commonStrings.GENERIC_ERROR} />}
                                     {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                                    {(fixFullNameError || fixEmailError) && <Error message={commonStrings.FIX_ERRORS} />}
                                 </div>
                             </form>
 
