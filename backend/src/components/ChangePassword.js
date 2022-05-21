@@ -199,7 +199,7 @@ export default class ChangePassword extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className="password-reset" style={visible ? null : { display: 'none' }}>
                     <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
-                        <h1 className="password-reset-form-title"> {strings.PASSWORD_RESET_HEADING} </h1>
+                        <h1 className="password-reset-form-title"> {strings.CHANGE_PASSWORD_HEADING} </h1>
                         <form className="form" onSubmit={this.handleSubmit}>
                             <FormControl fullWidth margin="dense">
                                 <InputLabel

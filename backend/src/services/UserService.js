@@ -27,7 +27,7 @@ export default class UserService {
     }
 
     static resend(email) {
-        return axios.post(`${Env.API_HOST}/api/resend/${encodeURIComponent(email)}`).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email)}`).then(res => res.status);
     }
 
     static activate(data) {

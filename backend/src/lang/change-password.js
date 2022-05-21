@@ -4,7 +4,7 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        PASSWORD_RESET_HEADING: 'Réinitialisation du mot de passe',
+        CHANGE_PASSWORD_HEADING: 'Modification du mot de passe',
         CURRENT_PASSWORD: 'Mot de passe actuel',
         YOUR_PASSWORD: 'Votre mot de passe',
         CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
@@ -14,7 +14,7 @@ export const strings = new LocalizedStrings({
         PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.'
     },
     en: {
-        PASSWORD_RESET_HEADING: 'Password Reset',
+        CHANGE_PASSWORD_HEADING: 'Password Modification',
         CURRENT_PASSWORD: 'Current Password',
         YOUR_PASSWORD: 'Your password',
         CURRENT_PASSWORD_ERROR: 'Wrong password',

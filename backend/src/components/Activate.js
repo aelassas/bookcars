@@ -13,7 +13,8 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper
+    Paper,
+    Link
 } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -199,6 +200,7 @@ export default class Activate extends Component {
                                     className="btn-primary btn-resend"
                                     onClick={this.handleResend}
                                 >{mStrings.RESEND}</Button>
+                                <p className='go-to-home'><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>
                             </div>
                         </Paper>
                     </div>

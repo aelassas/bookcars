@@ -19,6 +19,10 @@
     text-align: center;
 }
 
+.signin-form .reset-password {
+    margin-right: 20px;
+}
+
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {

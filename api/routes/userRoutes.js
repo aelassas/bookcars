@@ -100,9 +100,9 @@ routes.route(routeNames.signup).post((req, res) => {
                     const mailOptions = {
                         from: SMTP_FROM,
                         to: user.email,
-                        subject: strings.ACCOUNT_VALIDATION_SUBJECT,
+                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
                         html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>'
-                            + strings.ACCOUNT_VALIDATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>'
+                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>'
                             + '</p>'
                     };
                     transporter.sendMail(mailOptions, (err, info) => {
@@ -174,9 +174,9 @@ routes.route(routeNames.create).post((req, res) => {
                     const mailOptions = {
                         from: SMTP_FROM,
                         to: user.email,
-                        subject: strings.ACCOUNT_VALIDATION_SUBJECT,
+                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
                         html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_VALIDATION_LINK + '<br><br>'
+                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
 
                             + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
                             + '/?u=' + encodeURIComponent(user._id)
@@ -262,61 +262,67 @@ routes.route(routeNames.resend).post((req, res) => {
     User.findOne({ email: req.params.email })
         .then(user => {
             if (user) {
-                user.verified = false;
+                if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
+                    || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
+                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type === Env.USER_TYPE.COMPANY)
+                ) {
+                    return res.sendStatus(403);
+                } else {
+                    user.verified = false;
 
-                user.save()
-                    .then(() => {
-                        // generate token and save
-                        const token = new Token({ user: user._id, token: uuid() });
+                    user.save()
+                        .then(() => {
+                            // generate token and save
+                            const token = new Token({ user: user._id, token: uuid() });
 
-                        token.save()
-                            .then(token => {
-                                // Send email
-                                strings.setLanguage(user.language);
+                            token.save()
+                                .then(token => {
+                                    // Send email
+                                    strings.setLanguage(user.language);
 
-                                const transporter = nodemailer.createTransport({
-                                    host: SMTP_HOST,
-                                    port: SMTP_PORT,
-                                    auth: {
-                                        user: SMTP_USER,
-                                        pass: SMTP_PASS
-                                    }
+                                    const transporter = nodemailer.createTransport({
+                                        host: SMTP_HOST,
+                                        port: SMTP_PORT,
+                                        auth: {
+                                            user: SMTP_USER,
+                                            pass: SMTP_PASS
+                                        }
+                                    });
+                                    const mailOptions = {
+                                        from: SMTP_FROM,
+                                        to: user.email,
+                                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
+
+                                            + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                                            + '/?u=' + encodeURIComponent(user._id)
+                                            + '&e=' + encodeURIComponent(user.email)
+                                            + '&t=' + encodeURIComponent(token.token)
+                                            + '<br><br>'
+
+                                            + strings.REGARDS + '<br>'
+                                            + '</p>'
+                                    };
+                                    transporter.sendMail(mailOptions, (err, info) => {
+                                        if (err) {
+                                            console.error(strings.SMTP_ERROR, err);
+                                            return res.status(400).send(strings.SMTP_ERROR + err);;
+                                        } else {
+                                            return res.sendStatus(200);
+                                        }
+                                    });
+                                })
+                                .catch(err => {
+                                    console.error(strings.DB_ERROR, err);
+                                    return res.status(400).send(strings.DB_ERROR + err);
                                 });
-                                const mailOptions = {
-                                    from: SMTP_FROM,
-                                    to: user.email,
-                                    subject: strings.ACCOUNT_VALIDATION_SUBJECT,
-                                    html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                                        + strings.ACCOUNT_VALIDATION_LINK + '<br><br>'
-
-                                        + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
-                                        + '/?u=' + encodeURIComponent(user._id)
-                                        + '&e=' + encodeURIComponent(user.email)
-                                        + '&t=' + encodeURIComponent(token.token)
-                                        + '<br><br>'
-
-                                        + strings.REGARDS + '<br>'
-                                        + '</p>'
-                                };
-                                transporter.sendMail(mailOptions, (err, info) => {
-                                    if (err) {
-                                        console.error(strings.SMTP_ERROR, err);
-                                        return res.status(400).send(strings.SMTP_ERROR + err);;
-                                    } else {
-                                        return res.sendStatus(200);
-                                    }
-                                });
-                            })
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err);
-                                return res.status(400).send(strings.DB_ERROR + err);
-                            });
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err);
-                        return res.status(400).send(strings.DB_ERROR + err);
-                    });
-
+                        })
+                        .catch(err => {
+                            console.error(strings.DB_ERROR, err);
+                            return res.status(400).send(strings.DB_ERROR + err);
+                        });
+                }
             } else {
                 return res.sendStatus(204);
             }
@@ -428,19 +434,19 @@ routes.route(routeNames.confirmEmail).get((req, res) => {
             strings.setLanguage(user.language);
             // token is not found into database i.e. token may have expired 
             if (!token) {
-                console.error(strings.ACCOUNT_VALIDATION_LINK_EXPIRED, req.params);
-                return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_LINK_EXPIRED));
+                console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params);
+                return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED));
             }
             // if token is found then check valid user 
             else {
                 // not valid user
                 if (!user) {
                     console.error('[user.confirmEmail] User not found', req.params);
-                    return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_LINK_ERROR));
+                    return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_ERROR));
                 }
                 // user is already verified
                 else if (user.verified) {
-                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
+                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED));
                 }
                 // verify user
                 else {
@@ -455,7 +461,7 @@ routes.route(routeNames.confirmEmail).get((req, res) => {
                         }
                         // account successfully verified
                         else {
-                            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_SUCCESS));
+                            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS));
                         }
                     });
 
@@ -472,11 +478,11 @@ routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) =
         // user is not found into database
         if (!user) {
             console.error('[user.resendLink] User not found:', req.params);
-            return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_VALIDATION_RESEND_ERROR));
+            return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR));
         }
         // user has been already verified
         else if (user.verified) {
-            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_ACCOUNT_VERIFIED));
+            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED));
         }
         // send verification link
         else {
@@ -500,13 +506,13 @@ routes.route(routeNames.resendLink).post(authJwt.verifyToken, (req, res, next) =
                 });
 
                 strings.setLanguage(user.language);
-                const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_VALIDATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_VALIDATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' };
+                const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_ACTIVATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' };
                 transporter.sendMail(mailOptions, (err, info) => {
                     if (err) {
                         console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params);
-                        return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_TECHNICAL_ISSUE + ' ' + err.response));
+                        return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_TECHNICAL_ISSUE + ' ' + err.response));
                     }
-                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_2));
+                    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2));
                 });
             });
         }

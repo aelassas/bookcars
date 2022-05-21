@@ -7,13 +7,15 @@ export const strings = new LocalizedStrings({
         SIGN_IN_HEADING: 'Connexion',
         SIGN_IN: 'Se connecter',
         ERROR_IN_SIGN_IN: 'Nous ne pouvons pas nous connecter à votre compte.',
-        IS_BLACKLISTED: 'Votre compte est suspendu.'
+        IS_BLACKLISTED: 'Votre compte est suspendu.',
+        RESET_PASSWORD: 'Mot de passe oublié ?'
     },
     en: {
         SIGN_IN_HEADING: 'Sign in',
         SIGN_IN: 'Sign in',
         ERROR_IN_SIGN_IN: "We can't sign in to your account.",
-        IS_BLACKLISTED: 'Your account is suspended.'
+        IS_BLACKLISTED: 'Your account is suspended.',
+        RESET_PASSWORD: 'Forgot password?'
     }
 });
 

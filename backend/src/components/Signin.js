@@ -10,7 +10,8 @@ import {
     FormControl,
     InputLabel,
     Input,
-    Button
+    Button,
+    Link
 } from '@mui/material';
 
 import '../assets/css/signin.css';
@@ -167,6 +168,7 @@ export default class SignIn extends Component {
                                 />
                             </FormControl>
                             <div className='signin-buttons'>
+                                <Link href='/reset-password' className='reset-password'>{strings.RESET_PASSWORD}</Link>
                                 <Button
                                     type="submit"
                                     variant="contained"
