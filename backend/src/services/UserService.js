@@ -193,7 +193,7 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/delete-temp-avatar/${encodeURIComponent(avatar)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
-    static resetPassword(data) {
+    static changePassword(data) {
         const salt = bcrypt.genSaltSync(10);
 
         const newPassword = data.newPassword;
@@ -201,7 +201,7 @@ export default class UserService {
 
         data["newPassword"] = newPasswordHash;
 
-        return axios.post(`${Env.API_HOST}/api/reset-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static checkPassword(id, pass) {

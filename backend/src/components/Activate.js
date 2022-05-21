@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserService from '../services/UserService';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
-import { strings as rpStrings } from '../lang/reset-password';
+import { strings as rpStrings } from '../lang/change-password';
 import { strings as mStrings } from '../lang/master';
 import { strings } from '../lang/activate';
 import Error from './Error';

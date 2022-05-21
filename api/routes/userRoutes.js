@@ -736,16 +736,16 @@ routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, (req, res) =
 });
 
 // Reset password Router
-routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.changePassword).post(authJwt.verifyToken, (req, res) => {
     User.findOne({ _id: req.body._id })
         .then(user => {
 
             if (!user) {
-                console.error('[user.resetPassword] User not found:', req.body._id);
+                console.error('[user.changePassword] User not found:', req.body._id);
                 return res.sendStatus(204);
             }
 
-            const resetPassword = () => {
+            const changePassword = () => {
                 user.password = req.body.newPassword;
                 user.save()
                     .then(() => {
@@ -760,7 +760,7 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
             if (req.body.strict) {
                 bcrypt.compare(req.body.password, user.password).then(async passwordMatch => {
                     if (passwordMatch) {
-                        resetPassword();
+                        changePassword();
                     }
                     else {
                         return res.sendStatus(204);
@@ -768,7 +768,7 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
                 });
             }
             else {
-                resetPassword();
+                changePassword();
             }
         })
         .catch(err => {

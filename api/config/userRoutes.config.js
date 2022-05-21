@@ -14,7 +14,7 @@ export default {
     update: '/api/update-user',
     updateLanguage: '/api/update-language',
     updateEmailNotifications: '/api/update-email-notifications',
-    resetPassword: '/api/reset-password',
+    changePassword: '/api/change-password',
     createAvatar: '/api/create-avatar',
     updateAvatar: '/api/update-avatar/:userId',
     deleteAvatar: '/api/delete-avatar/:userId',

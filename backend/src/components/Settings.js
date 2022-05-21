@@ -225,7 +225,7 @@ export default class Settings extends Component {
                                         variant="contained"
                                         className='btn-primary btn-margin btn-margin-bottom'
                                         size="small"
-                                        href={`/reset-password?u=${user._id}`}
+                                        href={`/change-password?u=${user._id}`}
                                     >
                                         {commonStrings.RESET_PASSWORD}
                                     </Button>

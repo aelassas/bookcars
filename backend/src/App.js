@@ -29,7 +29,7 @@ const Notifications = lazy(() => import('./components/Notifications'));
 const Messages = lazy(() => import('./components/Messages'));
 const ToS = lazy(() => import('./components/ToS'));
 const About = lazy(() => import('./components/About'));
-const ResetPassword = lazy(() => import('./components/ResetPassword'));
+const ChangePassword = lazy(() => import('./components/ChangePassword'));
 const Contact = lazy(() => import('./components/Contact'));
 const NoMatch = lazy(() => import('./components/NoMatch'));
 
@@ -63,7 +63,7 @@ const App = () => {
 						<Route exact path='/settings' element={<Settings />} />
 						<Route exact path='/notifications' element={<Notifications />} />
 						<Route exact path='/messages' element={<Messages />} />
-						<Route exact path='/reset-password' element={<ResetPassword />} />
+						<Route exact path='/change-password' element={<ChangePassword />} />
 						<Route exact path='/about' element={<About />} />
 						<Route exact path='/tos' element={<ToS />} />
 						<Route exact path='/contact' element={<Contact />} />

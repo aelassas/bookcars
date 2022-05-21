@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/reset-password';
+import { strings } from '../lang/change-password';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
@@ -17,9 +17,9 @@ import {
     Button
 } from '@mui/material';
 
-import '../assets/css/reset-password.css';
+import '../assets/css/change-password.css';
 
-export default class ResetPassword extends Component {
+export default class ChangePassword extends Component {
 
     constructor(props) {
         super(props);
@@ -104,7 +104,7 @@ export default class ResetPassword extends Component {
                 strict: userId === user._id
             };
 
-            UserService.resetPassword(data)
+            UserService.changePassword(data)
                 .then(status => {
                     if (status === 200) {
                         if (user._id === userId) {

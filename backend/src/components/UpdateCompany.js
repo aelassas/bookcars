@@ -325,7 +325,7 @@ export default class UpdateCompany extends Component {
                                         variant="contained"
                                         className='btn-primary btn-margin btn-margin-bottom'
                                         size="small"
-                                        href={`/reset-password?u=${company._id}`}
+                                        href={`/change-password?u=${company._id}`}
                                     >
                                         {commonStrings.RESET_PASSWORD}
                                     </Button>
