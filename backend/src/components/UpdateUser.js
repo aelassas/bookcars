@@ -21,7 +21,8 @@ import {
     Button,
     Paper,
     Select,
-    MenuItem
+    MenuItem,
+    Link
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 
@@ -253,6 +254,22 @@ export default class CreateUser extends Component {
         }
     };
 
+    handleResendActivationLink = () => {
+        const { email } = this.state;
+
+        UserService.resend(email)
+            .then(status => {
+                if (status === 200) {
+                    toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
     onLoad = (loggedUser) => {
 
         this.setState({ loading: true }, () => {
@@ -321,7 +338,9 @@ export default class CreateUser extends Component {
             birthDate
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
-            driver = type === Env.RECORD_TYPE.USER;
+            driver = type === Env.RECORD_TYPE.USER,
+            activate = admin
+                || (loggedUser && user && loggedUser.type === Env.RECORD_TYPE.COMPANY && user.type === Env.RECORD_TYPE.USER && user.company === loggedUser._id);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -462,6 +481,12 @@ export default class CreateUser extends Component {
                                         value={bio}
                                     />
                                 </FormControl>
+
+                                {activate &&
+                                    <FormControl fullWidth margin="dense" className='resend-activation-link'>
+                                        <Link onClick={this.handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
+                                    </FormControl>
+                                }
 
                                 <div className="buttons">
                                     <Button

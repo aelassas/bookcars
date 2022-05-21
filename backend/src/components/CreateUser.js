@@ -37,11 +37,7 @@ export default class CreateUser extends Component {
             phone: '',
             location: '',
             bio: '',
-            password: '',
-            confirmPassword: '',
             error: false,
-            passwordError: false,
-            passwordsDontMatch: false,
             emailError: false,
             visible: false,
             loading: false,
@@ -142,48 +138,8 @@ export default class CreateUser extends Component {
         });
     };
 
-    handleOnChangePassword = (e) => {
-        this.setState({
-            password: e.target.value,
-        });
-    };
-
-    handleOnChangeConfirmPassword = (e) => {
-        this.setState({
-            confirmPassword: e.target.value,
-        });
-    };
-
-    handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-
-    handleMouseDownConfirmPassword = (event) => {
-        event.preventDefault();
-    };
-
-    preventDefault = (event) => event.preventDefault();
-
     handleSubmit = (e) => {
         e.preventDefault();
-
-        if (this.state.password.length < 6) {
-            return this.setState({
-                passwordError: true,
-                passwordsDontMatch: false,
-                error: false,
-                avatarError: false
-            });
-        }
-
-        if (this.state.password !== this.state.confirmPassword) {
-            return this.setState({
-                passwordsDontMatch: true,
-                passwordError: false,
-                error: false,
-                avatarError: false
-            });
-        }
 
         if (!this.state.avatar && this.state.type === Env.RECORD_TYPE.COMPANY) {
             return this.setState({
@@ -204,7 +160,6 @@ export default class CreateUser extends Component {
             location,
             bio,
             fullName,
-            password,
             type,
             avatar,
             birthDate } = this.state;
@@ -212,17 +167,11 @@ export default class CreateUser extends Component {
         const language = UserService.getLanguage();
         const company = admin ? undefined : user._id;
 
-        const data = { email, phone, location, bio, fullName, password, type, avatar, birthDate, language, company };
+        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company };
 
         UserService.create(data)
-            .then(data => {
-                if (data && data._id) {
-                    // if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-                    //     window.location = `/company?c=${data._id}`;
-                    // }
-                    // else {
-                    //     window.location = `/user?u=${data._id}`;
-                    // }
+            .then(status => {
+                if (status === 200) {
                     window.location = '/users';
                 } else {
                     this.setState({
@@ -391,39 +340,8 @@ export default class CreateUser extends Component {
                                             this.setState({ birthDate });
                                         }}
                                     />
-                                </FormControl>}
-
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
-                                <Input
-                                    id="password"
-                                    onChange={this.handleOnChangePassword}
-                                    required
-                                    type="password"
-                                    inputProps={{
-                                        autoComplete: 'new-password',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
-                                />
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                                <Input
-                                    id="confirm-password"
-                                    onChange={this.handleOnChangeConfirmPassword}
-                                    required
-                                    type="password"
-                                    inputProps={{
-                                        autoComplete: 'new-password',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
-                                />
-                            </FormControl>
+                                </FormControl>
+                            }
 
                             <div className='info'>
                                 <InfoIcon />

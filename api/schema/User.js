@@ -27,7 +27,6 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, "can't be blank"],
         minlength: 6
     },
     birthDate: {

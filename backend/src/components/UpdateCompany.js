@@ -4,6 +4,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as ccStrings } from '../lang/create-company';
 import CompanyService from '../services/CompanyService';
+import UserService from '../services/UserService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
@@ -15,17 +16,20 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper
+    Paper,
+    Link
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/update-company.css';
+import Helper from '../common/Helper';
 
 export default class UpdateCompany extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            user: null,
             company: null,
             fullName: '',
             phone: '',
@@ -158,8 +162,24 @@ export default class UpdateCompany extends Component {
         }
     };
 
+    handleResendActivationLink = () => {
+        const { company } = this.state;
+
+        UserService.resend(company.email)
+            .then(status => {
+                if (status === 200) {
+                    toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
     onLoad = (user) => {
-        this.setState({ loading: true }, () => {
+        this.setState({ user, loading: true }, () => {
             const params = new URLSearchParams(window.location.search);
             if (params.has('c')) {
                 const id = params.get('c');
@@ -198,6 +218,7 @@ export default class UpdateCompany extends Component {
 
     render() {
         const {
+            user,
             company,
             fullName,
             phone,
@@ -210,7 +231,7 @@ export default class UpdateCompany extends Component {
             noMatch,
             avatarError,
             avatarSizeError
-        } = this.state;
+        } = this.state, admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -257,6 +278,12 @@ export default class UpdateCompany extends Component {
                                         {fullNameError ? commonStrings.INVALID_COMPANY_NAME : ''}
                                     </FormHelperText>
                                 </FormControl>
+
+                                <div className='info'>
+                                    <InfoIcon />
+                                    <label>{commonStrings.OPTIONAL}</label>
+                                </div>
+
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel>{commonStrings.PHONE}</InputLabel>
                                     <Input
@@ -287,6 +314,11 @@ export default class UpdateCompany extends Component {
                                         value={bio}
                                     />
                                 </FormControl>
+                                {admin &&
+                                    <FormControl fullWidth margin="dense" className='resend-activation-link'>
+                                        <Link onClick={this.handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
+                                    </FormControl>
+                                }
                                 <div className="buttons">
                                     <Button
                                         type="submit"

@@ -1,10 +1,20 @@
 div.info-box {
     background: #fafafa;
     margin: 10px 10px 0 0;
-    padding: 15px;
     border: 1px solid #dadada;
-    height: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 40px;
+}
+
+div.info-box .info-box-icon {
+    position: relative;
+    left: 5px;
+    top: 7px;
+}
+
+div.info-box label.info-box-text {
+    color: rgba(0, 0, 0, 0.63);
+    position: relative;
+    left: 75px;
+    font-size: 17px;
+    font-weight: 700;
 }

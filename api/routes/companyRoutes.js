@@ -84,8 +84,8 @@ routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
                 console.error('[company.getCompany] Company not found:', req.params);
                 res.sendStatus(204);
             } else {
-                const { _id, fullName, avatar, phone, location, bio } = user;
-                res.json({ _id, fullName, avatar, phone, location, bio });
+                const { _id, email, fullName, avatar, phone, location, bio } = user;
+                res.json({ _id, email, fullName, avatar, phone, location, bio });
             }
         })
         .catch(err => {

@@ -1,4 +1,4 @@
-.update-company {
+div.update-company {
     position: absolute;
     top: 0;
     right: 0;
@@ -6,6 +6,12 @@
     left: 0;
     overflow: auto;
 }
+
+div.update-company .resend-activation-link {
+    cursor: pointer;
+    margin: 20px 0 10px 0;
+}
+
 
 /* Device width is less than or equal to 960px */
 

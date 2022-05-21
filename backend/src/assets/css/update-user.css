@@ -19,6 +19,11 @@ div.update-user .user-form-title {
 	color: #121212;
 }
 
+div.update-user .resend-activation-link {
+	cursor: pointer;
+	margin: 20px 0 10px 0;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -26,7 +31,7 @@ div.update-user .user-form-title {
 		margin-top: 45px !important;
 		margin-left: calc(50% - 180px) !important;
 		width: 360px;
-		height: 900px;
+		height: 970px;
 		padding: 30px;
 	}
 }
@@ -38,7 +43,7 @@ div.update-user .user-form-title {
 		margin-top: 45px !important;
 		margin-left: calc(50% - 275px) !important;
 		width: 550px;
-		height: 830px;
+		height: 900px;
 		padding: 30px;
 	}
 }

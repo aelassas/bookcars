@@ -2,6 +2,7 @@
 const Env = {
     isMobile: () => window.innerWidth <= 960,
 
+    APP_TYPE: process.env.REACT_APP_APP_TYPE || 'backend',
     API_HOST: process.env.REACT_APP_BC_API_HOST,
     LANGUAGES: ['fr', 'en'],
     DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'fr',

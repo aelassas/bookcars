@@ -15,13 +15,30 @@ export default class UserService {
     }
 
     static create(data) {
-        const password = data.password;
+        return axios.post(`${Env.API_HOST}/api/create-user`, data).then(res => res.status);
+    }
+
+    static checkToken(userId, email, token) {
+        return axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then(res => res.status);
+    }
+
+    static deleteTokens(userId) {
+        return axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then(res => res.status);
+    }
+
+    static resend(email) {
+        return axios.post(`${Env.API_HOST}/api/resend/${encodeURIComponent(email)}`).then(res => res.status);
+    }
+
+    static activate(data) {
         const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
 
-        data['password'] = hash;
+        const password = data.password;
+        const passwordHash = bcrypt.hashSync(password, salt);
 
-        return axios.post(`${Env.API_HOST}/api/create-user`, data).then(res => res.data);
+        data['password'] = passwordHash;
+
+        return axios.post(`${Env.API_HOST}/api/activate/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static validateEmail(data) {
@@ -29,7 +46,7 @@ export default class UserService {
     }
 
     static signin(data) {
-        return axios.post(`${Env.API_HOST}/api/sign-in/backend`, data).then(res => {
+        return axios.post(`${Env.API_HOST}/api/sign-in/${Env.APP_TYPE}`, data).then(res => {
             if (res.data.accessToken) {
                 localStorage.setItem('bc-user', JSON.stringify(res.data));
             }

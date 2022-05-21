@@ -20,7 +20,7 @@ export default new LocalizedStrings.default({
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_1: 'Un email de validation a été envoyé à',
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_2: ". Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
         CAR_IMAGE_REQUIRED: "Le champ image de Car ne peut pas être vide: ",
-        CAR_IMAGE_NOT_FOUND: "Le fichier image est introuvable : ",
+        CAR_IMAGE_NOT_FOUND: "Le fichier image est introuvable : "
     },
     en: {
         ERROR: 'Internal error: ',
@@ -41,6 +41,6 @@ export default new LocalizedStrings.default({
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_1: 'A validation email has been sent to ',
         ACCOUNT_VALIDATION_EMAIL_SENT_PART_2: ". It will be expire after one day. If you didn't receive validation email click on resend.",
         CAR_IMAGE_REQUIRED: "Car's image field can't be blank: ",
-        CAR_IMAGE_NOT_FOUND: "Image file not found: ",
+        CAR_IMAGE_NOT_FOUND: "Image file not found: "
     }
 });

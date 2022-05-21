@@ -70,15 +70,15 @@ export default class SignIn extends Component {
                             const params = new URLSearchParams(window.location.search);
 
                             if (params.has('u')) {
-                                window.location = '/user' + window.location.search;
+                                window.location.href = '/user' + window.location.search;
                             } else if (params.has('c')) {
-                                window.location = '/company' + window.location.search;
+                                window.location.href = '/company' + window.location.search;
                             } else if (params.has('cr')) {
-                                window.location = '/car' + window.location.search;
+                                window.location.href = '/car' + window.location.search;
                             } else if (params.has('b')) {
                                 window.location = '/booking' + window.location.search;
                             } else {
-                                window.location = '/';
+                                window.location.href = '/';
                             }
                         });
                     }

@@ -1,5 +1,9 @@
 export default {
     create: '/api/create-user',
+    checkToken: '/api/check-token/:type/:userId/:email/:token',
+    deleteTokens: '/api/delete-tokens/:userId',
+    activate: '/api/activate',
+    resend: '/api/resend/:email',
     signup: '/api/sign-up',
     confirmEmail: '/api/confirm-email/:email/:token',
     resendLink: '/api/resend-link',

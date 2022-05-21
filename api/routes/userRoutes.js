@@ -28,6 +28,8 @@ const SMTP_PASS = process.env.BC_SMTP_PASS;
 const SMTP_FROM = process.env.BC_SMTP_FROM;
 const CDN = process.env.BC_CDN_USERS;
 const CDN_TEMP = process.env.BC_CDN_TEMP_USERS;
+const BACKEND_HOST = process.env.BC_BACKEND_HOST;
+const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
 
 const routes = express.Router();
 
@@ -36,6 +38,16 @@ const getStatusMessage = (lang, msg) => {
         return '<!DOCTYPE html><html dir="rtl" lang="ar"><head></head><body><p>' + msg + '</p></body></html>';
     }
     return '<!DOCTYPE html><html lang="' + lang + '"><head></head><body><p>' + msg + '</p></body></html>';
+};
+
+const joinURL = (part1, part2) => {
+    if (part1.charAt(part1.length - 1) === '/') {
+        part1 = part1.substr(0, part1.length - 1);
+    }
+    if (part2.charAt(0) === '/') {
+        part2 = part2.substr(1);
+    }
+    return part1 + '/' + part2;
 };
 
 // Sign up route
@@ -96,17 +108,9 @@ routes.route(routeNames.signup).post((req, res) => {
                     transporter.sendMail(mailOptions, (err, info) => {
                         if (err) {
                             console.error(strings.SMTP_ERROR, err);
-
-                            User.deleteOne({ _id: user._id }, (error, response) => {
-                                if (error) {
-                                    console.error(strings.DB_ERROR, error);
-                                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + error));
-                                } else {
-                                    res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_TECHNICAL_ISSUE + ' ' + err.response));
-                                }
-                            });
+                            return res.status(400).send(strings.SMTP_ERROR + err);;
                         } else {
-                            res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_VALIDATION_EMAIL_SENT_PART_2));
+                            return res.sendStatus(200);
                         }
                     });
                 })
@@ -114,7 +118,6 @@ routes.route(routeNames.signup).post((req, res) => {
                     console.error(strings.DB_ERROR, err);
                     res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
                 });
-
         })
         .catch(err => {
             console.error(strings.DB_ERROR, err);
@@ -172,36 +175,189 @@ routes.route(routeNames.create).post((req, res) => {
                         from: SMTP_FROM,
                         to: user.email,
                         subject: strings.ACCOUNT_VALIDATION_SUBJECT,
-                        html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>'
-                            + strings.ACCOUNT_VALIDATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>'
+                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                            + strings.ACCOUNT_VALIDATION_LINK + '<br><br>'
+
+                            + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                            + '/?u=' + encodeURIComponent(user._id)
+                            + '&e=' + encodeURIComponent(user.email)
+                            + '&t=' + encodeURIComponent(token.token)
+                            + '<br><br>'
+
+                            + strings.REGARDS + '<br>'
                             + '</p>'
                     };
                     transporter.sendMail(mailOptions, (err, info) => {
                         if (err) {
                             console.error(strings.SMTP_ERROR, err);
-
-                            User.deleteOne({ _id: user._id }, (error, response) => {
-                                if (error) {
-                                    console.error(strings.DB_ERROR, error);
-                                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + error));
-                                } else {
-                                    res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_VALIDATION_TECHNICAL_ISSUE + ' ' + err.response));
-                                }
-                            });
+                            return res.status(400).send(strings.SMTP_ERROR + err);;
                         } else {
-                            return res.json({ _id: user._id });
+                            return res.sendStatus(200);
                         }
                     });
                 })
                 .catch(err => {
                     console.error(strings.DB_ERROR, err);
-                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
+                    return res.status(400).send(strings.DB_ERROR + err);
                 });
-
         })
         .catch(err => {
             console.error(strings.DB_ERROR, err);
-            res.status(400).send(strings.DB_ERROR + err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Confirm Email Router
+routes.route(routeNames.checkToken).get((req, res) => {
+    User.findOne({ _id: mongoose.Types.ObjectId(req.params.userId), email: req.params.email })
+        .then(user => {
+            if (user) {
+                if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
+                    || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
+                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type === Env.USER_TYPE.COMPANY)
+                    || user.verified
+                ) {
+                    return res.sendStatus(403);
+                } else {
+                    Token.findOne({ user: mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
+                        .then(token => {
+                            if (token) {
+                                return res.sendStatus(200);
+                            } else {
+                                return res.sendStatus(204);
+                            }
+                        })
+                        .catch(err => {
+                            console.error(strings.DB_ERROR, err);
+                            return res.status(400).send(strings.DB_ERROR + err);
+                        });
+                }
+            } else {
+                return res.sendStatus(403);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+routes.route(routeNames.deleteTokens).delete((req, res) => {
+    Token.deleteMany({ user: mongoose.Types.ObjectId(req.params.userId) })
+        .then((result) => {
+            if (result.deletedCount > 0) {
+                return res.sendStatus(200);
+            } else {
+                return res.sendStatus(400);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Resend link router
+routes.route(routeNames.resend).post((req, res) => {
+    User.findOne({ email: req.params.email })
+        .then(user => {
+            if (user) {
+                user.verified = false;
+
+                user.save()
+                    .then(() => {
+                        // generate token and save
+                        const token = new Token({ user: user._id, token: uuid() });
+
+                        token.save()
+                            .then(token => {
+                                // Send email
+                                strings.setLanguage(user.language);
+
+                                const transporter = nodemailer.createTransport({
+                                    host: SMTP_HOST,
+                                    port: SMTP_PORT,
+                                    auth: {
+                                        user: SMTP_USER,
+                                        pass: SMTP_PASS
+                                    }
+                                });
+                                const mailOptions = {
+                                    from: SMTP_FROM,
+                                    to: user.email,
+                                    subject: strings.ACCOUNT_VALIDATION_SUBJECT,
+                                    html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                                        + strings.ACCOUNT_VALIDATION_LINK + '<br><br>'
+
+                                        + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                                        + '/?u=' + encodeURIComponent(user._id)
+                                        + '&e=' + encodeURIComponent(user.email)
+                                        + '&t=' + encodeURIComponent(token.token)
+                                        + '<br><br>'
+
+                                        + strings.REGARDS + '<br>'
+                                        + '</p>'
+                                };
+                                transporter.sendMail(mailOptions, (err, info) => {
+                                    if (err) {
+                                        console.error(strings.SMTP_ERROR, err);
+                                        return res.status(400).send(strings.SMTP_ERROR + err);;
+                                    } else {
+                                        return res.sendStatus(200);
+                                    }
+                                });
+                            })
+                            .catch(err => {
+                                console.error(strings.DB_ERROR, err);
+                                return res.status(400).send(strings.DB_ERROR + err);
+                            });
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        return res.status(400).send(strings.DB_ERROR + err);
+                    });
+
+            } else {
+                return res.sendStatus(204);
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+// Activate Router
+routes.route(routeNames.activate).post((req, res) => {
+    User.findById(req.body.userId)
+        .then(user => {
+            if (user) {
+                Token.find({ token: req.body.token })
+                    .then(token => {
+                        if (token) {
+                            user.password = req.body.password;
+                            user.verified = true;
+                            user.save()
+                                .then(() => {
+                                    return res.sendStatus(200);
+                                })
+                                .catch(err => {
+                                    console.error(strings.DB_ERROR, err);
+                                    return res.status(400).send(strings.DB_ERROR + err);
+                                });
+                        } else {
+                            return res.sendStatus(204);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(strings.DB_ERROR, err);
+                        return res.status(400).send(strings.DB_ERROR + err);
+                    });
+            }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
         });
 });
 
@@ -209,10 +365,13 @@ routes.route(routeNames.create).post((req, res) => {
 routes.route(routeNames.signin).post((req, res) => {
     User.findOne({ email: req.body.email })
         .then(user => {
-            if (!user
+            if (!req.body.password
+                || !user
+                || !user.password
                 || (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type))
+                || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)
                 || (req.params.type === Env.APP_TYPE.FRONTEND && user && user.type === Env.USER_TYPE.COMPANY)
-                || (req.params.type === Env.APP_TYPE.BACKEND && user && user.type === Env.USER_TYPE.USER)) {
+            ) {
                 res.sendStatus(204);
             } else {
                 bcrypt.compare(req.body.password, user.password)
@@ -234,8 +393,16 @@ routes.route(routeNames.signin).post((req, res) => {
                         } else {
                             res.sendStatus(204);
                         }
+                    })
+                    .catch(err => {
+                        console.error(strings.ERROR, err);
+                        return res.status(400).send(strings.ERROR + err);
                     });
             }
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            return res.status(400).send(strings.DB_ERROR + err);
         });
 });
 
@@ -607,7 +774,7 @@ routes.route(routeNames.resetPassword).post(authJwt.verifyToken, (req, res) => {
         .catch(err => {
             console.error(strings.DB_ERROR, err);
             res.status(400).send(strings.DB_ERROR + err);
-        });;
+        });
 });
 
 routes.route(routeNames.checkPassword).get(authJwt.verifyToken, (req, res) => {
@@ -633,7 +800,6 @@ routes.route(routeNames.checkPassword).get(authJwt.verifyToken, (req, res) => {
             return res.status(400).send(strings.DB_ERROR + err);
         });;
 });
-
 
 // Search users route
 routes.route(routeNames.getUsers).post(authJwt.verifyToken, async (req, res) => {

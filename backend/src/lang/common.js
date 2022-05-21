@@ -58,7 +58,9 @@ export const strings = new LocalizedStrings({
         FIX_ERRORS: 'Veuillez corriger les erreurs.',
         SEND_MESSAGE: 'Envoyer un message',
         VERIFIED: 'Compte vérifié',
-        CAR: 'voiture'
+        CAR: 'voiture',
+        RESEND_ACTIVATION_LINK: "Renvoyer le lien d'activation du compte",
+        ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -115,7 +117,9 @@ export const strings = new LocalizedStrings({
         FIX_ERRORS: 'Please fix errors.',
         SEND_MESSAGE: 'Send a message',
         VERIFIED: 'Verified account',
-        CAR: 'car'
+        CAR: 'car',
+        RESEND_ACTIVATION_LINK: "Resend account activation link",
+        ACTIVATION_EMAIL_SENT: 'Activation email sent.',
     }
 });
 

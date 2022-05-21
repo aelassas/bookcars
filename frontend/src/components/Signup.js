@@ -170,7 +170,7 @@ export default class SignUp extends Component {
                     if (registerStatus === 200) {
                         UserService.signin({ email: this.state.email, password: this.state.password }).then(signInResult => {
                             if (signInResult.status === 200) {
-                                window.location = '/' + window.location.search;
+                                window.location.href = '/' + window.location.search;
                             } else {
                                 this.setState({
                                     error: true,

@@ -31,11 +31,7 @@ export default class CreateCompany extends Component {
             phone: '',
             location: '',
             bio: '',
-            password: '',
-            confirmPassword: '',
             error: false,
-            passwordError: false,
-            passwordsDontMatch: false,
             emailError: false,
             visible: false,
             loading: false,
@@ -73,18 +69,6 @@ export default class CreateCompany extends Component {
     handleOnChangeBio = e => {
         this.setState({
             bio: e.target.value,
-        });
-    };
-
-    handleOnChangePassword = e => {
-        this.setState({
-            password: e.target.value,
-        });
-    };
-
-    handleOnChangeConfirmPassword = e => {
-        this.setState({
-            confirmPassword: e.target.value,
         });
     };
 
@@ -133,88 +117,65 @@ export default class CreateCompany extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        const emailData = {
-            email: this.state.email,
+        const data = {
+            email: this.state.email
         };
 
-        UserService.validateEmail(emailData).then(emailStatus => {
-            if (emailStatus === 204) {
-                this.setState({ emailError: true });
-            } else {
-                this.setState({ emailError: false });
+        UserService.validateEmail(data)
+            .then(emailStatus => {
+                if (emailStatus === 204) {
+                    this.setState({ emailError: true });
+                } else {
+                    this.setState({ emailError: false });
 
-                if (this.state.password.length < 6) {
-                    this.setState({
-                        passwordError: true,
-                        passwordsDontMatch: false,
-                        error: false,
-                        avatarError: false,
-                        avatarSizeError: false,
-                    });
-                    return;
-                }
+                    if (!this.state.avatar) {
+                        this.setState({
+                            avatarError: true,
+                            avatarSizeError: false,
+                            passwordsDontMatch: false,
+                            passwordError: false,
+                            error: false
+                        });
+                        return;
+                    }
 
-                if (this.state.password !== this.state.confirmPassword) {
-                    this.setState({
-                        passwordsDontMatch: true,
-                        passwordError: false,
-                        error: false,
-                        avatarError: false,
-                        avatarSizeError: false,
-                    });
-                    return;
-                }
+                    this.setState({ loading: true });
 
-                if (!this.state.avatar) {
-                    this.setState({
-                        avatarError: true,
-                        avatarSizeError: false,
-                        passwordsDontMatch: false,
-                        passwordError: false,
-                        error: false
-                    });
-                    return;
-                }
+                    const data = {
+                        email: this.state.email,
+                        phone: this.state.phone,
+                        location: this.state.location,
+                        bio: this.state.bio,
+                        fullName: this.state.fullName,
+                        language: UserService.getLanguage(),
+                        type: Env.RECORD_TYPE.COMPANY,
+                        avatar: this.state.avatar
+                    };
 
-                this.setState({ loading: true });
-
-                const data = {
-                    email: this.state.email,
-                    phone: this.state.phone,
-                    location: this.state.location,
-                    bio: this.state.bio,
-                    password: this.state.password,
-                    fullName: this.state.fullName,
-                    language: UserService.getLanguage(),
-                    type: Env.RECORD_TYPE.COMPANY,
-                    avatar: this.state.avatar
-                };
-
-                UserService.create(data)
-                    .then(data => {
-                        if (data && data._id) {
-                            // window.location = `/company?c=${data._id}`;
-                            window.location = '/companies';
-                        } else
+                    UserService.create(data)
+                        .then(status => {
+                            if (status === 200) {
+                                window.location = '/companies';
+                            } else
+                                this.setState({
+                                    error: true,
+                                    passwordError: false,
+                                    passwordsDontMatch: false,
+                                    loading: false
+                                });
+                        }).catch(() => {
                             this.setState({
                                 error: true,
                                 passwordError: false,
                                 passwordsDontMatch: false,
                                 loading: false
                             });
-                    }).catch(() => {
-                        this.setState({
-                            error: true,
-                            passwordError: false,
-                            passwordsDontMatch: false,
-                            loading: false
                         });
-                    });
-            }
+                }
 
-        }).catch(() => {
-            this.setState({ emailError: true });
-        })
+            }).catch(() => {
+                this.setState({ emailError: true });
+            })
     };
 
     handleChange = (e) => {
@@ -346,38 +307,6 @@ export default class CreateCompany extends Component {
                                 <FormHelperText error={emailError}>
                                     {emailError ? commonStrings.INVALID_EMAIL : ''}
                                 </FormHelperText>
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
-                                <Input
-                                    id="password"
-                                    onChange={this.handleOnChangePassword}
-                                    required
-                                    type="password"
-                                    inputProps={{
-                                        autoComplete: 'new-password',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
-                                />
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                                <Input
-                                    id="confirm-password"
-                                    onChange={this.handleOnChangeConfirmPassword}
-                                    required
-                                    type="password"
-                                    inputProps={{
-                                        autoComplete: 'new-password',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
-                                />
                             </FormControl>
 
                             <div className='info'>

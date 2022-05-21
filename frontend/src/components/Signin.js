@@ -66,7 +66,7 @@ export default class SignIn extends Component {
                     this.setState({
                         error: false
                     }, () => {
-                        window.location = '/' + window.location.search;
+                        window.location.href = '/' + window.location.search;
                     });
                 }
             } else {
