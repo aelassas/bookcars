@@ -13,6 +13,7 @@ import {
     Paper,
     Link
 } from '@mui/material';
+import validator from 'validator';
 
 import '../assets/css/reset-password.css';
 
@@ -24,6 +25,7 @@ export default class Activate extends Component {
             email: null,
             visible: false,
             error: false,
+            emailValid: true,
             noMatch: false,
             sent: false
         };
@@ -31,6 +33,10 @@ export default class Activate extends Component {
 
     handleEmailChange = (e) => {
         this.setState({ email: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ error: false, emailValid: true });
+        }
     };
 
     handleEmailKeyDown = (e) => {
@@ -39,21 +45,39 @@ export default class Activate extends Component {
         }
     }
 
+    handleEmailBlur = (e) => {
+        if (e.target.value) {
+            this.setState({ error: false, emailValid: validator.isEmail(e.target.value) });
+        } else {
+            this.setState({ error: false, emailValid: true });
+        }
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const { email, } = this.state;
+        const { email } = this.state;
+
+        if (!email) {
+            this.setState({ error: false, emailValid: true });
+            return;
+        }
+
+        if (!validator.isEmail(email)) {
+            this.setState({ error: false, emailValid: false });
+            return;
+        }
 
         UserService.resend(email)
             .then(status => {
                 if (status === 200) {
-                    this.setState({ error: false, sent: true });
+                    this.setState({ error: false, emailValid: true, sent: true });
                 } else {
-                    this.setState({ error: true });
+                    this.setState({ error: true, emailValid: true });
                 }
             })
             .catch(() => {
-                this.setState({ error: true });
+                this.setState({ error: true, emailValid: true });
             });
     };
 
@@ -71,6 +95,7 @@ export default class Activate extends Component {
     render() {
         const {
             visible,
+            emailValid,
             error,
             noMatch,
             sent
@@ -97,15 +122,15 @@ export default class Activate extends Component {
                                         <Input
                                             onChange={this.handleEmailChange}
                                             onKeyDown={this.handleEmailKeyDown}
+                                            onBlur={this.handleEmailBlur}
                                             type='text'
-                                            error={error}
+                                            error={error || !emailValid}
                                             autoComplete='off'
                                             required
                                         />
-                                        <FormHelperText
-                                            error={error}
-                                        >
+                                        <FormHelperText error={error || !emailValid}>
                                             {(error && strings.EMAIL_ERROR) || ''}
+                                            {(!emailValid && strings.EMAIL_NOT_VALID) || ''}
                                         </FormHelperText>
                                     </FormControl>
 
@@ -133,7 +158,7 @@ export default class Activate extends Component {
                     </div>
                 }
                 {noMatch && <NoMatch />}
-            </Master>
+            </Master >
         );
     }
 }

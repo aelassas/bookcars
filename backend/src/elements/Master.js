@@ -43,6 +43,19 @@ export default class Master extends Component {
         });
     };
 
+    exit = () => {
+        if (this.props.strict) {
+            UserService.signout();
+        } else {
+            UserService.signout(false);
+            this.setState({ loading: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad();
+                }
+            });
+        }
+    };
+
     componentDidMount() {
         const currentUser = UserService.getCurrentUser();
 
@@ -69,27 +82,19 @@ export default class Master extends Component {
                                     }
                                 });
                             } else {
-                                this.error();
+                                this.exit();
                             }
                         }).catch(() => {
-                            this.error();
+                            this.exit();
                         });
                     } else {
-                        UserService.signout();
+                        this.exit();
                     }
                 }).catch(() => {
-                    UserService.signout();
+                    this.exit();
                 });
         } else {
-            if (this.props.strict) {
-                UserService.signout();
-            } else {
-                this.setState({ loading: false }, () => {
-                    if (this.props.onLoad) {
-                        this.props.onLoad();
-                    }
-                });
-            }
+            this.exit();
         }
     }
 
