@@ -35,6 +35,7 @@ export default class Master extends Component {
             UserService.signout(false, true);
         } else {
             this.setState({ loading: false }, () => {
+                UserService.signout(false, false);
                 if (this.props.onLoad) {
                     this.props.onLoad();
                 }
@@ -46,33 +47,35 @@ export default class Master extends Component {
         const currentUser = UserService.getCurrentUser();
 
         if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                if (status === 200) {
-                    UserService.getUser(currentUser.id).then(user => {
-                        if (user) {
+            UserService.validateAccessToken()
+                .then(status => {
+                    if (status === 200) {
+                        UserService.getUser(currentUser.id)
+                            .then(user => {
+                                if (user) {
 
-                            if (user.blacklisted) {
-                                this.exit();
-                                return;
-                            }
+                                    if (user.blacklisted) {
+                                        this.exit();
+                                        return;
+                                    }
 
-                            this.setState({ loading: false, user }, () => {
-                                if (this.props.onLoad) {
-                                    this.props.onLoad(user);
+                                    this.setState({ loading: false, user }, () => {
+                                        if (this.props.onLoad) {
+                                            this.props.onLoad(user);
+                                        }
+                                    });
+                                } else {
+                                    this.exit();
                                 }
+                            }).catch(() => {
+                                this.exit();
                             });
-                        } else {
-                            this.exit();
-                        }
-                    }).catch(() => {
+                    } else {
                         this.exit();
-                    });
-                } else {
+                    }
+                }).catch(() => {
                     this.exit();
-                }
-            }).catch(() => {
-                this.exit();
-            });
+                });
         } else {
             this.exit();
         }

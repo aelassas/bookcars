@@ -231,6 +231,7 @@ export default function Header(props) {
                     });
             } else {
                 const currentUser = UserService.getCurrentUser();
+
                 if (!currentUser || init) {
                     setIsLoading(false);
                     setIsLoaded(true);
@@ -385,16 +386,17 @@ export default function Header(props) {
                         >
                             {strings.SIGN_IN}
                         </Button>}
-                        {((isLoaded || !init) && !loading) && <Button
-                            variant="contained"
-                            startIcon={<LanguageIcon />}
-                            onClick={handleLangMenuOpen}
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                        >
-                            {getLang(lang)}
-                        </Button>}
+                        {((isLoaded || !init) && !loading) &&
+                            <Button
+                                variant="contained"
+                                startIcon={<LanguageIcon />}
+                                onClick={handleLangMenuOpen}
+                                disableElevation
+                                fullWidth
+                                className="btn-primary"
+                            >
+                                {getLang(lang)}
+                            </Button>}
                         {isSignedIn && <IconButton
                             edge="end"
                             aria-label="account"
