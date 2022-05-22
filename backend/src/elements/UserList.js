@@ -221,7 +221,7 @@ class BookingList extends Component {
         const { selectedIds, selectedId, rows } = this.state;
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
 
-        this.setState({ loading: true });
+        this.setState({ openDeleteDialog: false, loading: true });
 
         UserService.delete(ids)
             .then(status => {
@@ -235,11 +235,11 @@ class BookingList extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
 
-                this.setState({ openDeleteDialog: false, loading: false });
+                this.setState({ loading: false });
             })
             .catch(() => {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ openDeleteDialog: false, loading: false });
+                this.setState({ loading: false });
             });
     };
 

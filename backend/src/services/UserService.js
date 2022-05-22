@@ -18,6 +18,17 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/create-user`, data).then(res => res.status);
     }
 
+    static signup(data) {
+        const salt = bcrypt.genSaltSync(10);
+
+        const password = data.password;
+        const passwordHash = bcrypt.hashSync(password, salt);
+
+        data['password'] = passwordHash;
+
+        return axios.post(`${Env.API_HOST}/api/sign-up/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
     static checkToken(userId, email, token) {
         return axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then(res => res.status);
     }

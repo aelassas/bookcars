@@ -13,10 +13,10 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper,
-    Checkbox,
-    Link
+    Paper
 } from '@mui/material';
+import { toast } from 'react-toastify';
+import validator from 'validator';
 
 import '../assets/css/signup.css';
 
@@ -37,54 +37,68 @@ export default class SignUp extends Component {
             passwordsDontMatch: false,
             emailError: false,
             visible: false,
-            tosChecked: false,
-            loading: false
+            loading: false,
+            emailValid: true
         };
     }
 
-    handleOnChangeFullName = e => {
+    handleOnChangeFullName = (e) => {
         this.setState({
             fullName: e.target.value,
         });
     };
 
-    handleOnChangeEmail = e => {
+    handleOnChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
         });
 
+        if (!e.target.value) {
+            this.setState({ emailError: false, emailValid: true });
+        }
     };
 
-    handleOnChangePassword = e => {
+    handleOnChangePassword = (e) => {
         this.setState({
             password: e.target.value,
         });
     };
 
-    handleOnChangeConfirmPassword = e => {
+    handleOnChangeConfirmPassword = (e) => {
         this.setState({
             confirmPassword: e.target.value,
         });
     };
 
-    handleOnBlur = e => {
-        this.setState({
-            email: e.target.value,
-        });
-
-        const emailData = {
-            email: this.state.email,
-        };
-
-        UserService.validateEmail(emailData).then(emailStatus => {
-            if (emailStatus === 204) {
-                this.setState({ emailError: true });
+    validateEmail = async (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                try {
+                    const status = await UserService.validateEmail({ email });
+                    if (status === 200) {
+                        this.setState({ emailError: false, emailValid: true });
+                        return true;
+                    } else {
+                        this.setState({ emailError: true, emailValid: true, avatarError: false, error: false });
+                        return false;
+                    }
+                } catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ emailError: false, emailValid: true });
+                    return false;
+                }
             } else {
-                this.setState({ emailError: false });
+                this.setState({ emailError: false, emailValid: false });
+                return false;
             }
-        }).catch(err => {
-            this.setState({ emailError: false });
-        });
+        } else {
+            this.setState({ emailError: false, emailValid: true });
+            return false;
+        }
+    };
+
+    handleOnBlur = async (e) => {
+        await this.validateEmail(e.target.value);
     };
 
     handleOnRecaptchaVerify = (token) => {
@@ -111,88 +125,76 @@ export default class SignUp extends Component {
         this.setState({ tosChecked: event.target.checked });
     };
 
-    handleSubmit = e => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
-        const emailData = {
+        const { email } = this.state;
+
+        const emailValid = await this.validateEmail(email);
+        if (!emailValid) {
+            return;
+        }
+
+        if (this.state.password.length < 6) {
+            this.setState({
+                passwordError: true,
+                recaptchaError: false,
+                passwordsDontMatch: false,
+                error: false,
+                register: false
+            });
+            return;
+        }
+
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({
+                passwordsDontMatch: true,
+                recaptchaError: false,
+                passwordError: false,
+                error: false,
+                register: false
+            });
+            return;
+        }
+
+        if (!this.state.reCaptchaToken) {
+            this.setState({
+                recaptchaError: true,
+                passwordsDontMatch: false,
+                passwordError: false,
+                error: false,
+                register: false
+            });
+            return;
+        }
+
+        this.setState({ loading: true });
+
+        const data = {
             email: this.state.email,
+            password: this.state.password,
+            fullName: this.state.fullName,
+            language: UserService.getLanguage(),
+            type: Env.RECORD_TYPE.ADMIN
         };
 
-        UserService.validateEmail(emailData).then(emailStatus => {
-            if (emailStatus === 204) {
-                this.setState({ emailError: true });
-            } else {
-                this.setState({ emailError: false });
-
-                if (this.state.password.length < 6) {
-                    this.setState({
-                        passwordError: true,
-                        recaptchaError: false,
-                        passwordsDontMatch: false,
-                        error: false,
-                        register: false
-                    });
-                    return;
-                }
-
-                if (this.state.password !== this.state.confirmPassword) {
-                    this.setState({
-                        passwordsDontMatch: true,
-                        recaptchaError: false,
-                        passwordError: false,
-                        error: false,
-                        register: false
-                    });
-                    return;
-                }
-
-                if (!this.state.reCaptchaToken) {
-                    this.setState({
-                        recaptchaError: true,
-                        passwordsDontMatch: false,
-                        passwordError: false,
-                        error: false,
-                        register: false
-                    });
-                    return;
-                }
-
-                this.setState({ loading: true });
-
-                const data = {
-                    email: this.state.email,
-                    password: this.state.password,
-                    fullName: this.state.fullName,
-                    language: UserService.getLanguage(),
-                    type: Env.RECORD_TYPE.ADMIN
-                };
-
-                UserService.create(data)
-                    .then(data => {
-                        if (data && data._id) {
-                            UserService.signin({ email: this.state.email, password: this.state.password })
-                                .then(signInResult => {
-                                    if (signInResult.status === 200) {
-                                        window.location.href = '/' + window.location.search;
-                                    } else {
-                                        this.setState({
-                                            error: true,
-                                            passwordError: false,
-                                            passwordsDontMatch: false,
-                                            register: false,
-                                            loading: false
-                                        });
-                                    }
-                                }).catch(err => {
-                                    this.setState({
-                                        error: true,
-                                        passwordError: false,
-                                        passwordsDontMatch: false,
-                                        register: false,
-                                        loading: false
-                                    });
+        UserService.signup(data)
+            .then(status => {
+                if (status === 200) {
+                    UserService.signin({ email: this.state.email, password: this.state.password })
+                        .then(signInResult => {
+                            if (signInResult.status === 200) {
+                                window.location.href = '/' + window.location.search;
+                            } else {
+                                this.setState({
+                                    error: true,
+                                    passwordError: false,
+                                    passwordsDontMatch: false,
+                                    register: false,
+                                    loading: false
                                 });
-                        } else
+                            }
+                        }).catch(err => {
                             this.setState({
                                 error: true,
                                 passwordError: false,
@@ -200,21 +202,26 @@ export default class SignUp extends Component {
                                 register: false,
                                 loading: false
                             });
-                    })
-                    .catch(err => {
-                        this.setState({
-                            error: true,
-                            passwordError: false,
-                            passwordsDontMatch: false,
-                            register: false,
-                            loading: false
                         });
+                } else
+                    this.setState({
+                        error: true,
+                        passwordError: false,
+                        passwordsDontMatch: false,
+                        register: false,
+                        loading: false
                     });
-            }
+            })
+            .catch(err => {
+                this.setState({
+                    error: true,
+                    passwordError: false,
+                    passwordsDontMatch: false,
+                    register: false,
+                    loading: false
+                });
+            });
 
-        }).catch(err => {
-            this.setState({ emailError: true });
-        })
     };
 
     handleChange = (e) => {
@@ -237,8 +244,10 @@ export default class SignUp extends Component {
             emailError,
             recaptchaError,
             visible,
-            tosChecked,
-            loading } = this.state;
+            loading,
+            emailValid
+        } = this.state;
+
 
         return (
             <Master strict={false} onLoad={this.onLoad}>
@@ -264,7 +273,7 @@ export default class SignUp extends Component {
                                     <Input
                                         id="email"
                                         type="text"
-                                        error={emailError}
+                                        error={!emailValid || emailError}
                                         value={this.state.email}
                                         name="Email"
                                         onBlur={this.handleOnBlur}
@@ -272,8 +281,9 @@ export default class SignUp extends Component {
                                         required
                                         autoComplete="off"
                                     />
-                                    <FormHelperText error={emailError}>
-                                        {emailError ? commonStrings.EMAIL_ALREADY_REGISTERED : ''}
+                                    <FormHelperText error={!emailValid || emailError}>
+                                        {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                        {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                                     </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
@@ -318,32 +328,12 @@ export default class SignUp extends Component {
                                         onChange={this.handleOnRecaptchaVerify}
                                     />
                                 </div>
-                                <div className="signup-tos">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <Checkbox
-                                                        checked={tosChecked}
-                                                        onChange={this.handleTosChange}
-                                                        name="tosChecked"
-                                                        color="primary"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
                                 <div className="buttons">
                                     <Button
                                         type="submit"
                                         variant="contained"
                                         className='btn-primary btn-margin-bottom'
                                         size="small"
-                                        disabled={emailError || !tosChecked}
                                     >
                                         {strings.SIGN_UP}
                                     </Button>
@@ -356,14 +346,10 @@ export default class SignUp extends Component {
                                 </div>
                             </div>
                             <div className="form-error">
-                                {(passwordError || passwordsDontMatch || recaptchaError || error) ?
-                                    <div>
-                                        {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
-                                        {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                        {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
-                                        {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
-                                    </div>
-                                    : null}
+                                {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                                {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
+                                {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
                             </div>
                         </form>
                     </Paper>
