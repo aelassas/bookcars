@@ -116,7 +116,7 @@ export default class User extends Component {
                                             setState(companyIds);
                                         })
                                         .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
-                                } else if (!admin && loggedUser._id === user._id) {
+                                } else if (!admin && (loggedUser._id === user._id || loggedUser._id === user.company)) {
                                     setState([loggedUser._id]);
                                 } else {
                                     this.setState({ loading: false, noMatch: true });
