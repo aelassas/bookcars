@@ -4,10 +4,10 @@ Wants=mongod.service
 After=mongod.service
 
 [Service]
-ExecStart=/bin/bash /opt/bookcars/__scripts/bookcars.sh
-Type=idle
+ExecStart=/usr/bin/node -r dotenv/config app.js
+WorkingDirectory=/opt/bookcars/api
+Type=simple
 Restart=always
-StartLimitBurst=0
 StandardOutput=append:/var/log/bookcars.log
 StandardError=append:/var/log/bookcars.log
 User=aelassas

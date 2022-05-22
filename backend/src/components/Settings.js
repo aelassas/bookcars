@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 
 import '../assets/css/settings.css';
+import Helper from '../common/Helper';
 
 export default class Settings extends Component {
 
@@ -146,7 +147,7 @@ export default class Settings extends Component {
             error,
             visible,
             loading
-        } = this.state;
+        } = this.state, admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} onError={this.onError} strict={true} user={user}>
@@ -162,6 +163,7 @@ export default class Settings extends Component {
                                     readonly={false}
                                     onBeforeUpload={this.onBeforeUpload}
                                     onChange={this.onAvatarChange}
+                                    hideDelete={!admin}
                                     color='disabled'
                                     className='avatar-ctn' />
                                 <FormControl fullWidth margin="dense">
