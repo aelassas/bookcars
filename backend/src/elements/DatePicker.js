@@ -32,6 +32,8 @@ class DatePicker extends Component {
                             if (this.props.onChange) this.props.onChange(value);
                         });
                     }}
+                    minDate={this.props.minDate}
+                    defaultCalendarMonth={this.props.minDate}
                     required={this.props.required}
                     renderInput={(params) =>
                         <TextField {...params}

@@ -18,7 +18,8 @@ class BookingFilter extends Component {
             to: null,
             pickupLocation: null,
             dropOffLocation: null,
-            keyword: ''
+            keyword: '',
+            minDate: null
         };
     }
 
@@ -51,7 +52,7 @@ class BookingFilter extends Component {
     }
 
     render() {
-        const { keyword } = this.state;
+        const { keyword, minDate } = this.state;
 
         return (
             <div className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}>
@@ -60,7 +61,7 @@ class BookingFilter extends Component {
                         <DatePicker
                             label={commonStrings.FROM}
                             onChange={(from) => {
-                                this.setState({ from });
+                                this.setState({ from, minDate: from });
                             }}
                             language={this.props.language}
                         />
@@ -68,6 +69,7 @@ class BookingFilter extends Component {
                     <FormControl fullWidth margin="dense">
                         <DatePicker
                             label={commonStrings.TO}
+                            minDate={minDate}
                             onChange={(to) => {
                                 this.setState({ to });
                             }}

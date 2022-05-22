@@ -60,7 +60,8 @@ export default class Booking extends Component {
             collisionDamageWaiver: false,
             fullInsurance: false,
             additionalDriver: false,
-            openDeleteDialog: false
+            openDeleteDialog: false,
+            minDate: null
         };
     }
 
@@ -317,6 +318,7 @@ export default class Booking extends Component {
                                     pickupLocation: { _id: booking.pickupLocation._id, name: booking.pickupLocation.name },
                                     dropOffLocation: { _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name },
                                     from: new Date(booking.from),
+                                    minDate: new Date(booking.from),
                                     to: new Date(booking.to),
                                     status: booking.status,
                                     cancellation: booking.cancellation,
@@ -370,7 +372,8 @@ export default class Booking extends Component {
             fullInsurance,
             additionalDriver,
             price,
-            openDeleteDialog
+            openDeleteDialog,
+            minDate
         } = this.state;
 
         return (
@@ -444,7 +447,7 @@ export default class Booking extends Component {
                                                     booking,
                                                     booking.car,
                                                     (price) => {
-                                                        this.setState({ booking, price, from });
+                                                        this.setState({ booking, price, from, minDate: from });
                                                     },
                                                     (err) => {
                                                         this.error();
@@ -458,6 +461,7 @@ export default class Booking extends Component {
                                     <DatePicker
                                         label={commonStrings.TO}
                                         value={to}
+                                        minDate={minDate}
                                         required
                                         onChange={(to) => {
                                             if (to) {

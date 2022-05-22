@@ -49,7 +49,8 @@ export default class CreateBooking extends Component {
             theftProtection: false,
             collisionDamageWaiver: false,
             fullInsurance: false,
-            additionalDriver: false
+            additionalDriver: false,
+            minDate: null
         };
     }
 
@@ -185,7 +186,8 @@ export default class CreateBooking extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver
+            additionalDriver,
+            minDate
         } = this.state;
 
         return (
@@ -246,7 +248,7 @@ export default class CreateBooking extends Component {
                                     value={from}
                                     required
                                     onChange={(from) => {
-                                        this.setState({ from });
+                                        this.setState({ from, minDate: from });
                                     }}
                                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                 />
@@ -256,6 +258,7 @@ export default class CreateBooking extends Component {
                                 <DatePicker
                                     label={commonStrings.TO}
                                     value={to}
+                                    minDate={minDate}
                                     required
                                     onChange={(to) => {
                                         this.setState({ to });
