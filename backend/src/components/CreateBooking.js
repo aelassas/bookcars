@@ -248,6 +248,7 @@ export default class CreateBooking extends Component {
                                     onChange={(from) => {
                                         this.setState({ from });
                                     }}
+                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                 />
                             </FormControl>
 
@@ -259,6 +260,7 @@ export default class CreateBooking extends Component {
                                     onChange={(to) => {
                                         this.setState({ to });
                                     }}
+                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                 />
                             </FormControl>
 

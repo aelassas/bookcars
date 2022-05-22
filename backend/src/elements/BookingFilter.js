@@ -53,7 +53,6 @@ class BookingFilter extends Component {
     render() {
         const { keyword } = this.state;
 
-
         return (
             <div className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}>
                 <form onSubmit={this.handleSubmit}>
@@ -63,6 +62,7 @@ class BookingFilter extends Component {
                             onChange={(from) => {
                                 this.setState({ from });
                             }}
+                            language={this.props.language}
                         />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
@@ -71,6 +71,7 @@ class BookingFilter extends Component {
                             onChange={(to) => {
                                 this.setState({ to });
                             }}
+                            language={this.props.language}
                         />
                     </FormControl>
                     <FormControl fullWidth margin="dense">

@@ -451,6 +451,7 @@ export default class Booking extends Component {
                                                     });
                                             }
                                         }}
+                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
@@ -474,6 +475,7 @@ export default class Booking extends Component {
                                                     });
                                             }
                                         }}
+                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                     />
                                 </FormControl>
 

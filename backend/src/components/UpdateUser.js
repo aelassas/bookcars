@@ -408,6 +408,7 @@ export default class CreateUser extends Component {
                                             onChange={(birthDate) => {
                                                 this.setState({ birthDate });
                                             }}
+                                            language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                         />
                                     </FormControl>}
 

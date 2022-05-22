@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { Clear as ClearIcon } from '@mui/icons-material';
+import { fr, enUS } from "date-fns/locale";
 
 class DatePicker extends Component {
 
@@ -20,7 +21,7 @@ class DatePicker extends Component {
         const { value } = this.state;
 
         return (
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider adapterLocale={this.props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
                 <MuiDatePicker
                     label={this.props.label}
                     inputFormat='dd-MM-yyyy'

@@ -96,6 +96,7 @@ export default class Bookings extends Component {
                                     />
                                     <BookingFilter
                                         onSubmit={this.handleBookingFilterSubmit}
+                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                         className='cl-booking-filter'
                                     />
                                 </div>
