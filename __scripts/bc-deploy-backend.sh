@@ -14,8 +14,8 @@ sudo rm -rf build
 npm ci
 npm run build
 
-sudo systemctl restart bookcars-backend
-sudo systemctl status bookcars-backend --no-pager
+#sudo systemctl restart bookcars-backend
+#sudo systemctl status bookcars-backend --no-pager
 
 sudo rm -rf /var/www/bookcars.ma/backend
 sudo mkdir -p /var/www/bookcars.ma/backend
