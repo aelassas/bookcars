@@ -38,7 +38,7 @@ export default class Users extends Component {
     }
 
     onLoad = (user) => {
-        const admin = Helper.admin(user), types = admin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.USER];
+        const admin = Helper.admin(user), types = admin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.COMPANY, Env.RECORD_TYPE.USER];
         this.setState({ user, admin, types });
     }
 
@@ -81,7 +81,6 @@ export default class Users extends Component {
                             types={types}
                             keyword={keyword}
                             checkboxSelection={!Env.isMobile() && admin}
-                            hideTypeColumn={!admin}
                             reload={reload}
                             onLoad={this.handleUserListLoad}
                         />

@@ -299,6 +299,7 @@ routes.route(routeNames.resend).post((req, res) => {
                                             + '/?u=' + encodeURIComponent(user._id)
                                             + '&e=' + encodeURIComponent(user.email)
                                             + '&t=' + encodeURIComponent(token.token)
+                                            + (req.params.reset === 'true' ? '&r=true' : '')
                                             + '<br><br>'
 
                                             + strings.REGARDS + '<br>'

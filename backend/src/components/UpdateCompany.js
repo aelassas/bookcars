@@ -87,8 +87,8 @@ export default class UpdateCompany extends Component {
         }
     };
 
-    handleFullNameOnBlur = (e) => {
-        this.validateFullName(e.target.value);
+    handleFullNameOnBlur = async (e) => {
+        await this.validateFullName(e.target.value);
     };
 
     handleOnChangePhone = (e) => {

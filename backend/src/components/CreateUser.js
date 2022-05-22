@@ -53,10 +53,7 @@ export default class CreateUser extends Component {
     }
 
     handleUserTypeChange = (e) => {
-        this.setState({
-            type: e.target.value,
-            fullNameError: false
-        });
+        this.setState({ type: e.target.value }, async () => await this.validateFullName(this.state.fullName));
     };
 
     handleOnChangeFullName = (e) => {
@@ -92,8 +89,8 @@ export default class CreateUser extends Component {
         }
     };
 
-    handleFullNameOnBlur = (e) => {
-        this.validateFullName(e.target.value);
+    handleFullNameOnBlur = async (e) => {
+        await this.validateFullName(e.target.value);
     };
 
     handleOnChangeEmail = (e) => {
@@ -133,8 +130,8 @@ export default class CreateUser extends Component {
         }
     };
 
-    handleEmailOnBlur = (e) => {
-        this.validateEmail(e.target.value);
+    handleEmailOnBlur = async (e) => {
+        await this.validateEmail(e.target.value);
     };
 
     handleOnChangePhone = (e) => {

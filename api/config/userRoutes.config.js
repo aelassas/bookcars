@@ -3,7 +3,7 @@ export default {
     checkToken: '/api/check-token/:type/:userId/:email/:token',
     deleteTokens: '/api/delete-tokens/:userId',
     activate: '/api/activate',
-    resend: '/api/resend/:type/:email',
+    resend: '/api/resend/:type/:email/:reset',
     signup: '/api/sign-up',
     confirmEmail: '/api/confirm-email/:email/:token',
     resendLink: '/api/resend-link',

@@ -13,6 +13,7 @@ import {
     Paper,
     Link
 } from '@mui/material';
+import { toast } from 'react-toastify';
 import validator from 'validator';
 
 import '../assets/css/reset-password.css';
@@ -45,30 +46,49 @@ export default class Activate extends Component {
         }
     }
 
-    handleEmailBlur = (e) => {
-        if (e.target.value) {
-            this.setState({ error: false, emailValid: validator.isEmail(e.target.value) });
+    validateEmail = async (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                try {
+                    const status = await UserService.validateEmail({ email });
+
+                    if (status === 200) { // user not found (error)
+                        this.setState({ error: true, emailValid: true });
+                        return false;
+                    } else {
+                        this.setState({ error: false, emailValid: true });
+                        return true;
+                    }
+                } catch (err) {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    this.setState({ error: false, emailValid: true });
+                    return false;
+                }
+            } else {
+                this.setState({ error: false, emailValid: false });
+                return false;
+            }
         } else {
             this.setState({ error: false, emailValid: true });
+            return false;
         }
     };
 
-    handleSubmit = (e) => {
+    handleEmailBlur = async (e) => {
+        await this.validateEmail(e.target.value);
+    };
+
+    handleSubmit = async (e) => {
         e.preventDefault();
 
         const { email } = this.state;
 
-        if (!email) {
-            this.setState({ error: false, emailValid: true });
+        const emailValid = await this.validateEmail(email);
+        if (!emailValid) {
             return;
         }
 
-        if (!validator.isEmail(email)) {
-            this.setState({ error: false, emailValid: false });
-            return;
-        }
-
-        UserService.resend(email)
+        UserService.resend(email, true)
             .then(status => {
                 if (status === 200) {
                     this.setState({ error: false, emailValid: true, sent: true });

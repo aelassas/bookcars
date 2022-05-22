@@ -78,8 +78,8 @@ export default class CreateCompany extends Component {
         }
     };
 
-    handleFullNameOnBlur = (e) => {
-        this.validateFullName(e.target.value);
+    handleFullNameOnBlur = async (e) => {
+        await this.validateFullName(e.target.value);
     };
 
     handleOnChangeEmail = (e) => {
@@ -121,8 +121,8 @@ export default class CreateCompany extends Component {
         }
     };
 
-    handleEmailOnBlur = (e) => {
-        this.validateEmail(e.target.value);
+    handleEmailOnBlur = async (e) => {
+        await this.validateEmail(e.target.value);
     };
 
     handleOnChangePhone = (e) => {

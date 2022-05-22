@@ -107,17 +107,20 @@ export default class User extends Component {
                                         visible: true,
                                     });
                                 };
-                                if (Helper.admin(loggedUser)) {
+
+                                const admin = Helper.admin(loggedUser);
+                                if (admin) {
                                     CompanyService.getAllCompanies()
                                         .then(companies => {
                                             const companyIds = Helper.flattenCompanies(companies);
                                             setState(companyIds);
                                         })
                                         .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
-                                } else {
+                                } else if (!admin && loggedUser._id === user._id) {
                                     setState([loggedUser._id]);
+                                } else {
+                                    this.setState({ loading: false, noMatch: true });
                                 }
-
                             } else {
                                 this.setState({ loading: false, noMatch: true });
                             }
