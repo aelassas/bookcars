@@ -36,7 +36,7 @@ export const strings = new LocalizedStrings({
         CANCELLATION_TOOLTIP: 'La réservation peut être annulée avant la date de commencement de la location.',
         AMENDMENTS: 'Modifications',
         AMENDMENTS_TOOLTIP: 'La réservation peut être modifiée avant la date de commencement de la location.',
-        THEFT_PROTECTION: 'Prontection contre le vol',
+        THEFT_PROTECTION: 'Protection contre le vol',
         THEFT_PROTECTION_TOOLTIP: 'La location peut inclure une protection contre le vol.',
         COLLISION_DAMAGE_WAVER: 'Couverture en cas de collision',
         COLLISION_DAMAGE_WAVER_TOOLTIP: 'La location peut inclure une couverture en cas de collision.',
