@@ -77,14 +77,11 @@ section.car-list .empty-list {
     section.car-list article div.car div.car-company span.car-company-logo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
-        overflow: hidden;
-        vertical-align: text-bottom;
         display: flex;
     }
 
     section.car-list article div.car div.car-company a.car-company-info {
         color: #0064C8;
-        display: inline-block;
         font-size: .9em;
         line-height: 1em;
         white-space: nowrap;
@@ -250,15 +247,12 @@ section.car-list .empty-list {
     section.car-list article div.car div.car-company span.car-company-logo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
-        overflow: hidden;
-        vertical-align: text-bottom;
         display: flex;
     }
 
     section.car-list article div.car div.car-company a.car-company-info {
         color: #0064C8;
         text-decoration: underline;
-        display: inline-block;
         font-size: .9em;
         line-height: 1em;
         white-space: nowrap;
