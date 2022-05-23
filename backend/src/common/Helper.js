@@ -1,7 +1,6 @@
 import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
-import { intervalToDuration } from 'date-fns';
 import CarService from "../services/CarService";
 
 export default class Helper {
@@ -292,14 +291,19 @@ export default class Helper {
     }
 
     static async calculateBookingPrice(booking, car, onSucess, onError) {
+
+        const totalDays = (date1, date2) => {
+            return Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
+        };
+
         try {
             if (!car) {
                 car = await CarService.getCar(booking.car);
             }
 
             if (car) {
-                const start = new Date(booking.from), end = new Date(booking.to);
-                const days = intervalToDuration({ start, end }).days;
+                const from = new Date(booking.from), to = new Date(booking.to);
+                const days = totalDays(from, to);
 
                 let price = car.price * days;
                 if (booking.cancellation && car.cancellation > 0) price += car.cancellation;
