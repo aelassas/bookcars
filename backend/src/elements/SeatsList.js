@@ -53,6 +53,7 @@ class SeatsList extends Component {
                     <MenuItem value={5}>5</MenuItem>
                     <MenuItem value={6}>6</MenuItem>
                     <MenuItem value={8}>8</MenuItem>
+                    <MenuItem value={9}>9</MenuItem>
                 </Select>
             </div>
         );
