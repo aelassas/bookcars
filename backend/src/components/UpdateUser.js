@@ -77,7 +77,7 @@ export default class CreateUser extends Component {
             if (user.fullName !== fullName || user.type !== type) {
                 try {
                     const status = await CompanyService.validate({ fullName });
-                    console.log('--------status', status)
+                    
                     if (status === 200) {
                         this.setState({ fullNameError: false });
                         return true;

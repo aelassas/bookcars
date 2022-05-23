@@ -789,7 +789,6 @@ routes.route(routeNames.checkPassword).get(authJwt.verifyToken, (req, res) => {
         .then(user => {
             if (user) {
                 bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
-                    console.log('------------passwordMatch', passwordMatch)
                     if (passwordMatch) {
                         return res.sendStatus(200);
                     }

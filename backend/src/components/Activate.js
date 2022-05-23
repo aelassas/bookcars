@@ -93,7 +93,6 @@ export default class Activate extends Component {
                 if (status === 200) {
                     UserService.signin({ email, password })
                         .then(signInResult => {
-                            console.log(signInResult)
                             if (signInResult.status === 200) {
                                 UserService.deleteTokens(userId)
                                     .then(status => {
