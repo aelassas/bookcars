@@ -148,6 +148,7 @@ div.home footer div.secure-payment {
 
 div.home footer div.secure-payment img {
     height: 32px;
+    opacity: .97;
 }
 
 /* Device width is less than or equal to 960px */
