@@ -43,8 +43,8 @@ export const strings = new LocalizedStrings({
         BOOKING_STATUS_PAID: 'Payée',
         BOOKING_STATUS_RESERVED: 'Réservée',
         BOOKING_STATUS_CANCELLED: 'Annulée',
-        FROM: 'Début',
-        TO: 'Fin',
+        FROM: 'Du',
+        TO: 'Au',
         OPTIONAL: 'Paramètres optionnels',
         AND: 'et',
         RECORD_TYPE_ADMIN: 'Admin',
@@ -62,6 +62,8 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Renvoyer le lien d'activation du compte",
         ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
         EMAIL_NOT_VALID: 'E-mail non valide',
+        PICKUP_LOCATION: 'Lieu de prise en charge',
+        DROP_OFF_LOCATION: 'Lieu de restitution',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -122,6 +124,8 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Resend account activation link",
         ACTIVATION_EMAIL_SENT: 'Activation email sent.',
         EMAIL_NOT_VALID: 'Invalid email address',
+        PICKUP_LOCATION: 'Pickup location',
+        DROP_OFF_LOCATION: 'Drop-off location',
     }
 });
 

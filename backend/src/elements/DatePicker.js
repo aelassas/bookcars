@@ -25,6 +25,7 @@ class DatePicker extends Component {
                 <MuiDatePicker
                     label={this.props.label}
                     inputFormat='dd-MM-yyyy'
+                    views={['year', 'month', 'day']}
                     mask='__-__-____'
                     value={value}
                     onChange={(value) => {
@@ -36,7 +37,8 @@ class DatePicker extends Component {
                     defaultCalendarMonth={this.props.minDate}
                     required={this.props.required}
                     renderInput={(params) =>
-                        <TextField {...params}
+                        <TextField
+                            {...params}
                             variant='standard'
                             fullWidth
                             required={this.props.required}

@@ -259,13 +259,12 @@ export default class SignUp extends Component {
         if (user) {
             window.location.href = '/';
         } else {
-            this.setState({ user, visible: true });
+            this.setState({ visible: true });
         }
     };
 
     render() {
         const {
-            user,
             error,
             language,
             passwordError,
@@ -283,118 +282,119 @@ export default class SignUp extends Component {
 
         return (
             <Master strict={false} onLoad={this.onLoad}>
-                <div className="signup">
-                    <Paper className="signup-form" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
-                        <form onSubmit={this.handleSubmit}>
-                            <div>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                    <Input
-                                        type="text"
-                                        value={this.state.fullName}
-                                        required
-                                        onChange={this.handleOnChangeFullName}
-                                        autoComplete="off"
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                    <Input
-                                        type="text"
-                                        error={!emailValid || emailError}
-                                        value={this.state.email}
-                                        onBlur={this.handleOnBlur}
-                                        onChange={this.handleOnChangeEmail}
-                                        required
-                                        autoComplete="off"
-                                    />
-                                    <FormHelperText error={!emailValid || emailError}>
-                                        {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                                        {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <DatePicker
-                                        label={strings.BIRTH_DATE}
-                                        value={birthDate}
-                                        required
-                                        onChange={(birthDate) => {
-                                            this.setState({ birthDate });
-                                        }}
-                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
-                                    <Input
-                                        value={this.state.password}
-                                        onChange={this.handleOnChangePassword}
-                                        required
-                                        type="password"
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                                    <Input
-                                        value={this.state.confirmPassword}
-                                        onChange={this.handleOnChangeConfirmPassword}
-                                        required
-                                        type="password"
-                                    />
-                                </FormControl>
-                                <div className="recaptcha">
-                                    <ReCAPTCHA
-                                        sitekey={Env.RECAPTCHA_SITE_KEY}
-                                        hl={language}
-                                        onChange={this.handleOnRecaptchaVerify}
-                                    />
+                {visible &&
+                    <div className="signup">
+                        <Paper className="signup-form" elevation={10}>
+                            <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
+                            <form onSubmit={this.handleSubmit}>
+                                <div>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            value={this.state.fullName}
+                                            required
+                                            onChange={this.handleOnChangeFullName}
+                                            autoComplete="off"
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            error={!emailValid || emailError}
+                                            value={this.state.email}
+                                            onBlur={this.handleOnBlur}
+                                            onChange={this.handleOnChangeEmail}
+                                            required
+                                            autoComplete="off"
+                                        />
+                                        <FormHelperText error={!emailValid || emailError}>
+                                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                            {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <DatePicker
+                                            label={strings.BIRTH_DATE}
+                                            value={birthDate}
+                                            required
+                                            onChange={(birthDate) => {
+                                                this.setState({ birthDate });
+                                            }}
+                                            language={UserService.getLanguage()}
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
+                                        <Input
+                                            value={this.state.password}
+                                            onChange={this.handleOnChangePassword}
+                                            required
+                                            type="password"
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
+                                        <Input
+                                            value={this.state.confirmPassword}
+                                            onChange={this.handleOnChangeConfirmPassword}
+                                            required
+                                            type="password"
+                                        />
+                                    </FormControl>
+                                    <div className="recaptcha">
+                                        <ReCAPTCHA
+                                            sitekey={Env.RECAPTCHA_SITE_KEY}
+                                            hl={language}
+                                            onChange={this.handleOnRecaptchaVerify}
+                                        />
+                                    </div>
+                                    <div className="signup-tos">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <Checkbox
+                                                            checked={tosChecked}
+                                                            onChange={this.handleTosChange}
+                                                            color="primary"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className="buttons">
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            className='btn-primary btn-margin-bottom'
+                                            size="small"
+                                        >
+                                            {strings.SIGN_UP}
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className='btn-secondary btn-margin-bottom'
+                                            size="small"
+                                            href="/"> {commonStrings.CANCEL}
+                                        </Button>
+                                    </div>
                                 </div>
-                                <div className="signup-tos">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <Checkbox
-                                                        checked={tosChecked}
-                                                        onChange={this.handleTosChange}
-                                                        color="primary"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div className="form-error">
+                                    {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
+                                    {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                                    {recaptchaError && <Error message={strings.RECAPTCHA_ERROR} />}
+                                    {tosError && <Error message={strings.TOS_ERROR} />}
+                                    {error && <Error message={strings.SIGN_UP_ERROR} />}
                                 </div>
-                                <div className="buttons">
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary btn-margin-bottom'
-                                        size="small"
-                                    >
-                                        {strings.SIGN_UP}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary btn-margin-bottom'
-                                        size="small"
-                                        href="/"> {commonStrings.CANCEL}
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="form-error">
-                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                {recaptchaError && <Error message={strings.RECAPTCHA_ERROR} />}
-                                {tosError && <Error message={strings.TOS_ERROR} />}
-                                {error && <Error message={strings.SIGN_UP_ERROR} />}
-                            </div>
-                        </form>
-                    </Paper>
-                </div>
+                            </form>
+                        </Paper>
+                    </div>}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );

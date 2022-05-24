@@ -87,7 +87,8 @@ routes.route(routeNames.getLocation).get(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
+// routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
+routes.route(routeNames.getLocations).get(async (req, res) => {
     try {
         // for (let i = 1; i < 60; i++) {
         //     const name = `Location ${i}`;

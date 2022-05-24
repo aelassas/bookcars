@@ -24,6 +24,7 @@ class DatePicker extends Component {
             <LocalizationProvider adapterLocale={this.props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
                 <MuiDatePicker
                     label={this.props.label}
+                    views={['year', 'month', 'day']}
                     inputFormat='dd-MM-yyyy'
                     mask='__-__-____'
                     value={value}
@@ -37,7 +38,7 @@ class DatePicker extends Component {
                     required={this.props.required}
                     renderInput={(params) =>
                         <TextField {...params}
-                            variant='standard'
+                            variant={this.props.variant || 'standard'}
                             fullWidth
                             required={this.props.required}
                             autoComplete='off'

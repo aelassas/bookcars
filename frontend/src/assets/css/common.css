@@ -17,7 +17,6 @@
 .btn-primary {
     background-color: #f37022 !important;
     color: #ffffff !important;
-    opacity: .9;
 }
 
 .btn-secondary {
@@ -28,7 +27,7 @@
 .btn-primary:hover,
 .btn-secondary:hover,
 .btn-orange:hover {
-    opacity: 1;
+    opacity: .95;
 }
 
 .btn-margin {

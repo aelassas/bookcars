@@ -1,0 +1,42 @@
+li.ms-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+li.ms-option:hover {
+    background: #fafafa;
+    cursor: pointer;
+}
+
+.option-image {
+    margin-top: 5px;
+}
+
+.option-car {
+    height: 75px;
+}
+
+.option-name {
+    color: #333;
+    display: inline-block;
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.car-option-name {
+    color: #333;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.suo {
+    margin-bottom: 3px;
+}
