@@ -24,6 +24,30 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/sign-up`, data).then(res => res.status);
     }
 
+    static checkToken(userId, email, token) {
+        return axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then(res => res.status);
+    }
+
+    static deleteTokens(userId) {
+        return axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then(res => res.status);
+    }
+
+    static resend(email, reset = false) {
+        return axios.post(`${Env.API_HOST}/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email)}/${reset}`).then(res => res.status);
+    }
+
+    static activate(data) {
+        const salt = bcrypt.genSaltSync(10);
+
+        const password = data.password;
+        const passwordHash = bcrypt.hashSync(password, salt);
+
+        data['password'] = passwordHash;
+
+        return axios.post(`${Env.API_HOST}/api/activate/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
+
     static validateEmail(data) {
         return axios.post(`${Env.API_HOST}/api/validate-email`, data).then(exist => exist.status);
     }
@@ -127,6 +151,39 @@ export default class UserService {
     static getUser(id) {
         return axios.get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), { headers: UserService.authHeader() }).then(res => res.data);
     }
+
+    static updateUser(data) {
+        return axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
+    static updateEmailNotifications(data) {
+        return axios.post(`${Env.API_HOST}/api/update-email-notifications`, data, { headers: UserService.authHeader() })
+            .then(res => {
+                if (res.status === 200) {
+                    const user = UserService.getCurrentUser();
+                    user.enableEmailNotifications = data.enableEmailNotifications;
+                    localStorage.setItem('bc-user', JSON.stringify(user));
+                }
+                return res.status;
+            })
+    }
+
+
+    static checkPassword(id, pass) {
+        return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
+    static changePassword(data) {
+        const salt = bcrypt.genSaltSync(10);
+
+        const newPassword = data.newPassword;
+        const newPasswordHash = bcrypt.hashSync(newPassword, salt);
+
+        data["newPassword"] = newPasswordHash;
+
+        return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
 
     static updateAvatar(userId, file) {
         const user = JSON.parse(localStorage.getItem('bc-user'));

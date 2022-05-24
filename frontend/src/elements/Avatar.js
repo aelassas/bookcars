@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import Helper from '../common/Helper';
+import { strings as commonStrings } from '../lang/common';
 import UserService from '../services/UserService';
 import { toast } from 'react-toastify';
 import {
@@ -38,36 +39,34 @@ export const Avatar = (props) => {
             UserService.updateAvatar(_id, file).then(
                 status => {
                     if (status === 200) {
-                        UserService.getUser(_id).then(user => {
-                            if (user) {
-                                setUser(user);
-                                if (props.onChange) {
-                                    const img = document.querySelector('.avatar > img');
-                                    img.onload = () => {
+                        UserService.getUser(_id)
+                            .then(user => {
+                                if (user) {
+                                    setUser(user);
+                                    if (props.onChange) {
                                         props.onChange(user);
-                                    };
+                                    }
+                                } else {
+                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    if (props.onChange) {
+                                        props.onChange(user);
+                                    }
                                 }
-                            } else {
-                                toast(strings.GENERIC_ERROR, { type: 'error' });
+                            }).catch(err => {
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 if (props.onChange) {
                                     props.onChange(user);
                                 }
-                            }
-                        }).catch(err => {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
-                            if (props.onChange) {
-                                props.onChange(user);
-                            }
-                        });
+                            });
                     } else {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         if (props.onChange) {
                             props.onChange(user);
                         }
                     }
                 }
             ).catch(err => {
-                toast(strings.GENERIC_ERROR, { type: 'error' });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 if (props.onChange) {
                     props.onChange(user);
                 }
@@ -107,40 +106,31 @@ export const Avatar = (props) => {
         UserService.deleteAvatar(_id)
             .then(status => {
                 if (status === 200) {
-                    UserService.getUser(_id).then(user => {
-                        if (user) {
-                            setUser(user);
-                            if (props.onChange) {
-                                props.onChange(user);
+                    UserService.getUser(_id)
+                        .then(user => {
+                            if (user) {
+                                setUser(user);
+                                if (props.onChange) {
+                                    props.onChange(user);
+                                }
+                                closeDialog();
+                            } else {
+                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             }
-                            closeDialog();
-                        } else {
-                            toast(strings.GENERIC_ERROR, { type: 'error' });
-                        }
-                    }).catch(err => {
-                        toast(strings.GENERIC_ERROR, { type: 'error' });
-                    });
+                        }).catch(err => {
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        });
                 } else {
-                    toast(strings.GENERIC_ERROR, { type: 'error' });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             }).catch(err => {
-                toast(strings.GENERIC_ERROR, { type: 'error' });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             });
-    };
-
-    const joinURL = (part1, part2) => {
-        if (part1.charAt(part1.length - 1) === '/') {
-            part1 = part1.substr(0, part1.length - 1);
-        }
-        if (part2.charAt(0) === '/') {
-            part2 = part2.substr(1);
-        }
-        return part1 + '/' + part2;
     };
 
     useEffect(() => {
         const language = UserService.getLanguage();
-        strings.setLanguage(language);
+        commonStrings.setLanguage(language);
 
         const currentUser = UserService.getCurrentUser();
         if (currentUser) {
@@ -170,7 +160,7 @@ export const Avatar = (props) => {
                                 }}
                                 badgeContent={
                                     <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
-                                        <DeleteIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
+                                        <DeleteIcon className='avatar-action-icon' />
                                     </Box>
                                 }
                             >
@@ -182,12 +172,12 @@ export const Avatar = (props) => {
                                     }}
                                     badgeContent={
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                            <PhotoCameraIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
+                                            <PhotoCameraIcon className='avatar-action-icon' />
                                         </Box>
                                     }
                                 >
                                     <MaterialAvatar
-                                        src={user.avatar.startsWith('http') ? user.avatar : joinURL(Env.CDN, user.avatar)}
+                                        src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
                                         className="avatar"
                                     />
                                 </Badge>
@@ -217,7 +207,7 @@ export const Avatar = (props) => {
                         user.avatar
                             ?
                             <MaterialAvatar
-                                src={user.avatar.startsWith('http') ? user.avatar : joinURL(Env.CDN, user.avatar)}
+                                src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
                                 className={size ? 'avatar-' + size : 'avatar'} />
                             :
                             <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
@@ -228,11 +218,11 @@ export const Avatar = (props) => {
                     maxWidth="xs"
                     open={open}
                 >
-                    <DialogTitle>{strings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_AVATAR_CONFIRM}</DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCancelDelete} color="default">{strings.CANCEL}</Button>
-                        <Button onClick={handleDelete} color="secondary">{strings.DELETE}</Button>
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={handleCancelDelete} className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={handleDelete} className='btn-primary'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
             </div>

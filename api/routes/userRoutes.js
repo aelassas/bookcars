@@ -53,6 +53,7 @@ const joinURL = (part1, part2) => {
 // Sign up route
 routes.route(routeNames.signup).post((req, res) => {
     const { body } = req;
+    body.active = true;
     body.verified = false;
     body.blacklisted = false;
 
@@ -101,8 +102,10 @@ routes.route(routeNames.signup).post((req, res) => {
                         from: SMTP_FROM,
                         to: user.email,
                         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>'
+                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                            + strings.ACCOUNT_ACTIVATION_LINK
+                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                            + strings.REGARDS + '<br>'
                             + '</p>'
                     };
                     transporter.sendMail(mailOptions, (err, info) => {
@@ -215,7 +218,7 @@ routes.route(routeNames.checkToken).get((req, res) => {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
                     || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
                     || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
-                    || user.verified
+                    || user.active
                 ) {
                     return res.sendStatus(403);
                 } else {
@@ -268,7 +271,7 @@ routes.route(routeNames.resend).post((req, res) => {
                 ) {
                     return res.sendStatus(403);
                 } else {
-                    user.verified = false;
+                    user.active = false;
 
                     user.save()
                         .then(() => {
@@ -346,6 +349,7 @@ routes.route(routeNames.activate).post((req, res) => {
                     .then(token => {
                         if (token) {
                             user.password = req.body.password;
+                            user.active = true;
                             user.verified = true;
                             user.save()
                                 .then(() => {

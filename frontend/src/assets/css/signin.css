@@ -12,33 +12,11 @@
     margin-top: 35px;
 }
 
-.signin-buttons button {
-	margin-right: 15px;
-	margin-left: 0 !important;
-}
-
 .form-error {
     clear: both;
     height: 65px;
     padding-top: 10px;
     text-align: center;
-}
-
-/* Device width is greater than or equal to 960px */
-
-@media only screen and (min-width: 960px) {
-
-    .signin-form {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        width: 350px;
-        height: 370px;
-        margin-top: 45px;
-        margin-left: calc(50% - 150px);
-        border: 1px solid rgba(0, 0, 0, 0.12);
-        padding: 15px;
-    }
 }
 
 /* Device width is less than or equal to 960px */
@@ -49,11 +27,36 @@
         align-items: center;
         justify-content: center;
         display: flex;
-        width: 300px;
-        height: 370px;
+        width: 350px;
+        height: 390px;
         margin-top: 45px;
-        margin-left: calc(50% - 150px);
+        margin-left: calc(50% - 175px);
         border: 1px solid rgba(0, 0, 0, 0.12);
         padding: 15px;
+    }
+
+    .signin-form .reset-password {
+        margin-bottom: 15px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+
+    .signin-form {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        width: 430px;
+        height: 390px;
+        margin-top: 45px;
+        margin-left: calc(50% - 190px);
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        padding: 15px;
+    }
+
+    .signin-form .reset-password {
+        margin-right: 20px;
     }
 }

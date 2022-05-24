@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings } from '../lang/header';
-// import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
 import MessageService from '../services/MessageService';

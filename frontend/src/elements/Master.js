@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { strings } from '../config/app.config';
+import { strings } from '../lang/master';
 import Header from '../elements/Header';
 import UserService from '../services/UserService';
 import { Button } from '@mui/material';

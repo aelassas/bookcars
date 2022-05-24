@@ -3,6 +3,7 @@ import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
 import UserService from '../services/UserService';
+import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
@@ -18,7 +19,6 @@ import {
 } from '@mui/material';
 
 import '../assets/css/settings.css';
-import Helper from '../common/Helper';
 
 export default class Settings extends Component {
 

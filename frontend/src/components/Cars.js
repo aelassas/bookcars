@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import '../assets/css/car.css';
 
-export default class Car extends Component {
+import '../assets/css/cars.css';
+
+export default class Cars extends Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +23,7 @@ export default class Car extends Component {
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
-                Car!
+                Cars!
             </Master>
         );
     }

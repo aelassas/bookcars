@@ -126,7 +126,7 @@ export default class Activate extends Component {
                 {visible &&
                     <div className="reset-password">
                         <Paper className="reset-password-form" elevation={10}>
-                            <h1> {strings.RESET_PASSWORD_HEADING} </h1>
+                            <h1 className='reset-password-title'> {strings.RESET_PASSWORD_HEADING} </h1>
                             {sent &&
                                 <div>
                                     <label>{strings.EMAIL_SENT}</label>

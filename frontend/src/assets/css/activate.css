@@ -1,16 +1,15 @@
 /* Passwprd Reset */
 
-div.reset-password {
+div.activate {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding-bottom: 40px;
 }
 
-div.reset-password h1.reset-password-title {
+div.activate h1.activate-form-title {
 	text-align: center;
 	margin-top: 0;
-	color: #f37022;
 }
 
 div.resend {
@@ -20,9 +19,10 @@ div.resend {
 	padding-bottom: 40px;
 }
 
-.reset-password-form h1,
+.activate-form h1,
 .resend-form h1 {
 	text-align: center;
+	color: #f37022;
 }
 
 .resend-form div.resend-form-content {
@@ -44,20 +44,27 @@ div.resend {
 	margin-top: 20px !important;
 }
 
+.resend-form div.resend-form-content p.go-to-home {
+	float: left;
+	clear: left;
+	width: 200px;
+	margin-left: calc(50% - 100px);
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-	.reset-password-form {
+	.activate-form {
 		margin-top: 40px;
 		width: 330px;
-		height: 450px;
+		height: 440px;
 		padding: 30px;
 	}
 
 	.resend-form {
 		margin-top: 40px;
 		width: 330px;
-		height: 300px;
+		height: 330px;
 		padding: 30px;
 	}
 }
@@ -65,17 +72,17 @@ div.resend {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-	.reset-password-form {
+	.activate-form {
 		margin-top: 40px;
 		width: 450px;
-		height: 380px;
+		height: 390px;
 		padding: 30px;
 	}
 
 	.resend-form {
 		margin-top: 40px;
 		width: 430px;
-		height: 240px;
+		height: 270px;
 		padding: 30px;
 	}
 }

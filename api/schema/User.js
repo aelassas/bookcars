@@ -39,6 +39,10 @@ const userSchema = new Schema({
     verifiedAt: {
         type: Date
     },
+    active: {
+        type: Boolean,
+        default: false
+    },
     language: { // ISO 639-1 (alpha-2 code)
         type: String,
         default: process.env.BC_DEFAULT_LANGUAGE,

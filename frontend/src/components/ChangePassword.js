@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Master from '../elements/Master';
-import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/change-password';
 import UserService from '../services/UserService';
@@ -87,43 +86,30 @@ export default class ChangePassword extends Component {
                 });
             }
 
-            const { user, userId, currentPassword, newPassword } = this.state;
-
-            // if (userId === user._id && currentPassword === newPassword) {
-            //     return this.setState({
-            //         newPasswordError: true,
-            //         passwordLengthError: false,
-            //         confirmPasswordError: false,
-            //     });
-            // }
+            const { user, currentPassword, newPassword } = this.state;
 
             const data = {
-                _id: userId,
+                _id: user._id,
                 password: currentPassword,
                 newPassword,
-                strict: userId === user._id
+                strict: true
             };
 
             UserService.changePassword(data)
                 .then(status => {
                     if (status === 200) {
-                        if (user._id === userId) {
-                            UserService.getUser(user._id)
-                                .then(_user => {
-                                    if (_user) {
-                                        this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
-                                        toast(strings.PASSWORD_UPDATE, { type: 'info' });
-                                    } else {
-                                        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
-                                    }
-                                })
-                                .catch(() => {
+                        UserService.getUser(user._id)
+                            .then(_user => {
+                                if (_user) {
+                                    this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
+                                    toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                                } else {
                                     toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
-                                });
-                        } else {
-                            this.setState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                            toast(strings.PASSWORD_UPDATE, { type: 'info' });
-                        }
+                                }
+                            })
+                            .catch(() => {
+                                toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                            });
                     } else {
                         toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                     }
@@ -153,37 +139,7 @@ export default class ChangePassword extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user });
-        
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('u')) {
-            const id = params.get('u');
-            if (id && id !== '') {
-                if (id === user._id) {
-                    this.setState({ userId: user._id, visible: true, loading: false });
-                } else {
-                    if (user.type === Env.RECORD_TYPE.ADMIN) {
-                        UserService.getUser(id)
-                            .then(_user => {
-                                if (_user) {
-                                    this.setState({ userId: _user._id, visible: true, loading: false });
-                                } else {
-                                    this.setState({ loading: false, noMatch: true });
-                                }
-                            })
-                            .catch(err => {
-                                this.setState({ loading: false, error: true, visible: false });
-                            });
-                    } else {
-                        this.setState({ loading: false, noMatch: true });
-                    }
-                }
-            } else {
-                this.setState({ loading: false, noMatch: true });
-            }
-        } else {
-            this.setState({ loading: false, noMatch: true });
-        }
+        this.setState({ user, loading: false, visible: true });
     }
 
     componentDidMount() {
@@ -191,7 +147,7 @@ export default class ChangePassword extends Component {
     }
 
     render() {
-        const { userId, user, visible, currentPassword, newPassword, confirmPassword,
+        const { visible, currentPassword, newPassword, confirmPassword,
             currentPasswordError, newPasswordError, confirmPasswordError,
             passwordLengthError, loading, error, noMatch } = this.state;
 
@@ -206,7 +162,7 @@ export default class ChangePassword extends Component {
                                     error={currentPasswordError}
                                     className='required'
                                 >
-                                    {user && userId === user._id ? strings.CURRENT_PASSWORD : strings.YOUR_PASSWORD}
+                                    {strings.CURRENT_PASSWORD}
                                 </InputLabel>
                                 <Input
                                     id="password-current"

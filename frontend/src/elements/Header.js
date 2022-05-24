@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings } from '../lang/header';
 import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
 import MessageService from '../services/MessageService';
@@ -34,9 +34,9 @@ import {
     DescriptionTwoTone as TosIcon,
     ExitToApp as SignoutIcon,
     Login as LoginIcon,
-    CorporateFare as CompaniesIcon,
     EventSeat as BookingsIcon
 } from '@mui/icons-material';
+
 import '../assets/css/header.css';
 
 const ListItemLink = (props) => (
@@ -340,11 +340,7 @@ export default function Header(props) {
                                     <ListItemIcon>{<HomeIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.HOME} />
                                 </ListItemLink>
-                                <ListItemLink href="/companies">
-                                    <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.COMPANIES} />
-                                </ListItemLink>
-                                {isSignedIn && <ListItemLink href="/reservations">
+                                {isSignedIn && <ListItemLink href="/bookings">
                                     <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.BOOKINGS} />
                                 </ListItemLink>}

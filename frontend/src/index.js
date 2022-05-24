@@ -1,12 +1,13 @@
 import React from 'react';
-import ReactDOM from "react-dom/client";
+import ReactDOM from 'react-dom/client';
 import App from './App';
 import Env from './config/env.config';
-import { strings } from './config/app.config';
+import { strings as commonStrings } from './lang/common';
 import UserService from './services/UserService';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer, toast } from 'react-toastify';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { frFR, enUS } from '@mui/material/locale';
 
 import './assets/css/common.css';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -43,7 +44,7 @@ if (lang !== '') {
                 if (status === 200) {
                     const status = await UserService.updateLanguage(data);
                     if (status !== 200) {
-                        toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+                        toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
                     }
                 }
             });
@@ -53,49 +54,65 @@ if (lang !== '') {
         language = lang;
     }
     UserService.setLanguage(language);
-    strings.setLanguage(language);
+    commonStrings.setLanguage(language);
 }
+
+language = UserService.getLanguage();
 
 const theme = createTheme({
     typography: {
         fontFamily: [
             '-apple-system',
             'BlinkMacSystemFont',
-            '"Segoe UI"',
+            "'Segoe UI'",
             'Roboto',
-            '"Helvetica Neue"',
+            "'Helvetica Neue'",
             'Arial',
             'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
+            "'Apple Color Emoji'",
+            "'Segoe UI Emoji'",
+            "'Segoe UI Symbol'",
         ].join(','),
     },
     components: {
         MuiCssBaseline: {
             styleOverrides: {
                 body: {
-                    backgroundColor: "#fafafa",
+                    backgroundColor: '#fafafa',
                 }
             },
         },
+        MuiSwitch: {
+            styleOverrides: {
+                root: {
+                    '& .Mui-checked': {
+                        color: '#f37022 !important'
+                    },
+                    '& .Mui-checked+.MuiSwitch-track': {
+                        opacity: 0.7,
+                        backgroundColor: '#f37022 !important'
+                    },
+                }
+            },
+        }
     },
-});
+}, language === 'fr' ? frFR : enUS);
 
 root.render(
     <ThemeProvider theme={theme}>
         <CssBaseline>
             <App />
             <ToastContainer
-                position="bottom-left"
+                position='bottom-right'
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
                 pauseOnFocusLoss={false}
                 draggable={false}
-                pauseOnHover={false}
-                toastStyle={{ backgroundColor: "#131519", color: "#DDDDDD" }}
+                pauseOnHover={true}
+                icon={true}
+                theme='dark'
             />
         </CssBaseline>
     </ThemeProvider>

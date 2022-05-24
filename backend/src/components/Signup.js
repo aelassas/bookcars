@@ -121,10 +121,6 @@ export default class SignUp extends Component {
         event.preventDefault();
     };
 
-    handleTosChange = (event) => {
-        this.setState({ tosChecked: event.target.checked });
-    };
-
     handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -323,7 +319,7 @@ export default class SignUp extends Component {
                                 </FormControl>
                                 <div className="recaptcha">
                                     <ReCAPTCHA
-                                        sitekey={process.env.REACT_APP_BC_RECAPTCHA_SITE_KEY}
+                                        sitekey={Env.RECAPTCHA_SITE_KEY}
                                         hl={language}
                                         onChange={this.handleOnRecaptchaVerify}
                                     />
@@ -346,10 +342,10 @@ export default class SignUp extends Component {
                                 </div>
                             </div>
                             <div className="form-error">
-                                {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
                                 {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                {recaptchaError && <Error message={strings.ERROR_IN_RECAPTCHA} />}
-                                {error && <Error message={strings.ERROR_IN_SIGN_UP} />}
+                                {recaptchaError && <Error message={strings.RECAPTCHA_ERROR} />}
+                                {error && <Error message={strings.SIGN_UP_ERROR} />}
                             </div>
                         </form>
                     </Paper>

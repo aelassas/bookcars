@@ -392,7 +392,7 @@ export default class CreateCompany extends Component {
                             </div>
 
                             <div className="form-error">
-                                {passwordError && <Error message={commonStrings.ERROR_IN_PASSWORD} />}
+                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
                                 {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
                                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
                                 {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}

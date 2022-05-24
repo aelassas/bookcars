@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import { strings } from '../config/app.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/sign-in';
 import UserService from '../services/UserService';
 import Header from '../elements/Header';
 import Error from '../elements/Error';
@@ -9,7 +10,8 @@ import {
     FormControl,
     InputLabel,
     Input,
-    Button
+    Button,
+    Link
 } from '@mui/material';
 
 import '../assets/css/signin.css';
@@ -52,37 +54,37 @@ export default class SignIn extends Component {
         const { email, password } = this.state;
         const data = { email, password };
 
-        UserService.signin(data).then(res => {
-            console.log(res);
-            if (res.status === 200) {
-                if (res.data.blacklisted) {
-                    UserService.signout(false);
-                    this.setState({
-                        error: false,
-                        blacklisted: true,
-                        loginSuccess: false
-                    });
+        UserService.signin(data)
+            .then(res => {
+                if (res.status === 200) {
+                    if (res.data.blacklisted) {
+                        UserService.signout(false);
+                        this.setState({
+                            error: false,
+                            blacklisted: true,
+                            loginSuccess: false
+                        });
+                    } else {
+                        this.setState({
+                            error: false
+                        }, () => {
+                            window.location.href = '/';
+                        });
+                    }
                 } else {
                     this.setState({
-                        error: false
-                    }, () => {
-                        window.location.href = '/' + window.location.search;
+                        error: true,
+                        blacklisted: false,
+                        loginSuccess: false
                     });
                 }
-            } else {
+            }).catch(() => {
                 this.setState({
                     error: true,
                     blacklisted: false,
                     loginSuccess: false
                 });
-            }
-        }).catch(() => {
-            this.setState({
-                error: true,
-                blacklisted: false,
-                loginSuccess: false
             });
-        });
     };
 
 
@@ -125,59 +127,61 @@ export default class SignIn extends Component {
 
         return (
             <div>
-                <Header hideSignin={true} />
-                <div className='content' style={visible ? null : { display: 'none' }}>
-                    <Paper className='signin-form' elevation={10}>
-                        <form onSubmit={this.handleSubmit}>
-                            <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="email">{strings.EMAIL}</InputLabel>
-                                <Input
-                                    id="email"
-                                    type="text"
-                                    name="Email"
-                                    onChange={this.handleOnChangeEmail}
-                                    autoComplete="email"
-                                    required
-                                />
-                            </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="password">{strings.PASSWORD}</InputLabel>
-                                <Input
-                                    id="password"
-                                    name="Password"
-                                    onChange={this.handleOnChangePassword}
-                                    onKeyDown={this.handleOnPasswordKeyDown}
-                                    autoComplete="password"
-                                    type="password"
-                                    required
-                                />
-                            </FormControl>
-                            <div className='signin-buttons'>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    size="small"
-                                    className='btn-primary'
-                                >
-                                    {strings.SIGN_IN}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    href="/sign-up"
-                                    className='btn-secondary'
-                                >
-                                    {strings.SIGN_UP}
-                                </Button>
-                            </div>
-                            <div className="form-error">
-                                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
-                            </div>
-                        </form>
-                    </Paper>
-                </div>
+                <Header />
+                {visible &&
+                    <div className='content'>
+                        <Paper className='signin-form' elevation={10}>
+                            <form onSubmit={this.handleSubmit}>
+                                <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
+                                    <Input
+                                        id="email"
+                                        type="text"
+                                        name="Email"
+                                        onChange={this.handleOnChangeEmail}
+                                        autoComplete="email"
+                                        required
+                                    />
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
+                                    <Input
+                                        id="password"
+                                        name="Password"
+                                        onChange={this.handleOnChangePassword}
+                                        onKeyDown={this.handleOnPasswordKeyDown}
+                                        autoComplete="password"
+                                        type="password"
+                                        required
+                                    />
+                                </FormControl>
+                                <div className='buttons'>
+                                    <Link href='/reset-password' className='reset-password'>{strings.RESET_PASSWORD}</Link>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        href="/sign-up"
+                                        className='btn-secondary btn-margin btn-margin-bottom'
+                                    >
+                                        {strings.SIGN_UP}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="small"
+                                        className='btn-primary btn-margin btn-margin-bottom'
+                                    >
+                                        {strings.SIGN_IN}
+                                    </Button>
+                                </div>
+                                <div className="form-error">
+                                    {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
+                                    {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
+                                </div>
+                            </form>
+                        </Paper>
+                    </div>}
             </div>
         );
     }
