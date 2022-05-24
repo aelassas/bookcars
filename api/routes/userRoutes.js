@@ -280,6 +280,9 @@ routes.route(routeNames.resend).post((req, res) => {
                                     // Send email
                                     strings.setLanguage(user.language);
 
+                                    const reset = req.params.reset === 'true';
+                                    console.log('---------------reset', reset)
+
                                     const transporter = nodemailer.createTransport({
                                         host: SMTP_HOST,
                                         port: SMTP_PORT,
@@ -291,15 +294,15 @@ routes.route(routeNames.resend).post((req, res) => {
                                     const mailOptions = {
                                         from: SMTP_FROM,
                                         to: user.email,
-                                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                                        subject: (reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT),
                                         html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
+                                            + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>'
 
                                             + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
                                             + '/?u=' + encodeURIComponent(user._id)
                                             + '&e=' + encodeURIComponent(user.email)
                                             + '&t=' + encodeURIComponent(token.token)
-                                            + (req.params.reset === 'true' ? '&r=true' : '')
+                                            + (reset ? '&r=true' : '')
                                             + '<br><br>'
 
                                             + strings.REGARDS + '<br>'

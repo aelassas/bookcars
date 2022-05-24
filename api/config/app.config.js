@@ -15,12 +15,12 @@ export default new LocalizedStrings.default({
         ACCOUNT_ACTIVATION_SUCCESS: 'Votre compte a été validé avec succès.',
         ACCOUNT_ACTIVATION_RESEND_ERROR: "Nous n'avons pas pu trouver d'utilisateur correspondant à cette adresse e-mail. Assurez-vous que votre e-mail est correct.",
         ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED: 'Ce compte a déjà été validé. Veuillez vous connecter.',
-        ACCOUNT_ACTIVATION_SUBJECT: 'Validation de votre compte',
-        ACCOUNT_ACTIVATION_LINK: 'Veuillez activer votre compte en cliquant sur le lien :',
         ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1: 'Un email de validation a été envoyé à',
         ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2: ". Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
         CAR_IMAGE_REQUIRED: "Le champ image de Car ne peut pas être vide: ",
-        CAR_IMAGE_NOT_FOUND: "Le fichier image est introuvable : "
+        CAR_IMAGE_NOT_FOUND: "Le fichier image est introuvable : ",
+        PASSWORD_RESET_SUBJECT: 'Réinitialisation du mot de passe',
+        PASSWORD_RESET_LINK: 'Veuillez réinitialiser votre mot de passe en cliquant sur le lien :',
     },
     en: {
         ERROR: 'Internal error: ',
@@ -36,11 +36,12 @@ export default new LocalizedStrings.default({
         ACCOUNT_ACTIVATION_SUCCESS: 'Your account was successfully verified.',
         ACCOUNT_ACTIVATION_RESEND_ERROR: 'We were unable to find a user with that email. Make sure your Email is correct.',
         ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED: 'This account has already been verified. Please sign in.',
-        ACCOUNT_ACTIVATION_SUBJECT: 'Account Validation',
-        ACCOUNT_ACTIVATION_LINK: 'Please activate your account by clicking the link:',
         ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1: 'A validation email has been sent to ',
         ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2: ". It will be expire after one day. If you didn't receive validation email click on resend.",
         CAR_IMAGE_REQUIRED: "Car's image field can't be blank: ",
-        CAR_IMAGE_NOT_FOUND: "Image file not found: "
+        CAR_IMAGE_NOT_FOUND: "Image file not found: ",
+        PASSWORD_RESET_SUBJECT: 'Password Reset',
+        PASSWORD_RESET_LINK: 'Please reset your password by clicking the link:',
+
     }
 });

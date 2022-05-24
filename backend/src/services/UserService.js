@@ -37,7 +37,7 @@ export default class UserService {
         return axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then(res => res.status);
     }
 
-    static resend(email, reset) {
+    static resend(email, reset = false) {
         return axios.post(`${Env.API_HOST}/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email)}/${reset}`).then(res => res.status);
     }
 
