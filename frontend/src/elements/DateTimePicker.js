@@ -40,7 +40,6 @@ class DateTimePicker extends Component {
                         {...params}
                         variant={this.props.variant || 'standard'}
                         fullWidth
-                        required={this.props.required}
                         autoComplete='off'
                         inputProps={{
                             ...params.inputProps,

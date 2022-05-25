@@ -76,14 +76,9 @@ export default class Home extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        // TODO
         const { pickupLocation, dropOffLocation, from, to } = this.state;
 
-        console.log('pickupLocation', pickupLocation);
-        console.log('dropOffLocation', dropOffLocation);
-        console.log('from', from);
-        console.log('to', to);
-
+        window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`;
     };
 
     onLoad = (user) => {
