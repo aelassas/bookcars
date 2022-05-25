@@ -6,6 +6,7 @@ import { strings as blStrings } from '../lang/booking-list';
 import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-booking';
+import UserService from '../services/UserService';
 import BookingService from '../services/BookingService';
 import Helper from '../common/Helper';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -14,7 +15,7 @@ import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
-import DatePicker from '../elements/DatePicker';
+import DateTimePicker from '../elements/DateTimePicker';
 import { toast } from 'react-toastify';
 import {
     FormControl,
@@ -243,19 +244,19 @@ export default class CreateBooking extends Component {
                             />
 
                             <FormControl fullWidth margin="dense">
-                                <DatePicker
+                                <DateTimePicker
                                     label={commonStrings.FROM}
                                     value={from}
                                     required
                                     onChange={(from) => {
                                         this.setState({ from, minDate: from });
                                     }}
-                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                    language={UserService.getLanguage()}
                                 />
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">
-                                <DatePicker
+                                <DateTimePicker
                                     label={commonStrings.TO}
                                     value={to}
                                     minDate={minDate}
@@ -263,7 +264,7 @@ export default class CreateBooking extends Component {
                                     onChange={(to) => {
                                         this.setState({ to });
                                     }}
-                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                    language={UserService.getLanguage()}
                                 />
                             </FormControl>
 

@@ -7,6 +7,7 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking';
 import Helper from '../common/Helper';
 import Master from '../elements/Master';
+import UserService from '../services/UserService';
 import BookingService from '../services/BookingService';
 import CarService from '../services/CarService';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -18,7 +19,7 @@ import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
-import DatePicker from '../elements/DatePicker';
+import DateTimePicker from '../elements/DateTimePicker';
 import {
     FormControl,
     FormControlLabel,
@@ -434,7 +435,7 @@ export default class Booking extends Component {
                                 />
 
                                 <FormControl fullWidth margin="dense">
-                                    <DatePicker
+                                    <DateTimePicker
                                         label={commonStrings.FROM}
                                         value={from}
                                         required
@@ -454,11 +455,11 @@ export default class Booking extends Component {
                                                     });
                                             }
                                         }}
-                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                        language={UserService.getLanguage()}
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <DatePicker
+                                    <DateTimePicker
                                         label={commonStrings.TO}
                                         value={to}
                                         minDate={minDate}
@@ -479,7 +480,7 @@ export default class Booking extends Component {
                                                     });
                                             }
                                         }}
-                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                        language={UserService.getLanguage()}
                                     />
                                 </FormControl>
 

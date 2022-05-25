@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { Clear as ClearIcon } from '@mui/icons-material';
 import { fr, enUS } from "date-fns/locale";
 
-class DatePicker extends Component {
+class DateTimePicker extends Component {
 
     constructor(props) {
         super(props);
@@ -22,11 +22,11 @@ class DatePicker extends Component {
 
         return (
             <LocalizationProvider adapterLocale={this.props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
-                <MuiDatePicker
+                <MuiDateTimePicker
                     label={this.props.label}
-                    inputFormat='dd-MM-yyyy'
-                    views={['year', 'month', 'day']}
-                    mask='__-__-____'
+                    inputFormat='dd-MM-yyyy HH:mm'
+                    mask='__-__-____ __:__'
+                    showToolbar
                     value={value}
                     onChange={(value) => {
                         this.setState({ value }, () => {
@@ -36,10 +36,11 @@ class DatePicker extends Component {
                     minDate={this.props.minDate}
                     defaultCalendarMonth={this.props.minDate}
                     required={this.props.required}
+
                     renderInput={(params) =>
                         <TextField
                             {...params}
-                            variant='standard'
+                            variant={this.props.variant || 'standard'}
                             fullWidth
                             required={this.props.required}
                             autoComplete='off'
@@ -66,10 +67,11 @@ class DatePicker extends Component {
                             }}
                         />
                     }
+
                 />
             </LocalizationProvider>
         );
     }
 }
 
-export default DatePicker;
+export default DateTimePicker;
