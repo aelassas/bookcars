@@ -9,8 +9,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { frFR, enUS } from '@mui/material/locale';
 
-import './assets/css/common.css';
 import 'react-toastify/dist/ReactToastify.min.css';
+import './assets/css/common.css';
+import './assets/css/index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -99,21 +100,23 @@ const theme = createTheme({
 }, language === 'fr' ? frFR : enUS);
 
 root.render(
-    <ThemeProvider theme={theme}>
-        <CssBaseline>
-            <App />
-            <ToastContainer
-                position='bottom-right'
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                pauseOnFocusLoss={false}
-                draggable={false}
-                pauseOnHover={true}
-                icon={true}
-                theme='dark'
-            />
-        </CssBaseline>
-    </ThemeProvider>
+    <React.StrictMode>
+        <ThemeProvider theme={theme}>
+            <CssBaseline>
+                <App />
+                <ToastContainer
+                    position='bottom-right'
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    pauseOnFocusLoss={false}
+                    draggable={false}
+                    pauseOnHover={true}
+                    icon={true}
+                    theme='dark'
+                />
+            </CssBaseline>
+        </ThemeProvider>
+    </React.StrictMode>
 );

@@ -1,8 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import './assets/css/index.css';
-
 const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
 const Activate = lazy(() => import('./components/Activate'));
