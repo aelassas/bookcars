@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { strings } from "../lang/cars";
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/cars';
+import Accordion from './Accordion';
 
 import '../assets/css/mileage-filter.css'
 
@@ -65,19 +67,18 @@ class MileageFilter extends Component {
 
     render() {
         return (
-            <div className={`${this.props.className ? `${this.props.className} ` : ''}mileage-filter`}>
-                <label className='title'>{strings.MILEAGE}</label>
+            <Accordion title={strings.MILEAGE} className={`${this.props.className ? `${this.props.className} ` : ''}mileage-filter`}>
                 <div className='filter-elements'>
                     <div className='filter-element'>
                         <input type='radio' className='mileage-radio all-mileage-radio' onChange={this.handleAllMileageChange} />
-                        <label onClick={this.handleAllMileageClick}>{strings.ALL_MILEAGES}</label>
+                        <label onClick={this.handleAllMileageClick}>{commonStrings.ALL}</label>
                     </div>
                     <div className='filter-element'>
                         <input type='radio' className='mileage-radio unlimited-mileage-radio' onChange={this.handleUnlimitedMileageChange} />
                         <label onClick={this.handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
                     </div>
                 </div>
-            </div>
+            </Accordion>
         );
     }
 }

@@ -1,22 +1,3 @@
-div.fuel-filter {
-    background: #fff;
-    margin: 10px 10px 0 0;
-    border: 1px solid #dadada;
-    font-size: 13px;
-}
-
-div.fuel-filter .title {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 2em;
-    background: #fafafa;
-    border-bottom: 1px solid #dadada;
-}
-
 div.fuel-filter div.filter-elements {
     padding: 7px 5px;
 }

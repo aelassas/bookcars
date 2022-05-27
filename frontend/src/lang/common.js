@@ -64,7 +64,8 @@ export const strings = new LocalizedStrings({
         EMAIL_NOT_VALID: 'E-mail non valide',
         PICKUP_LOCATION: 'Lieu de prise en charge',
         DROP_OFF_LOCATION: 'Lieu de restitution',
-        PHONE_NOT_VALID: 'Numéro de téléphone non valide'
+        PHONE_NOT_VALID: 'Numéro de téléphone non valide',
+        ALL: 'Tous'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -127,7 +128,8 @@ export const strings = new LocalizedStrings({
         EMAIL_NOT_VALID: 'Invalid email address',
         PICKUP_LOCATION: 'Pickup location',
         DROP_OFF_LOCATION: 'Drop-off location',
-        PHONE_NOT_VALID: 'Invalid phone number'
+        PHONE_NOT_VALID: 'Invalid phone number',
+        ALL: 'All'
     }
 });
 

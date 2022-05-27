@@ -56,8 +56,7 @@ export const strings = new LocalizedStrings({
         PRICE_DAYS_PART_2: 'jour',
         PRICE_FOR_DAY: 'Prix par jour :',
         GEARBOX: 'Transmission',
-        ENGINE: 'Moteur',
-        ALL_MILEAGES: 'Tous les kilométrages'
+        ENGINE: 'Moteur'
     },
     en: {
         NEW_CAR: 'New car',
@@ -112,8 +111,7 @@ export const strings = new LocalizedStrings({
         PRICE_DAYS_PART_2: 'day',
         PRICE_FOR_DAY: 'Price for day:',
         GEARBOX: 'Gearbox',
-        ENGINE: 'Engine',
-        ALL_MILEAGES: 'All mileages'
+        ENGINE: 'Engine'
     }
 });
 

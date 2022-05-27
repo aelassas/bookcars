@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from "../lang/cars";
+import Accordion from './Accordion';
 
 import '../assets/css/gearbox-filter.css'
 
@@ -109,8 +110,7 @@ class GearboxFilter extends Component {
         const { allChecked } = this.state;
 
         return (
-            <div className={`${this.props.className ? `${this.props.className} ` : ''}gearbox-filter`}>
-                <label className='title'>{strings.GEARBOX}</label>
+            <Accordion title={strings.GEARBOX} className={`${this.props.className ? `${this.props.className} ` : ''}gearbox-filter`}>
                 <div className='filter-elements'>
                     <div className='filter-element'>
                         <input type='checkbox' className='gearbox-checkbox' onChange={this.handleCheckAutomaticChange} />
@@ -126,7 +126,7 @@ class GearboxFilter extends Component {
                         {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
                     </span>
                 </div>
-            </div>
+            </Accordion>
         );
     }
 }

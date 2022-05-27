@@ -184,6 +184,7 @@
     height: 20px !important;
 }
 
+
 @media only screen and (max-width: 960px) {
     .content {
         position: absolute;

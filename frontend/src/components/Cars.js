@@ -150,9 +150,9 @@ export default class Cars extends Component {
                             />
                             {!loading &&
                                 <>
-                                    <FuelFilter onChange={this.handleFuelFilterChange} />
-                                    <GearboxFilter onChange={this.handleGearboxFilterChange} />
-                                    <MileageFilter onChange={this.handleMileageFilterChange} />
+                                    <FuelFilter className='filter' onChange={this.handleFuelFilterChange} />
+                                    <GearboxFilter className='filter' onChange={this.handleGearboxFilterChange} />
+                                    <MileageFilter className='filter' onChange={this.handleMileageFilterChange} />
                                 </>
                             }
                         </div>
