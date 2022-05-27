@@ -102,7 +102,7 @@ export default class Master extends Component {
         const { loading, user, error, unauthorized } = this.state;
 
         return (
-            (<div>
+            <>
                 <Header user={this.props.user || user} hidden={this.props.hideHeader || loading} />
                 {(((!user && !loading) || (user && user.verified) || !this.props.strict)) && !error && !unauthorized ? (
                     <div className='content' style={this.props.style}>{this.props.children}</div>
@@ -121,7 +121,7 @@ export default class Master extends Component {
                 }
                 {unauthorized && <Unauthorized style={{ marginTop: '75px' }} />}
                 {error && <Error style={{ marginTop: '75px' }} />}
-            </div>)
+            </>
         );
     }
 }

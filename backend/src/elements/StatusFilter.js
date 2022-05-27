@@ -11,7 +11,7 @@ class StatusFilter extends Component {
         this.state = {
             statuses: [],
             checkedStatuses: [],
-            allStatusesChecked: true
+            allChecked: true
         }
     }
 
@@ -24,11 +24,15 @@ class StatusFilter extends Component {
     };
 
     handleCheckStatusChange = (e) => {
-        const { checkedStatuses } = this.state;
+        const { statuses, checkedStatuses } = this.state;
         const status = e.currentTarget.getAttribute('data-value');
 
         if (e.currentTarget.checked) {
             checkedStatuses.push(status);
+
+            if (checkedStatuses.length === statuses.length) {
+                this.setState({ allChecked: true });
+            }
         } else {
             const index = checkedStatuses.findIndex(s => s === status);
             checkedStatuses.splice(index, 1);
@@ -42,22 +46,22 @@ class StatusFilter extends Component {
     };
 
     handleUncheckAllChange = (e) => {
-        const { allStatusesChecked } = this.state;
+        const { allChecked } = this.state;
         const checkboxes = document.querySelectorAll('.status-checkbox');
 
-        if (allStatusesChecked) { // uncheck all
+        if (allChecked) { // uncheck all
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
 
-            this.setState({ allStatusesChecked: false, checkedStatuses: [] });
+            this.setState({ allChecked: false, checkedStatuses: [] });
         } else { // check all
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
 
             const statuses = this.state.statuses.map(status => status.value);
-            this.setState({ allStatusesChecked: true, checkedStatuses: statuses }, () => {
+            this.setState({ allChecked: true, checkedStatuses: statuses }, () => {
                 if (this.props.onChange) {
                     this.props.onChange(statuses);
                 }
@@ -82,7 +86,7 @@ class StatusFilter extends Component {
     }
 
     render() {
-        const { statuses, allStatusesChecked } = this.state;
+        const { statuses, allChecked } = this.state;
 
         return (
             statuses.length > 0 ? (
@@ -99,7 +103,7 @@ class StatusFilter extends Component {
                     </ul>
                     <div className='filter-actions'>
                         <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                            {allStatusesChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
                         </span>
                     </div>
                 </div>

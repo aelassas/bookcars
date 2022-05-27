@@ -40,6 +40,10 @@ div.status-filter ul.status-list li label.bs {
     opacity: 1;
 }
 
+div.status-filter ul.status-list li input[type='checkbox'].status-checkbox {
+    cursor: pointer;
+}
+
 div.status-filter ul.status-list li label.bs:hover {
     opacity: .9;
 }

@@ -127,7 +127,7 @@ export default class Home extends Component {
                                     <DateTimePicker
                                         label={commonStrings.TO}
                                         value={to}
-                                        minDate={minDate}
+                                        minDate={from}
                                         variant='outlined'
                                         required
                                         onChange={(to) => {
@@ -140,7 +140,6 @@ export default class Home extends Component {
                                     type="submit"
                                     variant="contained"
                                     className='btn-search'
-                                    size="small"
                                 >
                                     {commonStrings.SEARCH}
                                 </Button>

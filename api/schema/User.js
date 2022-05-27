@@ -15,15 +15,19 @@ const userSchema = new Schema({
         unique: true,
         required: [true, "can't be blank"],
         validate: [validator.isEmail, 'is invalid'],
-        index: true
+        index: true,
+        trim: true
     },
     phone: {
-        type: String
+        type: String,
+        validate: [validator.isMobilePhone, 'is invalid'],
+        trim: true
     },
     fullName: {
         type: String,
         required: [true, "can't be blank"],
-        index: true
+        index: true,
+        trim: true
     },
     password: {
         type: String,
@@ -59,10 +63,12 @@ const userSchema = new Schema({
     },
     bio: {
         type: String,
-        maxlength: 100
+        maxlength: 100,
+        trim: true
     },
     location: {
-        type: String
+        type: String,
+        trim: true
     },
     type: {
         type: String,

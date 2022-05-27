@@ -107,7 +107,7 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, async (req, res) 
         //         enableEmailNotifications: true,
         //         type: 'company',
         //         blacklisted: false,
-        //         avatar: '62794b5121c117948f2a9b2e_1652116388565.png'
+        //         avatar: '628a51a1572a010c6b5d1a10_1653234381567.png'
         //     });
         //     await new User(company).save();
         // }
@@ -153,7 +153,8 @@ routes.route(routeNames.getCompanies).get(authJwt.verifyToken, async (req, res) 
 });
 
 // Get All Companies Router
-routes.route(routeNames.getAllCompanies).get(authJwt.verifyToken, async (req, res) => {
+// routes.route(routeNames.getAllCompanies).get(authJwt.verifyToken, async (req, res) => {
+routes.route(routeNames.getAllCompanies).get(async (req, res) => {
     try {
         let data = await User.aggregate([
             { $match: { type: Env.USER_TYPE.COMPANY } },

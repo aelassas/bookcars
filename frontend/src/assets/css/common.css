@@ -1,14 +1,3 @@
-.content {
-    position: absolute;
-    top: 65px;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-}
-
 .buttons button {
     margin-right: 15px;
     margin-left: 0 !important;
@@ -196,6 +185,17 @@
 }
 
 @media only screen and (max-width: 960px) {
+    .content {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
     .buttons {
         margin-top: 15px;
         margin-bottom: 5px;
@@ -213,6 +213,18 @@
 }
 
 @media only screen and (min-width: 960px) {
+
+    .content {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
     .buttons {
         float: right;
         margin-top: 15px;

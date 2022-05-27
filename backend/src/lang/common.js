@@ -62,6 +62,7 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Renvoyer le lien d'activation du compte",
         ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
         EMAIL_NOT_VALID: 'E-mail non valide',
+        PHONE_NOT_VALID: 'Numéro de téléphone non valide'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -122,6 +123,7 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Resend account activation link",
         ACTIVATION_EMAIL_SENT: 'Activation email sent.',
         EMAIL_NOT_VALID: 'Invalid email address',
+        PHONE_NOT_VALID: 'Invalid phone number'
     }
 });
 

@@ -7,7 +7,8 @@ const carSchema = new Schema({
     name: {
         type: String,
         required: [true, "can't be blank"],
-        index: true
+        index: true,
+        trim: true
     },
     company: {
         type: Schema.Types.ObjectId,
@@ -17,7 +18,7 @@ const carSchema = new Schema({
     locations: {
         type: [Schema.Types.ObjectId],
         ref: 'Location',
-        validate: v => Array.isArray(v) && v.length > 0
+        validate: (value) => Array.isArray(value) && value.length > 0
     },
     price: {
         type: Number,

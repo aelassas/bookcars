@@ -85,7 +85,7 @@ export default class Master extends Component {
         const { loading, user } = this.state;
 
         return (
-            <div>
+            <>
                 <Header user={user} hidden={loading} hideSignin={this.props.hideSignin} />
                 {((!user && !loading) || (user && user.verified)) ? (
                     <div className='content'>{this.props.children}</div>
@@ -101,7 +101,7 @@ export default class Master extends Component {
                         >{strings.RESEND}</Button>
                     </div>)
                 }
-            </div>
+            </>
         );
     }
 }

@@ -1,7 +1,6 @@
 import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
-import CarService from "../services/CarService";
 
 export default class Helper {
 
@@ -290,36 +289,18 @@ export default class Helper {
         ];
     }
 
-    static async calculateBookingPrice(booking, car, onSucess, onError) {
+    static days(from, to) {
+        return ((from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0);
+    }
 
-        const totalDays = (date1, date2) => {
-            return Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
-        };
+    static calculateBookingPrice(price, from, to) {
+        const days = Helper.days(from, to);
 
-        try {
-            if (!car) {
-                car = await CarService.getCar(booking.car);
-            }
+        return price * days;
+    }
 
-            if (car) {
-                const from = new Date(booking.from), to = new Date(booking.to);
-                const days = totalDays(from, to);
-
-                let price = car.price * days;
-                if (booking.cancellation && car.cancellation > 0) price += car.cancellation;
-                if (booking.amendments && car.amendments > 0) price += car.amendments;
-                if (booking.theftProtection && car.theftProtection > 0) price += car.theftProtection * days;
-                if (booking.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * days;
-                if (booking.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * days;
-                if (booking.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * days;
-
-                if (onSucess) onSucess(price);
-            } else {
-                if (onError) onError(`Car ${booking.car} not found.`);
-            }
-        } catch (err) {
-            if (onError) onError(err);
-        }
+    static getDays(days) {
+        return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
     }
 
     static flattenCompanies(companies) {

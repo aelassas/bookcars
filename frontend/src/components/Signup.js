@@ -45,7 +45,9 @@ export default class SignUp extends Component {
             loading: false,
             emailValid: true,
             tosChecked: false,
-            tosError: false
+            tosError: false,
+            phoneValid: true,
+            phone: ''
         };
     }
 
@@ -55,7 +57,7 @@ export default class SignUp extends Component {
         });
     };
 
-    handleOnChangeEmail = (e) => {
+    handleEmailChange = (e) => {
         this.setState({
             email: e.target.value,
         });
@@ -63,18 +65,6 @@ export default class SignUp extends Component {
         if (!e.target.value) {
             this.setState({ emailError: false, emailValid: true });
         }
-    };
-
-    handleOnChangePassword = (e) => {
-        this.setState({
-            password: e.target.value,
-        });
-    };
-
-    handleOnChangeConfirmPassword = (e) => {
-        this.setState({
-            confirmPassword: e.target.value,
-        });
     };
 
     validateEmail = async (email) => {
@@ -104,8 +94,45 @@ export default class SignUp extends Component {
         }
     };
 
-    handleOnBlur = async (e) => {
+    handleEmailBlur = async (e) => {
         await this.validateEmail(e.target.value);
+    };
+
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
+    };
+
+    handleOnChangePassword = (e) => {
+        this.setState({
+            password: e.target.value,
+        });
+    };
+
+    handleOnChangeConfirmPassword = (e) => {
+        this.setState({
+            confirmPassword: e.target.value,
+        });
     };
 
     handleOnRecaptchaVerify = (token) => {
@@ -139,10 +166,15 @@ export default class SignUp extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email } = this.state;
+        const { email, phone } = this.state;
 
         const emailValid = await this.validateEmail(email);
         if (!emailValid) {
+            return;
+        }
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
             return;
         }
 
@@ -276,7 +308,8 @@ export default class SignUp extends Component {
             emailValid,
             birthDate,
             tosChecked,
-            tosError
+            tosError,
+            phoneValid
         } = this.state;
 
 
@@ -304,14 +337,29 @@ export default class SignUp extends Component {
                                             type="text"
                                             error={!emailValid || emailError}
                                             value={this.state.email}
-                                            onBlur={this.handleOnBlur}
-                                            onChange={this.handleOnChangeEmail}
+                                            onBlur={this.handleEmailBlur}
+                                            onChange={this.handleEmailChange}
                                             required
                                             autoComplete="off"
                                         />
                                         <FormHelperText error={!emailValid || emailError}>
                                             {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                                             {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            error={!phoneValid}
+                                            value={this.state.phone}
+                                            onBlur={this.handlePhoneBlur}
+                                            onChange={this.handlePhoneChange}
+                                            required
+                                            autoComplete="off"
+                                        />
+                                        <FormHelperText error={!phoneValid}>
+                                            {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                                         </FormHelperText>
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">

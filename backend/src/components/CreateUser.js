@@ -49,6 +49,7 @@ export default class CreateUser extends Component {
             type: '',
             birthDate: null,
             emailValid: true,
+            phoneValid: true
         };
     }
 
@@ -93,7 +94,7 @@ export default class CreateUser extends Component {
         await this.validateFullName(e.target.value);
     };
 
-    handleOnChangeEmail = (e) => {
+    handleEmailChange = (e) => {
         this.setState({
             email: e.target.value,
         });
@@ -130,14 +131,33 @@ export default class CreateUser extends Component {
         }
     };
 
-    handleEmailOnBlur = async (e) => {
+    handleEmailBlur = async (e) => {
         await this.validateEmail(e.target.value);
     };
 
-    handleOnChangePhone = (e) => {
-        this.setState({
-            phone: e.target.value,
-        });
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
     };
 
     handleOnChangeLocation = (e) => {
@@ -155,10 +175,15 @@ export default class CreateUser extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, type, fullName } = this.state;
+        const { email, phone, type, fullName } = this.state;
 
         const emailValid = await this.validateEmail(email);
         if (!emailValid) {
+            return;
+        }
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
             return;
         }
 
@@ -180,7 +205,6 @@ export default class CreateUser extends Component {
         const {
             admin,
             user,
-            phone,
             location,
             bio,
             avatar,
@@ -266,7 +290,8 @@ export default class CreateUser extends Component {
             visible,
             loading,
             birthDate,
-            emailValid
+            emailValid,
+            phoneValid
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER;
@@ -336,8 +361,8 @@ export default class CreateUser extends Component {
                                     id="email"
                                     type="text"
                                     error={!emailValid || emailError}
-                                    onBlur={this.handleEmailOnBlur}
-                                    onChange={this.handleOnChangeEmail}
+                                    onBlur={this.handleEmailBlur}
+                                    onChange={this.handleEmailChange}
                                     autoComplete="off"
                                     required
                                 />
@@ -361,24 +386,20 @@ export default class CreateUser extends Component {
                                 </FormControl>
                             }
 
-                            <div className='info'>
-                                <InfoIcon />
-                                <label>{commonStrings.OPTIONAL}</label>
-                            </div>
-
                             <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.PHONE}</InputLabel>
+                                <InputLabel className={driver ? 'required' : ''}>{commonStrings.PHONE}</InputLabel>
                                 <Input
                                     id="phone"
                                     type="text"
-                                    onChange={this.handleOnChangePhone}
-                                    inputProps={{
-                                        autoComplete: 'new-phone',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
+                                    onBlur={this.handlePhoneBlur}
+                                    onChange={this.handlePhoneChange}
+                                    error={!phoneValid}
+                                    required={driver ? true : false}
+                                    autoComplete="off"
                                 />
+                                <FormHelperText error={!phoneValid}>
+                                    {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                </FormHelperText>
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">

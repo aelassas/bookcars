@@ -6,7 +6,8 @@ const locationSchema = new Schema({
     name: {
         type: String,
         required: [true, "can't be blank"],
-        index: true
+        index: true,
+        trim: true
     }
 }, {
     timestamps: true,

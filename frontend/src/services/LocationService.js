@@ -7,4 +7,8 @@ export default class LocationService {
         return axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/?s=${encodeURIComponent(keyword)}`).then(res => res.data);
     }
 
+    static getLocation(id) {
+        return axios.get(`${Env.API_HOST}/api/location/${encodeURIComponent(id)}`).then(res => res.data);
+    }
+
 }

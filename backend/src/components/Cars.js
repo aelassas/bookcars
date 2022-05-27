@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import Master from '../elements/Master';
+import Helper from '../common/Helper';
 import { strings } from '../lang/cars';
 import { strings as commonStrings } from '../lang/common';
+import Master from '../elements/Master';
+import CarList from '../elements/CarList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Search from '../elements/Search';
 import InfoBox from '../elements/InfoBox';
 import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';
-import CarList from '../elements/CarList';
-import Helper from '../common/Helper';
 
 export default class Cars extends Component {
 

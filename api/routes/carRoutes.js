@@ -411,4 +411,91 @@ routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, re
     }
 });
 
+routes.route(routeNames.getFrontendCars).post(async (req, res) => {
+    try {
+        const page = parseInt(req.params.page);
+        const size = parseInt(req.params.size);
+        const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id));
+        const pickupLocation = mongoose.Types.ObjectId(req.body.pickupLocation);
+        const fuel = req.body.fuel;
+        const gearbox = req.body.gearbox;
+        const mileageUnlimited = req.body.mileageUnlimited;
+
+        const $match = {
+            $and: [
+                { company: { $in: companies } },
+                { locations: pickupLocation },
+                { available: true },
+                { type: { $in: fuel } },
+                { gearbox: { $in: gearbox } }
+            ]
+        };
+
+        if (mileageUnlimited) {
+            $match.$and.push({ mileage: -1 });
+        } else {
+            $match.$and.push({ mileage: { $gt: -1 } });
+        }
+
+        const cars = await Car.aggregate([
+            { $match },
+            {
+                $lookup: {
+                    from: 'User',
+                    let: { userId: '$company' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ['$_id', '$$userId'] }
+                            }
+                        }
+                    ],
+                    as: 'company'
+                }
+            },
+            { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+            {
+                $lookup: {
+                    from: 'Location',
+                    let: { locations: '$locations' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $in: ['$_id', '$$locations'] }
+                            }
+                        }
+                    ],
+                    as: 'locations'
+                }
+            },
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { name: 1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
+            }
+        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
+
+        cars.forEach(car => {
+            if (car.company) {
+                const { _id, fullName, avatar } = car.company;
+                car.company = { _id, fullName, avatar };
+            }
+        });
+
+        res.json(cars);
+    } catch (err) {
+        console.error(`[location.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
+});
+
 export default routes;

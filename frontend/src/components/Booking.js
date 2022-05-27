@@ -22,7 +22,7 @@ export default class Booking extends Component {
     render() {
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} strict={false}>
                 Booking!
             </Master>
         );

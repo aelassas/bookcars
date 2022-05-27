@@ -305,7 +305,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {car.cancellation > -1 ? <CheckIcon /> : <UncheckIcon />}
                                                     <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -313,7 +313,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {car.amendments > -1 ? <CheckIcon /> : <UncheckIcon />}
                                                     <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -321,7 +321,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {car.theftProtection > -1 ? <CheckIcon /> : <UncheckIcon />}
                                                     <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
                                                 </div>
                                             </Tooltip>
