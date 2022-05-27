@@ -18,6 +18,7 @@ div.car-filter .chk-same-location {
 div.car-filter .btn-search {
     background: #f37022;
     color: #fff;
+    margin: 5px 0;
 }
 
 div.car-filter .chk-same-location {
