@@ -433,8 +433,6 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
 
         if (mileageUnlimited) {
             $match.$and.push({ mileage: -1 });
-        } else {
-            $match.$and.push({ mileage: { $gt: -1 } });
         }
 
         const cars = await Car.aggregate([

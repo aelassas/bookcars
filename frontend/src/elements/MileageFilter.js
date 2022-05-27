@@ -13,26 +13,54 @@ class MileageFilter extends Component {
         }
     }
 
-    handleCheckMileageChange = (e) => {
-        const unlimited = e.currentTarget.checked;
-
-        this.setState({ unlimited }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(unlimited);
-            }
-        });
+    handleAllMileageClick = (e) => {
+        const checkbox = e.currentTarget.previousSibling;
+        if (!checkbox.checked) {
+            checkbox.checked = !checkbox.checked;
+            const event = e;
+            event.currentTarget = checkbox;
+            this.handleAllMileageChange(event);
+        }
     };
 
-    handleMileageClick = (e) => {
+    handleAllMileageChange = (e) => {
+        if (e.currentTarget.checked) {
+            const unlimited = false;
+            document.querySelector('.unlimited-mileage-radio').checked = false;
+
+            this.setState({ unlimited }, () => {
+                if (this.props.onChange) {
+                    this.props.onChange(unlimited);
+                }
+            });
+        }
+    };
+
+    handleUnlimitedMileageClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
-        checkbox.checked = !checkbox.checked;
-        const event = e;
-        event.currentTarget = checkbox;
-        this.handleCheckMileageChange(event);
+        if (!checkbox.checked) {
+            checkbox.checked = !checkbox.checked;
+            const event = e;
+            event.currentTarget = checkbox;
+            this.handleUnlimitedMileageChange(event);
+        }
+    };
+
+    handleUnlimitedMileageChange = (e) => {
+        if (e.currentTarget.checked) {
+            const unlimited = true;
+            document.querySelector('.all-mileage-radio').checked = false;
+
+            this.setState({ unlimited }, () => {
+                if (this.props.onChange) {
+                    this.props.onChange(unlimited);
+                }
+            });
+        }
     };
 
     componentDidMount() {
-        document.querySelector('.mileage-checkbox').checked = true;
+        document.querySelector('.all-mileage-radio').checked = true;
     }
 
     render() {
@@ -41,8 +69,12 @@ class MileageFilter extends Component {
                 <label className='title'>{strings.MILEAGE}</label>
                 <div className='filter-elements'>
                     <div className='filter-element'>
-                        <input type='checkbox' className='mileage-checkbox' onChange={this.handleCheckMileageChange} />
-                        <label onClick={this.handleMileageClick}>{strings.UNLIMITED}</label>
+                        <input type='radio' className='mileage-radio all-mileage-radio' onChange={this.handleAllMileageChange} />
+                        <label onClick={this.handleAllMileageClick}>{strings.ALL_MILEAGES}</label>
+                    </div>
+                    <div className='filter-element'>
+                        <input type='radio' className='mileage-radio unlimited-mileage-radio' onChange={this.handleUnlimitedMileageChange} />
+                        <label onClick={this.handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
                     </div>
                 </div>
             </div>

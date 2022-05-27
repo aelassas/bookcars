@@ -32,7 +32,7 @@ export default class Cars extends Component {
             loading: true,
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            mileageUnlimited: true
+            mileageUnlimited: false
         };
     }
 
