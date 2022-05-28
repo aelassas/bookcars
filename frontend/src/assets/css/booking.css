@@ -163,22 +163,12 @@ div.booking div.payment div.secure-payment-logo {
     margin-bottom: 5px;
 }
 
-div.booking div.payment .card-month,
-div.booking div.payment .card-year {
-    margin-right: 15px;
-    width: 180px;
-}
-
-div.booking div.payment .cvv {
-    display: table-row;
-    width: 180px;
-}
-
 div.booking div.payment div.secure-payment-info {
     display: flex;
     justify-content: center;
     color: #1c8901;
     font-size: 13px;
+    margin-top: 5px;
 }
 
 div.booking div.payment div.secure-payment-info .secure-payment-lock {
@@ -258,4 +248,13 @@ div.booking .btn-cancel {
         width: 375px;
     }
 
+    div.booking div.payment .card-month,
+    div.booking div.payment .card-year {
+        margin-right: 15px;
+        width: 180px;
+    }
+
+    div.booking div.payment .cvv {
+        width: 180px;
+    }
 }
