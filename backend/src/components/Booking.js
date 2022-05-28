@@ -91,7 +91,7 @@ export default class Booking extends Component {
                     if (car) {
                         booking.car = car;
 
-                        Helper.calculateBookingPrice(
+                        Helper.price(
                             booking,
                             booking.car,
                             (price) => {
@@ -124,7 +124,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.cancellation = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -139,7 +139,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.amendments = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -154,7 +154,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.theftProtection = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -169,7 +169,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.collisionDamageWaiver = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -184,7 +184,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.fullInsurance = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -199,7 +199,7 @@ export default class Booking extends Component {
         const { booking } = this.state;
         booking.additionalDriver = e.target.checked;
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             booking,
             booking.car,
             (price) => {
@@ -444,7 +444,7 @@ export default class Booking extends Component {
                                                 const { booking } = this.state;
                                                 booking.from = from;
 
-                                                Helper.calculateBookingPrice(
+                                                Helper.price(
                                                     booking,
                                                     booking.car,
                                                     (price) => {
@@ -469,7 +469,7 @@ export default class Booking extends Component {
                                                 const { booking } = this.state;
                                                 booking.to = to;
 
-                                                Helper.calculateBookingPrice(
+                                                Helper.price(
                                                     booking,
                                                     booking.car,
                                                     (price) => {

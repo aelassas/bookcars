@@ -68,7 +68,17 @@ export default class SignIn extends Component {
                         this.setState({
                             error: false
                         }, () => {
-                            window.location.href = '/';
+                            const params = new URLSearchParams(window.location.search);
+                            if (params.has('from')) {
+                                const from = params.get('from');
+                                if (from === 'booking') {
+                                    window.location.href = '/booking' + window.location.search;
+                                } else {
+                                    window.location.href = '/';
+                                }
+                            } else {
+                                window.location.href = '/';
+                            }
                         });
                     }
                 } else {
@@ -106,7 +116,17 @@ export default class SignIn extends Component {
                 if (status === 200) {
                     UserService.getUser(currentUser.id).then(user => {
                         if (user) {
-                            window.location.href = '/' + window.location.search;
+                            const params = new URLSearchParams(window.location.search);
+                            if (params.has('from')) {
+                                const from = params.get('from');
+                                if (from === 'booking') {
+                                    window.location.href = '/booking' + window.location.search;
+                                } else {
+                                    window.location.href = '/' + window.location.search;
+                                }
+                            } else {
+                                window.location.href = '/' + window.location.search;
+                            }
                         } else {
                             UserService.signout();
                         }

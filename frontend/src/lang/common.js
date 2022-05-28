@@ -65,7 +65,11 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Lieu de prise en charge',
         DROP_OFF_LOCATION: 'Lieu de restitution',
         PHONE_NOT_VALID: 'Numéro de téléphone non valide',
-        ALL: 'Tous'
+        ALL: 'Tous',
+        TOS: "J'ai lu et j'accepte les conditions générales d'utilisation.",
+        BIRTH_DATE: 'Date de naissance',
+        RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
+        TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -129,7 +133,11 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Pickup location',
         DROP_OFF_LOCATION: 'Drop-off location',
         PHONE_NOT_VALID: 'Invalid phone number',
-        ALL: 'All'
+        ALL: 'All',
+        TOS: 'I read and agree with the Terms of Use.',
+        BIRTH_DATE: 'Birth date',
+        RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
+        TOS_ERROR: 'Please accept the Terms of Use.',
     }
 });
 

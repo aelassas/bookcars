@@ -83,6 +83,15 @@ const theme = createTheme({
                 }
             },
         },
+        MuiFormControl: {
+            styleOverrides: {
+                root: {
+                    '& .Mui-disabled': {
+                        color: '#333 !important'
+                    }
+                }
+            },
+        },
         MuiSwitch: {
             styleOverrides: {
                 root: {
@@ -92,7 +101,7 @@ const theme = createTheme({
                     '& .Mui-checked+.MuiSwitch-track': {
                         opacity: 0.7,
                         backgroundColor: '#f37022 !important'
-                    },
+                    }
                 }
             },
         }

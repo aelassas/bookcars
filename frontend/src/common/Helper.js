@@ -18,6 +18,19 @@ export default class Helper {
         return /^-?\d+$/.test(val);
     }
 
+    static isInteger(val) {
+        return /^\d+$/.test(val);
+    }
+
+    static isYear(val) {
+        return /^-?\d{2}$/.test(val);
+    }
+
+    static isCvv(val) {
+        return /^-?\d{3,4}$/.test(val);
+    }
+
+
     static getCarType(type) {
         switch (type) {
             case Env.CAR_TYPE.DIESEL:
@@ -293,14 +306,28 @@ export default class Helper {
         return ((from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0);
     }
 
-    static calculateBookingPrice(price, from, to) {
+    static price(car, from, to, options) {
         const days = Helper.days(from, to);
 
-        return price * days;
+        let price = car.price * days;
+        if (options) {
+            if (options.cancellation && car.cancellation > 0) price += car.cancellation;
+            if (options.amendments && car.amendments > 0) price += car.amendments;
+            if (options.theftProtection && car.theftProtection > 0) price += car.theftProtection * days;
+            if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * days;
+            if (options.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * days;
+            if (options.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * days;
+        }
+
+        return price;
     }
 
     static getDays(days) {
         return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
+    }
+
+    static getDaysShort(days) {
+        return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
     }
 
     static flattenCompanies(companies) {
@@ -330,5 +357,72 @@ export default class Helper {
                 return '';
         }
     }
+
+    static getCancellationOption(cancellation, fr) {
+        if (cancellation === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (cancellation === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${cancellation} ${commonStrings.CURRENCY}`;
+        }
+    }
+
+    static getAmendmentsOption(amendments, fr) {
+        if (amendments === -1) {
+            return `${strings.UNAVAILABLE}${fr ? 's' : ''}`;
+        }
+        else if (amendments === 0) {
+            return `${strings.INCLUDED}${fr ? 'es' : ''}`;
+        } else {
+            return `+ ${amendments} ${commonStrings.CURRENCY}`;
+        }
+    }
+
+    static getTheftProtectionOption(theftProtection, days, fr) {
+        if (theftProtection === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (theftProtection === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${theftProtection * days} ${commonStrings.CURRENCY} (${theftProtection} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getCollisionDamageWaiverOption(collisionDamageWaiver, days, fr) {
+        if (collisionDamageWaiver === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (collisionDamageWaiver === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${collisionDamageWaiver * days} ${commonStrings.CURRENCY} (${collisionDamageWaiver} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getFullInsuranceOption(fullInsurance, days, fr) {
+        if (fullInsurance === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (fullInsurance === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${fullInsurance * days} ${commonStrings.CURRENCY} (${fullInsurance} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getAdditionalDriverOption(additionalDriver, days, fr) {
+        if (additionalDriver === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (additionalDriver === 0) {
+            return strings.INCLUDED;
+        } else {
+            return `+ ${additionalDriver * days} ${commonStrings.CURRENCY} (${additionalDriver} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
 }
 

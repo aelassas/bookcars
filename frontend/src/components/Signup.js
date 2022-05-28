@@ -7,7 +7,7 @@ import Master from '../elements/Master';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import DatePicker from '../elements/DatePicker'
+import DatePicker from '../elements/DatePicker';
 import {
     Input,
     InputLabel,
@@ -76,7 +76,7 @@ export default class SignUp extends Component {
                         this.setState({ emailError: false, emailValid: true });
                         return true;
                     } else {
-                        this.setState({ emailError: true, emailValid: true, avatarError: false, error: false });
+                        this.setState({ emailError: true, emailValid: true, error: false });
                         return false;
                     }
                 } catch (err) {
@@ -139,16 +139,8 @@ export default class SignUp extends Component {
         this.setState({ reCaptchaToken: token });
     };
 
-    handleClickShowPassword = () => {
-        this.setState({ showPassword: !this.state.showPassword });
-    };
-
     handleMouseDownPassword = (event) => {
         event.preventDefault();
-    };
-
-    handleClickShowConfirmPassword = () => {
-        this.setState({ showConfirmPassword: !this.state.showConfirmPassword });
     };
 
     handleMouseDownConfirmPassword = (event) => {
@@ -291,7 +283,7 @@ export default class SignUp extends Component {
         if (user) {
             window.location.href = '/';
         } else {
-            this.setState({ visible: true });
+            this.setState({ visible: true, language: UserService.getLanguage() });
         }
     };
 
@@ -364,13 +356,13 @@ export default class SignUp extends Component {
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
                                         <DatePicker
-                                            label={strings.BIRTH_DATE}
+                                            label={commonStrings.BIRTH_DATE}
                                             value={birthDate}
                                             required
                                             onChange={(birthDate) => {
                                                 this.setState({ birthDate });
                                             }}
-                                            language={UserService.getLanguage()}
+                                            language={language}
                                         />
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
@@ -410,7 +402,7 @@ export default class SignUp extends Component {
                                                         />
                                                     </td>
                                                     <td>
-                                                        <Link href="/tos">{strings.TOS_SIGN_UP}</Link>
+                                                        <Link href="/tos">{commonStrings.TOS}</Link>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -436,8 +428,8 @@ export default class SignUp extends Component {
                                 <div className="form-error">
                                     {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
                                     {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                    {recaptchaError && <Error message={strings.RECAPTCHA_ERROR} />}
-                                    {tosError && <Error message={strings.TOS_ERROR} />}
+                                    {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                                    {tosError && <Error message={commonStrings.TOS_ERROR} />}
                                     {error && <Error message={strings.SIGN_UP_ERROR} />}
                                 </div>
                             </form>

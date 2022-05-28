@@ -290,7 +290,7 @@ export default class Helper {
         ];
     }
 
-    static async calculateBookingPrice(booking, car, onSucess, onError) {
+    static async price(booking, car, onSucess, onError) {
 
         const totalDays = (date1, date2) => {
             return Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));

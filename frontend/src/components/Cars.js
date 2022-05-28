@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
+import LocationService from '../services/LocationService';
 import Master from '../elements/Master';
 import NoMatch from './NoMatch';
 import CarFilter from '../elements/CarFilter';
@@ -13,7 +14,6 @@ import CarList from '../elements/CarList';
 import { toast } from 'react-toastify';
 
 import '../assets/css/cars.css';
-import LocationService from '../services/LocationService';
 
 export default class Cars extends Component {
 
@@ -163,6 +163,7 @@ export default class Cars extends Component {
                                 gearbox={gearbox}
                                 mileageUnlimited={mileageUnlimited}
                                 pickupLocation={pickupLocation._id}
+                                dropOffLocation={dropOffLocation._id}
                                 reload={reload}
                                 loading={loading}
                                 from={from}

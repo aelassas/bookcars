@@ -259,7 +259,8 @@ routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) =>
     }
 });
 
-routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
+// routes.route(routeNames.getCar).get(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.getCar).get((req, res) => {
     Car.findById(req.params.id)
         .populate('company')
         .populate('locations')

@@ -47,7 +47,8 @@ class CarList extends Component {
             from: null,
             to: null,
             days: 0,
-            pickupLocation: null,
+            pickupLocation: props.pickupLocation,
+            dropOffLocation: props.dropOffLocation,
             fuel: props.fuel,
             gearbox: props.gearbox,
             mileageUnlimited: props.mileageUnlimited
@@ -81,7 +82,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, pickupLocation, from, to, reload, fuel, gearbox, mileageUnlimited } = prevState;
+        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileageUnlimited } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -101,6 +102,10 @@ class CarList extends Component {
 
         if (pickupLocation !== nextProps.pickupLocation) {
             return { pickupLocation: nextProps.pickupLocation };
+        }
+
+        if (dropOffLocation !== nextProps.dropOffLocation) {
+            return { dropOffLocation: nextProps.dropOffLocation };
         }
 
         if (from !== nextProps.from) {
@@ -186,7 +191,7 @@ class CarList extends Component {
     }
 
     render() {
-        const { rows, loading, language, from, to, days } = this.state;
+        const { rows, loading, language, from, to, days, pickupLocation, dropOffLocation } = this.state;
         const fr = language === 'fr';
 
         return (
@@ -337,7 +342,7 @@ class CarList extends Component {
                                     {Helper.getDays(days)}
                                 </label>
                                 <label className='price-main'>
-                                    {`${Helper.calculateBookingPrice(car.price, from, to)} ${commonStrings.CURRENCY}`}
+                                    {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
                                 </label>
                                 <label className='price-day'>
                                     {`${strings.PRICE_FOR_DAY} ${car.price} ${commonStrings.CURRENCY}`}
@@ -348,7 +353,7 @@ class CarList extends Component {
                                     type="submit"
                                     variant="contained"
                                     className='btn-book btn-margin-bottom'
-                                    href={`/booking?=c=${car._id}&f=${from.getTime()}&t=${to.getTime()}`}
+                                    href={`/booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
                                 >
                                     {strings.BOOK}
                                 </Button>

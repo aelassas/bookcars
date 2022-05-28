@@ -139,7 +139,7 @@ export default class CreateBooking extends Component {
             additionalDriver
         };
 
-        Helper.calculateBookingPrice(
+        Helper.price(
             data,
             null,
             (price) => {
