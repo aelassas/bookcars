@@ -12,7 +12,6 @@ import NoMatch from './NoMatch';
 import Error from '../elements/Error';
 import DatePicker from '../elements/DatePicker';
 import {
-    Input,
     OutlinedInput,
     InputLabel,
     FormControl,
@@ -672,8 +671,9 @@ export default class Booking extends Component {
                                             <div className='driver-details-form'>
                                                 <FormControl fullWidth margin="dense">
                                                     <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                                    <Input
+                                                    <OutlinedInput
                                                         type="text"
+                                                        label={commonStrings.FULL_NAME}
                                                         required
                                                         onChange={this.handleOnChangeFullName}
                                                         autoComplete="off"
@@ -681,8 +681,9 @@ export default class Booking extends Component {
                                                 </FormControl>
                                                 <FormControl fullWidth margin="dense">
                                                     <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                                    <Input
+                                                    <OutlinedInput
                                                         type="text"
+                                                        label={commonStrings.EMAIL}
                                                         error={!emailValid}
                                                         onBlur={this.handleEmailBlur}
                                                         onChange={this.handleEmailChange}
@@ -703,8 +704,9 @@ export default class Booking extends Component {
                                                 </FormControl>
                                                 <FormControl fullWidth margin="dense">
                                                     <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
-                                                    <Input
+                                                    <OutlinedInput
                                                         type="text"
+                                                        label={commonStrings.PHONE}
                                                         error={!phoneValid}
                                                         onBlur={this.handlePhoneBlur}
                                                         onChange={this.handlePhoneChange}
@@ -719,6 +721,7 @@ export default class Booking extends Component {
                                                 <FormControl fullWidth margin="dense">
                                                     <DatePicker
                                                         label={commonStrings.BIRTH_DATE}
+                                                        variant='outlined'
                                                         required
                                                         onChange={(birthDate) => {
                                                             this.setState({ birthDate });
