@@ -876,7 +876,7 @@ export default class CreateBooking extends Component {
                                                         onChange={this.handleCardMonthChange}
                                                         required
                                                         autoComplete="off"
-                                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{1,2}' }}
+                                                        // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
                                                     />
                                                     <FormHelperText error={!cardMonthValid}>
                                                         {(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}
@@ -892,7 +892,7 @@ export default class CreateBooking extends Component {
                                                         onChange={this.handleCardYearChange}
                                                         required
                                                         autoComplete="off"
-                                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{2}' }}
+                                                        // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
                                                     />
                                                     <FormHelperText error={!cardYearValid}>
                                                         {(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}
@@ -909,7 +909,7 @@ export default class CreateBooking extends Component {
                                                     onChange={this.handleCvvChange}
                                                     required
                                                     autoComplete="off"
-                                                    inputProps={{ inputMode: 'numeric', pattern: '\\d{3,4}' }}
+                                                    // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
                                                 />
                                                 <FormHelperText error={!cvvValid}>
                                                     {(!cvvValid && strings.CVV_NOT_VALID) || ''}

@@ -434,7 +434,7 @@ export default class CreateCar extends Component {
                                         value={minimumAge}
                                         autoComplete="off"
                                         onChange={this.handleMinimumAgeChange}
-                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{2}' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
                                     />
                                     <FormHelperText error={!minimumAgeValid}>
                                         {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
@@ -456,7 +456,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d{3,}(\.\\d+)?$' }}
                                         onChange={this.handlePriceChange}
                                         required
                                         variant='standard'
@@ -550,7 +550,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleMileageChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -562,7 +562,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleCancellationChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -574,7 +574,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleAmendmentsChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -586,7 +586,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleTheftProtectionChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -598,7 +598,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleCollisionDamageWaiverChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -610,7 +610,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleFullinsuranceChange}
                                         variant='standard'
                                         autoComplete='off'
@@ -622,7 +622,7 @@ export default class CreateCar extends Component {
                                     <TextField
                                         label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
                                         // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]+([\.][0-9]+)?' }}
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                         onChange={this.handleAdditionalDriverChange}
                                         variant='standard'
                                         autoComplete='off'
