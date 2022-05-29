@@ -5,6 +5,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as ccStrings } from '../lang/create-company';
 import CompanyService from '../services/CompanyService';
 import UserService from '../services/UserService';
+import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { toast } from 'react-toastify';
@@ -20,9 +21,9 @@ import {
     Link
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
+import validator from 'validator';
 
 import '../assets/css/update-company.css';
-import Helper from '../common/Helper';
 
 export default class UpdateCompany extends Component {
 
@@ -42,7 +43,8 @@ export default class UpdateCompany extends Component {
             noMatch: false,
             avatar: null,
             avatarError: false,
-            email: ''
+            email: '',
+            phoneValid: true
         };
     }
 
@@ -91,10 +93,29 @@ export default class UpdateCompany extends Component {
         await this.validateFullName(e.target.value);
     };
 
-    handleOnChangePhone = (e) => {
-        this.setState({
-            phone: e.target.value,
-        });
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
     };
 
     handleOnChangeLocation = (e) => {
@@ -142,10 +163,15 @@ export default class UpdateCompany extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { fullName } = this.state;
+        const { fullName, phone } = this.state;
 
         const fullNameValid = await this.validateFullName(fullName);
         if (!fullNameValid) {
+            return;
+        }
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
             return;
         }
 
@@ -157,7 +183,7 @@ export default class UpdateCompany extends Component {
             return;
         }
 
-        const { company, phone, location, bio } = this.state;
+        const { company, location, bio } = this.state;
 
         const data = {
             _id: company._id,
@@ -235,7 +261,8 @@ export default class UpdateCompany extends Component {
             visible,
             loading,
             noMatch,
-            avatarError
+            avatarError,
+            phoneValid
         } = this.state, admin = Helper.admin(user);
 
         return (
@@ -301,10 +328,15 @@ export default class UpdateCompany extends Component {
                                     <Input
                                         id="phone"
                                         type="text"
-                                        onChange={this.handleOnChangePhone}
+                                        onChange={this.handlePhoneChange}
+                                        onBlur={this.handlePhoneBlur}
                                         autoComplete="off"
                                         value={phone}
+                                        error={!phoneValid}
                                     />
+                                    <FormHelperText error={!phoneValid}>
+                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                    </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel>{commonStrings.LOCATION}</InputLabel>

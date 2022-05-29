@@ -24,25 +24,19 @@ export default new LocalizedStrings.default({
 
         BOOKING_CONFIRMED_SUBJECT_PART1: 'Votre réservation',
         BOOKING_CONFIRMED_SUBJECT_PART2: 'a été confirmée.',
-
         BOOKING_CONFIRMED_PART1: 'Votre réservation',
         BOOKING_CONFIRMED_PART2: 'a bien été confirmée et le paiement a bien été effectué.',
-
         BOOKING_CONFIRMED_PART3: ' Veuillez vous rendre à notre agence ',
         BOOKING_CONFIRMED_PART4: ' (',
         BOOKING_CONFIRMED_PART5: ') le ',
         BOOKING_CONFIRMED_PART6: ' (heure locale) pour récupérer votre véhicule ',
         BOOKING_CONFIRMED_PART7: '.',
-
         BOOKING_CONFIRMED_PART8: "Veuillez apporter avec vous votre pièce d'identité, votre permis de conduire et le chèque de garantie.",
-
         BOOKING_CONFIRMED_PART9: 'Vous devez rendre le véhicule à notre agence ',
         BOOKING_CONFIRMED_PART10: ' (',
         BOOKING_CONFIRMED_PART11: ') le ',
         BOOKING_CONFIRMED_PART12: ' (heure locale).',
-
         BOOKING_CONFIRMED_PART13: 'Veuillez respecter les dates et les horaires de prise en charge et de restitution du véhicule.',
-
         BOOKING_CONFIRMED_PART14: "Vous pouvez suivre votre réservation sur : "
     },
     en: {
@@ -68,25 +62,19 @@ export default new LocalizedStrings.default({
 
         BOOKING_CONFIRMED_SUBJECT_PART1: 'Your booking',
         BOOKING_CONFIRMED_SUBJECT_PART2: 'is confirmed.',
-
         BOOKING_CONFIRMED_PART1: 'Your booking',
         BOOKING_CONFIRMED_PART2: 'is confirmed and the payment was successfully done.',
-
         BOOKING_CONFIRMED_PART3: ' Please present yourself to our agency ',
         BOOKING_CONFIRMED_PART4: ' (',
         BOOKING_CONFIRMED_PART5: ') on ',
         BOOKING_CONFIRMED_PART6: ' (local time) to pick up your vehicle ',
         BOOKING_CONFIRMED_PART7: '.',
-
         BOOKING_CONFIRMED_PART8: "Please bring your ID, driver's license and warranty check with you.",
-
         BOOKING_CONFIRMED_PART9: 'You must drop-off the vehicle to our agency ',
         BOOKING_CONFIRMED_PART10: ' (',
         BOOKING_CONFIRMED_PART11: ') on ',
         BOOKING_CONFIRMED_PART12: ' (local time).',
-
         BOOKING_CONFIRMED_PART13: 'Please respect the pick-up and drop-off dates and times.',
-
         BOOKING_CONFIRMED_PART14: "You can follow your booking on: "
 
     }

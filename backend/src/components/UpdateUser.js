@@ -55,7 +55,8 @@ export default class CreateUser extends Component {
             avatarError: false,
             type: '',
             birthDate: null,
-            birthDateValid: true
+            birthDateValid: true,
+            phoneValid: true
         };
     }
 
@@ -369,7 +370,8 @@ export default class CreateUser extends Component {
             location,
             bio,
             birthDate,
-            birthDateValid
+            birthDateValid,
+            phoneValid
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER,
@@ -479,14 +481,13 @@ export default class CreateUser extends Component {
                                         type="text"
                                         onChange={this.handlePhoneChange}
                                         onBlur={this.handlePhoneBlur}
-                                        inputProps={{
-                                            autoComplete: 'new-phone',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        autoComplete="off"
                                         value={phone}
+                                        error={!phoneValid}
                                     />
+                                    <FormHelperText error={!phoneValid}>
+                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                    </FormHelperText>
                                 </FormControl>
 
                                 <FormControl fullWidth margin="dense">

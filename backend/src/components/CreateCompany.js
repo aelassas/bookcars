@@ -40,7 +40,8 @@ export default class CreateCompany extends Component {
             fullNameError: false,
             avatar: null,
             avatarError: false,
-            emailValid: true
+            emailValid: true,
+            phoneValid: true
         };
     }
 
@@ -125,10 +126,29 @@ export default class CreateCompany extends Component {
         await this.validateEmail(e.target.value);
     };
 
-    handleOnChangePhone = (e) => {
-        this.setState({
-            phone: e.target.value,
-        });
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
     };
 
     handleOnChangeLocation = (e) => {
@@ -156,7 +176,7 @@ export default class CreateCompany extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, fullName } = this.state;
+        const { email, fullName, phone } = this.state;
 
         const emailValid = await this.validateEmail(email);
         if (!emailValid) {
@@ -165,6 +185,11 @@ export default class CreateCompany extends Component {
 
         const fullNameValid = await this.validateFullName(fullName);
         if (!fullNameValid) {
+            return;
+        }
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
             return;
         }
 
@@ -188,11 +213,11 @@ export default class CreateCompany extends Component {
             this.setState({ emailError: false, loading: true });
 
             const data = {
-                email: this.state.email,
-                phone: this.state.phone,
+                email,
+                fullName,
+                phone,
                 location: this.state.location,
                 bio: this.state.bio,
-                fullName: this.state.fullName,
                 language: UserService.getLanguage(),
                 type: Env.RECORD_TYPE.COMPANY,
                 avatar: this.state.avatar
@@ -272,7 +297,8 @@ export default class CreateCompany extends Component {
             avatarError,
             visible,
             loading,
-            emailValid } = this.state;
+            emailValid,
+            phoneValid } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
@@ -342,14 +368,14 @@ export default class CreateCompany extends Component {
                                 <Input
                                     id="phone"
                                     type="text"
-                                    onChange={this.handleOnChangePhone}
-                                    inputProps={{
-                                        autoComplete: 'new-phone',
-                                        form: {
-                                            autoComplete: 'off',
-                                        },
-                                    }}
+                                    onChange={this.handlePhoneChange}
+                                    onBlur={this.handlePhoneBlur}
+                                    autoComplete="off"
+                                    error={!phoneValid}
                                 />
+                                <FormHelperText error={!phoneValid}>
+                                    {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                </FormHelperText>
                             </FormControl>
 
                             <FormControl fullWidth margin="dense">
