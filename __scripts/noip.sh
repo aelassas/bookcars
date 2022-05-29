@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 DNS="bookcars.ddns.net"
 
 log () { echo "$(date '+%d-%m-%Y-%H-%M-%S') - $1"; }
