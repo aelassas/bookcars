@@ -26,7 +26,8 @@ export const strings = new LocalizedStrings({
         BOOK: 'Réserver',
         SIGN_IN: 'Se connecter ?',
         SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
-        CARD_DATE_ERROR: 'Date de carte non valide.'
+        CARD_DATE_ERROR: 'Date de carte non valide.',
+        SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.'
     },
     en: {
         BOOKING_HEADING: 'Book now',
@@ -51,7 +52,8 @@ export const strings = new LocalizedStrings({
         BOOK: 'Book  now',
         SIGN_IN: 'Sign in?',
         SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
-        CARD_DATE_ERROR: 'Invalid card date.'
+        CARD_DATE_ERROR: 'Invalid card date.',
+        SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.'
     }
 });
 

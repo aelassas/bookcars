@@ -62,7 +62,8 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Renvoyer le lien d'activation du compte",
         ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
         EMAIL_NOT_VALID: 'E-mail non valide',
-        PHONE_NOT_VALID: 'Numéro de téléphone non valide'
+        PHONE_NOT_VALID: 'Numéro de téléphone non valide',
+        BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au minimum ' + Env.MINIMUM_AGE + ' ans.'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -123,7 +124,8 @@ export const strings = new LocalizedStrings({
         RESEND_ACTIVATION_LINK: "Resend account activation link",
         ACTIVATION_EMAIL_SENT: 'Activation email sent.',
         EMAIL_NOT_VALID: 'Invalid email address',
-        PHONE_NOT_VALID: 'Invalid phone number'
+        PHONE_NOT_VALID: 'Invalid phone number',
+        BIRTH_DATE_NOT_VALID: 'The driver must be at least ' + Env.MINIMUM_AGE + ' years old.'
     }
 });
 

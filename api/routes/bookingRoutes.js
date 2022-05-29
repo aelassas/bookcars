@@ -2,10 +2,23 @@ import express from 'express';
 import strings from '../config/app.config.js';
 import routeNames from '../config/bookingRoutes.config.js';
 import Booking from '../schema/Booking.js';
+import User from '../schema/User.js';
+import Token from '../schema/Token.js';
+import Car from '../schema/Car.js';
+import Location from '../schema/Location.js';
 import authJwt from '../middlewares/authJwt.js';
-import Env from '../config/env.config.js';
 import mongoose from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
+import nodemailer from 'nodemailer';
+import { v1 as uuid } from 'uuid';
+import Helper from '../common/Helper.js';
+
+const SMTP_HOST = process.env.BC_SMTP_HOST;
+const SMTP_PORT = process.env.BC_SMTP_PORT;
+const SMTP_USER = process.env.BC_SMTP_USER;
+const SMTP_PASS = process.env.BC_SMTP_PASS;
+const SMTP_FROM = process.env.BC_SMTP_FROM;
+const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
 
 const routes = express.Router();
 
@@ -18,6 +31,102 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
             console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err);
             res.status(400).send(strings.DB_ERROR + err);
         });
+});
+
+routes.route(routeNames.book).post(async (req, res) => {
+    try {
+        let user;
+        const driver = req.body.driver;
+
+        const transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
+            }
+        });
+
+        if (driver) {
+            driver.verified = false;
+            driver.blacklisted = false;
+
+            user = new User(driver);
+            await user.save();
+
+            const token = new Token({ user: user._id, token: uuid() });
+            await token.save();
+
+            strings.setLanguage(user.language);
+
+            const mailOptions = {
+                from: SMTP_FROM,
+                to: user.email,
+                subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                    + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
+
+                    + Helper.joinURL(FRONTEND_HOST, 'activate')
+                    + '/?u=' + encodeURIComponent(user._id)
+                    + '&e=' + encodeURIComponent(user.email)
+                    + '&t=' + encodeURIComponent(token.token)
+                    + '<br><br>'
+
+                    + strings.REGARDS + '<br>'
+                    + '</p>'
+            };
+            await transporter.sendMail(mailOptions);
+
+            req.body.booking.driver = user._id;
+        } else {
+            user = await User.findById(req.body.booking.driver);
+            strings.setLanguage(user.language);
+        }
+
+        const booking = new Booking(req.body.booking);
+
+        await booking.save();
+
+        const locale = user.language === 'fr' ? 'fr-FR' : 'en-US';
+        const options = { weekday: 'long', month: 'long', year: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const from = booking.from.toLocaleString(locale, options);
+        const to = booking.to.toLocaleString(locale, options);
+        const car = await Car.findById(booking.car).populate('company');
+        const pickupLocation = await Location.findById(booking.pickupLocation);
+        const dropOffLocation = await Location.findById(booking.dropOffLocation);
+
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+
+                + `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>'
+
+                + `${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}`
+                + `${from} ${strings.BOOKING_CONFIRMED_PART6}`
+                + `${car.name}${strings.BOOKING_CONFIRMED_PART7}` + '<br><br>'
+
+                + strings.BOOKING_CONFIRMED_PART8 + '<br><br>'
+
+                + `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocation.name}${strings.BOOKING_CONFIRMED_PART11}`
+                + `${to} ${strings.BOOKING_CONFIRMED_PART12}` + '<br><br>'
+
+                + strings.BOOKING_CONFIRMED_PART13 + '<br><br>'
+
+                + strings.BOOKING_CONFIRMED_PART14 + FRONTEND_HOST + '<br><br>'
+
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        };
+        await transporter.sendMail(mailOptions);
+
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        console.error(`[booking.book]  ${strings.ERROR}`, err);
+        return res.status(400).send(strings.ERROR + err);
+    }
 });
 
 routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {

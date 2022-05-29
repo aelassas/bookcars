@@ -24,6 +24,7 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
 import { toast } from 'react-toastify';
+import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/create-user.css';
 
@@ -49,7 +50,8 @@ export default class CreateUser extends Component {
             type: '',
             birthDate: null,
             emailValid: true,
-            phoneValid: true
+            phoneValid: true,
+            birthDateValid: true
         };
     }
 
@@ -160,6 +162,23 @@ export default class CreateUser extends Component {
         this.validatePhone(e.target.value);
     };
 
+    validateBirthDate = (date) => {
+        const { type } = this.state;
+
+        if (date && type === Env.RECORD_TYPE.USER) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid });
+            return birthDateValid;
+        } else {
+            this.setState({ birthDateValid: true });
+            return true;
+        }
+    };
+
+
     handleOnChangeLocation = (e) => {
         this.setState({
             location: e.target.value,
@@ -175,7 +194,12 @@ export default class CreateUser extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, phone, type, fullName } = this.state;
+        const { email, phone, type, fullName, birthDate } = this.state;
+
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
 
         const emailValid = await this.validateEmail(email);
         if (!emailValid) {
@@ -187,8 +211,8 @@ export default class CreateUser extends Component {
             return;
         }
 
-        const fullNameValid = await this.validateFullName(fullName);
-        if (!fullNameValid) {
+        const birthDateValid = this.validateBirthDate(birthDate);
+        if (!birthDateValid) {
             return;
         }
 
@@ -207,8 +231,8 @@ export default class CreateUser extends Component {
             user,
             location,
             bio,
-            avatar,
-            birthDate } = this.state;
+            avatar
+        } = this.state;
 
         const language = UserService.getLanguage();
         const company = admin ? undefined : user._id;
@@ -291,7 +315,8 @@ export default class CreateUser extends Component {
             loading,
             birthDate,
             emailValid,
-            phoneValid
+            phoneValid,
+            birthDateValid
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER;
@@ -379,10 +404,15 @@ export default class CreateUser extends Component {
                                         value={birthDate}
                                         required
                                         onChange={(birthDate) => {
-                                            this.setState({ birthDate });
+                                            const birthDateValid = this.validateBirthDate(birthDate);
+
+                                            this.setState({ birthDate, birthDateValid });
                                         }}
                                         language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                     />
+                                    <FormHelperText error={!birthDateValid}>
+                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                    </FormHelperText>
                                 </FormControl>
                             }
 

@@ -23,11 +23,11 @@ export default class Helper {
     }
 
     static isYear(val) {
-        return /^-?\d{2}$/.test(val);
+        return /^\d{2}$/.test(val);
     }
 
     static isCvv(val) {
-        return /^-?\d{3,4}$/.test(val);
+        return /^\d{3,4}$/.test(val);
     }
 
 

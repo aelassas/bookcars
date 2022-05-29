@@ -102,7 +102,7 @@ export default class SignUp extends Component {
     };
 
     handleOnRecaptchaVerify = (token) => {
-        this.setState({ reCaptchaToken: token });
+        this.setState({ reCaptchaToken: token, recaptchaError: !token });
     };
 
     handleClickShowPassword = () => {
@@ -170,8 +170,7 @@ export default class SignUp extends Component {
             email: this.state.email,
             password: this.state.password,
             fullName: this.state.fullName,
-            language: UserService.getLanguage(),
-            type: Env.RECORD_TYPE.ADMIN
+            language: UserService.getLanguage()
         };
 
         UserService.signup(data)
@@ -187,7 +186,8 @@ export default class SignUp extends Component {
                                     passwordError: false,
                                     passwordsDontMatch: false,
                                     register: false,
-                                    loading: false
+                                    loading: false,
+                                    recaptchaError: false
                                 });
                             }
                         }).catch(err => {
@@ -196,7 +196,8 @@ export default class SignUp extends Component {
                                 passwordError: false,
                                 passwordsDontMatch: false,
                                 register: false,
-                                loading: false
+                                loading: false,
+                                recaptchaError: false
                             });
                         });
                 } else
@@ -205,7 +206,8 @@ export default class SignUp extends Component {
                         passwordError: false,
                         passwordsDontMatch: false,
                         register: false,
-                        loading: false
+                        loading: false,
+                        recaptchaError: false
                     });
             })
             .catch(err => {
@@ -214,7 +216,8 @@ export default class SignUp extends Component {
                     passwordError: false,
                     passwordsDontMatch: false,
                     register: false,
-                    loading: false
+                    loading: false,
+                    recaptchaError: false
                 });
             });
 

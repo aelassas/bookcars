@@ -15,7 +15,7 @@ export default class UserService {
     }
 
     static create(data) {
-        return axios.post(`${Env.API_HOST}/api/create-user`, data).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/create-user`, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static signup(data) {
@@ -26,7 +26,7 @@ export default class UserService {
 
         data['password'] = passwordHash;
 
-        return axios.post(`${Env.API_HOST}/api/sign-up/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/admin-sign-up/ `, data).then(res => res.status);
     }
 
     static checkToken(userId, email, token) {
@@ -202,7 +202,7 @@ export default class UserService {
     static deleteTempAvatar(avatar) {
         return axios.post(`${Env.API_HOST}/api/delete-temp-avatar/${encodeURIComponent(avatar)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
     }
-    
+
     static checkPassword(id, pass) {
         return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: UserService.authHeader() }).then(res => res.status);
     }

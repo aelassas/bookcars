@@ -9,7 +9,7 @@ import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import DatePicker from '../elements/DatePicker';
 import {
-    Input,
+    OutlinedInput,
     InputLabel,
     FormControl,
     FormHelperText,
@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/signup.css';
 
@@ -47,7 +48,8 @@ export default class SignUp extends Component {
             tosChecked: false,
             tosError: false,
             phoneValid: true,
-            phone: ''
+            phone: '',
+            birthDateValid: true
         };
     }
 
@@ -119,6 +121,20 @@ export default class SignUp extends Component {
         }
     };
 
+    validateBirthDate = (date) => {
+        if (date) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid });
+            return birthDateValid;
+        } else {
+            this.setState({ birthDateValid: true });
+            return true;
+        }
+    };
+
     handlePhoneBlur = (e) => {
         this.validatePhone(e.target.value);
     };
@@ -136,7 +152,7 @@ export default class SignUp extends Component {
     };
 
     handleOnRecaptchaVerify = (token) => {
-        this.setState({ reCaptchaToken: token });
+        this.setState({ reCaptchaToken: token, recaptchaError: !token });
     };
 
     handleMouseDownPassword = (event) => {
@@ -158,7 +174,7 @@ export default class SignUp extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, phone } = this.state;
+        const { email, phone, birthDate } = this.state;
 
         const emailValid = await this.validateEmail(email);
         if (!emailValid) {
@@ -167,6 +183,11 @@ export default class SignUp extends Component {
 
         const phoneValid = this.validatePhone(phone);
         if (!phoneValid) {
+            return;
+        }
+
+        const birthDateValid = this.validateBirthDate(birthDate);
+        if (!birthDateValid) {
             return;
         }
 
@@ -222,11 +243,11 @@ export default class SignUp extends Component {
 
         const data = {
             email: this.state.email,
+            phone: this.state.phone,
             password: this.state.password,
             fullName: this.state.fullName,
             birthDate: this.state.birthDate,
-            language: UserService.getLanguage(),
-            type: Env.RECORD_TYPE.USER
+            language: UserService.getLanguage()
         };
 
         UserService.signup(data)
@@ -242,7 +263,8 @@ export default class SignUp extends Component {
                                     passwordError: false,
                                     passwordsDontMatch: false,
                                     register: false,
-                                    loading: false
+                                    loading: false,
+                                    recaptchaError: false
                                 });
                             }
                         }).catch(err => {
@@ -251,7 +273,8 @@ export default class SignUp extends Component {
                                 passwordError: false,
                                 passwordsDontMatch: false,
                                 register: false,
-                                loading: false
+                                loading: false,
+                                recaptchaError: false
                             });
                         });
                 } else
@@ -260,7 +283,8 @@ export default class SignUp extends Component {
                         passwordError: false,
                         passwordsDontMatch: false,
                         register: false,
-                        loading: false
+                        loading: false,
+                        recaptchaError: false
                     });
             })
             .catch(err => {
@@ -269,7 +293,8 @@ export default class SignUp extends Component {
                     passwordError: false,
                     passwordsDontMatch: false,
                     register: false,
-                    loading: false
+                    loading: false,
+                    recaptchaError: false
                 });
             });
 
@@ -301,7 +326,8 @@ export default class SignUp extends Component {
             birthDate,
             tosChecked,
             tosError,
-            phoneValid
+            phoneValid,
+            birthDateValid
         } = this.state;
 
 
@@ -315,8 +341,9 @@ export default class SignUp extends Component {
                                 <div>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                        <Input
+                                        <OutlinedInput
                                             type="text"
+                                            label={commonStrings.FULL_NAME}
                                             value={this.state.fullName}
                                             required
                                             onChange={this.handleOnChangeFullName}
@@ -325,8 +352,9 @@ export default class SignUp extends Component {
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                        <Input
+                                        <OutlinedInput
                                             type="text"
+                                            label={commonStrings.EMAIL}
                                             error={!emailValid || emailError}
                                             value={this.state.email}
                                             onBlur={this.handleEmailBlur}
@@ -341,8 +369,9 @@ export default class SignUp extends Component {
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
-                                        <Input
+                                        <OutlinedInput
                                             type="text"
+                                            label={commonStrings.PHONE}
                                             error={!phoneValid}
                                             value={this.state.phone}
                                             onBlur={this.handlePhoneBlur}
@@ -358,16 +387,23 @@ export default class SignUp extends Component {
                                         <DatePicker
                                             label={commonStrings.BIRTH_DATE}
                                             value={birthDate}
+                                            variant='outlined'
                                             required
                                             onChange={(birthDate) => {
-                                                this.setState({ birthDate });
+                                                const birthDateValid = this.validateBirthDate(birthDate);
+
+                                                this.setState({ birthDate, birthDateValid });
                                             }}
                                             language={language}
                                         />
+                                        <FormHelperText error={!birthDateValid}>
+                                            {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                        </FormHelperText>
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
-                                        <Input
+                                        <OutlinedInput
+                                            label={commonStrings.PASSWORD}
                                             value={this.state.password}
                                             onChange={this.handleOnChangePassword}
                                             required
@@ -376,7 +412,8 @@ export default class SignUp extends Component {
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
                                         <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                                        <Input
+                                        <OutlinedInput
+                                            label={commonStrings.CONFIRM_PASSWORD}
                                             value={this.state.confirmPassword}
                                             onChange={this.handleOnChangeConfirmPassword}
                                             required

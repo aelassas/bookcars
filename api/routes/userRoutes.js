@@ -16,6 +16,7 @@ import Booking from '../schema/Booking.js';
 import Token from '../schema/Token.js';
 import authJwt from '../middlewares/authJwt.js';
 import mongoose from 'mongoose';
+import Helper from '../common/Helper.js';
 
 const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE;
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true';
@@ -40,22 +41,13 @@ const getStatusMessage = (lang, msg) => {
     return '<!DOCTYPE html><html lang="' + lang + '"><head></head><body><p>' + msg + '</p></body></html>';
 };
 
-const joinURL = (part1, part2) => {
-    if (part1.charAt(part1.length - 1) === '/') {
-        part1 = part1.substr(0, part1.length - 1);
-    }
-    if (part2.charAt(0) === '/') {
-        part2 = part2.substr(1);
-    }
-    return part1 + '/' + part2;
-};
-
 // Sign up route
 routes.route(routeNames.signup).post((req, res) => {
     const { body } = req;
     body.active = true;
     body.verified = false;
     body.blacklisted = false;
+    body.type = Env.USER_TYPE.USER;
 
     const user = new User(body);
     user.save()
@@ -128,10 +120,12 @@ routes.route(routeNames.signup).post((req, res) => {
         });
 });
 
-routes.route(routeNames.create).post((req, res) => {
+routes.route(routeNames.adminSignup).post((req, res) => {
     const { body } = req;
+    body.active = true;
     body.verified = false;
     body.blacklisted = false;
+    body.type = Env.USER_TYPE.ADMIN;
 
     const user = new User(body);
     user.save()
@@ -179,9 +173,89 @@ routes.route(routeNames.create).post((req, res) => {
                         to: user.email,
                         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
                         html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                            + strings.ACCOUNT_ACTIVATION_LINK
+                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                            + strings.REGARDS + '<br>'
+                            + '</p>'
+                    };
+                    transporter.sendMail(mailOptions, (err, info) => {
+                        if (err) {
+                            console.error(strings.SMTP_ERROR, err);
+                            return res.status(400).send(strings.SMTP_ERROR + err);;
+                        } else {
+                            return res.sendStatus(200);
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error(strings.DB_ERROR, err);
+                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err));
+                });
+        })
+        .catch(err => {
+            console.error(strings.DB_ERROR, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
+    const { body } = req;
+    body.verified = false;
+    body.blacklisted = false;
+
+    const user = new User(body);
+    user.save()
+        .then(user => {
+            // avatar
+            if (body.avatar) {
+                const avatar = path.join(CDN_TEMP, body.avatar);
+                if (fs.existsSync(avatar)) {
+                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`;
+                    const newPath = path.join(CDN, filename);
+
+                    try {
+                        fs.renameSync(avatar, newPath);
+                        user.avatar = filename;
+                        user.save()
+                            .catch(err => {
+                                console.error(strings.DB_ERROR, err);
+                                res.status(400).send(strings.DB_ERROR + err);
+                            });
+                    } catch (err) {
+                        console.error(strings.ERROR, err);
+                        res.status(400).send(strings.ERROR + err);
+                    }
+                }
+            }
+
+            if (body.password) {
+                return res.sendStatus(200);
+            }
+
+            // generate token and save
+            const token = new Token({ user: user._id, token: uuid() });
+
+            token.save()
+                .then(token => {
+                    // Send email
+                    strings.setLanguage(user.language);
+
+                    const transporter = nodemailer.createTransport({
+                        host: SMTP_HOST,
+                        port: SMTP_PORT,
+                        auth: {
+                            user: SMTP_USER,
+                            pass: SMTP_PASS
+                        }
+                    });
+                    const mailOptions = {
+                        from: SMTP_FROM,
+                        to: user.email,
+                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
                             + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
 
-                            + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
                             + '/?u=' + encodeURIComponent(user._id)
                             + '&e=' + encodeURIComponent(user.email)
                             + '&t=' + encodeURIComponent(token.token)
@@ -284,7 +358,6 @@ routes.route(routeNames.resend).post((req, res) => {
                                     strings.setLanguage(user.language);
 
                                     const reset = req.params.reset === 'true';
-                                    console.log('---------------reset', reset)
 
                                     const transporter = nodemailer.createTransport({
                                         host: SMTP_HOST,
@@ -301,7 +374,7 @@ routes.route(routeNames.resend).post((req, res) => {
                                         html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
                                             + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>'
 
-                                            + joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
                                             + '/?u=' + encodeURIComponent(user._id)
                                             + '&e=' + encodeURIComponent(user.email)
                                             + '&t=' + encodeURIComponent(token.token)

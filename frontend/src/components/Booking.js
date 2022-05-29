@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
+import BookingService from '../services/BookingService';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking';
@@ -8,9 +9,11 @@ import UserService from '../services/UserService';
 import CarService from '../services/CarService';
 import LocationService from '../services/LocationService';
 import Master from '../elements/Master';
-import NoMatch from './NoMatch';
 import Error from '../elements/Error';
 import DatePicker from '../elements/DatePicker';
+import Backdrop from '../elements/SimpleBackdrop';
+import NoMatch from './NoMatch';
+import Info from './Info';
 import {
     OutlinedInput,
     InputLabel,
@@ -31,6 +34,7 @@ import {
 } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
 
 import SecurePayment from '../assets/img/secure-payment.png';
 import '../assets/css/booking.css';
@@ -43,7 +47,6 @@ export default class Booking extends Component {
             user: null,
             authenticated: false,
             language: Env.DEFAULT_LANGUAGE,
-            loading: false,
             noMatch: false,
             fullName: '',
             email: '',
@@ -72,7 +75,10 @@ export default class Booking extends Component {
             collisionDamageWaiver: false,
             fullInsurance: false,
             additionalDriver: false,
-            cardDateError: false
+            cardDateError: false,
+            success: false,
+            loading: false,
+            birthDateValid: true
         };
     }
 
@@ -194,6 +200,20 @@ export default class Booking extends Component {
 
     handlePhoneBlur = (e) => {
         this.validatePhone(e.target.value);
+    };
+
+    validateBirthDate = (date) => {
+        if (date) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid });
+            return birthDateValid;
+        } else {
+            this.setState({ birthDateValid: true });
+            return true;
+        }
     };
 
     handleTosChange = (event) => {
@@ -338,57 +358,111 @@ export default class Booking extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, phone, cardNumber, cardMonth, cardYear, cvv, tosChecked } = this.state;
+        const { authenticated, email, phone, birthDate, tosChecked, cardNumber, cardMonth, cardYear, cvv } = this.state;
 
-        const emailValid = await this.validateEmail(email);
-        if (!emailValid) {
-            return;
+        if (!authenticated) {
+            const emailValid = await this.validateEmail(email);
+            if (!emailValid) {
+                return;
+            }
+
+            const phoneValid = this.validatePhone(phone);
+            if (!phoneValid) {
+                return;
+            }
+
+            const birthDateValid = this.validateBirthDate(birthDate);
+            if (!birthDateValid) {
+                return;
+            }
+
+            const cardNumberValid = this.validateCardNumber(cardNumber);
+            if (!cardNumberValid) {
+                return;
+            }
+
+            const cardMonthValid = this.validateCardMonth(cardMonth);
+            if (!cardMonthValid) {
+                return;
+            }
+
+            const cardYearValid = this.validateCardYear(cardYear);
+            if (!cardYearValid) {
+                return;
+            }
+
+            const cvvValid = this.validateCvv(cvv);
+            if (!cvvValid) {
+                return;
+            }
+
+            const cardDateValid = this.validateCardDate(cardMonth, cardYear);
+            if (!cardDateValid) {
+                return this.setState({ cardDateError: true });
+            }
+
+            if (!tosChecked) {
+                return this.setState({ tosError: true });
+            }
         }
 
-        const phoneValid = this.validatePhone(phone);
-        if (!phoneValid) {
-            return;
-        }
+        this.setState({ loading: true });
 
-        const cardNumberValid = this.validateCardNumber(cardNumber);
-        if (!cardNumberValid) {
-            return;
-        }
+        const { user,
+            fullName,
+            car,
+            pickupLocation,
+            dropOffLocation,
+            from,
+            to,
+            cancellation,
+            amendments,
+            theftProtection,
+            collisionDamageWaiver,
+            fullInsurance,
+            additionalDriver,
+            price
+        } = this.state;
 
-        const cardMonthValid = this.validateCardMonth(cardMonth);
-        if (!cardMonthValid) {
-            return;
-        }
+        let booking, driver;
 
-        const cardYearValid = this.validateCardYear(cardYear);
-        if (!cardYearValid) {
-            return;
-        }
+        if (!authenticated) driver = { email, phone, fullName, birthDate, language: UserService.getLanguage() };
 
-        const cvvValid = this.validateCvv(cvv);
-        if (!cvvValid) {
-            return;
-        }
+        booking = {
+            company: car.company._id,
+            car: car._id,
+            driver: authenticated ? user._id : undefined,
+            pickupLocation: pickupLocation._id,
+            dropOffLocation: dropOffLocation._id,
+            from: from,
+            to: to,
+            status: Env.BOOKING_STATUS.PAID,
+            cancellation,
+            amendments,
+            theftProtection,
+            collisionDamageWaiver,
+            fullInsurance,
+            additionalDriver,
+            price
+        };
 
-        const cardDateValid = this.validateCardDate(cardMonth, cardYear);
-        if (!cardDateValid) {
-            return this.setState({ cardDateError: true });
-        }
+        const payload = { driver, booking };
 
-        if (!tosChecked) {
-            return this.setState({ tosError: true });
-        }
+        BookingService.book(payload)
+            .then(status => {
+                if (status === 200) {
+                    window.history.replaceState({}, window.document.title, '/booking');
+                    this.setState({ loading: false, visible: false, success: true });
+                } else {
+                    this.setState({ loading: false });
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(() => {
+                this.setState({ loading: false });
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
 
-        // TODO payload
-        // TODO /api/book
-
-        // TODO not signed-in activate
-
-        // TODO create-booking + confirmation email
-
-        // TODO done message + go to home
-
-        console.log('!');
     };
 
     onLoad = (user) => {
@@ -409,19 +483,19 @@ export default class Booking extends Component {
             }
 
             if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
-                return this.setState({ loading: false, noMatch: true });
+                return this.setState({ noMatch: true });
             }
 
             try {
                 car = await CarService.getCar(carId);
                 if (!car) {
-                    return this.setState({ loading: false, noMatch: true });
+                    return this.setState({ noMatch: true });
                 }
 
                 pickupLocation = await LocationService.getLocation(pickupLocationId);
 
                 if (!pickupLocation) {
-                    return this.setState({ loading: false, noMatch: true });
+                    return this.setState({ noMatch: true });
                 }
 
                 if (dropOffLocationId !== pickupLocationId) {
@@ -431,7 +505,7 @@ export default class Booking extends Component {
                 }
 
                 if (!dropOffLocation) {
-                    return this.setState({ loading: false, noMatch: true });
+                    return this.setState({ noMatch: true });
                 }
 
                 const price = Helper.price(car, from, to);
@@ -445,14 +519,12 @@ export default class Booking extends Component {
                     dropOffLocation,
                     from,
                     to,
-
                     cancellation: included(car.cancellation),
                     amendments: included(car.amendments),
                     theftProtection: included(car.theftProtection),
                     collisionDamageWaiver: included(car.collisionDamageWaiver),
                     fullInsurance: included(car.fullInsurance),
                     additionalDriver: included(car.additionalDriver),
-
                     visible: true
                 });
 
@@ -493,7 +565,10 @@ export default class Booking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             additionalDriver,
-            cardDateError } = this.state;
+            cardDateError,
+            success,
+            loading,
+            birthDateValid } = this.state;
 
         const locale = language === 'fr' ? 'fr-FR' : 'en-US';
         const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -684,13 +759,13 @@ export default class Booking extends Component {
                                                     <OutlinedInput
                                                         type="text"
                                                         label={commonStrings.EMAIL}
-                                                        error={!emailValid}
+                                                        error={!emailValid || emailRegitered}
                                                         onBlur={this.handleEmailBlur}
                                                         onChange={this.handleEmailChange}
                                                         required
                                                         autoComplete="off"
                                                     />
-                                                    <FormHelperText error={!emailValid}>
+                                                    <FormHelperText error={!emailValid || emailRegitered}>
                                                         {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                                                         {(emailRegitered &&
                                                             <span>
@@ -724,10 +799,14 @@ export default class Booking extends Component {
                                                         variant='outlined'
                                                         required
                                                         onChange={(birthDate) => {
-                                                            this.setState({ birthDate });
+                                                            const birthDateValid = this.validateBirthDate(birthDate);
+                                                            this.setState({ birthDate, birthDateValid });
                                                         }}
                                                         language={language}
                                                     />
+                                                    <FormHelperText error={!birthDateValid}>
+                                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                                    </FormHelperText>
                                                 </FormControl>
                                                 <div className="booking-tos">
                                                     <table>
@@ -794,6 +873,7 @@ export default class Booking extends Component {
                                                         onChange={this.handleCardMonthChange}
                                                         required
                                                         autoComplete="off"
+                                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{1,2}' }}
                                                     />
                                                     <FormHelperText error={!cardMonthValid}>
                                                         {(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}
@@ -809,6 +889,7 @@ export default class Booking extends Component {
                                                         onChange={this.handleCardYearChange}
                                                         required
                                                         autoComplete="off"
+                                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{2}' }}
                                                     />
                                                     <FormHelperText error={!cardYearValid}>
                                                         {(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}
@@ -825,6 +906,7 @@ export default class Booking extends Component {
                                                     onChange={this.handleCvvChange}
                                                     required
                                                     autoComplete="off"
+                                                    inputProps={{ inputMode: 'numeric', pattern: '\\d{3,4}' }}
                                                 />
                                                 <FormHelperText error={!cvvValid}>
                                                     {(!cvvValid && strings.CVV_NOT_VALID) || ''}
@@ -865,6 +947,8 @@ export default class Booking extends Component {
                     </div>
                 }
                 {noMatch && <NoMatch />}
+                {success && <Info message={strings.SUCCESS} />}
+                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
     }

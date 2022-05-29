@@ -239,22 +239,22 @@ div.booking .btn-cancel {
     }
 
     div.booking div.payment div.card {
-        width: 390px;
-        margin-left: calc(50% - 195px);
+        width: 410px;
+        margin-left: calc(50% - 205px);
         padding-bottom: 10px;
     }
 
     div.booking .card-number {
-        width: 375px;
+        width: 395px;
     }
 
     div.booking div.payment .card-month,
     div.booking div.payment .card-year {
         margin-right: 15px;
-        width: 180px;
+        width: 190px;
     }
 
     div.booking div.payment .cvv {
-        width: 180px;
+        width: 190px;
     }
 }
