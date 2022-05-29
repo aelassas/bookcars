@@ -173,7 +173,7 @@ class CarList extends Component {
             };
         }
 
-        const { companies } = this.props;
+        const { companies, cars } = this.props;
 
         if (companies) {
             if (companies.length > 0) {
@@ -185,6 +185,12 @@ class CarList extends Component {
                     }
                 });
             }
+        } else if (cars) {
+            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad({ rows: [], rowCount: 0 });
+                }
+            });
         }
 
         this.setState({ language: UserService.getLanguage() })
@@ -203,7 +209,7 @@ class CarList extends Component {
                         </CardContent>
                     </Card>
                     :
-                    from && to && rows.map((car, index) => (
+                    ((from && to) || this.props.hideTotalPrice) && rows.map((car, index) => (
                         <article key={car._id}>
                             <div className='name'><h2>{car.name}</h2></div>
                             <div className='car'>
@@ -338,26 +344,35 @@ class CarList extends Component {
                                 </ul>
                             </div>
                             <div className='price'>
-                                <label className='price-days'>
-                                    {Helper.getDays(days)}
-                                </label>
-                                <label className='price-main'>
-                                    {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
-                                </label>
-                                <label className='price-day'>
-                                    {`${strings.PRICE_FOR_DAY} ${car.price} ${commonStrings.CURRENCY}`}
-                                </label>
+                                {this.props.hideTotalPrice ?
+                                    <label className='price-main'>
+                                        {`${car.price} ${strings.CAR_CURRENCY}`}
+                                    </label>
+                                    :
+                                    <>
+                                        <label className='price-days'>
+                                            {Helper.getDays(days)}
+                                        </label>
+                                        <label className='price-main'>
+                                            {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
+                                        </label>
+                                        <label className='price-day'>
+                                            {`${strings.PRICE_FOR_DAY} ${car.price} ${commonStrings.CURRENCY}`}
+                                        </label>
+                                    </>}
+
                             </div>
-                            <div className='action'>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-book btn-margin-bottom'
-                                    href={`/booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
-                                >
-                                    {strings.BOOK}
-                                </Button>
-                            </div>
+                            {!this.props.hideTotalPrice &&
+                                <div className='action'>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-book btn-margin-bottom'
+                                        href={`/create-booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
+                                    >
+                                        {strings.BOOK}
+                                    </Button>
+                                </div>}
                         </article>
                     ))
                 }

@@ -304,29 +304,6 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
             });
         }
 
-        // for (let i = 0; i < 79; i++) {
-        //     const booking = new Booking({
-        //         company: i % 2 === 0 ? '6284b492eabdb8113b02e9f9' : '6284b492eabdb8113b02e9f9',
-        //         car: i % 2 === 0 ? '6286514e3268569a5f60ce91' : '62865e94d6c6974c9c33cdb2',
-        //         driver: '6280f28a864c93af021f397d',
-        //         pickupLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
-        //         dropOffLocation: i % 2 === 0 ? '6273e2f9f036f83c05e47b0d' : i % 3 === 0 ? '6273e2d9f036f83c05e47b05' : '6273e2e4f036f83c05e47b09',
-        //         from: '2022-05-15T23:00:00.000Z',
-        //         to: '2022-05-17T23:00:00.000Z',
-        //         status: i % 2 === 0 ? 'pending' : i % 3 === 0 ? 'paid' : 'reserved',
-        //         cancellation: false,
-        //         amendments: false,
-        //         theftProtection: false,
-        //         collisionDamageWaiver: false,
-        //         fullInsurance: false,
-        //         additionalDriver: false,
-        //         price: 1777
-        //     });
-        //     await booking.save();
-        // }
-
-        // await Booking.deleteMany({ price: 1777 });
-
         const data = await Booking.aggregate([
             {
                 $lookup: {

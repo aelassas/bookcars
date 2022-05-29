@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import Env from '../config/env.config.js';
 
+const MINIMUM_AGE = parseInt(process.env.BC_MINIMUM_AGE);
+
 const Schema = mongoose.Schema;
 
 const carSchema = new Schema({
@@ -14,6 +16,12 @@ const carSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: [true, "can't be blank"],
         ref: 'User'
+    },
+    minimumAge: {
+        type: Number,
+        required: [true, "can't be blank"],
+        min: MINIMUM_AGE,
+        max: 99
     },
     locations: {
         type: [Schema.Types.ObjectId],

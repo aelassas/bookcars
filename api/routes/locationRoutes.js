@@ -91,13 +91,6 @@ routes.route(routeNames.getLocation).get((req, res) => {
 // routes.route(routeNames.getLocations).get(authJwt.verifyToken, async (req, res) => {
 routes.route(routeNames.getLocations).get(async (req, res) => {
     try {
-        // for (let i = 1; i < 60; i++) {
-        //     const name = `Location ${i}`;
-        //     await new Location({ name }).save();
-        // }
-
-        // await Location.deleteMany({ name: { $regex: 'location', $options: 'i' } });
-
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
         const keyword = escapeStringRegexp(req.query.s || '');

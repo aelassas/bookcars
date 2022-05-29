@@ -11,6 +11,8 @@ import { v1 as uuid } from 'uuid';
 import escapeStringRegexp from 'escape-string-regexp';
 import mongoose from 'mongoose';
 
+import User from '../schema/User.js';
+
 const CDN = process.env.BC_CDN_CARS;
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS;
 
@@ -81,6 +83,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 const {
                     company,
                     name,
+                    minimumAge,
                     available,
                     type,
                     locations,
@@ -100,6 +103,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 } = req.body;
 
                 car.company = company._id;
+                car.minimumAge = minimumAge;
                 car.locations = locations;
                 car.name = name;
                 car.available = available;
@@ -285,34 +289,6 @@ routes.route(routeNames.getCar).get((req, res) => {
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
     try {
-        // for (let i = 1; i <= 30; i++) {
-        //     const car = {
-        //         "name": "Car " + i,
-        //         "company": "62794b5121c117948f2a9b2e",
-        //         "locations": ['6273e2f9f036f83c05e47b0d', '6273e2d9f036f83c05e47b05'],
-        //         "price": 350 + i,
-        //         "available": i % 2 === 0,
-        //         "type": i % 2 === 0 ? "diesel" : "gasoline",
-        //         "gearbox": i % 2 === 0 ? "manual" : "automatic",
-        //         "aircon": i % 2 === 0,
-        //         "image": "62865e94d6c6974c9c33cdb2_1652973204848.jpg",
-        //         "seats": 5,
-        //         "doors": 4,
-        //         "fuelPolicy": i % 2 === 0 ? "likeForlike" : "freeTank",
-        //         "mileage": i % 2 === 0 ? -1 : 150,
-        //         "cancellation": i % 2 === 0 ? -1 : 75,
-        //         "amendments": i % 2 === 0 ? -1 : 85,
-        //         "theftProtection": i % 2 === 0 ? -1 : 95,
-        //         "collisionDamageWaiver": i % 2 === 0 ? -1 : 105,
-        //         "fullInsurance": i % 2 === 0 ? -1 : 115,
-        //         "additionalDriver": i % 2 === 0 ? -1 : 125,
-        //     };
-
-        //     await new Car(car).save();
-        // }
-
-        // await Car.deleteMany({ name: { $regex: /Car/ } });
-
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
         const page = parseInt(req.params.page);
@@ -375,7 +351,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
 
         res.json(cars);
     } catch (err) {
-        console.error(`[location.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
         res.status(400).send(strings.DB_ERROR + err);
     }
 });
@@ -407,7 +383,7 @@ routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, re
 
         res.json(cars);
     } catch (err) {
-        console.error(`[location.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        console.error(`[car.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
         res.status(400).send(strings.DB_ERROR + err);
     }
 });
@@ -492,7 +468,7 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
 
         res.json(cars);
     } catch (err) {
-        console.error(`[location.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
+        console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
         res.status(400).send(strings.DB_ERROR + err);
     }
 });

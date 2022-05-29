@@ -4,12 +4,12 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        TOTAL: 'Total :',
-        DELETE_BOOKING: 'Êtes-vous sûr de vouloir supprimer cette réservation ?',
+        PICKUP_LOCATION: 'Lieu de prise en charge',
+        DROP_OFF_LOCATION: 'Lieu de restitution',
     },
     en: {
-        TOTAL: 'Total:',
-        DELETE_BOOKING: 'Are you sure you want to delete this booking?',
+        PICKUP_LOCATION: 'Pickup location',
+        DROP_OFF_LOCATION: 'Drop-off location',
     }
 });
 

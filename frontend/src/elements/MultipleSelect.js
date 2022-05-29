@@ -1,5 +1,6 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
 import Env from '../config/env.config';
+import Helper from '../common/Helper';
 import {
     Autocomplete,
     TextField,
@@ -87,7 +88,7 @@ export default function MultipleSelect({
                 freeSolo={freeSolo}
                 renderInput={(params) => {
 
-                    if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 0) {
+                    if (type === Env.RECORD_TYPE.LOCATION && !multiple && freeSolo && values.length === 0) {
                         return (
                             <TextField
                                 {...params}
@@ -122,6 +123,61 @@ export default function MultipleSelect({
                                             </InputAdornment>
                                             {params.InputProps.startAdornment}
                                         </>
+                                    )
+                                }}
+                            />
+                        );
+                    }
+
+                    if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
+                        const option = values[0];
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                    alt={option.name}
+                                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                                />
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
+                        );
+                    }
+
+                    if (type === Env.RECORD_TYPE.CAR && !multiple && values.length === 1 && values[0]) {
+                        const option = values[0];
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
+                                variant={variant || 'outlined'}
+                                required={required && values && values.length === 0}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    startAdornment: (
+                                        <>
+                                            <InputAdornment position='start'>
+                                                <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                                    alt={option.name}
+                                                    style={{
+                                                        height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT
+                                                    }} />
+                                            </InputAdornment>
+                                            {params.InputProps.startAdornment}
+                                        </>
                                     ),
                                 }}
                             />
@@ -150,6 +206,31 @@ export default function MultipleSelect({
                                     <LocationIcon />
                                 </span>
                                 <span className='option-name'>{option.name}</span>
+                            </li>
+                        );
+                    } else if (type === Env.RECORD_TYPE.COMPANY) {
+                        return (
+                            <li {...props} className={`${props.className} ms-option`}>
+                                <span className='option-image'>
+                                    <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                        alt={option.name}
+                                        style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                    />
+                                </span>
+                                <span className='option-name'>{option.name}</span>
+                            </li>
+                        );
+                    } else if (type === Env.RECORD_TYPE.CAR) {
+                        return (
+                            <li  {...props} className={`${props.className} ms-option`}>
+                                <span className='option-image'>
+                                    <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                        alt={option.name}
+                                        style={{
+                                            height: Env.CAR_OPTION_IMAGE_HEIGHT
+                                        }} />
+                                </span>
+                                <span className='car-option-name'>{option.name}</span>
                             </li>
                         );
                     }

@@ -71,8 +71,8 @@ export default class SignIn extends Component {
                             const params = new URLSearchParams(window.location.search);
                             if (params.has('from')) {
                                 const from = params.get('from');
-                                if (from === 'booking') {
-                                    window.location.href = '/booking' + window.location.search;
+                                if (from === 'create-booking') {
+                                    window.location.href = '/create-booking' + window.location.search;
                                 } else {
                                     window.location.href = '/';
                                 }
@@ -119,8 +119,8 @@ export default class SignIn extends Component {
                             const params = new URLSearchParams(window.location.search);
                             if (params.has('from')) {
                                 const from = params.get('from');
-                                if (from === 'booking') {
-                                    window.location.href = '/booking' + window.location.search;
+                                if (from === 'create-booking') {
+                                    window.location.href = '/create-booking' + window.location.search;
                                 } else {
                                     window.location.href = '/' + window.location.search;
                                 }

@@ -424,5 +424,9 @@ export default class Helper {
         }
     }
 
+    static getBirthDateError(minimumAge) {
+        return `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`;
+    }
+
 }
 

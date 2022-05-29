@@ -70,7 +70,9 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE: 'Date de naissance',
         RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
         TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-        BIRTH_DATE_NOT_VALID: 'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.'
+        BIRTH_DATE_NOT_VALID: 'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
+        BIRTH_DATE_NOT_VALID_PART1: 'Vous devez avoir au moins',
+        BIRTH_DATE_NOT_VALID_PART2: 'ans pour louer cette voiture.'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -139,7 +141,9 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE: 'Birth date',
         RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
         TOS_ERROR: 'Please accept the Terms of Use.',
-        BIRTH_DATE_NOT_VALID: 'You must be at least ' + Env.MINIMUM_AGE + ' years old.'
+        BIRTH_DATE_NOT_VALID: 'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
+        BIRTH_DATE_NOT_VALID_PART1: 'You must be at least',
+        BIRTH_DATE_NOT_VALID_PART2: 'years old to rent this car.'
     }
 });
 

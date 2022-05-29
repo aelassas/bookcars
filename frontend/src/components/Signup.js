@@ -100,14 +100,6 @@ export default class SignUp extends Component {
         await this.validateEmail(e.target.value);
     };
 
-    handlePhoneChange = (e) => {
-        this.setState({ phone: e.target.value });
-
-        if (!e.target.value) {
-            this.setState({ phoneValid: true });
-        }
-    };
-
     validatePhone = (phone) => {
         if (phone) {
             const phoneValid = validator.isMobilePhone(phone);
@@ -119,6 +111,18 @@ export default class SignUp extends Component {
 
             return true;
         }
+    };
+
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
     };
 
     validateBirthDate = (date) => {
@@ -133,10 +137,6 @@ export default class SignUp extends Component {
             this.setState({ birthDateValid: true });
             return true;
         }
-    };
-
-    handlePhoneBlur = (e) => {
-        this.validatePhone(e.target.value);
     };
 
     handleOnChangePassword = (e) => {
@@ -388,6 +388,7 @@ export default class SignUp extends Component {
                                             label={commonStrings.BIRTH_DATE}
                                             value={birthDate}
                                             variant='outlined'
+                                            error={!birthDateValid}
                                             required
                                             onChange={(birthDate) => {
                                                 const birthDateValid = this.validateBirthDate(birthDate);

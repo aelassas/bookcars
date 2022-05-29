@@ -27,6 +27,7 @@ class DateTimePicker extends Component {
                     label={this.props.label}
                     showToolbar
                     value={value}
+                    readOnly={this.props.readOnly}
                     onChange={(value) => {
                         this.setState({ value }, () => {
                             if (this.props.onChange) this.props.onChange(value);

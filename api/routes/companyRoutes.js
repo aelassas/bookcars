@@ -97,24 +97,6 @@ routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
 // Get Companies Router
 routes.route(routeNames.getCompanies).get(authJwt.verifyToken, async (req, res) => {
     try {
-        // for (let i = 1; i < 60; i++) {
-        //     const company = new User({
-        //         email: `company${i}@bookcars.ma`,
-        //         fullName: `Company ${i}`,
-        //         password: '$2a$10$6lsV6VfIesiQMPcqTHly7ed0B7OWs3s6QKRRMhyZBTn8ALdtH9CbO',
-        //         verified: true,
-        //         language: 'fr',
-        //         enableEmailNotifications: true,
-        //         type: 'company',
-        //         blacklisted: false,
-        //         avatar: '628a51a1572a010c6b5d1a10_1653234381567.png'
-        //     });
-        //     await new User(company).save();
-        // }
-
-        // await User.deleteMany({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: 'Company', $options: 'i' } });
-        // await User.deleteMany({ type: Env.USER_TYPE.USER, fullName: { $regex: 'User', $options: 'i' } });
-
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
         const keyword = escapeStringRegexp(req.query.s || '');

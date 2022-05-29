@@ -4,12 +4,12 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        TOTAL: 'Total :',
-        DELETE_BOOKING: 'Êtes-vous sûr de vouloir supprimer cette réservation ?',
+        REQUIRED_FIELD: 'Veuillez renseigner le champ : ',
+        REQUIRED_FIELDS: 'Veuillez renseigner les champs : ',
     },
     en: {
-        TOTAL: 'Total:',
-        DELETE_BOOKING: 'Are you sure you want to delete this booking?',
+        REQUIRED_FIELD: 'Please fill in the field: ',
+        REQUIRED_FIELDS: 'Please fill in the fields: ',
     }
 });
 

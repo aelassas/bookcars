@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
+import Env from '../config/env.config';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
 import UserService from '../services/UserService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
+import DatePicker from '../elements/DatePicker';
 import { toast } from 'react-toastify';
 import { Avatar } from '../elements/Avatar';
 import {
     Input,
     InputLabel,
+    FormHelperText,
     FormControl,
     FormControlLabel,
     Switch,
     Button,
     Paper
 } from '@mui/material';
+import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/settings.css';
 
@@ -31,7 +36,10 @@ export default class Settings extends Component {
             bio: '',
             error: false,
             visible: false,
-            loading: false
+            loading: false,
+            birthDate: null,
+            birthDateValid: true,
+            phoneValid: true
         };
     }
 
@@ -41,10 +49,46 @@ export default class Settings extends Component {
         });
     };
 
-    handleOnChangePhone = e => {
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneChange = e => {
         this.setState({
             phone: e.target.value,
         });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
+    };
+
+    validateBirthDate = (date) => {
+        if (date) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid });
+            return birthDateValid;
+        } else {
+            this.setState({ birthDateValid: true });
+            return true;
+        }
     };
 
     handleOnChangeLocation = e => {
@@ -57,34 +101,6 @@ export default class Settings extends Component {
         this.setState({
             bio: e.target.value,
         });
-    };
-
-    preventDefault = (event) => event.preventDefault();
-
-    handleSubmit = e => {
-        e.preventDefault();
-
-        const { user, fullName, phone, location, bio } = this.state;
-
-        const data = {
-            _id: user._id,
-            fullName,
-            phone,
-            location,
-            bio
-        };
-
-        UserService.updateUser(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                }
-            })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-            });
     };
 
     handleEmailNotificationsChange = (e) => {
@@ -114,21 +130,61 @@ export default class Settings extends Component {
         this.setState({ loading: false, user });
     };
 
+    onError = () => {
+        this.setState({ loading: false });
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+
+        const { phone, birthDate } = this.state;
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
+            return;
+        }
+
+        const birthDateValid = this.validateBirthDate(birthDate);
+        if (!birthDateValid) {
+            return;
+        }
+
+        const { user, fullName, location, bio } = this.state;
+
+        const data = {
+            _id: user._id,
+            fullName,
+            birthDate,
+            phone,
+            location,
+            bio
+        };
+
+        UserService.updateUser(data)
+            .then(status => {
+                if (status === 200) {
+                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
+                } else {
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                }
+            })
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
+    };
+
     onLoad = (user) => {
         this.setState({
             user,
             fullName: user.fullName,
             phone: user.phone,
+            birthDate: new Date(user.birthDate),
             location: user.location,
             bio: user.bio,
             loading: false,
             visible: true
         });
     };
-
-    onError = () => {
-        this.setState({ loading: false });
-    }
 
     componentDidMount() {
         this.setState({ loading: true });
@@ -143,12 +199,15 @@ export default class Settings extends Component {
             bio,
             error,
             visible,
-            loading
+            loading,
+            birthDate,
+            birthDateValid,
+            phoneValid
         } = this.state;
 
         return (
             <Master onLoad={this.onLoad} onError={this.onError} strict={true} user={user}>
-                {visible &&
+                {visible && user &&
                     <div className='settings'>
                         <Paper className="settings-form settings-form-wrapper" elevation={10}>
                             <form onSubmit={this.handleSubmit}>
@@ -187,7 +246,8 @@ export default class Settings extends Component {
                                     <Input
                                         id="phone"
                                         type="text"
-                                        onChange={this.handleOnChangePhone}
+                                        error={!phoneValid}
+                                        onChange={this.handlePhoneChange}
                                         inputProps={{
                                             autoComplete: 'new-phone',
                                             form: {
@@ -196,6 +256,27 @@ export default class Settings extends Component {
                                         }}
                                         value={phone}
                                     />
+                                    <FormHelperText error={!phoneValid}>
+                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                    </FormHelperText>
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <DatePicker
+                                        label={commonStrings.BIRTH_DATE}
+                                        value={birthDate}
+                                        variant='standard'
+                                        error={!birthDateValid}
+                                        required
+                                        onChange={(birthDate) => {
+                                            const birthDateValid = this.validateBirthDate(birthDate);
+
+                                            this.setState({ birthDate, birthDateValid });
+                                        }}
+                                        language={user.language}
+                                    />
+                                    <FormHelperText error={!birthDateValid}>
+                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                    </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel>{commonStrings.LOCATION}</InputLabel>

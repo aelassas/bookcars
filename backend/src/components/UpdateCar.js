@@ -27,7 +27,8 @@ import {
     Paper,
     FormControlLabel,
     Switch,
-    TextField
+    TextField,
+    FormHelperText
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 
@@ -66,7 +67,10 @@ export default class CreateCar extends Component {
             theftProtection: '',
             collisionDamageWaiver: '',
             fullInsurance: '',
-            additionalDriver: ''
+            additionalDriver: '',
+            minimumAge: '',
+            minimumAgeValid: true,
+            formError: false
         };
     }
 
@@ -104,6 +108,28 @@ export default class CreateCar extends Component {
 
     handleCompanyChange = (values) => {
         this.setState({ company: values.length > 0 ? values[0] : null });
+    };
+
+    validateMinimumAge = (age, updateState = true) => {
+        if (age) {
+            const _age = parseInt(age);
+            const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99;
+            if (updateState) this.setState({ minimumAgeValid });
+            if (minimumAgeValid) this.setState({ formError: false });
+            return minimumAgeValid;
+        } else {
+            this.setState({ minimumAgeValid: true, formError: false });
+            return true;
+        }
+    };
+
+    handleMinimumAgeChange = (e) => {
+        this.setState({ minimumAge: e.target.value });
+
+        const minimumAgeValid = this.validateMinimumAge(e.target.value, false);
+        if (minimumAgeValid) {
+            this.setState({ minimumAgeValid: true, formError: false });
+        }
     };
 
     handleLocationsChange = (locations) => {
@@ -175,11 +201,18 @@ export default class CreateCar extends Component {
     );
 
     getExtra = (extra) => (
-        extra === '' ? -1 : extra
+        extra === '' ? -1 : parseFloat(extra)
     );
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        const { minimumAge } = this.state;
+
+        const minimumAgeValid = this.validateMinimumAge(minimumAge);
+        if (!minimumAgeValid) {
+            return this.setState({ formError: true });
+        }
 
         const {
             car,
@@ -208,6 +241,7 @@ export default class CreateCar extends Component {
             _id: car._id,
             name,
             company,
+            minimumAge: parseInt(minimumAge),
             locations: locations.map(l => l._id),
             price,
             available,
@@ -265,6 +299,7 @@ export default class CreateCar extends Component {
                                     imageRequired: !car.image,
                                     name: car.name,
                                     company,
+                                    minimumAge: car.minimumAge,
                                     locations: car.locations.map(l => {
                                         const { _id, name } = l;
                                         return { _id, name };
@@ -291,6 +326,7 @@ export default class CreateCar extends Component {
                             }
                         })
                         .catch(() => {
+                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                             this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {
@@ -330,7 +366,10 @@ export default class CreateCar extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver
+            additionalDriver,
+            minimumAge,
+            minimumAgeValid,
+            formError
         } = this.state;
 
         const admin = user && user.type === Env.RECORD_TYPE.ADMIN;
@@ -385,6 +424,22 @@ export default class CreateCar extends Component {
                                         />
                                     </FormControl>
                                 }
+
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{strings.MINIMUM_AGE}</InputLabel>
+                                    <Input
+                                        type="text"
+                                        required
+                                        error={!minimumAgeValid}
+                                        value={minimumAge}
+                                        autoComplete="off"
+                                        onChange={this.handleMinimumAgeChange}
+                                        inputProps={{ inputMode: 'numeric', pattern: '\\d{2}' }}
+                                    />
+                                    <FormHelperText error={!minimumAgeValid}>
+                                        {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
+                                    </FormHelperText>
+                                </FormControl>
 
                                 <FormControl fullWidth margin="dense">
                                     <LocationSelectList
@@ -597,6 +652,7 @@ export default class CreateCar extends Component {
                                 <div className="form-error">
                                     {imageRequired && <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />}
                                     {imageSizeError && <ErrorMessage message={strings.CAR_IMAGE_SIZE_ERROR} />}
+                                    {formError && <ErrorMessage message={commonStrings.FORM_ERROR} />}
                                 </div>
                             </form>
 

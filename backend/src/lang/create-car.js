@@ -16,7 +16,9 @@ export const strings = new LocalizedStrings({
         SEATS: 'Sièges',
         DOORS: 'Portes',
         GEARBOX: 'Transmission',
-        AIRCON: 'Climatisation'
+        AIRCON: 'Climatisation',
+        MINIMUM_AGE: 'Âge minimum',
+        MINIMUM_AGE_NOT_VALID: "L'âge minimum doit être supérieur ou égal à " + Env.MINIMUM_AGE + ' ans.'
     },
     en: {
         NEW_CAR_HEADING: 'New car',
@@ -31,7 +33,9 @@ export const strings = new LocalizedStrings({
         SEATS: 'Seats',
         DOORS: 'Doors',
         GEARBOX: 'Gearbox',
-        AIRCON: 'Aircon'
+        AIRCON: 'Aircon',
+        MINIMUM_AGE: 'Minimum age',
+        MINIMUM_AGE_NOT_VALID: "Minimum age must be greater than or equal to " + Env.MINIMUM_AGE + ' years old.'
     }
 });
 

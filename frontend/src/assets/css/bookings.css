@@ -1,0 +1,58 @@
+div.bookings {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+div.bookings div.company-filter {
+    background-color: #fafafa !important;
+}
+
+/* Device width is lower than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.bookings div.col-1 {
+        display: none;
+    }
+
+    div.bookings div.col-2 {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.bookings div.col-1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 300px;
+        padding: 12px 0 0 12px;
+        background: #fefefe;
+        overflow: auto;
+    }
+
+    div.bookings div.col-1 .cl-company-filter,
+    div.bookings div.col-1 .cl-status-filter,
+    div.bookings div.col-1 .cl-booking-filter {
+        margin-bottom: 10px;
+    }
+
+    div.bookings div.col-1 .cl-new-booking {
+        width: 265px;
+        margin-left: 5px;
+    }
+
+    div.bookings div.col-2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 300px;
+    }
+}
