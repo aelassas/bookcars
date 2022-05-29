@@ -23,7 +23,7 @@
     "react-localization": "^1.0.19",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
-    "react-toastify": "^9.0.1",
+    "react-toastify": "^9.0.2",
     "stream-browserify": "^3.0.0",
     "validator": "^13.7.0",
     "web-vitals": "^2.1.4"
