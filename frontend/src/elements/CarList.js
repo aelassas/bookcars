@@ -51,16 +51,17 @@ class CarList extends Component {
             dropOffLocation: props.dropOffLocation,
             fuel: props.fuel,
             gearbox: props.gearbox,
-            mileageUnlimited: props.mileageUnlimited
+            mileage: props.mileage,
+            deposit: props.deposit,
         };
     }
 
     fetch = () => {
-        const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileageUnlimited } = this.state;
+        const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileage, deposit } = this.state;
 
         this.setState({ loading: true });
 
-        const payload = { companies, pickupLocation, fuel, gearbox, mileageUnlimited };
+        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
 
         CarService.getCars(payload, page, size)
             .then(data => {
@@ -82,7 +83,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileageUnlimited } = prevState;
+        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileage, deposit } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -96,8 +97,12 @@ class CarList extends Component {
             return { gearbox: Helper.clone(nextProps.gearbox) };
         }
 
-        if (mileageUnlimited !== nextProps.mileageUnlimited) {
-            return { mileageUnlimited: nextProps.mileageUnlimited };
+        if (nextProps.mileage && !Helper.arrayEqual(mileage, nextProps.mileage)) {
+            return { mileage: nextProps.mileage };
+        }
+
+        if (deposit !== nextProps.deposit) {
+            return { deposit: nextProps.deposit };
         }
 
         if (pickupLocation !== nextProps.pickupLocation) {
@@ -124,7 +129,7 @@ class CarList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { companies, pickupLocation, from, to, reload, fuel, gearbox, mileageUnlimited } = this.state;
+        const { companies, pickupLocation, from, to, reload, fuel, gearbox, mileage, deposit } = this.state;
 
         if (!Helper.arrayEqual(companies, prevState.companies)) {
             return this.setState({ page: 1 }, () => this.fetch());
@@ -138,7 +143,11 @@ class CarList extends Component {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
-        if (mileageUnlimited !== prevState.mileageUnlimited) {
+        if (!Helper.arrayEqual(mileage, prevState.mileage)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (deposit !== prevState.deposit) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 

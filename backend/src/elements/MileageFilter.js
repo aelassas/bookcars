@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import Accordion from './Accordion';
@@ -11,71 +12,122 @@ class MileageFilter extends Component {
         super(props);
 
         this.state = {
-            unlimited: true
+            allChecked: true,
+            values: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED]
         }
     }
 
-    handleAllMileageClick = (e) => {
-        const checkbox = e.currentTarget.previousSibling;
-        if (!checkbox.checked) {
-            checkbox.checked = !checkbox.checked;
-            const event = e;
-            event.currentTarget = checkbox;
-            this.handleAllMileageChange(event);
+    handleLimitedMileageChange = (e) => {
+        const { values } = this.state;
+
+        if (e.currentTarget.checked) {
+            values.push(Env.MILEAGE.LIMITED);
+
+            if (values.length === 2) {
+                this.setState({ allChecked: true });
+            }
+        } else {
+            values.splice(values.findIndex(v => v === Env.MILEAGE.LIMITED), 1);
         }
+
+        this.setState({ values }, () => {
+            if (this.props.onChange) {
+                this.props.onChange(values);
+            }
+        });
     };
 
-    handleAllMileageChange = (e) => {
-        if (e.currentTarget.checked) {
-            const unlimited = false;
-            document.querySelector('.unlimited-mileage-radio').checked = false;
+    handleLimitedMileageClick = (e) => {
+        const checkbox = e.currentTarget.previousSibling;
+        checkbox.checked = !checkbox.checked;
+        const event = e;
+        event.currentTarget = checkbox;
+        this.handleLimitedMileageChange(event);
+    };
 
-            this.setState({ unlimited }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(unlimited);
-                }
-            });
+    handleUnlimitedMileageChange = (e) => {
+        const { values } = this.state;
+
+        if (e.currentTarget.checked) {
+            values.push(Env.MILEAGE.UNLIMITED);
+
+            if (values.length === 2) {
+                this.setState({ allChecked: true });
+            }
+        } else {
+            values.splice(values.findIndex(v => v === Env.MILEAGE.UNLIMITED), 1);
         }
+
+        this.setState({ values }, () => {
+            if (this.props.onChange) {
+                this.props.onChange(values);
+            }
+        });
     };
 
     handleUnlimitedMileageClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
-        if (!checkbox.checked) {
-            checkbox.checked = !checkbox.checked;
-            const event = e;
-            event.currentTarget = checkbox;
-            this.handleUnlimitedMileageChange(event);
-        }
+        checkbox.checked = !checkbox.checked;
+        const event = e;
+        event.currentTarget = checkbox;
+        this.handleUnlimitedMileageChange(event);
     };
 
-    handleUnlimitedMileageChange = (e) => {
-        if (e.currentTarget.checked) {
-            const unlimited = true;
-            document.querySelector('.all-mileage-radio').checked = false;
+    handleUncheckAllChange = (e) => {
+        const { allChecked } = this.state;
+        const checkboxes = document.querySelectorAll('.mileage-checkbox');
 
-            this.setState({ unlimited }, () => {
+        if (allChecked) { // uncheck all
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            this.setState({ allChecked: false, values: [] });
+        } else { // check all
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+
+            const values = [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED];
+
+            this.setState({ allChecked: true, values }, () => {
                 if (this.props.onChange) {
-                    this.props.onChange(unlimited);
+                    this.props.onChange(values);
                 }
             });
         }
     };
 
     componentDidMount() {
-        document.querySelector('.all-mileage-radio').checked = true;
+        const { allChecked } = this.state;
+
+        if (allChecked) {
+            const checkboxes = document.querySelectorAll('.mileage-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
     }
 
     render() {
+        const { allChecked } = this.state;
+
         return (
             <Accordion title={strings.MILEAGE} className={`${this.props.className ? `${this.props.className} ` : ''}mileage-filter`}>
                 <div className='filter-elements'>
                     <div className='filter-element'>
-                        <input type='radio' className='mileage-radio all-mileage-radio' onChange={this.handleAllMileageChange} />
-                        <label onClick={this.handleAllMileageClick}>{commonStrings.ALL}</label>
+                        <input type='checkbox' className='mileage-checkbox' onChange={this.handleLimitedMileageChange} />
+                        <label onClick={this.handleLimitedMileageClick}>{strings.LIMITED}</label>
                     </div>
                     <div className='filter-element'>
-                        <input type='radio' className='mileage-radio unlimited-mileage-radio' onChange={this.handleUnlimitedMileageChange} />
+                        <input type='checkbox' className='mileage-checkbox' onChange={this.handleUnlimitedMileageChange} />
                         <label onClick={this.handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
+                    </div>
+                    <div className='filter-actions'>
+                        <span onClick={this.handleUncheckAllChange} className='uncheckall'>
+                            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                        </span>
                     </div>
                 </div>
             </Accordion>

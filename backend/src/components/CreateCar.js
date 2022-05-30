@@ -64,7 +64,8 @@ export default class CreateCar extends Component {
             additionalDriver: '',
             minimumAge: Env.MINIMUM_AGE.toString(),
             minimumAgeValid: true,
-            formError: false
+            formError: false,
+            deposit: ''
         };
     }
 
@@ -150,6 +151,10 @@ export default class CreateCar extends Component {
         this.setState({ price: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
     };
 
+    handleDepositChange = (e) => {
+        this.setState({ deposit: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    };
+
     handleSeatsChange = (value) => {
         this.setState({ seats: value });
     };
@@ -232,7 +237,8 @@ export default class CreateCar extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver
+            additionalDriver,
+            deposit
         } = this.state;
 
         const data = {
@@ -241,6 +247,7 @@ export default class CreateCar extends Component {
             minimumAge,
             locations: locations.map(l => l._id),
             price,
+            deposit,
             available,
             type,
             gearbox,
@@ -300,7 +307,8 @@ export default class CreateCar extends Component {
             additionalDriver,
             minimumAge,
             minimumAgeValid,
-            formError
+            formError,
+            deposit
         } = this.state;
 
         return (
@@ -388,6 +396,19 @@ export default class CreateCar extends Component {
                                     variant='standard'
                                     autoComplete='off'
                                     value={price}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={this.handleDepositChange}
+                                    required
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={deposit}
                                 />
                             </FormControl>
 

@@ -31,7 +31,10 @@ const carSchema = new Schema({
     price: {
         type: Number,
         required: [true, "can't be blank"],
-        index: true
+    },
+    deposit: {
+        type: Number,
+        required: [true, "can't be blank"],
     },
     available: {
         type: Boolean,

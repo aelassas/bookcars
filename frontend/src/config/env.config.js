@@ -48,7 +48,11 @@ const Env = {
         RESERVED: 'reserved',
         CANCELLED: 'cancelled'
     },
-    MINIMUM_AGE: parseInt(process.env.REACT_APP_BC_MINIMUM_AGE || 21)
+    MINIMUM_AGE: parseInt(process.env.REACT_APP_BC_MINIMUM_AGE || 21),
+    MILEAGE: {
+        LIMITED: 'limited',
+        UNLIMITED: 'unlimited'
+    }
 };
 
 export default Env;

@@ -32,6 +32,7 @@ export const strings = new LocalizedStrings({
         MILEAGE: 'Kilométrage',
         MILEAGE_UNIT: 'KM/jour',
         UNLIMITED: 'Illimité',
+        LIMITED: 'Limité',
         CANCELLATION: 'Annulation',
         CANCELLATION_TOOLTIP: 'La réservation peut être annulée avant la date de commencement de la location.',
         AMENDMENTS: 'Modifications',
@@ -53,7 +54,11 @@ export const strings = new LocalizedStrings({
         EMPTY_LIST: 'Pas de voitures.',
         CANNOT_DELETE_CAR: 'Cette voiture ne peut pas être supprimée car elle est liée à des réservations. Vous pouvez cependant la rendre indisponible à la location en la modifiant.',
         GEARBOX: 'Transmission',
-        ENGINE: 'Moteur'
+        ENGINE: 'Moteur',
+        DEPOSIT: 'Dépôt de garantie',
+        LESS_THAN_2500: 'Moins de 2500 DH',
+        LESS_THAN_5000: 'Moins de 5000 DH',
+        LESS_THAN_7500: 'Moins de 7500 DH'
     },
     en: {
         NEW_CAR: 'New car',
@@ -84,6 +89,7 @@ export const strings = new LocalizedStrings({
         MILEAGE: 'Mileage',
         MILEAGE_UNIT: 'KM/day',
         UNLIMITED: 'Unlimited',
+        LIMITED: 'Limited',
         CANCELLATION: 'Cancellation',
         CANCELLATION_TOOLTIP: 'The booking can be canceled before the start date of the rental.',
         AMENDMENTS: 'Amendments',
@@ -105,7 +111,11 @@ export const strings = new LocalizedStrings({
         EMPTY_LIST: 'No cars.',
         CANNOT_DELETE_CAR: 'This car cannot be deleted because it is linked to bookings. However, you can make it unavailable for rental by modifying it.',
         GEARBOX: 'Gearbox',
-        ENGINE: 'Engine'
+        ENGINE: 'Engine',
+        DEPOSIT: 'Deposit at pick-up',
+        LESS_THAN_2500: 'Less than 2500 DH',
+        LESS_THAN_5000: 'Less than 5000 DH',
+        LESS_THAN_7500: 'Less than 7500 DH'
     }
 });
 

@@ -56,7 +56,8 @@ class CarList extends Component {
             openInfoDialog: false,
             fuel: props.fuel,
             gearbox: props.gearbox,
-            mileageUnlimited: props.mileageUnlimited
+            mileage: props.mileage,
+            deposit: props.deposit
         };
     }
 
@@ -113,11 +114,11 @@ class CarList extends Component {
     };
 
     fetch = () => {
-        const { keyword, page, size, companies, rows, fuel, gearbox, mileageUnlimited } = this.state;
+        const { keyword, page, size, companies, rows, fuel, gearbox, mileage, deposit } = this.state;
 
         this.setState({ loading: true });
 
-        const payload = { companies, fuel, gearbox, mileageUnlimited };
+        const payload = { companies, fuel, gearbox, mileage, deposit };
 
         CarService.getCars(keyword, payload, page, size)
             .then(data => {
@@ -138,7 +139,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileageUnlimited } = prevState;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -156,8 +157,12 @@ class CarList extends Component {
             return { gearbox: Helper.clone(nextProps.gearbox) };
         }
 
-        if (mileageUnlimited !== nextProps.mileageUnlimited) {
-            return { mileageUnlimited: nextProps.mileageUnlimited };
+        if (nextProps.mileage && !Helper.arrayEqual(mileage, nextProps.mileage)) {
+            return { mileage: Helper.clone(nextProps.mileage) };
+        }
+
+        if (deposit !== nextProps.deposit) {
+            return { deposit: nextProps.deposit };
         }
 
         if (reload !== nextProps.reload) {
@@ -168,7 +173,7 @@ class CarList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileageUnlimited } = this.state;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit } = this.state;
 
         if (keyword !== prevState.keyword) {
             return this.setState({ page: 1 }, () => this.fetch());
@@ -186,7 +191,11 @@ class CarList extends Component {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
-        if (mileageUnlimited !== prevState.mileageUnlimited) {
+        if (!Helper.arrayEqual(mileage, prevState.mileage)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (deposit !== prevState.deposit) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
