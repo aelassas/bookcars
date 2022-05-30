@@ -10,7 +10,6 @@ cd /opt/bookcars/backend
 sudo rm -rf build
 
 npm ci
-npm prune
 npm run build
 
 sudo rm -rf /var/www/bookcars.ma/backend
