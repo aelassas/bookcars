@@ -23,7 +23,6 @@ section.car-list article .btn-book {
 @media only screen and (min-width: 500px) and (max-width: 960px) {
     section.car-list article {
         height: 750px !important;
-        overflow: auto;
     }
 
     section.car-list article div.car .car-img {
@@ -37,7 +36,6 @@ section.car-list article .btn-book {
     section.car-list {
         width: 100%;
         height: 100%;
-        overflow: auto;
     }
 
     section.car-list article {

@@ -84,7 +84,7 @@ export default class Cars extends Component {
                 {user &&
                     <div className='cars'>
                         <div className='col-1'>
-                            <Search onSubmit={this.handleSearch} />
+                            <Search onSubmit={this.handleSearch} className='search' />
 
                             <CompanyFilter
                                 onLoad={this.handleCompanyFilterLoad}
@@ -108,9 +108,9 @@ export default class Cars extends Component {
                                         {strings.NEW_CAR}
                                     </Button>
 
-                                    <FuelFilter className='filter' onChange={this.handleFuelFilterChange} />
-                                    <GearboxFilter className='filter' onChange={this.handleGearboxFilterChange} />
-                                    <MileageFilter className='filter' onChange={this.handleMileageFilterChange} />
+                                    <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
+                                    <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
+                                    <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
                                 </>
                             }
                         </div>
