@@ -4,14 +4,13 @@ import Env from '../config/env.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import Car from '../schema/Car.js';
+import Booking from '../schema/Booking.js';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import { v1 as uuid } from 'uuid';
 import escapeStringRegexp from 'escape-string-regexp';
 import mongoose from 'mongoose';
-
-import User from '../schema/User.js';
 
 const CDN = process.env.BC_CDN_CARS;
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS;
@@ -151,6 +150,7 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => 
                     fs.unlinkSync(image);
                 }
             }
+            await Booking.deleteMany({ car: car._id });
         } else {
             return res.sendStatus(404);
         }

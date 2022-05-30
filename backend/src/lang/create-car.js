@@ -10,7 +10,7 @@ export const strings = new LocalizedStrings({
         RECOMMENDED_IMAGE_SIZE: `Taille d'image recommandée : ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
         COMPANY: 'Société',
         LOCATIONS: 'Lieux de prise en charge',
-        AVAILABLE: 'Disponible pour la location',
+        AVAILABLE: 'Disponible à la location',
         CAR_TYPE: 'Moteur',
         PRICE: 'Prix',
         SEATS: 'Sièges',
