@@ -27,8 +27,6 @@ div.cars {
     div.cars div.col-1 {
         width: 100%;
         padding: 15px;
-        background: #fefefe;
-        border-bottom: #eee solid 1px;
         text-align: center;
     }
 

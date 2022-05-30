@@ -1,6 +1,5 @@
 div.accordion-container {
     background: #fff;
-    margin: 10px 10px 0 0;
     border: 1px solid #dadada;
     font-size: 13px;
     user-select: none;
@@ -27,15 +26,17 @@ div.accordion-container label.accordion:hover {
 }
 
 div.accordion-container label.accordion:after {
-    content: '\2B9F';
-    color: rgba(0, 0, 0, .6);
-    font-weight: 400;
+    content: '';
+    border-top: 5px solid transparent;
+    border-left: 5px solid #000;
+    border-bottom: 5px solid transparent;
+    transition: transform .1s ease;
     float: right;
-    margin-right: 5px;
+    margin: 7px 5px 0;
 }
 
 div.accordion-container label.accordion-active:after {
-    content: '\2B9D';
+    transform: rotate(90deg);
 }
 
 div.accordion-container div.panel {
