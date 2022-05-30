@@ -4,7 +4,7 @@ div.company-filter {
     padding: 5px;
     border: 1px solid #dadada;
     font-size: 13px;
-    max-height: 280px;
+    /* max-height: 280px; */
     overflow: auto;
 }
 

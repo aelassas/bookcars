@@ -4,39 +4,41 @@ div.cars {
     bottom: 0;
     right: 0;
     left: 0;
-}
-
-div.cars .search {
-    width: 235px;
-}
-
-div.cars .new-car {
-    margin: 20px 5px 0 0;
-    width: 270px;
+    overflow: auto;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.cars {
+        overflow: auto;
+    }
+
+    div.cars .sc-search,
+    div.cars .new-car {
+        width: 80%;
+    }
+
+    div.cars .new-car {
+        margin: 20px 5px 0 0;
+        margin-bottom: 5px;
+    }
+
     div.cars div.col-1 {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
         width: 100%;
-        height: 120px;
-        padding-left: calc(50% - 135px);
-        padding-top: 5px;
+        padding: 15px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
+        text-align: center;
+    }
+
+    div.cars .car-filter {
+        text-align: left;
     }
 
     div.cars div.col-2 {
-        position: absolute;
-        top: 120px;
-        bottom: 0;
-        right: 0;
-        left: 0;
+        margin-top: 3px;
+        padding: 1px;
     }
 
     div.cars div.col-1 .filter,
@@ -49,23 +51,29 @@ div.cars .new-car {
 
 @media only screen and (min-width: 960px) {
     .cars div.col-1 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
+        float: left;
         width: 300px;
-        padding: 20px 0 0 20px;
-        background: #fefefe;
-        border-right: #eee solid 1px;
-        overflow: auto;
-        padding-bottom: 40px;
+        margin-left: 20px;
     }
 
     .cars div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 300px;
+        float: left;
+        width: calc(100% - 320px);
+        margin-bottom: 50px;
     }
+
+    div.cars .search {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    div.cars .new-car {
+        margin: 20px 5px 0 0;
+        width: 290px;
+    }
+
+    div.cars div.col-1 .filter {
+        background-color: #fff;
+    }
+
 }

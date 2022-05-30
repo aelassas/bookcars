@@ -15,15 +15,12 @@ div.cars {
 
 @media only screen and (max-width: 960px) {
     div.cars div.col-1 {
-        display: none;
+        padding: 5px;
+        margin-bottom: 5px;
     }
 
     div.cars div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
+        padding: 1px;
     }
 }
 
