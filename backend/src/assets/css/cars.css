@@ -72,7 +72,8 @@ div.cars {
         width: 290px;
     }
 
-    div.cars div.col-1 .filter {
+    div.cars div.col-1 .filter,
+    div.cars div.col-1 div.info-box {
         background-color: #fff;
     }
 
