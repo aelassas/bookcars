@@ -10,6 +10,7 @@ cd /opt/bookcars/api
 
 npm ci
 npm prune
+
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
 

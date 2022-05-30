@@ -17,9 +17,6 @@ sudo rm -rf /var/www/bookcars.ma/frontend
 sudo mkdir -p /var/www/bookcars.ma/frontend
 sudo cp -rf build/* /var/www/bookcars.ma/frontend
 
-sudo systemctl restart nginx
-sudo systemctl status nginx --no-pager
-
 echo "BookCars frontend deployed."
 
 #$SHELL
