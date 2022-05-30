@@ -13,10 +13,12 @@ import {
     InputLabel,
     FormControl,
     FormControlLabel,
+    FormHelperText,
     Switch,
     Button,
     Paper
 } from '@mui/material';
+import validator from 'validator';
 
 import '../assets/css/settings.css';
 
@@ -32,7 +34,8 @@ export default class Settings extends Component {
             bio: '',
             error: false,
             visible: false,
-            loading: false
+            loading: false,
+            phoneValid: true
         };
     }
 
@@ -42,10 +45,29 @@ export default class Settings extends Component {
         });
     };
 
-    handleOnChangePhone = e => {
-        this.setState({
-            phone: e.target.value,
-        });
+    handlePhoneChange = (e) => {
+        this.setState({ phone: e.target.value });
+
+        if (!e.target.value) {
+            this.setState({ phoneValid: true });
+        }
+    };
+
+    validatePhone = (phone) => {
+        if (phone) {
+            const phoneValid = validator.isMobilePhone(phone);
+            this.setState({ phoneValid });
+
+            return phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    handlePhoneBlur = (e) => {
+        this.validatePhone(e.target.value);
     };
 
     handleOnChangeLocation = e => {
@@ -65,7 +87,14 @@ export default class Settings extends Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        const { user, fullName, phone, location, bio } = this.state;
+        const { phone } = this.state;
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
+            return;
+        }
+
+        const { user, fullName, location, bio } = this.state;
 
         const data = {
             _id: user._id,
@@ -121,9 +150,9 @@ export default class Settings extends Component {
         this.setState({
             user,
             fullName: user.fullName,
-            phone: user.phone,
-            location: user.location,
-            bio: user.bio,
+            phone: user.phone || '',
+            location: user.location || '',
+            bio: user.bio || '',
             loading: false,
             visible: true
         });
@@ -146,7 +175,8 @@ export default class Settings extends Component {
             bio,
             error,
             visible,
-            loading
+            loading,
+            phoneValid
         } = this.state, admin = Helper.admin(user);
 
         return (
@@ -191,15 +221,15 @@ export default class Settings extends Component {
                                     <Input
                                         id="phone"
                                         type="text"
-                                        onChange={this.handleOnChangePhone}
-                                        inputProps={{
-                                            autoComplete: 'new-phone',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        onChange={this.handlePhoneChange}
+                                        onBlur={this.handlePhoneBlur}
+                                        autoComplete="off"
                                         value={phone}
+                                        error={!phoneValid}
                                     />
+                                    <FormHelperText error={!phoneValid}>
+                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                    </FormHelperText>
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel>{commonStrings.LOCATION}</InputLabel>

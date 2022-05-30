@@ -138,6 +138,24 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
         });
 });
 
+routes.route(routeNames.checkCar).get(authJwt.verifyToken, (req, res) => {
+    const id = mongoose.Types.ObjectId(req.params.id);
+
+    Booking.find({ car: id })
+        .limit(1)
+        .count()
+        .then(count => {
+            if (count === 1) {
+                return res.sendStatus(200);
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[car.checkCar]  ${strings.DB_ERROR} ${id}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
 routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => {
     const id = req.params.id;
 

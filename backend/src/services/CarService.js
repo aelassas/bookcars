@@ -12,6 +12,10 @@ export default class CarService {
         return axios.put(`${Env.API_HOST}/api/update-car`, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
+    static check(id) {
+        return axios.get(`${Env.API_HOST}/api/check-car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
     static delete(id) {
         return axios.delete(`${Env.API_HOST}/api/delete-car/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status);
     }
