@@ -45,7 +45,7 @@ export const strings = new LocalizedStrings({
         ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
         INCLUDED: 'Inclus',
         UNAVAILABLE: 'Indisponible',
-        CAR_AVAILABLE: 'Disponible pour la location',
+        CAR_AVAILABLE: 'Disponible à la location',
         CAR_AVAILABLE_TOOLTIP: 'Cette voiture est disponible pour la location.',
         CAR_UNAVAILABLE: 'Indisponible pour la location',
         CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas disponible pour la location.",

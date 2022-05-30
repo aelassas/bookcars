@@ -63,7 +63,7 @@ export const strings = new LocalizedStrings({
         ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
         EMAIL_NOT_VALID: 'E-mail non valide',
         PHONE_NOT_VALID: 'Numéro de téléphone non valide',
-        BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au minimum ' + Env.MINIMUM_AGE + ' ans.',
+        BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
         FORM_ERROR: 'Veuillez corriger les erreurs.'
     },
     en: {
