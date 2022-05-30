@@ -49,6 +49,11 @@ routes.route(routeNames.signup).post((req, res) => {
     body.blacklisted = false;
     body.type = Env.USER_TYPE.USER;
 
+    const salt = bcrypt.genSaltSync(10);
+    const password = body.password;
+    const passwordHash = bcrypt.hashSync(password, salt);
+    body.password = passwordHash;
+
     const user = new User(body);
     user.save()
         .then(user => {
@@ -127,6 +132,11 @@ routes.route(routeNames.adminSignup).post((req, res) => {
     body.blacklisted = false;
     body.type = Env.USER_TYPE.ADMIN;
 
+    const salt = bcrypt.genSaltSync(10);
+    const password = body.password;
+    const passwordHash = bcrypt.hashSync(password, salt);
+    body.password = passwordHash;
+
     const user = new User(body);
     user.save()
         .then(user => {
@@ -202,6 +212,13 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
     const { body } = req;
     body.verified = false;
     body.blacklisted = false;
+
+    if (body.password) {
+        const salt = bcrypt.genSaltSync(10);
+        const password = body.password;
+        const passwordHash = bcrypt.hashSync(password, salt);
+        body.password = passwordHash;
+    }
 
     const user = new User(body);
     user.save()
@@ -421,7 +438,11 @@ routes.route(routeNames.activate).post((req, res) => {
                 Token.find({ token: req.body.token })
                     .then(token => {
                         if (token) {
-                            user.password = req.body.password;
+                            const salt = bcrypt.genSaltSync(10);
+                            const password = req.body.password;
+                            const passwordHash = bcrypt.hashSync(password, salt);
+                            user.password = passwordHash;
+
                             user.active = true;
                             user.verified = true;
                             user.save()
@@ -833,7 +854,11 @@ routes.route(routeNames.changePassword).post(authJwt.verifyToken, (req, res) => 
             }
 
             const changePassword = () => {
-                user.password = req.body.newPassword;
+                const salt = bcrypt.genSaltSync(10);
+                const password = req.body.newPassword;
+                const passwordHash = bcrypt.hashSync(password, salt);
+                user.password = passwordHash;
+
                 user.save()
                     .then(() => {
                         return res.sendStatus(200);

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Env from '../config/env.config';
-import bcrypt from 'bcryptjs';
 
 export default class UserService {
 
@@ -15,12 +14,6 @@ export default class UserService {
     }
 
     static signup(data) {
-        const password = data.password;
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
-
-        data['password'] = hash;
-
         return axios.post(`${Env.API_HOST}/api/sign-up`, data).then(res => res.status);
     }
 
@@ -37,16 +30,8 @@ export default class UserService {
     }
 
     static activate(data) {
-        const salt = bcrypt.genSaltSync(10);
-
-        const password = data.password;
-        const passwordHash = bcrypt.hashSync(password, salt);
-
-        data['password'] = passwordHash;
-
         return axios.post(`${Env.API_HOST}/api/activate/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
-
 
     static validateEmail(data) {
         return axios.post(`${Env.API_HOST}/api/validate-email`, data).then(exist => exist.status);
@@ -168,19 +153,11 @@ export default class UserService {
             })
     }
 
-
     static checkPassword(id, pass) {
         return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
     static changePassword(data) {
-        const salt = bcrypt.genSaltSync(10);
-
-        const newPassword = data.newPassword;
-        const newPasswordHash = bcrypt.hashSync(newPassword, salt);
-
-        data["newPassword"] = newPasswordHash;
-
         return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
     }
 
