@@ -50,13 +50,13 @@ div.cars {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .cars div.col-1 {
+    div.cars div.col-1 {
         float: left;
         width: 300px;
         margin-left: 20px;
     }
 
-    .cars div.col-2 {
+    div.cars div.col-2 {
         float: left;
         width: calc(100% - 320px);
         margin-bottom: 50px;
