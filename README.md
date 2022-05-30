@@ -1,7 +1,3 @@
-# BookCars.ma
-
-Book Cars Rental Service
-
 # api/.env
 
 ```
