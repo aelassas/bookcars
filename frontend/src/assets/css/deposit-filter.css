@@ -1,0 +1,20 @@
+div.deposit-filter div.filter-elements {
+    padding: 7px 5px;
+}
+
+div.deposit-filter div.filter-elements div.filter-element input[type='radio'].deposit-radio {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+div.deposit-filter div.filter-elements div.filter-element label {
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+div.deposit-filter div.filter-actions {
+    text-align: center;
+    padding-bottom: 10px;
+}

@@ -99,11 +99,15 @@ class FuelFilter extends Component {
     };
 
     componentDidMount() {
-        const checkboxes = document.querySelectorAll('.fuel-checkbox');
+        const { allChecked } = this.state;
 
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
+        if (allChecked) {
+            const checkboxes = document.querySelectorAll('.fuel-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
     }
 
     render() {

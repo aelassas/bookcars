@@ -28,6 +28,10 @@ const Env = {
         PAID: 'paid',
         RESERVED: 'reserved',
         CANCELLED: 'cancelled'
+    },
+    MILEAGE: {
+        LIMITED: 'limited',
+        UNLIMITED: 'unlimited'
     }
 };
 

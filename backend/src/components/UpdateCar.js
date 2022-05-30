@@ -70,7 +70,8 @@ export default class CreateCar extends Component {
             additionalDriver: '',
             minimumAge: '',
             minimumAgeValid: true,
-            formError: false
+            formError: false,
+            deposit: ''
         };
     }
 
@@ -156,6 +157,10 @@ export default class CreateCar extends Component {
         this.setState({ price: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
     };
 
+    handleDepositChange = (e) => {
+        this.setState({ deposit: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    };
+
     handleSeatsChange = (value) => {
         this.setState({ seats: value });
     };
@@ -220,6 +225,7 @@ export default class CreateCar extends Component {
             company,
             locations,
             price,
+            deposit,
             available,
             type,
             gearbox,
@@ -244,6 +250,7 @@ export default class CreateCar extends Component {
             minimumAge: parseInt(minimumAge),
             locations: locations.map(l => l._id),
             price,
+            deposit,
             available,
             type,
             gearbox,
@@ -305,6 +312,7 @@ export default class CreateCar extends Component {
                                         return { _id, name };
                                     }),
                                     price: car.price,
+                                    deposit: car.deposit,
                                     available: car.available,
                                     type: car.type,
                                     gearbox: car.gearbox,
@@ -369,7 +377,8 @@ export default class CreateCar extends Component {
             additionalDriver,
             minimumAge,
             minimumAgeValid,
-            formError
+            formError,
+            deposit
         } = this.state;
 
         const admin = user && user.type === Env.RECORD_TYPE.ADMIN;
@@ -462,6 +471,19 @@ export default class CreateCar extends Component {
                                         variant='standard'
                                         autoComplete='off'
                                         value={price}
+                                    />
+                                </FormControl>
+
+                                <FormControl fullWidth margin="dense">
+                                    <TextField
+                                        label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
+                                        // eslint-disable-next-line
+                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                        onChange={this.handleDepositChange}
+                                        required
+                                        variant='standard'
+                                        autoComplete='off'
+                                        value={deposit}
                                     />
                                 </FormControl>
 

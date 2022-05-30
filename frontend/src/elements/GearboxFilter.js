@@ -99,11 +99,15 @@ class GearboxFilter extends Component {
     };
 
     componentDidMount() {
-        const checkboxes = document.querySelectorAll('.gearbox-checkbox');
+        const { allChecked } = this.state;
 
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = true;
-        });
+        if (allChecked) {
+            const checkboxes = document.querySelectorAll('.gearbox-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
     }
 
     render() {

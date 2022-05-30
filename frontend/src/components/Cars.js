@@ -10,6 +10,7 @@ import CompanyFilter from '../elements/CompanyFilter';
 import FuelFilter from '../elements/FuelFilter';
 import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
+import DepositFilter from '../elements/DepositFilter';
 import CarList from '../elements/CarList';
 import { toast } from 'react-toastify';
 
@@ -32,7 +33,8 @@ export default class Cars extends Component {
             loading: true,
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            mileageUnlimited: false
+            mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
+            deposit: -1
         };
     }
 
@@ -74,8 +76,16 @@ export default class Cars extends Component {
         this.setState({ gearbox: values, reload: Helper.arrayEqual(values, gearbox) });
     };
 
-    handleMileageFilterChange = (value) => {
-        this.setState({ mileageUnlimited: value });
+    handleMileageFilterChange = (values) => {
+        const { mileage } = this.state;
+
+        this.setState({ mileage: values, reload: Helper.arrayEqual(values, mileage) });
+    };
+
+    handleDepositFilterChange = (value) => {
+        const { deposit } = this.state;
+
+        this.setState({ deposit: value, reload: value === deposit });
     };
 
     onLoad = (user) => {
@@ -128,7 +138,7 @@ export default class Cars extends Component {
     }
 
     render() {
-        const { companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileageUnlimited } = this.state;
+        const { companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
@@ -153,6 +163,7 @@ export default class Cars extends Component {
                                     <FuelFilter className='filter' onChange={this.handleFuelFilterChange} />
                                     <GearboxFilter className='filter' onChange={this.handleGearboxFilterChange} />
                                     <MileageFilter className='filter' onChange={this.handleMileageFilterChange} />
+                                    <DepositFilter className='filter' onChange={this.handleDepositFilterChange} />
                                 </>
                             }
                         </div>
@@ -161,7 +172,8 @@ export default class Cars extends Component {
                                 companies={companies}
                                 fuel={fuel}
                                 gearbox={gearbox}
-                                mileageUnlimited={mileageUnlimited}
+                                mileage={mileage}
+                                deposit={deposit}
                                 pickupLocation={pickupLocation._id}
                                 dropOffLocation={dropOffLocation._id}
                                 reload={reload}

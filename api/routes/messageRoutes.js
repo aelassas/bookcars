@@ -9,7 +9,7 @@ import nodemailer from "nodemailer";
 import mongoose from 'mongoose';
 
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true';
-const APP_HOST = process.env.BC_APP_HOST;
+const APP_HOST = process.env.BC_FRONTEND_HOST;
 const SMTP_HOST = process.env.BC_SMTP_HOST;
 const SMTP_PORT = process.env.BC_SMTP_PORT;
 const SMTP_USER = process.env.BC_SMTP_USER;

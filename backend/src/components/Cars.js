@@ -4,13 +4,14 @@ import Helper from '../common/Helper';
 import { strings } from '../lang/cars';
 import { strings as commonStrings } from '../lang/common';
 import Master from '../elements/Master';
-import CarList from '../elements/CarList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Search from '../elements/Search';
 import InfoBox from '../elements/InfoBox';
 import FuelFilter from '../elements/FuelFilter';
 import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
+import DepositFilter from '../elements/DepositFilter';
+import CarList from '../elements/CarList';
 import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';
@@ -28,7 +29,8 @@ export default class Cars extends Component {
             loading: true,
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            mileageUnlimited: false
+            mileage: false,
+            deposit: -1
         };
     }
 
@@ -68,8 +70,16 @@ export default class Cars extends Component {
         this.setState({ gearbox: values, reload: Helper.arrayEqual(values, gearbox) });
     };
 
-    handleMileageFilterChange = (value) => {
-        this.setState({ mileageUnlimited: value });
+    handleMileageFilterChange = (values) => {
+        const { mileage } = this.state;
+
+        this.setState({ mileage: values, reload: Helper.arrayEqual(values, mileage) });
+    };
+
+    handleDepositFilterChange = (value) => {
+        const { deposit } = this.state;
+
+        this.setState({ deposit: value, reload: value === deposit });
     };
 
     onLoad = (user) => {
@@ -77,7 +87,7 @@ export default class Cars extends Component {
     };
 
     render() {
-        const { user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileageUnlimited } = this.state;
+        const { user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -111,6 +121,7 @@ export default class Cars extends Component {
                                     <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
                                     <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
                                     <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
+                                    <DepositFilter className='car-filter' onChange={this.handleDepositFilterChange} />
                                 </>
                             }
                         </div>
@@ -120,7 +131,8 @@ export default class Cars extends Component {
                                 companies={companies}
                                 fuel={fuel}
                                 gearbox={gearbox}
-                                mileageUnlimited={mileageUnlimited}
+                                mileage={mileage}
+                                deposit={deposit}
                                 keyword={keyword}
                                 reload={reload}
                                 loading={loading}

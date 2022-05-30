@@ -87,6 +87,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                     type,
                     locations,
                     price,
+                    deposit,
                     seats,
                     doors,
                     aircon,
@@ -108,6 +109,7 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 car.available = available;
                 car.type = type;
                 car.price = price;
+                car.deposit = deposit;
                 car.seats = seats;
                 car.doors = doors;
                 car.aircon = aircon;
@@ -313,7 +315,8 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id));
         const fuel = req.body.fuel;
         const gearbox = req.body.gearbox;
-        const mileageUnlimited = req.body.mileageUnlimited;
+        const mileage = req.body.mileage;
+        const deposit = req.body.deposit;
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
 
@@ -326,8 +329,14 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
             ]
         };
 
-        if (mileageUnlimited) {
+        if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
+            $match.$and.push({ mileage: { $gt: -1 } });
+        } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
             $match.$and.push({ mileage: -1 });
+        }
+
+        if (deposit > -1) {
+            $match.$and.push({ deposit: { $lte: deposit } });
         }
 
         const cars = await Car.aggregate([
@@ -431,7 +440,8 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
         const pickupLocation = mongoose.Types.ObjectId(req.body.pickupLocation);
         const fuel = req.body.fuel;
         const gearbox = req.body.gearbox;
-        const mileageUnlimited = req.body.mileageUnlimited;
+        const mileage = req.body.mileage;
+        const deposit = req.body.deposit;
 
         const $match = {
             $and: [
@@ -443,8 +453,14 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
             ]
         };
 
-        if (mileageUnlimited) {
+        if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
+            $match.$and.push({ mileage: { $gt: -1 } });
+        } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
             $match.$and.push({ mileage: -1 });
+        }
+
+        if (deposit > -1) {
+            $match.$and.push({ deposit: { $lte: deposit } });
         }
 
         const cars = await Car.aggregate([
