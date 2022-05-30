@@ -12,6 +12,7 @@ sudo rm -rf build
 #npm install
 #npm update
 npm ci
+npm prune
 npm run build
 
 #sudo systemctl restart bookcars-backend
