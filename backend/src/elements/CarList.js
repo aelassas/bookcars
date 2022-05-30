@@ -52,14 +52,28 @@ class CarList extends Component {
             size: Env.CARS_PAGE_SIZE,
             openDeleteDialog: false,
             carId: '',
-            carIndex: -1
+            carIndex: -1,
+            openInfoDialog: false
         };
     }
 
-    handleDelete = (e) => {
+    handleDelete = async (e) => {
         const carId = e.currentTarget.getAttribute('data-id');
         const carIndex = e.currentTarget.getAttribute('data-index');
-        this.setState({ openDeleteDialog: true, carId, carIndex });
+
+        const status = await CarService.check(carId);
+
+        if (status === 200) {
+            this.setState({ openInfoDialog: true });
+        } else if (status === 204) {
+            this.setState({ openDeleteDialog: true, carId, carIndex });
+        } else {
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        }
+    };
+
+    handleCloseInfo = () => {
+        this.setState({ openInfoDialog: false });
     };
 
     handleConfirmDelete = () => {
@@ -190,7 +204,7 @@ class CarList extends Component {
     }
 
     render() {
-        const { user, rows, loading, openDeleteDialog } = this.state;
+        const { user, rows, loading, openInfoDialog, openDeleteDialog } = this.state;
         const admin = Helper.admin(user);
         const fr = user && user.language === 'fr';
 
@@ -382,6 +396,18 @@ class CarList extends Component {
                         );
                     })
                 }
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openInfoDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
+                    <DialogContent>{strings.CANNOT_DELETE_CAR}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={this.handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Dialog
                     disableEscapeKeyDown
                     maxWidth="xs"
