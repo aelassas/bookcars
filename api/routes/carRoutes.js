@@ -307,14 +307,31 @@ routes.route(routeNames.getCar).get((req, res) => {
 
 routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
     try {
-        const keyword = escapeStringRegexp(req.query.s || '');
-        const options = 'i';
+
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
-        const companies = req.body.map(id => mongoose.Types.ObjectId(id));
+        const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id));
+        const fuel = req.body.fuel;
+        const gearbox = req.body.gearbox;
+        const mileageUnlimited = req.body.mileageUnlimited;
+        const keyword = escapeStringRegexp(req.query.s || '');
+        const options = 'i';
+
+        const $match = {
+            $and: [
+                { name: { $regex: keyword, $options: options } },
+                { company: { $in: companies } },
+                { type: { $in: fuel } },
+                { gearbox: { $in: gearbox } }
+            ]
+        };
+
+        if (mileageUnlimited) {
+            $match.$and.push({ mileage: -1 });
+        }
 
         const cars = await Car.aggregate([
-            { $match: { name: { $regex: keyword, $options: options }, company: { $in: companies } } },
+            { $match },
             {
                 $lookup: {
                     from: 'User',

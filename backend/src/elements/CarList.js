@@ -53,7 +53,10 @@ class CarList extends Component {
             openDeleteDialog: false,
             carId: '',
             carIndex: -1,
-            openInfoDialog: false
+            openInfoDialog: false,
+            fuel: props.fuel,
+            gearbox: props.gearbox,
+            mileageUnlimited: props.mileageUnlimited
         };
     }
 
@@ -110,11 +113,13 @@ class CarList extends Component {
     };
 
     fetch = () => {
-        const { keyword, page, size, companies, rows } = this.state;
+        const { keyword, page, size, companies, rows, fuel, gearbox, mileageUnlimited } = this.state;
 
         this.setState({ loading: true });
 
-        CarService.getCars(keyword, companies, page, size)
+        const payload = { companies, fuel, gearbox, mileageUnlimited };
+
+        CarService.getCars(keyword, payload, page, size)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {};
                 if (_data.length === 0) _data.resultData = [];
@@ -133,7 +138,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, companies, reload } = prevState;
+        const { keyword, companies, reload, fuel, gearbox, mileageUnlimited } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -141,6 +146,18 @@ class CarList extends Component {
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
+        }
+
+        if (nextProps.fuel && !Helper.arrayEqual(fuel, nextProps.fuel)) {
+            return { fuel: Helper.clone(nextProps.fuel) };
+        }
+
+        if (nextProps.gearbox && !Helper.arrayEqual(gearbox, nextProps.gearbox)) {
+            return { gearbox: Helper.clone(nextProps.gearbox) };
+        }
+
+        if (mileageUnlimited !== nextProps.mileageUnlimited) {
+            return { mileageUnlimited: nextProps.mileageUnlimited };
         }
 
         if (reload !== nextProps.reload) {
@@ -151,13 +168,25 @@ class CarList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { keyword, companies, reload } = this.state;
+        const { keyword, companies, reload, fuel, gearbox, mileageUnlimited } = this.state;
 
         if (keyword !== prevState.keyword) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
         if (!Helper.arrayEqual(companies, prevState.companies)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(fuel, prevState.fuel)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(gearbox, prevState.gearbox)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (mileageUnlimited !== prevState.mileageUnlimited) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
