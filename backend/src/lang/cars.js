@@ -51,7 +51,9 @@ export const strings = new LocalizedStrings({
         CAR_UNAVAILABLE_TOOLTIP: "Cette voiture n'est pas disponible à la location.",
         VIEW_CAR: 'Voir cette voiture',
         EMPTY_LIST: 'Pas de voitures.',
-        CANNOT_DELETE_CAR: 'Cette voiture ne peut pas être supprimée car elle est liée à des réservations. Vous pouvez cependant la rendre indisponible à la location en la modifiant.'
+        CANNOT_DELETE_CAR: 'Cette voiture ne peut pas être supprimée car elle est liée à des réservations. Vous pouvez cependant la rendre indisponible à la location en la modifiant.',
+        GEARBOX: 'Transmission',
+        ENGINE: 'Moteur'
     },
     en: {
         NEW_CAR: 'New car',
@@ -101,7 +103,9 @@ export const strings = new LocalizedStrings({
         CAR_UNAVAILABLE_TOOLTIP: 'This car is unavailable for rental.',
         VIEW_CAR: 'View this car',
         EMPTY_LIST: 'No cars.',
-        CANNOT_DELETE_CAR: 'This car cannot be deleted because it is linked to bookings. However, you can make it unavailable for rental by modifying it.'
+        CANNOT_DELETE_CAR: 'This car cannot be deleted because it is linked to bookings. However, you can make it unavailable for rental by modifying it.',
+        GEARBOX: 'Gearbox',
+        ENGINE: 'Engine'
     }
 });
 

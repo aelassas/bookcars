@@ -57,6 +57,8 @@ div.cars .new-car {
         padding: 20px 0 0 20px;
         background: #fefefe;
         border-right: #eee solid 1px;
+        overflow: auto;
+        padding-bottom: 40px;
     }
 
     .cars div.col-2 {

@@ -76,7 +76,7 @@ export default class Cars extends Component {
 
     handleMileageFilterChange = (value) => {
         this.setState({ mileageUnlimited: value });
-    }
+    };
 
     onLoad = (user) => {
         this.setState({ user }, async () => {
