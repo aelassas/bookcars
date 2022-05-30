@@ -162,7 +162,11 @@ export default class Home extends Component {
                         </div>
                     </div>
                     <footer>
-                        <div className='copyright'>{strings.COPYRIGHT}</div>
+                        <div className='copyright'>
+                            <span className='part1'>{strings.COPYRIGHT_PART1}</span>
+                            <span className='part2'>{strings.COPYRIGHT_PART2}</span>
+                            <span className='part3'>{strings.COPYRIGHT_PART3}</span>
+                        </div>
                         <div className='secure-payment'>
                             <img src={SecurePayment} alt='' />
                         </div>
