@@ -7,6 +7,12 @@ div.cars {
     overflow: auto;
 }
 
+div.cars div.search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -20,8 +26,8 @@ div.cars {
     }
 
     div.cars .new-car {
-        margin: 20px 5px 0 0;
-        margin-bottom: 5px;
+        margin: 20px 5px 5px 0;
+        width: 100%;
     }
 
     div.cars div.col-1 {
@@ -60,14 +66,13 @@ div.cars {
         margin-bottom: 50px;
     }
 
-    div.cars .search {
-        width: 100%;
+    div.cars div.search {
         margin-top: 15px;
     }
 
     div.cars .new-car {
         margin: 20px 5px 0 0;
-        width: 290px;
+        width: 100%;
     }
 
     div.cars div.col-1 .filter,

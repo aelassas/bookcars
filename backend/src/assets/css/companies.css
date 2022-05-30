@@ -1,4 +1,4 @@
-.companies {
+div.companies {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -6,11 +6,15 @@
     left: 0;
 }
 
-.companies .search {
+div.companies div.search {
     width: 235px;
 }
 
-.companies .new-company {
+div.companies div.info-box {
+    margin-right: 10px;
+}
+
+div.companies .new-company {
     width: 270px;
     margin: 20px 5px 0 0;
 }
@@ -18,7 +22,7 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .companies div.col-1 {
+    div.companies div.col-1 {
         position: absolute;
         top: 0;
         right: 0;
@@ -31,11 +35,11 @@
         border-bottom: #eee solid 1px;
     }
 
-    .companies div.col-1 .company-count {
+    div.companies div.col-1 .company-count {
         display: none;
     }
 
-    .companies div.col-2 {
+    div.companies div.col-2 {
         position: absolute;
         top: 125px;
         bottom: 0;
@@ -48,7 +52,7 @@
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .companies div.col-1 {
+    div.companies div.col-1 {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -59,7 +63,7 @@
         border-right: #eee solid 1px;
     }
 
-    .companies div.col-2 {
+    div.companies div.col-2 {
         position: absolute;
         top: 0;
         bottom: 0;

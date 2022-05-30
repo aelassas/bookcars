@@ -10,11 +10,14 @@ div.locations .search {
     width: 235px;
 }
 
+div.locations div.info-box {
+    margin-right: 10px;
+}
+
 div.locations .new-location {
     margin: 20px 5px 0 0;
     width: 270px;
 }
-
 
 /* Device width is less than or equal to 960px */
 
