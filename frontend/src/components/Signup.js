@@ -409,6 +409,12 @@ export default class SignUp extends Component {
                                             onChange={this.handleOnChangePassword}
                                             required
                                             type="password"
+                                            inputProps={{
+                                                autoComplete: 'new-password',
+                                                form: {
+                                                    autoComplete: 'off',
+                                                },
+                                            }}
                                         />
                                     </FormControl>
                                     <FormControl fullWidth margin="dense">
@@ -419,6 +425,12 @@ export default class SignUp extends Component {
                                             onChange={this.handleOnChangeConfirmPassword}
                                             required
                                             type="password"
+                                            inputProps={{
+                                                autoComplete: 'new-password',
+                                                form: {
+                                                    autoComplete: 'off',
+                                                },
+                                            }}
                                         />
                                     </FormControl>
                                     <div className="recaptcha">
