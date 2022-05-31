@@ -36,6 +36,10 @@ class StatusFilter extends Component {
         } else {
             const index = checkedStatuses.findIndex(s => s === status);
             checkedStatuses.splice(index, 1);
+
+            if (checkedStatuses.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ checkedStatuses }, () => {
