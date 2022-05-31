@@ -54,6 +54,8 @@ export default class Home extends Component {
 
         if (e.target.checked) {
             this.setState({ dropOffLocation: pickupLocation });
+        } else {
+            this.setState({ dropOffLocation: null });
         }
     };
 
@@ -66,6 +68,8 @@ export default class Home extends Component {
 
         if (checked) {
             this.setState({ dropOffLocation: pickupLocation });
+        } else {
+            this.setState({ dropOffLocation: null });
         }
     };
 
@@ -77,6 +81,10 @@ export default class Home extends Component {
         e.preventDefault();
 
         const { pickupLocation, dropOffLocation, from, to } = this.state;
+
+        if (!pickupLocation || !dropOffLocation) {
+            return;
+        }
 
         window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`;
     };
