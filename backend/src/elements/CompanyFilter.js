@@ -40,6 +40,10 @@ class CompanyFilter extends Component {
         } else {
             const index = checkedCompanies.indexOf(companyId);
             checkedCompanies.splice(index, 1);
+
+            if (checkedCompanies.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ checkedCompanies }, () => {

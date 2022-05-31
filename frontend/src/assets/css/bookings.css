@@ -33,6 +33,10 @@ div.bookings {
         overflow: auto;
     }
 
+    div.bookings div.col-1 .cl-company-filter label.accordion {
+        background: #fafafa;
+    }
+
     div.bookings div.col-1 .cl-company-filter {
         margin: 10px 10px 10px 0;
         background-color: #fafafa;

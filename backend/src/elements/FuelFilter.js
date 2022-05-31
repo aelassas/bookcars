@@ -28,6 +28,10 @@ class FuelFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.CAR_TYPE.DIESEL), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {
@@ -56,6 +60,10 @@ class FuelFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.CAR_TYPE.GASOLINE), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {

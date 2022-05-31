@@ -28,6 +28,10 @@ class GearboxFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.GEARBOX_TYPE.AUTOMATIC), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {
@@ -56,6 +60,10 @@ class GearboxFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.GEARBOX_TYPE.MANUAL), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {
