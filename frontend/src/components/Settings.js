@@ -242,18 +242,14 @@ export default class Settings extends Component {
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel>{commonStrings.PHONE}</InputLabel>
+                                    <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
                                     <Input
                                         id="phone"
                                         type="text"
+                                        required
                                         error={!phoneValid}
                                         onChange={this.handlePhoneChange}
-                                        inputProps={{
-                                            autoComplete: 'new-phone',
-                                            form: {
-                                                autoComplete: 'off',
-                                            },
-                                        }}
+                                        autoComplete="off"
                                         value={phone}
                                     />
                                     <FormHelperText error={!phoneValid}>

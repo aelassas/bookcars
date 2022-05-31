@@ -24,14 +24,22 @@ class UserTypeFilter extends Component {
     };
 
     handleUserTypeChange = (e) => {
-        const { checkedUserTypes } = this.state;
+        const { userTypes, checkedUserTypes } = this.state;
         const user = e.currentTarget.getAttribute('data-value');
 
         if (e.currentTarget.checked) {
             checkedUserTypes.push(user);
+
+            if (checkedUserTypes.length === userTypes.length) {
+                this.setState({ allUserTypesChecked: true });
+            }
         } else {
             const index = checkedUserTypes.findIndex(s => s === user);
             checkedUserTypes.splice(index, 1);
+
+            if (checkedUserTypes.length === 0) {
+                this.setState({ allUserTypesChecked: false });
+            }
         }
 
         this.setState({ checkedUserTypes }, () => {
