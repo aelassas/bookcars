@@ -45,6 +45,7 @@ export const strings = new LocalizedStrings({
         FULL_INSURANCE_TOOLTIP: 'La location peut inclure une couverture en cas de collision, de dommages et vol du véhicule.',
         ADDITIONAL_DRIVER: 'Conducteur supplémentaire',
         INCLUDED: 'Inclus',
+        AVAILABLE: 'Disponile',
         UNAVAILABLE: 'Indisponible',
         CAR_AVAILABLE: 'Disponible à la location',
         CAR_AVAILABLE_TOOLTIP: 'Cette voiture est disponible à la location.',
@@ -58,7 +59,8 @@ export const strings = new LocalizedStrings({
         DEPOSIT: 'Dépôt de garantie',
         LESS_THAN_2500: 'Moins de 2500 DH',
         LESS_THAN_5000: 'Moins de 5000 DH',
-        LESS_THAN_7500: 'Moins de 7500 DH'
+        LESS_THAN_7500: 'Moins de 7500 DH',
+        AVAILABILITY: 'Disponibilité'
     },
     en: {
         NEW_CAR: 'New car',
@@ -102,6 +104,7 @@ export const strings = new LocalizedStrings({
         FULL_INSURANCE_TOOLTIP: 'The rental may include collision damage waiver and theft protection of the vehicle.',
         ADDITIONAL_DRIVER: 'Additional driver',
         INCLUDED: 'Included',
+        AVAILABLE: 'Available',
         UNAVAILABLE: 'Unavailable',
         CAR_AVAILABLE: 'Available for rental',
         CAR_AVAILABLE_TOOLTIP: 'This car is available for rental.',
@@ -115,7 +118,8 @@ export const strings = new LocalizedStrings({
         DEPOSIT: 'Deposit at pick-up',
         LESS_THAN_2500: 'Less than 2500 DH',
         LESS_THAN_5000: 'Less than 5000 DH',
-        LESS_THAN_7500: 'Less than 7500 DH'
+        LESS_THAN_7500: 'Less than 7500 DH',
+        AVAILABILITY: 'Availablity'
     }
 });
 

@@ -317,6 +317,7 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         const gearbox = req.body.gearbox;
         const mileage = req.body.mileage;
         const deposit = req.body.deposit;
+        const availability = req.body.availability;
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
 
@@ -345,6 +346,14 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
 
         if (deposit && deposit > -1) {
             $match.$and.push({ deposit: { $lte: deposit } });
+        }
+
+        if (availability) {
+            if (availability.length === 1 && availability[0] === Env.AVAILABILITY.AVAILABLE) {
+                $match.$and.push({ available: true });
+            } else if (availability.length === 1 && availability[0] === Env.AVAILABILITY.UNAVAILABLE) {
+                $match.$and.push({ available: false });
+            }
         }
 
         const cars = await Car.aggregate([

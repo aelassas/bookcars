@@ -11,6 +11,7 @@ import FuelFilter from '../elements/FuelFilter';
 import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';
+import AvailabilityFilter from '../elements/AvailabilityFilter';
 import CarList from '../elements/CarList';
 import { Button } from '@mui/material';
 
@@ -29,7 +30,8 @@ export default class Cars extends Component {
             loading: true,
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            mileage: false,
+            mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
+            availability: [Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE],
             deposit: -1
         };
     }
@@ -82,12 +84,19 @@ export default class Cars extends Component {
         this.setState({ deposit: value, reload: value === deposit });
     };
 
+    handleAvailabilityFilterChange = (values) => {
+        const { availability } = this.state;
+
+        this.setState({ availability: values, reload: Helper.arrayEqual(values, availability) });
+    };
+
+
     onLoad = (user) => {
         this.setState({ user });
     };
 
     render() {
-        const { user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit } = this.state;
+        const { user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -124,6 +133,7 @@ export default class Cars extends Component {
                                     <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
                                     <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
                                     <DepositFilter className='car-filter' onChange={this.handleDepositFilterChange} />
+                                    <AvailabilityFilter className='car-filter' onChange={this.handleAvailabilityFilterChange} />
                                 </>
                             }
                         </div>
@@ -135,6 +145,7 @@ export default class Cars extends Component {
                                 gearbox={gearbox}
                                 mileage={mileage}
                                 deposit={deposit}
+                                availability={availability}
                                 keyword={keyword}
                                 reload={reload}
                                 loading={loading}
