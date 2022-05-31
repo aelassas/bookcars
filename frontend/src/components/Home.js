@@ -105,6 +105,7 @@ export default class Home extends Component {
                                     <LocationSelectList
                                         label={commonStrings.PICKUP_LOCATION}
                                         freeSolo
+                                        overflowHidden
                                         required
                                         variant='outlined'
                                         onChange={this.handlePickupLocationChange}
@@ -148,6 +149,7 @@ export default class Home extends Component {
                                         <LocationSelectList
                                             label={commonStrings.DROP_OFF_LOCATION}
                                             freeSolo
+                                            overflowHidden
                                             required
                                             variant='outlined'
                                             onChange={this.handleDropOffLocationChange}
