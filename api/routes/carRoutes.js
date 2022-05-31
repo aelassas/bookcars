@@ -323,19 +323,27 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
         const $match = {
             $and: [
                 { name: { $regex: keyword, $options: options } },
-                { company: { $in: companies } },
-                { type: { $in: fuel } },
-                { gearbox: { $in: gearbox } }
+                { company: { $in: companies } }
             ]
         };
 
-        if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
-            $match.$and.push({ mileage: { $gt: -1 } });
-        } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
-            $match.$and.push({ mileage: -1 });
+        if (fuel) {
+            $match.$and.push({ type: { $in: fuel } });
         }
 
-        if (deposit > -1) {
+        if (gearbox) {
+            $match.$and.push({ gearbox: { $in: gearbox } });
+        }
+
+        if (mileage) {
+            if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
+                $match.$and.push({ mileage: { $gt: -1 } });
+            } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
+                $match.$and.push({ mileage: -1 });
+            }
+        }
+
+        if (deposit && deposit > -1) {
             $match.$and.push({ deposit: { $lte: deposit } });
         }
 
