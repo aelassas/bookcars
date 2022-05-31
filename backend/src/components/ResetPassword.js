@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Env from '../config/env.config';
 import UserService from '../services/UserService';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
@@ -18,7 +19,7 @@ import validator from 'validator';
 
 import '../assets/css/reset-password.css';
 
-export default class Activate extends Component {
+export default class ResetPassword extends Component {
 
     constructor(props) {
         super(props);
@@ -88,7 +89,7 @@ export default class Activate extends Component {
             return;
         }
 
-        UserService.resend(email, true)
+        UserService.resend(email, true, Env.APP_TYPE)
             .then(status => {
                 if (status === 200) {
                     this.setState({ error: false, emailValid: true, sent: true });

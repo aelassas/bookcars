@@ -4,11 +4,11 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-location';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
-import Error from '../elements/Error';
 import {
     Input,
     InputLabel,
     FormControl,
+    FormHelperText,
     Button,
     Paper
 } from '@mui/material';
@@ -90,11 +90,15 @@ export default class CreateLocation extends Component {
                                 <Input
                                     type="text"
                                     value={name}
+                                    error={nameError}
                                     required
                                     onChange={this.handleOnChangeName}
                                     onKeyDown={this.handleOnKeyDownName}
                                     autoComplete="off"
                                 />
+                                <FormHelperText error={nameError}>
+                                    {nameError ? strings.INVALID_LOCATION : ''}
+                                </FormHelperText>
                             </FormControl>
 
                             <div className="buttons">
@@ -114,10 +118,6 @@ export default class CreateLocation extends Component {
                                 >
                                     {commonStrings.CANCEL}
                                 </Button>
-                            </div>
-
-                            <div className="form-error">
-                                {nameError && <Error message={strings.INVALID_LOCATION} />}
                             </div>
                         </form>
 

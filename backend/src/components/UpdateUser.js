@@ -225,9 +225,9 @@ export default class CreateUser extends Component {
     };
 
     handleResendActivationLink = () => {
-        const { email } = this.state;
+        const { email, type } = this.state;
 
-        UserService.resend(email)
+        UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
             .then(status => {
                 if (status === 200) {
                     toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });

@@ -147,7 +147,7 @@ export default class UpdateCompany extends Component {
     handleResendActivationLink = () => {
         const { company } = this.state;
 
-        UserService.resend(company.email)
+        UserService.resend(company.email, false, Env.APP_TYPE)
             .then(status => {
                 if (status === 200) {
                     toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });

@@ -341,6 +341,8 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
                 $match.$and.push({ mileage: { $gt: -1 } });
             } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
                 $match.$and.push({ mileage: -1 });
+            } else if (mileage.length === 0) {
+                return res.json([{ resultData: [], pageInfo: [] }]);
             }
         }
 
@@ -353,6 +355,8 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
                 $match.$and.push({ available: true });
             } else if (availability.length === 1 && availability[0] === Env.AVAILABILITY.UNAVAILABLE) {
                 $match.$and.push({ available: false });
+            } else if (availability.length === 0) {
+                return res.json([{ resultData: [], pageInfo: [] }]);
             }
         }
 
@@ -410,10 +414,10 @@ routes.route(routeNames.getCars).post(authJwt.verifyToken, async (req, res) => {
             }
         });
 
-        res.json(cars);
+        return res.json(cars);
     } catch (err) {
         console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
-        res.status(400).send(strings.DB_ERROR + err);
+        return res.status(400).send(strings.DB_ERROR + err);
     }
 });
 
@@ -442,10 +446,10 @@ routes.route(routeNames.getBookingCars).post(authJwt.verifyToken, async (req, re
             { $limit: size }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } });
 
-        res.json(cars);
+        return res.json(cars);
     } catch (err) {
         console.error(`[car.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
-        res.status(400).send(strings.DB_ERROR + err);
+        return res.status(400).send(strings.DB_ERROR + err);
     }
 });
 
@@ -470,10 +474,14 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
             ]
         };
 
-        if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
-            $match.$and.push({ mileage: { $gt: -1 } });
-        } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
-            $match.$and.push({ mileage: -1 });
+        if (mileage) {
+            if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
+                $match.$and.push({ mileage: { $gt: -1 } });
+            } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
+                $match.$and.push({ mileage: -1 });
+            } else if (mileage.length === 0) {
+                return res.json([{ resultData: [], pageInfo: [] }]);
+            }
         }
 
         if (deposit > -1) {
@@ -534,10 +542,10 @@ routes.route(routeNames.getFrontendCars).post(async (req, res) => {
             }
         });
 
-        res.json(cars);
+        return res.json(cars);
     } catch (err) {
         console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err);
-        res.status(400).send(strings.DB_ERROR + err);
+        return res.status(400).send(strings.DB_ERROR + err);
     }
 });
 

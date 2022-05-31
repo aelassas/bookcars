@@ -5,6 +5,7 @@ const Signin = lazy(() => import("./components/Signin"));
 const Signup = lazy(() => import("./components/Signup"));
 const Activate = lazy(() => import('./components/Activate'));
 const ResetPassword = lazy(() => import('./components/ResetPassword'));
+const ResetUserPassword = lazy(() => import('./components/ResetUserPassword'));
 const Home = lazy(() => import("./components/Home"));
 const Cars = lazy(() => import("./components/Cars"));
 const CreateBooking = lazy(() => import("./components/CreateBooking"));
@@ -29,6 +30,7 @@ const App = () => {
 						<Route exact path="/sign-up" element={<Signup />} />
 						<Route exact path='/activate' element={<Activate />} />
 						<Route exact path='/reset-password' element={<ResetPassword />} />
+						<Route exact path='/reset-user-password' element={<ResetUserPassword />} />
 						<Route exact path="/" element={<Home />} />
 						<Route exact path="/cars" element={<Cars />} />
 						<Route exact path="/create-booking" element={<CreateBooking />} />

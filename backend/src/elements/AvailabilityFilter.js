@@ -28,6 +28,10 @@ class AvailabilityFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.AVAILABILITY.AVAILABLE), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {
@@ -56,6 +60,10 @@ class AvailabilityFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.AVAILABILITY.UNAVAILABLE), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {

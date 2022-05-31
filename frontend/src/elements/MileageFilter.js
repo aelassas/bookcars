@@ -28,6 +28,10 @@ class MileageFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.MILEAGE.LIMITED), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {
@@ -56,6 +60,10 @@ class MileageFilter extends Component {
             }
         } else {
             values.splice(values.findIndex(v => v === Env.MILEAGE.UNLIMITED), 1);
+
+            if (values.length === 0) {
+                this.setState({ allChecked: false });
+            }
         }
 
         this.setState({ values }, () => {

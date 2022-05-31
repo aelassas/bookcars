@@ -5,8 +5,6 @@ import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings as cpStrings } from '../lang/change-password';
 import { strings as rpStrings } from '../lang/reset-password';
-import { strings as mStrings } from '../lang/master';
-import { strings } from '../lang/activate';
 import Error from './Error';
 import NoMatch from './NoMatch';
 import {
@@ -15,14 +13,13 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper,
-    Link
+    Paper
 } from '@mui/material';
 import { toast } from 'react-toastify';
 
-import '../assets/css/activate.css';
+import '../assets/css/reset-user-password.css';
 
-export default class Activate extends Component {
+export default class ResetUserPassword extends Component {
 
     constructor(props) {
         super(props);
@@ -30,7 +27,6 @@ export default class Activate extends Component {
             userId: null,
             email: null,
             token: null,
-            resend: false,
             visible: false,
             error: false,
             noMatch: false,
@@ -38,8 +34,7 @@ export default class Activate extends Component {
             confirmPassword: '',
             passwordError: false,
             confirmPasswordError: false,
-            passwordLengthError: false,
-            reset: false
+            passwordLengthError: false
         };
     }
 
@@ -158,8 +153,6 @@ export default class Activate extends Component {
                                     const reset = params.get('r') === 'true';
                                     this.setState({ reset });
                                 }
-                            } else if (status === 204) {
-                                this.setState({ email, resend: true });
                             } else {
                                 this.setState({ noMatch: true });
                             }
@@ -174,14 +167,10 @@ export default class Activate extends Component {
                 this.setState({ noMatch: true });
             }
         }
-    }
-
-    componentDidMount() {
-    }
+    };
 
     render() {
         const {
-            resend,
             visible,
             error,
             noMatch,
@@ -189,34 +178,15 @@ export default class Activate extends Component {
             confirmPasswordError,
             passwordLengthError,
             password,
-            confirmPassword,
-            reset
+            confirmPassword
         } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
-                {resend &&
-                    <div className="resend">
-                        <Paper className="resend-form" elevation={10}>
-                            <h1>{strings.ACTIVATE_HEADING}</h1>
-                            <div className='resend-form-content'>
-                                <label>{strings.TOKEN_EXPIRED}</label>
-                                <Button
-                                    type="button"
-                                    variant="contained"
-                                    size="small"
-                                    className="btn-primary btn-resend"
-                                    onClick={this.handleResend}
-                                >{mStrings.RESEND}</Button>
-                                <p className='go-to-home'><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>
-                            </div>
-                        </Paper>
-                    </div>
-                }
                 {visible &&
-                    <div className="activate">
-                        <Paper className="activate-form" elevation={10}>
-                            <h1>{reset ? rpStrings.RESET_PASSWORD_HEADING : strings.ACTIVATE_HEADING}</h1>
+                    <div className="reset-user-password">
+                        <Paper className="reset-user-password-form" elevation={10}>
+                            <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
                             <form onSubmit={this.handleSubmit}>
                                 <FormControl fullWidth margin="dense">
                                     <InputLabel className='required' error={passwordError}>
@@ -264,7 +234,7 @@ export default class Activate extends Component {
                                         size="small"
                                         variant='contained'
                                     >
-                                        {reset ? commonStrings.UPDATE : strings.ACTIVATE}
+                                        {commonStrings.UPDATE}
                                     </Button>
                                     <Button
                                         className='btn-secondary btn-margin-bottom'
