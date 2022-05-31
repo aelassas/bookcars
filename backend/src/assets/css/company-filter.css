@@ -1,10 +1,7 @@
 div.company-filter {
     background: #fafafa;
     margin: 10px 0;
-    padding: 5px;
-    border: 1px solid #dadada;
     font-size: 13px;
-    overflow: auto;
 }
 
 div.company-filter ul.company-list {
@@ -50,6 +47,7 @@ div.company-filter ul.company-list li input[type='checkbox'] {
 
 div.company-filter div.filter-actions {
     text-align: center;
+    padding: 10px;
 }
 
 div.company-filter div.filter-actions span.uncheckall {

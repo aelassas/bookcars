@@ -72,7 +72,8 @@ export const strings = new LocalizedStrings({
         TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
         BIRTH_DATE_NOT_VALID: 'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
         BIRTH_DATE_NOT_VALID_PART1: 'Vous devez avoir au moins',
-        BIRTH_DATE_NOT_VALID_PART2: 'ans pour louer cette voiture.'
+        BIRTH_DATE_NOT_VALID_PART2: 'ans pour louer cette voiture.',
+        SUPPLIER: 'Fournisseur'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -143,7 +144,8 @@ export const strings = new LocalizedStrings({
         TOS_ERROR: 'Please accept the Terms of Use.',
         BIRTH_DATE_NOT_VALID: 'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
         BIRTH_DATE_NOT_VALID_PART1: 'You must be at least',
-        BIRTH_DATE_NOT_VALID_PART2: 'years old to rent this car.'
+        BIRTH_DATE_NOT_VALID_PART2: 'years old to rent this car.',
+        SUPPLIER: 'Supplier'
     }
 });
 
