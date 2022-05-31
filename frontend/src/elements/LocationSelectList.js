@@ -90,7 +90,8 @@ class LocationSelectList extends Component {
                                 this.fetch();
                             });
                         }
-                    }
+                    },
+                    style: { overflow: this.props.overflowHidden ? 'hidden' : 'auto' }
                 }}
                 onFocus={
                     (event) => {
