@@ -2,6 +2,7 @@ div.company-filter {
     background: #fff;
     margin: 10px 0;
     font-size: 13px;
+    text-align: center;
 }
 
 div.company-filter ul.company-list {
@@ -10,7 +11,7 @@ div.company-filter ul.company-list {
     margin: 15px 0 0 0;
     padding: 0;
     display: inline-block;
-    width: 100%;
+    width: 250px;
 }
 
 div.company-filter ul.company-list li {

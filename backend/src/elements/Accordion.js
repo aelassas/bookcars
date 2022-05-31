@@ -27,7 +27,7 @@ class Accordion extends Component {
             const accordion = document.querySelector('.accordion');
             const panel = accordion.nextElementSibling;
             accordion.classList.toggle('accordion-active');
-            panel.style.maxHeight = panel.scrollHeight + 'px';
+            panel.style.maxHeight = (panel.scrollHeight + 100) + 'px';
         }
     }
 

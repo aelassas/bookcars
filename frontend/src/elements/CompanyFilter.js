@@ -98,7 +98,7 @@ class CompanyFilter extends Component {
 
         return (
             companies.length > 0 ? (
-                <Accordion title={commonStrings.SUPPLIER} collapse className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}>
+                <Accordion title={commonStrings.SUPPLIER} collapse={this.props.collapse} className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}>
                     <ul className='company-list'>
                         {
                             companies.map(company => (

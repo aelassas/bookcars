@@ -33,7 +33,7 @@ div.accordion-container label.accordion:after {
     border-bottom: 5px solid transparent;
     transition: transform .1s ease;
     float: right;
-    margin: 7px 5px 0;
+    margin: 7px 7px 0;
 }
 
 div.accordion-container label.accordion-active:after {
