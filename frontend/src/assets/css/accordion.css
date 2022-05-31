@@ -44,3 +44,8 @@ div.accordion-container div.panel {
     overflow: hidden;
     transition: max-height .23s ease-out;
 }
+
+div.accordion-container div.panel-collapse {
+    overflow: hidden;
+    transition: max-height .23s ease-out;
+}

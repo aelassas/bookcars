@@ -65,7 +65,8 @@ export const strings = new LocalizedStrings({
         PHONE_NOT_VALID: 'Numéro de téléphone non valide',
         BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
         FORM_ERROR: 'Veuillez corriger les erreurs.',
-        ALL: 'Tous'
+        ALL: 'Tous',
+        SUPPLIER: 'Fournisseur'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -129,7 +130,8 @@ export const strings = new LocalizedStrings({
         PHONE_NOT_VALID: 'Invalid phone number',
         BIRTH_DATE_NOT_VALID: 'The driver must be at least ' + Env.MINIMUM_AGE + ' years old.',
         FORM_ERROR: 'Please fix errors.',
-        ALL: 'All'
+        ALL: 'All',
+        SUPPLIER: 'Supplier'
     }
 });
 

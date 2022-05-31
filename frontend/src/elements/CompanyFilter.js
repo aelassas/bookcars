@@ -3,6 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
+import Accordion from './Accordion';
 import { toast } from 'react-toastify';
 
 import '../assets/css/company-filter.css';
@@ -97,7 +98,7 @@ class CompanyFilter extends Component {
 
         return (
             companies.length > 0 ? (
-                <div className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}>
+                <Accordion title={commonStrings.SUPPLIER} collapse className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}>
                     <ul className='company-list'>
                         {
                             companies.map(company => (
@@ -118,7 +119,7 @@ class CompanyFilter extends Component {
                             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
                         </span>
                     </div>
-                </div>
+                </Accordion>
             )
                 :
                 <></>

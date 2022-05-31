@@ -96,27 +96,28 @@ export default class Cars extends Component {
                         <div className='col-1'>
                             <Search onSubmit={this.handleSearch} className='search' />
 
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                className='btn-primary new-car'
+                                size="small"
+                                href='/create-car'
+                            >
+                                {strings.NEW_CAR}
+                            </Button>
+
+                            {rowCount > 0 &&
+                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
+                            }
+
                             <CompanyFilter
                                 onLoad={this.handleCompanyFilterLoad}
                                 onChange={this.handleCompanyFilterChange}
                                 className='filter'
                             />
 
-                            {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
-                            }
-
                             {rowCount > -1 &&
                                 <>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary new-car'
-                                        size="small"
-                                        href='/create-car'
-                                    >
-                                        {strings.NEW_CAR}
-                                    </Button>
 
                                     <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
                                     <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
