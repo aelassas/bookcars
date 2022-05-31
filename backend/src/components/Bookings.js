@@ -83,11 +83,14 @@ export default class Bookings extends Component {
                                     {strings.NEW_BOOKING}
                                 </Button>
                             )}
-                            {admin && <CompanyFilter
-                                onLoad={this.handleCompanyFilterLoad}
-                                onChange={this.handleCompanyFilterChange}
-                                className='cl-company-filter'
-                            />}
+                            {admin &&
+                                <CompanyFilter
+                                    onLoad={this.handleCompanyFilterLoad}
+                                    onChange={this.handleCompanyFilterChange}
+                                    className='cl-company-filter'
+                                    collapse
+                                />
+                            }
                             {leftPanel && (
                                 <div>
                                     <StatusFilter

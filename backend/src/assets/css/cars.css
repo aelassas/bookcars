@@ -13,6 +13,11 @@ div.cars div.search {
     justify-content: center;
 }
 
+div.cars div.col-1 .filter,
+div.cars div.col-1 div.info-box {
+    background-color: #fff;
+}
+
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
@@ -45,7 +50,6 @@ div.cars div.search {
         padding: 1px;
     }
 
-    div.cars div.col-1 .filter,
     div.cars div.col-1 .car-count {
         display: none;
     }
@@ -74,10 +78,4 @@ div.cars div.search {
         margin: 20px 5px 0 0;
         width: 100%;
     }
-
-    div.cars div.col-1 .filter,
-    div.cars div.col-1 div.info-box {
-        background-color: #fff;
-    }
-
 }

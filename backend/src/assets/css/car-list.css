@@ -177,10 +177,6 @@ section.car-list .empty-list {
         margin: 2px;
     }
 
-    .company-filter {
-        display: none;
-    }
-
     section.car-list article div.action {
         position: absolute;
         right: 0;

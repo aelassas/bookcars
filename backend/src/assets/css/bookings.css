@@ -33,7 +33,11 @@ div.bookings {
         overflow: auto;
     }
 
-    div.bookings div.col-1 .cl-company-filter,
+    div.bookings div.col-1 .cl-company-filter {
+        margin: 10px 10px 10px 0;
+        background-color: #fff;
+    }
+
     div.bookings div.col-1 .cl-status-filter,
     div.bookings div.col-1 .cl-booking-filter {
         margin-bottom: 10px;
