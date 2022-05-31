@@ -54,6 +54,10 @@ const Env = {
     MILEAGE: {
         LIMITED: 'limited',
         UNLIMITED: 'unlimited'
+    },
+    AVAILABILITY: {
+        AVAILABLE: 'available',
+        UNAVAILABLE: 'unavailable'
     }
 };
 

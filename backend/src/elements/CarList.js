@@ -57,7 +57,8 @@ class CarList extends Component {
             fuel: props.fuel,
             gearbox: props.gearbox,
             mileage: props.mileage,
-            deposit: props.deposit
+            deposit: props.deposit,
+            availability: props.availability
         };
     }
 
@@ -114,11 +115,11 @@ class CarList extends Component {
     };
 
     fetch = () => {
-        const { keyword, page, size, companies, rows, fuel, gearbox, mileage, deposit } = this.state;
+        const { keyword, page, size, companies, rows, fuel, gearbox, mileage, deposit, availability } = this.state;
 
         this.setState({ loading: true });
 
-        const payload = { companies, fuel, gearbox, mileage, deposit };
+        const payload = { companies, fuel, gearbox, mileage, deposit, availability };
 
         CarService.getCars(keyword, payload, page, size)
             .then(data => {
@@ -139,7 +140,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileage, deposit } = prevState;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -165,6 +166,10 @@ class CarList extends Component {
             return { deposit: nextProps.deposit };
         }
 
+        if (nextProps.availability && !Helper.arrayEqual(availability, nextProps.availability)) {
+            return { availability: Helper.clone(nextProps.availability) };
+        }
+
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
         }
@@ -173,7 +178,7 @@ class CarList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileage, deposit } = this.state;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability } = this.state;
 
         if (keyword !== prevState.keyword) {
             return this.setState({ page: 1 }, () => this.fetch());
@@ -196,6 +201,10 @@ class CarList extends Component {
         }
 
         if (deposit !== prevState.deposit) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(availability, prevState.availability)) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
 
