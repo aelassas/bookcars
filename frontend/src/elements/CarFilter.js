@@ -65,7 +65,13 @@ class CarFilter extends Component {
 
         const { pickupLocation, dropOffLocation, from, to } = this.state;
 
-        if (this.props.onSubmit) this.props.onSubmit({ pickupLocation, dropOffLocation, from, to });
+        if (!pickupLocation || !dropOffLocation) {
+            return;
+        }
+
+        if (this.props.onSubmit) {
+            this.props.onSubmit({ pickupLocation, dropOffLocation, from, to });
+        }
     };
 
     render() {

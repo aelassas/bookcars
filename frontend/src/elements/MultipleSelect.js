@@ -64,6 +64,11 @@ export default function MultipleSelect({
                 getOptionLabel={(option) => (option && option.name) || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
+
+                    if (event.type === 'keydown' && event.key === 'Enter') {
+                        return;
+                    }
+
                     if (multiple) {
                         setValues(newValue);
                         callbackFromMultipleSelect(newValue, key, reference);
@@ -81,13 +86,17 @@ export default function MultipleSelect({
                         }
                     }
                 }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                }}
                 clearOnBlur={false}
                 clearOnEscape={false}
                 loading={loading}
                 multiple={multiple}
                 freeSolo={freeSolo}
                 renderInput={(params) => {
-
                     if (type === Env.RECORD_TYPE.LOCATION && !multiple && freeSolo && values.length === 0) {
                         return (
                             <TextField
