@@ -378,7 +378,7 @@ export default function Header(props) {
                             disableElevation
                             fullWidth
                             className="btn-primary"
-                            style={{ minWidth: '160px' }}
+                            style={{ minWidth: '180px' }}
                         >
                             {strings.SIGN_IN}
                         </Button>}
