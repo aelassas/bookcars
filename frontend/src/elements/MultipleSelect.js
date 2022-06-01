@@ -22,7 +22,8 @@ const ListBox = forwardRef(
 
         return (
             // eslint-disable-next-line
-            <ul {...rest} ref={innerRef} role='list-box'>{children}</ul>
+            // <ul {...rest} ref={innerRef} role='list-box'>{children}</ul>
+            <ul {...rest} ref={innerRef} role='listbox'>{children}</ul>
         );
     },
 );
@@ -47,6 +48,7 @@ export default function MultipleSelect({
     onOpen,
     readOnly
 }) {
+    const [open, setOpen] = React.useState(false);
     const [values, setValues] = useState([]);
     const [inputValue, setInputValue] = useState('');
 
@@ -58,14 +60,34 @@ export default function MultipleSelect({
     return (
         <div className='multiple-select'>
             <Autocomplete
+                open={open}
                 readOnly={readOnly}
                 options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
                 getOptionLabel={(option) => (option && option.name) || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
+                inputValue={inputValue}
+                onInputChange={(event, value) => {
+
+                    if (values.length === 0) {
+                        if (value.length === 0) {
+                            if (open) setOpen(false);
+                        } else {
+                            if (!open) setOpen(true);
+                        }
+                    }
+
+                    setInputValue(value);
+                    if (onInputChange) onInputChange(event);
+                }}
+                onClose={() => {
+                    setOpen(false)
+                }}
                 onChange={(event, newValue) => {
 
-                    if (event.type === 'keydown' && event.key === 'Enter') {
+                    if (!multiple
+                        && event && event.type === 'keydown' && event.key === 'Enter'
+                        && newValue && !newValue._id) {
                         return;
                     }
 
@@ -96,8 +118,13 @@ export default function MultipleSelect({
                 loading={loading}
                 multiple={multiple}
                 freeSolo={freeSolo}
+                handleHomeEndKeys={false}
+                popupIcon={null}
                 renderInput={(params) => {
-                    if (type === Env.RECORD_TYPE.LOCATION && !multiple && freeSolo && values.length === 0) {
+                    const inputProps = params.inputProps;
+                    inputProps.autoComplete = 'off';
+
+                    if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 0) {
                         return (
                             <TextField
                                 {...params}
@@ -111,15 +138,19 @@ export default function MultipleSelect({
                                         </>
                                     ),
                                 }}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    value: params.inputProps.value
+                                }}
                             />
                         );
                     }
 
                     if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 1 && values[0]) {
-
                         return (
                             <TextField
                                 {...params}
+                                style={{ paddingRight: '0 !important' }}
                                 label={label}
                                 variant={variant || 'outlined'}
                                 required={required && values && values.length === 0}
@@ -201,11 +232,6 @@ export default function MultipleSelect({
                             required={required && values && values.length === 0}
                         />
                     );
-                }}
-                inputValue={inputValue}
-                onInputChange={(event, newInputValue) => {
-                    setInputValue(newInputValue);
-                    if (onInputChange) onInputChange(event);
                 }}
                 renderOption={(props, option, { selected }) => {
                     if (type === Env.RECORD_TYPE.LOCATION) {

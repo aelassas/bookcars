@@ -104,7 +104,21 @@ const theme = createTheme({
                     }
                 }
             },
-        }
+        },
+        MuiAutocomplete: {
+            styleOverrides: {
+                root: {
+                    '& .MuiAutocomplete-inputRoot': {
+                        paddingRight: '20px !important'
+                    }
+                },
+                listbox: {
+                    '& .Mui-focused': {
+                        backgroundColor: '#eee !important',
+                    }
+                }
+            },
+        },
     },
 }, language === 'fr' ? frFR : enUS);
 

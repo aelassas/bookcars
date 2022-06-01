@@ -83,7 +83,6 @@ class CarFilter extends Component {
                     <FormControl fullWidth className='pickup-location'>
                         <LocationSelectList
                             label={commonStrings.PICKUP_LOCATION}
-                            freeSolo
                             overflowHidden
                             required
                             variant='standard'
@@ -96,7 +95,6 @@ class CarFilter extends Component {
                             <LocationSelectList
                                 label={commonStrings.DROP_OFF_LOCATION}
                                 value={dropOffLocation}
-                                freeSolo
                                 overflowHidden
                                 required
                                 variant='standard'

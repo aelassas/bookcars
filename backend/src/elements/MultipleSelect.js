@@ -66,6 +66,11 @@ export default function MultipleSelect({
                 getOptionLabel={(option) => (option && option.name) || ''}
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
+
+                    if (event && event.type === 'keydown' && event.key === 'Enter') {
+                        return;
+                    }
+
                     if (multiple) {
                         setValues(newValue);
                         callbackFromMultipleSelect(newValue, key, reference);
@@ -83,11 +88,20 @@ export default function MultipleSelect({
                         }
                     }
                 }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                    }
+                }}
                 clearOnBlur={false}
                 clearOnEscape={false}
                 loading={loading}
                 multiple={multiple}
+                handleHomeEndKeys={false}
                 renderInput={(params) => {
+                    const inputProps = params.inputProps;
+                    inputProps.autoComplete = 'off';
+
                     if (type === Env.RECORD_TYPE.USER && !multiple && values.length === 1 && values[0]) {
                         const option = values[0];
 
