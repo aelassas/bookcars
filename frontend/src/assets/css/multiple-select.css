@@ -4,8 +4,9 @@ li.ms-option {
     width: 100%;
 }
 
-li.ms-option:hover {
-    background: #fafafa;
+li.ms-option:hover,
+li.ms-option:focus {
+    background: #eee;
     cursor: pointer;
 }
 

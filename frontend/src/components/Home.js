@@ -112,7 +112,6 @@ export default class Home extends Component {
                                 <FormControl className='pickup-location'>
                                     <LocationSelectList
                                         label={commonStrings.PICKUP_LOCATION}
-                                        freeSolo
                                         overflowHidden
                                         required
                                         variant='outlined'
@@ -156,7 +155,6 @@ export default class Home extends Component {
                                     <FormControl className='drop-off-location'>
                                         <LocationSelectList
                                             label={commonStrings.DROP_OFF_LOCATION}
-                                            freeSolo
                                             overflowHidden
                                             required
                                             variant='outlined'
