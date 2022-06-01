@@ -187,15 +187,10 @@ class CompanyList extends Component {
                                     <span className='company-item-title'>{company.fullName}</span>
                                 </div>
                                 <div className='company-actions'>
-                                    <Tooltip title={strings.VIEW_COMPANY}>
-                                        <IconButton href={`/company?c=${company._id}`}>
-                                            <ViewIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    {edit &&
-                                        <Tooltip title={commonStrings.UPDATE}>
-                                            <IconButton href={`/update-company?c=${company._id}`}>
-                                                <EditIcon />
+                                    {canDelete &&
+                                        <Tooltip title={commonStrings.DELETE}>
+                                            <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
+                                                <DeleteIcon />
                                             </IconButton>
                                         </Tooltip>
                                     }
@@ -206,13 +201,18 @@ class CompanyList extends Component {
                                             </IconButton>
                                         </Tooltip>
                                     }
-                                    {canDelete &&
-                                        <Tooltip title={commonStrings.DELETE}>
-                                            <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
-                                                <DeleteIcon />
+                                    {edit &&
+                                        <Tooltip title={commonStrings.UPDATE}>
+                                            <IconButton href={`/update-company?c=${company._id}`}>
+                                                <EditIcon />
                                             </IconButton>
                                         </Tooltip>
                                     }
+                                    <Tooltip title={strings.VIEW_COMPANY}>
+                                        <IconButton href={`/company?c=${company._id}`}>
+                                            <ViewIcon />
+                                        </IconButton>
+                                    </Tooltip>
                                 </div>
                             </article>
                         );
