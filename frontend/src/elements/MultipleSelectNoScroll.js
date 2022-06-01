@@ -34,7 +34,7 @@ export default function MultipleSelect({
     hidePopupIcon,
     customOpen
 }) {
-    const [init, setInit] = React.useState(false);
+    const [init, setInit] = React.useState(selectedOptions.length === 0);
     const [open, setOpen] = React.useState(false);
     const [values, setValues] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -55,8 +55,6 @@ export default function MultipleSelect({
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 inputValue={inputValue}
                 onInputChange={(event, value) => {
-                    console.log('event', event)
-                    console.log('value', value)
                     if (init) {
                         if (!event) {
                             setInputValue(value);

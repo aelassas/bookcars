@@ -47,7 +47,7 @@ export default function MultipleSelect({
     hidePopupIcon,
     customOpen
 }) {
-    const [init, setInit] = React.useState(false);
+    const [init, setInit] = React.useState(selectedOptions.length === 0);
     const [open, setOpen] = React.useState(false);
     const [values, setValues] = useState([]);
     const [inputValue, setInputValue] = useState('');
