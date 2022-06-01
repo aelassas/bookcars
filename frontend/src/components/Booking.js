@@ -506,7 +506,7 @@ export default class Booking extends Component {
                                         {`${price} ${commonStrings.CURRENCY}`}
                                     </label>
                                     <label className='price-day'>
-                                        {`${csStrings.PRICE_PER_DAY} ${booking.car.price} ${commonStrings.CURRENCY}`}
+                                        {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}
                                     </label>
                                 </div>
                             </div>
