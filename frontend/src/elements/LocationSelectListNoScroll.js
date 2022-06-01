@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common';
 import LocationService from '../services/LocationService';
 import Helper from '../common/Helper';
 import { toast } from 'react-toastify';
-import MultipleSelect from './MultipleSelect';
+import MultipleSelect from './MultipleSelectNoScroll';
 
 class LocationSelectList extends Component {
 
@@ -63,8 +63,6 @@ class LocationSelectList extends Component {
             init,
             loading,
             rows,
-            fetch,
-            page,
             keyword,
             selectedOptions } = this.state;
 
@@ -81,19 +79,11 @@ class LocationSelectList extends Component {
                 freeSolo={this.props.freeSolo}
                 hidePopupIcon={this.props.hidePopupIcon}
                 customOpen={this.props.customOpen}
+                hidePopupOnload={this.props.hidePopupOnload}
                 type={Env.RECORD_TYPE.LOCATION}
                 variant={this.props.variant || 'standard'}
                 ListboxProps={{
-                    onScroll: (event) => {
-                        const listboxNode = event.currentTarget;
-                        if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
-                            const p = page + 1;
-                            this.setState({ page: p }, () => {
-                                this.fetch();
-                            });
-                        }
-                    },
-                    style: { overflow: this.props.overflowHidden ? 'hidden' : 'auto' }
+                    style: { overflow: 'hidden' }
                 }}
                 onFocus={
                     (event) => {
@@ -109,7 +99,6 @@ class LocationSelectList extends Component {
                     (event) => {
                         const value = (event && event.target ? event.target.value : null) || '';
 
-                        //if (event.target.type === 'text' && value !== keyword) {
                         if (value !== keyword) {
                             this.setState({ rows: [], page: 1, keyword: value }, () => {
                                 this.fetch();

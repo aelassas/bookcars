@@ -4,6 +4,13 @@ li.ms-option {
     width: 100%;
 }
 
+.ms-option .Mui-focused,
+.ms-option:focus,
+.ms-option:focus-visible,
+.ms-option:focus-within {
+    background: #eee !important
+}
+
 li.ms-option:hover {
     background: #eee;
     cursor: pointer;

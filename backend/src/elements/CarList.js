@@ -58,7 +58,8 @@ class CarList extends Component {
             gearbox: props.gearbox,
             mileage: props.mileage,
             deposit: props.deposit,
-            availability: props.availability
+            availability: props.availability,
+            cars: []
         };
     }
 
@@ -140,7 +141,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability } = prevState;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability, cars } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -170,6 +171,10 @@ class CarList extends Component {
             return { availability: Helper.clone(nextProps.availability) };
         }
 
+        if (nextProps.cars && !Helper.carsEqual(cars, nextProps.cars)) {
+            return { cars: Helper.clone(nextProps.cars) };
+        }
+
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
         }
@@ -178,7 +183,7 @@ class CarList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability } = this.state;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability, cars } = this.state;
 
         if (keyword !== prevState.keyword) {
             return this.setState({ page: 1 }, () => this.fetch());
@@ -206,6 +211,14 @@ class CarList extends Component {
 
         if (!Helper.arrayEqual(availability, prevState.availability)) {
             return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.carsEqual(cars, prevState.cars)) {
+            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad({ rows: cars, rowCount: cars.length });
+                }
+            });
         }
 
         if (reload && !prevState.reload) {
