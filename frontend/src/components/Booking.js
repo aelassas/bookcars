@@ -3,7 +3,6 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as blStrings } from '../lang/booking-list';
 import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as csStrings } from '../lang/cars';
-import { strings } from '../lang/booking';
 import Helper from '../common/Helper';
 import Master from '../elements/Master';
 import UserService from '../services/UserService';
@@ -72,25 +71,16 @@ export default class Booking extends Component {
     };
 
     handleCarSelectListChange = (values) => {
-        const { booking, car } = this.state, newCar = values.length > 0 ? values[0] : null;
+        const { booking, car, from, to } = this.state, newCar = values.length > 0 ? values[0] : null;
 
         if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
             CarService.getCar(newCar._id)
                 .then(car => {
                     if (car) {
                         booking.car = car;
+                        const price = Helper.price(car, from, to, booking);
 
-                        Helper.price(
-                            booking,
-                            booking.car,
-                            (price) => {
-                                booking.price = price;
-
-                                this.setState({ booking, price, car: newCar });
-                            },
-                            (err) => {
-                                this.error();
-                            });
+                        this.setState({ booking, price, car: newCar });
                     } else {
                         this.error();
                     }
@@ -291,7 +281,7 @@ export default class Booking extends Component {
             price,
             minDate,
             edit
-        } = this.state;
+        } = this.state, days = Helper.days(from, to);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -508,12 +498,23 @@ export default class Booking extends Component {
                         </div>
                         <div className='col-2'>
                             <div className='col-2-header'>
-                                <h2> {`${strings.TOTAL} ${price} ${commonStrings.CURRENCY}`} </h2>
+                                <div className='price'>
+                                    <label className='price-days'>
+                                        {Helper.getDays(days)}
+                                    </label>
+                                    <label className='price-main'>
+                                        {`${price} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                    <label className='price-day'>
+                                        {`${csStrings.PRICE_PER_DAY} ${booking.car.price} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                </div>
                             </div>
                             <CarList
                                 user={user}
+                                booking={booking}
                                 cars={[booking.car]}
-                                hideTotalPrice
+                                hidePrice
                             />
                         </div>
 

@@ -105,20 +105,31 @@ const theme = createTheme({
                 }
             },
         },
-        // MuiAutocomplete: {
-        //     styleOverrides: {
-        //         root: {
-        //             '& .MuiAutocomplete-inputRoot': {
-        //                 paddingRight: '20px !important'
-        //             }
-        //         },
-        //         listbox: {
-        //             '& .Mui-focused': {
-        //                 backgroundColor: '#eee !important',
-        //             }
-        //         }
-        //     },
-        // },
+        MuiAutocomplete: {
+            styleOverrides: {
+                root: {
+                    '& .MuiAutocomplete-inputRoot': {
+                        paddingRight: '20px !important'
+                    }
+                },
+                listbox: {
+                    '& .Mui-focused': {
+                        backgroundColor: '#eee !important',
+                    }
+                },
+                option: {
+                    // Hover
+                    // '&[data-focus="true"]': {
+                    //     backgroundColor: '#eee !important',
+                    //     borderColor: 'transparent',
+                    // },
+                    // Selected
+                    '&[aria-selected="true"]': {
+                        backgroundColor: '#faad43 !important'
+                    },
+                },
+            },
+        },
     },
 }, language === 'fr' ? frFR : enUS);
 

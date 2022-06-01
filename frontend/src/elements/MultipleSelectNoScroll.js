@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import {
@@ -11,19 +11,6 @@ import {
 } from '@mui/icons-material';
 
 import '../assets/css/multiple-select.css';
-
-const ListBox =
-    forwardRef(function ListBoxBase(props, ref) {
-        const { children, ...rest } = props;
-
-        const innerRef = useRef(null);
-
-        useImperativeHandle(ref, () => innerRef.current);
-        return (
-            // eslint-disable-next-line
-            <ul {...rest} ref={innerRef} role='list-box'>{children}</ul>
-        );
-    });
 
 export default function MultipleSelect({
     label,
@@ -54,7 +41,7 @@ export default function MultipleSelect({
 
     useEffect(() => {
         setValues(selectedOptions);
-        if (selectedOptions && selectedOptions.length === 0) setInputValue('')
+        if (selectedOptions && selectedOptions.length === 0) setInputValue('');
     }, [selectedOptions, type]);
 
     return (
@@ -68,6 +55,8 @@ export default function MultipleSelect({
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 inputValue={inputValue}
                 onInputChange={(event, value) => {
+                    console.log('event', event)
+                    console.log('value', value)
                     if (init) {
                         if (!event) {
                             setInputValue(value);
@@ -92,7 +81,9 @@ export default function MultipleSelect({
                 }}
                 onChange={(event, newValue) => {
 
-                    if (event && event.type === 'keydown' && event.key === 'Enter') {
+                    if (!multiple
+                        && event && event.type === 'keydown' && event.key === 'Enter'
+                        && newValue && !newValue._id) {
                         return;
                     }
 
@@ -284,7 +275,6 @@ export default function MultipleSelect({
                 }}
                 ListboxProps={ListboxProps || null}
                 onFocus={onFocus || null}
-                ListboxComponent={ListBox}
                 onOpen={onOpen || null}
             />
         </div>

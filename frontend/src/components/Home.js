@@ -3,7 +3,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
 import UserService from '../services/UserService';
 import Master from '../elements/Master';
-import LocationSelectList from '../elements/LocationSelectList';
+import LocationSelectList from '../elements/LocationSelectListNoScroll';
 import DateTimePicker from '../elements/DateTimePicker'
 import { FormControl, Button } from '@mui/material';
 
@@ -112,9 +112,8 @@ export default class Home extends Component {
                                 <FormControl className='pickup-location'>
                                     <LocationSelectList
                                         label={commonStrings.PICKUP_LOCATION}
-                                        overflowHidden
                                         hidePopupIcon
-                                        freeSolo
+                                        customOpen
                                         required
                                         variant='outlined'
                                         onChange={this.handlePickupLocationChange}
@@ -157,9 +156,9 @@ export default class Home extends Component {
                                     <FormControl className='drop-off-location'>
                                         <LocationSelectList
                                             label={commonStrings.DROP_OFF_LOCATION}
-                                            overflowHidden
+                                            // overflowHidden
                                             hidePopupIcon
-                                            freeSolo
+                                            customOpen
                                             required
                                             variant='outlined'
                                             onChange={this.handleDropOffLocationChange}

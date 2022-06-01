@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
 import UserService from '../services/UserService';
-import LocationSelectList from './LocationSelectList';
+import LocationSelectList from './LocationSelectListNoScroll';
 import DateTimePicker from './DateTimePicker'
 import { FormControl, Button } from '@mui/material';
 
@@ -83,9 +83,9 @@ class CarFilter extends Component {
                     <FormControl fullWidth className='pickup-location'>
                         <LocationSelectList
                             label={commonStrings.PICKUP_LOCATION}
-                            overflowHidden
                             hidePopupIcon
-                            freeSolo
+                            customOpen
+                            hidePopupOnload
                             required
                             variant='standard'
                             value={pickupLocation}
@@ -97,9 +97,9 @@ class CarFilter extends Component {
                             <LocationSelectList
                                 label={commonStrings.DROP_OFF_LOCATION}
                                 value={dropOffLocation}
-                                overflowHidden
                                 hidePopupIcon
-                                freeSolo
+                                customOpen
+                                hidePopupOnload
                                 required
                                 variant='standard'
                                 onChange={this.handleDropOffLocationChange}
