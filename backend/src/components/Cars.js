@@ -147,6 +147,7 @@ export default class Cars extends Component {
                                 deposit={deposit}
                                 availability={availability}
                                 keyword={keyword}
+                                from='cars'
                                 reload={reload}
                                 loading={loading}
                                 onLoad={this.handleCarListLoad}

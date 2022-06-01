@@ -366,5 +366,13 @@ export default class Helper {
                 return '';
         }
     }
+
+    static days(from, to) {
+        return ((from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0);
+    }
+
+    static getDays(days) {
+        return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
+    }
 }
 

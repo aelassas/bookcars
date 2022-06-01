@@ -375,7 +375,7 @@ export default class Booking extends Component {
             price,
             openDeleteDialog,
             minDate
-        } = this.state;
+        } = this.state, days = Helper.days(from, to);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -603,11 +603,23 @@ export default class Booking extends Component {
                         </div>
                         <div className='col-2'>
                             <div className='col-2-header'>
-                                <h2> {`${strings.TOTAL} ${price} ${commonStrings.CURRENCY}`} </h2>
+                                <div className='price'>
+                                    <label className='price-days'>
+                                        {Helper.getDays(days)}
+                                    </label>
+                                    <label className='price-main'>
+                                        {`${price} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                    <label className='price-day'>
+                                        {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                </div>
                             </div>
                             <CarList
                                 user={user}
+                                booking={booking}
                                 cars={[booking.car]}
+                                hidePrice
                             />
                         </div>
 
