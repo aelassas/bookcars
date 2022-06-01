@@ -1,6 +1,6 @@
 #!/bin/bash
 
-start=`date +%s`
+start_time=`date +%s`
 echo "Deploying BookCars API..."
 
 cd /opt/bookcars
@@ -14,8 +14,12 @@ npm ci
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
 
-end=`date +%s`
-runtime=$((end-start))
-echo "BookCars API deployed in ${runtime}."
+finish_time=`date +%s`
+elapsed_time=$((finish_time  - start_time))
+
+((sec=elapsed_time%60, elapsed_time/=60, min=elapsed_time%60, hrs=elapsed_time/60))
+timestamp=$(printf "Total time taken - %d minutes, and %d seconds." $min $sec)
+echo "BookCars API deployed."
+echo $timestamp
 
 #$SHEL
