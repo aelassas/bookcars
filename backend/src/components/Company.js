@@ -193,7 +193,8 @@ export default class Company extends Component {
                             <CarList
                                 user={user}
                                 companies={[company._id]}
-                                keyword={''}
+                                keyword=''
+                                from='company'
                                 reload={false}
                                 onLoad={this.handleCarListLoad}
                                 onDelete={this.handleCarDelete}

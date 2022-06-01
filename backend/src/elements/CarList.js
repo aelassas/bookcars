@@ -130,7 +130,11 @@ class CarList extends Component {
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
                     if (page === 1) {
-                        document.querySelector('section.car-list').scrollTo(0, 0);
+                        if (this.props.from && this.props.from === 'cars') {
+                            document.querySelector('div.cars').scrollTo(0, 0);
+                        } else {
+                            document.querySelector('section.car-list').scrollTo(0, 0);
+                        }
                     }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
@@ -227,10 +231,10 @@ class CarList extends Component {
     }
 
     componentDidMount() {
-        // const section = document.querySelector('section.car-list');
-        const div = document.querySelector('div.cars');
-        if (div) {
-            div.onscroll = (event) => {
+        const element = this.props.from && this.props.from === 'cars' ? document.querySelector('div.cars') : document.querySelector('section.car-list');
+
+        if (element) {
+            element.onscroll = (event) => {
                 const { fetch, loading, page } = this.state;
                 let offset = 0;
                 if (Env.isMobile()) offset = document.querySelector('div.col-1').clientHeight;
@@ -380,56 +384,56 @@ class CarList extends Component {
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.cancellation > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.cancellation > -1 && !this.props.booking) || (this.props.booking && this.props.booking.cancellation)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.amendments > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.amendments > -1 && !this.props.booking) || (this.props.booking && this.props.booking.amendments)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.theftProtection > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.theftProtection > -1 && !this.props.booking) || (this.props.booking && this.props.booking.theftProtection)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.collisionDamageWaiver > -1 && !this.props.booking) || (this.props.booking && this.props.booking.collisionDamageWaiver)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.fullInsurance > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.fullInsurance > -1 && !this.props.booking) || (this.props.booking && this.props.booking.fullInsurance)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                         <li>
-                                            <Tooltip title={Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
+                                            <Tooltip title={this.props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {car.additionalDriver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                                                    {((car.additionalDriver > -1 && !this.props.booking) || (this.props.booking && this.props.booking.additionalDriver)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
                                                     <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                                                 </div>
                                             </Tooltip>
                                         </li>
                                     </ul>
                                 </div>
-                                <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>
+                                {!this.props.hidePrice && <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>}
                                 <div className='action'>
                                     <Tooltip title={strings.VIEW_CAR}>
                                         <IconButton href={`/car?cr=${car._id}`}>

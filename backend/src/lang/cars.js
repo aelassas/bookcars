@@ -60,7 +60,10 @@ export const strings = new LocalizedStrings({
         LESS_THAN_2500: 'Moins de 2500 DH',
         LESS_THAN_5000: 'Moins de 5000 DH',
         LESS_THAN_7500: 'Moins de 7500 DH',
-        AVAILABILITY: 'Disponibilité'
+        AVAILABILITY: 'Disponibilité',
+        PRICE_DAYS_PART_1: 'Prix pour',
+        PRICE_DAYS_PART_2: 'jour',
+        PRICE_PER_DAY: 'Prix par jour :',
     },
     en: {
         NEW_CAR: 'New car',
@@ -119,7 +122,10 @@ export const strings = new LocalizedStrings({
         LESS_THAN_2500: 'Less than 2500 DH',
         LESS_THAN_5000: 'Less than 5000 DH',
         LESS_THAN_7500: 'Less than 7500 DH',
-        AVAILABILITY: 'Availablity'
+        AVAILABILITY: 'Availablity',
+        PRICE_DAYS_PART_1: 'Price for',
+        PRICE_DAYS_PART_2: 'day',
+        PRICE_PER_DAY: 'Price per day:',
     }
 });
 

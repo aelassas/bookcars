@@ -108,6 +108,14 @@ section.car-list article .btn-book {
         left: 5px;
     }
 
+    section.car-list article div.car-info ul.extras-list .available {
+        color: #1f9201;
+    }
+
+    section.car-list article div.car-info ul.extras-list .unavailable {
+        color: #F44336;
+    }
+
     section.car-list article div.price {
         display: table;
         position: absolute;

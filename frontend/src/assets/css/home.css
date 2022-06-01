@@ -28,7 +28,7 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content {
         width: 100%;
-        height: calc(100% - 100px);
+        height: 600px;
     }
 
     div.home div.home-content div.home-logo {

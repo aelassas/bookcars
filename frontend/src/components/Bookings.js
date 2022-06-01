@@ -69,7 +69,6 @@ export default class Bookings extends Component {
                             <CompanyFilter
                                 onLoad={this.handleCompanyFilterLoad}
                                 onChange={this.handleCompanyFilterChange}
-                                collapse
                                 className='cl-company-filter'
                             />
                             <StatusFilter

@@ -97,6 +97,16 @@ section.car-list .empty-list {
         left: 5px;
     }
 
+    section.car-list article div.car-info ul.extras-list li.car-available,
+    section.car-list article div.car-info ul.extras-list .available {
+        color: #1f9201;
+    }
+
+    section.car-list article div.car-info ul.extras-list li.car-unavailable,
+    section.car-list article div.car-info ul.extras-list .unavailable {
+        color: #F44336;
+    }
+
     section.car-list article div.price {
         color: #383838;
         font-size: 2em;
@@ -148,11 +158,11 @@ section.car-list .empty-list {
         width: 100%;
     }
 
-    section.car-list article div.car-info ul.extras-list li.car-available {
+    section.car-list article div.car-info ul.extras-list .available {
         color: #1f9201;
     }
 
-    section.car-list article div.car-info ul.extras-list li.car-unavailable {
+    section.car-list article div.car-info ul.extras-list .unavailable {
         color: #F44336;
     }
 
@@ -307,11 +317,13 @@ section.car-list .empty-list {
         width: 100%;
     }
 
-    section.car-list article div.car-info ul.extras-list li.car-available {
+    section.car-list article div.car-info ul.extras-list li.car-available,
+    section.car-list article div.car-info ul.extras-list .available {
         color: #1f9201;
     }
 
-    section.car-list article div.car-info ul.extras-list li.car-unavailable {
+    section.car-list article div.car-info ul.extras-list li.car-unavailable,
+    section.car-list article div.car-info ul.extras-list .unavailable {
         color: #F44336;
     }
 

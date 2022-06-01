@@ -180,9 +180,9 @@ class CarList extends Component {
 
     componentDidMount() {
         // const section = document.querySelector('section.car-list');
-        const div = document.querySelector('div.cars');
-        if (div) {
-            div.onscroll = (event) => {
+        const element = document.querySelector('div.cars');
+        if (element) {
+            element.onscroll = (event) => {
                 const { fetch, loading, page } = this.state;
                 let offset = 0;
                 if (Env.isMobile()) offset = document.querySelector('div.col-1').clientHeight;

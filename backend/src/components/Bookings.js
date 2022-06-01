@@ -88,7 +88,6 @@ export default class Bookings extends Component {
                                     onLoad={this.handleCompanyFilterLoad}
                                     onChange={this.handleCompanyFilterChange}
                                     className='cl-company-filter'
-                                    collapse
                                 />
                             }
                             {leftPanel && (
