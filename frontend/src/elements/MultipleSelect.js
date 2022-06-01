@@ -12,21 +12,18 @@ import {
 
 import '../assets/css/multiple-select.css';
 
-const ListBox = forwardRef(
-    function ListBoxBase(props, ref) {
+const ListBox =
+    forwardRef(function ListBoxBase(props, ref) {
         const { children, ...rest } = props;
 
         const innerRef = useRef(null);
 
         useImperativeHandle(ref, () => innerRef.current);
-
         return (
             // eslint-disable-next-line
-            // <ul {...rest} ref={innerRef} role='list-box'>{children}</ul>
-            <ul {...rest} ref={innerRef} role='listbox'>{children}</ul>
+            <ul {...rest} ref={innerRef} role='list-box'>{children}</ul>
         );
-    },
-);
+    });
 
 export default function MultipleSelect({
     label,
@@ -46,7 +43,8 @@ export default function MultipleSelect({
     type,
     variant,
     onOpen,
-    readOnly
+    readOnly,
+    hidePopupIcon
 }) {
     const [open, setOpen] = React.useState(false);
     const [values, setValues] = useState([]);
@@ -60,7 +58,7 @@ export default function MultipleSelect({
     return (
         <div className='multiple-select'>
             <Autocomplete
-                open={open}
+                // open={open}
                 readOnly={readOnly}
                 options={options}
                 value={multiple ? values : (values.length > 0 ? values[0] : null)}
@@ -68,7 +66,6 @@ export default function MultipleSelect({
                 isOptionEqualToValue={(option, value) => option._id === value._id}
                 inputValue={inputValue}
                 onInputChange={(event, value) => {
-
                     if (values.length === 0) {
                         if (value.length === 0) {
                             if (open) setOpen(false);
@@ -119,7 +116,7 @@ export default function MultipleSelect({
                 multiple={multiple}
                 freeSolo={freeSolo}
                 handleHomeEndKeys={false}
-                popupIcon={null}
+                popupIcon={hidePopupIcon ? null : undefined}
                 renderInput={(params) => {
                     const inputProps = params.inputProps;
                     inputProps.autoComplete = 'off';

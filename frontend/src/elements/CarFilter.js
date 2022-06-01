@@ -84,6 +84,8 @@ class CarFilter extends Component {
                         <LocationSelectList
                             label={commonStrings.PICKUP_LOCATION}
                             overflowHidden
+                            hidePopupIcon
+                            freeSolo
                             required
                             variant='standard'
                             value={pickupLocation}
@@ -96,6 +98,8 @@ class CarFilter extends Component {
                                 label={commonStrings.DROP_OFF_LOCATION}
                                 value={dropOffLocation}
                                 overflowHidden
+                                hidePopupIcon
+                                freeSolo
                                 required
                                 variant='standard'
                                 onChange={this.handleDropOffLocationChange}

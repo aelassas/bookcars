@@ -337,8 +337,8 @@ export default class Booking extends Component {
 
                                 <CarSelectList
                                     label={blStrings.CAR}
-                                    company={company._id}
-                                    pickupLocation={pickupLocation._id}
+                                    company={company && company._id}
+                                    pickupLocation={pickupLocation && pickupLocation._id}
                                     onChange={this.handleCarSelectListChange}
                                     required
                                     value={car}
