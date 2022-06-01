@@ -96,18 +96,6 @@ routes.route(routeNames.getLocations).get(async (req, res) => {
         const keyword = escapeStringRegexp(req.query.s || '');
         const options = 'i';
 
-        // for (let i = 1; i < 60; i++) {
-        //     const name = `Location ${i}`;
-        //     await new Location({ name }).save();
-        // }
-
-        // Location.deleteMany({ name: { $regex: 'location', $options: 'i' } }, (err, response) => {
-        //     if (err) {
-        //         console.error(strings.DB_ERROR + err);
-        //         res.status(400).send(strings.DB_ERROR + err);
-        //     }
-        // });
-
         const locations = await Location.aggregate([
             { $match: { name: { $regex: keyword, $options: options } } },
             {
