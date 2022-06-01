@@ -141,7 +141,7 @@ export default class SignIn extends Component {
             <div>
                 <Header />
                 {visible &&
-                    <div className='content'>
+                    <div className='signin'>
                         <Paper className='signin-form' elevation={10}>
                             <form onSubmit={this.handleSubmit}>
                                 <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>

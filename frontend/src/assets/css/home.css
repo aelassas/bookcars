@@ -4,11 +4,28 @@ div.home {
     right: 0;
     bottom: 0;
     left: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 50px;
+    overflow-y: auto;
+}
+
+div.home footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+    color: #70757a;
+    border-top: 1px solid #ebebeb;
 }
 
 div.home footer div.copyright span.part1,
@@ -28,7 +45,7 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content {
         width: 100%;
-        height: calc(100% - 100px);
+        height: calc(100% - 200px);
     }
 
     div.home div.home-content div.home-logo {
@@ -118,22 +135,6 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content .chk-same-location input[type='checkbox'] {
         cursor: pointer;
-    }
-
-    div.home footer {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        height: 50px;
-        flex-shrink: 0;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #f2f2f2;
-        color: #70757a;
-        border-top: 1px solid #ebebeb;
     }
 
     div.home footer div.secure-payment {
@@ -262,22 +263,6 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content .chk-same-location input[type='checkbox'] {
         cursor: pointer;
-    }
-
-    div.home footer {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        height: 50px;
-        flex-shrink: 0;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #f2f2f2;
-        color: #70757a;
-        border-top: 1px solid #ebebeb;
     }
 
     div.home footer div.secure-payment {
