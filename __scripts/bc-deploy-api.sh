@@ -1,5 +1,6 @@
 #!/bin/bash
 
+start=`date +%s`
 echo "Deploying BookCars API..."
 
 cd /opt/bookcars
@@ -13,6 +14,8 @@ npm ci
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
 
-echo "BookCars API deployed."
+end=`date +%s`
+runtime=$((end-start))
+echo "BookCars API deployed in ${runtime}."
 
 #$SHEL
