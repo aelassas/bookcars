@@ -9,6 +9,7 @@ div.home {
     justify-content: center;
     align-items: center;
     margin-bottom: 50px;
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
