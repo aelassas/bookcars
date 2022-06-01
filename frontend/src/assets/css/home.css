@@ -158,7 +158,8 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content {
         width: 980px;
-        height: calc(100% - 300px);
+        height: 300px;
+        margin-top: -130px;
     }
 
     div.home div.home-content div.home-logo {
@@ -287,6 +288,14 @@ div.home footer div.copyright span.part2 {
 
     div.home footer div.secure-payment img {
         height: 32px;
+    }
+
+}
+
+@media only screen and (max-height: 800px) {
+
+    div.home div.home-content {
+        margin-top: -50px;
     }
 
 }
