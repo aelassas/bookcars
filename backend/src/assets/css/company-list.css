@@ -5,7 +5,6 @@ section.company-list .empty-list {
     margin-left: calc(50% - 125px);
 }
 
-
 section.company-list {
     width: 100%;
     height: 100%;
@@ -54,6 +53,11 @@ section.company-list article .company-actions {
     position: absolute;
     right: 10px;
     width: 160px;
+}
+
+section.company-list article .company-actions a,
+section.company-list article .company-actions button {
+    float: right;
 }
 
 /* Device width is less than or equal to 960px */
