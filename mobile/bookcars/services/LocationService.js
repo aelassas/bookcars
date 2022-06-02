@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Env from '../env.config';
+import Env from '../config/env.config';
 
 export default class LocationService {
 

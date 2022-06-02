@@ -1,6 +1,6 @@
 import axios from 'axios';
+import Env from '../config/env.config';
 import UserService from './UserService';
-import Env from '../env.config';
 
 export default class MessageService {
     static sendMessage(data) {
