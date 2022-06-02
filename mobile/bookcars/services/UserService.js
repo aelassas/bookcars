@@ -1,38 +1,11 @@
 import axios from 'axios';
-import Env from '../env.config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const storeData = async (key, value) => {
-    try {
-        const jsonValue = JSON.stringify(value);
-        await AsyncStorage.setItem(key, jsonValue);
-    } catch (e) {
-        // saving error
-    }
-};
-
-const getData = async (key) => {
-    try {
-        const value = await AsyncStorage.getItem(key)
-        const jsonValue = value != null ? JSON.parse(value) : null;
-        return jsonValue;
-    } catch (e) {
-        // error reading value
-    }
-};
-
-const removeData = async (key) => {
-    try {
-        await AsyncStorage.removeItem(key);
-    } catch (e) {
-        // remove error
-    }
-};
+import Env from '../config/env.config';
+import AsyncStorage from '../common/AsyncStorage';
 
 export default class UserService {
 
     static async authHeader() {
-        const user = await getData('bc-user');
+        const user = await AsyncStorage.getObject('bc-user');
 
         if (user && user.accessToken) {
             return { 'x-access-token': user.accessToken };
@@ -68,7 +41,7 @@ export default class UserService {
     static async signin(data) {
         return axios.post(`${Env.API_HOST}/api/sign-in/frontend`, data).then(async res => {
             if (res.data.accessToken) {
-                await storeData('bc-user', JSON.stringify(res.data));
+                await AsyncStorage.storeObject('bc-user', res.data);
             }
             return { status: res.status, data: res.data };
         });
@@ -76,7 +49,7 @@ export default class UserService {
 
     static async signout(redirect = true, redirectSignin = false) {
 
-        await removeData('bc-user');
+        await AsyncStorage.removeItem('bc-user');
 
         if (redirect) {
             // TODO
@@ -101,12 +74,12 @@ export default class UserService {
     }
 
     static async getLanguage() {
-        const user = await getData('bc-user');
+        const user = await AsyncStorage.getObject('bc-user');
 
         if (user && user.language) {
             return user.language;
         } else {
-            const lang = await getData('bc-language');
+            const lang = await AsyncStorage.getString('bc-language');
             if (lang && lang.length === 2) {
                 return lang;
             }
@@ -114,31 +87,23 @@ export default class UserService {
         }
     };
 
-    static getQueryLanguage() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('l')) {
-            return params.get('l');
-        }
-        return '';
-    };
-
     static async updateLanguage(data) {
         return axios.post(`${Env.API_HOST}/api/update-language`, data, { headers: UserService.authHeader() }).then(async res => {
             if (res.status === 200) {
-                const user = await getData('bc-user');
+                const user = await AsyncStorage.getObject('bc-user');
                 user.language = data.language;
-                await storeData('bc-user', JSON.stringify(user));
+                await AsyncStorage.storeObject('bc-user', user);
             }
             return res.status;
         })
     }
 
     static async setLanguage(lang) {
-        await storeData('bc-language', lang);
+        await AsyncStorage.storeString('bc-language', lang);
     }
 
     static async getCurrentUser() {
-        const user = await getData('bc-user');
+        const user = await AsyncStorage.getObject('bc-user');
         if (user && user.accessToken) {
             return user;
         }
@@ -159,7 +124,7 @@ export default class UserService {
                 if (res.status === 200) {
                     const user = UserService.getCurrentUser();
                     user.enableEmailNotifications = data.enableEmailNotifications;
-                    await storeData('bc-user', JSON.stringify(user));
+                    await AsyncStorage.storeObject('bc-user', user);
                 }
                 return res.status;
             })
@@ -174,7 +139,7 @@ export default class UserService {
     }
 
     static async updateAvatar(userId, file) {
-        const user = await getData('bc-user');
+        const user = await AsyncStorage.getObject('bc-user');
         var formData = new FormData();
         formData.append('image', file);
         return axios.post(`${Env.API_HOST}/api/update-avatar/` + encodeURIComponent(userId), formData,

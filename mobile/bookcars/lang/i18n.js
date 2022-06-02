@@ -1,6 +1,5 @@
 import i18n from 'i18n-js';
-import Env from './env.config';
-import UserService from './services/UserService';
+import Env from '../config/env.config';
 
 const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`;
 
