@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import { StatusBar } from 'expo-status-bar';
 import LocationSelectList from './elements/LocationSelectList';
 import i18n from './lang/i18n';
@@ -12,12 +13,18 @@ class App extends Component {
 
     this.state = {
       init: false,
-      selectedItem: null
+      pickupLocation: null,
+      close: false
     };
   }
 
-  handlePickupLocationSelect = (location) => {
-    console.log(location);
+  handlePickupLocationSelect = (pickupLocation) => {
+    console.log(pickupLocation);
+    this.setState({ pickupLocation })
+  };
+
+  handleTouchableOpacityClick = () => {
+    this.setState({ close: true });
   };
 
   async componentDidMount() {
@@ -27,19 +34,36 @@ class App extends Component {
   }
 
   render() {
-    const { init } = this.state;
+    const { init, close } = this.state;
 
     return (
       init &&
-      <View style={styles.container}>
-        <Text style={styles.logo}>BookCars</Text>
-        <LocationSelectList
-          label={i18n.t('PICKUP_LOCATION')}
-          style={styles.component}
-          onSelectItem={this.handlePickupLocationSelect}
-        />
-        <StatusBar style="auto" />
-      </View>
+      <RootSiblingParent>
+        <View style={styles.container}>
+          <Text style={styles.logo}>BookCars</Text>
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              backgroundColor: "rgba(0, 0, 0, 0)",
+              opacity: 0,
+              width: Dimensions.get('window').width,
+              height: Dimensions.get('window').height,
+              left: 0,
+              top: 0
+            }}
+            onPress={this.handleTouchableOpacityClick} />
+          <LocationSelectList
+            label={i18n.t('PICKUP_LOCATION')}
+            style={styles.component}
+            onSelectItem={this.handlePickupLocationSelect}
+            onFetch={() => {
+              this.setState({ close: false });
+            }}
+            close={close}
+          />
+          <StatusBar style="auto" />
+        </View>
+      </RootSiblingParent>
     );
   }
 }
