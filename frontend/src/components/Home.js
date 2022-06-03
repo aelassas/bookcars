@@ -93,9 +93,6 @@ export default class Home extends Component {
         this.setState({ user });
     }
 
-    componentDidMount() {
-    }
-
     render() {
         const { minDate, from, to, sameLocation } = this.state;
 

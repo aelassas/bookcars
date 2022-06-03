@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 import Env from '../config/env.config';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import Toast from 'react-native-root-toast';
+
 import i18n from '../lang/i18n';
 import LocationService from '../services/LocationService';
-
-import Feather from 'react-native-vector-icons/Feather'
-Feather.loadFont();
 
 class LocationSelectList extends Component {
 
@@ -43,7 +41,6 @@ class LocationSelectList extends Component {
 
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-
                 const _data = data.length > 0 ? data[0] : {};
                 if (_data.length === 0) _data.resultData = [];
                 const _rows = page === 1 ? _data.resultData.map(location => ({
@@ -78,50 +75,74 @@ class LocationSelectList extends Component {
         const { loading, rows, selectedItem } = this.state;
 
         return (
-            <AutocompleteDropdown
-                containerStyle={this.props.style}
-                initialValue={(selectedItem && selectedItem.id) || ''}
-                loading={loading}
-                useFilter={false} // set false to prevent rerender twice
-                dataSet={rows}
-                onSelectItem={item => {
-                    item && this.setSelectedItem(item.id)
-                }}
-                onChangeText={this.onChangeText}
-                onClear={() => {
-                    this.setSelectedItem(null);
-                }
-                }
-                textInputProps={{
-                    placeholder: this.props.label || '',
-                    placeholderTextColor: 'rgba(0, 0, 0, 0.6)',
-                    autoCorrect: false,
-                    autoCapitalize: 'none',
-                    style: {
-                        borderRadius: 25,
-                        paddingLeft: 18,
-                    }
-                }}
-                rightButtonsContainerStyle={{
-                    right: 8,
-                    height: 30,
-                    alignSelf: 'center',
-                }}
-                inputContainerStyle={{
-                    borderRadius: 25
-                }}
-                suggestionsListContainerStyle={{
-                    display: this.props.close ? 'none' : undefined
-                }}
-                renderItem={(item, text) => <Text style={{ padding: 15 }}>{item.title}</Text>}
-                inputHeight={60}
-                showChevron={false}
-                showClear={selectedItem !== null}
-                closeOnBlur={true}
-                clearOnFocus={true}
-                closeOnSubmit={true}
-                EmptyResultComponent={<></>}
-            />
+            <View style={this.props.style}>
+                <Text style={{
+                    display: selectedItem !== null ? undefined : 'none',
+                    backgroundColor: '#fff',
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: 12,
+                    fontWeight: '400',
+                    paddingRight: 5,
+                    paddingLeft: 5,
+                    marginLeft: 15,
+                    position: 'absolute',
+                    top: -7,
+                    zIndex: 1,
+                }}>{this.props.label}</Text>
+                <AutocompleteDropdown
+                    initialValue={(selectedItem && selectedItem.id) || ''}
+                    loading={loading}
+                    useFilter={false} // set false to prevent rerender twice
+                    dataSet={rows}
+                    flatListProps={{
+                        // scrollEnabled: false,
+                        // horizontal: true
+                    }}
+                    onSelectItem={item => {
+                        item && this.setSelectedItem(item.id)
+                    }}
+                    onChangeText={this.onChangeText}
+                    onClear={() => {
+                        this.setSelectedItem(null);
+                    }}
+                    onFocus={() => {
+                        if (this.props.onFocus) this.props.onFocus();
+                    }}
+                    textInputProps={{
+                        placeholder: this.props.label || '',
+                        placeholderTextColor: 'rgba(0, 0, 0, 0.6)',
+                        autoCorrect: false,
+                        autoCapitalize: 'none',
+                        style: {
+                            borderRadius: 10,
+                            paddingLeft: 18,
+                        }
+                    }}
+                    rightButtonsContainerStyle={{
+                        right: 8,
+                        height: 30,
+                        alignSelf: 'center',
+                    }}
+                    inputContainerStyle={{
+                        borderRadius: 10,
+                        backgroundColor: '#fff',
+                        color: 'rgba(0, 0, 0, 0.87)',
+                        borderColor: 'rgba(0, 0, 0, 0.23)',
+                        borderWidth: 1
+                    }}
+                    suggestionsListContainerStyle={{
+                        display: this.props.close ? 'none' : undefined
+                    }}
+                    renderItem={(item, text) => <Text style={{ padding: 15 }}>{item.title}</Text>}
+                    inputHeight={50}
+                    showChevron={false}
+                    showClear={selectedItem !== null}
+                    closeOnBlur={true}
+                    clearOnFocus={false}
+                    closeOnSubmit={true}
+                    EmptyResultComponent={<></>}
+                />
+            </View>
         );
     }
 }
