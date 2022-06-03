@@ -75,11 +75,14 @@ i18n.translations = {
         BIRTH_DATE_NOT_VALID_PART1: 'Vous devez avoir au moins',
         BIRTH_DATE_NOT_VALID_PART2: 'ans pour louer cette voiture.',
         SUPPLIER: 'Fournisseur',
-
-        DROP_OFF: 'Restituer au même endroit',
         COPYRIGHT_PART1: COPYRIGHT_PART1,
         COPYRIGHT_PART2: '®',
         COPYRIGHT_PART3: '. Tous droits réservés.',
+        SAME_LOCATION: 'Restituer au même endroit',
+        FROM_DATE: 'Date de prise en charge',
+        FROM_TIME: 'Heure de prise en charge',
+        TO_DATE: 'Date de restitution',
+        TO_TIME: 'Heure de restitution'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -152,11 +155,14 @@ i18n.translations = {
         BIRTH_DATE_NOT_VALID_PART1: 'You must be at least',
         BIRTH_DATE_NOT_VALID_PART2: 'years old to rent this car.',
         SUPPLIER: 'Supplier',
-
-        DROP_OFF: 'Return to same location',
         COPYRIGHT_PART1: COPYRIGHT_PART1,
         COPYRIGHT_PART2: '®',
         COPYRIGHT_PART3: '. All rights reserved.',
+        SAME_LOCATION: 'Return to same location',
+        FROM_DATE: 'Pickup date',
+        FROM_TIME: 'Pickup time',
+        TO_DATE: 'Drop-off date',
+        TO_TIME: 'Drop-off time'
     }
 };
 

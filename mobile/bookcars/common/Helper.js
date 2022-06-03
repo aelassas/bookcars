@@ -1,5 +1,11 @@
 
+const ANDROID = Platform.OS === 'android';
+
 export default class Helper {
+
+    static android() {
+        return ANDROID;
+    }
 
     static arrayEqual(a, b) {
         if (a === b) return true;
@@ -15,6 +21,10 @@ export default class Helper {
             if (a[i] !== b[i]) return false;
         }
         return true;
+    }
+
+    static capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
 }
