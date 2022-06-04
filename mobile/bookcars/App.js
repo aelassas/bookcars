@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
+import Toast from 'react-native-root-toast';
 import LocationSelectList from './elements/LocationSelectList';
 import DateTimePicker from './elements/DateTimePicker';
 
@@ -58,9 +59,7 @@ class App extends Component {
       fromTime,
       toTime,
       toDate,
-      keyboardDidShow: false,
       language: Env.DEFAULT_LANGUAGE,
-      keyboardHeight: 0,
       orientation: Env.ORIENTATION.LANDSCAPE,
       windowWidth: WINDOW_WIDTH,
       windowHeight: WINDOW_HEIGHT,
@@ -108,13 +107,15 @@ class App extends Component {
     const to = this.dateTime(toDate, toTime);
 
     if (!pickupLocation) {
-      // TODO toast
-      return;
+      return Toast.show(i18n.t('PICKUP_LOCATION_EMPTY'), {
+        duration: Toast.durations.LONG,
+      });
     }
 
     if (!dropOffLocation) {
-      // TODO toast
-      return;
+      return Toast.show(i18n.t('DROP_OFF_LOCATION_EMPTY'), {
+        duration: Toast.durations.LONG,
+      });
     }
 
     console.log('pickupLocation', pickupLocation);
@@ -132,24 +133,17 @@ class App extends Component {
     i18n.locale = language;
     this.setState({ init: true, language });
 
-    Keyboard.addListener('keyboardDidShow', (e) => {
-      if (this._isMounted) this.setState({ keyboardDidShow: true, keyboardHeight: e.endCoordinates.height });
-    });
-
-    Keyboard.addListener('keyboardDidHide', () => {
-      if (this._isMounted) this.setState({ keyboardDidShow: false, close: true, keyboardHeight: 0 });
-    });
-
     const { windowWidth, windowHeight } = this.state;
     this.setState({ orientation: windowWidth < windowHeight ? Env.ORIENTATION.LANDSCAPE : Env.ORIENTATION.PORTRAIT })
 
     Dimensions.addEventListener('change', ({ window: { width, height } }) => {
       if (this._isMounted) {
+        const statusBarHeight = StatusBar.currentHeight || 24;
         this.setState({
           orientation: width < height ? Env.ORIENTATION.LANDSCAPE : Env.ORIENTATION.PORTRAIT,
           windowWidth: width,
           windowHeight: height,
-          statusBarHeight: (StatusBar.currentHeight || 24)
+          statusBarHeight
         });
       }
     })
@@ -160,117 +154,60 @@ class App extends Component {
   }
 
   render() {
-    const { init, close, sameLocation, fromDate, fromTime,
-      toDate, toTime,
-      keyboardDidShow, language, orientation,
-      windowWidth, windowHeight, statusBarHeight, blur } = this.state;
+    const {
+      init, close, sameLocation, fromDate,
+      fromTime, toDate, toTime, language,
+      orientation, windowWidth, windowHeight,
+      statusBarHeight, blur } = this.state;
 
     return (
       init &&
       <RootSiblingParent>
-        <View style={{
-          ...styles.statusBar,
-          height: statusBarHeight
-        }}>
-          <SafeAreaView>
-            <StatusBar
-              backgroundColor="#f37022"
-              barStyle='light-content'
-            />
-          </SafeAreaView>
-        </View>
+        <View style={{ flex: 1 }}>
+          <View style={{
+            ...styles.statusBar,
+            height: statusBarHeight
+          }}>
+            <SafeAreaView>
+              <StatusBar
+                backgroundColor="#f37022"
+                barStyle='light-content'
+              />
+            </SafeAreaView>
+          </View>
 
-        <ScrollView
-          contentContainerStyle={{
-            ...styles.container,
-            width: windowWidth,
-            height: orientation === Env.ORIENTATION.LANDSCAPE ? windowHeight : 'auto',
-          }}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-        >
-          <View style={styles.contentContainer}>
+          <ScrollView
+            contentContainerStyle={{
+              ...styles.container,
+              width: windowWidth,
+              height: orientation === Env.ORIENTATION.LANDSCAPE ? windowHeight : 'auto',
+            }}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
+          >
+            <View style={styles.contentContainer}>
 
-            <View style={styles.logo}>
-              <Text style={styles.logoMain}>BookCars</Text>
-              <Text style={styles.logoRegistered}>®</Text>
-            </View>
+              <View style={styles.logo}>
+                <Text style={styles.logoMain}>BookCars</Text>
+                <Text style={styles.logoRegistered}>®</Text>
+              </View>
 
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                opacity: 0,
-                width: windowWidth,
-                height: windowHeight,
-                left: 0,
-                top: 0
-              }}
-              onPress={this.handleTouchableOpacityClick} />
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'rgba(0, 0, 0, 0)',
+                  opacity: 0,
+                  width: windowWidth,
+                  height: windowHeight,
+                  left: 0,
+                  top: 0
+                }}
+                onPress={this.handleTouchableOpacityClick} />
 
-            <LocationSelectList
-              label={i18n.t('PICKUP_LOCATION')}
-              style={styles.component}
-              onSelectItem={this.handlePickupLocationSelect}
-              onFetch={() => {
-                this.setState({ close: false });
-              }}
-              onFocus={() => {
-                this.setState({ blur: false });
-              }}
-              close={close}
-              blur={blur}
-            />
-
-            <DateTimePicker
-              mode='date'
-              language={language}
-              style={styles.date}
-              label={i18n.t('FROM_DATE')}
-              value={fromDate}
-              onChange={(date) => this.setState({ fromDate: date })}
-              onPress={() => this.setState({ blur: true })}
-            />
-
-            <DateTimePicker
-              mode='time'
-              language={language}
-              style={styles.date}
-              label={i18n.t('FROM_TIME')}
-              value={fromTime}
-              onChange={(date) => this.setState({ fromTime: date })}
-              onPress={() => this.setState({ blur: true })}
-            />
-
-            <DateTimePicker
-              mode='date'
-              language={language}
-              style={styles.date}
-              label={i18n.t('TO_DATE')}
-              value={toDate}
-              onChange={(date) => this.setState({ toDate: date })}
-              onPress={() => this.setState({ blur: true })}
-            />
-
-            <DateTimePicker
-              mode='time'
-              language={language}
-              style={styles.date}
-              label={i18n.t('TO_TIME')}
-              value={toTime}
-              onChange={(date) => this.setState({ toTime: date })}
-              onPress={() => this.setState({ blur: true })}
-            />
-
-            <Pressable style={styles.search} onPress={this.handleSearch} >
-              <Text style={styles.searchText}>{i18n.t('SEARCH')}</Text>
-            </Pressable>
-
-            {!sameLocation &&
               <LocationSelectList
-                label={i18n.t('DROP_OFF_LOCATION')}
+                label={i18n.t('PICKUP_LOCATION')}
                 style={styles.component}
-                onSelectItem={this.handleDropOffLocationSelect}
+                onSelectItem={this.handlePickupLocationSelect}
                 onFetch={() => {
                   this.setState({ close: false });
                 }}
@@ -280,24 +217,81 @@ class App extends Component {
                 close={close}
                 blur={blur}
               />
-            }
 
-            <View style={styles.sameLocation}>
-              <Switch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor='#f37022' value={sameLocation} onValueChange={this.handleSameLocationChange} />
-              <Text style={styles.sameLocationText} onPress={this.handleSameLocationPress}>{i18n.t('SAME_LOCATION')}</Text>
+              <DateTimePicker
+                mode='date'
+                language={language}
+                style={styles.date}
+                label={i18n.t('FROM_DATE')}
+                value={fromDate}
+                onChange={(date) => this.setState({ fromDate: date })}
+                onPress={() => this.setState({ blur: true })}
+              />
+
+              <DateTimePicker
+                mode='time'
+                language={language}
+                style={styles.date}
+                label={i18n.t('FROM_TIME')}
+                value={fromTime}
+                onChange={(date) => this.setState({ fromTime: date })}
+                onPress={() => this.setState({ blur: true })}
+              />
+
+              <DateTimePicker
+                mode='date'
+                language={language}
+                style={styles.date}
+                label={i18n.t('TO_DATE')}
+                value={toDate}
+                onChange={(date) => this.setState({ toDate: date })}
+                onPress={() => this.setState({ blur: true })}
+              />
+
+              <DateTimePicker
+                mode='time'
+                language={language}
+                style={styles.date}
+                label={i18n.t('TO_TIME')}
+                value={toTime}
+                onChange={(date) => this.setState({ toTime: date })}
+                onPress={() => this.setState({ blur: true })}
+              />
+
+              <Pressable style={styles.search} onPress={this.handleSearch} >
+                <Text style={styles.searchText}>{i18n.t('SEARCH')}</Text>
+              </Pressable>
+
+              {!sameLocation &&
+                <LocationSelectList
+                  label={i18n.t('DROP_OFF_LOCATION')}
+                  style={styles.component}
+                  onSelectItem={this.handleDropOffLocationSelect}
+                  onFetch={() => {
+                    this.setState({ close: false });
+                  }}
+                  onFocus={() => {
+                    this.setState({ blur: false });
+                  }}
+                  close={close}
+                  blur={blur}
+                />
+              }
+
+              <View style={styles.sameLocation}>
+                <Switch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor='#f37022' value={sameLocation} onValueChange={this.handleSameLocationChange} />
+                <Text style={styles.sameLocationText} onPress={this.handleSameLocationPress}>{i18n.t('SAME_LOCATION')}</Text>
+              </View>
             </View>
-          </View>
 
-          {!keyboardDidShow &&
             <View style={styles.footer}>
               <Text style={styles.copyright}>{i18n.t('COPYRIGHT_PART1')}</Text>
               <Text style={styles.copyrightRegistered}>{i18n.t('COPYRIGHT_PART2')}</Text>
               <Text style={styles.copyright}>{i18n.t('COPYRIGHT_PART3')}</Text>
             </View>
-          }
-
-          <ExpoStatusBar style='auto' />
-        </ScrollView>
+            <ExpoStatusBar style='auto' />
+          </ScrollView>
+        </View>
       </RootSiblingParent>
     );
   }

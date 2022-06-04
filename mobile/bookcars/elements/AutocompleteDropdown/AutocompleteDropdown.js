@@ -25,6 +25,7 @@ export const AutocompleteDropdown = memo(
     const [selectedItem, setSelectedItem] = useState(null)
     const [direction, setDirection] = useState(props.direction ?? 'down')
     const [isOpened, setIsOpened] = useState(false)
+    const [isCleared, setIsCleared] = useState(false)
     const [searchText, setSearchText] = useState('')
     const [dataSet, setDataSet] = useState(props.dataSet)
     const clearOnFocus = props.clearOnFocus === false ? false : true
@@ -267,6 +268,8 @@ export const AutocompleteDropdown = memo(
       // setIsOpened(false)
       // inputRef.current.blur()
       if (!isKeyboardVisible) {
+        setIsOpened(false)
+        setIsCleared(true)
         inputRef.current.focus()
       }
       if (typeof props.onClear === 'function') {
@@ -284,6 +287,7 @@ export const AutocompleteDropdown = memo(
     )
 
     const onChangeText = useCallback(text => {
+      setIsOpened(true)
       setSearchText(text)
       debouncedEvent(text)
     }, [])
@@ -301,9 +305,12 @@ export const AutocompleteDropdown = memo(
         if (typeof props.onFocus === 'function') {
           props.onFocus(e)
         }
-        open()
+        if (!isCleared) {
+          open()
+        }
+        setIsCleared(false)
       },
-      [dataSet, clearOnFocus, props.onFocus]
+      [dataSet, clearOnFocus, props.onFocus, isCleared]
     )
 
     const onBlur = useCallback(

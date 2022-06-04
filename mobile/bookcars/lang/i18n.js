@@ -82,7 +82,10 @@ i18n.translations = {
         FROM_DATE: 'Date de prise en charge',
         FROM_TIME: 'Heure de prise en charge',
         TO_DATE: 'Date de restitution',
-        TO_TIME: 'Heure de restitution'
+        TO_TIME: 'Heure de restitution',
+
+        PICKUP_LOCATION_EMPTY: 'Veuillez saisir un lieu de prise en charge.',
+        DROP_OFF_LOCATION_EMPTY: 'Veuillez saisir un lieu de restitution.'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -162,7 +165,10 @@ i18n.translations = {
         FROM_DATE: 'Pickup date',
         FROM_TIME: 'Pickup time',
         TO_DATE: 'Drop-off date',
-        TO_TIME: 'Drop-off time'
+        TO_TIME: 'Drop-off time',
+
+        PICKUP_LOCATION_EMPTY: 'Please enter a pick up location.',
+        DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.'
     }
 };
 

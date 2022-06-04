@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Env from '../config/env.config';
-// import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
 import Toast from 'react-native-root-toast';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import i18n from '../lang/i18n';
 import LocationService from '../services/LocationService';
@@ -134,7 +133,7 @@ class LocationSelectList extends Component {
                     }}
                     renderItem={(item, text) => (
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Icon name="location-on" size={30} style={{ marginLeft: 5 }} />
+                            <MaterialIcons name="location-on" size={23} style={{ marginLeft: 5 }} />
                             <Text style={{ paddingTop: 15, paddingRight: 5, paddingBottom: 15, paddingLeft: 5 }}>{item.title}</Text>
                         </View>
                     )}
