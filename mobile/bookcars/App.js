@@ -151,7 +151,6 @@ class App extends Component {
           windowHeight: height,
           statusBarHeight: (StatusBar.currentHeight || 24)
         });
-        console.log(StatusBar.currentHeight)
       }
     })
   }
