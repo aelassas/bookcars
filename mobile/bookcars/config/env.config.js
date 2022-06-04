@@ -68,6 +68,10 @@ const Env = {
     MILEAGE: {
         LIMITED: 'limited',
         UNLIMITED: 'unlimited'
+    },
+    ORIENTATION: {
+        PORTRAIT: 'portrait',
+        LANDSCAPE: 'landscape'
     }
 };
 

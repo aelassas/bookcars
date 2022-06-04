@@ -7,7 +7,7 @@ const error = (err) => {
     Toast.show(i18n.t('GENERIC_ERROR'), {
         duration: Toast.durations.LONG,
     });
-}
+};
 
 export default class AsyncStorage {
 
@@ -17,7 +17,7 @@ export default class AsyncStorage {
         } catch (err) {
             error(err);
         }
-    };
+    }
 
     static async getString(key) {
         try {
@@ -26,7 +26,7 @@ export default class AsyncStorage {
         } catch (err) {
             error('test');
         }
-    };
+    }
 
     static async storeObject(key, value) {
         try {
@@ -35,7 +35,7 @@ export default class AsyncStorage {
         } catch (err) {
             error('test');
         }
-    };
+    }
 
     static async getObject(key) {
         try {
@@ -45,7 +45,7 @@ export default class AsyncStorage {
         } catch (err) {
             error('test');
         }
-    };
+    }
 
     static async removeItem(key) {
         try {
@@ -53,5 +53,5 @@ export default class AsyncStorage {
         } catch (err) {
             error('test');
         }
-    };
+    }
 }

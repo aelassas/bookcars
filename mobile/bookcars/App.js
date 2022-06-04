@@ -8,9 +8,9 @@ import {
   SafeAreaView,
   StatusBar,
   Pressable,
-  KeyboardAvoidingView,
   Keyboard,
-  Switch
+  Switch,
+  ScrollView
 } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
@@ -22,7 +22,6 @@ import i18n from './lang/i18n';
 import UserService from './services/UserService';
 import Helper from './common/Helper';
 
-const SCREEN_HEIGHT = Dimensions.get('screen').height; // device height
 const STATUS_BAR_HEIGHT = StatusBar.currentHeight || 24;
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
@@ -59,15 +58,19 @@ class App extends Component {
       fromTime,
       toTime,
       toDate,
-      pickupLocationFocus: false,
       keyboardDidShow: false,
       language: Env.DEFAULT_LANGUAGE,
-      keyboardHeight: 0
+      keyboardHeight: 0,
+      orientation: Env.ORIENTATION.LANDSCAPE,
+      windowWidth: WINDOW_WIDTH,
+      windowHeight: WINDOW_HEIGHT,
+      statusBarHeight: STATUS_BAR_HEIGHT,
+      blur: false
     };
   }
 
   handlePickupLocationSelect = (pickupLocation) => {
-    this.setState({ pickupLocation, pickupLocationFocus: false })
+    this.setState({ pickupLocation })
   };
 
   handleDropOffLocationSelect = (dropOffLocation) => {
@@ -75,7 +78,7 @@ class App extends Component {
   };
 
   handleTouchableOpacityClick = () => {
-    this.setState({ close: true });
+    this.setState({ close: true, blur: true });
   };
 
   dateTime = (date, time) => {
@@ -88,13 +91,13 @@ class App extends Component {
   };
 
   handleSameLocationChange = (checked) => {
-    this.setState({ sameLocation: checked });
+    this.setState({ sameLocation: checked, blur: true });
   };
 
   handleSameLocationPress = () => {
     const { sameLocation } = this.state;
 
-    this.setState({ sameLocation: !sameLocation });
+    this.setState({ sameLocation: !sameLocation, blur: true });
   };
 
   handleSearch = () => {
@@ -136,6 +139,21 @@ class App extends Component {
     Keyboard.addListener('keyboardDidHide', () => {
       if (this._isMounted) this.setState({ keyboardDidShow: false, close: true, keyboardHeight: 0 });
     });
+
+    const { windowWidth, windowHeight } = this.state;
+    this.setState({ orientation: windowWidth < windowHeight ? Env.ORIENTATION.LANDSCAPE : Env.ORIENTATION.PORTRAIT })
+
+    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+      if (this._isMounted) {
+        this.setState({
+          orientation: width < height ? Env.ORIENTATION.LANDSCAPE : Env.ORIENTATION.PORTRAIT,
+          windowWidth: width,
+          windowHeight: height,
+          statusBarHeight: (StatusBar.currentHeight || 24)
+        });
+        console.log(StatusBar.currentHeight)
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -144,13 +162,17 @@ class App extends Component {
 
   render() {
     const { init, close, sameLocation, fromDate, fromTime,
-      toDate, toTime, pickupLocationFocus,
-      keyboardDidShow, language, keyboardHeight } = this.state;
+      toDate, toTime,
+      keyboardDidShow, language, orientation,
+      windowWidth, windowHeight, statusBarHeight, blur } = this.state;
 
     return (
       init &&
       <RootSiblingParent>
-        <View style={styles.statusBar}>
+        <View style={{
+          ...styles.statusBar,
+          height: statusBarHeight
+        }}>
           <SafeAreaView>
             <StatusBar
               backgroundColor="#f37022"
@@ -159,9 +181,14 @@ class App extends Component {
           </SafeAreaView>
         </View>
 
-        <KeyboardAvoidingView
-          behavior={pickupLocationFocus ? undefined : 'padding'}
-          style={styles.container}
+        <ScrollView
+          contentContainerStyle={{
+            ...styles.container,
+            width: windowWidth,
+            height: orientation === Env.ORIENTATION.LANDSCAPE ? windowHeight : 'auto',
+          }}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
         >
           <View style={styles.contentContainer}>
 
@@ -175,8 +202,8 @@ class App extends Component {
                 position: 'absolute',
                 backgroundColor: 'rgba(0, 0, 0, 0)',
                 opacity: 0,
-                width: WINDOW_WIDTH,
-                height: WINDOW_HEIGHT,
+                width: windowWidth,
+                height: windowHeight,
                 left: 0,
                 top: 0
               }}
@@ -190,19 +217,51 @@ class App extends Component {
                 this.setState({ close: false });
               }}
               onFocus={() => {
-                this.setState({ pickupLocationFocus: true });
+                this.setState({ blur: false });
               }}
               close={close}
+              blur={blur}
             />
 
+            <DateTimePicker
+              mode='date'
+              language={language}
+              style={styles.date}
+              label={i18n.t('FROM_DATE')}
+              value={fromDate}
+              onChange={(date) => this.setState({ fromDate: date })}
+              onPress={() => this.setState({ blur: true })}
+            />
 
-            <DateTimePicker mode='date' language={language} style={styles.date} label={i18n.t('FROM_DATE')} value={fromDate} onChange={(date) => this.setState({ fromDate: date })} />
+            <DateTimePicker
+              mode='time'
+              language={language}
+              style={styles.date}
+              label={i18n.t('FROM_TIME')}
+              value={fromTime}
+              onChange={(date) => this.setState({ fromTime: date })}
+              onPress={() => this.setState({ blur: true })}
+            />
 
-            <DateTimePicker mode='time' language={language} style={styles.date} label={i18n.t('FROM_TIME')} value={fromTime} onChange={(date) => this.setState({ fromTime: date })} />
+            <DateTimePicker
+              mode='date'
+              language={language}
+              style={styles.date}
+              label={i18n.t('TO_DATE')}
+              value={toDate}
+              onChange={(date) => this.setState({ toDate: date })}
+              onPress={() => this.setState({ blur: true })}
+            />
 
-            <DateTimePicker mode='date' language={language} style={styles.date} label={i18n.t('TO_DATE')} value={toDate} onChange={(date) => this.setState({ toDate: date })} />
-
-            <DateTimePicker mode='time' language={language} style={styles.date} label={i18n.t('TO_TIME')} value={toTime} onChange={(date) => this.setState({ toTime: date })} />
+            <DateTimePicker
+              mode='time'
+              language={language}
+              style={styles.date}
+              label={i18n.t('TO_TIME')}
+              value={toTime}
+              onChange={(date) => this.setState({ toTime: date })}
+              onPress={() => this.setState({ blur: true })}
+            />
 
             <Pressable style={styles.search} onPress={this.handleSearch} >
               <Text style={styles.searchText}>{i18n.t('SEARCH')}</Text>
@@ -217,9 +276,10 @@ class App extends Component {
                   this.setState({ close: false });
                 }}
                 onFocus={() => {
-                  this.setState({ pickupLocationFocus: false });
+                  this.setState({ blur: false });
                 }}
                 close={close}
+                blur={blur}
               />
             }
 
@@ -238,7 +298,7 @@ class App extends Component {
           }
 
           <ExpoStatusBar style='auto' />
-        </KeyboardAvoidingView>
+        </ScrollView>
       </RootSiblingParent>
     );
   }
@@ -246,20 +306,21 @@ class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
     zIndex: 1,
     elevation: Helper.android() ? 1 : 0,
+    justifyContent: 'center',
+    paddingBottom: 50
   },
   statusBar: {
     backgroundColor: '#f37022',
-    height: STATUS_BAR_HEIGHT,
     zIndex: 2,
     elevation: Helper.android() ? 2 : 0
   },
   contentContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   logo: {
     alignSelf: 'stretch',
@@ -270,33 +331,28 @@ const styles = StyleSheet.create({
   },
   logoMain: {
     color: '#f37022',
-    fontSize: 60,
-    fontWeight: '700'
+    fontSize: 70,
+    fontWeight: '700',
+    lineHeight: 125
   },
   logoRegistered: {
-    fontSize: 13,
-    fontWeight: '600',
     color: '#f37022',
-    marginTop: 20
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 40
   },
   component: {
     alignSelf: 'stretch',
-    marginTop: 7,
-    marginRight: 10,
-    marginBottom: 7,
-    marginLeft: 10
+    margin: 10
   },
   date: {
     alignSelf: 'stretch',
-    marginTop: 7,
-    marginRight: 10,
-    marginBottom: 7,
-    marginLeft: 10
+    margin: 10
   },
   search: {
     borderWidth: 0,
     borderRadius: 10,
-    height: 50,
+    height: 55,
     alignSelf: 'stretch',
     flexDirection: 'row',
     backgroundColor: '#f37022',
@@ -332,7 +388,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     height: 50,
-    display: 'none',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f2f2f2',
