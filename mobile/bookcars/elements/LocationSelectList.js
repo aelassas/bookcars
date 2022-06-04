@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Env from '../config/env.config';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+// import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
 import Toast from 'react-native-root-toast';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import i18n from '../lang/i18n';
 import LocationService from '../services/LocationService';
@@ -90,14 +92,11 @@ class LocationSelectList extends Component {
                     zIndex: 1,
                 }}>{this.props.label}</Text>
                 <AutocompleteDropdown
+                    blur={this.props.blur}
                     initialValue={(selectedItem && selectedItem.id) || ''}
                     loading={loading}
                     useFilter={false} // set false to prevent rerender twice
                     dataSet={rows}
-                    flatListProps={{
-                        // scrollEnabled: false,
-                        // horizontal: true
-                    }}
                     onSelectItem={item => {
                         item && this.setSelectedItem(item.id)
                     }}
@@ -133,8 +132,13 @@ class LocationSelectList extends Component {
                     suggestionsListContainerStyle={{
                         display: this.props.close ? 'none' : undefined
                     }}
-                    renderItem={(item, text) => <Text style={{ padding: 15 }}>{item.title}</Text>}
-                    inputHeight={50}
+                    renderItem={(item, text) => (
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Icon name="location-on" size={30} style={{ marginLeft: 5 }} />
+                            <Text style={{ paddingTop: 15, paddingRight: 5, paddingBottom: 15, paddingLeft: 5 }}>{item.title}</Text>
+                        </View>
+                    )}
+                    inputHeight={55}
                     showChevron={false}
                     showClear={selectedItem !== null}
                     closeOnBlur={true}

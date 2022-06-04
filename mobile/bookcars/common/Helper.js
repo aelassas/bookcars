@@ -1,4 +1,6 @@
 
+import { Platform } from 'react-native';
+
 const ANDROID = Platform.OS === 'android';
 
 export default class Helper {

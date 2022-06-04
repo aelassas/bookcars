@@ -29,7 +29,13 @@ class DateTimePicker extends Component {
             <View style={this.props.style}>
                 <Text style={styles.label}>{this.props.label}</Text>
                 <View style={styles.dateContainer}>
-                    <Pressable style={styles.dateButton} onPress={() => this.setState({ show: true })} >
+                    <Pressable
+                        style={styles.dateButton}
+                        onPress={() => {
+                            this.setState({ show: true });
+
+                            if (this.props.onPress) this.props.onPress();
+                        }} >
                         <Text style={styles.dateText}>{Helper.capitalize(moment(value).format(format))}</Text>
                     </Pressable>
                     {show &&
@@ -59,7 +65,7 @@ const styles = StyleSheet.create({
     },
     dateContainer: {
         alignSelf: 'stretch',
-        height: 50,
+        height: 55,
         borderWidth: 0,
         borderRadius: 10,
         backgroundColor: '#fff',
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     dateButton: {
-        height: 50,
+        height: 55,
         alignSelf: 'stretch',
         flexDirection: 'row',
         display: 'flex',
