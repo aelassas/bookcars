@@ -267,9 +267,9 @@ export const AutocompleteDropdown = memo(
       setSelectedItem(null)
       // setIsOpened(false)
       // inputRef.current.blur()
+      setIsOpened(false)
+      setIsCleared(true)
       if (!isKeyboardVisible) {
-        setIsOpened(false)
-        setIsCleared(true)
         inputRef.current.focus()
       }
       if (typeof props.onClear === 'function') {
@@ -368,7 +368,7 @@ export const AutocompleteDropdown = memo(
             onClearPress={onClearPress}
             onChevronPress={onChevronPress}
             showChevron={props.showChevron ?? true}
-            showClear={props.showClear ?? !!searchText}
+            showClear={(props.showClear || searchText !== '')}
             loading={props.loading}
             buttonsContainerStyle={props.rightButtonsContainerStyle}
             ChevronIconComponent={props.ChevronIconComponent}
@@ -376,7 +376,7 @@ export const AutocompleteDropdown = memo(
           />
         </View>
 
-        {isOpened && Array.isArray(dataSet) && (
+        {isOpened && searchText !== '' && Array.isArray(dataSet) && (
           <View
             style={{
               ...styles.listContainer,
