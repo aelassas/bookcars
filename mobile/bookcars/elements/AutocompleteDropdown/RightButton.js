@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef } from 'react'
 import { ActivityIndicator, Animated, Easing, StyleSheet, TouchableOpacity, View } from 'react-native'
 // Icons
+import { MaterialIcons } from '@expo/vector-icons'
 import Feather from 'react-native-vector-icons/Feather'
 Feather.loadFont()
 
@@ -42,7 +43,8 @@ export const RightButton = memo(
         }}>
         {!loading && showClear && (
           <TouchableOpacity onPress={onClearPress} style={styles.clearButton}>
-            {ClearIconComponent ?? <Feather name="x" size={18} color="#aeb4c6" />}
+            {/* {ClearIconComponent ?? <Feather name="x" size={18} color="#aeb4c6" />} */}
+            {ClearIconComponent ?? <MaterialIcons name='clear' size={20} color='rgba(0, 0, 0, 0.54)' />}
           </TouchableOpacity>
         )}
         {loading && <ActivityIndicator color="#999" />}

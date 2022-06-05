@@ -85,7 +85,9 @@ i18n.translations = {
         TO_TIME: 'Heure de restitution',
 
         PICKUP_LOCATION_EMPTY: 'Veuillez saisir un lieu de prise en charge.',
-        DROP_OFF_LOCATION_EMPTY: 'Veuillez saisir un lieu de restitution.'
+        DROP_OFF_LOCATION_EMPTY: 'Veuillez saisir un lieu de restitution.',
+        HOME: 'Accueil',
+        ABOUT: 'À propos',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -168,7 +170,9 @@ i18n.translations = {
         TO_TIME: 'Drop-off time',
 
         PICKUP_LOCATION_EMPTY: 'Please enter a pick up location.',
-        DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.'
+        DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.',
+        HOME: 'Home1',
+        ABOUT: 'About1',
     }
 };
 

@@ -19,7 +19,7 @@ class LocationSelectList extends Component {
             rowCount: 0,
             fetch: false,
             page: 1,
-            keyword: '',
+            text: '',
             selectedItem: null
         };
     }
@@ -32,15 +32,15 @@ class LocationSelectList extends Component {
         }
     };
 
-    onChangeText = (keyword) => {
-        this.setState({ keyword }, () => this.fetch());
+    onChangeText = (text) => {
+        this.setState({ text }, () => this.fetch());
     };
 
     fetch = () => {
-        const { rows, keyword, page } = this.state;
+        const { rows, text, page } = this.state;
         this.setState({ loading: true });
 
-        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+        LocationService.getLocations(text, page, Env.PAGE_SIZE)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {};
                 if (_data.length === 0) _data.resultData = [];
@@ -99,7 +99,10 @@ class LocationSelectList extends Component {
                     onSelectItem={item => {
                         item && this.setSelectedItem(item.id)
                     }}
-                    onChangeText={this.onChangeText}
+                    onChangeText={(text) => {
+                        this.onChangeText(text);
+                        if (this.props.onChangeText) this.props.onChangeText(text);
+                    }}
                     onClear={() => {
                         this.setSelectedItem(null);
                     }}
