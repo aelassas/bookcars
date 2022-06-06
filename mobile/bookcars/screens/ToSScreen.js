@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import Master from './Master';
 
-export default function AboutScreen() {
+export default function ToSScreen() {
 
     return (
         <Master style={styles.container}>
-            <Text style={{ fontSize: 16 }}>About!</Text>
+            <Text style={{ fontSize: 16 }}>ToS!</Text>
         </Master>
     );
 }

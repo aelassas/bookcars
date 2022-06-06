@@ -22,6 +22,10 @@ const Env = {
     API_HOST: BC_API_HOST,
     LANGUAGES: ['fr', 'en'],
     DEFAULT_LANGUAGE: BC_DEFAULT_LANGUAGE || 'fr',
+    LANGUAGE: {
+        FR: 'fr',
+        EN: 'en'
+    },
     DATE_FORMAT: BC_DATE_FORMAT || 'llll',
     PAGE_SIZE: parseInt(BC_PAGE_SIZE || 30),
     CARS_PAGE_SIZE: parseInt(BC_CARS_PAGE_SIZE || 15),

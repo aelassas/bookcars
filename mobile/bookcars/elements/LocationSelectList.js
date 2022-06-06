@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Env from '../config/env.config';
 import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
-import Toast from 'react-native-root-toast';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import i18n from '../lang/i18n';
 import LocationService from '../services/LocationService';
+import Helper from '../common/Helper';
 
 class LocationSelectList extends Component {
 
@@ -56,9 +56,7 @@ class LocationSelectList extends Component {
             })
             .catch((err) => {
                 console.log(err);
-                Toast.show(i18n.t('GENERIC_ERROR'), {
-                    duration: Toast.durations.LONG,
-                });
+                Helper.toast(i18n.t('GENERIC_ERROR'));
             });
     };
 
@@ -76,10 +74,10 @@ class LocationSelectList extends Component {
         const { loading, rows, selectedItem } = this.state;
 
         return (
-            <View style={this.props.style}>
+            <View style={{ ...this.props.style, ...styles.container }}>
                 <Text style={{
                     display: selectedItem !== null ? undefined : 'none',
-                    backgroundColor: '#fff',
+                    backgroundColor: '#fafafa',
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: 12,
                     fontWeight: '400',
@@ -87,7 +85,7 @@ class LocationSelectList extends Component {
                     paddingLeft: 5,
                     marginLeft: 15,
                     position: 'absolute',
-                    top: -7,
+                    top: -8,
                     zIndex: 1,
                 }}>{this.props.label}</Text>
                 <AutocompleteDropdown
@@ -126,7 +124,7 @@ class LocationSelectList extends Component {
                     }}
                     inputContainerStyle={{
                         borderRadius: 10,
-                        backgroundColor: '#fff',
+                        backgroundColor: '#fafafa',
                         color: 'rgba(0, 0, 0, 0.87)',
                         borderColor: 'rgba(0, 0, 0, 0.23)',
                         borderWidth: 1
@@ -152,5 +150,11 @@ class LocationSelectList extends Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        maxWidth: 400
+    }
+});
 
 export default LocationSelectList;

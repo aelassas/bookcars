@@ -5,12 +5,11 @@
 }
 
 .header-desktop {
-    display: none;
+    display: flex;
 }
 
 .header-mobile {
-    display: flex;
-    margin-right: -13px;
+    display: none;
 }
 
 .btn-signin {
@@ -19,17 +18,18 @@
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
-    .header-desktop {
-        display: flex;
-    }
-
-    .header-mobile {
-        display: none;
-    }
-
-}
+@media only screen and (min-width: 960px) {}
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {}
+@media only screen and (max-width: 960px) {
+
+    .header-desktop {
+        display: none;
+    }
+
+    .header-mobile {
+        display: flex;
+        margin-right: -13px;
+    }
+}

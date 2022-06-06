@@ -1,12 +1,10 @@
 import ReactAsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-root-toast';
 import i18n from '../lang/i18n';
+import Helper from './Helper';
 
 const error = (err) => {
     console.log(err);
-    Toast.show(i18n.t('GENERIC_ERROR'), {
-        duration: Toast.durations.LONG,
-    });
+    Helper.toast(i18n.t('GENERIC_ERROR'));
 };
 
 export default class AsyncStorage {

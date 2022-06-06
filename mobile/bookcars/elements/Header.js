@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Header({ title, showTitle }) {
+export default function Header({ title, hideTitle }) {
     const navigation = useNavigation();
 
     const styles = StyleSheet.create({
@@ -19,7 +19,13 @@ export default function Header({ title, showTitle }) {
         },
         text: {
             color: '#fff'
-        }
+        },
+        signout: {
+            flexDirection: 'row'
+        },
+        signoutIcon: {
+            marginRight: 5
+        },
     });
 
     return (
@@ -27,7 +33,7 @@ export default function Header({ title, showTitle }) {
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
                 <MaterialIcons name="menu" size={24} color="#fff" />
             </TouchableOpacity>
-            {showTitle &&
+            {!hideTitle &&
                 <View>
                     <Text style={styles.text}>{title}</Text>
                 </View>
