@@ -1,5 +1,7 @@
 
 import { Platform } from 'react-native';
+import Toast from 'react-native-root-toast';
+import i18n from '../lang/i18n';
 
 const ANDROID = Platform.OS === 'android';
 
@@ -29,4 +31,23 @@ export default class Helper {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    static toast(message) {
+        Toast.show(message, {
+            duration: Toast.durations.LONG,
+        });
+    }
+
+    static dateTime(date, time) {
+        const dateTime = new Date(date);
+        dateTime.setHours(time.getHours());
+        dateTime.setMinutes(time.getMinutes());
+        dateTime.setSeconds(time.getSeconds());
+        dateTime.setMilliseconds(time.getMilliseconds());
+        return dateTime;
+    };
+
+    static error(err) {
+        if (err) console.log(err);
+        Helper.toast(i18n.t('GENERIC_ERROR'));
+    }
 }

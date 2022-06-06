@@ -5,7 +5,7 @@ import AsyncStorage from '../common/AsyncStorage';
 export default class UserService {
 
     static async authHeader() {
-        const user = await AsyncStorage.getObject('bc-user');
+        const user = await UserService.getCurrentUser();
 
         if (user && user.accessToken) {
             return { 'x-access-token': user.accessToken };
@@ -47,30 +47,29 @@ export default class UserService {
         });
     }
 
-    static async signout(redirect = true, redirectSignin = false) {
-
+    static async signout(navigation, redirect = true, redirectSignin = false) {
         await AsyncStorage.removeItem('bc-user');
 
         if (redirect) {
-            // TODO
-            // window.location.href = '/' + window.location.search;
+            navigation.navigate('Home', { d: new Date().getTime() });
         }
         if (redirectSignin) {
-            // TODO
-            // window.location.href = '/sign-in' + window.location.search;
+            navigation.navigate('SignIn');
         }
     }
 
-    static validateAccessToken() {
-        return axios.post(`${Env.API_HOST}/api/validate-access-token`, null, { headers: UserService.authHeader() }).then(res => res.status);
+    static async validateAccessToken() {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/validate-access-token`, null, { headers: authHeader }).then(res => res.status);
     }
 
     static confirmEmail(email, token) {
         return axios.post(`${Env.API_HOST}/api/confirm-email/` + encodeURIComponent(email) + '/' + encodeURIComponent(token)).then(res => res.status);
     }
 
-    static resendLink(data) {
-        return axios.post(`${Env.API_HOST}/api/resend-link`, data, { headers: UserService.authHeader() }).then(res => res.status);
+    static async resendLink(data) {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/resend-link`, data, { headers: authHeader }).then(res => res.status);
     }
 
     static async getLanguage() {
@@ -88,7 +87,8 @@ export default class UserService {
     };
 
     static async updateLanguage(data) {
-        return axios.post(`${Env.API_HOST}/api/update-language`, data, { headers: UserService.authHeader() }).then(async res => {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/update-language`, data, { headers: authHeader }).then(async res => {
             if (res.status === 200) {
                 const user = await AsyncStorage.getObject('bc-user');
                 user.language = data.language;
@@ -110,16 +110,19 @@ export default class UserService {
         return null;
     };
 
-    static getUser(id) {
-        return axios.get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), { headers: UserService.authHeader() }).then(res => res.data);
+    static async getUser(id) {
+        const authHeader = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), { headers: authHeader }).then(res => res.data);
     }
 
-    static updateUser(data) {
-        return axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: UserService.authHeader() }).then(res => res.status);
+    static async updateUser(data) {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: authHeader }).then(res => res.status);
     }
 
     static async updateEmailNotifications(data) {
-        return axios.post(`${Env.API_HOST}/api/update-email-notifications`, data, { headers: UserService.authHeader() })
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/update-email-notifications`, data, { headers: authHeader })
             .then(async res => {
                 if (res.status === 200) {
                     const user = UserService.getCurrentUser();
@@ -130,12 +133,14 @@ export default class UserService {
             })
     }
 
-    static checkPassword(id, pass) {
-        return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: UserService.authHeader() }).then(res => res.status);
+    static async checkPassword(id, pass) {
+        const authHeader = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: authHeader }).then(res => res.status);
     }
 
-    static changePassword(data) {
-        return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: UserService.authHeader() }).then(res => res.status);
+    static async changePassword(data) {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: authHeader }).then(res => res.status);
     }
 
     static async updateAvatar(userId, file) {
@@ -147,7 +152,21 @@ export default class UserService {
                 : { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.status);
     }
 
-    static deleteAvatar(userId) {
-        return axios.post(`${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId), null, { headers: UserService.authHeader() }).then(res => res.status);
+    static async deleteAvatar(userId) {
+        const authHeader = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId), null, { headers: authHeader }).then(res => res.status);
+    }
+
+    static async loggedIn() {
+        const currentUser = await UserService.getCurrentUser();
+        if (currentUser) {
+            const status = await UserService.validateAccessToken();
+            if (status === 200) {
+                const user = await UserService.getUser(currentUser.id);
+                if (user) return true;
+            }
+        }
+
+        return false;
     }
 }

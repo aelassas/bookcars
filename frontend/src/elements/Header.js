@@ -356,6 +356,12 @@ export default function Header(props) {
                                     <ListItemIcon>{<MailIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.CONTACT} />
                                 </ListItemLink>
+                                {(Env.isMobile() && !props.hideSignin && !isSignedIn && isLoaded && !loading) &&
+                                    <ListItemLink href="/sign-in">
+                                        <ListItemIcon>{<LoginIcon />}</ListItemIcon>
+                                        <ListItemText primary={strings.SIGN_IN} />
+                                    </ListItemLink>
+                                }
                             </List>
                         </Drawer>
                     </React.Fragment>
@@ -405,17 +411,6 @@ export default function Header(props) {
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
-                        {(!props.hideSignin && !isSignedIn && isLoaded && !loading) && <Button
-                            variant="contained"
-                            startIcon={<LoginIcon />}
-                            href="/sign-in"
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                            style={{ minWidth: '180px' }}
-                        >
-                            {strings.SIGN_IN}
-                        </Button>}
                         {(!isSignedIn && !loading && !init) && <Button
                             variant="contained"
                             startIcon={<LanguageIcon />}
