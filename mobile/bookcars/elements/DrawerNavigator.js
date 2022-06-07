@@ -201,8 +201,9 @@ export default function DrawerNavigator(props) {
         signout: {
             flexDirection: 'row',
             alignItems: 'center',
-            marginTop: -5,
-            marginLeft: 20
+            marginTop: -13,
+            marginLeft: 20,
+            marginBottom: 25
         },
         signoutIcon: {
             marginRight: 5
@@ -220,6 +221,9 @@ export default function DrawerNavigator(props) {
         languageButton: {
             flexDirection: 'row',
             alignItems: 'center',
+        },
+        languageIcon: {
+            marginRight: 5
         },
         languageMenu: {
             position: 'absolute',
