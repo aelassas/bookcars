@@ -190,7 +190,7 @@ export default function DrawerNavigator(props) {
             marginTop: insets.top
         },
         drawer: {
-            flex: 1,
+            flexGrow: 1,
             flexDirection: 'column',
             justifyContent: 'space-between'
         },
