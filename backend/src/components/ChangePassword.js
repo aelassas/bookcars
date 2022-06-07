@@ -89,14 +89,6 @@ export default class ChangePassword extends Component {
 
             const { user, userId, currentPassword, newPassword } = this.state;
 
-            // if (userId === user._id && currentPassword === newPassword) {
-            //     return this.setState({
-            //         newPasswordError: true,
-            //         passwordLengthError: false,
-            //         confirmPasswordError: false,
-            //     });
-            // }
-
             const data = {
                 _id: userId,
                 password: currentPassword,
@@ -129,7 +121,7 @@ export default class ChangePassword extends Component {
                     }
                 })
                 .catch(() => {
-                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                    UserService.signout();
                 });
         };
 
@@ -148,13 +140,13 @@ export default class ChangePassword extends Component {
                     submit();
                 }
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
 
     };
 
     onLoad = (user) => {
         this.setState({ user });
-        
+
         const params = new URLSearchParams(window.location.search);
         if (params.has('u')) {
             const id = params.get('u');

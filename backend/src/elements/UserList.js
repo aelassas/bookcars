@@ -238,8 +238,7 @@ class BookingList extends Component {
                 this.setState({ loading: false });
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ loading: false });
+                UserService.signout();
             });
     };
 
@@ -265,7 +264,7 @@ class BookingList extends Component {
                 });
             })
             .catch((err) => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 

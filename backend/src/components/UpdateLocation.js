@@ -16,6 +16,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
+import UserService from '../services/UserService';
 
 import '../assets/css/update-location.css';
 
@@ -49,7 +50,7 @@ export default class UpdateLocation extends Component {
                     this.setState({ nameError: false });
                 }
             }).catch(() => {
-                this.error();
+                UserService.signout();
             });
         } else {
             this.setState({ nameError: false });
@@ -84,21 +85,22 @@ export default class UpdateLocation extends Component {
                         this.error();
                     }
                 }).catch(() => {
-                    this.error();
+                    UserService.signout();
                 });
         };
 
         if (name !== location.name) {
-            LocationService.validate(data).then(status => {
-                if (status === 204) {
-                    this.setState({ nameError: true, loading: false });
-                } else {
-                    this.setState({ nameError: false });
-                    update();
-                }
-            }).catch(() => {
-                this.error();
-            });
+            LocationService.validate(data)
+                .then(status => {
+                    if (status === 204) {
+                        this.setState({ nameError: true, loading: false });
+                    } else {
+                        this.setState({ nameError: false });
+                        update();
+                    }
+                }).catch(() => {
+                    UserService.signout();
+                });
         } else {
             this.setState({ nameError: false });
             update();

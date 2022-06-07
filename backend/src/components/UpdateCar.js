@@ -31,6 +31,7 @@ import {
     FormHelperText
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
+import UserService from '../services/UserService';
 
 import '../assets/css/create-car.css';
 import '../assets/css/update-car.css';
@@ -277,7 +278,7 @@ export default class CreateCar extends Component {
                 }
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 

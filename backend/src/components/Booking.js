@@ -107,7 +107,7 @@ export default class Booking extends Component {
                     }
                 })
                 .catch((err) => {
-                    this.error();
+                    UserService.signout();
                 });
         } else if (!newCar) {
             this.setState({ car: newCar, price: 0 });
@@ -131,7 +131,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, cancellation: booking.cancellation });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -146,7 +146,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, amendments: booking.amendments });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -161,7 +161,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, theftProtection: booking.theftProtection });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -176,7 +176,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, collisionDamageWaiver: booking.collisionDamageWaiver });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -191,7 +191,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, fullInsurance: booking.fullInsurance });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -206,7 +206,7 @@ export default class Booking extends Component {
                 this.setState({ booking, price, additionalDriver: booking.additionalDriver });
             },
             (err) => {
-                this.error();
+                UserService.signout();
             });
     };
 
@@ -227,15 +227,16 @@ export default class Booking extends Component {
         const { booking } = this.state;
 
         this.setState({ loading: true, openDeleteDialog: false }, () => {
-            BookingService.delete([booking._id]).then(status => {
-                if (status === 200) {
-                    window.location.href = '/';
-                } else {
-                    this.error(true);
-                }
-            }).catch(() => {
-                this.error(true);
-            });
+            BookingService.delete([booking._id])
+                .then(status => {
+                    if (status === 200) {
+                        window.location.href = '/';
+                    } else {
+                        this.error(true);
+                    }
+                }).catch(() => {
+                    UserService.signout();
+                });
         });
     };
 
@@ -289,7 +290,7 @@ export default class Booking extends Component {
                 }
             })
             .catch((err) => {
-                this.error();
+                UserService.signout();
             });
     };
 

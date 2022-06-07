@@ -148,18 +148,17 @@ export default class CreateBooking extends Component {
                 BookingService.create(data)
                     .then(booking => {
                         if (booking && booking._id) {
-                            // window.location = `/booking?b=${booking._id}`;
                             window.location = '/';
                         } else {
                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(() => {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        UserService.signout();
                     });
             },
             () => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 

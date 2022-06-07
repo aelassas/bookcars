@@ -13,7 +13,7 @@ export default function App() {
     <SafeAreaProvider>
       <RootSiblingParent>
         <NavigationContainer>
-          <ExpoStatusBar style='light' backgroundColor='rgba(0, 0, 0, 8)' />
+          <ExpoStatusBar style='light' backgroundColor='rgba(0, 0, 0, .9)' />
           <DrawerNavigator />
         </NavigationContainer>
       </RootSiblingParent>

@@ -24,8 +24,9 @@ import {
     Mail as MailIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
+import UserService from '../services/UserService';
 
-import '../assets/css/company-list.css';;
+import '../assets/css/company-list.css';
 
 class CompanyList extends Component {
     constructor(props) {
@@ -61,22 +62,22 @@ class CompanyList extends Component {
 
         if (companyId !== '' && companyIndex > -1) {
             this.setState({ loading: true, openDeleteDialog: false });
-            CompanyService.delete(companyId).then(status => {
-                if (status === 200) {
-                    rows.splice(companyIndex, 1);
-                    this.setState({ rows, rowCount: rowCount - 1, loading: false, companyId: '', companyIndex: -1 }, () => {
-                        if (this.props.onDelete) {
-                            this.props.onDelete(this.state.rowCount);
-                        }
-                    });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ loading: false, companyId: '', companyIndex: -1 });
-                }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ loading: false, companyId: '', companyIndex: -1 });
-            });
+            CompanyService.delete(companyId)
+                .then(status => {
+                    if (status === 200) {
+                        rows.splice(companyIndex, 1);
+                        this.setState({ rows, rowCount: rowCount - 1, loading: false, companyId: '', companyIndex: -1 }, () => {
+                            if (this.props.onDelete) {
+                                this.props.onDelete(this.state.rowCount);
+                            }
+                        });
+                    } else {
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        this.setState({ loading: false, companyId: '', companyIndex: -1 });
+                    }
+                }).catch(() => {
+                    UserService.signout();
+                });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             this.setState({ openDeleteDialog: false, companyId: '', companyIndex: -1 });
@@ -106,7 +107,7 @@ class CompanyList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
