@@ -55,9 +55,6 @@ export default class Bookings extends Component {
         this.setState({ user, loadingCompanies: true });
     };
 
-    componentDidMount() {
-    }
-
     render() {
         const { user, companies, statuses, filter, reload, loadingCompanies } = this.state;
 

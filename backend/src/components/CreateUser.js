@@ -23,7 +23,6 @@ import {
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
-import { toast } from 'react-toastify';
 import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/create-user.css';

@@ -86,7 +86,7 @@ export default class Booking extends Component {
                     }
                 })
                 .catch((err) => {
-                    this.error();
+                    UserService.signout();
                 });
         } else if (!newCar) {
             this.setState({ car: newCar, price: 0 });
@@ -202,7 +202,7 @@ export default class Booking extends Component {
                 }
             })
             .catch((err) => {
-                this.error();
+                UserService.signout();
             });
     };
 

@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 
 import '../assets/css/create-company.css';
 
