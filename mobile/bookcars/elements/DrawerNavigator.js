@@ -156,6 +156,7 @@ export default function DrawerNavigator(props) {
             <DrawerContentScrollView {...props} contentContainerStyle={styles.drawer}>
                 <View forceInset={styles.drawerList}>
                     {/* <DrawerItemList {...props} /> */}
+                    {/* <DrawerItemList state={props.state} navigation={props.navigation} descriptors={props.descriptors}> */}
                     {props.state.routes.map((route, i) => {
                         const focused = i === props.state.index;
                         const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options;
@@ -196,6 +197,7 @@ export default function DrawerNavigator(props) {
                         )
                     })
                     }
+                    {/* </DrawerItemList> */}
                     {loggedIn &&
                         <TouchableOpacity style={styles.signout} onPress={() => UserService.signout(navigation)}>
                             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
