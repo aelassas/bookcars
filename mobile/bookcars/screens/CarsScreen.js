@@ -6,13 +6,14 @@ import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 
-export default function BookingsScreen({ navigation, route }) {
+export default function CarsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
 
     const _init = async () => {
         const language = await UserService.getLanguage();
         i18n.locale = language;
+        console.log(route.params);
     };
 
     useEffect(() => {
@@ -27,8 +28,8 @@ export default function BookingsScreen({ navigation, route }) {
     };
 
     return (
-        <Master style={styles.container} navigation={navigation} onLoad={onLoad} reload={reload} strict>
-            <Text style={{ fontSize: 16 }}>Bookings!</Text>
+        <Master style={styles.container} onLoad={onLoad} reload={reload}>
+            <Text style={{ fontSize: 16 }}>Cars!</Text>
         </Master>
     );
 }

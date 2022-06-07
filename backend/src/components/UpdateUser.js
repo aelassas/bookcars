@@ -96,9 +96,7 @@ export default class CreateUser extends Component {
                         return false;
                     }
                 } catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ fullNameError: false });
-                    return false;
+                    UserService.signout();
                 }
             } else {
                 this.setState({ fullNameError: false });
@@ -213,7 +211,7 @@ export default class CreateUser extends Component {
             this.setState({ loading: true });
 
             UserService.deleteTempAvatar(avatar)
-                .then(() => {
+                .then((status) => {
                     window.location.href = '/users';
                 })
                 .catch(() => {
@@ -300,12 +298,7 @@ export default class CreateUser extends Component {
                     });
                 }
             }).catch(() => {
-                this.setState({
-                    error: true,
-                    passwordError: false,
-                    passwordsDontMatch: false,
-                    loading: false
-                });
+                UserService.signout();
             });
 
     };

@@ -72,16 +72,18 @@ export default class CreateUser extends Component {
     validateFullName = async (fullName) => {
         if (fullName) {
             if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-
-                const status = await CompanyService.validate({ fullName });
-                if (status === 200) {
-                    this.setState({ fullNameError: false });
-                    return true;
-                } else {
-                    this.setState({ fullNameError: true, avatarError: false, error: false });
-                    return false;
+                try {
+                    const status = await CompanyService.validate({ fullName });
+                    if (status === 200) {
+                        this.setState({ fullNameError: false });
+                        return true;
+                    } else {
+                        this.setState({ fullNameError: true, avatarError: false, error: false });
+                        return false;
+                    }
+                } catch (err) {
+                    UserService.signout();
                 }
-
             } else {
                 this.setState({ fullNameError: false });
                 return true;
@@ -119,9 +121,7 @@ export default class CreateUser extends Component {
                         return false;
                     }
                 } catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ emailError: false, emailValid: true });
-                    return false;
+                    UserService.signout();
                 }
             } else {
                 this.setState({ emailError: false, emailValid: false });
@@ -250,10 +250,7 @@ export default class CreateUser extends Component {
                     });
                 }
             }).catch(() => {
-                this.setState({
-                    error: true,
-                    loading: false
-                });
+                UserService.signout();
             });
 
     };
@@ -297,10 +294,7 @@ export default class CreateUser extends Component {
     onLoad = (user) => {
         const admin = Helper.admin(user);
         this.setState({ user: user, admin, visible: true, type: admin ? '' : Env.RECORD_TYPE.USER });
-    }
-
-    componentDidMount() {
-    }
+    };
 
     render() {
         const {

@@ -9,22 +9,6 @@ export default function Master(props) {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
-    const handleResend = () => {
-        const data = { email: user.email };
-
-        UserService.resendLink(data)
-            .then(status => {
-                if (status === 200) {
-                    toast(i18n.t('VALIDATION_EMAIL_SENT'));
-                } else {
-                    toast(i18n.t('VALIDATION_EMAIL_ERROR'));
-                }
-            }).catch(err => {
-                console.log(err);
-                toast(i18n.t('VALIDATION_EMAIL_ERROR'));
-            });
-    };
-
     const exit = () => {
         if (props.strict) {
             UserService.signout(props.navigation, false, true);
@@ -37,7 +21,7 @@ export default function Master(props) {
         }
     };
 
-    const init = async () => {
+    const _init = async () => {
         try {
             setLoading(true);
 
@@ -83,8 +67,24 @@ export default function Master(props) {
     };
 
     useEffect(() => {
-        init();
-    }, [props.route]);
+        if (props.reload) _init();
+    }, [props.reload]);
+
+    const handleResend = () => {
+        const data = { email: user.email };
+
+        UserService.resendLink(data)
+            .then(status => {
+                if (status === 200) {
+                    toast(i18n.t('VALIDATION_EMAIL_SENT'));
+                } else {
+                    toast(i18n.t('VALIDATION_EMAIL_ERROR'));
+                }
+            }).catch(err => {
+                console.log(err);
+                toast(i18n.t('VALIDATION_EMAIL_ERROR'));
+            });
+    };
 
     return (
         !loading &&

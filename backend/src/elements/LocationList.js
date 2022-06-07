@@ -27,6 +27,7 @@ import {
     Delete as DeleteIcon,
     LocationOn as LocationIcon
 } from '@mui/icons-material';
+import UserService from '../services/UserService';
 
 import '../assets/css/location-list.css';;
 
@@ -63,7 +64,7 @@ class LocationList extends Component {
                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                 }
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     };
 
     handleCloseInfo = () => {
@@ -75,22 +76,22 @@ class LocationList extends Component {
 
         if (locationId !== '' && locationIndex > -1) {
             this.setState({ loading: true, openDeleteDialog: false });
-            LocationService.delete(locationId).then(status => {
-                if (status === 200) {
-                    rows.splice(locationIndex, 1);
-                    this.setState({ rows, rowCount: rowCount - 1, loading: false, locationId: '', locationIndex: -1 }, () => {
-                        if (this.props.onDelete) {
-                            this.props.onDelete(this.state.rowCount);
-                        }
-                    });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ loading: false, locationId: '', locationIndex: -1 });
-                }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                this.setState({ loading: false, locationId: '', locationIndex: -1 });
-            });
+            LocationService.delete(locationId)
+                .then(status => {
+                    if (status === 200) {
+                        rows.splice(locationIndex, 1);
+                        this.setState({ rows, rowCount: rowCount - 1, loading: false, locationId: '', locationIndex: -1 }, () => {
+                            if (this.props.onDelete) {
+                                this.props.onDelete(this.state.rowCount);
+                            }
+                        });
+                    } else {
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        this.setState({ loading: false, locationId: '', locationIndex: -1 });
+                    }
+                }).catch(() => {
+                    UserService.signout();
+                });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
             this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });

@@ -82,8 +82,6 @@ export default class Settings extends Component {
         });
     };
 
-    preventDefault = (event) => event.preventDefault();
-
     handleSubmit = e => {
         e.preventDefault();
 
@@ -113,7 +111,7 @@ export default class Settings extends Component {
                 }
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 
@@ -128,7 +126,7 @@ export default class Settings extends Component {
                 }
             })
             .catch(err => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native';
-import { useNavigationState } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
@@ -19,6 +19,7 @@ import LocationSelectList from '../elements/LocationSelectList';
 import DateTimePicker from '../elements/DateTimePicker';
 
 export default function HomeScreen({ navigation, route }) {
+  const isFocused = useIsFocused();
 
   const _fromDate = new Date();
   _fromDate.setDate(_fromDate.getDate() + 1);
@@ -48,19 +49,34 @@ export default function HomeScreen({ navigation, route }) {
   const [toDate, setToDate] = useState(_toDate);
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
   const [blur, setBlur] = useState(false);
-
-  const routes = useNavigationState(state => state && state.routes);
+  const [reload, setReload] = useState(false);
 
   const _init = async () => {
     const language = await UserService.getLanguage();
     i18n.locale = language;
     setLanguage(language);
+
+    setPickupLocation(null);
+    setDropOffLocation(null);
+    setSameLocation(true);
+    setFromDate(_fromDate);
+    setFromTime(_fromTime);
+    setToDate(_toDate);
+    setToTime(_toTime);
+
     setInit(true);
   };
 
   useEffect(() => {
-    _init();
-  }, [routes]);
+    if (isFocused) {
+      _init();
+      setReload(true);
+    }
+  }, [route.params, isFocused]);
+
+  const onLoad = (user) => {
+    setReload(false);
+  };
 
   const handlePickupLocationSelect = (pickupLocation) => {
     setPickupLocation(pickupLocation);
@@ -101,17 +117,13 @@ export default function HomeScreen({ navigation, route }) {
       return Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'));
     }
 
-    console.log('pickupLocation', pickupLocation);
-    console.log('dropOffLocation', dropOffLocation);
-    console.log('from', from);
-    console.log('to', to);
-
-    // TODO cars
+    const params = { pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
+    navigation.navigate('Cars', params)
   };
 
   return (
     init &&
-    <Master style={styles.master} navigation={navigation} route={route}>
+    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload}>
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
@@ -140,6 +152,7 @@ export default function HomeScreen({ navigation, route }) {
             label={i18n.t('PICKUP_LOCATION')}
             style={styles.component}
             onSelectItem={handlePickupLocationSelect}
+            selectedItem={pickupLocation}
             onFetch={() => {
               setClosePickupLocation(false);
             }}
@@ -198,6 +211,7 @@ export default function HomeScreen({ navigation, route }) {
               label={i18n.t('DROP_OFF_LOCATION')}
               style={styles.component}
               onSelectItem={handleDropOffLocationSelect}
+              selectedItem={dropOffLocation}
               onFetch={() => {
                 setCloseDropOffLocation(false);
               }}

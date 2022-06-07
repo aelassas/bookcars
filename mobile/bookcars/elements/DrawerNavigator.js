@@ -24,6 +24,7 @@ import ContactScreen from '../screens/ContactScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import CarsScreen from '../screens/CarsScreen';
 import Header from './Header';
 import UserService from '../services/UserService';
 import i18n from '../lang/i18n';
@@ -47,6 +48,13 @@ export default function DrawerNavigator(props) {
                 name: 'Home',
                 title: i18n.t('HOME'),
                 iconName: 'home'
+            },
+            {
+                name: 'Cars',
+                title: i18n.t('CARS'),
+                iconName: 'directions-car',
+                hidden: true,
+                hideTitle: true
             },
             {
                 name: 'Bookings',
@@ -118,7 +126,7 @@ export default function DrawerNavigator(props) {
                     language: language
                 };
                 const status = await UserService.updateLanguage(data);
-                
+
                 if (status === 200) {
                     setLang(language);
                 } else {
@@ -266,14 +274,15 @@ export default function DrawerNavigator(props) {
                             name={drawer.name}
                             component={
                                 drawer.name === 'Home' ? HomeScreen :
-                                    drawer.name === 'Bookings' ? BookingsScreen
-                                        : drawer.name === 'About' ? AboutScreen
-                                            : drawer.name === 'ToS' ? ToSScreen
-                                                : drawer.name === 'Contact' ? ContactScreen
-                                                    : drawer.name === 'SignIn' ? SignInScreen
-                                                        : drawer.name === 'SignUp' ? SignUpScreen
-                                                            : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
-                                                                : null
+                                    drawer.name === 'Cars' ? CarsScreen :
+                                        drawer.name === 'Bookings' ? BookingsScreen
+                                            : drawer.name === 'About' ? AboutScreen
+                                                : drawer.name === 'ToS' ? ToSScreen
+                                                    : drawer.name === 'Contact' ? ContactScreen
+                                                        : drawer.name === 'SignIn' ? SignInScreen
+                                                            : drawer.name === 'SignUp' ? SignUpScreen
+                                                                : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
+                                                                    : null
                             }
                             options={{
                                 title: drawer.title,

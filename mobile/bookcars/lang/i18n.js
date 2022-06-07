@@ -124,6 +124,7 @@ i18n.translations = {
         LANGUAGE: 'Langue',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
+        CARS: 'Voitures'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -245,6 +246,7 @@ i18n.translations = {
         LANGUAGE: 'Language',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
+        CARS: 'Cars'
     }
 };
 

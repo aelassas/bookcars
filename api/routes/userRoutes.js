@@ -829,7 +829,7 @@ routes.route(routeNames.deleteAvatar).post(authJwt.verifyToken, (req, res) => {
 });
 
 // Delete Temp Avatar Router
-routes.route(routeNames.deleteTempAvatar).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.deleteTempAvatar).post((req, res) => {
     try {
         const avatar = path.join(CDN_TEMP, req.params.avatar);
         if (fs.existsSync(avatar)) {

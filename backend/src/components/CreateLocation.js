@@ -12,6 +12,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
+import UserService from '../services/UserService';
 
 import '../assets/css/create-location.css';
 
@@ -61,20 +62,17 @@ export default class CreateLocation extends Component {
                             this.error();
                         }
                     }).catch(() => {
-                        this.error();
+                        UserService.signout();
                     });
             }
         }).catch(() => {
-            this.error();
+            UserService.signout();
         });
     };
 
     onLoad = (user) => {
         this.setState({ visible: true });
     };
-
-    componentDidMount() {
-    }
 
     render() {
         const { visible, name, nameError } = this.state;

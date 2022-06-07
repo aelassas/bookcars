@@ -40,7 +40,7 @@ class UserSelectList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     };
 
     handleChange = (values, key, reference) => {

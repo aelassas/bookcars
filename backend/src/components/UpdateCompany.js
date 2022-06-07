@@ -75,9 +75,7 @@ export default class UpdateCompany extends Component {
                     }
                 }
                 catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ fullNameError: false, avatarError: false, error: false });
-                    return false;
+                    UserService.signout();
                 }
             } else {
                 this.setState({ fullNameError: false, avatarError: false, error: false });
@@ -204,7 +202,7 @@ export default class UpdateCompany extends Component {
                 }
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 

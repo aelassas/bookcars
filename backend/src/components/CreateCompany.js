@@ -69,9 +69,7 @@ export default class CreateCompany extends Component {
                 }
             }
             catch (err) {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ fullNameError: false });
-                return false;
+                UserService.signout();
             }
         } else {
             this.setState({ fullNameError: false });
@@ -108,9 +106,7 @@ export default class CreateCompany extends Component {
                     }
                 }
                 catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    this.setState({ emailError: false, emailValid: true });
-                    return false;
+                    UserService.signout();
                 }
             } else {
                 this.setState({ emailError: false, emailValid: false });
@@ -203,48 +199,31 @@ export default class CreateCompany extends Component {
             return;
         }
 
-        try {
-            const status = await UserService.validateEmail({ email });
-            if (status === 204) {
-                this.setState({ emailError: true });
-                return;
-            }
+        const data = {
+            email,
+            fullName,
+            phone,
+            location: this.state.location,
+            bio: this.state.bio,
+            language: UserService.getLanguage(),
+            type: Env.RECORD_TYPE.COMPANY,
+            avatar: this.state.avatar
+        };
 
-            this.setState({ emailError: false, loading: true });
-
-            const data = {
-                email,
-                fullName,
-                phone,
-                location: this.state.location,
-                bio: this.state.bio,
-                language: UserService.getLanguage(),
-                type: Env.RECORD_TYPE.COMPANY,
-                avatar: this.state.avatar
-            };
-
-            UserService.create(data)
-                .then(status => {
-                    if (status === 200) {
-                        window.location = '/companies';
-                    } else
-                        this.setState({
-                            error: true,
-                            passwordError: false,
-                            passwordsDontMatch: false,
-                            loading: false
-                        });
-                }).catch(() => {
+        UserService.create(data)
+            .then(status => {
+                if (status === 200) {
+                    window.location = '/companies';
+                } else
                     this.setState({
                         error: true,
                         passwordError: false,
                         passwordsDontMatch: false,
                         loading: false
                     });
-                });
-        } catch (err) {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-        }
+            }).catch(() => {
+                UserService.signout();
+            });
     };
 
     handleChange = (e) => {

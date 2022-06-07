@@ -270,7 +270,7 @@ routes.route(routeNames.deleteImage).post(authJwt.verifyToken, (req, res) => {
         });
 });
 
-routes.route(routeNames.deleteTempImage).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.deleteTempImage).post((req, res) => {
     try {
         const image = path.join(CDN_TEMP, req.params.image);
         if (fs.existsSync(image)) {

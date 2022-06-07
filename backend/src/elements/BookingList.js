@@ -29,6 +29,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
+import UserService from '../services/UserService';
 
 import '../assets/css/booking-list.css';
 
@@ -224,8 +225,7 @@ class BookingList extends Component {
                 this.setState({ openUpdateDialog: false });
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                this.setState({ openUpdateDialog: false });
+                UserService.signout();
             });
     };
 
@@ -252,7 +252,7 @@ class BookingList extends Component {
                 this.setState({ openDeleteDialog: false });
             })
             .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                UserService.signout();
             });
     };
 
@@ -273,7 +273,7 @@ class BookingList extends Component {
                     });
                 })
                 .catch((err) => {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    UserService.signout();
                 });
         } else {
             this.setState({ rows: [], rowCount: 0, loading: false }, () => {

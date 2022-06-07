@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useNavigationState } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
@@ -10,7 +10,8 @@ import Error from '../elements/Error';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 
-export default function SignInScreen({ navigation }) {
+export default function SignInScreen({ navigation, route }) {
+    const isFocused = useIsFocused();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -22,31 +23,22 @@ export default function SignInScreen({ navigation }) {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            // The screen is focused
-
-            setEmail('');
-            setPassword('');
-
-            if (emailRef.current) emailRef.current.clear();
-            if (passwordRef.current) passwordRef.current.clear();
-        });
-
-        // Return the function to unsubscribe from the event so it gets removed on unmount
-        return unsubscribe;
-    }, [navigation]);
-
-    const routes = useNavigationState(state => state && state.routes);
-
     const _init = async () => {
         const language = await UserService.getLanguage();
         i18n.locale = language;
+
+        setEmail('');
+        setPassword('');
+
+        if (emailRef.current) emailRef.current.clear();
+        if (passwordRef.current) passwordRef.current.clear();
     };
 
     useEffect(() => {
-        _init();
-    }, [routes]);
+        if (isFocused) {
+            _init();
+        }
+    }, [route.params, isFocused]);
 
     const onChangeEmail = (text) => {
         setEmail(text);

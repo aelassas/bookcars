@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { useNavigationState } from '@react-navigation/native';
 
 import Master from './Master';
 import TextInput from '../elements/TextInput';
@@ -8,10 +7,10 @@ import Button from '../elements/Button';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 
-export default function ForgotPasswordScreen({ navigation }) {
+export default function ForgotPasswordScreen({ navigation, route }) {
+    const isFocused = useIsFocused();
     const [email, onChangeEmail] = useState('');
-
-    const routes = useNavigationState(state => state && state.routes);
+    const [reload, setReload] = useState(false);
 
     const _init = async () => {
         const language = await UserService.getLanguage();
@@ -19,15 +18,22 @@ export default function ForgotPasswordScreen({ navigation }) {
     };
 
     useEffect(() => {
-        _init();
-    }, [routes]);
+        if (isFocused) {
+            _init();
+            setReload(true);
+        }
+    }, [route.params, isFocused]);
+
+    const onLoad = (user) => {
+        setReload(false);
+    };
 
     const onPressReset = () => {
         console.log('reset!')
     };
 
     return (
-        <Master style={styles.master}>
+        <Master style={styles.master} onLoad={onLoad} reload={reload}>
             <ScrollView
                 contentContainerStyle={styles.container}
                 keyboardShouldPersistTaps="handled"

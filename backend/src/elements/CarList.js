@@ -30,6 +30,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
+import UserService from '../services/UserService';
 
 import DoorsIcon from '../assets/img/car-door.png';
 
@@ -64,17 +65,21 @@ class CarList extends Component {
     }
 
     handleDelete = async (e) => {
-        const carId = e.currentTarget.getAttribute('data-id');
-        const carIndex = e.currentTarget.getAttribute('data-index');
+        try {
+            const carId = e.currentTarget.getAttribute('data-id');
+            const carIndex = e.currentTarget.getAttribute('data-index');
 
-        const status = await CarService.check(carId);
+            const status = await CarService.check(carId);
 
-        if (status === 200) {
-            this.setState({ openInfoDialog: true });
-        } else if (status === 204) {
-            this.setState({ openDeleteDialog: true, carId, carIndex });
-        } else {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            if (status === 200) {
+                this.setState({ openInfoDialog: true });
+            } else if (status === 204) {
+                this.setState({ openDeleteDialog: true, carId, carIndex });
+            } else {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            }
+        } catch (err) {
+            UserService.signout();
         }
     };
 
@@ -102,8 +107,7 @@ class CarList extends Component {
                         this.setState({ loading: false, carId: '', carIndex: -1 });
                     }
                 }).catch((err) => {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' })
-                    this.setState({ loading: false, carId: '', carIndex: -1 });
+                    UserService.signout();
                 });
         } else {
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -141,7 +145,7 @@ class CarList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {

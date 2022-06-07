@@ -86,7 +86,7 @@ export const Avatar = (props) => {
                                 }
                             })
                             .catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                UserService.signout();
                             });
                     };
 
@@ -99,26 +99,27 @@ export const Avatar = (props) => {
                         UserService.updateAvatar(_id, file)
                             .then(status => {
                                 if (status === 200) {
-                                    UserService.getUser(_id).then(user => {
-                                        if (user) {
-                                            setRecord(user);
-                                            setAvatar(user.avatar);
+                                    UserService.getUser(_id)
+                                        .then(user => {
+                                            if (user) {
+                                                setRecord(user);
+                                                setAvatar(user.avatar);
 
-                                            if (props.onChange) {
-                                                props.onChange(user.avatar);
+                                                if (props.onChange) {
+                                                    props.onChange(user.avatar);
+                                                }
+                                            } else {
+                                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                             }
-                                        } else {
-                                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                        }
-                                    }).catch(err => {
-                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                    });
+                                        }).catch(err => {
+                                            UserService.signout();
+                                        });
                                 } else {
                                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             })
                             .catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                UserService.signout();
                             });
                     };
 
@@ -137,7 +138,7 @@ export const Avatar = (props) => {
                                 }
                             })
                             .catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                UserService.signout();
                             });
                     };
 
@@ -150,26 +151,27 @@ export const Avatar = (props) => {
                         CarService.updateImage(_id, file)
                             .then(status => {
                                 if (status === 200) {
-                                    CarService.getCar(_id).then(car => {
-                                        if (car) {
-                                            setRecord(car);
-                                            setAvatar(car.image);
+                                    CarService.getCar(_id)
+                                        .then(car => {
+                                            if (car) {
+                                                setRecord(car);
+                                                setAvatar(car.image);
 
-                                            if (props.onChange) {
-                                                props.onChange(car);
+                                                if (props.onChange) {
+                                                    props.onChange(car);
+                                                }
+                                            } else {
+                                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                             }
-                                        } else {
-                                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                        }
-                                    }).catch(err => {
-                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                    });
+                                        }).catch(err => {
+                                            UserService.signout();
+                                        });
                                 } else {
                                     toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                 }
                             })
                             .catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                UserService.signout();
                             });
                     };
 
@@ -233,14 +235,14 @@ export const Avatar = (props) => {
                                         toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                     }
                                 }).catch(err => {
-                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    UserService.signout();
                                 });
                         } else {
                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        UserService.signout();
                     });
             } else if (!record && props.mode === 'create') {
                 UserService.deleteTempAvatar(avatar)
@@ -281,26 +283,27 @@ export const Avatar = (props) => {
                 CarService.deleteImage(_id)
                     .then(status => {
                         if (status === 200) {
-                            UserService.getUser(_id).then(car => {
-                                if (car) {
-                                    setRecord(car);
-                                    setAvatar(null);
-                                    if (props.onChange) {
-                                        props.onChange(null);
+                            UserService.getUser(_id)
+                                .then(car => {
+                                    if (car) {
+                                        setRecord(car);
+                                        setAvatar(null);
+                                        if (props.onChange) {
+                                            props.onChange(null);
+                                        }
+                                        closeDialog();
+                                    } else {
+                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                                     }
-                                    closeDialog();
-                                } else {
-                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                                }
-                            }).catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                            });
+                                }).catch(err => {
+                                    UserService.signout();
+                                });
                         } else {
                             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
                         }
                     })
                     .catch(err => {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        UserService.signout();
                     });
             }
         }

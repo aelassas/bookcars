@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useNavigationState } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import Master from './Master';
 import i18n from '../lang/i18n';
@@ -16,7 +16,8 @@ import Env from '../config/env.config';
 import Error from '../elements/Error';
 import Backdrop from '../elements/Backdrop';
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen({ navigation, route }) {
+    const isFocused = useIsFocused();
     const [language, setLanguage] = useState(null);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -47,40 +48,31 @@ export default function SignUpScreen({ navigation }) {
     const passwordRef = useRef(null);
     const confirmPasswordRef = useRef(null);
 
-    const routes = useNavigationState(state => state && state.routes);
-
     const _init = async () => {
         const language = await UserService.getLanguage();
         i18n.locale = language;
         setLanguage(language);
+
+        setFullName('');
+        setEmail('');
+        setPhone('');
+        setBirthDate(null);
+        setPassword('');
+        setConfirmPassword('');
+        onChangeToSChecked(false);
+
+        if (fullNameRef.current) fullNameRef.current.clear();
+        if (emailRef.current) emailRef.current.clear();
+        if (phoneRef.current) phoneRef.current.clear();
+        if (passwordRef.current) passwordRef.current.clear();
+        if (confirmPasswordRef.current) confirmPasswordRef.current.clear();
     };
 
     useEffect(() => {
-        _init();
-    }, [routes]);
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            // The screen is focused
-
-            setFullName('');
-            setEmail('');
-            setPhone('');
-            setBirthDate(null);
-            setPassword('');
-            setConfirmPassword('');
-            onChangeToSChecked(false);
-
-            if (fullNameRef.current) fullNameRef.current.clear();
-            if (emailRef.current) emailRef.current.clear();
-            if (phoneRef.current) phoneRef.current.clear();
-            if (passwordRef.current) passwordRef.current.clear();
-            if (confirmPasswordRef.current) confirmPasswordRef.current.clear();
-        });
-
-        // Return the function to unsubscribe from the event so it gets removed on unmount
-        return unsubscribe;
-    }, [navigation]);
+        if (isFocused) {
+            _init();
+        }
+    }, [route.params, isFocused]);
 
     const validateFullName = () => {
         const valid = fullName !== '';
@@ -304,7 +296,7 @@ export default function SignUpScreen({ navigation }) {
 
     return (
         language &&
-        <Master style={styles.master}>
+        <View style={styles.master}>
             <ScrollView
                 contentContainerStyle={styles.container}
                 keyboardShouldPersistTaps='handled'
@@ -399,13 +391,14 @@ export default function SignUpScreen({ navigation }) {
             </ScrollView>
 
             {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
-        </Master>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     master: {
         flex: 1,
+        backgroundColor: '#fafafa'
     },
     container: {
         justifyContent: 'center',

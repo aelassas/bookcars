@@ -14,6 +14,7 @@ import {
     DialogActions,
     Button
 } from '@mui/material';
+import UserService from '../services/UserService';
 
 class CarSelectList extends Component {
 
@@ -70,7 +71,7 @@ class CarSelectList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     };
 
     handleCloseDialog = () => {
