@@ -59,6 +59,7 @@ const TextInput = React.forwardRef((props, ref) => {
                 onSubmitEditing={props.onSubmitEditing}
                 onBlur={props.onBlur}
                 autoCapitalize='none'
+                editable={!props.readOnly}
             />
             <Text style={styles.helperText}>{props.helperText}</Text>
         </View>

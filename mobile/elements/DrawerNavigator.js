@@ -8,7 +8,6 @@ import {
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
-    DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
 import {
@@ -36,6 +35,8 @@ import UserService from '../services/UserService';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
+import SettingsScreen from '../screens/SettingsScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 
 export default function DrawerNavigator(props) {
     const navigation = useNavigation();
@@ -85,6 +86,18 @@ export default function DrawerNavigator(props) {
                 iconName: 'mail'
             },
             {
+                name: 'Settings',
+                title: i18n.t('SETTINGS'),
+                iconName: 'settings',
+                hidden: !loggedIn
+            },
+            {
+                name: 'ChangePassword',
+                title: i18n.t('CHANGE_PASSWORD_TITLE'),
+                iconName: 'vpn-key',
+                hidden: true
+            },
+            {
                 name: 'SignIn',
                 title: i18n.t('SIGN_IN_TITLE'),
                 iconName: 'login',
@@ -95,8 +108,7 @@ export default function DrawerNavigator(props) {
                 title: i18n.t('SIGN_UP_TITLE'),
                 iconName: 'login',
                 hidden: true
-            }
-            ,
+            },
             {
                 name: 'ForgotPassword',
                 title: i18n.t('FORGOT_PASSWORD'),
@@ -253,7 +265,7 @@ export default function DrawerNavigator(props) {
         signout: {
             flexDirection: 'row',
             alignItems: 'center',
-            marginTop: 10,
+            marginTop: 13,
             marginLeft: 20,
             marginBottom: 25
         },
@@ -336,17 +348,23 @@ export default function DrawerNavigator(props) {
                                             : drawer.name === 'About' ? AboutScreen
                                                 : drawer.name === 'ToS' ? ToSScreen
                                                     : drawer.name === 'Contact' ? ContactScreen
-                                                        : drawer.name === 'SignIn' ? SignInScreen
-                                                            : drawer.name === 'SignUp' ? SignUpScreen
-                                                                : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
-                                                                    : null
+                                                        : drawer.name === 'Settings' ? SettingsScreen
+                                                            : drawer.name === 'ChangePassword' ? ChangePasswordScreen
+                                                                : drawer.name === 'SignIn' ? SignInScreen
+                                                                    : drawer.name === 'SignUp' ? SignUpScreen
+                                                                        : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
+                                                                            : null
                             }
                             options={{
                                 title: drawer.title,
                                 drawerItemStyle: {
-                                    height: (drawer.hidden
+                                    height: (
+                                        drawer.hidden
                                         || (drawer.name === 'SignIn' && loggedIn)
-                                        || (drawer.name === 'Bookings' && !loggedIn)) ? 0 : 'auto'
+                                        || (drawer.name === 'Bookings' && !loggedIn)
+                                        || (drawer.name === 'Settings' && !loggedIn)
+                                    )
+                                        ? 0 : 'auto'
                                 },
                                 drawerIcon: ({ focused }) =>
                                     <MaterialIcons
