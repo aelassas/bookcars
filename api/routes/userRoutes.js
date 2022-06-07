@@ -635,7 +635,7 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 user.bio = bio;
                 user.birthDate = birthDate;
                 if (type) user.type = type;
-                if (typeof enableEmailNotifications !== undefined) user.enableEmailNotifications = enableEmailNotifications;
+                if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications;
 
                 user.save()
                     .then(() => {
