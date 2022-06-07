@@ -114,7 +114,7 @@ i18n.translations = {
         CONFIRM_PASSWORD: 'Confirmer le mot de passe',
         ACCEPT_TOS: "J'ai lu et j'accepte les conditions générales d'utilisation.",
         TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-        RESET_PASSWORD: 'Veuillez entrer votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
+        RESET_PASSWORD: 'Veuillez saisir votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
         RESET: 'Réinitialiser',
         RESET_EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.',
         REQUIRED: 'Veuillez renseigner ce champ.',
@@ -124,7 +124,9 @@ i18n.translations = {
         LANGUAGE: 'Langue',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
-        CARS: 'Voitures'
+        CARS: 'Voitures',
+        RESET_EMAIL_ERROR: 'Adresse e-mail non enregistrée',
+        RESET_EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -246,7 +248,9 @@ i18n.translations = {
         LANGUAGE: 'Language',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
-        CARS: 'Cars'
+        CARS: 'Cars',
+        RESET_EMAIL_ERROR: 'Email address not registered',
+        RESET_EMAIL_SENT: 'Password reset email sent.'
     }
 };
 

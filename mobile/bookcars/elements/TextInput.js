@@ -55,6 +55,8 @@ const TextInput = React.forwardRef((props, ref) => {
                 placeholder={props.label}
                 value={value}
                 onChangeText={onChangeText}
+                onKeyPress={props.onKeyPress}
+                onSubmitEditing={props.onSubmitEditing}
                 onBlur={props.onBlur}
                 autoCapitalize='none'
             />

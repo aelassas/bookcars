@@ -5,7 +5,7 @@ import UserService from '../services/UserService';
 export const strings = new LocalizedStrings({
     fr: {
         RESET_PASSWORD_HEADING: 'Réinitialisation du mot de passe',
-        RESET_PASSWORD: 'Veuillez entrer votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
+        RESET_PASSWORD: 'Veuillez saisir votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
         EMAIL_ERROR: 'Adresse e-mail non enregistrée',
         RESET: 'Réinitialiser',
         EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.'
