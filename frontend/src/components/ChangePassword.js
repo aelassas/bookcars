@@ -56,6 +56,10 @@ export default class ChangePassword extends Component {
         this.setState({ currentPassword: e.target.value });
     };
 
+    error = () => {
+        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
 
@@ -104,18 +108,18 @@ export default class ChangePassword extends Component {
                                     this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
                                     toast(strings.PASSWORD_UPDATE, { type: 'info' });
                                 } else {
-                                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                                    this.error();
                                 }
                             })
                             .catch(() => {
-                                toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                                UserService.signout();
                             });
                     } else {
-                        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                        this.error();
                     }
                 })
                 .catch(() => {
-                    toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                    UserService.signout();
                 });
         };
 
@@ -134,7 +138,7 @@ export default class ChangePassword extends Component {
                     submit();
                 }
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
 
     };
 

@@ -5,7 +5,6 @@ import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as blStrings } from '../lang/booking-list';
 import { strings } from '../lang/booking-car-list';
 import CarService from '../services/CarService';
-import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 import {
     Dialog,

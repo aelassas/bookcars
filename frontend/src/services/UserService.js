@@ -66,10 +66,10 @@ export default class UserService {
             deleteAllCookies();
 
             if (redirect) {
-                window.location.href = '/' + window.location.search;
+                window.location.href = '/';
             }
             if (redirectSignin) {
-                window.location.href = '/sign-in' + window.location.search;
+                window.location.href = '/sign-in';
             }
         };
 

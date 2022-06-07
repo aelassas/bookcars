@@ -5,7 +5,6 @@ import { strings } from '../lang/cars';
 import Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import UserService from '../services/UserService';
-import { toast } from 'react-toastify';
 import Backdrop from './SimpleBackdrop';
 import {
     Button,
@@ -80,7 +79,7 @@ class CarList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch(() => UserService.signout());
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {

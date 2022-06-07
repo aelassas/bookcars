@@ -32,5 +32,5 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './backend/package-lock.json'
     - run: npm ci
-    - run: npm run build
+    - run: CI='' npm run build
     
