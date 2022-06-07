@@ -27,7 +27,7 @@ export default function SignUpScreen({ navigation, route }) {
     const [tosChecked, setTosChecked] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const [fullNameError, setFullNameError] = useState(false);
+    const [fullNameRequired, setFullNameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [emailValid, setEmailValid] = useState(true);
     const [emailRequired, setEmailRequired] = useState(false);
@@ -209,8 +209,8 @@ export default function SignUpScreen({ navigation, route }) {
 
     const onChangeConfirmPassword = (text) => {
         setConfirmPassword(text);
-        setConfirmPasswordError(false);
         setConfirmPasswordRequired(false);
+        setConfirmPasswordError(false);
     };
 
     const onChangeToSChecked = (checked) => {
@@ -307,8 +307,8 @@ export default function SignUpScreen({ navigation, route }) {
                         style={styles.component}
                         label={i18n.t('FULL_NAME')}
                         value={fullName}
-                        error={fullNameError}
-                        helperText={(fullNameError && i18n.t('REQUIRED')) || ''}
+                        error={fullNameRequired}
+                        helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
                         onChangeText={onChangeFullName}
                     />
 

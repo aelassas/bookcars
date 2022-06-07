@@ -71,7 +71,7 @@ export default function SignInScreen({ navigation, route }) {
                         setBlacklisted(true);
                     } else {
                         setSignInError(false);
-                        navigation.navigate('Home', { d: new Date().getTime() });
+                        navigation.navigate('Home', { d: new Date().getTime(), from: 'SignIn' });
                     }
                 } else {
                     setSignInError(true);

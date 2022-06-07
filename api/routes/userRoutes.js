@@ -628,13 +628,14 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 console.error('[user.update] User not found:', req.body.email);
                 res.sendStatus(204);
             } else {
-                const { fullName, phone, bio, location, type, birthDate } = req.body;
+                const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications } = req.body;
                 if (fullName) user.fullName = fullName;
                 user.phone = phone;
                 user.location = location;
                 user.bio = bio;
                 user.birthDate = birthDate;
                 if (type) user.type = type;
+                if (typeof enableEmailNotifications !== undefined) user.enableEmailNotifications = enableEmailNotifications;
 
                 user.save()
                     .then(() => {
@@ -869,14 +870,15 @@ routes.route(routeNames.changePassword).post(authJwt.verifyToken, (req, res) => 
             };
 
             if (req.body.strict) {
-                bcrypt.compare(req.body.password, user.password).then(async passwordMatch => {
-                    if (passwordMatch) {
-                        changePassword();
-                    }
-                    else {
-                        return res.sendStatus(204);
-                    }
-                });
+                bcrypt.compare(req.body.password, user.password)
+                    .then(async passwordMatch => {
+                        if (passwordMatch) {
+                            changePassword();
+                        }
+                        else {
+                            return res.sendStatus(204);
+                        }
+                    });
             }
             else {
                 changePassword();

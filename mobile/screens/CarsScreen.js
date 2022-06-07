@@ -9,17 +9,21 @@ import UserService from '../services/UserService';
 export default function CarsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const _init = async () => {
         const language = await UserService.getLanguage();
         i18n.locale = language;
         console.log(route.params);
+        setVisible(true);
     };
 
     useEffect(() => {
         if (isFocused) {
             _init();
             setReload(true);
+        } else {
+            setVisible(false);
         }
     }, [route.params, isFocused]);
 
@@ -29,7 +33,9 @@ export default function CarsScreen({ navigation, route }) {
 
     return (
         <Master style={styles.container} onLoad={onLoad} reload={reload}>
-            <Text style={{ fontSize: 16 }}>Cars!</Text>
+            {visible &&
+                <Text style={{ fontSize: 16 }}>Cars!</Text>
+            }
         </Master>
     );
 }

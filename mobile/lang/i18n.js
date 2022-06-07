@@ -31,6 +31,7 @@ i18n.translations = {
         SAVE: 'Sauvegarder',
         CANCEL: 'Annuler',
         CHANGE_PASSWORD: 'Changer le mot de passe',
+        CHANGE_PASSWORD_TITLE: 'Modification du mot de passe',
         CURRENCY: 'DH',
         DELETE_AVATAR_CONFIRM: 'Êtes-vous sûr de vouloir supprimer la photo ?',
         DELETE_IMAGE: "Supprimer l'image",
@@ -120,13 +121,21 @@ i18n.translations = {
         REQUIRED: 'Veuillez renseigner ce champ.',
         SIGN_OUT: 'Déconnexion',
         BOOKINGS: 'Réservations',
-
         LANGUAGE: 'Langue',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
         CARS: 'Voitures',
         RESET_EMAIL_ERROR: 'Adresse e-mail non enregistrée',
         RESET_EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.',
+        SETTINGS: 'Paramètres',
+        ENABLE_EMAIL_NOTIFICATIONS: 'Activer les notifications par email',
+        SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
+
+        CURRENT_PASSWORD: 'Mot de passe actuel',
+        CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
+        NEW_PASSWORD: 'Nouveau mot de passe',
+        PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
+        PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -150,11 +159,12 @@ i18n.translations = {
         PASSWORD_LENGTH_ERROR: 'Password must be at least 6 characters long.',
         PASSWORDS_DONT_MATCH: "Passwords don't match.",
         CREATE: 'Create',
-        UPDATE: 'Edit',
+        UPDATE: 'Save',
         DELETE: 'Delete',
         SAVE: 'Save',
         CANCEL: 'Cancel',
         CHANGE_PASSWORD: 'Change Password',
+        CHANGE_PASSWORD_TITLE: 'Password modification',
         CURRENCY: 'DH',
         DELETE_AVATAR_CONFIRM: 'Are you sure you want to delete the picture?',
         UPLOAD_IMAGE: 'Upload image',
@@ -244,13 +254,21 @@ i18n.translations = {
         REQUIRED: 'This field is required',
         SIGN_OUT: 'Sign out',
         BOOKINGS: 'Bookings',
-
         LANGUAGE: 'Language',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
         CARS: 'Cars',
         RESET_EMAIL_ERROR: 'Email address not registered',
-        RESET_EMAIL_SENT: 'Password reset email sent.'
+        RESET_EMAIL_SENT: 'Password reset email sent.',
+        SETTINGS: 'Settings',
+        ENABLE_EMAIL_NOTIFICATIONS: 'Enable email notifications',
+        SETTINGS_UPDATED: 'Settings updated successfully.',
+
+        CURRENT_PASSWORD: 'Current Password',
+        CURRENT_PASSWORD_ERROR: 'Wrong password',
+        NEW_PASSWORD: 'New Password',
+        PASSWORD_UPDATE: 'Password changed successfully.',
+        PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
     }
 };
 

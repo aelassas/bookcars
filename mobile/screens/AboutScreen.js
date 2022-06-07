@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
-import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 
-export default function ToSScreen({ navigation, route }) {
+export default function AboutScreen({ navigation, route }) {
     const isFocused = useIsFocused();
-    const [reload, setReload] = useState(false);
 
     const _init = async () => {
         const language = await UserService.getLanguage();
@@ -18,24 +16,23 @@ export default function ToSScreen({ navigation, route }) {
     useEffect(() => {
         if (isFocused) {
             _init();
-            setReload(true);
         }
     }, [route.params, isFocused]);
 
-    const onLoad = (user) => {
-        setReload(false);
-    };
-
     return (
-        <Master style={styles.container} onLoad={onLoad} reload={reload}>
-            <Text style={{ fontSize: 16 }}>ToS!</Text>
-        </Master>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
+        >
+            <Text style={{ fontSize: 16 }}>About!</Text>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         alignItems: 'center'
     }
 });

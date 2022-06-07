@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Keyboard
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -38,6 +39,7 @@ export default function HomeScreen({ navigation, route }) {
   _toTime.setHours(10);
 
   const [init, setInit] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [pickupLocation, setPickupLocation] = useState(null);
   const [dropOffLocation, setDropOffLocation] = useState(null);
   const [closePickupLocation, setClosePickupLocation] = useState(false);
@@ -64,14 +66,22 @@ export default function HomeScreen({ navigation, route }) {
     setToDate(_toDate);
     setToTime(_toTime);
 
+    Keyboard.addListener('keyboardDidHide', () => {
+      setBlur(true);
+    });
+
     setInit(true);
+    setVisible(true);
   };
 
   useEffect(() => {
     if (isFocused) {
       _init();
       setReload(true);
+    } else {
+      setVisible(false);
     }
+
   }, [route.params, isFocused]);
 
   const onLoad = (user) => {
@@ -122,8 +132,8 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   return (
-    init &&
-    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload}>
+    init && visible &&
+    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
