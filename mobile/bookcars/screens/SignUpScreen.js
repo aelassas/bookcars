@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
-import Master from './Master';
 import i18n from '../lang/i18n';
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';

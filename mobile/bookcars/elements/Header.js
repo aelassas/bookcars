@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -30,7 +30,10 @@ export default function Header({ title, hideTitle }) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+            <TouchableOpacity
+                onPress={() => navigation.toggleDrawer()}
+                hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            >
                 <MaterialIcons name="menu" size={24} color="#fff" />
             </TouchableOpacity>
             {!hideTitle &&
