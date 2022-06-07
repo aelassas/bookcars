@@ -76,13 +76,12 @@ export default function Master(props) {
         UserService.resendLink(data)
             .then(status => {
                 if (status === 200) {
-                    toast(i18n.t('VALIDATION_EMAIL_SENT'));
+                    Helper.toast(i18n.t('VALIDATION_EMAIL_SENT'));
                 } else {
-                    toast(i18n.t('VALIDATION_EMAIL_ERROR'));
+                    Helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'));
                 }
             }).catch(err => {
-                console.log(err);
-                toast(i18n.t('VALIDATION_EMAIL_ERROR'));
+                UserService.signout();
             });
     };
 
