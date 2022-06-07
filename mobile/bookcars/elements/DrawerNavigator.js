@@ -11,7 +11,13 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { useNavigation, useNavigationState } from '@react-navigation/native';
+import {
+    CommonActions,
+    DrawerActions,
+    useLinkBuilder,
+    useNavigation,
+    useNavigationState
+} from '@react-navigation/native';
 import { getHeaderTitle } from '@react-navigation/elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -47,7 +53,8 @@ export default function DrawerNavigator(props) {
             {
                 name: 'Home',
                 title: i18n.t('HOME'),
-                iconName: 'home'
+                iconName: 'home',
+                hideTitle: true
             },
             {
                 name: 'Cars',
@@ -59,7 +66,8 @@ export default function DrawerNavigator(props) {
             {
                 name: 'Bookings',
                 title: i18n.t('BOOKINGS'),
-                iconName: 'event-seat'
+                iconName: 'event-seat',
+                hidden: !loggedIn
             },
             {
                 name: 'About',
@@ -141,11 +149,53 @@ export default function DrawerNavigator(props) {
         }
     };
 
+    const buildLink = useLinkBuilder();
+
     const CustomDrawerContent = (props) => {
         return (
             <DrawerContentScrollView {...props} contentContainerStyle={styles.drawer}>
                 <View forceInset={styles.drawerList}>
-                    <DrawerItemList {...props} />
+                    {/* <DrawerItemList {...props} /> */}
+                    {props.state.routes.map((route, i) => {
+                        const focused = i === props.state.index;
+                        const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options;
+
+                        const hidden = drawerItems.find(item => item.name === route.name).hidden;
+                        if (hidden) {
+                            return <View key={route.key} />
+                        }
+
+                        return (
+                            <DrawerItem
+                                key={route.key}
+                                label={
+                                    drawerLabel !== undefined
+                                        ? drawerLabel
+                                        : title !== undefined
+                                            ? title
+                                            : route.name
+                                }
+                                icon={drawerIcon}
+                                focused={focused}
+                                activeTintColor={props.activeTintColor}
+                                inactiveTintColor={props.inactiveTintColor}
+                                activeBackgroundColor={props.activeBackgroundColor}
+                                inactiveBackgroundColor={props.inactiveBackgroundColor}
+                                labelStyle={props.labelStyle}
+                                style={props.itemStyle}
+                                to={buildLink(route.name, route.params)}
+                                onPress={() => {
+                                    props.navigation.dispatch({
+                                        ...(focused
+                                            ? DrawerActions.closeDrawer()
+                                            : CommonActions.navigate(route.name)),
+                                        target: props.state.key,
+                                    })
+                                }}
+                            />
+                        )
+                    })
+                    }
                     {loggedIn &&
                         <TouchableOpacity style={styles.signout} onPress={() => UserService.signout(navigation)}>
                             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
@@ -201,7 +251,7 @@ export default function DrawerNavigator(props) {
         signout: {
             flexDirection: 'row',
             alignItems: 'center',
-            marginTop: -13,
+            marginTop: 10,
             marginLeft: 20,
             marginBottom: 25
         },
@@ -269,7 +319,8 @@ export default function DrawerNavigator(props) {
                 screenOptions={{
                     drawerActiveTintColor: '#f37022'
                 }}
-                drawerContent={(props) => <CustomDrawerContent {...props} />}
+                drawerContent={(props) => <CustomDrawerContent {...props} activeBackgroundColor='#feeee4' activeTintColor="#f37022" />}
+                useLegacyImplementation
             >
                 {
                     drawerItems.map(drawer => (

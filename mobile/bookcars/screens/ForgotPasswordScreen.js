@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import Master from './Master';
 import TextInput from '../elements/TextInput';
