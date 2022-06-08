@@ -259,7 +259,8 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   contentContainer: {
-    width: 420,
+    width: '100%',
+    maxWidth: 420,
     alignItems: 'center'
   },
   logo: {

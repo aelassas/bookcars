@@ -31,8 +31,8 @@ export default class Cars extends Component {
             companies: [],
             reload: false,
             loading: true,
-            gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
+            gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
             deposit: -1
         };

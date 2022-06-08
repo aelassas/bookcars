@@ -286,7 +286,8 @@ const styles = StyleSheet.create({
         flexGrow: 1
     },
     contentContainer: {
-        width: 420,
+        width: '100%',
+        maxWidth: 420,
         alignItems: 'center',
         paddingTop: 8,
         paddingBottom: 20
