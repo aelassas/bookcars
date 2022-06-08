@@ -11,11 +11,8 @@ import Button from './Button';
 
 const { width: WINDOW_WIDTH } = Dimensions.get('window');
 
-Dimensions.addEventListener('change', (e) => {
-    const { width } = e.window;
-})
-
 class CarList extends Component {
+
     constructor(props) {
         super(props);
 
@@ -41,8 +38,7 @@ class CarList extends Component {
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
             deposit: -1,
-            cars: [],
-            windowWidth: Dimensions.get('window').width
+            cars: []
         };
     }
 
@@ -54,10 +50,6 @@ class CarList extends Component {
             const allCompanies = await CompanyService.getAllCompanies();
             const companies = allCompanies.map(c => c._id);
             this.setState({ language, allCompanies, companies, init: true });
-            Dimensions.addEventListener('change', (e) => {
-                const { width: windowWidth } = e.window;
-                this.setState({ windowWidth });
-            })
         } catch (err) {
             Helper.error(err);
         }
@@ -77,9 +69,6 @@ class CarList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
-                    if (page === 1) {
-                        //document.querySelector('div.cars').scrollTo(0, 0);
-                    }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
@@ -91,6 +80,14 @@ class CarList extends Component {
     async componentDidMount() {
         await this._init();
         this.fetch();
+
+        Dimensions.addEventListener('change', (e) => {
+            const { loaded } = this.state;
+            if (loaded) {
+                const { width: windowWidth } = e.window;
+                this.setState({ windowWidth }, () => console.log(this.state.windowWidth));
+            }
+        });
     }
 
     render() {
@@ -119,7 +116,7 @@ class CarList extends Component {
                             data={rows}
                             renderItem={({ item: car, index }) => {
                                 return (
-                                    <View key={car._id} style={{ ...styles.car, width: windowWidth - 4 }}>
+                                    <View key={car._id} style={styles.car} >
                                         <Text style={styles.name}>{car.name}</Text>
 
                                         <View style={styles.imgView}>
@@ -283,6 +280,7 @@ const styles = StyleSheet.create({
     },
     car: {
         backgroundColor: '#fff',
+        width: WINDOW_WIDTH - 4,
         maxWidth: 480,
         height: 750,
         paddingTop: 20,
