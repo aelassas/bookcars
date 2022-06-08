@@ -1,11 +1,5 @@
 import ReactAsyncStorage from '@react-native-async-storage/async-storage';
-import i18n from '../lang/i18n';
 import Helper from './Helper';
-
-const error = (err) => {
-    console.log(err);
-    Helper.toast(i18n.t('GENERIC_ERROR'));
-};
 
 export default class AsyncStorage {
 
@@ -13,7 +7,7 @@ export default class AsyncStorage {
         try {
             await ReactAsyncStorage.setItem(key, value);
         } catch (err) {
-            error(err);
+            Helper.error(err);
         }
     }
 
@@ -22,7 +16,7 @@ export default class AsyncStorage {
             const value = await ReactAsyncStorage.getItem(key);
             return value;
         } catch (err) {
-            error('test');
+            Helper.error(err);
         }
     }
 
@@ -31,7 +25,7 @@ export default class AsyncStorage {
             const jsonValue = JSON.stringify(value);
             await ReactAsyncStorage.setItem(key, jsonValue);
         } catch (err) {
-            error('test');
+            Helper.error(err);
         }
     }
 
@@ -41,7 +35,7 @@ export default class AsyncStorage {
             const jsonValue = value != null ? JSON.parse(value) : null;
             return jsonValue;
         } catch (err) {
-            error('test');
+            Helper.error(err);
         }
     }
 
@@ -49,7 +43,7 @@ export default class AsyncStorage {
         try {
             await ReactAsyncStorage.removeItem(key);
         } catch (err) {
-            error('test');
+            Helper.error(err);
         }
     }
 }

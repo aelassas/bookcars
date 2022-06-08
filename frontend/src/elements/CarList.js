@@ -22,6 +22,7 @@ import {
     Check as CheckIcon,
     Clear as UncheckIcon
 } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 import DoorsIcon from '../assets/img/car-door.png';
 
@@ -79,7 +80,9 @@ class CarList extends Component {
                     }
                 });
             })
-            .catch(() => UserService.signout());
+            .catch(() => {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            });
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {

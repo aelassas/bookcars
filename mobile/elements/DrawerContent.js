@@ -22,16 +22,15 @@ class DrawerContent extends Component {
 
     updateLanguage = async (language) => {
         try {
-            const setLang = (language) => {
+            const setLang = async (language) => {
                 i18n.locale = language;
-                UserService.setLanguage(language);
+                await UserService.setLanguage(language);
                 this.setState({ language });
                 const route = this.props.state.routes[this.props.index];
-                this.props.navigation.navigate(route.name, { d: new Date().getTime() });
+                this.props.navigation.navigate(route.name, { d: new Date().getTime(), ...route.params });
             };
 
             const currentUser = await UserService.getCurrentUser();
-
             if (currentUser) {
                 const data = {
                     id: currentUser.id,
@@ -40,13 +39,13 @@ class DrawerContent extends Component {
                 const status = await UserService.updateLanguage(data);
 
                 if (status === 200) {
-                    setLang(language);
+                    await setLang(language);
                 } else {
                     Helper.error();
                 }
             }
             else {
-                setLang(language);
+                await setLang(language);
             }
         } catch (err) {
             Helper.error(err);
