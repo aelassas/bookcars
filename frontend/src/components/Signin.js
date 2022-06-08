@@ -154,21 +154,17 @@ export default class SignIn extends Component {
                             <form onSubmit={this.handleSubmit}>
                                 <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
+                                    <InputLabel>{commonStrings.EMAIL}</InputLabel>
                                     <Input
-                                        id="email"
                                         type="text"
-                                        name="Email"
                                         onChange={this.handleOnChangeEmail}
                                         autoComplete="email"
                                         required
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense">
-                                    <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
+                                    <InputLabel>{commonStrings.PASSWORD}</InputLabel>
                                     <Input
-                                        id="password"
-                                        name="Password"
                                         onChange={this.handleOnChangePassword}
                                         onKeyDown={this.handleOnPasswordKeyDown}
                                         autoComplete="password"
@@ -176,6 +172,7 @@ export default class SignIn extends Component {
                                         required
                                     />
                                 </FormControl>
+                                
                                 <div className='buttons'>
                                     <Link href='/reset-password' className='reset-password'>{strings.RESET_PASSWORD}</Link>
                                     <Button
