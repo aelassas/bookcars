@@ -111,133 +111,133 @@ class CarList extends Component {
                         <FlatList
                             contentContainerStyle={styles.contentContainer}
                             style={styles.flatList}
-                            keyboardShouldPersistTaps="handled"
-                            nestedScrollEnabled
                             data={rows}
                             renderItem={({ item: car, index }) => {
                                 return (
-                                    <View key={car._id} style={styles.car} >
-                                        <Text style={styles.name}>{car.name}</Text>
+                                    <View key={car._id} style={styles.carContainer}>
+                                        <View style={styles.car}>
+                                            <Text style={styles.name}>{car.name}</Text>
 
-                                        <View style={styles.imgView}>
-                                            <View style={styles.imgContainer}>
-                                                <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
+                                            <View style={styles.imgView}>
+                                                <View style={styles.imgContainer}>
+                                                    <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
+                                                </View>
                                             </View>
-                                        </View>
 
-                                        <View style={styles.infos}>
-                                            <View style={styles.info}>
-                                                <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
-                                            </View>
-                                            <View style={styles.info}>
-                                                <MaterialIcons name='account-tree' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
-                                            </View>
-                                            <View style={styles.info}>
-                                                <MaterialIcons name='person' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                                <Text style={styles.text}>{car.seats}</Text>
-                                            </View>
-                                            <View style={styles.info}>
-                                                <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
-                                                <Text style={styles.text}>{car.doors}</Text>
-                                            </View>
-                                            {car.aircon &&
+                                            <View style={styles.infos}>
                                                 <View style={styles.info}>
-                                                    <MaterialIcons name='ac-unit' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                    <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
                                                 </View>
-                                            }
-                                        </View>
-
-                                        <View style={styles.infos}>
-                                            <MaterialIcons name='directions-car' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
-                                        </View>
-
-                                        <View style={styles.infos}>
-                                            <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
-                                        </View>
-
-                                        <View style={styles.extras}>
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.cancellation > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.cancellation > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
-                                            </View>
-
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.amendments > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.amendments > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
-                                            </View>
-
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.theftProtection > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.theftProtection > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
-                                            </View>
-
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.collisionDamageWaiver > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.collisionDamageWaiver > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
-                                            </View>
-
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.fullInsurance > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.fullInsurance > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
-                                            </View>
-
-                                            <View style={styles.extra}>
-                                                <MaterialIcons
-                                                    name={car.additionalDriver > -1 ? 'check' : 'clear'}
-                                                    size={iconSize}
-                                                    color={car.additionalDriver > -1 ? availableColor : unavailableColor}
-                                                    style={styles.infoIcon} />
-                                                <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
-                                            </View>
-                                        </View>
-
-                                        <View style={styles.footer}>
-                                            <View style={styles.company}>
-                                                <View style={styles.companyImgView}>
-                                                    <View style={styles.companyImgContainer}>
-                                                        <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
+                                                <View style={styles.info}>
+                                                    <MaterialIcons name='account-tree' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
+                                                </View>
+                                                <View style={styles.info}>
+                                                    <MaterialIcons name='person' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{car.seats}</Text>
+                                                </View>
+                                                <View style={styles.info}>
+                                                    <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
+                                                    <Text style={styles.text}>{car.doors}</Text>
+                                                </View>
+                                                {car.aircon &&
+                                                    <View style={styles.info}>
+                                                        <MaterialIcons name='ac-unit' size={iconSize} color={iconColor} style={styles.infoIcon} />
                                                     </View>
+                                                }
+                                            </View>
+
+                                            <View style={styles.infos}>
+                                                <MaterialIcons name='directions-car' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
+                                            </View>
+
+                                            <View style={styles.infos}>
+                                                <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                                <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
+                                            </View>
+
+                                            <View style={styles.extras}>
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.cancellation > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.cancellation > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
                                                 </View>
-                                                <Text style={styles.companyText}>{car.company.fullName}</Text>
+
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.amendments > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.amendments > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
+                                                </View>
+
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.theftProtection > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.theftProtection > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
+                                                </View>
+
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.collisionDamageWaiver > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.collisionDamageWaiver > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+                                                </View>
+
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.fullInsurance > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.fullInsurance > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
+                                                </View>
+
+                                                <View style={styles.extra}>
+                                                    <MaterialIcons
+                                                        name={car.additionalDriver > -1 ? 'check' : 'clear'}
+                                                        size={iconSize}
+                                                        color={car.additionalDriver > -1 ? availableColor : unavailableColor}
+                                                        style={styles.infoIcon} />
+                                                    <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
+                                                </View>
                                             </View>
 
-                                            <View style={styles.price}>
-                                                <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(from, to))}</Text>
-                                                <Text style={styles.pricePrimary}>{`${Helper.price(car, from, to)} ${i18n.t('CURRENCY')}`}</Text>
-                                                <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${car.price} ${i18n.t('CURRENCY')}`}</Text>
-                                            </View>
-                                        </View>
+                                            <View style={styles.footer}>
+                                                <View style={styles.company}>
+                                                    <View style={styles.companyImgView}>
+                                                        <View style={styles.companyImgContainer}>
+                                                            <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
+                                                        </View>
+                                                    </View>
+                                                    <Text style={styles.companyText}>{car.company.fullName}</Text>
+                                                </View>
 
-                                        <View style={styles.buttonContainer}>
-                                            <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
-                                                // TODO
-                                                const params = { car: car._id, pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
-                                                console.log(params);
-                                            }} />
+                                                <View style={styles.price}>
+                                                    <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(from, to))}</Text>
+                                                    <Text style={styles.pricePrimary}>{`${Helper.price(car, from, to)} ${i18n.t('CURRENCY')}`}</Text>
+                                                    <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${car.price} ${i18n.t('CURRENCY')}`}</Text>
+                                                </View>
+                                            </View>
+
+                                            <View style={styles.buttonContainer}>
+                                                <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
+                                                    // TODO
+                                                    const params = { car: car._id, pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
+                                                    console.log(params);
+                                                }} />
+                                            </View>
                                         </View>
                                     </View>
                                 );
@@ -250,7 +250,6 @@ class CarList extends Component {
                                     });
                                 }
                             }}
-                            onEndReachedThreshold={0.1}
                             ListHeaderComponent={<></>}
                             ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
                             refreshing={loading}
@@ -269,28 +268,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     contentContainer: {
-        alignItems: 'center'
+        alignSelf: 'stretch',
     },
     flatList: {
         paddingTop: 5,
-        alignSelf: 'stretch'
+        alignSelf: 'stretch',
     },
     indicator: {
         margin: 10
     },
+    carContainer: {
+        height: 780,
+        marginRight: 2,
+        marginLeft: 2,
+        marginBottom: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'stretch',
+    },
     car: {
-        backgroundColor: '#fff',
-        width: WINDOW_WIDTH - 4,
+        width: '100%',
         maxWidth: 480,
-        height: 750,
+        backgroundColor: '#fff',
         paddingTop: 20,
         paddingRight: 10,
         paddingBottom: 20,
         paddingLeft: 10,
-        marginRight: 2,
-        marginLeft: 2,
-        marginBottom: 10,
-        justifyContent: 'center',
     },
     name: {
         fontSize: 20,
@@ -397,7 +400,6 @@ const styles = StyleSheet.create({
         color: '#a1a1a1',
     },
     buttonContainer: {
-        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },

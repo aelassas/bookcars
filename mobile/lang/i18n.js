@@ -135,7 +135,6 @@ i18n.translations = {
         NEW_PASSWORD: 'Nouveau mot de passe',
         PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
         PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
-
         EMPTY_CAR_LIST: 'Pas de voitures.',
         CAR_CURRENCY: ' DH/jour',
         DIESEL_SHORT: 'D',
@@ -293,7 +292,6 @@ i18n.translations = {
         NEW_PASSWORD: 'New Password',
         PASSWORD_UPDATE: 'Password changed successfully.',
         PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
-
         EMPTY_CAR_LIST: 'No cars.',
         CAR_CURRENCY: ' DH/day',
         DIESEL_SHORT: 'D',
