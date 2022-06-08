@@ -9,8 +9,6 @@ import CarService from '../services/CarService';
 import { MaterialIcons } from '@expo/vector-icons';
 import Button from './Button';
 
-const { width: WINDOW_WIDTH } = Dimensions.get('window');
-
 class CarList extends Component {
 
     constructor(props) {
@@ -31,7 +29,6 @@ class CarList extends Component {
             carIndex: -1,
             from: props.from,
             to: props.to,
-            days: 0,
             pickupLocation: props.pickupLocation,
             dropOffLocation: props.dropOffLocation,
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
@@ -91,10 +88,11 @@ class CarList extends Component {
     }
 
     render() {
-        const { init, rows, loading, language, from, to, days, pickupLocation, dropOffLocation, page, fetch, windowWidth } = this.state;
+        const { init, rows, loading, language, from, to, pickupLocation, dropOffLocation, page, fetch } = this.state;
         const fr = language === Env.LANGUAGE.FR;
         const iconSize = 24;
         const iconColor = '#000';
+        const infoColor = 'rgba(0, 0, 0, 0.35)';
         const availableColor = '#1f9201';
         const unavailableColor = '#f44336';
 
@@ -107,7 +105,7 @@ class CarList extends Component {
                         <Text style={styles.text}>{i18n.t('EMPTY_CAR_LIST')}</Text>
                     </View>
                     :
-                    (((from && to) || this.props.hidePrice) &&
+                    ((from && to) &&
                         <FlatList
                             contentContainerStyle={styles.contentContainer}
                             style={styles.flatList}
@@ -161,54 +159,54 @@ class CarList extends Component {
                                             <View style={styles.extras}>
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.cancellation > -1 ? 'check' : 'clear'}
+                                                        name={car.cancellation === -1 ? 'clear' : car.cancellation === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.cancellation > -1 ? availableColor : unavailableColor}
+                                                        color={car.cancellation === 0 ? availableColor : car.cancellation === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.amendments > -1 ? 'check' : 'clear'}
+                                                        name={car.amendments === -1 ? 'clear' : car.amendments === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.amendments > -1 ? availableColor : unavailableColor}
+                                                        color={car.amendments === 0 ? availableColor : car.amendments === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.theftProtection > -1 ? 'check' : 'clear'}
+                                                        name={car.theftProtection === -1 ? 'clear' : car.theftProtection === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.theftProtection > -1 ? availableColor : unavailableColor}
+                                                        color={car.theftProtection === 0 ? availableColor : car.theftProtection === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.collisionDamageWaiver > -1 ? 'check' : 'clear'}
+                                                        name={car.collisionDamageWaiver === -1 ? 'clear' : car.collisionDamageWaiver === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.collisionDamageWaiver > -1 ? availableColor : unavailableColor}
+                                                        color={car.collisionDamageWaiver === 0 ? availableColor : car.collisionDamageWaiver === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.fullInsurance > -1 ? 'check' : 'clear'}
+                                                        name={car.fullInsurance === -1 ? 'clear' : car.fullInsurance === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.fullInsurance > -1 ? availableColor : unavailableColor}
+                                                        color={car.fullInsurance === 0 ? availableColor : car.fullInsurance === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.additionalDriver > -1 ? 'check' : 'clear'}
+                                                        name={car.additionalDriver === -1 ? 'clear' : car.additionalDriver === 0 ? 'check' : 'info'}
                                                         size={iconSize}
-                                                        color={car.additionalDriver > -1 ? availableColor : unavailableColor}
+                                                        color={car.additionalDriver === 0 ? availableColor : car.additionalDriver === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
                                                 </View>
@@ -233,9 +231,8 @@ class CarList extends Component {
 
                                             <View style={styles.buttonContainer}>
                                                 <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
-                                                    // TODO
                                                     const params = { car: car._id, pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
-                                                    console.log(params);
+                                                    this.props.navigation.navigate('CreateBooking', params);
                                                 }} />
                                             </View>
                                         </View>

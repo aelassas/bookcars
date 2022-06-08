@@ -31,6 +31,7 @@ import Env from '../config/env.config';
 import SettingsScreen from '../screens/SettingsScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DrawerContent from './DrawerContent';
+import CreateBookingScreen from '../screens/CreateBooking';
 
 export default function DrawerNavigator(props) {
     const buildLink = useLinkBuilder();
@@ -57,6 +58,12 @@ export default function DrawerNavigator(props) {
                 iconName: 'directions-car',
                 hidden: true,
                 hideTitle: true
+            },
+            {
+                name: 'CreateBooking',
+                title: i18n.t('CREATE_BOOKING'),
+                iconName: 'event-seat',
+                hidden: true
             },
             {
                 name: 'Bookings',
@@ -161,16 +168,17 @@ export default function DrawerNavigator(props) {
                             component={
                                 drawer.name === 'Home' ? HomeScreen :
                                     drawer.name === 'Cars' ? CarsScreen :
-                                        drawer.name === 'Bookings' ? BookingsScreen
-                                            : drawer.name === 'About' ? AboutScreen
-                                                : drawer.name === 'ToS' ? ToSScreen
-                                                    : drawer.name === 'Contact' ? ContactScreen
-                                                        : drawer.name === 'Settings' ? SettingsScreen
-                                                            : drawer.name === 'ChangePassword' ? ChangePasswordScreen
-                                                                : drawer.name === 'SignIn' ? SignInScreen
-                                                                    : drawer.name === 'SignUp' ? SignUpScreen
-                                                                        : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
-                                                                            : null
+                                        drawer.name === 'CreateBooking' ? CreateBookingScreen :
+                                            drawer.name === 'Bookings' ? BookingsScreen
+                                                : drawer.name === 'About' ? AboutScreen
+                                                    : drawer.name === 'ToS' ? ToSScreen
+                                                        : drawer.name === 'Contact' ? ContactScreen
+                                                            : drawer.name === 'Settings' ? SettingsScreen
+                                                                : drawer.name === 'ChangePassword' ? ChangePasswordScreen
+                                                                    : drawer.name === 'SignIn' ? SignInScreen
+                                                                        : drawer.name === 'SignUp' ? SignUpScreen
+                                                                            : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
+                                                                                : null
                             }
                             options={{
                                 title: drawer.title,
