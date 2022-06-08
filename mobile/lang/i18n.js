@@ -130,7 +130,6 @@ i18n.translations = {
         SETTINGS: 'Paramètres',
         ENABLE_EMAIL_NOTIFICATIONS: 'Activer les notifications par email',
         SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
-
         CURRENT_PASSWORD: 'Mot de passe actuel',
         CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
         NEW_PASSWORD: 'Nouveau mot de passe',
@@ -263,7 +262,6 @@ i18n.translations = {
         SETTINGS: 'Settings',
         ENABLE_EMAIL_NOTIFICATIONS: 'Enable email notifications',
         SETTINGS_UPDATED: 'Settings updated successfully.',
-
         CURRENT_PASSWORD: 'Current Password',
         CURRENT_PASSWORD_ERROR: 'Wrong password',
         NEW_PASSWORD: 'New Password',

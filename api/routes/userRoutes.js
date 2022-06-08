@@ -486,7 +486,11 @@ routes.route(routeNames.signin).post((req, res) => {
                         if (passwordMatch) {
                             const payload = { id: user.id };
 
-                            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRE_AT });
+                            let options = { expiresIn: JWT_EXPIRE_AT };
+                            if (req.body.stayConnected) options = {};
+                            console.log('options', options);
+                            
+                            const token = jwt.sign(payload, JWT_SECRET, options);
 
                             res.status(200).send({
                                 id: user._id,
