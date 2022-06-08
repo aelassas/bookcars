@@ -17,7 +17,7 @@ div.signin {
 
 .signin-buttons {
     float: right;
-    margin-top: 35px;
+    margin-top: 20px;
 }
 
 .form-error {
@@ -25,6 +25,21 @@ div.signin {
     height: 65px;
     padding-top: 10px;
     text-align: center;
+}
+
+div.signin div.stay-connected {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+}
+
+div.signin div.stay-connected input[type='checkbox'] {
+    margin-right: 5px;
+}
+
+div.signin div.stay-connected label {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .signin-form .reset-password {

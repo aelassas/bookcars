@@ -153,7 +153,7 @@ class LocationSelectList extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        maxWidth: 400
+        maxWidth: 480
     }
 });
 

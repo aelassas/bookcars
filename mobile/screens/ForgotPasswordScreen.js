@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fafafa'
     },
     contentContainer: {
-        width: 420,
+        width: '100%',
+        maxWidth: 480,
         alignItems: 'center'
     },
     component: {

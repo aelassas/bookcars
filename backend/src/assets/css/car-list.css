@@ -107,6 +107,10 @@ section.car-list .empty-list {
         color: #F44336;
     }
 
+    section.car-list article div.car-info ul.extras-list .extra-info {
+        color: rgba(0, 0, 0, 0.35)
+    }
+
     section.car-list article div.price {
         color: #383838;
         font-size: 2em;
@@ -156,14 +160,6 @@ section.car-list .empty-list {
     section.car-list article div.car-info ul.extras-list li {
         margin: 5px;
         width: 100%;
-    }
-
-    section.car-list article div.car-info ul.extras-list .available {
-        color: #1f9201;
-    }
-
-    section.car-list article div.car-info ul.extras-list .unavailable {
-        color: #F44336;
     }
 
     section.car-list article div.car-info ul.extras-list span.car-info-list-text {
@@ -325,6 +321,10 @@ section.car-list .empty-list {
     section.car-list article div.car-info ul.extras-list li.car-unavailable,
     section.car-list article div.car-info ul.extras-list .unavailable {
         color: #F44336;
+    }
+
+    section.car-list article div.car-info ul.extras-list .extra-info {
+        color: rgba(0, 0, 0, 0.35)
     }
 
     section.car-list article div.car-info ul.extras-list span.car-info-list-text {

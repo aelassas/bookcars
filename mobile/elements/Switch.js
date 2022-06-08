@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         display: 'flex',
         alignItems: 'center',
-        maxWidth: 400
+        maxWidth: 480
     },
     pressable: {
         flexShrink: 1

@@ -16,7 +16,7 @@ const TextInput = React.forwardRef((props, ref) => {
 
     const styles = StyleSheet.create({
         container: {
-            maxWidth: 400
+            maxWidth: 480
         },
         label: {
             backgroundColor: '#fafafa',
