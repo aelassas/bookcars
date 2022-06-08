@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         width: '100%',
-        maxWidth: 420,
+        maxWidth: 480,
         alignItems: 'center',
         paddingTop: 8,
         paddingBottom: 20

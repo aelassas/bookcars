@@ -27,6 +27,7 @@ export default class SignIn extends Component {
             error: false,
             visible: false,
             blacklisted: false,
+            stayConnected: false
         };
     }
 
@@ -51,8 +52,8 @@ export default class SignIn extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        const { email, password } = this.state;
-        const data = { email, password };
+        const { email, password, stayConnected } = this.state;
+        const data = { email, password, stayConnected };
 
         UserService.signin(data)
             .then(res => {
@@ -172,9 +173,24 @@ export default class SignIn extends Component {
                                         required
                                     />
                                 </FormControl>
-                                
-                                <div className='buttons'>
+
+                                <div className='stay-connected'>
+                                    <input type='checkbox' onChange={(e) => {
+                                        this.setState({ stayConnected: e.currentTarget.checked });
+                                    }} />
+                                    <label onClick={(e) => {
+                                        const checkbox = e.currentTarget.previousSibling;
+                                        const checked = !checkbox.checked;
+                                        checkbox.checked = checked;
+                                        this.setState({ stayConnected: checked });
+                                    }}>{strings.STAY_CONNECTED}</label>
+                                </div>
+
+                                <div className='reset-password'>
                                     <Link href='/reset-password' className='reset-password'>{strings.RESET_PASSWORD}</Link>
+                                </div>
+
+                                <div className='signin-buttons'>
                                     <Button
                                         variant="contained"
                                         size="small"

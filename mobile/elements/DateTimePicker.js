@@ -25,7 +25,7 @@ export default function DateTimePicker(props) {
 
     const styles = StyleSheet.create({
         container: {
-            maxWidth: 400
+            maxWidth: 480
         },
         label: {
             backgroundColor: '#fafafa',

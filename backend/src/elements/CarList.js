@@ -28,7 +28,8 @@ import {
     Clear as UncheckIcon,
     Visibility as ViewIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon
+    Delete as DeleteIcon,
+    Info as InfoIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
 
@@ -234,6 +235,14 @@ class CarList extends Component {
         }
     }
 
+    getExtraIcon = (extra) => (
+        ((this.props.booking && this.props.booking.cancellation) || (!this.props.booking && extra === -1))
+            ? <UncheckIcon className='unavailable' />
+            : !this.props.booking && extra === 0 ?
+                <CheckIcon className='available' />
+                : <InfoIcon className='extra-info' />
+    )
+
     componentDidMount() {
         const element = this.props.from && this.props.from === 'cars' ? document.querySelector('div.cars') : document.querySelector('section.car-list');
 
@@ -375,22 +384,10 @@ class CarList extends Component {
                                         </li>
                                     </ul>
                                     <ul className='extras-list'>
-                                        <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP} placement='left'>
-                                                <div className='car-info-list-item'>
-                                                    {car.available ? <CheckIcon /> : <UncheckIcon />}
-                                                    {car.available ?
-                                                        <span className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
-                                                        :
-                                                        <span className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
-                                                    }
-                                                </div>
-                                            </Tooltip>
-                                        </li>
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.cancellation > -1 && !this.props.booking) || (this.props.booking && this.props.booking.cancellation)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.cancellation)}
                                                     <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -398,7 +395,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.amendments > -1 && !this.props.booking) || (this.props.booking && this.props.booking.amendments)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.amendments)}
                                                     <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -406,7 +403,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.theftProtection > -1 && !this.props.booking) || (this.props.booking && this.props.booking.theftProtection)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.theftProtection)}
                                                     <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -414,7 +411,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.collisionDamageWaiver > -1 && !this.props.booking) || (this.props.booking && this.props.booking.collisionDamageWaiver)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.collisionDamageWaiver)}
                                                     <span className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -422,7 +419,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.fullInsurance > -1 && !this.props.booking) || (this.props.booking && this.props.booking.fullInsurance)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.fullInsurance)}
                                                     <span className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
                                                 </div>
                                             </Tooltip>
@@ -430,7 +427,7 @@ class CarList extends Component {
                                         <li>
                                             <Tooltip title={this.props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
-                                                    {((car.additionalDriver > -1 && !this.props.booking) || (this.props.booking && this.props.booking.additionalDriver)) ? <CheckIcon className='available' /> : <UncheckIcon className='unavailable' />}
+                                                    {this.getExtraIcon(car.additionalDriver)}
                                                     <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                                                 </div>
                                             </Tooltip>

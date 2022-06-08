@@ -14,7 +14,7 @@ export default function Button(props) {
             backgroundColor: props.type === 'secondary' ? '#999' : '#f37022',
             alignItems: 'center',
             justifyContent: 'center',
-            maxWidth: 400
+            maxWidth: 480
         },
         text: {
             color: '#fff',

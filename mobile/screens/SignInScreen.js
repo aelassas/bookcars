@@ -9,11 +9,13 @@ import i18n from '../lang/i18n';
 import Error from '../elements/Error';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
+import Switch from '../elements/Switch';
 
 export default function SignInScreen({ navigation, route }) {
     const isFocused = useIsFocused();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [stayConnected, setStayConnected] = useState(false);
 
     const [emailRequired, setEmailRequired] = useState(false);
     const [passwordRequired, setPasswordRequired] = useState(false);
@@ -29,6 +31,7 @@ export default function SignInScreen({ navigation, route }) {
 
         setEmail('');
         setPassword('');
+        setStayConnected(false);
 
         if (emailRef.current) emailRef.current.clear();
         if (passwordRef.current) passwordRef.current.clear();
@@ -50,6 +53,10 @@ export default function SignInScreen({ navigation, route }) {
         setPasswordRequired(false);
     };
 
+    const onChangeStayConnected = (checked) => {
+        setStayConnected(checked);
+    };
+
     const onPressSignIn = () => {
 
         if (!email) {
@@ -60,7 +67,7 @@ export default function SignInScreen({ navigation, route }) {
             return setPasswordRequired(true);
         }
 
-        const data = { email, password };
+        const data = { email, password, stayConnected };
 
         UserService.signin(data)
             .then(async res => {
@@ -117,6 +124,8 @@ export default function SignInScreen({ navigation, route }) {
                     onChangeText={onChangePassword}
                 />
 
+                <Switch style={styles.stayConnected} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
+
                 <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
 
                 <Button style={styles.component} type='secondary' label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
@@ -139,12 +148,17 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         width: '100%',
-        maxWidth: 420,
+        maxWidth: 480,
         alignItems: 'center'
     },
     component: {
         alignSelf: 'stretch',
         margin: 10,
+    },
+    stayConnected: {
+        alignSelf: 'stretch',
+        marginLeft: 10,
+        marginBottom: 10
     },
     link: {
         margin: 10

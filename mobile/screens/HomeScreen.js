@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: '100%',
-    maxWidth: 420,
+    maxWidth: 480,
     alignItems: 'center'
   },
   logo: {
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     marginBottom: 10,
-    maxWidth: 400
+    maxWidth: 480
   },
   logoMain: {
     color: '#f37022',

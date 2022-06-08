@@ -74,6 +74,14 @@ class CarList extends Component {
             .catch((err) => Helper.error(err));
     };
 
+    getExtraIcon = (extra) => (
+        extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
+    )
+
+    getExtraColor = (extra) => (
+        extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
+    )
+
     async componentDidMount() {
         await this._init();
         this.fetch();
@@ -92,9 +100,6 @@ class CarList extends Component {
         const fr = language === Env.LANGUAGE.FR;
         const iconSize = 24;
         const iconColor = '#000';
-        const infoColor = 'rgba(0, 0, 0, 0.35)';
-        const availableColor = '#1f9201';
-        const unavailableColor = '#f44336';
 
         return (
             init &&
@@ -159,54 +164,59 @@ class CarList extends Component {
                                             <View style={styles.extras}>
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.cancellation === -1 ? 'clear' : car.cancellation === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.cancellation)}
+                                                        color={this.getExtraColor(car.cancellation)}
                                                         size={iconSize}
-                                                        color={car.cancellation === 0 ? availableColor : car.cancellation === -1 ? unavailableColor : infoColor}
-                                                        style={styles.infoIcon} />
+                                                        style={styles.infoIcon}
+                                                    />
                                                     <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.amendments === -1 ? 'clear' : car.amendments === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.amendments)}
+                                                        color={this.getExtraColor(car.amendments)}
                                                         size={iconSize}
-                                                        color={car.amendments === 0 ? availableColor : car.amendments === -1 ? unavailableColor : infoColor}
-                                                        style={styles.infoIcon} />
+                                                        style={styles.infoIcon}
+                                                    />
                                                     <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.theftProtection === -1 ? 'clear' : car.theftProtection === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.theftProtection)}
+                                                        color={this.getExtraColor(car.theftProtection)}
                                                         size={iconSize}
-                                                        color={car.theftProtection === 0 ? availableColor : car.theftProtection === -1 ? unavailableColor : infoColor}
-                                                        style={styles.infoIcon} />
+                                                        style={styles.infoIcon}
+                                                    />
                                                     <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.collisionDamageWaiver === -1 ? 'clear' : car.collisionDamageWaiver === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.collisionDamageWaiver)}
+                                                        color={this.getExtraColor(car.collisionDamageWaiver)}
                                                         size={iconSize}
-                                                        color={car.collisionDamageWaiver === 0 ? availableColor : car.collisionDamageWaiver === -1 ? unavailableColor : infoColor}
-                                                        style={styles.infoIcon} />
+                                                        style={styles.infoIcon}
+                                                    />
                                                     <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.fullInsurance === -1 ? 'clear' : car.fullInsurance === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.fullInsurance)}
+                                                        color={this.getExtraColor(car.fullInsurance)}
                                                         size={iconSize}
-                                                        color={car.fullInsurance === 0 ? availableColor : car.fullInsurance === -1 ? unavailableColor : infoColor}
-                                                        style={styles.infoIcon} />
+                                                        style={styles.infoIcon}
+                                                    />
                                                     <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
                                                 </View>
 
                                                 <View style={styles.extra}>
                                                     <MaterialIcons
-                                                        name={car.additionalDriver === -1 ? 'clear' : car.additionalDriver === 0 ? 'check' : 'info'}
+                                                        name={this.getExtraIcon(car.additionalDriver)}
+                                                        color={this.getExtraColor(car.additionalDriver)}
                                                         size={iconSize}
-                                                        color={car.additionalDriver === 0 ? availableColor : car.additionalDriver === -1 ? unavailableColor : infoColor}
                                                         style={styles.infoIcon} />
                                                     <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
                                                 </View>

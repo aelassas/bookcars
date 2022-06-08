@@ -161,6 +161,7 @@ i18n.translations = {
         PRICE_PER_DAY: 'Prix par jour :',
         BOOK: 'Réserver',
 
+        STAY_CONNECTED: 'Rester connecté',
         CREATE_BOOKING:'Réserver Maintenant'
     },
     en: {
@@ -320,6 +321,7 @@ i18n.translations = {
         PRICE_PER_DAY: 'Price per day:',
         BOOK: 'Choose this car',
 
+        STAY_CONNECTED: 'Stay connected',
         CREATE_BOOKING:'Book Now'
 
     }

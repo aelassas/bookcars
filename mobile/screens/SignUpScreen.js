@@ -58,7 +58,7 @@ export default function SignUpScreen({ navigation, route }) {
         setBirthDate(null);
         setPassword('');
         setConfirmPassword('');
-        onChangeToSChecked(false);
+        onChangeToS(false);
 
         if (fullNameRef.current) fullNameRef.current.clear();
         if (emailRef.current) emailRef.current.clear();
@@ -213,7 +213,7 @@ export default function SignUpScreen({ navigation, route }) {
         setConfirmPasswordError(false);
     };
 
-    const onChangeToSChecked = (checked) => {
+    const onChangeToS = (checked) => {
         setTosChecked(checked);
         if (checked) setTosError(false);
     };
@@ -381,7 +381,7 @@ export default function SignUpScreen({ navigation, route }) {
                         onChangeText={onChangeConfirmPassword}
                     />
 
-                    <Switch style={styles.component} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToSChecked} />
+                    <Switch style={styles.component} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 
                     <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
 
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         width: '100%',
-        maxWidth: 420,
+        maxWidth: 480,
         alignItems: 'center'
     },
     component: {
