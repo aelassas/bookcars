@@ -160,6 +160,8 @@ i18n.translations = {
         PRICE_DAYS_PART_2: 'jour',
         PRICE_PER_DAY: 'Prix par jour :',
         BOOK: 'Réserver',
+
+        CREATE_BOOKING:'Réserver Maintenant'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -317,6 +319,8 @@ i18n.translations = {
         PRICE_DAYS_PART_2: 'day',
         PRICE_PER_DAY: 'Price per day:',
         BOOK: 'Choose this car',
+
+        CREATE_BOOKING:'Book Now'
 
     }
 };

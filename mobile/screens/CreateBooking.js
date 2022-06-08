@@ -5,9 +5,8 @@ import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
-import CarList from '../elements/CarList';
 
-export default function CarsScreen({ navigation, route }) {
+export default function CreateBookingScreen({ navigation, route }) {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -15,6 +14,9 @@ export default function CarsScreen({ navigation, route }) {
     const _init = async () => {
         const language = await UserService.getLanguage();
         i18n.locale = language;
+
+        console.log(route.params);
+        
         setVisible(true);
     };
 
@@ -32,23 +34,17 @@ export default function CarsScreen({ navigation, route }) {
     };
 
     return (
-        route.params &&
-        <Master style={styles.master} onLoad={onLoad} reload={reload}>
+        <Master style={styles.container} navigation={navigation} onLoad={onLoad} reload={reload}>
             {visible &&
-                <CarList
-                    navigation={navigation}
-                    pickupLocation={route.params.pickupLocation}
-                    dropOffLocation={route.params.dropOffLocation}
-                    from={new Date(route.params.from)}
-                    to={new Date(route.params.to)}
-                />
+                <Text style={{ fontSize: 16 }}>CreateBooking!</Text>
             }
         </Master>
     );
 }
 
 const styles = StyleSheet.create({
-    master: {
-        flex: 1
+    container: {
+        flex: 1,
+        alignItems: 'center'
     }
 });
