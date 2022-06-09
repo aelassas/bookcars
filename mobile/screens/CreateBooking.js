@@ -715,11 +715,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
                                     <Text style={styles.detailTitle}>{i18n.t('COMPANY')}</Text>
                                     <View style={styles.company}>
-                                        <View style={styles.companyImgView}>
-                                            <View style={styles.companyImgContainer}>
-                                                <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
-                                            </View>
-                                        </View>
+                                        <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
                                         <Text style={styles.companyText}>{car.company.fullName}</Text>
                                     </View>
 
@@ -991,22 +987,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignItems: 'center'
     },
-    companyImgView: {
-        height: Env.COMPANY_IMAGE_HEIGHT,
-        width: Env.COMPANY_IMAGE_WIDTH,
-        alignItems: 'center',
-    },
-    companyImgContainer: {
-        width: Env.COMPANY_IMAGE_WIDTH,
-        height: Env.COMPANY_IMAGE_HEIGHT,
-    },
     companyImg: {
-        flex: 1,
-        width: null,
-        height: null,
-        maxWidth: Env.COMPANY_IMAGE_WIDTH,
-        maxHeight: Env.COMPANY_IMAGE_HEIGHT,
-        resizeMode: 'contain',
+        width: Env.COMPANY_IMAGE_WIDTH,
+        height: Env.COMPANY_IMAGE_HEIGHT,
     },
     companyText: {
         color: '#a1a1a1',
