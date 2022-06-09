@@ -8,12 +8,14 @@ export default class BookingService {
         return axios.post(`${Env.API_HOST}/api/book`, data).then(res => res.status);
     }
 
-    static getBookings(payload, page, size) {
-        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}}`, payload, { headers: UserService.authHeader() }).then(res => res.data);
+    static async getBookings(payload, page, size) {
+        const headers = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}}`, payload, { headers }).then(res => res.data);
     }
 
-    static getBooking(id) {
-        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+    static async getBooking(id) {
+        const headers = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers }).then(res => res.data);
     }
 
 }

@@ -351,6 +351,36 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
             },
             { $unwind: { path: '$driver', preserveNullAndEmptyArrays: false } },
             {
+                $lookup: {
+                    from: 'Location',
+                    let: { pickupLocationId: '$pickupLocation' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ['$_id', '$$pickupLocationId'] }
+                            }
+                        }
+                    ],
+                    as: 'pickupLocation'
+                }
+            },
+            { $unwind: { path: '$pickupLocation', preserveNullAndEmptyArrays: false } },
+            {
+                $lookup: {
+                    from: 'Location',
+                    let: { dropOffLocationId: '$dropOffLocation' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ['$_id', '$$dropOffLocationId'] }
+                            }
+                        }
+                    ],
+                    as: 'dropOffLocation'
+                }
+            },
+            { $unwind: { path: '$dropOffLocation', preserveNullAndEmptyArrays: false } },
+            {
                 $match
             },
             {

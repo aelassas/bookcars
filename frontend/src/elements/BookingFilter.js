@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/booking-filter'
-import LocationSelectList from './LocationSelectList';
+import LocationSelectList from './LocationSelectListNoScroll';
 import DatePicker from './DatePicker';
 import { FormControl, TextField, Button, IconButton } from '@mui/material';
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
@@ -83,7 +83,8 @@ class BookingFilter extends Component {
                             label={strings.PICKUP_LOCATION}
                             variant='standard'
                             onChange={this.handlePickupLocationChange}
-                            freeSolo
+                            hidePopupIcon
+                            customOpen
                         />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
@@ -91,7 +92,8 @@ class BookingFilter extends Component {
                             label={strings.DROP_OFF_LOCATION}
                             variant='standard'
                             onChange={this.handleDropOffLocationChange}
-                            freeSolo
+                            hidePopupIcon
+                            customOpen
                         />
                     </FormControl>
                     <FormControl fullWidth margin="dense">
