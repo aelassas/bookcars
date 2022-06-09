@@ -262,6 +262,7 @@ export default function SettingsScreen({ navigation, route }) {
 
                     <Switch
                         style={styles.component}
+                        textStyle={styles.enableEmailNotificationsText}
                         label={i18n.t('ENABLE_EMAIL_NOTIFICATIONS')}
                         value={enableEmailNotifications}
                         onValueChange={onChangeEnableEmailNotificationsChecked} />
@@ -302,5 +303,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginBottom: 25,
         marginLeft: 10
+    },
+    enableEmailNotificationsText: {
+        fontSize: 12
     }
 });

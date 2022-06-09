@@ -124,7 +124,7 @@ export default function SignInScreen({ navigation, route }) {
                     onChangeText={onChangePassword}
                 />
 
-                <Switch style={styles.stayConnected} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
+                <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
 
                 <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
 
@@ -159,6 +159,9 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         marginLeft: 10,
         marginBottom: 10
+    },
+    stayConnectedText: {
+        fontSize: 12
     },
     link: {
         margin: 10

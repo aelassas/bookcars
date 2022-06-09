@@ -30,7 +30,6 @@ export default class Helper {
         return /^\d{3,4}$/.test(val);
     }
 
-
     static getCarType(type) {
         switch (type) {
             case Env.CAR_TYPE.DIESEL:

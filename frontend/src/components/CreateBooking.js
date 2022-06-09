@@ -378,34 +378,34 @@ export default class CreateBooking extends Component {
                 return;
             }
 
-            const cardNumberValid = this.validateCardNumber(cardNumber);
-            if (!cardNumberValid) {
-                return;
-            }
-
-            const cardMonthValid = this.validateCardMonth(cardMonth);
-            if (!cardMonthValid) {
-                return;
-            }
-
-            const cardYearValid = this.validateCardYear(cardYear);
-            if (!cardYearValid) {
-                return;
-            }
-
-            const cvvValid = this.validateCvv(cvv);
-            if (!cvvValid) {
-                return;
-            }
-
-            const cardDateValid = this.validateCardDate(cardMonth, cardYear);
-            if (!cardDateValid) {
-                return this.setState({ cardDateError: true });
-            }
-
             if (!tosChecked) {
                 return this.setState({ tosError: true });
             }
+        }
+
+        const cardNumberValid = this.validateCardNumber(cardNumber);
+        if (!cardNumberValid) {
+            return;
+        }
+
+        const cardMonthValid = this.validateCardMonth(cardMonth);
+        if (!cardMonthValid) {
+            return;
+        }
+
+        const cardYearValid = this.validateCardYear(cardYear);
+        if (!cardYearValid) {
+            return;
+        }
+
+        const cvvValid = this.validateCvv(cvv);
+        if (!cvvValid) {
+            return;
+        }
+
+        const cardDateValid = this.validateCardDate(cardMonth, cardYear);
+        if (!cardDateValid) {
+            return this.setState({ cardDateError: true });
         }
 
         this.setState({ loading: true });
@@ -629,23 +629,6 @@ export default class CreateBooking extends Component {
 
                                             <FormControl fullWidth margin="dense" >
                                                 <FormControlLabel
-                                                    disabled={car.theftProtection === -1 || car.theftProtection === 0}
-                                                    control={
-                                                        <Switch checked={theftProtection}
-                                                            onChange={this.handleTheftProtectionChange}
-                                                            color="primary" />
-                                                    }
-                                                    label={
-                                                        <span>
-                                                            <span className='booking-option-label'>{csStrings.THEFT_PROTECTION}</span>
-                                                            <span className='booking-option-value'>{Helper.getTheftProtectionOption(car.theftProtection, days, fr)}</span>
-                                                        </span>
-                                                    }
-                                                />
-                                            </FormControl>
-
-                                            <FormControl fullWidth margin="dense" >
-                                                <FormControlLabel
                                                     disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
                                                     control={
                                                         <Switch checked={collisionDamageWaiver}
@@ -656,6 +639,23 @@ export default class CreateBooking extends Component {
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.COLLISION_DAMAGE_WAVER}</span>
                                                             <span className='booking-option-value'>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr)}</span>
+                                                        </span>
+                                                    }
+                                                />
+                                            </FormControl>
+
+                                            <FormControl fullWidth margin="dense" >
+                                                <FormControlLabel
+                                                    disabled={car.theftProtection === -1 || car.theftProtection === 0}
+                                                    control={
+                                                        <Switch checked={theftProtection}
+                                                            onChange={this.handleTheftProtectionChange}
+                                                            color="primary" />
+                                                    }
+                                                    label={
+                                                        <span>
+                                                            <span className='booking-option-label'>{csStrings.THEFT_PROTECTION}</span>
+                                                            <span className='booking-option-value'>{Helper.getTheftProtectionOption(car.theftProtection, days, fr)}</span>
                                                         </span>
                                                     }
                                                 />

@@ -28,7 +28,7 @@ export default function DateTimePicker(props) {
             maxWidth: 480
         },
         label: {
-            backgroundColor: '#fafafa',
+            backgroundColor: props.backgroundColor ?? '#fafafa',
             color: 'rgba(0, 0, 0, 0.6)',
             fontSize: 12,
             fontWeight: '400',

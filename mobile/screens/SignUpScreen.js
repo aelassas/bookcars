@@ -27,14 +27,14 @@ export default function SignUpScreen({ navigation, route }) {
     const [tosChecked, setTosChecked] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const [fullNameRequired, setFullNameError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [emailValid, setEmailValid] = useState(true);
+    const [fullNameRequired, setFullNameRequired] = useState(false);
     const [emailRequired, setEmailRequired] = useState(false);
+    const [emailValid, setEmailValid] = useState(true);
+    const [emailError, setEmailError] = useState(false);
     const [phoneValid, setPhoneValid] = useState(true);
     const [phoneRequired, setPhoneRequired] = useState(false);
-    const [birthDateRequired, setbirthDateRequired] = useState(false);
-    const [birthDateValid, setbirthDateValid] = useState(true);
+    const [birthDateRequired, setBirthDateRequired] = useState(false);
+    const [birthDateValid, setBirthDateValid] = useState(true);
     const [passwordRequired, setPasswordRequired] = useState(false);
     const [confirmPasswordRequired, setConfirmPasswordRequired] = useState(false);
     const [passwordLengthError, setPasswordLengthError] = useState(false);
@@ -58,7 +58,22 @@ export default function SignUpScreen({ navigation, route }) {
         setBirthDate(null);
         setPassword('');
         setConfirmPassword('');
-        onChangeToS(false);
+        setTosChecked(false);
+
+        setFullNameRequired(false);
+        setEmailRequired(false);
+        setEmailValid(true);
+        setEmailError(false);
+        setPhoneRequired(false);
+        setPhoneValid(true);
+        setBirthDateRequired(false);
+        setBirthDateValid(true);
+        setBirthDateRequired(false);
+        setPasswordRequired(false);
+        setPasswordLengthError(false);
+        setConfirmPasswordRequired(false);
+        setConfirmPasswordError(false);
+        setTosError(false);
 
         if (fullNameRef.current) fullNameRef.current.clear();
         if (emailRef.current) emailRef.current.clear();
@@ -75,16 +90,13 @@ export default function SignUpScreen({ navigation, route }) {
 
     const validateFullName = () => {
         const valid = fullName !== '';
-        setFullNameError(!valid);
+        setFullNameRequired(!valid);
         return valid;
     };
 
     const onChangeFullName = (text) => {
         setFullName(text);
-
-        if (text) {
-            setFullNameError(false);
-        }
+        setFullNameRequired(false);
     };
 
     const validateEmail = async () => {
@@ -152,16 +164,16 @@ export default function SignUpScreen({ navigation, route }) {
 
     const validateBirthDate = () => {
         if (birthDate) {
-            setbirthDateRequired(false);
+            setBirthDateRequired(false);
 
             const sub = moment().diff(birthDate, 'years');
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-            setbirthDateValid(birthDateValid);
+            setBirthDateValid(birthDateValid);
             return birthDateValid;
         } else {
-            setbirthDateRequired(true);
-            setbirthDateValid(true);
+            setBirthDateRequired(true);
+            setBirthDateValid(true);
 
             return false;
         }
@@ -169,8 +181,8 @@ export default function SignUpScreen({ navigation, route }) {
 
     const onChangeBirthDate = (date) => {
         setBirthDate(date);
-        setbirthDateRequired(false);
-        setbirthDateValid(true);
+        setBirthDateRequired(false);
+        setBirthDateValid(true);
     };
 
     const validatePassword = () => {
@@ -381,7 +393,7 @@ export default function SignUpScreen({ navigation, route }) {
                         onChangeText={onChangeConfirmPassword}
                     />
 
-                    <Switch style={styles.component} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
+                    <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 
                     <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
 
@@ -419,5 +431,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginBottom: 25,
         marginLeft: 10
+    },
+    tosText: {
+        fontSize: 12
     }
 });

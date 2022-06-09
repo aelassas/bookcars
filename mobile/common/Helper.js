@@ -180,6 +180,10 @@ export default class Helper {
         return `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`;
     }
 
+    static getDaysShort(days) {
+        return `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`;
+    }
+
     static days(from, to) {
         return ((from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0);
     }
@@ -199,4 +203,75 @@ export default class Helper {
 
         return price;
     }
+
+    static isCvv(val) {
+        return /^\d{3,4}$/.test(val);
+    }
+
+    static getCancellationOption(cancellation, fr) {
+        if (cancellation === -1) {
+            return i18n.t('UNAVAILABLE');
+        }
+        else if (cancellation === 0) {
+            return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${cancellation} ${i18n.t('CURRENCY')}`;
+        }
+    }
+
+    static getAmendmentsOption(amendments, fr) {
+        if (amendments === -1) {
+            return `${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`;
+        }
+        else if (amendments === 0) {
+            return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`;
+        } else {
+            return `+ ${amendments} ${i18n.t('CURRENCY')}`;
+        }
+    }
+
+    static getCollisionDamageWaiverOption(collisionDamageWaiver, days, fr) {
+        if (collisionDamageWaiver === -1) {
+            return i18n.t('UNAVAILABLE');
+        }
+        else if (collisionDamageWaiver === 0) {
+            return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${collisionDamageWaiver * days} ${i18n.t('CURRENCY')} (${collisionDamageWaiver} ${i18n.t('CAR_CURRENCY')})`;
+        }
+    }
+
+    static getTheftProtectionOption(theftProtection, days, fr) {
+        if (theftProtection === -1) {
+            return i18n.t('UNAVAILABLE');
+        }
+        else if (theftProtection === 0) {
+            return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${theftProtection * days} ${i18n.t('CURRENCY')} (${theftProtection} ${i18n.t('CAR_CURRENCY')})`;
+        }
+    }
+
+    static getFullInsuranceOption(fullInsurance, days, fr) {
+        if (fullInsurance === -1) {
+            return i18n.t('UNAVAILABLE');
+        }
+        else if (fullInsurance === 0) {
+            return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
+        } else {
+            return `+ ${fullInsurance * days} ${i18n.t('CURRENCY')} (${fullInsurance} ${i18n.t('CAR_CURRENCY')})`;
+        }
+    }
+
+    static getAdditionalDriverOption(additionalDriver, days, fr) {
+        if (additionalDriver === -1) {
+            return i18n.t('UNAVAILABLE');
+        }
+        else if (additionalDriver === 0) {
+            return i18n.t('INCLUDED');
+        } else {
+            return `+ ${additionalDriver * days} ${i18n.t('CURRENCY')} (${additionalDriver} ${i18n.t('CAR_CURRENCY')})`;
+        }
+    }
+
 }
