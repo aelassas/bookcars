@@ -106,9 +106,7 @@ class CarList extends Component {
                                     <Text style={styles.name}>{car.name}</Text>
 
                                     <View style={styles.imgView}>
-                                        <View style={styles.imgContainer}>
-                                            <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
-                                        </View>
+                                        <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
                                     </View>
 
                                     <View style={styles.infos}>
@@ -208,11 +206,7 @@ class CarList extends Component {
 
                                     <View style={styles.footer}>
                                         <View style={styles.company}>
-                                            <View style={styles.companyImgView}>
-                                                <View style={styles.companyImgContainer}>
-                                                    <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
-                                                </View>
-                                            </View>
+                                            <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
                                             <Text style={styles.companyText}>{car.company.fullName}</Text>
                                         </View>
 
@@ -264,19 +258,19 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         alignSelf: 'stretch',
+        paddingTop: 10,
+        paddingBottom: 10,
     },
     flatList: {
-        paddingTop: 5,
         alignSelf: 'stretch',
     },
     indicator: {
         margin: 10
     },
     carContainer: {
-        height: 780,
-        marginRight: 2,
-        marginLeft: 2,
-        marginBottom: 5,
+        marginRight: 7,
+        marginLeft: 7,
+        marginBottom: 10,
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'stretch',
@@ -289,6 +283,9 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingBottom: 20,
         paddingLeft: 10,
+        borderWidth: 1,
+        borderColor: '#d9d8d9',
+        borderRadius: 5,
     },
     name: {
         fontSize: 20,
@@ -300,17 +297,9 @@ const styles = StyleSheet.create({
         height: Env.CAR_IMAGE_HEIGHT,
         alignItems: 'center'
     },
-    imgContainer: {
+    img: {
         width: Env.CAR_IMAGE_WIDTH,
         height: Env.CAR_IMAGE_HEIGHT,
-    },
-    img: {
-        flex: 1,
-        width: null,
-        height: null,
-        maxWidth: Env.CAR_IMAGE_WIDTH,
-        maxHeight: Env.CAR_IMAGE_HEIGHT,
-        resizeMode: 'contain',
     },
     infos: {
         flexDirection: 'row',
@@ -356,22 +345,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flex: 1
     },
-    companyImgView: {
-        height: Env.COMPANY_IMAGE_HEIGHT,
-        width: Env.COMPANY_IMAGE_WIDTH,
-        alignItems: 'center',
-    },
-    companyImgContainer: {
-        width: Env.COMPANY_IMAGE_WIDTH,
-        height: Env.COMPANY_IMAGE_HEIGHT,
-    },
     companyImg: {
-        flex: 1,
-        width: null,
-        height: null,
-        maxWidth: Env.COMPANY_IMAGE_WIDTH,
-        maxHeight: Env.COMPANY_IMAGE_HEIGHT,
-        resizeMode: 'contain',
+        width: Env.COMPANY_IMAGE_WIDTH,
+        height: Env.COMPANY_IMAGE_HEIGHT,
     },
     companyText: {
         color: '#a1a1a1',
