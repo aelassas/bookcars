@@ -17,7 +17,6 @@ export default function Link(props) {
 const styles = StyleSheet.create({
     text: {
         color: '#1976d2',
-        textDecorationLine: 'underline',
-        fontSize: 16
+        textDecorationLine: 'underline'
     }
 });

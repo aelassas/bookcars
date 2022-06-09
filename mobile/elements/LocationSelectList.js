@@ -77,7 +77,7 @@ class LocationSelectList extends Component {
             <View style={{ ...this.props.style, ...styles.container }}>
                 <Text style={{
                     display: selectedItem !== null ? undefined : 'none',
-                    backgroundColor: '#fafafa',
+                    backgroundColor: this.props.backgroundColor ?? '#fafafa',
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: 12,
                     fontWeight: '400',
@@ -124,7 +124,7 @@ class LocationSelectList extends Component {
                     }}
                     inputContainerStyle={{
                         borderRadius: 10,
-                        backgroundColor: '#fafafa',
+                        backgroundColor: this.props.backgroundColor ?? '#fafafa',
                         color: 'rgba(0, 0, 0, 0.87)',
                         borderColor: 'rgba(0, 0, 0, 0.23)',
                         borderWidth: 1

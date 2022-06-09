@@ -14,14 +14,20 @@ export default function Switch(props) {
     };
 
     const onPress = () => {
-        onValueChange(!value);
+        if (!props.disabled) onValueChange(!value);
     };
 
     return (
         <View style={{ ...styles.switch, ...props.style }}>
-            <ReactSwitch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor='#f37022' value={value} onValueChange={onValueChange} />
+            <ReactSwitch
+                trackColor={{ true: '#f7b68f', false: '#9d9d9d' }}
+                thumbColor='#f37022'
+                value={value}
+                onValueChange={onValueChange}
+                disabled={props.disabled}
+            />
             <Pressable style={styles.pressable} onPress={onPress}>
-                <Text style={styles.text} >{props.label}</Text>
+                <Text style={{ ...styles.text, ...props.textStyle }} >{props.label}</Text>
             </Pressable>
         </View>
     );
@@ -39,7 +45,6 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'rgba(0, 0, 0, .7)',
-        padding: 5,
-        fontSize: 12
+        padding: 5
     }
 });

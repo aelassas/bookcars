@@ -19,7 +19,7 @@ const TextInput = React.forwardRef((props, ref) => {
             maxWidth: 480
         },
         label: {
-            backgroundColor: '#fafafa',
+            backgroundColor: props.backgroundColor ?? '#fafafa',
             color: 'rgba(0, 0, 0, 0.6)',
             fontSize: 12,
             fontWeight: '400',
@@ -38,7 +38,7 @@ const TextInput = React.forwardRef((props, ref) => {
             padding: 10,
         },
         helperText: {
-            color: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.23)',
+            color: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.45)',
             fontSize: 12,
             fontWeight: '400',
             paddingLeft: 5,
@@ -60,6 +60,8 @@ const TextInput = React.forwardRef((props, ref) => {
                 onBlur={props.onBlur}
                 autoCapitalize='none'
                 editable={!props.readOnly}
+                keyboardType={props.keyboardType ?? 'default'}
+                maxLength={props.maxLength}
             />
             <Text style={styles.helperText}>{props.helperText}</Text>
         </View>
