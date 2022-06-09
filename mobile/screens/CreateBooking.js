@@ -797,7 +797,8 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('ACCEPT_TOS')}
                                             value={tosChecked}
                                             onValueChange={onChangeToS} />
-                                    </View>}
+                                    </View>
+                                }
 
                                 <View style={styles.payment}>
 

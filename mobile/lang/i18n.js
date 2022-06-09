@@ -183,7 +183,9 @@ i18n.translations = {
         SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
         CARD_DATE_ERROR: 'Date de carte non valide.',
         BOOKING_SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-        BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.'
+        BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
+
+        EMPTY_BOOKING_LIST: 'Pas de réservations.',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -367,6 +369,7 @@ i18n.translations = {
         BOOKING_SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.',
         BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
 
+        EMPTY_BOOKING_LIST: 'No bookings.',
     }
 };
 

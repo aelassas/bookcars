@@ -274,4 +274,19 @@ export default class Helper {
         }
     }
 
+    static getBookingStatuses() {
+        return [
+            { value: Env.BOOKING_STATUS.VOID, label: i18n.t('BOOKING_STATUS_VOID') },
+            { value: Env.BOOKING_STATUS.PENDING, label: i18n.t('BOOKING_STATUS_PENDING') },
+            { value: Env.BOOKING_STATUS.DEPOSIT, label: i18n.t('BOOKING_STATUS_DEPOSIT') },
+            { value: Env.BOOKING_STATUS.PAID, label: i18n.t('BOOKING_STATUS_PAID') },
+            { value: Env.BOOKING_STATUS.RESERVED, label: i18n.t('BOOKING_STATUS_RESERVED') },
+            { value: Env.BOOKING_STATUS.CANCELLED, label: i18n.t('BOOKING_STATUS_CANCELLED') }
+        ];
+    }
+
+    static flattenCompanies(companies) {
+        return companies.map(company => company._id);
+    }
+
 }

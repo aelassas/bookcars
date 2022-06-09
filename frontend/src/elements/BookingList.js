@@ -225,7 +225,7 @@ class BookingList extends Component {
                     UserService.signout(false, true);
                 });
         } else {
-            this.setState({ rows: [], rowCount: 0, loading: false }, () => {
+            this.setState({ rows: [], rowCount: 0 }, () => {
                 if (this.props.onLoad) {
                     this.props.onLoad({ rows: [], rowCount: 0 });
                 }
