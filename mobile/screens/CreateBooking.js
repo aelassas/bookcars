@@ -58,6 +58,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [emailError, setEmailError] = useState(false);
     const [emailValid, setEmailValid] = useState(true);
     const [emailRequired, setEmailRequired] = useState(false);
+    const [phoneInfo, setPhoneInfo] = useState(true);
     const [phoneValid, setPhoneValid] = useState(true);
     const [phoneRequired, setPhoneRequired] = useState(false);
     const [birthDateRequired, setBirthDateRequired] = useState(false);
@@ -284,6 +285,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
     const onChangeEmail = (text) => {
         setEmail(text);
+        setEmailInfo(true);
         setEmailRequired(false);
         setEmailValid(true);
         setEmailError(false);
@@ -293,12 +295,14 @@ export default function CreateBookingScreen({ navigation, route }) {
     const validatePhone = () => {
         if (phone) {
             const phoneValid = validator.isMobilePhone(phone);
+            setPhoneInfo(phoneValid);
             setPhoneRequired(false);
             setPhoneValid(phoneValid);
             setError(!phoneValid);
 
             return phoneValid;
         } else {
+            setPhoneInfo(false);
             setPhoneRequired(true);
             setPhoneValid(true);
             setError(true);
@@ -309,6 +313,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
     const onChangePhone = (text) => {
         setPhone(text);
+        setPhoneInfo(true);
         setPhoneRequired(false);
         setPhoneValid(true);
         setError(false);
@@ -747,10 +752,10 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             value={email}
                                             error={emailRequired || !emailValid || emailError}
                                             helperText={
-                                                ((emailRequired && i18n.t('REQUIRED')) || '')
+                                                ((emailInfo && i18n.t('EMAIL_INFO')) || '')
+                                                || ((emailRequired && i18n.t('REQUIRED')) || '')
                                                 || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
                                                 || ((emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || '')
-                                                || ((emailInfo && i18n.t('EMAIL_INFO')) || '')
                                             }
                                             onChangeText={onChangeEmail}
                                             backgroundColor='#fbfbfb'
@@ -763,7 +768,8 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             value={phone}
                                             error={phoneRequired || !phoneValid}
                                             helperText={
-                                                ((phoneRequired && i18n.t('REQUIRED')) || '')
+                                                ((phoneInfo && i18n.t('PHONE_INFO')) || '')
+                                                || ((phoneRequired && i18n.t('REQUIRED')) || '')
                                                 || ((!phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
                                             }
                                             onChangeText={onChangePhone}
@@ -785,7 +791,12 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             backgroundColor='#fbfbfb'
                                         />
 
-                                        <Switch style={styles.component} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
+                                        <Switch
+                                            style={styles.component}
+                                            textStyle={styles.tosText}
+                                            label={i18n.t('ACCEPT_TOS')}
+                                            value={tosChecked}
+                                            onValueChange={onChangeToS} />
                                     </View>}
 
                                 <View style={styles.payment}>
@@ -1005,9 +1016,11 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         marginBottom: 10
     },
+    tosText: {
+        fontSize: 12
+    },
     date: {
         alignSelf: 'stretch',
-        marginTop: 10,
         marginBottom: 25,
     },
     payment: {

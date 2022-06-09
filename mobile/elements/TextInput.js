@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput as ReactTextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native';
 
 // export default function TextInput(props) {
 const TextInput = React.forwardRef((props, ref) => {
@@ -39,7 +39,7 @@ const TextInput = React.forwardRef((props, ref) => {
         },
         helperText: {
             color: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.45)',
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: '400',
             paddingLeft: 5,
         }
@@ -62,6 +62,7 @@ const TextInput = React.forwardRef((props, ref) => {
                 editable={!props.readOnly}
                 keyboardType={props.keyboardType ?? 'default'}
                 maxLength={props.maxLength}
+                autoComplete={Platform.OS === 'web' ? 'none' : 'off'}
             />
             <Text style={styles.helperText}>{props.helperText}</Text>
         </View>
