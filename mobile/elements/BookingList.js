@@ -26,6 +26,7 @@ export default function BookingList(props) {
             if (props.companies.length > 0) {
                 const payload = { companies: props.companies, statuses, filter, user: props.user };
                 setLoading(true);
+                setFetch(true);
                 const data = await BookingService.getBookings(payload, page, Env.BOOKINGS_PAGE_SIZE);
                 const _data = data.length > 0 ? data[0] : {};
                 const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
