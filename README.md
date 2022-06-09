@@ -1,17 +1,17 @@
 # api/.env
 
 ```
-NODE_ENV = development
+NODE_ENV = production
 BC_PORT = 4000
-BC_HTTPS = false
+BC_HTTPS = true
 BC_PRIVATE_KEY = /etc/ssl/bookcars.ma.key
 BC_CERTIFICATE = /etc/ssl/bookcars.ma.crt
-BC_DB_HOST = localhost
+BC_DB_HOST = bookcars.ddns.net
 BC_DB_PORT = 27017
 BC_DB_SSL = false
-BC_DB_SSL_KEY = /home/bookcars/ssl/bookcars.ma.key
-BC_DB_SSL_CERT = /home/bookcars/ssl/bookcars.ma.crt
-BC_DB_SSL_CA = /home/bookcars/ssl/bookcars.ma.ca.pem
+BC_DB_SSL_KEY = /etc/ssl/bookcars.ma.key
+BC_DB_SSL_CERT = /etc/ssl/bookcars.ma.crt
+BC_DB_SSL_CA = /etc/ssl/bookcars.ma.ca.pem
 BC_DB_DEBUG = true
 BC_DB_APP_NAME = bookcars
 BC_DB_AUTH_SOURCE = admin
@@ -33,7 +33,7 @@ BC_CDN_CARS = /var/www/bookcars.ma/cdn/cars
 BC_CDN_TEMP_CARS = /var/www/bookcars.ma/cdn/temp/cars
 BC_DEFAULT_LANGUAGE = fr
 BC_BACKEND_HOST = https://bookcars.ddns.net:3000/
-BC_FRONTEND_HOST = https://bookcars.ddns.net:3001/
+BC_FRONTEND_HOST = https://bookcars.ddns.net/
 BC_MINIMUM_AGE = 21
 ```
 
@@ -41,7 +41,7 @@ BC_MINIMUM_AGE = 21
 
 ```
 PORT = 3000
-REACT_APP_NODE_ENV = development
+REACT_APP_NODE_ENV = production
 REACT_APP_BC_API_HOST = https://bookcars.ddns.net:4000
 REACT_APP_BC_RECAPTCHA_SITE_KEY = GOOGLE_RECAPTCHA_SITE_KEY 
 REACT_APP_BC_DEFAULT_LANGUAGE = fr
@@ -65,7 +65,7 @@ REACT_APP_BC_MINIMUM_AGE = 21
 
 ```
 PORT = 3001
-REACT_APP_NODE_ENV = development
+REACT_APP_NODE_ENV = production
 REACT_APP_BC_API_HOST = https://bookcars.ddns.net:4000
 REACT_APP_BC_RECAPTCHA_SITE_KEY = GOOGLE_RECAPTCHA_SITE_KEY
 REACT_APP_BC_DEFAULT_LANGUAGE = fr
