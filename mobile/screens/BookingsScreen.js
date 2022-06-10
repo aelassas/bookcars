@@ -7,9 +7,11 @@ import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
+import Env from '../config/env.config';
 
 export default function BookingsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
     const [user, setUser] = useState(null);
@@ -23,6 +25,7 @@ export default function BookingsScreen({ navigation, route }) {
 
             const language = await UserService.getLanguage();
             i18n.locale = language;
+            setLanguage(language);
 
             const currentUser = await UserService.getCurrentUser();
 
@@ -66,6 +69,7 @@ export default function BookingsScreen({ navigation, route }) {
                 <BookingList
                     user={user._id}
                     companies={companies}
+                    language={language}
                     header={
                         <View>
                             <CompanyFilter onLoad={onLoadCompanies} />

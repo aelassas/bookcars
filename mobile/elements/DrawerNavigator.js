@@ -166,10 +166,10 @@ export default function DrawerNavigator(props) {
                             key={drawer.name}
                             name={drawer.name}
                             component={
-                                drawer.name === 'Home' ? HomeScreen :
-                                    drawer.name === 'Cars' ? CarsScreen :
-                                        drawer.name === 'CreateBooking' ? CreateBookingScreen :
-                                            drawer.name === 'Bookings' ? BookingsScreen
+                                drawer.name === 'Home' ? HomeScreen
+                                    : drawer.name === 'Cars' ? CarsScreen
+                                        : drawer.name === 'CreateBooking' ? CreateBookingScreen
+                                            : drawer.name === 'Bookings' ? BookingsScreen
                                                 : drawer.name === 'About' ? AboutScreen
                                                     : drawer.name === 'ToS' ? ToSScreen
                                                         : drawer.name === 'Contact' ? ContactScreen

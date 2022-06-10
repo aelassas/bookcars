@@ -526,11 +526,11 @@ export default class Booking extends Component {
                                 <FormControl fullWidth margin="dense" className='checkbox-fc'>
                                     <FormControlLabel
                                         control={
-                                            <Switch checked={theftProtection}
-                                                onChange={this.handleTheftProtectionChange}
+                                            <Switch checked={collisionDamageWaiver}
+                                                onChange={this.handleCollisionDamageWaiverChange}
                                                 color="primary" />
                                         }
-                                        label={csStrings.THEFT_PROTECTION}
+                                        label={csStrings.COLLISION_DAMAGE_WAVER}
                                         className='checkbox-fcl'
                                     />
                                 </FormControl>
@@ -538,11 +538,11 @@ export default class Booking extends Component {
                                 <FormControl fullWidth margin="dense" className='checkbox-fc'>
                                     <FormControlLabel
                                         control={
-                                            <Switch checked={collisionDamageWaiver}
-                                                onChange={this.handleCollisionDamageWaiverChange}
+                                            <Switch checked={theftProtection}
+                                                onChange={this.handleTheftProtectionChange}
                                                 color="primary" />
                                         }
-                                        label={csStrings.COLLISION_DAMAGE_WAVER}
+                                        label={csStrings.THEFT_PROTECTION}
                                         className='checkbox-fcl'
                                     />
                                 </FormControl>
