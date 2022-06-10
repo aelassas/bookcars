@@ -9,7 +9,7 @@ export default function Link(props) {
 
     return (
         <Pressable style={props.style} onPress={onPress} >
-            <Text style={styles.text}>{props.label}</Text>
+            <Text style={{...styles.text, ...props.textStyle}}>{props.label}</Text>
         </Pressable>
     );
 }

@@ -8,6 +8,7 @@ import UserService from '../services/UserService';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Env from '../config/env.config';
+import Helper from '../common/Helper';
 
 export default function BookingsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -63,6 +64,10 @@ export default function BookingsScreen({ navigation, route }) {
         setCompanies(companies);
     };
 
+    const onChangeCompanies = (companies) => {
+        setCompanies(companies);
+    }
+
     return (
         <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
             {visible &&
@@ -72,7 +77,7 @@ export default function BookingsScreen({ navigation, route }) {
                     language={language}
                     header={
                         <View>
-                            <CompanyFilter onLoad={onLoadCompanies} />
+                            <CompanyFilter style={styles.filter} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
                         </View>
                     }
                 />
@@ -84,5 +89,10 @@ export default function BookingsScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     master: {
         flex: 1
+    },
+    filter: {
+        marginRight: 7,
+        marginBottom: 10,
+        marginLeft: 7
     }
 });

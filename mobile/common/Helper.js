@@ -314,4 +314,8 @@ export default class Helper {
         }
     }
 
+    static clone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
 }

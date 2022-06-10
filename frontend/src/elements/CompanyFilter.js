@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import '../assets/css/company-filter.css';
 
 class CompanyFilter extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +18,6 @@ class CompanyFilter extends Component {
             allChecked: true
         }
     }
-
 
     handleCompanyClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
