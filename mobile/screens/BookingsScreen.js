@@ -9,6 +9,7 @@ import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
+import StatusFilter from '../elements/StatusFilter';
 
 export default function BookingsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -17,6 +18,7 @@ export default function BookingsScreen({ navigation, route }) {
     const [visible, setVisible] = useState(false);
     const [user, setUser] = useState(null);
     const [companies, setCompanies] = useState([]);
+    const [statuses, setStatuses] = useState([]);
 
     const _init = async () => {
         try {
@@ -68,16 +70,26 @@ export default function BookingsScreen({ navigation, route }) {
         setCompanies(companies);
     }
 
+    const onLoadStatuses = (statuses) => {
+        setStatuses(statuses);
+    };
+
+    const onChangeStatuses = (statuses) => {
+        setStatuses(statuses);
+    }
+
     return (
         <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
             {visible &&
                 <BookingList
                     user={user._id}
                     companies={companies}
+                    statuses={statuses}
                     language={language}
                     header={
                         <View>
                             <CompanyFilter style={styles.filter} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+                            <StatusFilter style={styles.filter} onLoad={onLoadStatuses} onChange={onChangeStatuses} />
                         </View>
                     }
                 />

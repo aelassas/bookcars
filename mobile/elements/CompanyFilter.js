@@ -88,8 +88,8 @@ export default function CompanyFilter(props) {
                         });
                         setAllChecked(true);
                         setCompanies(Helper.clone(companies));
-                        _checkedCompanies = Helper.flattenCompanies(companies);
-                        setCheckedCompanies(Helper.clone(_checkedCompanies));
+                        _checkedCompanies = Helper.clone(Helper.flattenCompanies(companies));
+                        setCheckedCompanies(_checkedCompanies);
 
                         if (props.onChange) {
                             props.onChange(_checkedCompanies);
