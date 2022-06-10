@@ -16,8 +16,6 @@ export default function BookingList(props) {
     const [fetch, setFetch] = useState(false);
     const [page, setPage] = useState(0);
     const [rows, setRows] = useState([]);
-    const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map(status => status.value));
-    const [filter, setFilter] = useState(null);
 
     const fr = props.language === Env.LANGUAGE.FR;
     const format = 'dddd, D MMMM YYYY';
@@ -28,13 +26,13 @@ export default function BookingList(props) {
 
     const _fetch = async (reset = false) => {
         try {
-            if (props.companies.length > 0) {
+            if (props.companies.length > 0 && props.statuses.length > 0) {
                 let _page = page;
                 if (reset) {
                     _page = 0;
                     setPage(0);
                 }
-                const payload = { companies: props.companies, statuses, filter, user: props.user };
+                const payload = { companies: props.companies, statuses: props.statuses, filter: props.filter, user: props.user };
                 setLoading(true);
                 setFetch(true);
                 const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE);
@@ -64,7 +62,7 @@ export default function BookingList(props) {
         } else {
             _fetch();
         }
-    }, [props.companies]);
+    }, [props.companies, props.statuses]);
 
     return (
         <View style={styles.container}>
