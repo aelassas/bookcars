@@ -26,9 +26,16 @@ export default function Switch(props) {
                 onValueChange={onValueChange}
                 disabled={props.disabled}
             />
-            <Pressable style={styles.pressable} onPress={onPress}>
-                <Text style={{ ...styles.text, ...props.textStyle }} >{props.label}</Text>
-            </Pressable>
+            {typeof props.label !== 'undefined' &&
+                <Pressable style={styles.pressable} onPress={onPress}>
+                    <Text style={{ ...styles.text, ...props.textStyle }} >{props.label}</Text>
+                </Pressable>
+            }
+            {typeof props.children !== 'undefined' &&
+                <Pressable style={styles.children} onPress={onPress}>
+                    {props.children}
+                </Pressable>
+            }
         </View>
     );
 }
@@ -46,5 +53,8 @@ const styles = StyleSheet.create({
     text: {
         color: 'rgba(0, 0, 0, .7)',
         padding: 5
+    },
+    children: {
+        marginLeft: 5
     }
 });

@@ -17,16 +17,12 @@ class CarList extends Component {
         this.state = {
             language: Env.DEFAULT_LANGUAGE,
             companies: [],
-            init: false,
             loading: true,
             fetch: false,
             reload: false,
             rows: [],
-            rowCount: 0,
             page: 1,
             size: Env.CARS_PAGE_SIZE,
-            carId: '',
-            carIndex: -1,
             from: props.from,
             to: props.to,
             pickupLocation: props.pickupLocation,
@@ -39,39 +35,31 @@ class CarList extends Component {
         };
     }
 
-    _init = async () => {
-        try {
-            this.setState({ init: false });
-            const language = await UserService.getLanguage();
-            i18n.locale = language;
-            const allCompanies = await CompanyService.getAllCompanies();
-            const companies = allCompanies.map(c => c._id);
-            this.setState({ language, allCompanies, companies, init: true });
-        } catch (err) {
-            Helper.error(err);
-        }
-    };
-
     fetch = () => {
         const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileage, deposit } = this.state;
 
-        this.setState({ loading: true, fetch: true });
+        if (companies.length > 0) {
+            this.setState({ loading: true, fetch: true });
 
-        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
+            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
 
-        CarService.getCars(payload, page, size)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                    }
-                });
-            })
-            .catch((err) => Helper.error(err));
+            CarService.getCars(payload, page, size)
+                .then(data => {
+                    const _data = data.length > 0 ? data[0] : {};
+                    if (_data.length === 0) _data.resultData = [];
+                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                    this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
+                        if (this.props.onLoad) {
+                            this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                        }
+                    });
+                    console.log('page', page);
+                })
+                .catch((err) => Helper.error(err));
+        } else {
+            this.setState({ rows: [] });
+        }
     };
 
     getExtraIcon = (extra) => (
@@ -82,13 +70,40 @@ class CarList extends Component {
         extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
     )
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { companies } = prevState;
+
+        if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
+            return { companies: Helper.clone(nextProps.companies) };
+        }
+
+        return null;
+    }
+    componentDidUpdate(prevProps, prevState) {
+        const { companies } = this.state;
+
+        if (!Helper.arrayEqual(companies, prevState.companies)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+    }
+
+    _init = async () => {
+        try {
+            const language = await UserService.getLanguage();
+            i18n.locale = language;
+            this.setState({ language });
+        } catch (err) {
+            Helper.error(err);
+        }
+    };
+
     async componentDidMount() {
         await this._init();
         this.fetch();
     }
 
     render() {
-        const { init, rows, loading, language, from, to, pickupLocation, dropOffLocation, page, fetch } = this.state;
+        const { rows, loading, language, from, to, pickupLocation, dropOffLocation, page, fetch } = this.state;
         const fr = language === Env.LANGUAGE.FR;
         const iconSize = 24;
         const iconColor = '#000';
@@ -234,11 +249,11 @@ class CarList extends Component {
                                 });
                             }
                         }}
-                        ListHeaderComponent={<></>}
+                        ListHeaderComponent={this.props.header}
                         ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
                         ListEmptyComponent={
                             !loading &&
-                            <View>
+                            <View style={styles.container}>
                                 <Text style={styles.text}>{i18n.t('EMPTY_CAR_LIST')}</Text>
                             </View>
                         }

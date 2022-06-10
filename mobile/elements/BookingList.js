@@ -26,20 +26,26 @@ export default function BookingList(props) {
     const extraIconColor = '#1f9201';
     const extraIconSize = 16;
 
-    const _fetch = async () => {
+    const _fetch = async (reset = false) => {
         try {
             if (props.companies.length > 0) {
+                let _page = page;
+                if (reset) {
+                    _page = 0;
+                    setPage(0);
+                }
                 const payload = { companies: props.companies, statuses, filter, user: props.user };
                 setLoading(true);
                 setFetch(true);
-                const data = await BookingService.getBookings(payload, page, Env.BOOKINGS_PAGE_SIZE);
+                const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE);
                 const _data = data.length > 0 ? data[0] : {};
-                const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
+                const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData];
                 setRows(_rows);
                 setFetch(_data.resultData.length > 0);
                 setLoading(false);
             } else {
                 setRows([]);
+                setFetch(false);
             }
         } catch (err) {
             Helper.error(err);
@@ -54,7 +60,7 @@ export default function BookingList(props) {
 
     useEffect(() => {
         if (page > 0) {
-            setPage(0);
+            _fetch(true);
         } else {
             _fetch();
         }
@@ -177,7 +183,7 @@ export default function BookingList(props) {
                 ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
                 ListEmptyComponent={
                     !loading &&
-                    <View>
+                    <View style={styles.container}>
                         <Text style={styles.text}>{i18n.t('EMPTY_BOOKING_LIST')}</Text>
                     </View>
                 }
