@@ -54,7 +54,6 @@ class CarList extends Component {
                             this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                         }
                     });
-                    console.log('page', page);
                 })
                 .catch((err) => Helper.error(err));
         } else {
