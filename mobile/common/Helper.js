@@ -208,69 +208,69 @@ export default class Helper {
         return /^\d{3,4}$/.test(val);
     }
 
-    static getCancellationOption(cancellation, fr) {
+    static getCancellationOption(cancellation, fr, hidePlus) {
         if (cancellation === -1) {
             return i18n.t('UNAVAILABLE');
         }
         else if (cancellation === 0) {
             return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
         } else {
-            return `+ ${cancellation} ${i18n.t('CURRENCY')}`;
+            return `${hidePlus ? '' : '+ '}${cancellation} ${i18n.t('CURRENCY')}`;
         }
     }
 
-    static getAmendmentsOption(amendments, fr) {
+    static getAmendmentsOption(amendments, fr, hidePlus) {
         if (amendments === -1) {
             return `${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`;
         }
         else if (amendments === 0) {
             return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`;
         } else {
-            return `+ ${amendments} ${i18n.t('CURRENCY')}`;
+            return `${hidePlus ? '' : '+ '}${amendments} ${i18n.t('CURRENCY')}`;
         }
     }
 
-    static getCollisionDamageWaiverOption(collisionDamageWaiver, days, fr) {
+    static getCollisionDamageWaiverOption(collisionDamageWaiver, days, fr, hidePlus) {
         if (collisionDamageWaiver === -1) {
             return i18n.t('UNAVAILABLE');
         }
         else if (collisionDamageWaiver === 0) {
             return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
         } else {
-            return `+ ${collisionDamageWaiver * days} ${i18n.t('CURRENCY')} (${collisionDamageWaiver} ${i18n.t('CAR_CURRENCY')})`;
+            return `${hidePlus ? '' : '+ '}${collisionDamageWaiver * days} ${i18n.t('CURRENCY')} (${collisionDamageWaiver} ${i18n.t('CAR_CURRENCY')})`;
         }
     }
 
-    static getTheftProtectionOption(theftProtection, days, fr) {
+    static getTheftProtectionOption(theftProtection, days, fr, hidePlus) {
         if (theftProtection === -1) {
             return i18n.t('UNAVAILABLE');
         }
         else if (theftProtection === 0) {
             return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
         } else {
-            return `+ ${theftProtection * days} ${i18n.t('CURRENCY')} (${theftProtection} ${i18n.t('CAR_CURRENCY')})`;
+            return `${hidePlus ? '' : '+ '}${theftProtection * days} ${i18n.t('CURRENCY')} (${theftProtection} ${i18n.t('CAR_CURRENCY')})`;
         }
     }
 
-    static getFullInsuranceOption(fullInsurance, days, fr) {
+    static getFullInsuranceOption(fullInsurance, days, fr, hidePlus) {
         if (fullInsurance === -1) {
             return i18n.t('UNAVAILABLE');
         }
         else if (fullInsurance === 0) {
             return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`;
         } else {
-            return `+ ${fullInsurance * days} ${i18n.t('CURRENCY')} (${fullInsurance} ${i18n.t('CAR_CURRENCY')})`;
+            return `${hidePlus ? '' : '+ '}${fullInsurance * days} ${i18n.t('CURRENCY')} (${fullInsurance} ${i18n.t('CAR_CURRENCY')})`;
         }
     }
 
-    static getAdditionalDriverOption(additionalDriver, days, fr) {
+    static getAdditionalDriverOption(additionalDriver, days, fr, hidePlus) {
         if (additionalDriver === -1) {
             return i18n.t('UNAVAILABLE');
         }
         else if (additionalDriver === 0) {
             return i18n.t('INCLUDED');
         } else {
-            return `+ ${additionalDriver * days} ${i18n.t('CURRENCY')} (${additionalDriver} ${i18n.t('CAR_CURRENCY')})`;
+            return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${i18n.t('CURRENCY')} (${additionalDriver} ${i18n.t('CAR_CURRENCY')})`;
         }
     }
 
@@ -287,6 +287,31 @@ export default class Helper {
 
     static flattenCompanies(companies) {
         return companies.map(company => company._id);
+    }
+
+    static getBookingStatus(status) {
+        switch (status) {
+            case Env.BOOKING_STATUS.VOID:
+                return i18n.t('BOOKING_STATUS_VOID');
+
+            case Env.BOOKING_STATUS.PENDING:
+                return i18n.t('BOOKING_STATUS_PENDING');
+
+            case Env.BOOKING_STATUS.DEPOSIT:
+                return i18n.t('BOOKING_STATUS_DEPOSIT');
+
+            case Env.BOOKING_STATUS.PAID:
+                return i18n.t('BOOKING_STATUS_PAID');
+
+            case Env.BOOKING_STATUS.RESERVED:
+                return i18n.t('BOOKING_STATUS_RESERVED');
+
+            case Env.BOOKING_STATUS.CANCELLED:
+                return i18n.t('BOOKING_STATUS_CANCELLED');
+
+            default:
+                return '';
+        }
     }
 
 }

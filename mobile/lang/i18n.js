@@ -186,6 +186,7 @@ i18n.translations = {
         BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
 
         EMPTY_BOOKING_LIST: 'Pas de réservations.',
+        OPTIONS: 'Options',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -370,6 +371,7 @@ i18n.translations = {
         BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
 
         EMPTY_BOOKING_LIST: 'No bookings.',
+        OPTIONS: 'Options',
     }
 };
 
