@@ -182,12 +182,14 @@ class CarList extends Component {
 
     getExtraIcon = (option, extra) => {
         let available = false;
-        if (option === 'cancellation' && this.props.booking.cancellation && extra > 0) available = true;
-        if (option === 'amendments' && this.props.booking.amendments && extra > 0) available = true;
-        if (option === 'collisionDamageWaiver' && this.props.booking.collisionDamageWaiver && extra > 0) available = true;
-        if (option === 'theftProtection' && this.props.booking.theftProtection && extra > 0) available = true;
-        if (option === 'fullInsurance' && this.props.booking.fullInsurance && extra > 0) available = true;
-        if (option === 'additionalDriver' && this.props.booking.additionalDriver && extra > 0) available = true;
+        if (this.props.booking) {
+            if (option === 'cancellation' && this.props.booking.cancellation && extra > 0) available = true;
+            if (option === 'amendments' && this.props.booking.amendments && extra > 0) available = true;
+            if (option === 'collisionDamageWaiver' && this.props.booking.collisionDamageWaiver && extra > 0) available = true;
+            if (option === 'theftProtection' && this.props.booking.theftProtection && extra > 0) available = true;
+            if (option === 'fullInsurance' && this.props.booking.fullInsurance && extra > 0) available = true;
+            if (option === 'additionalDriver' && this.props.booking.additionalDriver && extra > 0) available = true;
+        }
 
         return extra === -1 ? <UncheckIcon className='unavailable' />
             : extra === 0 || available ? <CheckIcon className='available' />
