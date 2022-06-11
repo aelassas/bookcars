@@ -18,73 +18,83 @@ export default function StatusFilter(props) {
     }, []);
 
     return (
-        <Accordion style={props.style} title={i18n.t('BOOKING_STATUS')}>
-            <View style={styles.statuses}>
-                {
-                    statuses.map((status) => (
-                        <View key={status.value} style={styles.status}>
-                            <Switch value={status.checked}
-                                onValueChange={(checked) => {
-                                    if (checked) {
-                                        status.checked = true;
-                                        setStatuses(Helper.clone(statuses));
-                                        checkedStatuses.push(status.value);
+        <View style={{ ...styles.container, ...props.style }}>
+            <Accordion style={styles.accordion} title={i18n.t('BOOKING_STATUS')}>
+                <View style={styles.statuses}>
+                    {
+                        statuses.map((status) => (
+                            <View key={status.value} style={styles.status}>
+                                <Switch value={status.checked}
+                                    onValueChange={(checked) => {
+                                        if (checked) {
+                                            status.checked = true;
+                                            setStatuses(Helper.clone(statuses));
+                                            checkedStatuses.push(status.value);
 
-                                        if (checkedStatuses.length === statuses.length) {
-                                            setAllChecked(true);
+                                            if (checkedStatuses.length === statuses.length) {
+                                                setAllChecked(true);
+                                            }
+                                        } else {
+                                            status.checked = false;
+                                            setStatuses(Helper.clone(statuses));
+                                            const index = checkedStatuses.indexOf(status.value);
+                                            checkedStatuses.splice(index, 1);
+
+                                            if (checkedStatuses.length === 0) {
+                                                setAllChecked(false);
+                                            }
                                         }
-                                    } else {
-                                        status.checked = false;
-                                        setStatuses(Helper.clone(statuses));
-                                        const index = checkedStatuses.indexOf(status.value);
-                                        checkedStatuses.splice(index, 1);
 
-                                        if (checkedStatuses.length === 0) {
-                                            setAllChecked(false);
+                                        if (props.onChange) {
+                                            props.onChange(Helper.clone(checkedStatuses));
                                         }
-                                    }
-
-                                    if (props.onChange) {
-                                        props.onChange(Helper.clone(checkedStatuses));
-                                    }
-                                }}
-                            >
-                                <BookingStatus style={styles.bookingStatus} status={status.value} />
-                            </Switch>
-                        </View>
-                    ))
-                }
-
-                <Link style={styles.link} textStyle={styles.linkText} label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')} onPress={() => {
-
-                    let _checkedStatuses = [];
-                    if (allChecked) {
-                        statuses.forEach((status) => {
-                            status.checked = false;
-                        });
-                        setAllChecked(false);
-                        setStatuses(Helper.clone(statuses));
-                        setCheckedStatuses(_checkedStatuses);
-                    } else {
-                        statuses.forEach((status) => {
-                            status.checked = true;
-                        });
-                        setAllChecked(true);
-                        setStatuses(Helper.clone(statuses));
-                        _checkedStatuses = Helper.clone(statuses.map(status => status.value));
-                        setCheckedStatuses(_checkedStatuses);
-
-                        if (props.onChange) {
-                            props.onChange(_checkedStatuses);
-                        }
+                                    }}
+                                >
+                                    <BookingStatus style={styles.bookingStatus} status={status.value} />
+                                </Switch>
+                            </View>
+                        ))
                     }
-                }} />
-            </View>
-        </Accordion>
+
+                    <Link style={styles.link} textStyle={styles.linkText} label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')} onPress={() => {
+
+                        let _checkedStatuses = [];
+                        if (allChecked) {
+                            statuses.forEach((status) => {
+                                status.checked = false;
+                            });
+                            setAllChecked(false);
+                            setStatuses(Helper.clone(statuses));
+                            setCheckedStatuses(_checkedStatuses);
+                        } else {
+                            statuses.forEach((status) => {
+                                status.checked = true;
+                            });
+                            setAllChecked(true);
+                            setStatuses(Helper.clone(statuses));
+                            _checkedStatuses = Helper.clone(statuses.map(status => status.value));
+                            setCheckedStatuses(_checkedStatuses);
+
+                            if (props.onChange) {
+                                props.onChange(_checkedStatuses);
+                            }
+                        }
+                    }} />
+                </View>
+            </Accordion>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    accordion: {
+        width: '100%',
+        maxWidth: 480
+    },
     statuses: {
         flex: 1,
         flexDirection: 'row',
