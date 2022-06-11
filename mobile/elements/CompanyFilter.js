@@ -32,7 +32,7 @@ export default function CompanyFilter(props) {
     }, []);
 
     return (
-        companies.length > 0 &&
+        companies.length > 0 && props.visible &&
         <View style={{ ...styles.container, ...props.style }}>
             <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
                 <View style={styles.companies}>

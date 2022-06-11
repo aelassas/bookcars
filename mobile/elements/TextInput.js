@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native';
 
-// export default function TextInput(props) {
 const TextInput = React.forwardRef((props, ref) => {
     const [value, setValue] = useState('');
+    const small = props.size === 'small';
 
     useEffect(() => {
         setValue(props.value ?? '');
@@ -31,11 +31,16 @@ const TextInput = React.forwardRef((props, ref) => {
             zIndex: 1
         },
         input: {
-            height: 55,
+            height: small ? 37 : 55,
             borderWidth: 1,
             borderRadius: 10,
             borderColor: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.23)',
-            padding: 10,
+            fontSize: small ? 14 : 16,
+            paddingTop: small ? 8 : 15,
+            paddingRight: 15,
+            paddingBottom: small ? 8 : 15,
+            paddingLeft: 15
+
         },
         helperText: {
             color: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.45)',
@@ -47,7 +52,7 @@ const TextInput = React.forwardRef((props, ref) => {
 
     return (
         <View style={{ ...props.style, ...styles.container }}>
-            {value !== '' && <Text style={styles.label}>{props.label}</Text>}
+            {(value !== '' && !props.hideLabel) && <Text style={styles.label}>{props.label}</Text>}
             <ReactTextInput
                 ref={ref}
                 style={styles.input}

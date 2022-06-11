@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Accordion(props) {
@@ -22,6 +22,16 @@ export default function Accordion(props) {
             borderRadius: 5,
             backgroundColor: '#fff',
         },
+        title: {
+            flex: 1
+        },
+        titleTouchable: {
+            flex: 1,
+            alignSelf: 'stretch',
+            backgroundColor: 'red',
+            zIndex: 10,
+            elevation: 10
+        },
         titleContainer: {
             flex: 1,
             display: 'flex',
@@ -34,7 +44,7 @@ export default function Accordion(props) {
             borderColor: '#d9d8d9',
             borderRadius: open ? 0 : 4,
             paddingTop: 5,
-            paddingBottom: 5,
+            paddingBottom: 5
         },
         titleTextContainer: {
             flex: 1,
@@ -51,8 +61,11 @@ export default function Accordion(props) {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: 7,
-            paddingBottom: 7,
+            paddingTop: open ? 7 : 0,
+            paddingBottom: open ? 7 : 0,
+            opacity: open ? 1 : 0,
+            height: open ? 'auto' : 0,
+            width: open ? 'auto' : 0
         }
     });
 
@@ -82,14 +95,14 @@ export default function Accordion(props) {
                             <Text style={styles.titleText}>{props.title}</Text>
                         </View>
                         <Animated.View style={{ transform: [{ rotateZ: arrowAngle }] }}>
-                            <MaterialIcons name="keyboard-arrow-down" size={22} color='rgba(0, 0, 0, 0.7)'/>
+                            <MaterialIcons name="keyboard-arrow-down" size={22} color='rgba(0, 0, 0, 0.7)' />
                         </Animated.View>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
-            {open && <View style={styles.bodyContainer}>
+            <View style={styles.bodyContainer}>
                 {props.children}
-            </View>}
+            </View>
         </View>
     );
 }

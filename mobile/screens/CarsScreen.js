@@ -54,7 +54,7 @@ export default function CarsScreen({ navigation, route }) {
                     to={new Date(route.params.to)}
                     header={
                         <View>
-                            <CompanyFilter style={styles.filter} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+                            <CompanyFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
                         </View>
                     }
                 />

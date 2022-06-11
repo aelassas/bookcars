@@ -62,11 +62,13 @@ export default function BookingList(props) {
         } else {
             _fetch();
         }
-    }, [props.companies, props.statuses]);
+    }, [props.companies, props.statuses, props.filter]);
 
     return (
         <View style={styles.container}>
             <FlatList
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
                 contentContainerStyle={styles.contentContainer}
                 style={styles.flatList}
                 data={rows}

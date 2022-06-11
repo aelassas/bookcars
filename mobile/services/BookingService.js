@@ -18,4 +18,19 @@ export default class BookingService {
         return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers }).then(res => res.data);
     }
 
+    static async hasBookings(driver) {
+        const headers = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/has-bookings/${encodeURIComponent(driver)}`, { headers }).then(res => res.status);
+    }
+
+    static async minDate(driver) {
+        const headers = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/bookings-min-date/${encodeURIComponent(driver)}`, { headers }).then(res => res.data);
+    }
+
+    static async maxDate(driver) {
+        const headers = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/bookings-max-date/${encodeURIComponent(driver)}`, { headers }).then(res => res.data);
+    }
+
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
 
 export default function Button(props) {
+    const small = props.size === 'small';
 
     const onPress = () => {
         if (props.onPress) props.onPress();
@@ -9,7 +10,7 @@ export default function Button(props) {
 
     const styles = StyleSheet.create({
         button: {
-            height: 55,
+            height: small ? 37 : 55,
             borderRadius: 10,
             backgroundColor: props.type === 'secondary' ? '#999' : '#f37022',
             alignItems: 'center',
@@ -19,7 +20,7 @@ export default function Button(props) {
         text: {
             color: '#fff',
             textTransform: 'uppercase',
-            fontSize: 17,
+            fontSize: small ? 14 : 17,
             fontWeight: '600'
         },
     });
