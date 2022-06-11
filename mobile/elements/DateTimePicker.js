@@ -83,7 +83,7 @@ export default function DateTimePicker(props) {
                 </Pressable>
                 <Text style={styles.helperText}>{props.helperText}</Text>
                 {show &&
-                    <ReactDateTimePicker mode={props.mode} value={value ?? now} onChange={(event, date) => {
+                    <ReactDateTimePicker mode={props.mode} value={value ?? now} minimumDate={props.minimumDate} onChange={(event, date) => {
                         setShow(false);
                         if (date.getTime() !== now.getTime()) {
                             setValue(date);
