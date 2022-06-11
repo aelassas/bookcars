@@ -18,6 +18,7 @@ export default function StatusFilter(props) {
     }, []);
 
     return (
+        props.visible &&
         <View style={{ ...styles.container, ...props.style }}>
             <Accordion style={styles.accordion} title={i18n.t('BOOKING_STATUS')}>
                 <View style={styles.statuses}>

@@ -72,6 +72,7 @@ class LocationSelectList extends Component {
 
     render() {
         const { loading, rows, selectedItem } = this.state;
+        const small = this.props.size === 'small';
 
         return (
             <View style={{ ...this.props.style, ...styles.container }}>
@@ -114,7 +115,9 @@ class LocationSelectList extends Component {
                         autoCapitalize: 'none',
                         style: {
                             borderRadius: 10,
-                            paddingLeft: 18,
+                            paddingLeft: 15,
+                            height: small ? 37 : 55,
+                            fontSize: small ? 14 : 16,
                         }
                     }}
                     rightButtonsContainerStyle={{

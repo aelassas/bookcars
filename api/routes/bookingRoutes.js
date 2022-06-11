@@ -292,8 +292,8 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
         if (car) $match.$and.push({ 'car._id': { $eq: mongoose.Types.ObjectId(car) } });
         if (from) $match.$and.push({ 'from': { $gte: from } }); // $from > from
         if (to) $match.$and.push({ 'to': { $lte: to } }); // $to < to
-        if (pickupLocation) $match.$and.push({ 'pickupLocation': { $eq: mongoose.Types.ObjectId(pickupLocation) } });
-        if (dropOffLocation) $match.$and.push({ 'dropOffLocation': { $eq: mongoose.Types.ObjectId(dropOffLocation) } });
+        if (pickupLocation) $match.$and.push({ 'pickupLocation._id': { $eq: mongoose.Types.ObjectId(pickupLocation) } });
+        if (dropOffLocation) $match.$and.push({ 'dropOffLocation._id': { $eq: mongoose.Types.ObjectId(dropOffLocation) } });
         if (keyword) {
             $match.$and.push({
                 $or: [
@@ -414,6 +414,52 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
         console.error(`[booking.getBookings] ${strings.DB_ERROR} ${req.body}`, err);
         res.status(400).send(strings.DB_ERROR + err);
     }
+});
+
+routes.route(routeNames.hasBookings).get(authJwt.verifyToken, (req, res) => {
+    Booking.find({ driver: mongoose.Types.ObjectId(req.params.driver) })
+        .limit(1)
+        .count()
+        .then(count => {
+            if (count === 1) {
+                return res.sendStatus(200);
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${req.params.driver}`, err);
+            res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+routes.route(routeNames.bookingsMinDate).get(authJwt.verifyToken, (req, res) => {
+    Booking.findOne({ driver: mongoose.Types.ObjectId(req.params.driver) }, { from: 1 })
+        .sort({ from: 1 })
+        .then(booking => {
+            if (booking) {
+                return res.json((new Date(booking.from).getTime()));
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${req.params.driver}`, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+routes.route(routeNames.bookingsMaxDate).get(authJwt.verifyToken, (req, res) => {
+    Booking.findOne({ driver: mongoose.Types.ObjectId(req.params.driver) }, { to: 1 })
+        .sort({ to: -1 })
+        .then(booking => {
+            if (booking) {
+                return res.json((new Date(booking.to).getTime()));
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${req.params.driver}`, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
 });
 
 export default routes;

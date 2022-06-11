@@ -228,7 +228,9 @@ export const AutocompleteDropdown = memo(
             <ScrollViewListItem
               {...{ titleHighlighted, titleStart, titleEnd }}
               style={props.suggestionsListTextStyle}
-              onPress={() => _onSelectItem(item)}
+              onPress={() => {
+                _onSelectItem(item)
+              }}
             />
           ),
           {}
@@ -399,7 +401,7 @@ export const AutocompleteDropdown = memo(
             <ScrollViewComponent
               keyboardShouldPersistTaps="handled"
               nestedScrollEnabled
-              style={{ maxHeight: suggestionsListMaxHeight }}
+              style={{ maxHeight: suggestionsListMaxHeight, zIndex: 999, elevation: 999 }}
             >
               <View>
                 {scrollContent.length > 0
@@ -481,7 +483,6 @@ const styles = ScaledSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 15.46,
-
     elevation: 20
   }
 })

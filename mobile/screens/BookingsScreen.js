@@ -10,6 +10,8 @@ import CompanyFilter from '../elements/CompanyFilter';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import StatusFilter from '../elements/StatusFilter';
+import BookingService from '../services/BookingService';
+import BookingFilter from '../elements/BookingFilter';
 
 export default function BookingsScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -17,14 +19,17 @@ export default function BookingsScreen({ navigation, route }) {
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
     const [user, setUser] = useState(null);
+    const [hasBookings, setHasBookings] = useState(false);
     const [companies, setCompanies] = useState([]);
     const [statuses, setStatuses] = useState([]);
+    const [filter, setFilter] = useState(null);
 
     const _init = async () => {
         try {
             setVisible(false);
             setUser(null);
             setCompanies([]);
+            setFilter(null);
 
             const language = await UserService.getLanguage();
             i18n.locale = language;
@@ -43,6 +48,11 @@ export default function BookingsScreen({ navigation, route }) {
             }
 
             setUser(user);
+
+            const hasBookingsStatus = await BookingService.hasBookings(user._id);
+            const hasBookings = hasBookingsStatus === 200;
+            setHasBookings(hasBookings);
+
             setVisible(true);
         } catch (err) {
             UserService.signout(navigation, false, true);
@@ -76,20 +86,26 @@ export default function BookingsScreen({ navigation, route }) {
 
     const onChangeStatuses = (statuses) => {
         setStatuses(statuses);
-    }
+    };
+
+    const onSubmitBookingFilter = (filter) => {
+        setFilter(filter);
+    };
 
     return (
         <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
             {visible &&
                 <BookingList
                     user={user._id}
+                    language={language}
                     companies={companies}
                     statuses={statuses}
-                    language={language}
+                    filter={filter}
                     header={
                         <View>
-                            <CompanyFilter style={styles.filter} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
-                            <StatusFilter style={styles.filter} onLoad={onLoadStatuses} onChange={onChangeStatuses} />
+                            <CompanyFilter style={styles.filter} visible={hasBookings} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+                            <StatusFilter style={styles.filter} visible={hasBookings} onLoad={onLoadStatuses} onChange={onChangeStatuses} />
+                            <BookingFilter style={styles.filter} visible={hasBookings} driver={user._id} onSubmit={onSubmitBookingFilter} />
                         </View>
                     }
                 />

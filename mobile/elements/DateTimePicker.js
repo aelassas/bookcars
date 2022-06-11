@@ -12,6 +12,7 @@ export default function DateTimePicker(props) {
     const [show, setShow] = useState(false);
     const format = props.mode === 'date' ? 'dddd, D MMMM YYYY' : 'HH:mm';
     const now = new Date();
+    const small = props.size === 'small';
 
     useEffect(() => {
         moment.locale(props.locale);
@@ -41,21 +42,24 @@ export default function DateTimePicker(props) {
         },
         dateContainer: {
             alignSelf: 'stretch',
-            height: 55,
+            height: small ? 37 : 55,
+            fontSize: small ? 14 : 16,
             borderWidth: 1,
             borderRadius: 10,
             borderColor: props.error ? '#d32f2f' : 'rgba(0, 0, 0, 0.23)',
-            backgroundColor: '#fafafa',
+            backgroundColor: props.backgroundColor ?? '#fafafa',
         },
         dateButton: {
             height: 55,
             alignSelf: 'stretch',
             flexDirection: 'row',
-            display: 'flex',
-            alignItems: 'center',
         },
         dateText: {
-            fontSize: 15,
+            flex: 1,
+            fontSize: small ? 14 : 16,
+            paddingTop: small ? 8 : 15,
+            paddingRight: 15,
+            paddingBottom: small ? 8 : 15,
             paddingLeft: 15
         },
         helperText: {

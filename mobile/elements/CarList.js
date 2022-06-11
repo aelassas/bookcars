@@ -111,6 +111,8 @@ class CarList extends Component {
             <View style={styles.container}>
                 {(from && to) &&
                     <FlatList
+                        keyboardShouldPersistTaps="handled"
+                        nestedScrollEnabled
                         contentContainerStyle={styles.contentContainer}
                         style={styles.flatList}
                         data={rows}
