@@ -31,7 +31,7 @@ section.car-list .empty-list {
         position: relative;
         background: #fff;
         border: 1px solid #ddd;
-        border-radius: 2px;
+        border-radius: 5px;
         color: #333;
         font-size: 12px;
         margin: 0 1px 10px;
@@ -141,7 +141,7 @@ section.car-list .empty-list {
         padding-top: 3px;
         box-shadow: 0 0 0 1px #ddd inset;
         margin-left: 5px;
-        border-radius: 2px;
+        border-radius: 5px;
         text-align: center;
     }
 
@@ -205,7 +205,7 @@ section.car-list .empty-list {
         position: relative;
         background: #fff;
         border: 1px solid #ddd;
-        border-radius: 2px;
+        border-radius: 5px;
         color: #333;
         font-size: 12px;
         margin-bottom: 10px;
@@ -292,7 +292,7 @@ section.car-list .empty-list {
         padding-top: 3px;
         box-shadow: 0 0 0 1px #ddd inset;
         margin-left: 5px;
-        border-radius: 2px;
+        border-radius: 5px;
         text-align: center;
     }
 

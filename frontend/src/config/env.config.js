@@ -10,6 +10,7 @@ const Env = {
     PAGE_SIZE: parseInt(process.env.REACT_APP_BC_PAGE_SIZE || 30),
     CARS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_CARS_PAGE_SIZE || 15),
     BOOKINGS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_BOOKINGS_PAGE_SIZE || 20),
+    BOOKINGS_MOBILE_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_BOOKINGS_MOBILE_PAGE_SIZE || 10),
     CDN_USERS: process.env.REACT_APP_BC_CDN_USERS,
     CDN_CARS: process.env.REACT_APP_BC_CDN_CARS,
     PAGE_OFFSET: 200,

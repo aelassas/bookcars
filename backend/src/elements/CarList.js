@@ -245,7 +245,7 @@ class CarList extends Component {
             if (option === 'fullInsurance' && this.props.booking.fullInsurance && extra > 0) available = true;
             if (option === 'additionalDriver' && this.props.booking.additionalDriver && extra > 0) available = true;
         }
-        
+
         return extra === -1 ? <UncheckIcon className='unavailable' />
             : extra === 0 || available ? <CheckIcon className='available' />
                 : <InfoIcon className='extra-info' />
@@ -460,7 +460,8 @@ class CarList extends Component {
 
                                     {edit &&
                                         <Tooltip title={commonStrings.DELETE}>
-                                            <IconButton data-id={car._id}
+                                            <IconButton
+                                                data-id={car._id}
                                                 data-index={index}
                                                 onClick={this.handleDelete}>
                                                 <DeleteIcon />

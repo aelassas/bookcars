@@ -73,7 +73,7 @@ div.status-filter ul.status-list li label.bs-cancelled {
 
 div.status-filter div.filter-actions {
     text-align: center;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
 }
 
 div.status-filter div.filter-actions span.uncheckall {

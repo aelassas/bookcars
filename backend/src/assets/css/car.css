@@ -97,7 +97,7 @@ div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
         padding-top: 3px;
         box-shadow: 0 0 0 1px #ddd inset;
         margin-left: 5px;
-        border-radius: 2px;
+        border-radius: 5px;
         text-align: center;
     }
 
@@ -238,7 +238,7 @@ div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
         padding-top: 3px;
         box-shadow: 0 0 0 1px #ddd inset;
         margin-left: 5px;
-        border-radius: 2px;
+        border-radius: 5px;
         text-align: center;
     }
 

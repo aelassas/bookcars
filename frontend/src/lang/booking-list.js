@@ -18,7 +18,9 @@ export const strings = new LocalizedStrings({
         DELETE_BOOKINGS: 'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
         EMPTY_LIST: 'Pas de réservations.',
         VIEW: 'Voir cette réservation',
-        UPDATE: 'Modifier cette réservation'
+        UPDATE: 'Modifier cette réservation',
+        DAYS: 'Jours',
+        COST: 'Total',
     },
     en: {
         CAR: 'Car',
@@ -35,7 +37,9 @@ export const strings = new LocalizedStrings({
         DELETE_BOOKINGS: 'Are you sure you want to delete the selected bookings?',
         EMPTY_LIST: 'No bookings.',
         VIEW: 'View this booking',
-        UPDATE: 'Edit this booking'
+        UPDATE: 'Edit this booking',
+        DAYS: 'Days',
+        COST: 'COST',
     }
 });
 

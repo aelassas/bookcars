@@ -105,7 +105,7 @@ div.home footer div.copyright span.part2 {
         line-height: 28px;
         font-weight: 500;
         border: 0;
-        border-radius: 2px;
+        border-radius: 5px;
         height: 52px;
         white-space: nowrap;
         background: #f37022;
@@ -232,7 +232,7 @@ div.home footer div.copyright span.part2 {
         line-height: 28px;
         font-weight: 500;
         border: 0;
-        border-radius: 2px;
+        border-radius: 5px;
         color: #fff;
         height: 52px;
         min-width: 100%;

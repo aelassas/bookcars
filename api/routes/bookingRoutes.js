@@ -304,6 +304,29 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
             });
         }
 
+        // for (let i = 0; i < 20; i++) {
+        //     const booking = new Booking({
+        //         company: '628a51a1572a010c6b5d1a10',
+        //         car: '628a721f3021ce5ab61286f6',
+        //         driver: '629f2b7bbf8f826e4973ac8b',
+        //         pickupLocation: '628a5459572a010c6b5d1b2d',
+        //         dropOffLocation: '628a5459572a010c6b5d1b2d',
+        //         from: '2022-06-15T23:00:00.000Z',
+        //         to: '2022-06-17T23:00:00.000Z',
+        //         status: i % 2 === 0 ? 'pending' : i % 3 === 0 ? 'paid' : 'reserved',
+        //         cancellation: false,
+        //         amendments: false,
+        //         theftProtection: false,
+        //         collisionDamageWaiver: false,
+        //         fullInsurance: false,
+        //         additionalDriver: false,
+        //         price: 1777
+        //     });
+        //     await booking.save();
+        // }
+
+        // await Booking.deleteMany({ price: 1777 });
+
         const data = await Booking.aggregate([
             {
                 $lookup: {
