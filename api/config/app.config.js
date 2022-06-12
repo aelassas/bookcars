@@ -37,7 +37,11 @@ export default new LocalizedStrings.default({
         BOOKING_CONFIRMED_PART11: ') le ',
         BOOKING_CONFIRMED_PART12: ' (heure locale).',
         BOOKING_CONFIRMED_PART13: 'Veuillez respecter les dates et les horaires de prise en charge et de restitution du véhicule.',
-        BOOKING_CONFIRMED_PART14: "Vous pouvez suivre votre réservation sur : "
+        BOOKING_CONFIRMED_PART14: "Vous pouvez suivre votre réservation sur : ",
+
+        CANCEL_BOOKING_SUBJECT: "Demande d'annulation de la réservation",
+        CANCEL_BOOKING_PART1: "L'utilisateur ",
+        CANCEL_BOOKING_PART2: " a fait une demande d'annulation de la réservation : "
     },
     en: {
         ERROR: 'Internal error: ',
@@ -75,7 +79,11 @@ export default new LocalizedStrings.default({
         BOOKING_CONFIRMED_PART11: ') on ',
         BOOKING_CONFIRMED_PART12: ' (local time).',
         BOOKING_CONFIRMED_PART13: 'Please respect the pick-up and drop-off dates and times.',
-        BOOKING_CONFIRMED_PART14: "You can follow your booking on: "
+        BOOKING_CONFIRMED_PART14: "You can follow your booking on: ",
+
+        CANCEL_BOOKING_SUBJECT: 'Cancel request of the booking',
+        CANCEL_BOOKING_PART1: "The user ",
+        CANCEL_BOOKING_PART2: " made a request to cancel the reservation: "
 
     }
 });

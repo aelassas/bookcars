@@ -16,4 +16,8 @@ export default class BookingService {
         return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
+    static cancel(id) {
+        return axios.post(`${Env.API_HOST}/api/cancel-booking/${encodeURIComponent(id)}`, null, { headers: UserService.authHeader() }).then(res => res.status);
+    }
+
 }

@@ -76,7 +76,11 @@ const bookingSchema = new Schema({
     price: {
         type: Number,
         required: [true, "can't be blank"],
-    }
+    },
+    cancelRequest: {
+        type: Boolean,
+        default: false
+    },
 }, {
     timestamps: true,
     strict: true,

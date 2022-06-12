@@ -17,13 +17,22 @@ import {
     IconButton,
     Card,
     CardContent,
-    Typography
+    Typography,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    CircularProgress,
+    Stack
 } from '@mui/material';
 import {
     Visibility as ViewIcon,
     Check as CheckIcon,
+    Cancel as CancelIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
+import { toast } from 'react-toastify';
 
 import '../assets/css/booking-list.css';
 
@@ -48,7 +57,10 @@ class BookingList extends Component {
             statuses: props.statuses,
             filter: props.filter,
             reload: props.reload,
-            car: props.car
+            car: props.car,
+            openCancelDialog: false,
+            cancelRequestSent: false,
+            cancelRequestProcessing: false
         };
     }
 
@@ -100,12 +112,26 @@ class BookingList extends Component {
                 sortable: false,
                 disableColumnMenu: true,
                 renderCell: (params) => {
+                    const cancelBooking = (e) => {
+                        e.stopPropagation(); // don't select this row after clicking
+                        this.setState({ selectedId: params.row._id, openCancelDialog: true });
+                    };
+
                     return (
-                        <Tooltip title={strings.VIEW}>
-                            <IconButton href={`booking?b=${params.row._id}`} target='_blank' rel='noreferrer'>
-                                <ViewIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <>
+                            <Tooltip title={strings.VIEW}>
+                                <IconButton href={`booking?b=${params.row._id}`} target='_blank' rel='noreferrer'>
+                                    <ViewIcon />
+                                </IconButton>
+                            </Tooltip>
+                            {params.row.cancellation && !params.row.cancelRequest &&
+                                <Tooltip title={strings.CANCEL}>
+                                    <IconButton onClick={cancelBooking}>
+                                        <CancelIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                        </>
                     );
                 },
             }
@@ -139,6 +165,38 @@ class BookingList extends Component {
 
         return columns;
     }
+
+    handleCancelCancelBooking = () => {
+        const { cancelRequestSent } = this.state;
+        this.setState({ openCancelDialog: false }, () => {
+            if (cancelRequestSent) {
+                setTimeout(() => {
+                    this.setState({ cancelRequestSent: false });
+                }, 500);
+            }
+        });
+    };
+
+    handleConfirmCancelBooking = async () => {
+        try {
+            const { rows, selectedId } = this.state;
+
+            this.setState({ cancelRequestProcessing: true });
+            const status = await BookingService.cancel(selectedId);
+            if (status === 200) {
+                const row = rows.find(r => r._id === selectedId);
+                row.cancelRequest = true;
+
+                this.setState({ cancelRequestSent: true, rows, selectedId: '', cancelRequestProcessing: false });
+            } else {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
+            }
+        } catch (err) {
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
+        }
+    };
 
     fetch = () => {
         const { companies, statuses, filter, car, page, user, rows } = this.state;
@@ -261,7 +319,10 @@ class BookingList extends Component {
             loading,
             page,
             pageSize,
-            user
+            user,
+            openCancelDialog,
+            cancelRequestSent,
+            cancelRequestProcessing
         } = this.state;
 
         const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
@@ -398,16 +459,17 @@ class BookingList extends Component {
 
                                             <div className='bs-buttons'>
 
-                                                {/* <Button
-                                                    variant="contained"
-                                                    className='btn-secondary'
-                                                    size="small"
-                                                    href={`booking?b=${booking._id}`}
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    {commonStrings.VIEW}
-                                                </Button> */}
+                                                {booking.cancellation && !booking.cancelRequest &&
+                                                    <Button
+                                                        variant="contained"
+                                                        className='btn-secondary'
+                                                        onClick={() => {
+                                                            this.setState({ selectedId: booking._id, openCancelDialog: true });
+                                                        }}
+                                                    >
+                                                        {strings.CANCEL}
+                                                    </Button>
+                                                }
 
                                             </div>
                                         </div>
@@ -437,6 +499,35 @@ class BookingList extends Component {
                                 disableSelectionOnClick
                             />)
                 }
+
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openCancelDialog}
+                >
+                    <DialogTitle className='dialog-header'>{!cancelRequestSent && !cancelRequestProcessing && commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent className='dialog-content'>
+                        {
+                            cancelRequestProcessing ? <Stack sx={{ color: '#f37022' }}><CircularProgress color='inherit' /></Stack>
+                                : cancelRequestSent ? strings.CANCEL_BOOKING_REQUEST_SENT
+                                    : strings.CANCEL_BOOKING
+                        }
+                    </DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        {
+                            !cancelRequestProcessing &&
+                            <Button onClick={this.handleCancelCancelBooking} variant='contained' className='btn-secondary'>
+                                {cancelRequestSent ? commonStrings.CLOSE : commonStrings.CANCEL}
+                            </Button>
+                        }
+                        {
+                            !cancelRequestSent && !cancelRequestProcessing &&
+                            <Button onClick={this.handleConfirmCancelBooking} variant='contained' className='btn-primary'>
+                                {commonStrings.CONFIRM}
+                            </Button>
+                        }
+                    </DialogActions>
+                </Dialog>
 
                 {loading && <Backdrop text={commonStrings.LOADING} />}
             </div>
