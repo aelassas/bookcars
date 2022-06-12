@@ -3,7 +3,6 @@ import Env from '../config/env.config';
 import { strings } from '../lang/header';
 import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
-import MessageService from '../services/MessageService';
 import { toast } from 'react-toastify';
 import { Avatar } from './Avatar';
 import {
@@ -30,11 +29,9 @@ import {
     Language as LanguageIcon,
     Settings as SettingsIcon,
     Dashboard as DashboardIcon,
-    // Home as HomeIcon,
     CorporateFare as CompaniesIcon,
     LocationOn as LocationsIcon,
     DirectionsCar as CarsIcon,
-    //EventSeat as BookingsIcon,
     People as UsersIcon,
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
@@ -47,7 +44,6 @@ const ListItemLink = (props) => (
 );
 
 export default function Header(props) {
-
     const [currentLanguage, setCurrentLanguage] = useState(null);
     const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -56,11 +52,9 @@ export default function Header(props) {
     const [sideAnchorEl, setSideAnchorEl] = useState(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [notificationsCount, setNotificationsCount] = useState(0);
-    const [messagesCount, setMessagesCount] = useState(0);
     const [init, setInit] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
-    // const [admin, setIsAdmin] = useState(false);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -99,14 +93,6 @@ export default function Header(props) {
     };
 
     const refreshPage = () => {
-        // let params = new URLSearchParams(window.location.search);
-
-        // if (params.has('l')) {
-        //     params.delete('l');
-        //     window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '');
-        // } else {
-        //     window.location.reload();
-        // }
         window.location.reload();
     };
 
@@ -179,10 +165,6 @@ export default function Header(props) {
         setSideAnchorEl(null);
     };
 
-    const handleMessagesClick = (e) => {
-        window.location.href = '/messages';
-    };
-
     const handleNotificationsClick = (e) => {
         window.location.href = '/notifications';
     };
@@ -193,11 +175,6 @@ export default function Header(props) {
             setIsLoading(true);
 
             let countUpdated = false;
-            if (init && (props.messagesCount !== undefined)) {
-                setMessagesCount(props.messagesCount);
-                countUpdated = true;
-            }
-
             if (init && (props.notificationsCount !== undefined)) {
                 setNotificationsCount(props.notificationsCount);
                 countUpdated = true;
@@ -224,16 +201,11 @@ export default function Header(props) {
             if (!init && props.user) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
-                        MessageService.getMessageCounter(props.user._id)
-                            .then(messageCounter => {
-                                setIsSignedIn(true);
-                                // setIsAdmin(Helper.admin(props.user));
-                                setNotificationsCount(notificationCounter.count);
-                                setMessagesCount(messageCounter.count);
-                                setIsLoading(false);
-                                setIsLoaded(true);
-                                setInit(true);
-                            });
+                        setIsSignedIn(true);
+                        setNotificationsCount(notificationCounter.count);
+                        setIsLoading(false);
+                        setIsLoaded(true);
+                        setInit(true);
                     });
             } else {
                 const currentUser = UserService.getCurrentUser();
@@ -280,9 +252,6 @@ export default function Header(props) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem onClick={handleOnSettingsClick}>
-                {/* <IconButton color="inherit">
-                    <Avatar record={props.user} size="small" readonly />
-                </IconButton> */}
                 <SettingsIcon className="header-action" />
                 <p>{strings.SETTINGS}</p>
             </MenuItem>
@@ -345,10 +314,6 @@ export default function Header(props) {
                                     <ListItemIcon>{<CarsIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.CARS} />
                                 </ListItemLink>
-                                {/* <ListItemLink href="/bookings">
-                                    <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
-                                    <ListItemText primary={strings.BOOKINGS} />
-                                </ListItemLink> */}
                                 <ListItemLink href="/users">
                                     <ListItemIcon>{<UsersIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.USERS} />
@@ -370,67 +335,63 @@ export default function Header(props) {
                     </React.Fragment>
                     <div style={classes.grow} />
                     <div className='header-desktop'>
-                        {isSignedIn && <IconButton aria-label="" color="inherit" onClick={handleMessagesClick}>
-                            <Badge badgeContent={messagesCount > 0 ? messagesCount : null} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>}
-                        {isSignedIn && <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                            <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>}
-                        {((isLoaded || !init) && !loading) && <Button
-                            variant="contained"
-                            startIcon={<LanguageIcon />}
-                            onClick={handleLangMenuOpen}
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                        >
-                            {getLang(lang)}
-                        </Button>}
-                        {isSignedIn && <IconButton
-                            edge="end"
-                            aria-label="account"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleAccountMenuOpen}
-                            color="inherit"
-                        >
-                            <Avatar record={props.user} type={props.user.type} size="small" readonly />
-                        </IconButton>}
+                        {isSignedIn &&
+                            <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
+                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>}
+                        {((isLoaded || !init) && !loading) &&
+                            <Button
+                                variant="contained"
+                                startIcon={<LanguageIcon />}
+                                onClick={handleLangMenuOpen}
+                                disableElevation
+                                fullWidth
+                                className="btn-primary"
+                            >
+                                {getLang(lang)}
+                            </Button>}
+                        {isSignedIn &&
+                            <IconButton
+                                edge="end"
+                                aria-label="account"
+                                aria-controls={menuId}
+                                aria-haspopup="true"
+                                onClick={handleAccountMenuOpen}
+                                color="inherit"
+                            >
+                                <Avatar record={props.user} type={props.user.type} size="small" readonly />
+                            </IconButton>}
                     </div>
                     <div className='header-mobile'>
-                        {(!isSignedIn && !loading && !init) && <Button
-                            variant="contained"
-                            startIcon={<LanguageIcon />}
-                            onClick={handleLangMenuOpen}
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                        >
-                            {getLang(lang)}
-                        </Button>}
-                        {isSignedIn && <IconButton color="inherit" onClick={handleMessagesClick}>
-                            <Badge badgeContent={messagesCount > 0 ? messagesCount : null} color="secondary" >
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>}
-                        {isSignedIn && <IconButton color="inherit" onClick={handleNotificationsClick}>
-                            <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>}
-                        {isSignedIn && <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>}
+                        {(!isSignedIn && !loading && !init) &&
+                            <Button
+                                variant="contained"
+                                startIcon={<LanguageIcon />}
+                                onClick={handleLangMenuOpen}
+                                disableElevation
+                                fullWidth
+                                className="btn-primary"
+                            >
+                                {getLang(lang)}
+                            </Button>}
+                        {isSignedIn &&
+                            <IconButton color="inherit" onClick={handleNotificationsClick}>
+                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>}
+                        {isSignedIn &&
+                            <IconButton
+                                aria-label="show more"
+                                aria-controls={mobileMenuId}
+                                aria-haspopup="true"
+                                onClick={handleMobileMenuOpen}
+                                color="inherit"
+                            >
+                                <MoreIcon />
+                            </IconButton>}
                     </div>
                 </Toolbar>
             </AppBar>
