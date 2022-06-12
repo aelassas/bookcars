@@ -83,6 +83,7 @@ export default class Bookings extends Component {
                                 width='100%'
                                 height='100%'
                                 user={user}
+                                language={user.language}
                                 companies={companies}
                                 statuses={statuses}
                                 filter={filter}

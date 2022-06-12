@@ -74,7 +74,9 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE_NOT_VALID_PART1: 'Vous devez avoir au moins',
         BIRTH_DATE_NOT_VALID_PART2: 'ans pour louer cette voiture.',
         SUPPLIER: 'Fournisseur',
-        STATUS: 'Statut'
+        STATUS: 'Statut',
+        OPTIONS: 'Options',
+        VIEW: 'Consulter'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -147,7 +149,9 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE_NOT_VALID_PART1: 'You must be at least',
         BIRTH_DATE_NOT_VALID_PART2: 'years old to rent this car.',
         SUPPLIER: 'Supplier',
-        STATUS: 'Status'
+        STATUS: 'Status',
+        OPTIONS: 'Options',
+        VIEW: 'View'
     }
 });
 

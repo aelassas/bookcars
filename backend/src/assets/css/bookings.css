@@ -9,13 +9,38 @@ div.bookings {
 /* Device width is lower than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.bookings div.col-1 {
-        display: none;
+    div.bookings div.col-1 {}
+
+    div.bookings div.col-1 .cl-company-filter label.accordion,
+    div.bookings div.col-1 .cl-status-filter label.accordion,
+    div.bookings div.col-1 .cl-booking-filter label.accordion {
+        background: #fff;
     }
 
-    div.bookings div.col-2 {
-        width: 100%;
-        height: 100%;
+    div.bookings div.col-1 .cl-company-filter,
+    div.bookings div.col-1 .cl-status-filter,
+    div.bookings div.col-1 .cl-booking-filter {
+        margin: 10px;
+        background-color: #fff;
+    }
+
+    div.bookings div.col-1 .cl-booking-filter div.panel {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    div.bookings div.col-1 .cl-status-filter,
+    div.bookings div.col-1 .cl-booking-filter {
+        margin-bottom: 10px;
+    }
+
+    div.bookings div.col-1 .cl-new-booking {
+        width: calc(100% - 20px);
+        margin: 15px 10px 5px 10px;
+    }
+
+    div.bookings {
+        overflow-y: auto;
     }
 }
 
@@ -33,22 +58,22 @@ div.bookings {
         overflow: auto;
     }
 
-    div.bookings div.col-1 .cl-company-filter label.accordion {
+    div.bookings div.col-1 .cl-company-filter label.accordion,
+    div.bookings div.col-1 .cl-status-filter label.accordion,
+    div.bookings div.col-1 .cl-booking-filter label.accordion {
         background: #fafafa;
     }
 
-    div.bookings div.col-1 .cl-company-filter {
+    div.bookings div.col-1 .cl-company-filter,
+    div.bookings div.col-1 .cl-status-filter,
+    div.bookings div.col-1 .cl-booking-filter {
         margin: 10px 10px 10px 0;
         background-color: #fafafa;
     }
 
-    div.bookings div.col-1 .cl-status-filter label.accordion {
-        background: #fafafa;
-    }
-
-    div.bookings div.col-1 .cl-status-filter {
-        margin: 10px 10px 10px 0;
-        background-color: #fafafa;
+    div.bookings div.col-1 .cl-booking-filter div.panel {
+        padding-right: 15px;
+        padding-left: 15px;
     }
 
     div.bookings div.col-1 .cl-status-filter,

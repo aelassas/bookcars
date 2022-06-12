@@ -7,6 +7,7 @@ import { FormControl, TextField, Button, IconButton } from '@mui/material';
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import '../assets/css/booking-filter.css';
+import Accordion from './Accordion';
 
 class BookingFilter extends Component {
 
@@ -55,7 +56,11 @@ class BookingFilter extends Component {
         const { keyword, minDate } = this.state;
 
         return (
-            <div className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}>
+            <Accordion
+                title={commonStrings.SEARCH}
+                collapse={this.props.collapse}
+                className={`${this.props.className ? `${this.props.className} ` : ''}booking-filter`}
+            >
                 <form onSubmit={this.handleSubmit}>
                     <FormControl fullWidth margin="dense">
                         <DatePicker
@@ -121,7 +126,7 @@ class BookingFilter extends Component {
                         {commonStrings.SEARCH}
                     </Button>
                 </form>
-            </div >
+            </Accordion>
         );
     }
 }

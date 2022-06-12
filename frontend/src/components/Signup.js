@@ -452,7 +452,7 @@ export default class SignUp extends Component {
                                                         />
                                                     </td>
                                                     <td>
-                                                        <Link href="/tos" target="_blank">{commonStrings.TOS}</Link>
+                                                        <Link href="/tos" target="_blank" rel="noreferrer">{commonStrings.TOS}</Link>
                                                     </td>
                                                 </tr>
                                             </tbody>

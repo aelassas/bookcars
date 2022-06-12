@@ -190,7 +190,7 @@
 
 
 @media only screen and (max-width: 960px) {
-    .content {
+    div.content {
         position: absolute;
         top: 55px;
         right: 0;
@@ -219,7 +219,7 @@
 
 @media only screen and (min-width: 960px) {
 
-    .content {
+    div.content {
         position: absolute;
         top: 65px;
         right: 0;

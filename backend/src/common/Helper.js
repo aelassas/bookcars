@@ -374,5 +374,77 @@ export default class Helper {
     static getDays(days) {
         return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
     }
+
+    // ---
+
+    static getDaysShort(days) {
+        return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`;
+    }
+
+    static getCancellationOption(cancellation, fr, hidePlus) {
+        if (cancellation === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (cancellation === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `${hidePlus ? '' : '+ '}${cancellation} ${commonStrings.CURRENCY}`;
+        }
+    }
+
+    static getAmendmentsOption(amendments, fr, hidePlus) {
+        if (amendments === -1) {
+            return `${strings.UNAVAILABLE}${fr ? 's' : ''}`;
+        }
+        else if (amendments === 0) {
+            return `${strings.INCLUDED}${fr ? 'es' : ''}`;
+        } else {
+            return `${hidePlus ? '' : '+ '}${amendments} ${commonStrings.CURRENCY}`;
+        }
+    }
+
+    static getCollisionDamageWaiverOption(collisionDamageWaiver, days, fr, hidePlus) {
+        if (collisionDamageWaiver === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (collisionDamageWaiver === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `${hidePlus ? '' : '+ '}${collisionDamageWaiver * days} ${commonStrings.CURRENCY} (${collisionDamageWaiver} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getTheftProtectionOption(theftProtection, days, fr, hidePlus) {
+        if (theftProtection === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (theftProtection === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `${hidePlus ? '' : '+ '}${theftProtection * days} ${commonStrings.CURRENCY} (${theftProtection} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getFullInsuranceOption(fullInsurance, days, fr, hidePlus) {
+        if (fullInsurance === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (fullInsurance === 0) {
+            return `${strings.INCLUDED}${fr ? 'e' : ''}`;
+        } else {
+            return `${hidePlus ? '' : '+ '}${fullInsurance * days} ${commonStrings.CURRENCY} (${fullInsurance} ${strings.CAR_CURRENCY})`;
+        }
+    }
+
+    static getAdditionalDriverOption(additionalDriver, days, fr, hidePlus) {
+        if (additionalDriver === -1) {
+            return strings.UNAVAILABLE;
+        }
+        else if (additionalDriver === 0) {
+            return strings.INCLUDED;
+        } else {
+            return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${commonStrings.CURRENCY} (${additionalDriver} ${strings.CAR_CURRENCY})`;
+        }
+    }
 }
 

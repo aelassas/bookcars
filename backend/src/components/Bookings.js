@@ -78,6 +78,8 @@ export default class Bookings extends Component {
                                     className='btn-primary cl-new-booking'
                                     size="small"
                                     href='/create-booking'
+                                    target='_blank'
+                                    rel='noreferrer'
                                 >
                                     {strings.NEW_BOOKING}
                                 </Button>
@@ -107,6 +109,7 @@ export default class Bookings extends Component {
                             <BookingList
                                 width='100%'
                                 height='100%'
+                                language={user.language}
                                 loggedUser={user}
                                 companies={companies}
                                 statuses={statuses}
