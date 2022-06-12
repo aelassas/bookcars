@@ -279,7 +279,7 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
         const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null;
         const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
         const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null;
-        const keyword = escapeStringRegexp((req.body.filter && req.body.filter.keyword) || '');
+        let keyword = (req.body.filter && req.body.filter.keyword) || '';
         const options = 'i';
 
         const $match = {
@@ -295,13 +295,20 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
         if (pickupLocation) $match.$and.push({ 'pickupLocation._id': { $eq: mongoose.Types.ObjectId(pickupLocation) } });
         if (dropOffLocation) $match.$and.push({ 'dropOffLocation._id': { $eq: mongoose.Types.ObjectId(dropOffLocation) } });
         if (keyword) {
-            $match.$and.push({
-                $or: [
-                    { 'company.fullName': { $regex: keyword, $options: options } },
-                    { 'driver.fullName': { $regex: keyword, $options: options } },
-                    { 'car.name': { $regex: keyword, $options: options } }
-                ]
-            });
+            const isObjectId = mongoose.isValidObjectId(keyword);
+            if (isObjectId) {
+                $match.$and.push({ '_id': { $eq: mongoose.Types.ObjectId(keyword) } });
+            } else {
+                keyword = escapeStringRegexp(keyword);
+                $match.$and.push({
+                    $or: [
+                        { 'company.fullName': { $regex: keyword, $options: options } },
+                        { 'driver.fullName': { $regex: keyword, $options: options } },
+                        { 'car.name': { $regex: keyword, $options: options } }
+                    ]
+                });
+            }
+
         }
 
         const data = await Booking.aggregate([
