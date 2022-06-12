@@ -3,7 +3,6 @@ import Env from '../config/env.config';
 import { strings } from '../lang/header';
 import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
-import MessageService from '../services/MessageService';
 import { toast } from 'react-toastify';
 import { Avatar } from './Avatar';
 import {
@@ -53,7 +52,6 @@ export default function Header(props) {
     const [sideAnchorEl, setSideAnchorEl] = useState(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [notificationsCount, setNotificationsCount] = useState(0);
-    const [messagesCount, setMessagesCount] = useState(0);
     const [init, setInit] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -174,10 +172,6 @@ export default function Header(props) {
         setSideAnchorEl(null);
     };
 
-    const handleMessagesClick = (e) => {
-        window.location.href = '/messages';
-    };
-
     const handleNotificationsClick = (e) => {
         window.location.href = '/notifications';
     };
@@ -188,11 +182,6 @@ export default function Header(props) {
             setIsLoading(true);
 
             let countUpdated = false;
-            if (init && (props.messagesCount !== undefined)) {
-                setMessagesCount(props.messagesCount);
-                countUpdated = true;
-            }
-
             if (init && (props.notificationsCount !== undefined)) {
                 setNotificationsCount(props.notificationsCount);
                 countUpdated = true;
@@ -219,15 +208,11 @@ export default function Header(props) {
             if (!init && props.user) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
-                        MessageService.getMessageCounter(props.user._id)
-                            .then(messageCounter => {
-                                setIsSignedIn(true);
-                                setNotificationsCount(notificationCounter.count);
-                                setMessagesCount(messageCounter.count);
-                                setIsLoading(false);
-                                setIsLoaded(true);
-                                setInit(true);
-                            });
+                        setIsSignedIn(true);
+                        setNotificationsCount(notificationCounter.count);
+                        setIsLoading(false);
+                        setIsLoaded(true);
+                        setInit(true);
                     });
             } else {
                 const currentUser = UserService.getCurrentUser();
@@ -253,9 +238,6 @@ export default function Header(props) {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleOnSettingsClick}>
-                {/* {
-                    <Avatar loggedUser={props.user} user={props.user} size="small" className="header-action" readonly />
-                } */}
                 <SettingsIcon className="header-action" />
                 {strings.SETTINGS}
             </MenuItem>
@@ -278,9 +260,6 @@ export default function Header(props) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem onClick={handleOnSettingsClick}>
-                {/* <IconButton color="inherit">
-                    <Avatar loggedUser={props.user} user={props.user} size="small" readonly />
-                </IconButton> */}
                 <SettingsIcon className="header-action" />
                 <p>{strings.SETTINGS}</p>
             </MenuItem>
@@ -367,16 +346,12 @@ export default function Header(props) {
                     </React.Fragment>
                     <div style={classes.grow} />
                     <div className='header-desktop'>
-                        {isSignedIn && <IconButton aria-label="" color="inherit" onClick={handleMessagesClick}>
-                            <Badge badgeContent={messagesCount > 0 ? messagesCount : null} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>}
-                        {isSignedIn && <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                            <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>}
+                        {isSignedIn &&
+                            <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
+                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>}
                         {(!props.hideSignin && !isSignedIn && isLoaded && !loading) && <Button
                             variant="contained"
                             startIcon={<LoginIcon />}
@@ -411,26 +386,24 @@ export default function Header(props) {
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
-                        {(!isSignedIn && !loading && !init) && <Button
-                            variant="contained"
-                            startIcon={<LanguageIcon />}
-                            onClick={handleLangMenuOpen}
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                        >
-                            {getLang(lang)}
-                        </Button>}
-                        {isSignedIn && <IconButton color="inherit" onClick={handleMessagesClick}>
-                            <Badge badgeContent={messagesCount > 0 ? messagesCount : null} color="secondary" >
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>}
+                        {(!isSignedIn && !loading && !init) &&
+                            <Button
+                                variant="contained"
+                                startIcon={<LanguageIcon />}
+                                onClick={handleLangMenuOpen}
+                                disableElevation
+                                fullWidth
+                                className="btn-primary"
+                            >
+                                {getLang(lang)}
+                            </Button>
+                        }
                         {isSignedIn && <IconButton color="inherit" onClick={handleNotificationsClick}>
                             <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
                                 <NotificationsIcon />
                             </Badge>
-                        </IconButton>}
+                        </IconButton>
+                        }
                         {isSignedIn && <IconButton
                             aria-label="show more"
                             aria-controls={mobileMenuId}
@@ -439,7 +412,8 @@ export default function Header(props) {
                             color="inherit"
                         >
                             <MoreIcon />
-                        </IconButton>}
+                        </IconButton>
+                        }
                     </div>
                 </Toolbar>
             </AppBar>
