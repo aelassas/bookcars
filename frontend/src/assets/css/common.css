@@ -215,6 +215,10 @@
     .btn-margin {
         margin-right: 0 !important;
     }
+
+    .d-adornment {
+        margin-right: -3px;
+    }
 }
 
 @media only screen and (min-width: 960px) {

@@ -24,7 +24,8 @@ div.bookings {
         background-color: #fff;
     }
 
-    div.bookings div.col-1 .cl-booking-filter div.panel {
+    div.bookings div.col-1 .cl-booking-filter div.panel,
+    div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
         padding-right: 15px;
         padding-left: 15px;
     }
@@ -71,7 +72,8 @@ div.bookings {
         background-color: #fafafa;
     }
 
-    div.bookings div.col-1 .cl-booking-filter div.panel {
+    div.bookings div.col-1 .cl-booking-filter div.panel,
+    div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
         padding-right: 15px;
         padding-left: 15px;
     }
