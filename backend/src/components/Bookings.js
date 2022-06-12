@@ -61,9 +61,6 @@ export default class Bookings extends Component {
         this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin });
     };
 
-    componentDidMount() {
-    }
-
     render() {
         const { user, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies } = this.state;
 
