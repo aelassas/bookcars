@@ -34,7 +34,6 @@ export default function Accordion(props) {
         },
         titleContainer: {
             flex: 1,
-            display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
