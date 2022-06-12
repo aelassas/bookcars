@@ -71,6 +71,10 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value {
     display: table-cell;
 }
 
+div.booking div.booking-details div.booking-detail div.booking-detail-value {
+    color: rgba(0, 0, 0, 0.55);
+}
+
 div.booking div.booking-details div.booking-detail label.booking-detail-title {
     font-weight: 700;
     width: 250px;
@@ -213,14 +217,23 @@ div.booking .btn-cancel {
 
 @media only screen and (max-width: 960px) {
     div.booking .booking-form {
-        margin: 45px 0 20px calc(50% - 175px);
-        width: 350px;
         padding: 30px;
+        margin: 10px;
     }
 
     div.booking .btn-book,
     div.booking .btn-cancel {
         width: 100%;
+    }
+
+    div.booking div.booking-options span.booking-option-value,
+    div.booking div.booking-details div.booking-detail label.booking-detail-title,
+    div.booking div.booking-details div.booking-detail div.booking-detail-value {
+        display: table-row;
+    }
+
+    div.booking div.booking-details div.booking-detail div.booking-detail-value {
+        line-height: 25px;
     }
 }
 
