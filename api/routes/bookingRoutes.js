@@ -19,6 +19,7 @@ const SMTP_USER = process.env.BC_SMTP_USER;
 const SMTP_PASS = process.env.BC_SMTP_PASS;
 const SMTP_FROM = process.env.BC_SMTP_FROM;
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
+const BACKEND_HOST = process.env.BC_BACKEND_HOST;
 
 const routes = express.Router();
 
@@ -487,6 +488,51 @@ routes.route(routeNames.bookingsMaxDate).get(authJwt.verifyToken, (req, res) => 
         })
         .catch(err => {
             console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${req.params.driver}`, err);
+            return res.status(400).send(strings.DB_ERROR + err);
+        });
+});
+
+routes.route(routeNames.cancelBooking).post(authJwt.verifyToken, (req, res) => {
+    Booking.findOne({ _id: mongoose.Types.ObjectId(req.params.id) })
+        .populate('company')
+        .populate('driver')
+        .then(async booking => {
+            if (booking && booking.cancellation && !booking.cancelRequest) {
+
+                const transporter = nodemailer.createTransport({
+                    host: SMTP_HOST,
+                    port: SMTP_PORT,
+                    auth: {
+                        user: SMTP_USER,
+                        pass: SMTP_PASS
+                    }
+                });
+
+                strings.setLanguage(booking.company.language);
+
+                const mailOptions = {
+                    from: SMTP_FROM,
+                    to: booking.company.email,
+                    subject: `${strings.CANCEL_BOOKING_SUBJECT} ${booking._id}`,
+                    html: '<p>' + strings.HELLO + booking.company.fullName + ',<br><br>'
+                        + strings.CANCEL_BOOKING_PART1 + booking.driver.fullName + strings.CANCEL_BOOKING_PART2 + '<br><br>'
+
+                        + Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)
+                        + '<br><br>'
+
+                        + strings.REGARDS + '<br>'
+                        + '</p>'
+                };
+                await transporter.sendMail(mailOptions);
+
+                booking.cancelRequest = true;
+                await booking.save();
+                return res.sendStatus(200);
+            }
+            return res.sendStatus(204);
+        })
+        .catch(err => {
+            console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${req.params.id}`, err);
             return res.status(400).send(strings.DB_ERROR + err);
         });
 });
