@@ -42,6 +42,15 @@ div.bookings {
         background-color: #fafafa;
     }
 
+    div.bookings div.col-1 .cl-status-filter label.accordion {
+        background: #fafafa;
+    }
+
+    div.bookings div.col-1 .cl-status-filter {
+        margin: 10px 10px 10px 0;
+        background-color: #fafafa;
+    }
+
     div.bookings div.col-1 .cl-status-filter,
     div.bookings div.col-1 .cl-booking-filter {
         margin-bottom: 10px;

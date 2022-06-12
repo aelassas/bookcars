@@ -66,7 +66,8 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
         FORM_ERROR: 'Veuillez corriger les erreurs.',
         ALL: 'Tous',
-        SUPPLIER: 'Fournisseur'
+        SUPPLIER: 'Fournisseur',
+        STATUS: 'Statut'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -131,7 +132,8 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE_NOT_VALID: 'The driver must be at least ' + Env.MINIMUM_AGE + ' years old.',
         FORM_ERROR: 'Please fix errors.',
         ALL: 'All',
-        SUPPLIER: 'Supplier'
+        SUPPLIER: 'Supplier',
+        STATUS: 'Status'
     }
 });
 

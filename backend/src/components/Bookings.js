@@ -15,7 +15,6 @@ import {
 
 import '../assets/css/bookings.css';
 
-
 export default class Bookings extends Component {
 
     constructor(props) {
