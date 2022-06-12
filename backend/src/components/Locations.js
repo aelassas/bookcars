@@ -46,11 +46,7 @@ export default class Locations extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='locations'>
                     <div className='col-1'>
-                        <Search onSubmit={this.handleSearch} />
-
-                        {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
-                        }
+                        <Search className='search' onSubmit={this.handleSearch} />
 
                         {rowCount > -1 &&
                             <Button
@@ -61,6 +57,10 @@ export default class Locations extends Component {
                             >
                                 {strings.NEW_LOCATION}
                             </Button>
+                        }
+
+                        {rowCount > 0 &&
+                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
                         }
                     </div>
                     <div className='col-2'>

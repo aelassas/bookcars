@@ -4,35 +4,35 @@ div.companies {
     bottom: 0;
     right: 0;
     left: 0;
+    overflow: auto;
 }
 
-div.companies div.search {
-    width: 235px;
+div.companies .search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-div.companies div.info-box {
-    margin-right: 10px;
-}
-
-div.companies .new-company {
-    width: 270px;
-    margin: 5px 5px 0 0;
+div.companies .info-box {
+    background-color: #fff;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
     div.companies div.col-1 {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
         width: 100%;
-        height: 120px;
-        padding-left: calc(50% - 135px);
-        padding-top: 5px;
-        background: #fefefe;
-        border-bottom: #eee solid 1px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    div.companies .sc-search {
+        width: 80%;
+    }
+
+    div.companies .new-company {
+        margin: 20px 5px 5px 0;
+        width: 100%;
     }
 
     div.companies div.col-1 .company-count {
@@ -40,12 +40,8 @@ div.companies .new-company {
     }
 
     div.companies div.col-2 {
-        position: absolute;
-        top: 125px;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        overflow: auto;
+        margin-top: 3px;
+        padding: 1px;
     }
 }
 
@@ -53,22 +49,23 @@ div.companies .new-company {
 
 @media only screen and (min-width: 960px) {
     div.companies div.col-1 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
+        float: left;
         width: 300px;
-        padding: 20px 0 0 20px;
-        background: #fefefe;
-        border-right: #eee solid 1px;
+        margin-left: 20px;
     }
 
     div.companies div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 300px;
-        overflow: auto;
+        float: left;
+        width: calc(100% - 320px);
+        margin-bottom: 50px;
+    }
+
+    div.companies .search {
+        margin-top: 15px;
+    }
+
+    div.companies .new-company {
+        margin: 10px 5px 0 0;
+        width: 100%;
     }
 }

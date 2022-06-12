@@ -21,12 +21,7 @@ div.cars div.col-1 div.info-box {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.cars {
-        overflow: auto;
-    }
-
-    div.cars .sc-search,
-    div.cars .new-car {
+    div.cars .sc-search {
         width: 80%;
     }
 
