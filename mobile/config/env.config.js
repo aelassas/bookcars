@@ -25,9 +25,9 @@ const Env = {
         FR: 'fr',
         EN: 'en'
     },
-    PAGE_SIZE: parseInt(BC_PAGE_SIZE || 30),
-    CARS_PAGE_SIZE: parseInt(BC_CARS_PAGE_SIZE || 10),
-    BOOKINGS_PAGE_SIZE: parseInt(BC_BOOKINGS_PAGE_SIZE || 20),
+    PAGE_SIZE: parseInt(BC_PAGE_SIZE || 20),
+    CARS_PAGE_SIZE: parseInt(BC_CARS_PAGE_SIZE || 8),
+    BOOKINGS_PAGE_SIZE: parseInt(BC_BOOKINGS_PAGE_SIZE || 8),
     CDN_USERS: BC_CDN_USERS,
     CDN_CARS: BC_CDN_CARS,
     PAGE_OFFSET: 200,
