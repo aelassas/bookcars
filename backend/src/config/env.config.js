@@ -6,7 +6,6 @@ const Env = {
     API_HOST: process.env.REACT_APP_BC_API_HOST,
     LANGUAGES: ['fr', 'en'],
     DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'fr',
-    DATE_FORMAT: process.env.REACT_APP_BC_DATE_FORMAT || 'llll',
     PAGE_SIZE: parseInt(process.env.REACT_APP_BC_PAGE_SIZE || 30),
     CARS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_CARS_PAGE_SIZE || 15),
     BOOKINGS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_BOOKINGS_PAGE_SIZE || 20),
