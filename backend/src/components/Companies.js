@@ -52,11 +52,7 @@ export default class Companies extends Component {
                 {user &&
                     <div className='companies'>
                         <div className='col-1'>
-                            <Search onSubmit={this.handleSearch} />
-
-                            {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
-                            }
+                            <Search className='search' onSubmit={this.handleSearch} />
 
                             {rowCount > -1 && admin &&
                                 <Button
@@ -68,6 +64,10 @@ export default class Companies extends Component {
                                 >
                                     {strings.NEW_COMPANY}
                                 </Button>
+                            }
+
+                            {rowCount > 0 &&
+                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
                             }
                         </div>
                         <div className='col-2'>
