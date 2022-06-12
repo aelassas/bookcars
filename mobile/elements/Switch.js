@@ -18,7 +18,7 @@ export default function Switch(props) {
     };
 
     return (
-        <View style={{ ...styles.switch, ...props.style }}>
+        <View style={{ ...styles.container, ...props.style }}>
             <ReactSwitch
                 trackColor={{ true: '#f7b68f', false: '#9d9d9d' }}
                 thumbColor='#f37022'
@@ -41,7 +41,7 @@ export default function Switch(props) {
 }
 
 const styles = StyleSheet.create({
-    switch: {
+    container: {
         flexDirection: 'row',
         display: 'flex',
         alignItems: 'center',

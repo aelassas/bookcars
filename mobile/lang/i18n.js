@@ -185,9 +185,21 @@ i18n.translations = {
         CARD_DATE_ERROR: 'Date de carte non valide.',
         BOOKING_SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
         BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
-
         EMPTY_BOOKING_LIST: 'Pas de réservations.',
         OPTIONS: 'Options',
+
+        ENGINE: 'Moteur',
+        DIESEL: 'Diesel',
+        GASOLINE: 'Essence',
+
+        GEARBOX: 'Transmission',
+        GEARBOX_AUTOMATIC: 'Automatique',
+        GEARBOX_MANUAL: 'Manuelle',
+        ENGINE: 'Moteur',
+        DEPOSIT: 'Dépôt de garantie',
+        LESS_THAN_2500: 'Moins de 2500 DH',
+        LESS_THAN_5000: 'Moins de 5000 DH',
+        LESS_THAN_7500: 'Moins de 7500 DH'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -371,9 +383,21 @@ i18n.translations = {
         CARD_DATE_ERROR: 'Invalid card date.',
         BOOKING_SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.',
         BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
-
         EMPTY_BOOKING_LIST: 'No bookings.',
         OPTIONS: 'Options',
+
+        ENGINE: 'Engine',
+        DIESEL: 'Diesel',
+        GASOLINE: 'Gasoline',
+
+        GEARBOX: 'Gearbox',
+        GEARBOX_AUTOMATIC: 'Automatic',
+        GEARBOX_MANUAL: 'Manual',
+        ENGINE: 'Engine',
+        DEPOSIT: 'Deposit at pick-up',
+        LESS_THAN_2500: 'Less than 2500 DH',
+        LESS_THAN_5000: 'Less than 5000 DH',
+        LESS_THAN_7500: 'Less than 7500 DH'
     }
 };
 

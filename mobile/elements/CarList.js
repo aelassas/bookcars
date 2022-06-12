@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
-import CompanyService from '../services/CompanyService';
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
@@ -70,18 +69,50 @@ class CarList extends Component {
     )
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies } = prevState;
+        const { companies, fuel, gearbox, mileage, deposit } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
         }
 
+        if (nextProps.fuel && !Helper.arrayEqual(fuel, nextProps.fuel)) {
+            return { fuel: Helper.clone(nextProps.fuel) };
+        }
+
+        if (nextProps.gearbox && !Helper.arrayEqual(gearbox, nextProps.gearbox)) {
+            return { gearbox: Helper.clone(nextProps.gearbox) };
+        }
+
+        if (nextProps.mileage && !Helper.arrayEqual(mileage, nextProps.mileage)) {
+            return { mileage: nextProps.mileage };
+        }
+
+        if (deposit !== nextProps.deposit) {
+            return { deposit: nextProps.deposit };
+        }
+
         return null;
     }
     componentDidUpdate(prevProps, prevState) {
-        const { companies } = this.state;
+        const { companies, fuel, gearbox, mileage, deposit } = this.state;
 
         if (!Helper.arrayEqual(companies, prevState.companies)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(fuel, prevState.fuel)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(gearbox, prevState.gearbox)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (!Helper.arrayEqual(mileage, prevState.mileage)) {
+            return this.setState({ page: 1 }, () => this.fetch());
+        }
+
+        if (deposit !== prevState.deposit) {
             return this.setState({ page: 1 }, () => this.fetch());
         }
     }
