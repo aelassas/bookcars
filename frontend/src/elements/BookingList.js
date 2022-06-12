@@ -14,7 +14,6 @@ import {
 import {
     Tooltip,
     Link,
-    Button,
     IconButton,
     Card,
     CardContent,
@@ -333,57 +332,65 @@ class BookingList extends Component {
                                                 </div>
                                             </div>
 
-                                            <div className='extras'>
-                                                <label className='extras-title'>{commonStrings.OPTIONS}</label>
-                                                {booking.cancellation &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.CANCELLATION}</label>
-                                                        <label className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, fr, true)}</label>
-                                                    </div>
-                                                }
+                                            {(booking.cancellation
+                                                || booking.amendments
+                                                || booking.collisionDamageWaiver
+                                                || booking.theftProtection
+                                                || booking.fullInsurance
+                                                || booking.additionalDriver) &&
+                                                <>
+                                                    <div className='extras'>
+                                                        <label className='extras-title'>{commonStrings.OPTIONS}</label>
+                                                        {booking.cancellation &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.CANCELLATION}</label>
+                                                                <label className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, fr, true)}</label>
+                                                            </div>
+                                                        }
 
-                                                {booking.amendments &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.AMENDMENTS}</label>
-                                                        <label className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, fr, true)}</label>
-                                                    </div>
-                                                }
+                                                        {booking.amendments &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.AMENDMENTS}</label>
+                                                                <label className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, fr, true)}</label>
+                                                            </div>
+                                                        }
 
-                                                {booking.collisionDamageWaiver &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.COLLISION_DAMAGE_WAVER}</label>
-                                                        <label className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, fr, true)}</label>
-                                                    </div>
-                                                }
+                                                        {booking.collisionDamageWaiver &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.COLLISION_DAMAGE_WAVER}</label>
+                                                                <label className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, fr, true)}</label>
+                                                            </div>
+                                                        }
 
-                                                {booking.theftProtection &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.THEFT_PROTECTION}</label>
-                                                        <label className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, fr, true)}</label>
-                                                    </div>
-                                                }
+                                                        {booking.theftProtection &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.THEFT_PROTECTION}</label>
+                                                                <label className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, fr, true)}</label>
+                                                            </div>
+                                                        }
 
-                                                {booking.fullInsurance &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.FULL_INSURANCE}</label>
-                                                        <label className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, fr, true)}</label>
-                                                    </div>
-                                                }
+                                                        {booking.fullInsurance &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.FULL_INSURANCE}</label>
+                                                                <label className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, fr, true)}</label>
+                                                            </div>
+                                                        }
 
-                                                {booking.additionalDriver &&
-                                                    <div className='extra'>
-                                                        <CheckIcon className='extra-icon' />
-                                                        <label className='extra-title'>{csStrings.ADDITIONAL_DRIVER}</label>
-                                                        <label className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, fr, true)}</label>
+                                                        {booking.additionalDriver &&
+                                                            <div className='extra'>
+                                                                <CheckIcon className='extra-icon' />
+                                                                <label className='extra-title'>{csStrings.ADDITIONAL_DRIVER}</label>
+                                                                <label className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, fr, true)}</label>
+                                                            </div>
+                                                        }
                                                     </div>
-                                                }
-                                            </div>
-
+                                                </>
+                                            }
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.COST}</label>
                                                 <div className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
@@ -391,7 +398,7 @@ class BookingList extends Component {
 
                                             <div className='bs-buttons'>
 
-                                                <Button
+                                                {/* <Button
                                                     variant="contained"
                                                     className='btn-secondary'
                                                     size="small"
@@ -400,7 +407,7 @@ class BookingList extends Component {
                                                     rel='noreferrer'
                                                 >
                                                     {commonStrings.VIEW}
-                                                </Button>
+                                                </Button> */}
 
                                             </div>
                                         </div>
