@@ -3,6 +3,7 @@ import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 
 import '../assets/css/status-filter.css';
+import Accordion from './Accordion';
 
 class StatusFilter extends Component {
 
@@ -94,7 +95,11 @@ class StatusFilter extends Component {
 
         return (
             statuses.length > 0 ? (
-                <div className={`${this.props.className ? `${this.props.className} ` : ''}status-filter`}>
+                <Accordion
+                    title={commonStrings.STATUS}
+                    collapse={this.props.collapse}
+                    className={`${this.props.className ? `${this.props.className} ` : ''}status-filter`}
+                >
                     <ul className='status-list'>
                         {
                             statuses.map(status => (
@@ -110,7 +115,7 @@ class StatusFilter extends Component {
                             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
                         </span>
                     </div>
-                </div>
+                </Accordion>
             )
                 :
                 <></>

@@ -102,7 +102,12 @@ class CompanyFilter extends Component {
 
         return (
             companies.length > 0 ? (
-                <Accordion title={commonStrings.SUPPLIER} collapse={this.props.collapse} offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}>
+                <Accordion
+                    title={commonStrings.SUPPLIER}
+                    collapse={this.props.collapse}
+                    offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
+                    className={`${this.props.className ? `${this.props.className} ` : ''}company-filter`}
+                >
                     <ul className='company-list'>
                         {
                             companies.map(company => (
