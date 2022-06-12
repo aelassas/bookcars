@@ -3,6 +3,7 @@ div.status-filter {
     margin: 10px 10px 0 0;
     border: 1px solid #dadada;
     font-size: 13px;
+    text-align: center;
 }
 
 div.status-filter ul.status-list {
@@ -11,6 +12,7 @@ div.status-filter ul.status-list {
     margin: 15px 0 0 0;
     padding: 0;
     display: inline-block;
+    width: 300px;
 }
 
 div.status-filter ul.status-list li {

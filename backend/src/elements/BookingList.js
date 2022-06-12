@@ -43,6 +43,7 @@ class BookingList extends Component {
             loggedUser: null,
             user: null,
             page: 0,
+            pageSize: Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE,
             columns: [],
             rows: [],
             rowCount: 0,
@@ -290,8 +291,7 @@ class BookingList extends Component {
     };
 
     fetch = () => {
-        const { companies, statuses, filter, car, page, user, rows } = this.state;
-        const pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE;
+        const { companies, statuses, filter, car, page, user, rows, pageSize } = this.state;
 
         if (companies.length > 0) {
             this.setState({ loading: true });
@@ -314,6 +314,7 @@ class BookingList extends Component {
                             }
                         });
                     }
+
                 })
                 .catch((err) => {
                     UserService.signout();
@@ -544,7 +545,7 @@ class BookingList extends Component {
                                                     </div>
                                                 </>
                                             }
-                                            
+
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.COST}</label>
                                                 <div className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
