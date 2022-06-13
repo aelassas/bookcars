@@ -331,7 +331,7 @@ class BookingList extends Component {
         const fr = this.props.language === 'fr';
 
         return (
-            <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='bs-list' >
+            <div className='bs-list'>
 
                 {user && (
                     rows.length === 0 ?

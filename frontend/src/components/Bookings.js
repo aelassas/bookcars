@@ -63,26 +63,26 @@ export default class Bookings extends Component {
                 {user &&
                     <div className='bookings'>
                         <div className='col-1'>
-                            <CompanyFilter
-                                onLoad={this.handleCompanyFilterLoad}
-                                onChange={this.handleCompanyFilterChange}
-                                className='cl-company-filter'
-                            />
-                            <StatusFilter
-                                onChange={this.handleStatusFilterChange}
-                                className='cl-status-filter'
-                            />
-                            <BookingFilter
-                                onSubmit={this.handleBookingFilterSubmit}
-                                language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                className='cl-booking-filter'
-                                collapse={!Env.isMobile()}
-                            />
+                            <div>
+                                <CompanyFilter
+                                    onLoad={this.handleCompanyFilterLoad}
+                                    onChange={this.handleCompanyFilterChange}
+                                    className='cl-company-filter'
+                                />
+                                <StatusFilter
+                                    onChange={this.handleStatusFilterChange}
+                                    className='cl-status-filter'
+                                />
+                                <BookingFilter
+                                    onSubmit={this.handleBookingFilterSubmit}
+                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                    className='cl-booking-filter'
+                                    collapse={!Env.isMobile()}
+                                />
+                            </div>
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                width='100%'
-                                height='100%'
                                 user={user}
                                 language={user.language}
                                 companies={companies}

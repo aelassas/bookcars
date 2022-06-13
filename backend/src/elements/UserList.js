@@ -205,8 +205,8 @@ class BookingList extends Component {
             }
         ];
 
-        if (this.props.hideTypeColumn) {
-            columns.splice(3, 1);
+        if (this.props.hideDesktopColumns) {
+            columns.splice(1, 3);
         }
 
 
@@ -322,7 +322,7 @@ class BookingList extends Component {
         } = this.state;
 
         return (
-            <div style={{ width: this.props.width || '100%', height: this.props.height || 400 }} className='us-list' >
+            <div className='us-list' >
                 {user && columns.length > 0 &&
                     <DataGrid
                         checkboxSelection={this.props.checkboxSelection}

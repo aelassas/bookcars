@@ -103,39 +103,41 @@ export default class Cars extends Component {
                 {user &&
                     <div className='cars'>
                         <div className='col-1'>
-                            <Search onSubmit={this.handleSearch} className='search' />
+                            <div className='col-1-container'>
+                                <Search onSubmit={this.handleSearch} className='search' />
 
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                className='btn-primary new-car'
-                                size="small"
-                                href='/create-car'
-                            >
-                                {strings.NEW_CAR}
-                            </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary new-car'
+                                    size="small"
+                                    href='/create-car'
+                                >
+                                    {strings.NEW_CAR}
+                                </Button>
 
-                            {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
-                            }
+                                {rowCount > 0 &&
+                                    <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
+                                }
 
-                            <CompanyFilter
-                                onLoad={this.handleCompanyFilterLoad}
-                                onChange={this.handleCompanyFilterChange}
-                                collapse={!Env.isMobile()}
-                                className='filter'
-                            />
+                                <CompanyFilter
+                                    onLoad={this.handleCompanyFilterLoad}
+                                    onChange={this.handleCompanyFilterChange}
+                                    collapse={!Env.isMobile()}
+                                    className='filter'
+                                />
 
-                            {rowCount > -1 &&
-                                <>
+                                {rowCount > -1 &&
+                                    <>
 
-                                    <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
-                                    <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
-                                    <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
-                                    <DepositFilter className='car-filter' onChange={this.handleDepositFilterChange} />
-                                    <AvailabilityFilter className='car-filter' onChange={this.handleAvailabilityFilterChange} />
-                                </>
-                            }
+                                        <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
+                                        <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
+                                        <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
+                                        <DepositFilter className='car-filter' onChange={this.handleDepositFilterChange} />
+                                        <AvailabilityFilter className='car-filter' onChange={this.handleAvailabilityFilterChange} />
+                                    </>
+                                }
+                            </div>
                         </div>
                         <div className='col-2'>
                             <CarList

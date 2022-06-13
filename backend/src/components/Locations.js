@@ -46,22 +46,24 @@ export default class Locations extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 <div className='locations'>
                     <div className='col-1'>
-                        <Search className='search' onSubmit={this.handleSearch} />
+                        <div className='col-1-container'>
+                            <Search className='search' onSubmit={this.handleSearch} />
 
-                        {rowCount > -1 &&
-                            <Button
-                                variant="contained"
-                                className='btn-primary new-location'
-                                size="small"
-                                href='/create-location'
-                            >
-                                {strings.NEW_LOCATION}
-                            </Button>
-                        }
+                            {rowCount > -1 &&
+                                <Button
+                                    variant="contained"
+                                    className='btn-primary new-location'
+                                    size="small"
+                                    href='/create-location'
+                                >
+                                    {strings.NEW_LOCATION}
+                                </Button>
+                            }
 
-                        {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
-                        }
+                            {rowCount > 0 &&
+                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
+                            }
+                        </div>
                     </div>
                     <div className='col-2'>
                         <LocationList

@@ -69,44 +69,44 @@ export default class Bookings extends Component {
                 {user &&
                     <div className='bookings'>
                         <div className='col-1'>
-                            {leftPanel && (
-                                <Button
-                                    variant="contained"
-                                    className='btn-primary cl-new-booking'
-                                    size="small"
-                                    href='/create-booking'
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    {strings.NEW_BOOKING}
-                                </Button>
-                            )}
-                            {admin &&
-                                <CompanyFilter
-                                    onLoad={this.handleCompanyFilterLoad}
-                                    onChange={this.handleCompanyFilterChange}
-                                    className='cl-company-filter'
-                                />
-                            }
-                            {leftPanel && (
-                                <div>
-                                    <StatusFilter
-                                        onChange={this.handleStatusFilterChange}
-                                        className='cl-status-filter'
+                            <div>
+                                {leftPanel && (
+                                    <Button
+                                        variant="contained"
+                                        className='btn-primary cl-new-booking'
+                                        size="small"
+                                        href='/create-booking'
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        {strings.NEW_BOOKING}
+                                    </Button>
+                                )}
+                                {admin &&
+                                    <CompanyFilter
+                                        onLoad={this.handleCompanyFilterLoad}
+                                        onChange={this.handleCompanyFilterChange}
+                                        className='cl-company-filter'
                                     />
-                                    <BookingFilter
-                                        onSubmit={this.handleBookingFilterSubmit}
-                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                        className='cl-booking-filter'
-                                        collapse={!Env.isMobile()}
-                                    />
-                                </div>
-                            )}
+                                }
+                                {leftPanel && (
+                                    <div>
+                                        <StatusFilter
+                                            onChange={this.handleStatusFilterChange}
+                                            className='cl-status-filter'
+                                        />
+                                        <BookingFilter
+                                            onSubmit={this.handleBookingFilterSubmit}
+                                            language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                            className='cl-booking-filter'
+                                            collapse={!Env.isMobile()}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                width='100%'
-                                height='100%'
                                 language={user.language}
                                 loggedUser={user}
                                 companies={companies}
