@@ -12,7 +12,7 @@ export default function Button(props) {
         button: {
             height: small ? 37 : 55,
             borderRadius: 10,
-            backgroundColor: props.type === 'secondary' ? '#999' : '#f37022',
+            backgroundColor: props.color === 'secondary' ? '#999' : '#f37022',
             alignItems: 'center',
             justifyContent: 'center',
             maxWidth: 480

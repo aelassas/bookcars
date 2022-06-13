@@ -89,7 +89,8 @@ export default function Master(props) {
         !loading &&
         <View style={{ ...styles.container, ...props.style }}>
             {((!user && !props.strict) || (user && user.verified))
-                ? props.children
+                ?
+                props.children
                 :
                 (
                     <View style={styles.validate}>

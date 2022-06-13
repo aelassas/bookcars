@@ -10,12 +10,13 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { Dimensions, Keyboard, Platform, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Keyboard, Platform, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { withFadeAnimation } from './HOC/withFadeAnimation'
 import { NothingFound } from './NothingFound'
 import { RightButton } from './RightButton'
 import { ScrollViewListItem } from './ScrollViewListItem'
+// import TextInput from '../TextInput'
 
 export const AutocompleteDropdown = memo(
   forwardRef((props, ref) => {
@@ -342,12 +343,15 @@ export const AutocompleteDropdown = memo(
     )
 
     return (
-      <View style={[styles.container, props.containerStyle, Platform.select({ ios: { zIndex: 1 } })]}>
+      <View
+        style={[styles.container, props.containerStyle, Platform.select({ ios: { zIndex: 1 } })]}
+      >
         {/* it's necessary use onLayout here for Androd (bug?) */}
         <View
           ref={containerRef}
           onLayout={_ => { }}
-          style={[styles.inputContainerStyle, props.inputContainerStyle]}>
+          style={[styles.inputContainerStyle, props.inputContainerStyle]}
+        >
           <InputComponent
             ref={inputRef}
             value={searchText}
@@ -469,7 +473,7 @@ const styles = ScaledSheet.create({
     flexShrink: 1,
     overflow: 'hidden',
     paddingHorizontal: 13,
-    fontSize: 16
+    fontSize: 16,
   },
   listContainer: {
     backgroundColor: '#fff',

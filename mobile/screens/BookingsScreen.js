@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import Master from './Master';
@@ -8,7 +8,6 @@ import UserService from '../services/UserService';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
 import StatusFilter from '../elements/StatusFilter';
 import BookingService from '../services/BookingService';
 import BookingFilter from '../elements/BookingFilter';

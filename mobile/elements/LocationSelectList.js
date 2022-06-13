@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import i18n from '../lang/i18n';
 import LocationService from '../services/LocationService';
 import Helper from '../common/Helper';
+import TextInput from './TextInput';
 
 class LocationSelectList extends Component {
 
@@ -77,7 +78,7 @@ class LocationSelectList extends Component {
         return (
             <View style={{ ...this.props.style, ...styles.container }}>
                 <Text style={{
-                    display: selectedItem !== null ? undefined : 'none',
+                    display: selectedItem !== null ? 'flex' : 'none',
                     backgroundColor: this.props.backgroundColor ?? '#fafafa',
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: 12,
@@ -126,11 +127,11 @@ class LocationSelectList extends Component {
                         alignSelf: 'center',
                     }}
                     inputContainerStyle={{
-                        borderRadius: 10,
                         backgroundColor: this.props.backgroundColor ?? '#fafafa',
                         color: 'rgba(0, 0, 0, 0.87)',
                         borderColor: 'rgba(0, 0, 0, 0.23)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        borderRadius: 10,
                     }}
                     suggestionsListContainerStyle={{
                         display: this.props.close ? 'none' : undefined
