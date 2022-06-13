@@ -58,6 +58,7 @@ div.user-type-filter ul.user-type-list li label.bs-user {
 
 div.user-type-filter div.filter-actions {
     text-align: center;
+    padding-bottom: 5px;
 }
 
 div.user-type-filter div.filter-actions span.uncheckall {

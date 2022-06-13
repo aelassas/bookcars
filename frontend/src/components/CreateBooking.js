@@ -719,7 +719,9 @@ export default class CreateBooking extends Component {
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.CAR}</label>
-                                                <div className='booking-detail-value'>{car.name}</div>
+                                                <div className='booking-detail-value'>
+                                                    {`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}
+                                                </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.COMPANY}</label>
