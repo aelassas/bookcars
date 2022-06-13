@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, View, Text, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper';
 import moment from 'moment';
 import 'moment/locale/fr';
 
@@ -9,13 +10,17 @@ import i18n from '../lang/i18n';
 import Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
 import BookingStatus from './BookingStatus';
-import Switch from './Switch';
+import Button from './Button';
 
 export default function BookingList(props) {
     const [loading, setLoading] = useState(true);
     const [fetch, setFetch] = useState(false);
     const [page, setPage] = useState(0);
     const [rows, setRows] = useState([]);
+    const [selectedId, setSelectedId] = useState('');
+    const [openCancelDialog, setOpenCancelDialog] = useState(false);
+    const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false);
+    const [cancelRequestSent, setCancelRequestSent] = useState(false);
 
     const fr = props.language === Env.LANGUAGE.FR;
     const format = 'dddd, D MMMM YYYY';
@@ -67,7 +72,7 @@ export default function BookingList(props) {
     return (
         <View style={styles.container}>
             <FlatList
-                keyboardShouldPersistTaps="handled"
+                keyboardShouldPersistTaps='handled'
                 nestedScrollEnabled
                 contentContainerStyle={styles.contentContainer}
                 style={styles.flatList}
@@ -169,6 +174,91 @@ export default function BookingList(props) {
 
                                 <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
                                 <Text style={styles.detailTextBold}>{`${booking.price} ${i18n.t('CURRENCY')}`}</Text>
+
+                                {booking.cancellation && !booking.cancelRequest &&
+                                    <Button
+                                        size='small'
+                                        color='secondary'
+                                        style={styles.button}
+                                        label={i18n.t('CANCEL_BOOKING_BTN')}
+                                        onPress={() => {
+                                            setSelectedId(booking._id);
+                                            setOpenCancelDialog(true);
+                                        }}
+                                    />
+                                }
+
+                                <Portal>
+                                    <Dialog
+                                        style={styles.dialog}
+                                        visible={openCancelDialog}
+                                        dismissable={false}
+                                    >
+                                        <Dialog.Title style={styles.dialogTitleContent}>
+                                            {
+                                                ((!cancelRequestSent && !cancelRequestProcessing && i18n.t('CONFIRM_TITLE')) || '')
+                                            }
+                                        </Dialog.Title>
+                                        <Dialog.Content style={styles.dialogContent}>
+                                            {
+                                                cancelRequestProcessing ?
+                                                    <ActivityIndicator size='large' color='#f37022' />
+                                                    : cancelRequestSent ? <Paragraph>{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</Paragraph>
+                                                        : <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>
+                                            }
+                                        </Dialog.Content>
+                                        <Dialog.Actions style={styles.dialogActions}>
+                                            {
+                                                !cancelRequestProcessing &&
+                                                <NativeButton
+                                                    color='#f37022'
+                                                    onPress={() => {
+                                                        setOpenCancelDialog(false);
+                                                        if (cancelRequestSent) {
+                                                            setTimeout(() => {
+                                                                setCancelRequestSent(false);
+                                                            }, 500);
+                                                        }
+                                                    }}
+                                                >
+                                                    {i18n.t('CLOSE')}
+                                                </NativeButton>
+                                            }
+                                            {
+                                                !cancelRequestSent && !cancelRequestProcessing &&
+                                                <NativeButton
+                                                    color='#f37022'
+                                                    onPress={async () => {
+                                                        try {
+                                                            setCancelRequestProcessing(true);
+                                                            const status = await BookingService.cancel(selectedId);
+
+                                                            if (status === 200) {
+                                                                const row = rows.find(r => r._id === selectedId);
+                                                                row.cancelRequest = true;
+
+                                                                setCancelRequestSent(true);
+                                                                setRows(rows);
+                                                                setSelectedId('');
+                                                                setCancelRequestProcessing(false);
+                                                            } else {
+                                                                Helper.error();
+                                                                setCancelRequestProcessing(false);
+                                                                setOpenCancelDialog(false);
+                                                            }
+                                                        } catch (err) {
+                                                            Helper.error(err);
+                                                            setCancelRequestProcessing(false);
+                                                            setOpenCancelDialog(false);
+                                                        }
+                                                    }}
+                                                >
+                                                    {i18n.t('CONFIRM')}
+                                                </NativeButton>
+                                            }
+                                        </Dialog.Actions>
+                                    </Dialog>
+                                </Portal>
                             </View>
                         </View>
                     );
@@ -180,7 +270,7 @@ export default function BookingList(props) {
                     }
                 }}
                 ListHeaderComponent={props.header}
-                ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
+                ListFooterComponent={fetch && !openCancelDialog && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
                 ListEmptyComponent={
                     !loading &&
                     <View style={styles.container}>
@@ -304,4 +394,22 @@ const styles = StyleSheet.create({
         fontSize: 10,
         marginLeft: 5
     },
+    button: {
+        marginTop: 15
+    },
+    dialog: {
+        width: '90%',
+        maxWidth: 480,
+        alignSelf: 'center'
+    },
+    dialogTitleContent: {
+        textAlign: 'center',
+    },
+    dialogContent: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    dialogActions: {
+        height: 75
+    }
 });

@@ -33,4 +33,9 @@ export default class BookingService {
         return axios.get(`${Env.API_HOST}/api/bookings-max-date/${encodeURIComponent(driver)}`, { headers }).then(res => res.data);
     }
 
+    static async cancel(id) {
+        const headers = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/cancel-booking/${encodeURIComponent(id)}`, null, { headers }).then(res => res.status);
+    }
+
 }

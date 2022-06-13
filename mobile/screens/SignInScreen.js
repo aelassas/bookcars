@@ -128,7 +128,7 @@ export default function SignInScreen({ navigation, route }) {
 
                 <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
 
-                <Button style={styles.component} type='secondary' label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
+                <Button style={styles.component} color='secondary' label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
 
                 <Link style={styles.link} label={i18n.t('FORGOT_PASSWORD')} onPress={onPressForgotPassword} />
 

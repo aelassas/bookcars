@@ -166,7 +166,7 @@ class BookingList extends Component {
         return columns;
     }
 
-    handleCancelCancelBooking = () => {
+    handleCloseCancelBooking = () => {
         const { cancelRequestSent } = this.state;
         this.setState({ openCancelDialog: false }, () => {
             if (cancelRequestSent) {
@@ -516,8 +516,8 @@ class BookingList extends Component {
                     <DialogActions className='dialog-actions'>
                         {
                             !cancelRequestProcessing &&
-                            <Button onClick={this.handleCancelCancelBooking} variant='contained' className='btn-secondary'>
-                                {cancelRequestSent ? commonStrings.CLOSE : commonStrings.CANCEL}
+                            <Button onClick={this.handleCloseCancelBooking} variant='contained' className='btn-secondary'>
+                                {commonStrings.CLOSE}
                             </Button>
                         }
                         {

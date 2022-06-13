@@ -187,11 +187,9 @@ i18n.translations = {
         BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
         EMPTY_BOOKING_LIST: 'Pas de réservations.',
         OPTIONS: 'Options',
-
         ENGINE: 'Moteur',
         DIESEL: 'Diesel',
         GASOLINE: 'Essence',
-
         GEARBOX: 'Transmission',
         GEARBOX_AUTOMATIC: 'Automatique',
         GEARBOX_MANUAL: 'Manuelle',
@@ -199,7 +197,11 @@ i18n.translations = {
         DEPOSIT: 'Dépôt de garantie',
         LESS_THAN_2500: 'Moins de 2500 DH',
         LESS_THAN_5000: 'Moins de 5000 DH',
-        LESS_THAN_7500: 'Moins de 7500 DH'
+        LESS_THAN_7500: 'Moins de 7500 DH',
+
+        CANCEL_BOOKING_BTN: 'Annuler cette réservation',
+        CANCEL_BOOKING: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
+        CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation."
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -385,11 +387,9 @@ i18n.translations = {
         BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
         EMPTY_BOOKING_LIST: 'No bookings.',
         OPTIONS: 'Options',
-
         ENGINE: 'Engine',
         DIESEL: 'Diesel',
         GASOLINE: 'Gasoline',
-
         GEARBOX: 'Gearbox',
         GEARBOX_AUTOMATIC: 'Automatic',
         GEARBOX_MANUAL: 'Manual',
@@ -397,7 +397,11 @@ i18n.translations = {
         DEPOSIT: 'Deposit at pick-up',
         LESS_THAN_2500: 'Less than 2500 DH',
         LESS_THAN_5000: 'Less than 5000 DH',
-        LESS_THAN_7500: 'Less than 7500 DH'
+        LESS_THAN_7500: 'Less than 7500 DH',
+
+        CANCEL_BOOKING_BTN: 'Cancel this booking',
+        CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
+        CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.'
     }
 };
 

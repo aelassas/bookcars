@@ -70,22 +70,23 @@ const TextInput = React.forwardRef((props, ref) => {
                         if (ref) ref.current = r;
                         _ref.current = r;
                     }}
-                    style={styles.input}
                     secureTextEntry={props.secureTextEntry}
                     placeholder={props.label}
                     value={value}
                     onChangeText={onChangeText}
                     onKeyPress={props.onKeyPress}
                     onSubmitEditing={props.onSubmitEditing}
+                    onFocus={props.onFocus}
                     onBlur={props.onBlur}
                     autoCapitalize='none'
                     editable={!props.readOnly}
                     keyboardType={props.keyboardType ?? 'default'}
                     maxLength={props.maxLength}
                     autoComplete={Platform.OS === 'web' ? 'none' : 'off'}
-
+                    autoCorrect={props.autoCorrect}
+                    style={{ ...styles.input, ...props.inputStyle }}
                 />
-                {!props.readOnly && value !== '' &&
+                {!props.readOnly && value !== '' && !props.hideClearButton &&
                     <MaterialIcons style={styles.clear} name='clear' size={22} color='rgba(0, 0, 0, 0.28)' onPress={() => {
                         onChangeText('');
                         if (_ref && _ref.current) _ref.current.focus();
