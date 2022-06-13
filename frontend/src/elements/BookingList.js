@@ -13,7 +13,6 @@ import {
 } from '@mui/x-data-grid';
 import {
     Tooltip,
-    Link,
     IconButton,
     Card,
     CardContent,
@@ -120,7 +119,7 @@ class BookingList extends Component {
                     return (
                         <>
                             <Tooltip title={strings.VIEW}>
-                                <IconButton href={`booking?b=${params.row._id}`} target='_blank' rel='noreferrer'>
+                                <IconButton href={`booking?b=${params.row._id}`}>
                                     <ViewIcon />
                                 </IconButton>
                             </Tooltip>
@@ -357,13 +356,7 @@ class BookingList extends Component {
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.CAR}</label>
                                                 <div className='booking-detail-value'>
-                                                    <Link href={`car/?cr=${booking.car._id}`} target='_blank' rel='noreferrer'>{booking.car.name}</Link>
-                                                </div>
-                                            </div>
-                                            <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                                <label className='booking-detail-title'>{strings.DRIVER}</label>
-                                                <div className='booking-detail-value'>
-                                                    <Link href={`user/?u=${booking.driver._id}`} target='_blank' rel='noreferrer'>{booking.driver.fullName}</Link>
+                                                    {`${booking.car.name} (${booking.car.price} ${csStrings.CAR_CURRENCY})`}
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>

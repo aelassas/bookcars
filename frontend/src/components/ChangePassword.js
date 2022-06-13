@@ -194,13 +194,16 @@ export default class ChangePassword extends Component {
                                     onChange={this.handleNewPasswordChange}
                                     type='password'
                                     value={newPassword}
-                                    error={newPasswordError}
+                                    error={newPasswordError || passwordLengthError}
                                     required
                                 />
                                 <FormHelperText
-                                    error={newPasswordError}
+                                    error={newPasswordError || passwordLengthError}
                                 >
-                                    {(newPasswordError && strings.NEW_PASSWORD_ERROR) || ''}
+                                    {
+                                        ((newPasswordError && strings.NEW_PASSWORD_ERROR) || '')
+                                        || (passwordLengthError ? commonStrings.PASSWORD_ERROR : '')
+                                    }
                                 </FormHelperText>
                             </FormControl>
                             <FormControl
@@ -218,17 +221,15 @@ export default class ChangePassword extends Component {
                                     id="password-confirm"
                                     onChange={this.handleConfirmPasswordChange}
                                     onKeyDown={this.handleOnConfirmPasswordKeyDown}
-                                    error={confirmPasswordError || passwordLengthError}
+                                    error={confirmPasswordError}
                                     type='password'
                                     value={confirmPassword}
                                     required
                                 />
                                 <FormHelperText
-                                    error={confirmPasswordError || passwordLengthError}
+                                    error={confirmPasswordError}
                                 >
-                                    {confirmPasswordError
-                                        ? commonStrings.PASSWORDS_DONT_MATCH
-                                        : (passwordLengthError ? commonStrings.PASSWORD_ERROR : '')}
+                                    {confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH}
                                 </FormHelperText>
                             </FormControl>
                             <div className='buttons'>

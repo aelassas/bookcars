@@ -66,6 +66,8 @@ div.companies .info-box {
         float: left;
         width: calc(100% - 320px);
         margin-bottom: 50px;
+        display: flex;
+        justify-content: center;
     }
 
     div.companies .search {

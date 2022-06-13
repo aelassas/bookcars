@@ -129,8 +129,6 @@ class BookingList extends Component {
                             <Tooltip title={commonStrings.UPDATE}>
                                 <IconButton
                                     href={`booking?b=${params.row._id}`}
-                                    target='_blank'
-                                    rel='noreferrer'
                                 >
                                     <EditIcon />
                                 </IconButton>
@@ -450,13 +448,13 @@ class BookingList extends Component {
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.CAR}</label>
                                                 <div className='booking-detail-value'>
-                                                    <Link href={`car/?cr=${booking.car._id}`} target='_blank' rel='noreferrer'>{booking.car.name}</Link>
+                                                    <Link href={`car/?cr=${booking.car._id}`}>{booking.car.name}</Link>
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.DRIVER}</label>
                                                 <div className='booking-detail-value'>
-                                                    <Link href={`user/?u=${booking.driver._id}`} target='_blank' rel='noreferrer'>{booking.driver.fullName}</Link>
+                                                    <Link href={`user/?u=${booking.driver._id}`}>{booking.driver.fullName}</Link>
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
@@ -558,8 +556,6 @@ class BookingList extends Component {
                                                     className='btn-primary'
                                                     size="small"
                                                     href={`booking?b=${booking._id}`}
-                                                    target='_blank'
-                                                    rel='noreferrer'
                                                 >
                                                     {commonStrings.UPDATE}
                                                 </Button>

@@ -117,7 +117,6 @@ class LocationSelectList extends Component {
                         style: {
                             borderRadius: 10,
                             paddingLeft: 15,
-                            height: small ? 37 : 55,
                             fontSize: small ? 14 : 16,
                         }
                     }}
@@ -134,7 +133,7 @@ class LocationSelectList extends Component {
                         borderRadius: 10,
                     }}
                     suggestionsListContainerStyle={{
-                        display: this.props.close ? 'none' : undefined
+                        display: this.props.close ? 'none' : 'flex'
                     }}
                     renderItem={(item, text) => (
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -142,7 +141,7 @@ class LocationSelectList extends Component {
                             <Text style={{ paddingTop: 15, paddingRight: 5, paddingBottom: 15, paddingLeft: 5 }}>{item.title}</Text>
                         </View>
                     )}
-                    inputHeight={55}
+                    inputHeight={small ? 37 : 55}
                     showChevron={false}
                     showClear={selectedItem !== null}
                     closeOnBlur={true}
