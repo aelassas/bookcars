@@ -52,23 +52,25 @@ export default class Companies extends Component {
                 {user &&
                     <div className='companies'>
                         <div className='col-1'>
-                            <Search className='search' onSubmit={this.handleSearch} />
+                            <div className='col-1-container'>
+                                <Search className='search' onSubmit={this.handleSearch} />
 
-                            {rowCount > -1 && admin &&
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary new-company'
-                                    size="small"
-                                    href='/create-company'
-                                >
-                                    {strings.NEW_COMPANY}
-                                </Button>
-                            }
+                                {rowCount > -1 && admin &&
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-primary new-company'
+                                        size="small"
+                                        href='/create-company'
+                                    >
+                                        {strings.NEW_COMPANY}
+                                    </Button>
+                                }
 
-                            {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
-                            }
+                                {rowCount > 0 &&
+                                    <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
+                                }
+                            </div>
                         </div>
                         <div className='col-2'>
                             <CompanyList

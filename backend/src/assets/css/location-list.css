@@ -1,6 +1,8 @@
 section.location-list {
     padding-top: 10px;
     margin: 0 10px;
+    width: 100%;
+    max-width: 480px;
 }
 
 section.location-list .empty-list {

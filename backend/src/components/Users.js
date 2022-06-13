@@ -52,35 +52,36 @@ export default class Users extends Component {
             <Master onLoad={this.onLoad} strict={true}>
                 {user && <div className='users'>
                     <div className='col-1'>
-
-                        <Search
-                            onSubmit={this.handleSearch}
-                            className='cl-user-filter'
-                        />
-
-                        {admin &&
-                            <UserTypeFilter
-                                onChange={this.handleUserTypeFilterChange}
+                        <div className='div.col-1-container'>
+                            <Search
+                                onSubmit={this.handleSearch}
+                                className='search'
                             />
-                        }
-                        <Button
-                            variant="contained"
-                            className='btn-primary cl-new-user'
-                            size="small"
-                            href='/create-user'
-                        >
-                            {strings.NEW_USER}
-                        </Button>
 
+                            {admin &&
+                                <UserTypeFilter
+                                    className='user-type-filter'
+                                    onChange={this.handleUserTypeFilterChange}
+                                />
+                            }
+
+                            <Button
+                                variant="contained"
+                                className='btn-primary new-user'
+                                size="small"
+                                href='/create-user'
+                            >
+                                {strings.NEW_USER}
+                            </Button>
+                        </div>
                     </div>
                     <div className='col-2'>
                         <UserList
-                            width='100%'
-                            height='100%'
                             user={user}
                             types={types}
                             keyword={keyword}
                             checkboxSelection={!Env.isMobile() && admin}
+                            hideDesktopColumns={Env.isMobile()}
                             reload={reload}
                             onLoad={this.handleUserListLoad}
                         />

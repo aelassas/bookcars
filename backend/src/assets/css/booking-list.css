@@ -5,6 +5,10 @@ div.bs-list .empty-list {
     margin-left: calc(50% - 125px);
 }
 
+div.bs-list {
+    width: 100%;
+}
+
 div.bs-list a.cell-company {
     display: flex;
     align-items: center;
@@ -182,6 +186,12 @@ div.bs-list div.bs-buttons a,
 div.bs-list div.bs-buttons button {
     width: 100%;
     margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 960px) {
+    div.bs-list {
+        max-width: 480px;
+    }
 }
 
 @media only screen and (min-width: 960px) {

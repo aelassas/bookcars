@@ -5,27 +5,22 @@ section.car-list .empty-list {
     margin-left: calc(50% - 125px);
 }
 
+section.car-list {
+    width: 100%;
+}
+
 /* Device width is between 500px and 960px */
 
 @media only screen and (min-width: 500px) and (max-width: 960px) {
-    section.car-list article {
-        height: 750px !important;
-        overflow: auto;
-    }
-
-    section.car-list article div.car .car-img {
-        width: 50% !important;
+    section.car-list {
+        width: 100%;
+        max-width: 480px;
     }
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    section.car-list {
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-    }
 
     section.car-list article {
         position: relative;

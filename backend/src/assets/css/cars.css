@@ -33,7 +33,13 @@ div.cars div.col-1 div.info-box {
     div.cars div.col-1 {
         width: 100%;
         padding: 15px;
-        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    div.cars div.col-1 div.col-1-container {
+        width: 100%;
+        max-width: 480px;
     }
 
     div.cars .car-filter {
@@ -43,6 +49,9 @@ div.cars div.col-1 div.info-box {
     div.cars div.col-2 {
         margin-top: 3px;
         padding: 1px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     div.cars div.col-1 .car-count {

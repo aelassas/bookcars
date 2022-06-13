@@ -9,7 +9,11 @@ div.bookings {
 /* Device width is lower than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.bookings div.col-1 {
+
+    div.bookings div.col-1,
+    div.bookings div.col-2 {
+        display: flex;
+        justify-content: center;
         padding-top: 10px;
     }
 
@@ -24,6 +28,7 @@ div.bookings {
     div.bookings div.col-1 .cl-booking-filter {
         margin: 10px;
         background-color: #fff;
+        max-width: 480px;
     }
 
     div.bookings div.col-1 .cl-booking-filter div.panel,
@@ -39,6 +44,7 @@ div.bookings {
 
     div.bookings div.col-1 .cl-new-booking {
         width: calc(100% - 20px);
+        max-width: 480px;
         margin: 15px 10px 5px 10px;
     }
 
