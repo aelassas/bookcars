@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, route }) {
     const language = await UserService.getLanguage();
     i18n.locale = language;
     setLanguage(language);
-    
+
     setPickupLocation(null);
     setDropOffLocation(null);
     setSameLocation(true);
@@ -110,7 +110,11 @@ export default function HomeScreen({ navigation, route }) {
   const handleSameLocationChange = (checked) => {
     setSameLocation(checked);
     blurLocations();
-    if (!checked) setDropOffLocation(null);
+    if (checked) {
+      setDropOffLocation(pickupLocation);
+    } else {
+      setDropOffLocation(null);
+    }
   };
 
   const handleSearch = () => {
