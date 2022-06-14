@@ -26,36 +26,22 @@ div.user div.col-1 .user-actions {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.user {
+        overflow: auto;
+    }
+
     div.user div.col-1 {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        width: 100%;
-        height: 420px;
-        padding-top: 5px;
+        padding-bottom: 15px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
     }
 
     div.user div.col-1 section.user-avatar-sec {
-        position: relative;
-        left: 50%;
-        transform: translateX(-22%);
+        display: flex;
+        justify-content: center;
     }
 
-    div.user div.col-2 {
-        position: absolute;
-        top: 420px;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        overflow: auto;
-    }
-
-    div.user div.col-2 .cars {
-        width: 100%;
-    }
+    div.user div.col-2 {}
 }
 
 /* Device width is greater than or equal to 960px */
