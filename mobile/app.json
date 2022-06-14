@@ -6,6 +6,17 @@
     "slug": "bookcars",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "versionCode": 1,
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.bookcars",
+      "buildNumber": "1.0.0"
+    }
   }
 }
