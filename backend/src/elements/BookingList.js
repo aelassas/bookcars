@@ -383,8 +383,7 @@ class BookingList extends Component {
         }
 
         if (Env.isMobile()) {
-            const element = document.querySelector('div.bookings');
-            const offset = document.querySelector('div.col-1').clientHeight;
+            const element = this.props.from && this.props.from === 'car' ? document.querySelector('div.car') : document.querySelector('div.bookings');
 
             if (element) {
                 element.onscroll = (event) => {
@@ -392,7 +391,7 @@ class BookingList extends Component {
                     if (fetch
                         && !loading
                         && event.target.scrollTop > 0
-                        && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                        && (event.target.offsetHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
                         this.setState({ page: page + 1 }, () => {
                             this.fetch();
                         });

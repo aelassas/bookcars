@@ -47,13 +47,11 @@ div.company {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.company {
+        overflow: auto;
+    }
+
     .company div.col-1 {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        width: 100%;
-        height: 320px;
         padding-top: 5px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
@@ -61,8 +59,7 @@ div.company {
 
     .company div.col-1 section.company-avatar-sec {
         position: relative;
-        left: 50%;
-        transform: translateX(-22%);
+        margin-left: 28%;
     }
 
     .company div.col-1 .car-count {
@@ -70,11 +67,7 @@ div.company {
     }
 
     .company div.col-2 {
-        position: absolute;
-        top: 320px;
-        bottom: 0;
-        right: 0;
-        left: 0;
+
     }
 }
 

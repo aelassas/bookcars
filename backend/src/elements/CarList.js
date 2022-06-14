@@ -252,17 +252,18 @@ class CarList extends Component {
     };
 
     componentDidMount() {
-        const element = this.props.from && this.props.from === 'cars' ? document.querySelector('div.cars') : document.querySelector('section.car-list');
+        const element = this.props.from && this.props.from === 'cars' ? document.querySelector('div.cars')
+            : this.props.from && this.props.from === 'company' && Env.isMobile() ? document.querySelector('div.company')
+                : document.querySelector('section.car-list');
 
         if (element) {
             element.onscroll = (event) => {
                 const { fetch, loading, page } = this.state;
-                let offset = 0;
-                if (Env.isMobile()) offset = document.querySelector('div.col-1').clientHeight;
+
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                    && (event.target.offsetHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
                     this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });

@@ -322,8 +322,7 @@ export default class Car extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                width='100%'
-                                height='100%'
+                                from='car'
                                 loggedUser={user}
                                 companies={companies}
                                 statuses={statuses}
