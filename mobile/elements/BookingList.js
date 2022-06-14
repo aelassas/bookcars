@@ -23,7 +23,7 @@ export default function BookingList(props) {
     const [cancelRequestSent, setCancelRequestSent] = useState(false);
 
     const fr = props.language === Env.LANGUAGE.FR;
-    const format = 'dddd, D MMMM YYYY';
+    const format = 'ddd, D MMMM YYYY HH:mm';
     const iconSize = 24;
     const iconColor = '#000';
     const extraIconColor = '#1f9201';
