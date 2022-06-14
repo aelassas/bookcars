@@ -101,10 +101,11 @@ export default class Car extends Component {
                                             this.setState({ companies: companyIds, car, loading: false, visible: true });
                                         })
                                         .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
-                                } else {
+                                } else if (car.company._id === user._id) {
                                     this.setState({ companies: [user._id], car, loading: false, visible: true });
+                                } else {
+                                    this.setState({ loading: false, noMatch: true });
                                 }
-
                             } else {
                                 this.setState({ loading: false, noMatch: true });
                             }

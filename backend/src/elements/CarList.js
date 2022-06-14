@@ -445,29 +445,27 @@ class CarList extends Component {
                                 </div>
                                 {!this.props.hidePrice && <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>}
                                 <div className='action'>
-                                    <Tooltip title={strings.VIEW_CAR}>
-                                        <IconButton href={`/car?cr=${car._id}`}>
-                                            <ViewIcon />
-                                        </IconButton>
-                                    </Tooltip>
-
                                     {edit &&
-                                        <Tooltip title={commonStrings.UPDATE}>
-                                            <IconButton href={`/update-car?cr=${car._id}`}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-
-                                    {edit &&
-                                        <Tooltip title={commonStrings.DELETE}>
-                                            <IconButton
-                                                data-id={car._id}
-                                                data-index={index}
-                                                onClick={this.handleDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                        <>
+                                            <Tooltip title={strings.VIEW_CAR}>
+                                                <IconButton href={`/car?cr=${car._id}`}>
+                                                    <ViewIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={commonStrings.UPDATE}>
+                                                <IconButton href={`/update-car?cr=${car._id}`}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={commonStrings.DELETE}>
+                                                <IconButton
+                                                    data-id={car._id}
+                                                    data-index={index}
+                                                    onClick={this.handleDelete}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </>
                                     }
                                 </div>
                             </article>
