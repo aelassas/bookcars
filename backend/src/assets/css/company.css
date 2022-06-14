@@ -58,8 +58,8 @@ div.company {
     }
 
     .company div.col-1 section.company-avatar-sec {
-        position: relative;
-        margin-left: 28%;
+        display: flex;
+        justify-content: center;
     }
 
     .company div.col-1 .car-count {
@@ -67,7 +67,8 @@ div.company {
     }
 
     .company div.col-2 {
-
+        display: flex;
+        justify-content: center;
     }
 }
 
