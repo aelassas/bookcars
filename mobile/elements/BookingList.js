@@ -23,7 +23,7 @@ export default function BookingList(props) {
     const [cancelRequestSent, setCancelRequestSent] = useState(false);
 
     const fr = props.language === Env.LANGUAGE.FR;
-    const format = 'ddd, D MMMM YYYY HH:mm';
+    const format = 'ddd D MMMM YYYY HH:mm';
     const iconSize = 24;
     const iconColor = '#000';
     const extraIconColor = '#1f9201';
@@ -54,6 +54,10 @@ export default function BookingList(props) {
             Helper.error(err);
         }
     };
+
+    useEffect(() => {
+        moment.locale(props.language);
+    }, [props.language]);
 
     useEffect(() => {
         if (page > 0) {

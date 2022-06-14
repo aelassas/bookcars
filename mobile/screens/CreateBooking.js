@@ -608,7 +608,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
     const iconSize = 18;
     const iconColor = '#000';
-    const format = 'dddd, D MMMM YYYY';
+    const format = 'ddd D MMMM YYYY HH:mm';
     const fr = language === Env.LANGUAGE.FR;
     const days = Helper.days(from, to);
 
