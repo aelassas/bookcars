@@ -56,8 +56,7 @@ class LocationSelectList extends Component {
                 });
             })
             .catch((err) => {
-                console.log(err);
-                Helper.toast(i18n.t('GENERIC_ERROR'));
+                Helper.error(err);
             });
     };
 
