@@ -14,7 +14,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-BookCars.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-BookCars.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		F60BC712A4E14CF98E0E29B0 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6EBED84F8C4ABAA147E5C8 /* noop-file.swift */; };
+		0B76616B629C4F03858C4B17 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A954CBE7364946AF95F38E /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +32,7 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-BookCars/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		CD6EBED84F8C4ABAA147E5C8 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "BookCars/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		66A954CBE7364946AF95F38E /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "BookCars/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +58,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				CD6EBED84F8C4ABAA147E5C8 /* noop-file.swift */,
+				66A954CBE7364946AF95F38E /* noop-file.swift */,
 			);
 			name = BookCars;
 			sourceTree = "<group>";
@@ -292,7 +292,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				F60BC712A4E14CF98E0E29B0 /* noop-file.swift in Sources */,
+				0B76616B629C4F03858C4B17 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
