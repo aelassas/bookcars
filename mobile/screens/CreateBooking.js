@@ -711,7 +711,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                     <Text style={styles.detailText}>{dropOffLocation.name}</Text>
 
                                     <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                                    <Text style={styles.detailText}>{car.name}</Text>
+                                    <Text style={styles.detailText}>{`${car.name} (${car.price} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
                                     <Text style={styles.detailTitle}>{i18n.t('COMPANY')}</Text>
                                     <View style={styles.company}>
@@ -963,7 +963,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         flex: 1,
         flexWrap: 'wrap',
-        marginLeft: 55,
+        marginLeft: 53,
         marginTop: -3
     },
     detailTitle: {

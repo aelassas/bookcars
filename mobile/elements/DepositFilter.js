@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         maxWidth: 480
     },
     component: {
-        marginTop: 0
+        marginTop: -3
     },
     text: {
         fontSize: 12
