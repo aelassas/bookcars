@@ -56,7 +56,7 @@ class CarList extends Component {
                 })
                 .catch((err) => Helper.error(err));
         } else {
-            this.setState({ rows: [] });
+            this.setState({ rows: [], fetch: false });
         }
     };
 
