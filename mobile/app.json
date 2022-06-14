@@ -12,7 +12,8 @@
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
-      }
+      },
+      "package": "com.bookcars"
     },
     "ios": {
       "bundleIdentifier": "com.bookcars",
