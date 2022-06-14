@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     },
     company: {
         width: '50%',
+        marginBottom: 7
     },
     image: {
         width: Env.COMPANY_IMAGE_WIDTH,

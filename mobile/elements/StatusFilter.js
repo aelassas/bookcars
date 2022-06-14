@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
         width: 300
     },
     status: {
-        width: '50%'
+        width: '50%',
+        marginBottom: 7
     },
     bookingStatus: {
         width: 85

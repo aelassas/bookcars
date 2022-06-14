@@ -964,7 +964,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexWrap: 'wrap',
         marginLeft: 55,
-        marginTop: -11
+        marginTop: -3
     },
     detailTitle: {
         alignSelf: 'stretch',
