@@ -383,7 +383,9 @@ class BookingList extends Component {
         }
 
         if (Env.isMobile()) {
-            const element = this.props.from && this.props.from === 'car' ? document.querySelector('div.car') : document.querySelector('div.bookings');
+            const element = this.props.from && this.props.from === 'car' ? document.querySelector('div.car')
+                : this.props.from && this.props.from === 'user' ? document.querySelector('div.user')
+                    : document.querySelector('div.bookings');
 
             if (element) {
                 element.onscroll = (event) => {

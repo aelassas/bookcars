@@ -196,8 +196,7 @@ export default class User extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                width='100%'
-                                height='100%'
+                                from='user'
                                 loggedUser={loggedUser}
                                 user={company ? undefined : user}
                                 companies={company ? [user._id] : companies}
