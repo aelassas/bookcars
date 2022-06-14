@@ -1,13 +1,19 @@
 {
   "expo": {
-    "name": "bookcars",
-    "slug": "bookcars",
+    "name": "BookCars",
+    "icon": "./assets/icon.png",
     "version": "1.0.0",
+    "slug": "bookcars",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.bookcars"
+      "package": "com.bookcars",
+      "versionCode": 1
+    },
+    "ios": {
+      "bundleIdentifier": "com.bookcars",
+      "buildNumber": "1.0.0"
     }
   }
 }
