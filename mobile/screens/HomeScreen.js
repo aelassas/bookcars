@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, route }) {
     const language = await UserService.getLanguage();
     i18n.locale = language;
     setLanguage(language);
-
+    
     setPickupLocation(null);
     setDropOffLocation(null);
     setSameLocation(true);

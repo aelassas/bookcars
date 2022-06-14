@@ -49,6 +49,9 @@ export default class Helper {
 
     static error(err) {
         if (err) console.log(err);
+        if (err.request?._response) {
+            console.log(err.request?._response);
+        }
         Helper.toast(i18n.t('GENERIC_ERROR'));
     }
 
