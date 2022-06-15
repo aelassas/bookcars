@@ -951,7 +951,7 @@ export default class CreateBooking extends Component {
                         </Paper>
                     </div>
                 }
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
                 {success && <Info message={strings.SUCCESS} />}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>

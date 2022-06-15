@@ -250,7 +250,7 @@ export default class ResetUserPassword extends Component {
                     </div>
                 }
                 {error && <Error />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

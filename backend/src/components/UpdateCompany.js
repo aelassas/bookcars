@@ -397,7 +397,7 @@ export default class UpdateCompany extends Component {
                         </Paper>
                     </div>}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

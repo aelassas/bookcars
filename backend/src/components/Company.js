@@ -216,7 +216,7 @@ export default class Company extends Component {
                 </Dialog>
                 {loading && <Backdrop text={commonStrings.LOADING} />}
                 {error && <Error />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

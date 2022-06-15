@@ -194,7 +194,7 @@ export default class UpdateLocation extends Component {
                     </div>}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
                 {error && <Error />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }
