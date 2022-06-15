@@ -17,6 +17,7 @@ export default function App() {
       try {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
+        await new Promise(resolve => setTimeout(resolve, 1500));
       } catch (err) {
         Helper.error(err);
       } finally {
