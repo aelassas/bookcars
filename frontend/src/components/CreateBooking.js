@@ -724,7 +724,7 @@ export default class CreateBooking extends Component {
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                                <label className='booking-detail-title'>{strings.COMPANY}</label>
+                                                <label className='booking-detail-title'>{commonStrings.SUPPLIER}</label>
                                                 <div className='booking-detail-value'>
                                                     <div className='car-company'>
                                                         <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
