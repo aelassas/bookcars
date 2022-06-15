@@ -41,14 +41,17 @@ if (lang !== '') {
                 language: lang
             }
 
-            UserService.validateAccessToken().then(async status => {
-                if (status === 200) {
-                    const status = await UserService.updateLanguage(data);
-                    if (status !== 200) {
-                        toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+            UserService.validateAccessToken()
+                .then(async status => {
+                    if (status === 200) {
+                        const status = await UserService.updateLanguage(data);
+                        if (status !== 200) {
+                            toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+                        }
                     }
-                }
-            });
+                }).catch(() => {
+                    toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+                });
             language = lang;
         }
     } else if (lang) {

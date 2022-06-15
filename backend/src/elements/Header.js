@@ -91,7 +91,14 @@ export default function Header(props) {
     };
 
     const refreshPage = () => {
-        window.location.reload();
+        let params = new URLSearchParams(window.location.search);
+
+        if (params.has('l')) {
+            params.delete('l');
+            window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '');
+        } else {
+            window.location.reload();
+        }
     };
 
     const handleLangMenuClose = async (event) => {
