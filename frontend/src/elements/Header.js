@@ -43,8 +43,6 @@ const ListItemLink = (props) => (
 );
 
 export default function Header(props) {
-
-    const [currentLanguage, setCurrentLanguage] = useState(null);
     const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE);
     const [anchorEl, setAnchorEl] = useState(null);
     const [langAnchorEl, setLangAnchorEl] = useState(null);
@@ -52,7 +50,6 @@ export default function Header(props) {
     const [sideAnchorEl, setSideAnchorEl] = useState(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [notificationsCount, setNotificationsCount] = useState(0);
-    const [init, setInit] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -177,54 +174,44 @@ export default function Header(props) {
     };
 
     useEffect(() => {
+        const queryLanguage = UserService.getQueryLanguage();
 
+        if (Env.LANGUAGES.includes(queryLanguage)) {
+            setLang(queryLanguage);
+            strings.setLanguage(queryLanguage);
+        } else {
+            const language = UserService.getLanguage();
+            setLang(language);
+            strings.setLanguage(language);
+        }
+    }, []);
+
+    useEffect(() => {
         if (!props.hidden) {
-            setIsLoading(true);
-
-            let countUpdated = false;
-            if (init && (props.notificationsCount !== undefined)) {
-                setNotificationsCount(props.notificationsCount);
-                countUpdated = true;
-            }
-
-            if (countUpdated) {
-                setIsLoading(false);
-                return;
-            }
-
-            const queryLanguage = UserService.getQueryLanguage();
-
-            if (Env.LANGUAGES.includes(queryLanguage)) {
-                setLang(queryLanguage);
-                setCurrentLanguage(queryLanguage)
-                strings.setLanguage(queryLanguage);
-            } else {
-                const language = UserService.getLanguage();
-                setLang(language);
-                setCurrentLanguage(language)
-                strings.setLanguage(language);
-            }
-
-            if (!init && props.user) {
+            if (props.user) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
                         setIsSignedIn(true);
                         setNotificationsCount(notificationCounter.count);
                         setIsLoading(false);
                         setIsLoaded(true);
-                        setInit(true);
                     });
             } else {
-                const currentUser = UserService.getCurrentUser();
-
-                if (!currentUser || init) {
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                }
+                setIsLoading(false);
+                setIsLoaded(true);
             }
-
         }
-    }, [props, init, currentLanguage]);
+    }, [props.hidden, props.user]);
+
+    useEffect(() => {
+        if (!props.hidden) {
+            if (props.notificationsCount) {
+                setNotificationsCount(props.notificationsCount);
+            } else {
+                setNotificationsCount(0);
+            }
+        }
+    }, [props.hidden, props.notificationsCount]);
 
     const menuId = 'primary-account-menu';
     const renderMenu = (
@@ -300,7 +287,8 @@ export default function Header(props) {
     );
 
     return (
-        <div style={props.hidden ? { display: 'none' } : classes.grow} >
+        !props.hidden &&
+        <div style={classes.grow} >
             <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
                 <Toolbar>
                     {isLoaded && !loading && <IconButton
@@ -352,18 +340,19 @@ export default function Header(props) {
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>}
-                        {(!props.hideSignin && !isSignedIn && isLoaded && !loading) && <Button
-                            variant="contained"
-                            startIcon={<LoginIcon />}
-                            href="/sign-in"
-                            disableElevation
-                            fullWidth
-                            className="btn-primary"
-                            style={{ minWidth: '180px' }}
-                        >
-                            {strings.SIGN_IN}
-                        </Button>}
-                        {((isLoaded || !init) && !loading) &&
+                        {(!props.hideSignin && !isSignedIn && isLoaded && !loading) &&
+                            <Button
+                                variant="contained"
+                                startIcon={<LoginIcon />}
+                                href="/sign-in"
+                                disableElevation
+                                fullWidth
+                                className="btn-primary"
+                                style={{ minWidth: '180px' }}
+                            >
+                                {strings.SIGN_IN}
+                            </Button>}
+                        {(isLoaded && !loading) &&
                             <Button
                                 variant="contained"
                                 startIcon={<LanguageIcon />}
@@ -386,7 +375,7 @@ export default function Header(props) {
                         </IconButton>}
                     </div>
                     <div className='header-mobile'>
-                        {(!isSignedIn && !loading && !init) &&
+                        {(!isSignedIn && !loading) &&
                             <Button
                                 variant="contained"
                                 startIcon={<LanguageIcon />}
@@ -398,11 +387,12 @@ export default function Header(props) {
                                 {getLang(lang)}
                             </Button>
                         }
-                        {isSignedIn && <IconButton color="inherit" onClick={handleNotificationsClick}>
-                            <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
+                        {isSignedIn &&
+                            <IconButton color="inherit" onClick={handleNotificationsClick}>
+                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
                         }
                         {isSignedIn && <IconButton
                             aria-label="show more"
