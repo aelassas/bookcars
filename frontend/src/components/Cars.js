@@ -186,7 +186,7 @@ export default class Cars extends Component {
                         </div>
                     </div>
                 }
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master >
         );
     }

@@ -177,7 +177,7 @@ export default class Activate extends Component {
                         </Paper>
                     </div>
                 }
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master >
         );
     }

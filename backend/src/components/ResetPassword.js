@@ -178,7 +178,7 @@ export default class ResetPassword extends Component {
                         </Paper>
                     </div>
                 }
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master >
         );
     }

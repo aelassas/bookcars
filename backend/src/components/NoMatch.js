@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from '@mui/material';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/no-match';
-import Master from '../elements/Master'
+import Master from '../elements/Master';
 
 export default class NoMatch extends Component {
 
@@ -16,7 +16,7 @@ export default class NoMatch extends Component {
 
     render() {
         return (
-            this.props.header ? <Master strict={false}>{this.noMatch()}</Master> : this.noMatch()
+            this.props.hideHeader ? this.noMatch() : <Master strict={false}>{this.noMatch()}</Master>
         );
     }
 }

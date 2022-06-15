@@ -550,7 +550,7 @@ export default class CreateUser extends Component {
                         </Paper>
                     </div>}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

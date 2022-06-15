@@ -279,7 +279,7 @@ export default class Activate extends Component {
                     </div>
                 }
                 {error && <Error />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

@@ -222,7 +222,7 @@ export default class User extends Component {
                 </Dialog>
                 {loading && <Backdrop text={commonStrings.LOADING} />}
                 {error && <Error />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
             </Master>
         );
     }

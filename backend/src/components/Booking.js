@@ -640,7 +640,7 @@ export default class Booking extends Component {
                 }
 
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {noMatch && <NoMatch />}
+                {noMatch && <NoMatch hideHeader />}
                 {error && <Error />}
             </Master>
         );
