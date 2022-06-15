@@ -20,6 +20,7 @@
     "@react-navigation/native-stack": "^6.6.2",
     "axios": "^0.27.2",
     "expo": "~45.0.0",
+    "expo-asset": "~8.5.0",
     "expo-constants": "~13.1.1",
     "expo-localization": "~13.0.0",
     "expo-splash-screen": "~0.15.1",
