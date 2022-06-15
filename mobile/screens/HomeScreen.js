@@ -242,11 +242,11 @@ export default function HomeScreen({ navigation, route }) {
           <Switch style={styles.component} label={i18n.t('SAME_LOCATION')} value={sameLocation} onValueChange={handleSameLocationChange} />
         </View>
 
-        <View style={styles.footer}>
+        {/* <View style={styles.footer}>
           <Text style={styles.copyright}>{i18n.t('COPYRIGHT_PART1')}</Text>
           <Text style={styles.copyrightRegistered}>{i18n.t('COPYRIGHT_PART2')}</Text>
           <Text style={styles.copyright}>{i18n.t('COPYRIGHT_PART3')}</Text>
-        </View>
+        </View> */}
       </ScrollView>
     </Master>
   );
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 50,
+    paddingBottom: 10,
   },
   contentContainer: {
     width: '100%',
