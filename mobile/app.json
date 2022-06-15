@@ -1,23 +1,40 @@
 {
   "expo": {
     "name": "BookCars",
-    "icon": "./assets/icon.png",
     "version": "1.0.0",
     "slug": "bookcars",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "backgroundColor": "#f37022",
+      "image": "./assets/splash.png"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
       "versionCode": 1,
-      "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
+      },
+      "icon": "./assets/icon.png",
+      "splash": {
+        "backgroundColor": "#f37022",
+        "image": "./assets/splash.png",
+        "mdpi": "./assets/splash.png",
+        "hdpi": "./assets/splash-hdpi.png",
+        "xhdpi": "./assets/splash-xhdpi.png",
+        "xxhdpi": "./assets/splash-xxhdpi.png"
       }
     },
     "ios": {
       "buildNumber": "1.0.0",
+      "supportsTablet": true,
       "icon": "./assets/icon.png",
-      "supportsTablet": true
+      "splash": {
+        "backgroundColor": "#f37022",
+        "image": "./assets/splash.png",
+        "tabletImage": "./assets/splash-tablet.png"
+      }
     }
   }
 }
