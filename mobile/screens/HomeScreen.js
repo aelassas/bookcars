@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     color: '#70757a',
   },
   copyrightRegistered: {
-    fontSize: 10,
+    fontSize: 6,
     color: '#70757a',
     position: 'relative',
     top: -5
