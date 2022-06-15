@@ -188,7 +188,7 @@ class BookingList extends Component {
         if (Helper.admin(user) && !this.props.hideCompanyColumn) {
             columns.unshift({
                 field: 'company',
-                headerName: strings.COMPANY,
+                headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
                     <Link href={`/company?c=${params.value._id}`} className='cell-company'>
@@ -473,7 +473,7 @@ class BookingList extends Component {
                                                 <div className='booking-detail-value'>{booking.dropOffLocation.name}</div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                                <label className='booking-detail-title'>{strings.COMPANY}</label>
+                                                <label className='booking-detail-title'>{commonStrings.SUPPLIER}</label>
                                                 <div className='booking-detail-value'>
                                                     <div className='car-company'>
                                                         <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
