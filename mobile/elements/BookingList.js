@@ -110,7 +110,7 @@ export default function BookingList(props) {
                                 <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
                                 <Text style={styles.detailText}>{`${booking.car.name} (${booking.car.price} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
-                                <Text style={styles.detailTitle}>{i18n.t('COMPANY')}</Text>
+                                <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                                 <View style={styles.company}>
                                     <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, booking.company.avatar) }} />
                                     <Text style={styles.companyText}>{booking.company.fullName}</Text>
