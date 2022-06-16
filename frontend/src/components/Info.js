@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { Link } from '@mui/material';
 
-export default class Error extends Component {
+export default class Info extends Component {
     render() {
         return (
             <div style={this.props.style} className={`${this.props.className ? `${this.props.className} ` : ''}msg`}>

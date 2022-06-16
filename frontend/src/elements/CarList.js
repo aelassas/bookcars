@@ -215,7 +215,7 @@ class CarList extends Component {
             };
         }
 
-        const { companies } = this.props;
+        const { companies, cars } = this.props;
 
         if (companies) {
             if (companies.length > 0) {
@@ -227,6 +227,12 @@ class CarList extends Component {
                     }
                 });
             }
+        } else if (cars) {
+            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
+                if (this.props.onLoad) {
+                    this.props.onLoad({ rows: cars, rowCount: cars.length });
+                }
+            });
         }
 
         this.setState({ language: UserService.getLanguage() })
