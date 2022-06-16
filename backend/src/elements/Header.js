@@ -174,7 +174,7 @@ export default function Header(props) {
         window.location.href = '/notifications';
     };
 
-    const loadLanguage = () => {
+    useEffect(() => {
         const queryLanguage = UserService.getQueryLanguage();
 
         if (Env.LANGUAGES.includes(queryLanguage)) {
@@ -185,21 +185,19 @@ export default function Header(props) {
             setLang(language);
             strings.setLanguage(language);
         }
-    };
+    }, []);
 
     useEffect(() => {
         if (!props.hidden) {
             if (props.user) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
-                        loadLanguage();
                         setIsSignedIn(true);
                         setNotificationsCount(notificationCounter.count);
                         setIsLoading(false);
                         setIsLoaded(true);
                     });
             } else {
-                loadLanguage();
                 setIsLoading(false);
                 setIsLoaded(true);
             }
