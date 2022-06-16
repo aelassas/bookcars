@@ -61,7 +61,6 @@ export default function Master(props) {
                 exit();
             }
         } catch (err) {
-            Helper.error(err);
             exit();
         }
     };
