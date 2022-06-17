@@ -87,16 +87,21 @@ class CompanyFilter extends Component {
                 console.log('companiesFilter.companies', companies.length)
                 const companyIds = Helper.flattenCompanies(companies);
                 this.setState({ companies, checkedCompanies: companyIds }, () => {
-                    const { checkedCompanies } = this.state;
-                    const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
+                    try {
+                        const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
 
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = true;
-                    });
-                    console.log('companiesFilter.checkboxes done')
-
-                    if (this.props.onLoad) {
-                        this.props.onLoad(checkedCompanies);
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = true;
+                        });
+                        console.log('companiesFilter.checkboxes done')
+                    } catch (err) {
+                        console.log(err);
+                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    }
+                    finally {
+                        if (this.props.onLoad) {
+                            this.props.onLoad(companyIds);
+                        }
                     }
                 });
             })
