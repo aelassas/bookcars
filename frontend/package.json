@@ -23,7 +23,6 @@
     "react-google-recaptcha": "^2.1.0",
     "react-localization": "^1.0.19",
     "react-toastify": "^9.0.4",
-    "sharp": "^0.30.6",
     "validator": "^13.7.0"
   },
   "devDependencies": {
