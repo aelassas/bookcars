@@ -84,11 +84,12 @@ class CompanyFilter extends Component {
             Helper.setLanguage(commonStrings);
 
             const companies = await CompanyService.getAllCompanies();
-
+            console.log('companies.length', companies.length);
             const companyIds = Helper.flattenCompanies(companies);
-
+            console.log('companyIds.length', companyIds.length);
             this.setState({ companies, checkedCompanies: companyIds }, () => {
                 try {
+                    console.log('checkboxes.start');
                     const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
                     console.log('checkboxes.length', checkboxes.length);
                     checkboxes.forEach(checkbox => {
@@ -111,7 +112,6 @@ class CompanyFilter extends Component {
             console.log(err);
             toast(commonStrings.GENERIC_ERROR, { type: 'error' });
         }
-
     }
 
     render() {
