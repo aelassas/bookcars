@@ -85,11 +85,6 @@ section.carList article .btnBook {
         left: 5px;
     }
 
-    section.carList article div.car div.carCompany span.carCompanyLogo {
-        border: 1px solid #e6e6e6;
-        border-radius: 3px;
-    }
-
     section.carList article div.car div.carCompany label.carCompanyInfo {
         color: rgba(0, 0, 0, 0.6);
         font-size: .9em;
@@ -293,11 +288,6 @@ section.carList article .btnBook {
         align-items: center;
         position: absolute;
         bottom: 20px;
-    }
-
-    section.carList article div.car div.carCompany span.carCompanyLogo {
-        border: 1px solid #e6e6e6;
-        border-radius: 3px;
     }
 
     section.carList article div.car div.carCompany label.carCompanyInfo {
