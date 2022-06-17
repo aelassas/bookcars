@@ -271,29 +271,18 @@ class CarList extends Component {
                                 </div>
                                 {!this.props.hideCompany &&
                                     <div className={styles.carCompany}>
-                                        <span
-                                            className={styles.carCompanyLogo}
-                                        >
-                                            <div style={{
-                                                position: 'relative',
-                                                width: Env.COMPANY_IMAGE_WIDTH,
-                                                height: Env.COMPANY_IMAGE_HEIGHT
-                                            }}>
-                                                <Image
-                                                    src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                                    alt={car.company.fullName}
-                                                    layout='fill'
-                                                    objectFit='contain'
-                                                />
-                                            </div>
-                                        </span>
-                                        <label
-                                            className={styles.carCompanyInfo}
-                                            style={{
-                                                position: 'absolute',
-                                                left: Env.COMPANY_IMAGE_WIDTH,
-                                            }}
-                                        >{car.company.fullName}</label>
+                                        <div style={{
+                                            position: 'relative',
+                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                            height: Env.COMPANY_IMAGE_HEIGHT
+                                        }}>
+                                            <Image
+                                                src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                alt={car.company.fullName}
+                                                layout='fill'
+                                                objectFit='contain'
+                                            />
+                                        </div>
                                     </div>
                                 }
                             </div>
