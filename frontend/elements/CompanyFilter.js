@@ -18,7 +18,6 @@ export default function CompanyFilter(props) {
         async function init() {
             try {
                 Helper.setLanguage(commonStrings);
-
                 const companies = await CompanyService.getAllCompanies();
                 setCompanies(companies);
                 const companyIds = Helper.flattenCompanies(companies);
@@ -26,7 +25,6 @@ export default function CompanyFilter(props) {
                 if (props.onLoad) props.onLoad(companyIds);
             }
             catch (err) {
-                console.log(err);
                 Helper.error();
             }
         }
@@ -40,7 +38,6 @@ export default function CompanyFilter(props) {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
-            console.log('checkboxes.done');
         }
     }, [companies]);
 
@@ -101,7 +98,6 @@ export default function CompanyFilter(props) {
             }
         }
     };
-
 
     return (
         companies.length > 0 &&
