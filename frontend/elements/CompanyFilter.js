@@ -79,6 +79,7 @@ class CompanyFilter extends Component {
     };
 
     componentDidMount() {
+        console.log('companiesFilter.componentDidMount');
         Helper.setLanguage(commonStrings);
 
         CompanyService.getAllCompanies()
