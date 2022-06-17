@@ -89,6 +89,7 @@ export default class Cars extends Component {
     };
 
     onLoad = (user) => {
+        console.log('!')
         this.setState({ user }, async () => {
 
             let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to;

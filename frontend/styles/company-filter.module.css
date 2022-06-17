@@ -25,6 +25,8 @@ div.companyFilter ul.companyList li {
 }
 
 div.companyFilter ul.companyList li label {
+    border-radius: 3px;
+    border: 1px solid #d9d9d9;
     box-shadow: none;
     vertical-align: middle;
     cursor: pointer;
