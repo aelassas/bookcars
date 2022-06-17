@@ -84,6 +84,7 @@ class CompanyFilter extends Component {
         CompanyService.getAllCompanies()
             .then(companies => {
                 const companyIds = Helper.flattenCompanies(companies);
+
                 if (this.props.onLoad) {
                     this.props.onLoad(companyIds);
                 }
