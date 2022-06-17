@@ -35,6 +35,7 @@ import {
 import { toast } from 'react-toastify';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
+import Image from 'next/image';
 
 import styles from '../styles/create-booking.module.css';
 
@@ -732,10 +733,18 @@ export default class CreateBooking extends Component {
                                                 <label className={styles.bookingDetailTitle}>{commonStrings.SUPPLIER}</label>
                                                 <div className={styles.bookingDetailValue}>
                                                     <div className={styles.carCompany}>
-                                                        <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                                            alt={car.company.fullName}
-                                                            style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
-                                                        />
+                                                        <div style={{
+                                                            position: 'relative',
+                                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                                            height: Env.COMPANY_IMAGE_HEIGHT
+                                                        }}>
+                                                            <Image
+                                                                src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                                alt={car.company.fullName}
+                                                                layout='fill'
+                                                                objectFit='contain'
+                                                            />
+                                                        </div>
                                                         <label className={styles.carCompanyName}>{car.company.fullName}</label>
                                                     </div>
                                                 </div>
@@ -846,14 +855,25 @@ export default class CreateBooking extends Component {
                                                 <LockIcon className={styles.securePaymentLock} />
                                                 <label>{strings.PAYMENT}</label>
                                             </div>
-                                            <div className={styles.securePaymentLock}>
+                                            <div className={styles.securePaymentCost}>
                                                 <label className={styles.costTitle}>{strings.COST}</label>
                                                 <label className={styles.costValue}>{`${price} ${commonStrings.CURRENCY}`}</label>
                                             </div>
                                         </div>
 
                                         <div className={styles.securePaymentLogo}>
-                                            <img src='/img/secure-payment.png' alt='' />
+                                            <div style={{
+                                                position: 'relative',
+                                                width: 220,
+                                                height: 40
+                                            }}>
+                                                <Image
+                                                    src='/img/secure-payment.png'
+                                                    alt=''
+                                                    layout='fill'
+                                                    objectFit='contain'
+                                                />
+                                            </div>
                                         </div>
 
                                         <div className={styles.card}>

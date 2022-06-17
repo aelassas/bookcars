@@ -5,6 +5,7 @@ import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
 import Accordion from './Accordion';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 import styles from '../styles/company-filter.module.css';
 
@@ -111,10 +112,18 @@ class CompanyFilter extends Component {
                                 <li key={company._id}>
                                     <input className={styles.companyCheckbox} type='checkbox' data-id={company._id} onChange={this.handleCheckCompanyChange} />
                                     <label onClick={this.handleCompanyClick}>
-                                        <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                            alt={company.fullName}
-                                            style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                                        />
+                                        <div style={{
+                                            position: 'relative',
+                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                            height: Env.COMPANY_IMAGE_HEIGHT
+                                        }}>
+                                            <Image
+                                                src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                                alt={company.fullName}
+                                                layout='fill'
+                                                objectFit='contain'
+                                            />
+                                        </div>
                                     </label>
                                 </li>
                             ))
