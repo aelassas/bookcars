@@ -9,6 +9,7 @@ import {
 import {
     LocationOn as LocationIcon
 } from '@mui/icons-material';
+import Image from 'next/image';
 
 import styles from '../styles/multiple-select.module.css';
 
@@ -187,10 +188,18 @@ export default function MultipleSelect({
                                 startAdornment: (
                                     <>
                                         <InputAdornment position='start'>
-                                            <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                                                alt={option.name}
-                                                style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                                            />
+                                            <div style={{
+                                                position: 'relative',
+                                                width: Env.COMPANY_IMAGE_WIDTH,
+                                                height: Env.COMPANY_IMAGE_HEIGHT
+                                            }}>
+                                                <Image
+                                                    src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                    alt={option.name}
+                                                    layout='fill'
+                                                    objectFit='contain'
+                                                />
+                                            </div>
                                         </InputAdornment>
                                         {params.InputProps.startAdornment}
                                     </>
@@ -214,11 +223,18 @@ export default function MultipleSelect({
                                 startAdornment: (
                                     <>
                                         <InputAdornment position='start'>
-                                            <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
-                                                alt={option.name}
-                                                style={{
-                                                    height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT
-                                                }} />
+                                            <div style={{
+                                                position: 'relative',
+                                                width: Env.SELECTED_CAR_OPTION_IMAGE_WIDTH,
+                                                height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT
+                                            }}>
+                                                <Image
+                                                    src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                                    alt={option.name}
+                                                    layout='fill'
+                                                    objectFit='contain'
+                                                />
+                                            </div>
                                         </InputAdornment>
                                         {params.InputProps.startAdornment}
                                     </>
@@ -251,10 +267,18 @@ export default function MultipleSelect({
                     return (
                         <li {...props} className={`${props.className} ${styles.msOption}`}>
                             <span className={styles.optionImage}>
-                                <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                                    alt={option.name}
-                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                                />
+                                <div style={{
+                                    position: 'relative',
+                                    width: Env.COMPANY_IMAGE_WIDTH,
+                                    height: Env.COMPANY_IMAGE_HEIGHT
+                                }}>
+                                    <Image
+                                        src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                        alt={option.name}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
                             </span>
                             <span className={styles.optionName}>{option.name}</span>
                         </li>
@@ -263,11 +287,18 @@ export default function MultipleSelect({
                     return (
                         <li  {...props} className={`${props.className} ${styles.msOption}`}>
                             <span className={styles.optionImage}>
-                                <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
-                                    alt={option.name}
-                                    style={{
-                                        height: Env.CAR_OPTION_IMAGE_HEIGHT
-                                    }} />
+                                <div style={{
+                                    position: 'relative',
+                                    width: 60,
+                                    height: 80
+                                }}>
+                                    <Image
+                                        src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                        alt={option.name}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
                             </span>
                             <span className={styles.carOptionName}>{option.name}</span>
                         </li>

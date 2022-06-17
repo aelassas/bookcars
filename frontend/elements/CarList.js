@@ -24,6 +24,7 @@ import {
     Info as InfoIcon
 } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 import styles from '../styles/car-list.module.css';
 import carsStyles from '../styles/cars.module.css';
@@ -255,23 +256,44 @@ class CarList extends Component {
                         <article key={car._id}>
                             <div className={styles.name}><h2>{car.name}</h2></div>
                             <div className={styles.car}>
-                                <img
-                                    src={Helper.joinURL(Env.CDN_CARS, car.image)}
-                                    alt={car.name} className={styles.carImg}
-                                    style={{
-                                        maxWidth: Env.CAR_IMAGE_WIDTH,
-                                    }}
-                                />
+                                <div style={{
+                                    position: 'relative',
+                                    width: '100%',
+                                    maxWidth: Env.CAR_IMAGE_WIDTH,
+                                    height: Env.CAR_IMAGE_HEIGHT,
+                                }}>
+                                    <Image
+                                        src={Helper.joinURL(Env.CDN_CARS, car.image)}
+                                        alt={car.name} className={styles.carImg}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
                                 {!this.props.hideCompany &&
                                     <div className={styles.carCompany}>
-                                        <span className={styles.carCompanyLogo}>
-                                            <img
-                                                src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                                alt={car.company.fullName}
-                                                width={Env.COMPANY_IMAGE_WIDTH}
-                                            />
+                                        <span
+                                            className={styles.carCompanyLogo}
+                                        >
+                                            <div style={{
+                                                position: 'relative',
+                                                width: Env.COMPANY_IMAGE_WIDTH,
+                                                height: Env.COMPANY_IMAGE_HEIGHT
+                                            }}>
+                                                <Image
+                                                    src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                    alt={car.company.fullName}
+                                                    layout='fill'
+                                                    objectFit='contain'
+                                                />
+                                            </div>
                                         </span>
-                                        <label className={styles.carCompanyInfo}>{car.company.fullName}</label>
+                                        <label
+                                            className={styles.carCompanyInfo}
+                                            style={{
+                                                position: 'absolute',
+                                                left: Env.COMPANY_IMAGE_WIDTH,
+                                            }}
+                                        >{car.company.fullName}</label>
                                     </div>
                                 }
                             </div>
@@ -296,7 +318,7 @@ class CarList extends Component {
                                     <li className={styles.seats}>
                                         <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
                                             <div className={styles.carInfoListItem}>
-                                                <SeatsIcon />
+                                                <SeatsIcon className={styles.icon} />
                                                 <span className={styles.carInfoListText}>{car.seats}</span>
                                             </div>
                                         </Tooltip>
@@ -304,7 +326,15 @@ class CarList extends Component {
                                     <li className={styles.doors}>
                                         <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
                                             <div className={styles.carInfoListItem}>
-                                                <img src='/img/car-door.png' alt='' className={styles.carDoors} />
+                                                <div className={styles.carDoors}>
+                                                    <Image
+                                                        src='/img/car-door.png'
+                                                        alt=''
+                                                        layout='fill'
+                                                        objectFit='contain'
+                                                        className={styles.carDoors}
+                                                    />
+                                                </div>
                                                 <span className={styles.carInfoListText}>{car.doors}</span>
                                             </div>
                                         </Tooltip>

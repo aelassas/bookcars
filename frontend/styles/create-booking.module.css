@@ -153,8 +153,8 @@ div.booking div.payment div.cost div.securePaymentCost {
     justify-content: center;
 }
 
-div.booking div.payment div.cost div.securePaymentCost label.costTitle,
-div.booking div.payment div.cost div.securePaymentCost label.costValue {
+div.booking div.payment div.cost div.securePaymentCost .costTitle,
+div.booking div.payment div.cost div.securePaymentCost .costValue {
     display: table-cell;
     padding: 5px;
 }

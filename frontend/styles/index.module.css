@@ -269,10 +269,8 @@ div.home footer div.copyright span.part2 {
         position: absolute;
         right: 0;
         padding: 5px;
-    }
-
-    div.home footer div.securePayment img {
         height: 32px;
+        width: 180px;
     }
 
 }

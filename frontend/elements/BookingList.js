@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 import styles from '../styles/booking-list.module.css';
 import bookingsStyles from '../styles/bookings.module.css';
@@ -167,9 +168,16 @@ class BookingList extends Component {
                 headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
-                    <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                        alt={params.value.fullName}
-                        style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                    <div style={{
+                        position: 'relative',
+                        width: Env.COMPANY_IMAGE_WIDTH,
+                        height: Env.COMPANY_IMAGE_HEIGHT
+                    }}>
+                        <Image src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
+                            alt={params.value.fullName}
+                            layout='fill'
+                            objectFit='contain' />
+                    </div>
                 ),
             });
         }
@@ -392,10 +400,17 @@ class BookingList extends Component {
                                                 <label className={styles.bookingDetailTitle}>{commonStrings.SUPPLIER}</label>
                                                 <div className={styles.bookingDetailValue}>
                                                     <div className={styles.carCompany}>
-                                                        <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
-                                                            alt={booking.company.fullName}
-                                                            style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
-                                                        />
+                                                        <div style={{
+                                                            position: 'relative',
+                                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                                            height: Env.COMPANY_IMAGE_HEIGHT
+                                                        }}>
+                                                            <Image src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
+                                                                alt={booking.company.fullName}
+                                                                layout='fill'
+                                                                objectFit='contain'
+                                                            />
+                                                        </div>
                                                         <label className={styles.carCompanyName}>{booking.company.fullName}</label>
                                                     </div>
                                                 </div>

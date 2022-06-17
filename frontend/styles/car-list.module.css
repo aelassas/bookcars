@@ -88,7 +88,6 @@ section.carList article .btnBook {
     section.carList article div.car div.carCompany span.carCompanyLogo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
-        display: flex;
     }
 
     section.carList article div.car div.carCompany label.carCompanyInfo {
@@ -205,6 +204,14 @@ section.carList article .btnBook {
         margin-left: 3px;
     }
 
+    section.carList article div.carInfo ul.carInfoList div.carInfoListItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 2px;
+    }
+
     section.carList article div.carInfo ul.carInfoList li.mileage div.carInfoListItem,
     section.carList article div.carInfo ul.carInfoList li.fuelPolicy div.carInfoListItem {
         width: fit-content;
@@ -216,6 +223,7 @@ section.carList article .btnBook {
     }
 
     section.carList article div.carInfo ul.carInfoList li .carDoors {
+        position: relative;
         width: 20px;
         height: 20px;
         margin: 2px;
@@ -290,7 +298,6 @@ section.carList article .btnBook {
     section.carList article div.car div.carCompany span.carCompanyLogo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
-        display: flex;
     }
 
     section.carList article div.car div.carCompany label.carCompanyInfo {
@@ -388,6 +395,14 @@ section.carList article .btnBook {
         margin-left: 3px;
     }
 
+    section.carList article div.carInfo ul.carInfoList div.carInfoListItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 2px;
+    }
+
     section.carList article div.carInfo ul.carInfoList li.mileage div.carInfoListItem,
     section.carList article div.carInfo ul.carInfoList li.fuelPolicy div.carInfoListItem {
         width: fit-content;
@@ -399,6 +414,7 @@ section.carList article .btnBook {
     }
 
     section.carList article div.carInfo ul.carInfoList li .carDoors {
+        position: relative;
         width: 20px;
         height: 20px;
         margin: 2px;

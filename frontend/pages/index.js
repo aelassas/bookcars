@@ -7,6 +7,7 @@ import LocationSelectList from '../elements/LocationSelectList';
 import DateTimePicker from '../elements/DateTimePicker'
 import { FormControl, Button } from '@mui/material';
 import Helper from '../common/Helper';
+import Image from 'next/image';
 
 import styles from '../styles/index.module.css';
 
@@ -181,7 +182,12 @@ export default class Home extends Component {
                             <span className={styles.part3}>{strings.COPYRIGHT_PART3}</span>
                         </div>
                         <div className={styles.securePayment}>
-                            <img src='/img/secure-payment.png' alt='' />
+                            <Image
+                                src='/img/secure-payment.png'
+                                alt=''
+                                layout='fill'
+                                objectFit='contain'
+                            />
                         </div>
                     </footer>
                 </div>
