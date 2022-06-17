@@ -2,8 +2,13 @@ import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
 import UserService from "../services/UserService";
+import { toast } from 'react-toastify';
 
 export default class Helper {
+
+    static error() {
+        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+    }
 
     static setLanguage(str) {
         let language = UserService.getQueryLanguage();
@@ -12,10 +17,7 @@ export default class Helper {
             language = UserService.getLanguage();
         }
 
-        if (str.setLanguage) {
-            str.setLanguage(language);
-            console.log('Helper.setLanguage');
-        }
+        str.setLanguage(language);
     }
 
     static joinURL(part1, part2) {
