@@ -39,7 +39,7 @@ export default class Cars extends Component {
     }
 
     handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies, loading: false });
+        this.setState({ companies, loading: false }, console.log('handleCompanyFilterLoad'));
     };
 
     handleCarListLoad = (data) => {
@@ -89,7 +89,6 @@ export default class Cars extends Component {
     };
 
     onLoad = (user) => {
-        console.log('!')
         this.setState({ user }, async () => {
 
             let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to;
@@ -126,7 +125,7 @@ export default class Cars extends Component {
                     return this.setState({ loading: false, noMatch: true });
                 }
 
-                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true });
+                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true }, () => console.log('onLoad'));
 
             } catch (err) {
                 toast(commonStrings.GENERIC_ERROR, { type: 'error' });
@@ -144,7 +143,7 @@ export default class Cars extends Component {
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
-                {visible && companies && pickupLocation && dropOffLocation && from && to &&
+                {visible && pickupLocation && dropOffLocation && from && to &&
                     <div className={styles.cars}>
                         <div className={styles.col1}>
                             {!loading &&
