@@ -1,0 +1,206 @@
+div.bsList .emptyList {
+    margin-top: 15px;
+    text-align: center;
+    width: 250px;
+    margin-left: calc(50% - 125px);
+}
+
+div.bsList {
+    width: 100%;
+}
+
+div.bsList a.cellCompany {
+    display: flex;
+    align-items: center;
+}
+
+div.bsList span.bs {
+    padding: 3px;
+    width: 80px;
+    text-align: center;
+    color: #fff;
+}
+
+div.bsList span.bsVoid {
+    background: #999;
+}
+
+div.bsList span.bsPending {
+    background: #e98003;
+}
+
+div.bsList span.bsDeposit {
+    background: #22bba7;
+}
+
+div.bsList span.bsPaid {
+    background: #77bc23;
+}
+
+div.bsList span.bsReserved {
+    background: #188ace;
+}
+
+div.bsList span.bsCancelled {
+    background: #bc2143;
+}
+
+div.bsUpdateStatus {
+    width: 444px;
+    height: 70px;
+    overflow: hidden;
+}
+
+div.bsList span.bp {
+    font-weight: 600;
+}
+
+div.bsList div.bookingDetails {
+    display: table;
+    color: #333;
+    font-size: 15px;
+    background-color: #fff;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #d9d8d9;
+    border-radius: 5px;
+    width: calc(100% - 20px);
+}
+
+div.bsList div.bookingDetails div.bookingDetail {
+    display: table-row;
+}
+
+div.bsList div.bookingDetails div.bookingDetail div.bookingDetailValue {
+    display: table-row;
+    line-height: 25px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.47);
+}
+
+div.bsList div.bookingDetails div.bookingDetail label.bookingDetailTitle {
+    display: table-row;
+    font-weight: 700;
+    width: 250px;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+div.bsList div.bookingDetails div.bookingDetail div.bookingDetailValue div.carCompany {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+div.bsList div.bookingDetails div.bookingDetail div.bookingDetailValue label.carCompanyName {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+div.bsList div.bookingDetails div.bookingDetail div.bookingPrice {
+    font-size: 17px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+div.bsList div.bookingDetails div.bs {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+
+div.bsList div.bookingDetails div.bs label {
+    color: #fff;
+}
+
+div.bsList div.bookingDetails div.bsVoid {
+    background: #999;
+}
+
+div.bsList div.bookingDetails div.bsPending {
+    background: #e98003;
+}
+
+div.bsList div.bookingDetails div.bsDeposit {
+    background: #22bba7;
+}
+
+div.bsList div.bookingDetails div.bsPaid {
+    background: #77bc23;
+}
+
+div.bsList div.bookingDetails div.bsReserved {
+    background: #188ace;
+}
+
+div.bsList div.bookingDetails div.bsCancelled {
+    background: #bc2143;
+}
+
+div.bsList div.extras {
+    margin-bottom: 10px;
+}
+
+div.bsList div.extras label.extrasTitle {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+div.bsList div.extras div.extra {
+    display: flex;
+    align-items: center;
+    margin: 3px;
+}
+
+div.bsList div.extras div.extra .extraIcon {
+    color: #1f9201;
+    height: 20px;
+}
+
+div.bsList div.extras div.extra label.extraTitle {
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 5px;
+}
+
+div.bsList div.extras div.extra label.extraText {
+    font-size: 13px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.47);
+}
+
+div.bsList div.bsButtons {
+    display: grid;
+    margin-top: 10px;
+}
+
+div.bsList div.bsButtons a,
+div.bsList div.bsButtons button {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 960px) {
+    div.bsList {
+        max-width: 480px;
+    }
+}
+
+@media only screen and (min-width: 960px) {
+    div.bsList {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow-y: auto;
+    }
+}

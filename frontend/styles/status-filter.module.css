@@ -1,0 +1,85 @@
+div.statusFilter {
+    background: #fafafa;
+    margin: 10px 10px 0 0;
+    border: 1px solid #dadada;
+    font-size: 13px;
+    text-align: center;
+}
+
+div.statusFilter ul.statusList {
+    list-style-type: none;
+    font-size: 13px;
+    margin: 15px 0 0 0;
+    padding: 0;
+    display: inline-block;
+    width: 250px;
+}
+
+div.statusFilter ul.statusList li {
+    width: 42%;
+    float: left;
+    margin-bottom: 12px;
+    margin-left: 4%;
+    margin-right: 4%;
+    clear: none;
+}
+
+div.statusFilter ul.statusList li label.bs {
+    padding: 3px;
+    width: 80px;
+    text-align: center;
+    color: #fff;
+    box-shadow: none;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+    left: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 0;
+    display: inline-block;
+    opacity: 1;
+}
+
+div.statusFilter ul.statusList li input[type='checkbox'].statusCheckbox {
+    cursor: pointer;
+}
+
+div.statusFilter ul.statusList li label.bs:hover {
+    opacity: .9;
+}
+
+div.statusFilter ul.statusList li label.bsVoid {
+    background: #999;
+}
+
+div.statusFilter ul.statusList li label.bsPending {
+    background: #e98003;
+}
+
+div.statusFilter ul.statusList li label.bsDeposit {
+    background: #22bba7;
+}
+
+div.statusFilter ul.statusList li label.bsPaid {
+    background: #77bc23;
+}
+
+div.statusFilter ul.statusList li label.bsReserved {
+    background: #188ace;
+}
+
+div.statusFilter ul.statusList li label.bsCancelled {
+    background: #bc2143;
+}
+
+div.statusFilter div.filterActions {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+div.statusFilter div.filterActions span.uncheckall {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0064C8;
+}

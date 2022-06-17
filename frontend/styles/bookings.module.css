@@ -1,0 +1,93 @@
+div.bookings {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+/* Device width is lower than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+
+    div.bookings div.col1,
+    div.bookings div.col2 {
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+    }
+
+    div.bookings div.col1 .clCompanyFilter label.accordion,
+    div.bookings div.col1 .clStatusFilter label.accordion,
+    div.bookings div.col1 .clBookingFilter label.accordion {
+        background: #fff;
+    }
+
+    div.bookings div.col1 .clCompanyFilter,
+    div.bookings div.col1 .clStatusFilter,
+    div.bookings div.col1 .clBookingFilter {
+        margin: 10px;
+        background-color: #fff;
+        max-width: 480px;
+    }
+
+    div.bookings div.col1 .clBookingFilter div[class*="panel"] {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    div.bookings div.col1 .clStatusFilter,
+    div.bookings div.col1 .clBookingFilter {
+        margin-bottom: 10px;
+    }
+
+    div.bookings {
+        overflow-y: auto;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.bookings div.col1 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 300px;
+        padding: 12px 0 0 12px;
+        background: #fefefe;
+        overflow: auto;
+    }
+
+    div.bookings div.col1 .clCompanyFilter label.accordion,
+    div.bookings div.col1 .clStatusFilter label.accordion,
+    div.bookings div.col1 .clBookingFilter label.accordion {
+        background: #fafafa;
+    }
+
+    div.bookings div.col1 .clCompanyFilter,
+    div.bookings div.col1 .clStatusFilter,
+    div.bookings div.col1 .clBookingFilter {
+        margin: 10px 10px 10px 0;
+        background-color: #fafafa;
+    }
+
+    div.bookings div.col1 .clBookingFilter div[class*="panel"] {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    div.bookings div.col1 .clStatusFilter,
+    div.bookings div.col1 .clBookingFilter {
+        margin-bottom: 10px;
+    }
+
+    div.bookings div.col2 {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 300px;
+    }
+}

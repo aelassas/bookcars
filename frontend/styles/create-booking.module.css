@@ -1,0 +1,274 @@
+div.booking {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+div.booking .bookingFormTitle {
+    text-align: center;
+    text-transform: capitalize;
+    color: #f37022;
+    margin-bottom: 30px;
+}
+
+div.booking div.bookingInfo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+div.booking div.bookingInfo label {
+    color: #444;
+    display: inline-block;
+    font-size: 17px;
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+div.booking div.bookingOptionsContainer,
+div.booking div.bookingDetailsContainer {
+    background: #fbfbfb;
+    border: 1px solid #d9d8d9;
+    padding: 25px;
+    margin-bottom: 15px;
+}
+
+div.booking div.bookingOptions {
+    color: #333;
+    user-select: none;
+}
+
+div.booking div.bookingOptions span.bookingOptionLabel {
+    font-weight: 700;
+}
+
+div.booking div.bookingOptions span.bookingOptionLabel::after {
+    content: ' ';
+}
+
+div.booking div.bookingOptions span.bookingOptionValue {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+div.booking div.bookingDetails {
+    display: table;
+    color: #333;
+    font-size: 15px;
+}
+
+div.booking div.bookingDetails div.bookingDetail {
+    display: table-row;
+}
+
+div.booking div.bookingDetails div.bookingDetail label.bookingDetailTitle,
+div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue {
+    display: table-cell;
+}
+
+div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+div.booking div.bookingDetails div.bookingDetail label.bookingDetailTitle {
+    font-weight: 700;
+    width: 250px;
+}
+
+div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue div.carCompany {
+    display: flex;
+    align-items: center;
+}
+
+div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue label.carCompanyName {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+div.booking div.bookingDetails div.bookingDetail div.bookingPrice {
+    font-size: 17px;
+    font-weight: 700;
+    color: #333;
+}
+
+div.booking div.driverDetails {
+    background: #fbfbfb;
+    border: 1px solid #d9d8d9;
+    padding: 25px;
+}
+
+div.booking div.bookingTos {
+    margin-top: 10px;
+}
+
+div.booking div.payment {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    padding: 25px;
+    background-color: #e5efe5;
+    border: 1px solid #d9d8d9;
+}
+
+div.booking div.payment div.cost {
+    color: #1c8901;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #1c8901;
+    border-radius: 3px;
+    margin-top: -45px;
+    margin-bottom: 15px;
+}
+
+div.booking div.payment div.cost div.securePaymentLabel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+div.booking div.payment div.cost div.securePaymentLabel label {
+    margin-left: 5px;
+}
+
+div.booking div.payment div.cost div.securePaymentLabel .securePaymentLock {
+    height: 16px;
+}
+
+div.booking div.payment div.cost div.securePaymentCost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.booking div.payment div.cost div.securePaymentCost label.costTitle,
+div.booking div.payment div.cost div.securePaymentCost label.costValue {
+    display: table-cell;
+    padding: 5px;
+}
+
+div.booking div.payment div.securePaymentLogo {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+div.booking div.payment div.securePaymentInfo {
+    display: flex;
+    justify-content: center;
+    color: #1c8901;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+div.booking div.payment div.securePaymentInfo .securePaymentLock {
+    height: 16px;
+}
+
+div.booking div.bookingButtons {
+    display: inline-block;
+    width: 100%;
+}
+
+div.booking div.bookingButtons button,
+div.booking div.bookingButtons a {
+    float: right;
+}
+
+div.booking .btnBook,
+div.booking .btnCancel {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 500;
+    border: 0;
+    border-radius: 5px;
+    color: #fff;
+    height: 42px;
+    min-width: 75px;
+    margin: 0;
+    white-space: nowrap;
+    padding: 5px 32px;
+    margin-left: 7px;
+}
+
+div.booking .btnBook {
+    background: #f37022;
+}
+
+div.booking .btnCancel {
+    background: #999;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.booking .bookingForm {
+        padding: 30px;
+        margin: 10px;
+    }
+
+    div.booking .btnBook,
+    div.booking .btnCancel {
+        width: 100%;
+    }
+
+    div.booking div.bookingOptions span.bookingOptionValue,
+    div.booking div.bookingDetails div.bookingDetail label.bookingDetailTitle,
+    div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue {
+        display: table-row;
+    }
+
+    div.booking div.bookingDetails div.bookingDetail div.bookingDetailValue {
+        line-height: 25px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.booking .bookingForm {
+        margin: 45px 0 20px calc(50% - 350px);
+        width: 700px;
+        padding: 30px;
+    }
+
+    div.booking div.driverDetailsForm {
+        width: 390px;
+        margin-left: calc(50% - 195px);
+    }
+
+    div.booking div.payment div.card {
+        width: 410px;
+        margin-left: calc(50% - 205px);
+        padding-bottom: 10px;
+    }
+
+    div.booking .cardNumber {
+        width: 395px;
+    }
+
+    div.booking div.payment .cardMonth,
+    div.booking div.payment .cardYear {
+        margin-right: 15px;
+        width: 190px;
+    }
+
+    div.booking div.payment .cvv {
+        width: 190px;
+    }
+}

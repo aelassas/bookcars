@@ -1,0 +1,35 @@
+/* Header */
+
+.headerAction {
+    margin-right: 20px;
+}
+
+.headerDesktop {
+    display: flex;
+}
+
+.headerMobile {
+    display: none;
+}
+
+.btnSignin {
+    width: 75px;
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+
+    .headerDesktop {
+        display: none;
+    }
+
+    .headerMobile {
+        display: flex;
+        margin-right: -13px;
+    }
+}

@@ -8,14 +8,12 @@ git pull
 sudo chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/frontend
-sudo rm -rf build
 
 npm ci
 npm run build
 
-sudo rm -rf /var/www/bookcars.ma/frontend
-sudo mkdir -p /var/www/bookcars.ma/frontend
-sudo cp -rf build/* /var/www/bookcars.ma/frontend
+sudo systemctl restart bookcars-frontend
+sudo systemctl status bookcars-frontend --no-pager
 
 finish_time=`date +%s`
 elapsed_time=$((finish_time  - start_time))
