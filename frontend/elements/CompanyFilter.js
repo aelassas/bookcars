@@ -17,14 +17,11 @@ export default function CompanyFilter(props) {
 
         async function init() {
             try {
-                console.log('companyFilter.init');
                 Helper.setLanguage(commonStrings);
 
                 const companies = await CompanyService.getAllCompanies();
-                console.log('companies.length', companies.length);
                 setCompanies(companies);
                 const companyIds = Helper.flattenCompanies(companies);
-                console.log('companyIds.length', companyIds.length);
                 setCheckedCompanies(companyIds);
                 if (props.onLoad) props.onLoad(companyIds);
             }
@@ -39,21 +36,13 @@ export default function CompanyFilter(props) {
 
     useEffect(() => {
         if (companies.length > 0) {
-            console.log('checkboxes.start');
             const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
-            console.log('checkboxes.length', checkboxes.length);
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
             console.log('checkboxes.done');
         }
     }, [companies]);
-
-    useEffect(() => {
-        if (checkedCompanies.length > 0 && props.onChange) {
-            props.onChange(Helper.clone(checkedCompanies));
-        }
-    }, [checkedCompanies]);
 
     const handleCompanyClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
@@ -81,7 +70,11 @@ export default function CompanyFilter(props) {
             }
         }
 
-        setCheckedCompanies(Helper.clone(checkedCompanies));
+        setCheckedCompanies(checkedCompanies);
+
+        if (props.onChange) {
+            props.onChange(checkedCompanies);
+        }
     };
 
     const handleUncheckAllChange = (e) => {
@@ -101,7 +94,11 @@ export default function CompanyFilter(props) {
 
             const companyIds = Helper.flattenCompanies(companies);
             setAllChecked(true);
-            setCheckedCompanies(Helper.clone(companyIds));
+            setCheckedCompanies(companyIds);
+
+            if (props.onChange) {
+                props.onChange(companyIds);
+            }
         }
     };
 
