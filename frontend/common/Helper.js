@@ -5,14 +5,17 @@ import UserService from "../services/UserService";
 
 export default class Helper {
 
-    static setLanguage(strings) {
+    static setLanguage(str) {
         let language = UserService.getQueryLanguage();
 
         if (language === '' || !Env.LANGUAGES.includes(language)) {
             language = UserService.getLanguage();
         }
-        
-        strings.setLanguage(language);
+
+        if (str.setLanguage) {
+            str.setLanguage(language);
+            console.log('Helper.setLanguage');
+        }
     }
 
     static joinURL(part1, part2) {
