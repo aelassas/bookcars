@@ -78,26 +78,40 @@ class CompanyFilter extends Component {
         }
     };
 
-    componentDidMount() {
-        Helper.setLanguage(commonStrings);
+    async componentDidMount() {
+        try {
+            console.log('companyFilter.componentDidMount');
+            Helper.setLanguage(commonStrings);
 
-        CompanyService.getAllCompanies()
-            .then(companies => {
-                const companyIds = Helper.flattenCompanies(companies);
+            const companies = await CompanyService.getAllCompanies();
 
-                if (this.props.onLoad) {
-                    this.props.onLoad(companyIds);
-                }
+            const companyIds = Helper.flattenCompanies(companies);
 
-                this.setState({ companies, checkedCompanies: companyIds }, () => {
+            this.setState({ companies, checkedCompanies: companyIds }, () => {
+                try {
                     const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
-
+                    console.log('checkboxes.length', checkboxes.length);
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = true;
                     });
-                });
-            })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                    console.log('checkboxes.done');
+                } catch (err) {
+                    console.log(err);
+                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                } finally {
+                    console.log('companyFilter.onLoad.finally');
+                    if (this.props.onLoad) {
+                        console.log('companyFilter.onLoad');
+                        this.props.onLoad(companyIds);
+                    }
+                }
+            });
+        }
+        catch (err) {
+            console.log(err);
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        }
+
     }
 
     render() {
