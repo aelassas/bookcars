@@ -84,6 +84,7 @@ class CompanyFilter extends Component {
 
         CompanyService.getAllCompanies()
             .then(companies => {
+                console.log('companiesFilter.companies', companies.length)
                 const companyIds = Helper.flattenCompanies(companies);
                 this.setState({ companies, checkedCompanies: companyIds }, () => {
                     const { checkedCompanies } = this.state;
@@ -92,6 +93,7 @@ class CompanyFilter extends Component {
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = true;
                     });
+                    console.log('companiesFilter.checkboxes done')
 
                     if (this.props.onLoad) {
                         this.props.onLoad(checkedCompanies);
