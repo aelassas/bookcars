@@ -283,13 +283,7 @@ class CarList extends Component {
                                                 objectFit='contain'
                                             />
                                         </div>
-                                        <label
-                                            className={styles.carCompanyInfo}
-                                            style={{
-                                                position: 'absolute',
-                                                left: Env.COMPANY_IMAGE_WIDTH,
-                                            }}
-                                        >{car.company.fullName}</label>
+                                        <label className={styles.carCompanyInfo}>{car.company.fullName}</label>
                                     </div>
                                 }
                             </div>
