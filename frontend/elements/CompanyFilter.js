@@ -86,23 +86,18 @@ class CompanyFilter extends Component {
             .then(companies => {
                 console.log('companiesFilter.companies', companies.length)
                 const companyIds = Helper.flattenCompanies(companies);
-                this.setState({ companies, checkedCompanies: companyIds }, () => {
-                    try {
-                        const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
+                console.log('companiesFilter.companyIds', companyIds.length)
+                if (this.props.onLoad) {
+                    this.props.onLoad(companyIds);
+                }
 
-                        checkboxes.forEach(checkbox => {
-                            checkbox.checked = true;
-                        });
-                        console.log('companiesFilter.checkboxes done')
-                    } catch (err) {
-                        console.log(err);
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    }
-                    finally {
-                        if (this.props.onLoad) {
-                            this.props.onLoad(companyIds);
-                        }
-                    }
+                this.setState({ companies, checkedCompanies: companyIds }, () => {
+                    const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
+
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                    console.log('companiesFilter.checkboxes done')
                 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
