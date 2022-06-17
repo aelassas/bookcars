@@ -1,0 +1,49 @@
+li.msOption {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.msOption .Mui-focused,
+.msOption:focus,
+.msOption:focus-visible,
+.msOption:focus-within {
+    background: #eee !important
+}
+
+li.msOption:hover {
+    background: #eee;
+    cursor: pointer;
+}
+
+.optionImage {
+    margin-top: 5px;
+}
+
+.optionCar {
+    height: 75px;
+}
+
+.optionName {
+    color: #333;
+    display: inline-block;
+    font-size: .9em;
+    line-height: 1em;
+    white-space: nowrap;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.carOptionName {
+    color: #333;
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.suo {
+    margin-bottom: 3px;
+}

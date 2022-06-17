@@ -1,0 +1,53 @@
+li.bsS {
+    padding: 7px;
+    text-align: center;
+    font-weight: 200;
+    color: #fff;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bsS:hover {
+    opacity: .93;
+}
+
+.bsSVoid,
+.bsSVoid:hover {
+    background: #999 !important;
+}
+
+.bsSPending,
+.bsSPending:hover {
+    background: #e98003 !important;
+}
+
+.bsSDeposit,
+.bsSDeposit:hover {
+    background: #22bba7 !important;
+}
+
+.bsSPaid,
+.bsSPaid:hover {
+    background: #77bc23 !important;
+}
+
+.bsSReserved,
+.bsSReserved:hover {
+    background: #188ace !important;
+}
+
+.bsSCancelled,
+.bsSCancelled:hover {
+    background: #bc2143 !important;
+}
+
+.bsSSSv {
+    display: inherit;
+    text-align: center;
+    font-weight: 200;
+    color: #fff;
+    padding: 3px;
+    opacity: .93;
+}

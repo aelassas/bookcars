@@ -1,0 +1,41 @@
+div.cars {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: auto;
+}
+
+div.cars .filter {
+    margin: 10px 0;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.cars div.col1 {
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    div.cars div.col2 {
+        padding: 1px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.cars div.col1 {
+        float: left;
+        width: 300px;
+        margin-left: 20px;
+    }
+
+    .cars div.col2 {
+        float: left;
+        width: calc(100% - 320px);
+        margin-bottom: 50px;
+    }
+}

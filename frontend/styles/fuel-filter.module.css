@@ -1,0 +1,26 @@
+div.fuelFilter div.filterElements {
+    padding: 7px 5px;
+}
+
+div.fuelFilter div.filterElements div.filterElement input[type='checkbox'].fuelCheckbox {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+div.fuelFilter div.filterElements div.filterElement label {
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+div.fuelFilter div.filterActions {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+div.fuelFilter div.filterActions span.uncheckall {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0064C8;
+}
