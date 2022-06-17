@@ -220,6 +220,7 @@ class CarList extends Component {
 
         if (companies) {
             if (companies.length > 0) {
+                console.log('componentDidMount.companies', companies.length);
                 this.fetch();
             } else {
                 this.setState({ rows: [], rowCount: 0, loading: false, fetch: false }, () => {
@@ -246,7 +247,8 @@ class CarList extends Component {
         return (
             <section className={styles.carList}>
                 {rows.length === 0 ?
-                    !loading && !this.props.loading && <Card variant="outlined" className={styles.emptyList}>
+                    !loading && !this.props.loading &&
+                    <Card variant="outlined" className={styles.emptyList}>
                         <CardContent>
                             <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
                         </CardContent>
