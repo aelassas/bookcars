@@ -79,14 +79,11 @@ class CompanyFilter extends Component {
     };
 
     componentDidMount() {
-        console.log('companiesFilter.componentDidMount');
         Helper.setLanguage(commonStrings);
 
         CompanyService.getAllCompanies()
             .then(companies => {
-                console.log('companiesFilter.companies', companies.length)
                 const companyIds = Helper.flattenCompanies(companies);
-                console.log('companiesFilter.companyIds', companyIds.length)
                 if (this.props.onLoad) {
                     this.props.onLoad(companyIds);
                 }
@@ -97,7 +94,6 @@ class CompanyFilter extends Component {
                     checkboxes.forEach(checkbox => {
                         checkbox.checked = true;
                     });
-                    console.log('companiesFilter.checkboxes done')
                 });
             })
             .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
