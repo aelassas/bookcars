@@ -1,61 +1,90 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 import CompanyService from '../services/CompanyService';
 import Accordion from './Accordion';
-import { toast } from 'react-toastify';
 import Image from 'next/image';
 
 import styles from '../styles/company-filter.module.css';
 
-class CompanyFilter extends Component {
+export default function CompanyFilter(props) {
+    const [companies, setCompanies] = useState([]);
+    const [checkedCompanies, setCheckedCompanies] = useState([]);
+    const [allChecked, setAllChecked] = useState(true);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            companies: [],
-            checkedCompanies: [],
-            allChecked: true
+    useEffect(() => {
+
+        async function init() {
+            try {
+                console.log('companyFilter.init');
+                Helper.setLanguage(commonStrings);
+
+                const companies = await CompanyService.getAllCompanies();
+                console.log('companies.length', companies.length);
+                setCompanies(companies);
+                const companyIds = Helper.flattenCompanies(companies);
+                console.log('companyIds.length', companyIds.length);
+                setCheckedCompanies(companyIds);
+                if (props.onLoad) props.onLoad(companyIds);
+            }
+            catch (err) {
+                console.log(err);
+                Helper.error();
+            }
         }
-    }
 
-    handleCompanyClick = (e) => {
+        init();
+    }, []);
+
+    useEffect(() => {
+        if (companies.length > 0) {
+            console.log('checkboxes.start');
+            const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
+            console.log('checkboxes.length', checkboxes.length);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            console.log('checkboxes.done');
+        }
+    }, [companies]);
+
+    useEffect(() => {
+        if (checkedCompanies.length > 0 && props.onChange) {
+            props.onChange(Helper.clone(checkedCompanies));
+        }
+    }, [checkedCompanies]);
+
+    const handleCompanyClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckCompanyChange(event);
+        handleCheckCompanyChange(event);
     };
 
-    handleCheckCompanyChange = (e) => {
-        const { companies, checkedCompanies } = this.state;
+    const handleCheckCompanyChange = (e) => {
         const companyId = e.currentTarget.getAttribute('data-id');
 
         if (e.currentTarget.checked) {
             checkedCompanies.push(companyId);
 
             if (checkedCompanies.length === companies.length) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             const index = checkedCompanies.indexOf(companyId);
             checkedCompanies.splice(index, 1);
 
             if (checkedCompanies.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ checkedCompanies }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(checkedCompanies);
-            }
-        });
+        setCheckedCompanies(Helper.clone(checkedCompanies));
     };
 
-    handleUncheckAllChange = (e) => {
-        const { allChecked } = this.state;
+    const handleUncheckAllChange = (e) => {
         const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
 
         if (allChecked) { // uncheck all
@@ -63,97 +92,51 @@ class CompanyFilter extends Component {
                 checkbox.checked = false;
             });
 
-            this.setState({ allChecked: false, checkedCompanies: [] });
+            setAllChecked(false);
+            setCheckedCompanies([]);
         } else { // check all
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
 
-            const { companies } = this.state, companyIds = Helper.flattenCompanies(companies);
-            this.setState({ allChecked: true, checkedCompanies: companyIds }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(companyIds);
-                }
-            });
+            const companyIds = Helper.flattenCompanies(companies);
+            setAllChecked(true);
+            setCheckedCompanies(Helper.clone(companyIds));
         }
     };
 
-    async componentDidMount() {
-        try {
-            console.log('companyFilter.componentDidMount');
-            Helper.setLanguage(commonStrings);
 
-            const companies = await CompanyService.getAllCompanies();
-            console.log('companies.length', companies.length);
-            const companyIds = Helper.flattenCompanies(companies);
-            console.log('companyIds.length', companyIds.length);
-            this.setState({ companies, checkedCompanies: companyIds }, () => {
-                try {
-                    console.log('checkboxes.start');
-                    const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
-                    console.log('checkboxes.length', checkboxes.length);
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = true;
-                    });
-                    console.log('checkboxes.done');
-                } catch (err) {
-                    console.log(err);
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                } finally {
-                    console.log('companyFilter.onLoad.finally');
-                    if (this.props.onLoad) {
-                        console.log('companyFilter.onLoad');
-                        this.props.onLoad(companyIds);
-                    }
+    return (
+        companies.length > 0 &&
+        <Accordion title={commonStrings.SUPPLIER} collapse={props.collapse} offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${props.className ? `${props.className} ` : ''}${styles.companyFilter}`}>
+            <ul className={styles.companyList}>
+                {
+                    companies.map(company => (
+                        <li key={company._id}>
+                            <input className={styles.companyCheckbox} type='checkbox' data-id={company._id} onChange={handleCheckCompanyChange} />
+                            <label onClick={handleCompanyClick}>
+                                <div style={{
+                                    position: 'relative',
+                                    width: Env.COMPANY_IMAGE_WIDTH,
+                                    height: Env.COMPANY_IMAGE_HEIGHT
+                                }}>
+                                    <Image
+                                        src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                        alt={company.fullName}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
+                            </label>
+                        </li>
+                    ))
                 }
-            });
-        }
-        catch (err) {
-            console.log(err);
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-        }
-    }
-
-    render() {
-        const { companies, allChecked } = this.state;
-
-        return (
-            companies.length > 0 ? (
-                <Accordion title={commonStrings.SUPPLIER} collapse={this.props.collapse} offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${this.props.className ? `${this.props.className} ` : ''}${styles.companyFilter}`}>
-                    <ul className={styles.companyList}>
-                        {
-                            companies.map(company => (
-                                <li key={company._id}>
-                                    <input className={styles.companyCheckbox} type='checkbox' data-id={company._id} onChange={this.handleCheckCompanyChange} />
-                                    <label onClick={this.handleCompanyClick}>
-                                        <div style={{
-                                            position: 'relative',
-                                            width: Env.COMPANY_IMAGE_WIDTH,
-                                            height: Env.COMPANY_IMAGE_HEIGHT
-                                        }}>
-                                            <Image
-                                                src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                                alt={company.fullName}
-                                                layout='fill'
-                                                objectFit='contain'
-                                            />
-                                        </div>
-                                    </label>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                    <div className={styles.filterActions}>
-                        <span onClick={this.handleUncheckAllChange} className={styles.uncheckall}>
-                            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                        </span>
-                    </div>
-                </Accordion>
-            )
-                :
-                <></>
-        );
-    }
+            </ul>
+            <div className={styles.filterActions}>
+                <span onClick={handleUncheckAllChange} className={styles.uncheckall}>
+                    {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                </span>
+            </div>
+        </Accordion>
+    );
 }
-
-export default CompanyFilter;
