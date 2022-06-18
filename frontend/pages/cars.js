@@ -148,13 +148,16 @@ export default class Cars extends Component {
                             {!loading &&
                                 <>
                                     <CarFilter
+                                        className={styles.filter}
                                         pickupLocation={pickupLocation}
                                         dropOffLocation={dropOffLocation}
                                         from={from}
                                         to={to}
                                         onSubmit={this.handleCarFilterSubmit}
+
                                     />
                                     <CompanyFilter
+                                        className={styles.filter}
                                         companies={allCompanies}
                                         onChange={this.handleCompanyFilterChange}
                                     />

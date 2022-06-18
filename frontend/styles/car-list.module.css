@@ -1,3 +1,9 @@
+section.carList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 section.carList .emptyList {
     margin-top: 15px;
     text-align: center;
@@ -18,26 +24,9 @@ section.carList article .btnBook {
     padding: 1em;
 }
 
-/* Device width is between 500px and 960px */
-
-@media only screen and (min-width: 500px) and (max-width: 960px) {
-    section.carList article {
-        height: 750px !important;
-    }
-
-    section.carList article div.car .carImg {
-        width: 50% !important;
-    }
-}
-
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    section.carList {
-        width: 100%;
-        height: 100%;
-    }
-
     section.carList article {
         position: relative;
         background: #fff;
@@ -47,6 +36,7 @@ section.carList article .btnBook {
         font-size: 12px;
         margin: 0 1px 10px;
         height: 730px;
+        max-width: 480px;
         padding: 15px;
     }
 
@@ -237,10 +227,7 @@ section.carList article .btnBook {
 @media only screen and (min-width: 960px) {
 
     section.carList {
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        padding-top: 10px;
+        padding: 10px;
     }
 
     section.carList article {
@@ -253,7 +240,6 @@ section.carList article .btnBook {
         margin-bottom: 10px;
         height: 430px;
         width: 800px;
-        margin-left: calc(50% - 400px);
     }
 
     section.carList article div.name {
