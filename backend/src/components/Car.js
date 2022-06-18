@@ -226,18 +226,20 @@ export default class Car extends Component {
                                         </li>
                                     </ul>
                                     <ul className='extras-list'>
-                                        <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
-                                                <div className='car-info-list-item'>
-                                                    {car.available ? <CheckIcon /> : <UncheckIcon />}
-                                                    {car.available ?
-                                                        <span className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
-                                                        :
-                                                        <span className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
-                                                    }
-                                                </div>
-                                            </Tooltip>
-                                        </li>
+                                        {edit &&
+                                            <li className={car.available ? 'car-available' : 'car-unavailable'}>
+                                                <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                                                    <div className='car-info-list-item'>
+                                                        {car.available ? <CheckIcon /> : <UncheckIcon />}
+                                                        {car.available ?
+                                                            <span className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
+                                                            :
+                                                            <span className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
+                                                        }
+                                                    </div>
+                                                </Tooltip>
+                                            </li>
+                                        }
                                         <li>
                                             <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
                                                 <div className='car-info-list-item'>
