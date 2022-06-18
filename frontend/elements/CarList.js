@@ -62,7 +62,6 @@ class CarList extends Component {
         const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileage, deposit } = this.state;
 
         this.setState({ loading: true });
-        console.log('loading.start', this.state.loading);
 
         const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
 
@@ -79,7 +78,6 @@ class CarList extends Component {
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
-                    console.log('loading.end', this.state.loading);
                 });
             })
             .catch(() => {
