@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: false,
   poweredByHeader: false,
   images: {
-    domains: ['localhost', 'bookcars.ddns.net', 'bookcars.ma'],
+    domains: ['localhost', 'bookcars.ddns.net', 'bookcars.ma']
   }
 }
 
