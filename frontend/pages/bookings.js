@@ -53,7 +53,7 @@ export default class Bookings extends Component {
         this.setState({ loadingCompanies: true });
         const allCompanies = await CompanyService.getAllCompanies();
         const companies = Helper.flattenCompanies(allCompanies);
-        this.setState({ user, allCompanies, companies });
+        this.setState({ user, allCompanies, companies, loadingCompanies: false });
     };
 
     render() {
