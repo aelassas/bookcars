@@ -501,6 +501,7 @@ class BookingList extends Component {
                             </div>
                             :
                             <DataGrid
+                                className={styles.dataGrid}
                                 checkboxSelection={this.props.checkboxSelection}
                                 getRowId={(row) => row._id}
                                 columns={columns}

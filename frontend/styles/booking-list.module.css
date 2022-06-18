@@ -1,12 +1,16 @@
-div.bsList .emptyList {
-    margin-top: 15px;
-    text-align: center;
-    width: 250px;
-    margin-left: calc(50% - 125px);
+div.bsList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-div.bsList {
+div.bsList .dataGrid {
     width: 100%;
+}
+
+div.bsList .emptyList {
+    text-align: center;
+    width: 250px;
 }
 
 div.bsList a.cellCompany {
@@ -56,7 +60,7 @@ div.bsList span.bp {
 }
 
 div.bsList div.bookingDetails {
-    display: table;
+    display: inline-block;
     color: #333;
     font-size: 15px;
     background-color: #fff;
@@ -192,6 +196,10 @@ div.bsList div.bsButtons button {
     div.bsList {
         max-width: 480px;
     }
+
+    div.bsList .emptyList {
+        margin-top: 10px;
+    }
 }
 
 @media only screen and (min-width: 960px) {
@@ -202,5 +210,9 @@ div.bsList div.bsButtons button {
         bottom: 0;
         left: 0;
         overflow-y: auto;
+    }
+
+    div.bsList .emptyList {
+        margin-top: 15px;
     }
 }
