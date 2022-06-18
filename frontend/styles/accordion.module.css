@@ -1,6 +1,7 @@
 div.accordionContainer {
     background: #fff;
     border: 1px solid #dadada;
+    border-radius: 5px;
     font-size: 13px;
     user-select: none;
 }
@@ -17,7 +18,18 @@ div.accordionContainer label.accordion {
     font-size: 13px;
     line-height: 2em;
     background: #fff;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+div.accordionContainer label.accordionActive {
     border-bottom: 1px solid #dadada;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 div.accordionContainer label.accordionActive,
