@@ -15,6 +15,7 @@ div.bookings {
 
     div.bookings div.col1,
     div.bookings div.col2 {
+        width: 100%;
         max-width: 480px;
     }
 

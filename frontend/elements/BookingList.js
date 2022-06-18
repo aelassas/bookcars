@@ -365,7 +365,7 @@ class BookingList extends Component {
                         </Card>
                         :
                         Env.isMobile() ?
-                            <div>
+                            <>
                                 {rows.map((booking, index) => {
                                     const from = new Date(booking.from);
                                     const to = new Date(booking.to);
@@ -498,7 +498,7 @@ class BookingList extends Component {
                                         </div>
                                     );
                                 })}
-                            </div>
+                            </>
                             :
                             <DataGrid
                                 className={styles.dataGrid}
