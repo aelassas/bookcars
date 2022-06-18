@@ -5,10 +5,8 @@ section.carList {
 }
 
 section.carList .emptyList {
-    margin-top: 15px;
     text-align: center;
     width: 250px;
-    margin-left: calc(50% - 125px);
 }
 
 section.carList article .btnBook {
