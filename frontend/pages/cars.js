@@ -12,7 +12,7 @@ import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';
 import CarList from '../elements/CarList';
-import { toast } from 'react-toastify';
+import CompanyService from '../services/CompanyService';
 
 import styles from '../styles/cars.module.css';
 
@@ -28,6 +28,7 @@ export default class Cars extends Component {
             dropOffLocation: null,
             from: null,
             to: null,
+            allCompanies: [],
             companies: [],
             reload: false,
             loading: true,
@@ -37,10 +38,6 @@ export default class Cars extends Component {
             deposit: -1
         };
     }
-
-    handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies, loading: false });
-    };
 
     handleCarListLoad = (data) => {
         this.setState({ reload: false });
@@ -125,9 +122,12 @@ export default class Cars extends Component {
                     return this.setState({ loading: false, noMatch: true });
                 }
 
-                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true });
+                const allCompanies = await CompanyService.getAllCompanies();
+                const companies = Helper.flattenCompanies(allCompanies);
+
+                this.setState({ allCompanies, companies, pickupLocation, dropOffLocation, from, to, visible: true, loading: false });
             } catch (err) {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error();
             }
 
         });
@@ -138,7 +138,7 @@ export default class Cars extends Component {
     }
 
     render() {
-        const { companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit } = this.state;
+        const { allCompanies, companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
@@ -146,20 +146,18 @@ export default class Cars extends Component {
                     <div className={styles.cars}>
                         <div className={styles.col1}>
                             {!loading &&
-                                <CarFilter
-                                    pickupLocation={pickupLocation}
-                                    dropOffLocation={dropOffLocation}
-                                    from={from}
-                                    to={to}
-                                    onSubmit={this.handleCarFilterSubmit}
-                                />
-                            }
-                            <CompanyFilter
-                                onLoad={this.handleCompanyFilterLoad}
-                                onChange={this.handleCompanyFilterChange}
-                            />
-                            {!loading &&
                                 <>
+                                    <CarFilter
+                                        pickupLocation={pickupLocation}
+                                        dropOffLocation={dropOffLocation}
+                                        from={from}
+                                        to={to}
+                                        onSubmit={this.handleCarFilterSubmit}
+                                    />
+                                    <CompanyFilter
+                                        companies={allCompanies}
+                                        onChange={this.handleCompanyFilterChange}
+                                    />
                                     <FuelFilter className={styles.filter} onChange={this.handleFuelFilterChange} />
                                     <GearboxFilter className={styles.filter} onChange={this.handleGearboxFilterChange} />
                                     <MileageFilter className={styles.filter} onChange={this.handleMileageFilterChange} />

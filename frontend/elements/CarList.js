@@ -220,7 +220,6 @@ class CarList extends Component {
 
         if (companies) {
             if (companies.length > 0) {
-                console.log('componentDidMount.companies', companies.length);
                 this.fetch();
             } else {
                 this.setState({ rows: [], rowCount: 0, loading: false, fetch: false }, () => {
