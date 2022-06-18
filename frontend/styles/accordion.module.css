@@ -18,10 +18,7 @@ div.accordionContainer label.accordion {
     font-size: 13px;
     line-height: 2em;
     background: #fff;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-radius: 5px;
 }
 
 div.accordionContainer label.accordionActive {
