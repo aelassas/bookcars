@@ -14,23 +14,13 @@ export default function CompanyFilter(props) {
     const [allChecked, setAllChecked] = useState(true);
 
     useEffect(() => {
-
-        async function init() {
-            try {
-                Helper.setLanguage(commonStrings);
-                const companies = await CompanyService.getAllCompanies();
-                setCompanies(companies);
-                const companyIds = Helper.flattenCompanies(companies);
-                setCheckedCompanies(companyIds);
-                if (props.onLoad) props.onLoad(companyIds);
-            }
-            catch (err) {
-                Helper.error();
-            }
-        }
-
-        init();
+        Helper.setLanguage(commonStrings);
     }, []);
+
+    useEffect(() => {
+        setCompanies(props.companies);
+        setCheckedCompanies(Helper.flattenCompanies(props.companies));
+    }, [props.companies]);
 
     useEffect(() => {
         if (companies.length > 0) {
@@ -38,6 +28,7 @@ export default function CompanyFilter(props) {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = true;
             });
+
         }
     }, [companies]);
 

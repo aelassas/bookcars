@@ -6,6 +6,7 @@ import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import StatusFilter from '../elements/StatusFilter';
 import BookingFilter from '../elements/BookingFilter';
+import CompanyService from '../services/CompanyService';
 
 import styles from '../styles/bookings.module.css';
 
@@ -48,12 +49,15 @@ export default class Bookings extends Component {
         this.setState({ reload: false });
     }
 
-    onLoad = (user) => {
-        this.setState({ user, loadingCompanies: true });
+    onLoad = async (user) => {
+        this.setState({ loadingCompanies: true });
+        const allCompanies = await CompanyService.getAllCompanies();
+        const companies = Helper.flattenCompanies(allCompanies);
+        this.setState({ user, allCompanies, companies });
     };
 
     render() {
-        const { user, companies, statuses, filter, reload, loadingCompanies } = this.state;
+        const { user, allCompanies, companies, statuses, filter, reload, loadingCompanies } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -61,23 +65,21 @@ export default class Bookings extends Component {
                     user &&
                     <div className={styles.bookings}>
                         <div className={styles.col1}>
-                            <div>
-                                <CompanyFilter
-                                    onLoad={this.handleCompanyFilterLoad}
-                                    onChange={this.handleCompanyFilterChange}
-                                    className={styles.clCompanyFilter}
-                                />
-                                <StatusFilter
-                                    onChange={this.handleStatusFilterChange}
-                                    className={styles.clStatusFilter}
-                                />
-                                <BookingFilter
-                                    onSubmit={this.handleBookingFilterSubmit}
-                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                    className={styles.clBookingFilter}
-                                    collapse={!Env.isMobile()}
-                                />
-                            </div>
+                            <CompanyFilter
+                                companies={allCompanies}
+                                onChange={this.handleCompanyFilterChange}
+                                className={styles.clCompanyFilter}
+                            />
+                            <StatusFilter
+                                onChange={this.handleStatusFilterChange}
+                                className={styles.clStatusFilter}
+                            />
+                            <BookingFilter
+                                onSubmit={this.handleBookingFilterSubmit}
+                                language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                className={styles.clBookingFilter}
+                                collapse={!Env.isMobile()}
+                            />
                         </div>
                         <div className={styles.col2}>
                             <BookingList
