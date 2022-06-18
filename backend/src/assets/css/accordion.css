@@ -2,6 +2,7 @@ div.accordion-container {
     background: #fff;
     margin: 10px 0;
     border: 1px solid #dadada;
+    border-radius: 5px;
     font-size: 13px;
     user-select: none;
 }
@@ -18,7 +19,15 @@ div.accordion-container label.accordion {
     font-size: 13px;
     line-height: 2em;
     background: #fff;
+    border-radius: 5px;
+}
+
+div.accordion-container label.accordion-active {
     border-bottom: 1px solid #dadada;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 div.accordion-container label.accordion-active,

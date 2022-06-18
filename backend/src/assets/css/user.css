@@ -41,7 +41,11 @@ div.user div.col-1 .user-actions {
         justify-content: center;
     }
 
-    div.user div.col-2 {}
+    div.user div.col-2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 /* Device width is greater than or equal to 960px */

@@ -52,7 +52,7 @@ div.company {
     }
 
     .company div.col-1 {
-        padding-top: 5px;
+        padding: 10px 0;
         background: #fefefe;
         border-bottom: #eee solid 1px;
     }

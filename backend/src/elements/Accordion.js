@@ -4,6 +4,8 @@ import '../assets/css/accordion.css'
 
 class Accordion extends Component {
 
+    accordionRef = null;
+
     handleAccordionClick = (e) => {
         e.currentTarget.classList.toggle('accordion-active');
         const panel = e.currentTarget.nextElementSibling;
@@ -24,9 +26,8 @@ class Accordion extends Component {
 
     componentDidMount() {
         if (this.props.collapse) {
-            const accordion = document.querySelector('.accordion');
-            const panel = accordion.nextElementSibling;
-            accordion.classList.toggle('accordion-active');
+            const panel = this.accordionRef.nextElementSibling;
+            this.accordionRef.classList.toggle('accordion-active');
             panel.style.maxHeight = (panel.scrollHeight + this.props.offsetHeight) + 'px';
         }
     }
@@ -34,7 +35,7 @@ class Accordion extends Component {
     render() {
         return (
             <div className={`${this.props.className ? `${this.props.className} ` : ''}accordion-container`}>
-                <label className='accordion' onClick={this.handleAccordionClick}>{this.props.title}</label>
+                <label ref={ref => this.accordionRef = ref} className='accordion' onClick={this.handleAccordionClick}>{this.props.title}</label>
                 <div className={this.props.collapse ? 'panel-collapse' : 'panel'}>{this.props.children}</div>
             </div>
         );

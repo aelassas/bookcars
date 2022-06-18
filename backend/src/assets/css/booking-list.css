@@ -60,11 +60,11 @@ div.bs-list div.booking-details {
     color: #333;
     font-size: 15px;
     background-color: #fff;
-    margin: 10px;
+    margin: 10px 0;
     padding: 10px;
     border: 1px solid #d9d8d9;
     border-radius: 5px;
-    width: calc(100% - 20px);
+    width: 100%;
 }
 
 div.bs-list div.booking-details div.booking-detail {
@@ -190,6 +190,7 @@ div.bs-list div.bs-buttons button {
 
 @media only screen and (max-width: 960px) {
     div.bs-list {
+        width: calc(100% - 20px);
         max-width: 480px;
     }
 }
