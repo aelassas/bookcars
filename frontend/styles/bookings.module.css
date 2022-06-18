@@ -4,6 +4,9 @@ div.bookings {
     bottom: 0;
     right: 0;
     left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Device width is lower than or equal to 960px */
@@ -12,9 +15,11 @@ div.bookings {
 
     div.bookings div.col1,
     div.bookings div.col2 {
-        display: flex;
-        justify-content: center;
-        padding-top: 10px;
+        max-width: 480px;
+    }
+
+    div.bookings div.col1 {
+        padding-top: 15px;
     }
 
     div.bookings div.col1 .clCompanyFilter label.accordion,
@@ -28,17 +33,13 @@ div.bookings {
     div.bookings div.col1 .clBookingFilter {
         margin: 10px;
         background-color: #fff;
+        width: calc(100% - 20px);
         max-width: 480px;
     }
 
     div.bookings div.col1 .clBookingFilter div[class*="panel"] {
         padding-right: 15px;
         padding-left: 15px;
-    }
-
-    div.bookings div.col1 .clStatusFilter,
-    div.bookings div.col1 .clBookingFilter {
-        margin-bottom: 10px;
     }
 
     div.bookings {
