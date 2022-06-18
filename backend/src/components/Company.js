@@ -24,7 +24,6 @@ import {
 } from '@mui/material';
 import {
     Edit as EditIcon,
-    Mail as MailIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
 
@@ -167,13 +166,6 @@ export default class Company extends Component {
                                     <Tooltip title={commonStrings.UPDATE}>
                                         <IconButton href={`/update-company?c=${company._id}`}>
                                             <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                {edit && user._id !== company._id &&
-                                    <Tooltip title={commonStrings.SEND_MESSAGE}>
-                                        <IconButton>
-                                            <MailIcon />
                                         </IconButton>
                                     </Tooltip>
                                 }

@@ -123,7 +123,6 @@ export default class Cars extends Component {
                                 <CompanyFilter
                                     onLoad={this.handleCompanyFilterLoad}
                                     onChange={this.handleCompanyFilterChange}
-                                    collapse={!Env.isMobile()}
                                     className='filter'
                                 />
 

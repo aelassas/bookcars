@@ -2,6 +2,7 @@ div.info-box {
     background: #fafafa;
     margin: 10px 0;
     border: 1px solid #dadada;
+    border-radius: 5px;
     height: 40px;
 }
 

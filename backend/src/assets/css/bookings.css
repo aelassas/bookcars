@@ -13,7 +13,8 @@ div.bookings {
     div.bookings div.col-1,
     div.bookings div.col-2 {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 
     div.bookings div.col-1 .cl-company-filter label.accordion,

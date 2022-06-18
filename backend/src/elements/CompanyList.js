@@ -21,7 +21,6 @@ import {
 import {
     Visibility as ViewIcon,
     Edit as EditIcon,
-    Mail as MailIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
@@ -175,7 +174,6 @@ class CompanyList extends Component {
                     :
                     rows.map((company, index) => {
                         const edit = admin || (user && user._id === company._id);
-                        const canMessage = admin || (user && user.type === Env.RECORD_TYPE.COMPANY && user._id !== company._id);
                         const canDelete = admin;
 
                         return (
@@ -195,13 +193,6 @@ class CompanyList extends Component {
                                         <Tooltip title={commonStrings.DELETE}>
                                             <IconButton data-id={company._id} data-index={index} onClick={this.handleDelete}>
                                                 <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    {canMessage &&
-                                        <Tooltip title={commonStrings.SEND_MESSAGE}>
-                                            <IconButton>
-                                                <MailIcon />
                                             </IconButton>
                                         </Tooltip>
                                     }
