@@ -305,7 +305,7 @@ class BookingList extends Component {
             if (element) {
                 element.onscroll = (event) => {
                     const { fetch, loading, page, offset } = this.state;
-
+                    console.log('offset', offset)
                     if (fetch
                         && !loading
                         && event.target.scrollTop > 0

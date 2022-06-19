@@ -16,9 +16,11 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .MuiToolbar-root {
+
+    .toolbar {
         min-height: 56px !important;
     }
+
 }
 
 /* Device width is greater than or equal to 960px */
@@ -31,5 +33,4 @@
     .header-mobile {
         display: none;
     }
-
 }

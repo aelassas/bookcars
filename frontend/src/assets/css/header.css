@@ -28,4 +28,8 @@
         display: flex;
         margin-right: -13px;
     }
+
+    .toolbar {
+        min-height: 56px !important;
+    }
 }
