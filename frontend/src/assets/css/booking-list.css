@@ -1,8 +1,16 @@
+div.bs-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+div.bs-list .data-grid {
+    width: 100%;
+}
+
 div.bs-list .empty-list {
-    margin-top: 15px;
     text-align: center;
     width: 250px;
-    margin-left: calc(50% - 125px);
 }
 
 div.bs-list {
@@ -192,6 +200,10 @@ div.bs-list div.bs-buttons button {
     div.bs-list {
         max-width: 480px;
     }
+
+    div.bs-list .empty-list {
+        margin-top: 10px;
+    }
 }
 
 @media only screen and (min-width: 960px) {
@@ -202,5 +214,9 @@ div.bs-list div.bs-buttons button {
         bottom: 0;
         left: 0;
         overflow-y: auto;
+    }
+
+    div.bs-list .empty-list {
+        margin-top: 15px;
     }
 }

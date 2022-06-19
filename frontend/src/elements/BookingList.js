@@ -480,6 +480,7 @@ class BookingList extends Component {
                             </div>
                             :
                             <DataGrid
+                                className='data-grid'
                                 checkboxSelection={this.props.checkboxSelection}
                                 getRowId={(row) => row._id}
                                 columns={columns}
