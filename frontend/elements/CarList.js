@@ -27,7 +27,6 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 
 import styles from '../styles/car-list.module.css';
-import carsStyles from '../styles/cars.module.css';
 
 class CarList extends Component {
 
@@ -54,7 +53,8 @@ class CarList extends Component {
             gearbox: props.gearbox,
             mileage: props.mileage,
             deposit: props.deposit,
-            cars: []
+            cars: [],
+            offset: 0
         };
     }
 
@@ -72,9 +72,6 @@ class CarList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
-                    if (page === 1) {
-                        document.querySelector(`.${carsStyles.cars}`).scrollTo(0, 0);
-                    }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
@@ -86,7 +83,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileage, deposit, cars } = prevState;
+        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileage, deposit, cars, offset } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -130,6 +127,10 @@ class CarList extends Component {
 
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
+        }
+
+        if (offset !== nextProps.offset) {
+            return { offset: nextProps.offset };
         }
 
         return null;
@@ -199,16 +200,18 @@ class CarList extends Component {
         Helper.setLanguage(commonStrings);
         Helper.setLanguage(strings);
 
-        const element = document.querySelector(`.${carsStyles.cars}`);
+        const element = document.querySelector(`.${this.props.containerClassName}`);
+
         if (element) {
             element.onscroll = (event) => {
-                const { fetch, loading, page } = this.state;
-                let offset = 0;
-                if (Env.isMobile()) offset = document.querySelector(`.${carsStyles.col1}`).clientHeight;
+                const { fetch, loading, page, offset } = this.state;
+                let _offset = 0;
+                if (Env.isMobile()) _offset = offset;
+
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
                     this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });

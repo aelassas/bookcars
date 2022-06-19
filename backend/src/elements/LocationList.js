@@ -46,7 +46,8 @@ class LocationList extends Component {
             openDeleteDialog: false,
             openInfoDialog: false,
             locationId: '',
-            locationIndex: -1
+            locationIndex: -1,
+            offset: 0
         };
     }
 
@@ -113,9 +114,6 @@ class LocationList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, loading: false, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
-                    if (page === 1) {
-                        document.querySelector('.location-list').scrollTo(0, 0);
-                    }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
@@ -125,7 +123,7 @@ class LocationList extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, reload } = prevState;
+        const { keyword, reload, offset } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -133,6 +131,10 @@ class LocationList extends Component {
 
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
+        }
+
+        if (offset !== nextProps.offset) {
+            return { offset: nextProps.offset };
         }
 
         return null;
@@ -151,17 +153,18 @@ class LocationList extends Component {
     }
 
     componentDidMount() {
-        const div = document.querySelector('div.locations');
-        if (div) {
-            div.onscroll = (event) => {
-                const { fetch, loading, page } = this.state;
-                let offset = 0;
-                if (Env.isMobile()) offset = document.querySelector('div.col-1').clientHeight;
+        const element = document.querySelector(`.${this.props.containerClassName}`);
+        if (element) {
+            element.onscroll = (event) => {
+                const { fetch, loading, page, offset } = this.state;
+
+                let _offset = 0;
+                if (Env.isMobile()) _offset = offset;
 
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
+                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
                     this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });

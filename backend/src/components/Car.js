@@ -48,6 +48,7 @@ export default class Car extends Component {
             openDeleteDialog: false,
             companies: [],
             statuses: Helper.getBookingStatuses().map(status => status.value),
+            offset: 0
         };
     }
 
@@ -94,15 +95,18 @@ export default class Car extends Component {
                     CarService.getCar(id)
                         .then(car => {
                             if (car) {
+                                const setOffset = () => {
+                                    this.setState({ offset: document.querySelector('.col-1').clientHeight });
+                                };
                                 if (user.type === Env.RECORD_TYPE.ADMIN) {
                                     CompanyService.getAllCompanies()
                                         .then(companies => {
                                             const companyIds = Helper.flattenCompanies(companies);
-                                            this.setState({ companies: companyIds, car, loading: false, visible: true });
+                                            this.setState({ companies: companyIds, car, loading: false, visible: true }, setOffset);
                                         })
                                         .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
                                 } else if (car.company._id === user._id) {
-                                    this.setState({ companies: [user._id], car, loading: false, visible: true });
+                                    this.setState({ companies: [user._id], car, loading: false, visible: true }, setOffset);
                                 } else {
                                     this.setState({ loading: false, noMatch: true });
                                 }
@@ -126,7 +130,7 @@ export default class Car extends Component {
     }
 
     render() {
-        const { visible, loading, error, noMatch, user, car, openDeleteDialog, companies, statuses } = this.state;
+        const { visible, loading, error, noMatch, user, car, openDeleteDialog, companies, statuses, offset } = this.state;
         const edit = (user && car && car.company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id);
         const fr = user && user.language === 'fr';
 
@@ -323,7 +327,8 @@ export default class Car extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                from='car'
+                                containerClassName='car'
+                                offset={offset}
                                 loggedUser={user}
                                 companies={companies}
                                 statuses={statuses}

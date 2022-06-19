@@ -18,7 +18,8 @@ export default class Locations extends Component {
             loading: false,
             keyword: '',
             rowCount: -1,
-            reload: false
+            reload: false,
+            offset: 0
         };
     }
 
@@ -37,10 +38,11 @@ export default class Locations extends Component {
     };
 
     onLoad = (user) => {
+        this.setState({ offset: document.querySelector('.col-1').clientHeight });
     };
 
     render() {
-        const { rowCount, reload, keyword } = this.state;
+        const { rowCount, reload, keyword, offset } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -67,6 +69,8 @@ export default class Locations extends Component {
                     </div>
                     <div className='col-2'>
                         <LocationList
+                            containerClassName='locations'
+                            offset={offset}
                             keyword={keyword}
                             reload={reload}
                             onLoad={this.handleLocationListLoad}

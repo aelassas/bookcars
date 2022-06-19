@@ -41,7 +41,8 @@ export default class Company extends Component {
             loading: false,
             noMatch: false,
             openDeleteDialog: false,
-            rowCount: -1
+            rowCount: -1,
+            offset: 0
         };
     }
 
@@ -104,6 +105,8 @@ export default class Company extends Component {
                                     bio: company.bio,
                                     visible: true,
                                     loading: false
+                                }, () => {
+                                    this.setState({ offset: document.querySelector('div.col-1').clientHeight });
                                 });
                             } else {
                                 this.setState({ loading: false, noMatch: true });
@@ -122,7 +125,7 @@ export default class Company extends Component {
     };
 
     render() {
-        const { visible, loading, error, noMatch, user, company, openDeleteDialog, rowCount } = this.state;
+        const { visible, loading, error, noMatch, user, company, openDeleteDialog, rowCount, offset } = this.state;
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
@@ -183,10 +186,11 @@ export default class Company extends Component {
                         </div>
                         <div className='col-2'>
                             <CarList
+                                containerClassName={Env.isMobile() ? 'company' : null}
+                                offset={offset}
                                 user={user}
                                 companies={[company._id]}
                                 keyword=''
-                                from='company'
                                 reload={false}
                                 onLoad={this.handleCarListLoad}
                                 onDelete={this.handleCarDelete}

@@ -34,7 +34,8 @@ export default class Cars extends Component {
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
             mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
             availability: [Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE],
-            deposit: -1
+            deposit: -1,
+            offset: 0
         };
     }
 
@@ -93,12 +94,14 @@ export default class Cars extends Component {
         this.setState({ user }, async () => {
             const allCompanies = await CompanyService.getAllCompanies();
             const companies = Helper.flattenCompanies(allCompanies);
-            this.setState({ allCompanies, companies, loading: false });
+            this.setState({ allCompanies, companies, loading: false }, () => {
+                this.setState({ offset: document.querySelector('div.col-1').clientHeight });
+            });
         });
     };
 
     render() {
-        const { allCompanies, user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability } = this.state;
+        const { allCompanies, user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability, offset } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -142,6 +145,8 @@ export default class Cars extends Component {
                         </div>
                         <div className='col-2'>
                             <CarList
+                                containerClassName='cars'
+                                offset={offset}
                                 user={user}
                                 companies={companies}
                                 fuel={fuel}
@@ -150,7 +155,6 @@ export default class Cars extends Component {
                                 deposit={deposit}
                                 availability={availability}
                                 keyword={keyword}
-                                from='cars'
                                 reload={reload}
                                 loading={loading}
                                 onLoad={this.handleCarListLoad}

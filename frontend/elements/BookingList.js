@@ -61,7 +61,8 @@ class BookingList extends Component {
             car: props.car,
             openCancelDialog: false,
             cancelRequestSent: false,
-            cancelRequestProcessing: false
+            cancelRequestProcessing: false,
+            offset: 0
         };
     }
 
@@ -256,7 +257,7 @@ class BookingList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, statuses, filter, reload, car } = prevState;
+        const { companies, statuses, filter, reload, car, offset } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -276,6 +277,10 @@ class BookingList extends Component {
 
         if (nextProps.car && car !== nextProps.car) {
             return { car: nextProps.car };
+        }
+
+        if (offset !== nextProps.offset) {
+            return { offset: nextProps.offset };
         }
 
         return null;
@@ -314,12 +319,12 @@ class BookingList extends Component {
         }
 
         if (Env.isMobile()) {
-            const element = document.querySelector(`.${bookingsStyles.bookings}`);
-            const offset = document.querySelector(`.${bookingsStyles.col1}`).clientHeight;
+            const element = document.querySelector(`.${this.props.containerClassName}`);
 
             if (element) {
                 element.onscroll = (event) => {
-                    const { fetch, loading, page } = this.state;
+                    const { fetch, loading, page, offset } = this.state;
+
                     if (fetch
                         && !loading
                         && event.target.scrollTop > 0

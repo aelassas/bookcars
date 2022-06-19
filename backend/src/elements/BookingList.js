@@ -59,7 +59,8 @@ class BookingList extends Component {
             statuses: props.statuses,
             filter: props.filter,
             reload: props.reload,
-            car: props.car
+            car: props.car,
+            offset: 0
         };
     }
 
@@ -312,7 +313,6 @@ class BookingList extends Component {
                             }
                         });
                     }
-
                 })
                 .catch((err) => {
                     UserService.signout();
@@ -327,7 +327,7 @@ class BookingList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, statuses, filter, reload, car } = prevState;
+        const { companies, statuses, filter, reload, car, offset } = prevState;
 
         if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
             return { companies: Helper.clone(nextProps.companies) };
@@ -349,6 +349,10 @@ class BookingList extends Component {
             return { car: nextProps.car };
         }
 
+        if (offset !== nextProps.offset) {
+            return { offset: nextProps.offset };
+        }
+
         return null;
     }
 
@@ -366,7 +370,6 @@ class BookingList extends Component {
         }
 
         if (this.state.reload && !prevState.reload) {
-            console.log('!')
             return this.setState({ page: 0 }, () => this.fetch());
         }
 
@@ -383,17 +386,16 @@ class BookingList extends Component {
         }
 
         if (Env.isMobile()) {
-            const element = this.props.from && this.props.from === 'car' ? document.querySelector('div.car')
-                : this.props.from && this.props.from === 'user' ? document.querySelector('div.user')
-                    : document.querySelector('div.bookings');
+            const element = this.props.containerClassName ? document.querySelector(`.${this.props.containerClassName}`) : document.querySelector('div.bookings');
 
             if (element) {
                 element.onscroll = (event) => {
-                    const { fetch, loading, page } = this.state;
+                    const { fetch, loading, page, offset } = this.state;
+
                     if (fetch
                         && !loading
                         && event.target.scrollTop > 0
-                        && (event.target.offsetHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                        && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
                         this.setState({ page: page + 1 }, () => {
                             this.fetch();
                         });

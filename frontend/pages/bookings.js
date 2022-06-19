@@ -22,7 +22,8 @@ export default class Bookings extends Component {
             filter: null,
             loading: true,
             reload: false,
-            loadingCompanies: true
+            loadingCompanies: true,
+            offset: 0
         };
     }
 
@@ -53,11 +54,13 @@ export default class Bookings extends Component {
         this.setState({ loadingCompanies: true });
         const allCompanies = await CompanyService.getAllCompanies();
         const companies = Helper.flattenCompanies(allCompanies);
-        this.setState({ user, allCompanies, companies, loadingCompanies: false });
+        this.setState({ user, allCompanies, companies, loadingCompanies: false }, () => {
+            this.setState({ offset: document.querySelector(`.${styles.col1}`).clientHeight });
+        });
     };
 
     render() {
-        const { user, allCompanies, companies, statuses, filter, reload, loadingCompanies } = this.state;
+        const { user, allCompanies, companies, statuses, filter, reload, loadingCompanies, offset } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -83,6 +86,8 @@ export default class Bookings extends Component {
                         </div>
                         <div className={styles.col2}>
                             <BookingList
+                                containerClassName={styles.bookings}
+                                offset={offset}
                                 user={user}
                                 language={user.language}
                                 companies={companies}
