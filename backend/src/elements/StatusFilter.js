@@ -1,126 +1,100 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
+import Accordion from '../elements/Accordion';
 
 import '../assets/css/status-filter.css';
-import Accordion from './Accordion';
 
-class StatusFilter extends Component {
+export default function StatusFilter(props) {
+    const statuses = Helper.getBookingStatuses();
+    const [checkedStatuses, setCheckedStatuses] = useState(statuses.map(status => status.value));
+    const [allChecked, setAllChecked] = useState(true);
+    const refs = useRef([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            statuses: [],
-            checkedStatuses: [],
-            allChecked: true
-        }
-    }
+    useEffect(() => {
+        refs.current.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+    }, []);
 
-    handleStatusClick = (e) => {
+    const handleStatusClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckStatusChange(event);
+        handleCheckStatusChange(event);
     };
 
-    handleCheckStatusChange = (e) => {
-        const { statuses, checkedStatuses } = this.state;
+    const handleCheckStatusChange = (e) => {
         const status = e.currentTarget.getAttribute('data-value');
 
         if (e.currentTarget.checked) {
             checkedStatuses.push(status);
 
             if (checkedStatuses.length === statuses.length) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             const index = checkedStatuses.findIndex(s => s === status);
             checkedStatuses.splice(index, 1);
 
             if (checkedStatuses.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ checkedStatuses }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(checkedStatuses);
-            }
-        });
+        setCheckedStatuses(checkedStatuses);
+        if (props.onChange) {
+            props.onChange(checkedStatuses);
+        }
     };
 
-    handleUncheckAllChange = (e) => {
-        const { allChecked } = this.state;
-        const checkboxes = document.querySelectorAll('.status-checkbox');
+    const handleUncheckAllChange = (e) => {
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
+            refs.current.forEach(checkbox => {
                 checkbox.checked = false;
             });
 
-            this.setState({ allChecked: false, checkedStatuses: [] });
+            setAllChecked(false);
+            setCheckedStatuses([]);
         } else { // check all
-            checkboxes.forEach(checkbox => {
+            refs.current.forEach(checkbox => {
                 checkbox.checked = true;
             });
 
-            const statuses = this.state.statuses.map(status => status.value);
-            this.setState({ allChecked: true, checkedStatuses: statuses }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(statuses);
-                }
-            });
+            const allStatuses = statuses.map(status => status.value);
+            setAllChecked(true);
+            setCheckedStatuses(allStatuses);
+
+            if (props.onChange) {
+                props.onChange(allStatuses);
+            }
         }
     };
 
-    componentDidMount() {
-        const statuses = Helper.getBookingStatuses();
-
-        this.setState({ statuses, checkedStatuses: Helper.clone(statuses.map(status => status.value)) }, () => {
-            const checkboxes = document.querySelectorAll('.status-checkbox');
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-
-            if (this.props.onLoad) {
-                this.props.onLoad(this.state.checkedStatuses);
-            }
-        });
-    }
-
-    render() {
-        const { statuses, allChecked } = this.state;
-
-        return (
-            statuses.length > 0 ? (
-                <Accordion
-                    title={commonStrings.STATUS}
-                    collapse={this.props.collapse}
-                    className={`${this.props.className ? `${this.props.className} ` : ''}status-filter`}
-                >
-                    <ul className='status-list'>
-                        {
-                            statuses.map(status => (
-                                <li key={status.value}>
-                                    <input type='checkbox' data-value={status.value} className='status-checkbox' onChange={this.handleCheckStatusChange} />
-                                    <label onClick={this.handleStatusClick} className={`bs bs-${status.value}`}>{Helper.getBookingStatus(status.value)}</label>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                    <div className='filter-actions'>
-                        <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                        </span>
-                    </div>
-                </Accordion>
-            )
-                :
-                <></>
-        );
-    }
+    return (
+        statuses.length > 0 &&
+        <Accordion
+            title={commonStrings.STATUS}
+            collapse={props.collapse}
+            className={`${props.className ? `${props.className} ` : ''}status-filter`}
+        >
+            <ul className='status-list'>
+                {
+                    statuses.map((status, index) => (
+                        <li key={status.value}>
+                            <input ref={ref => refs.current[index] = ref} type='checkbox' data-value={status.value} className='status-checkbox' onChange={handleCheckStatusChange} />
+                            <label onClick={handleStatusClick} className={`bs bs-${status.value}`}>{Helper.getBookingStatus(status.value)}</label>
+                        </li>
+                    ))
+                }
+            </ul>
+            <div className='filter-actions'>
+                <span onClick={handleUncheckAllChange} className='uncheckall'>
+                    {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                </span>
+            </div>
+        </Accordion>
+    );
 }
-
-export default StatusFilter;

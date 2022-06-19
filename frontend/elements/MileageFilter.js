@@ -9,6 +9,9 @@ import styles from '../styles/mileage-filter.module.css';
 
 class MileageFilter extends Component {
 
+    limitedRef = null;
+    unlimitedRef = null;
+
     constructor(props) {
         super(props);
 
@@ -84,18 +87,15 @@ class MileageFilter extends Component {
 
     handleUncheckAllChange = (e) => {
         const { allChecked } = this.state;
-        const checkboxes = document.querySelectorAll(`.${styles.mileageCheckbox}`);
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            this.limitedRef.checked = false;
+            this.unlimitedRef.checked = false;
 
             this.setState({ allChecked: false, values: [] });
         } else { // check all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.limitedRef.checked = true;
+            this.unlimitedRef.checked = true;
 
             const values = [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED];
 
@@ -114,11 +114,8 @@ class MileageFilter extends Component {
         const { allChecked } = this.state;
 
         if (allChecked) {
-            const checkboxes = document.querySelectorAll(`.${styles.mileageCheckbox}`);
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.limitedRef.checked = true;
+            this.unlimitedRef.checked = true;
         }
     }
 
@@ -129,11 +126,11 @@ class MileageFilter extends Component {
             <Accordion title={strings.MILEAGE} className={`${this.props.className ? `${this.props.className} ` : ''}${styles.mileageFilter}`}>
                 <div className={styles.filterElements}>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.mileageCheckbox} onChange={this.handleLimitedMileageChange} />
+                        <input ref={ref => this.limitedRef = ref} type='checkbox' className={styles.mileageCheckbox} onChange={this.handleLimitedMileageChange} />
                         <label onClick={this.handleLimitedMileageClick}>{strings.LIMITED}</label>
                     </div>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.mileageCheckbox} onChange={this.handleUnlimitedMileageChange} />
+                        <input ref={ref => this.unlimitedRef = ref} type='checkbox' className={styles.mileageCheckbox} onChange={this.handleUnlimitedMileageChange} />
                         <label onClick={this.handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
                     </div>
                     <div className={styles.filterActions}>

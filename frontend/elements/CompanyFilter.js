@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
-import CompanyService from '../services/CompanyService';
 import Accordion from './Accordion';
 import Image from 'next/image';
 
@@ -12,6 +11,7 @@ export default function CompanyFilter(props) {
     const [companies, setCompanies] = useState([]);
     const [checkedCompanies, setCheckedCompanies] = useState([]);
     const [allChecked, setAllChecked] = useState(true);
+    const refs = useRef([]);
 
     useEffect(() => {
         Helper.setLanguage(commonStrings);
@@ -24,8 +24,7 @@ export default function CompanyFilter(props) {
 
     useEffect(() => {
         if (companies.length > 0) {
-            const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
-            checkboxes.forEach(checkbox => {
+            refs.current.forEach(checkbox => {
                 checkbox.checked = true;
             });
 
@@ -66,17 +65,16 @@ export default function CompanyFilter(props) {
     };
 
     const handleUncheckAllChange = (e) => {
-        const checkboxes = document.querySelectorAll(`.${styles.companyCheckbox}`);
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
+            refs.current.forEach(checkbox => {
                 checkbox.checked = false;
             });
 
             setAllChecked(false);
             setCheckedCompanies([]);
         } else { // check all
-            checkboxes.forEach(checkbox => {
+            refs.current.forEach(checkbox => {
                 checkbox.checked = true;
             });
 
@@ -95,9 +93,9 @@ export default function CompanyFilter(props) {
         <Accordion title={commonStrings.SUPPLIER} collapse={props.collapse} offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${props.className ? `${props.className} ` : ''}${styles.companyFilter}`}>
             <ul className={styles.companyList}>
                 {
-                    companies.map(company => (
+                    companies.map((company, index) => (
                         <li key={company._id}>
-                            <input className={styles.companyCheckbox} type='checkbox' data-id={company._id} onChange={handleCheckCompanyChange} />
+                            <input ref={ref => refs.current[index] = ref} className={styles.companyCheckbox} type='checkbox' data-id={company._id} onChange={handleCheckCompanyChange} />
                             <label onClick={handleCompanyClick}>
                                 <div style={{
                                     position: 'relative',

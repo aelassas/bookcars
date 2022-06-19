@@ -8,6 +8,9 @@ import '../assets/css/availability-filter.css'
 
 class AvailabilityFilter extends Component {
 
+    availableRef = null;
+    unavailableRef = null;
+
     constructor(props) {
         super(props);
 
@@ -83,18 +86,15 @@ class AvailabilityFilter extends Component {
 
     handleUncheckAllChange = (e) => {
         const { allChecked } = this.state;
-        const checkboxes = document.querySelectorAll('.availability-checkbox');
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            this.availableRef.checked = false;
+            this.unavailableRef.checked = false;
 
             this.setState({ allChecked: false, values: [] });
         } else { // check all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.availableRef.checked = true;
+            this.unavailableRef.checked = true;
 
             const values = [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED];
 
@@ -110,11 +110,8 @@ class AvailabilityFilter extends Component {
         const { allChecked } = this.state;
 
         if (allChecked) {
-            const checkboxes = document.querySelectorAll('.availability-checkbox');
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.availableRef.checked = true;
+            this.unavailableRef.checked = true;
         }
     }
 
@@ -125,11 +122,11 @@ class AvailabilityFilter extends Component {
             <Accordion title={strings.AVAILABILITY} className={`${this.props.className ? `${this.props.className} ` : ''}availability-filter`}>
                 <div className='filter-elements'>
                     <div className='filter-element'>
-                        <input type='checkbox' className='availability-checkbox' onChange={this.handleAvailableChange} />
+                        <input ref={ref => this.availableRef = ref} type='checkbox' className='availability-checkbox' onChange={this.handleAvailableChange} />
                         <label onClick={this.handleAvailableClick}>{strings.AVAILABLE}</label>
                     </div>
                     <div className='filter-element'>
-                        <input type='checkbox' className='availability-checkbox' onChange={this.handleUnavailableChange} />
+                        <input ref={ref => this.unavailableRef = ref} type='checkbox' className='availability-checkbox' onChange={this.handleUnavailableChange} />
                         <label onClick={this.handleUnavailableClick}>{strings.UNAVAILABLE}</label>
                     </div>
                     <div className='filter-actions'>

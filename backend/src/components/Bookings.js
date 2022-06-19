@@ -14,6 +14,7 @@ import {
 } from '@mui/icons-material';
 
 import '../assets/css/bookings.css';
+import CompanyService from '../services/CompanyService';
 
 export default class Bookings extends Component {
 
@@ -23,6 +24,7 @@ export default class Bookings extends Component {
         this.state = {
             user: null,
             leftPanel: false,
+            allCompanies: [],
             companies: [],
             statuses: Helper.getBookingStatuses().map(status => status.value),
             filter: null,
@@ -32,10 +34,6 @@ export default class Bookings extends Component {
             loadingCompanies: true
         };
     }
-
-    handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies, leftPanel: true, loadingCompanies: false });
-    };
 
     handleCompanyFilterChange = (newCompanies) => {
         const { companies } = this.state;
@@ -58,19 +56,23 @@ export default class Bookings extends Component {
 
     onLoad = (user) => {
         const admin = Helper.admin(user);
-        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin });
+        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin }, async () => {
+            const allCompanies = await CompanyService.getAllCompanies();
+            const companies = Helper.flattenCompanies(allCompanies);
+            this.setState({ allCompanies, companies, leftPanel: true, loadingCompanies: false });
+        });
     };
 
     render() {
-        const { user, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies } = this.state;
+        const { user, allCompanies, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
                 {user &&
                     <div className='bookings'>
                         <div className='col-1'>
-                            <div>
-                                {leftPanel && (
+                            {leftPanel && (
+                                <>
                                     <Button
                                         variant="contained"
                                         className='btn-primary cl-new-booking'
@@ -79,29 +81,25 @@ export default class Bookings extends Component {
                                     >
                                         {strings.NEW_BOOKING}
                                     </Button>
-                                )}
-                                {admin &&
-                                    <CompanyFilter
-                                        onLoad={this.handleCompanyFilterLoad}
-                                        onChange={this.handleCompanyFilterChange}
-                                        className='cl-company-filter'
+                                    {admin &&
+                                        <CompanyFilter
+                                            companies={allCompanies}
+                                            onChange={this.handleCompanyFilterChange}
+                                            className='cl-company-filter'
+                                        />
+                                    }
+                                    <StatusFilter
+                                        onChange={this.handleStatusFilterChange}
+                                        className='cl-status-filter'
                                     />
-                                }
-                                {leftPanel && (
-                                    <div>
-                                        <StatusFilter
-                                            onChange={this.handleStatusFilterChange}
-                                            className='cl-status-filter'
-                                        />
-                                        <BookingFilter
-                                            onSubmit={this.handleBookingFilterSubmit}
-                                            language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                            className='cl-booking-filter'
-                                            collapse={!Env.isMobile()}
-                                        />
-                                    </div>
-                                )}
-                            </div>
+                                    <BookingFilter
+                                        onSubmit={this.handleBookingFilterSubmit}
+                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                        className='cl-booking-filter'
+                                        collapse={!Env.isMobile()}
+                                    />
+                                </>
+                            )}
                         </div>
                         <div className='col-2'>
                             <BookingList

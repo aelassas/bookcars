@@ -9,6 +9,9 @@ import styles from '../styles/fuel-filter.module.css';
 
 class FuelFilter extends Component {
 
+    dieselRef = null;
+    gasolineRef = null;
+
     constructor(props) {
         super(props);
 
@@ -84,18 +87,15 @@ class FuelFilter extends Component {
 
     handleUncheckAllChange = (e) => {
         const { allChecked } = this.state;
-        const checkboxes = document.querySelectorAll(`.${styles.fuelCheckbox}`);
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            this.dieselRef.checked = false;
+            this.gasolineRef.checked = false;
 
             this.setState({ allChecked: false, values: [] });
         } else { // check all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.dieselRef.checked = true;
+            this.gasolineRef.checked = true;
 
             const values = [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE];
 
@@ -114,11 +114,8 @@ class FuelFilter extends Component {
         const { allChecked } = this.state;
 
         if (allChecked) {
-            const checkboxes = document.querySelectorAll(`.${styles.fuelCheckbox}`);
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.dieselRef.checked = true;
+            this.gasolineRef.checked = true;
         }
     }
 
@@ -129,11 +126,11 @@ class FuelFilter extends Component {
             <Accordion title={strings.ENGINE} className={`${this.props.className ? `${this.props.className} ` : ''}${styles.fuelFilter}`}>
                 <div className={styles.filterElements}>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.fuelCheckbox} onChange={this.handleCheckDieselChange} />
+                        <input ref={ref => this.dieselRef = ref} type='checkbox' className={styles.fuelCheckbox} onChange={this.handleCheckDieselChange} />
                         <label onClick={this.handleDieselClick}>{strings.DIESEL}</label>
                     </div>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.fuelCheckbox} onChange={this.handleCheckGasolineChange} />
+                        <input ref={ref => this.gasolineRef = ref} type='checkbox' className={styles.fuelCheckbox} onChange={this.handleCheckGasolineChange} />
                         <label onClick={this.handleGasolineClick}>{strings.GASOLINE}</label>
                     </div>
                 </div>

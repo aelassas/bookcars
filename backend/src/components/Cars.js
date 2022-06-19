@@ -16,6 +16,7 @@ import CarList from '../elements/CarList';
 import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';
+import CompanyService from '../services/CompanyService';
 
 export default class Cars extends Component {
 
@@ -23,6 +24,7 @@ export default class Cars extends Component {
         super(props);
         this.state = {
             user: null,
+            allCompanies: [],
             companies: [],
             keyword: '',
             reload: false,
@@ -40,10 +42,6 @@ export default class Cars extends Component {
         const { keyword } = this.state;
 
         this.setState({ keyword: newKeyword, reload: newKeyword === keyword });
-    };
-
-    handleCompanyFilterLoad = (companies) => {
-        this.setState({ companies, loading: false });
     };
 
     handleCompanyFilterChange = (newCompanies) => {
@@ -92,11 +90,15 @@ export default class Cars extends Component {
 
 
     onLoad = (user) => {
-        this.setState({ user });
+        this.setState({ user }, async () => {
+            const allCompanies = await CompanyService.getAllCompanies();
+            const companies = Helper.flattenCompanies(allCompanies);
+            this.setState({ allCompanies, companies, loading: false });
+        });
     };
 
     render() {
-        const { user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability } = this.state;
+        const { allCompanies, user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -121,7 +123,7 @@ export default class Cars extends Component {
                                 }
 
                                 <CompanyFilter
-                                    onLoad={this.handleCompanyFilterLoad}
+                                    companies={allCompanies}
                                     onChange={this.handleCompanyFilterChange}
                                     className='filter'
                                 />
