@@ -51,7 +51,11 @@ export default class Bookings extends Component {
         this.setState({ user, loadingCompanies: true }, async () => {
             const allCompanies = await CompanyService.getAllCompanies();
             const companies = Helper.flattenCompanies(allCompanies);
-            this.setState({ allCompanies, companies, loadingCompanies: false, offset: document.querySelector('div.col-1').clientHeight });
+            this.setState({ allCompanies, companies }, () => {
+                this.setState({ loadingCompanies: false }, () => {
+                    this.setState({ offset: document.querySelector('div.col-1').clientHeight });
+                });
+            });
         });
     };
 

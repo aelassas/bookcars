@@ -127,8 +127,10 @@ export default class Cars extends Component {
                 const allCompanies = await CompanyService.getAllCompanies();
                 const companies = Helper.flattenCompanies(allCompanies);
 
-                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true, allCompanies, companies, loading: false }, () => {
-                    this.setState({ offset: document.querySelector('div.col-1').clientHeight });
+                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true, allCompanies, companies }, () => {
+                    this.setState({ loading: false }, () => {
+                        this.setState({ offset: document.querySelector('div.col-1').clientHeight });
+                    });
                 });
 
             } catch (err) {
