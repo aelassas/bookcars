@@ -237,8 +237,6 @@ export default class Booking extends Component {
                                     fullInsurance: booking.fullInsurance,
                                     additionalDriver: booking.additionalDriver
                                 });
-                                console.log('!')
-
                             } else {
                                 this.setState({ loading: false, noMatch: true });
                             }
@@ -516,6 +514,7 @@ export default class Booking extends Component {
                                 </div>
                             </div>
                             <CarList
+                                className={styles.car}
                                 user={user}
                                 booking={booking}
                                 cars={[booking.car]}

@@ -617,6 +617,7 @@ export default class Booking extends Component {
                                 </div>
                             </div>
                             <CarList
+                                className='car'
                                 user={user}
                                 booking={booking}
                                 cars={[booking.car]}
