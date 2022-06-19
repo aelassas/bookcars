@@ -8,11 +8,11 @@ export default function SimpleBackdrop(props) {
 
     return (
         <div>
-            <Backdrop open={true}
+            <Backdrop
+                open={true}
                 sx={{
-                    zIndex: 999,
+                    zIndex: 9999,
                     color: '#fff',
-                    // background: 'rgba(0,0,0,0.7)'
                 }}
             >
                 {props.text}
