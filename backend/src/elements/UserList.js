@@ -256,11 +256,12 @@ class BookingList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = _data.resultData;
                 this.setState({ rows: _rows, rowCount: totalRecords }, () => {
-                    this.setState({ loading: false });
 
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
+
+                    this.setState({ loading: false });
                 });
             })
             .catch((err) => {

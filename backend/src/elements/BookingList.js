@@ -301,10 +301,13 @@ class BookingList extends Component {
                     const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                     if (Env.isMobile()) {
                         const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
-                        this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
+                        this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
+
                             if (this.props.onLoad) {
                                 this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                             }
+
+                            this.setState({ loading: false });
                         });
                     } else {
                         this.setState({ rows: _data.resultData, rowCount: totalRecords, loading: false }, () => {
