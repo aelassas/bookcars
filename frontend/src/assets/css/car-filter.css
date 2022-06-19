@@ -1,0 +1,41 @@
+div.car-filter {
+    background: #fff;
+    margin: 10px 0;
+    padding: 5px;
+    border: 1px solid #dadada;
+    font-size: 13px;
+}
+
+div.car-filter .pickup-location,
+div.car-filter .drop-off-location,
+div.car-filter .from,
+div.car-filter .to,
+div.car-filter .search,
+div.car-filter .chk-same-location {
+    padding: 5px;
+}
+
+div.car-filter .btn-search {
+    background: #f37022;
+    color: #fff;
+    margin: 5px 0;
+}
+
+div.car-filter .chk-same-location {
+    color: rgba(0, 0, 0, .7);
+    font-weight: 400;
+    line-height: 1.4em;
+    font-size: .9em;
+    display: inline-block;
+    width: 100%;
+}
+
+div.car-filter .chk-same-location label {
+    cursor: pointer;
+    padding: 2px;
+    vertical-align: top;
+}
+
+div.car-filter .chk-same-location input[type='checkbox'] {
+    cursor: pointer;
+}

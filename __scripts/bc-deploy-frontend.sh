@@ -12,8 +12,9 @@ cd /opt/bookcars/frontend
 npm ci
 npm run build
 
-sudo systemctl restart bookcars-frontend
-sudo systemctl status bookcars-frontend --no-pager
+sudo rm -rf /var/www/bookcars.ma/frontend
+sudo mkdir -p /var/www/bookcars.ma/frontend
+sudo cp -rf build/* /var/www/bookcars.ma/frontend
 
 finish_time=`date +%s`
 elapsed_time=$((finish_time  - start_time))

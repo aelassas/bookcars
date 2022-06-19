@@ -1,0 +1,72 @@
+/* Create settings */
+
+div.settings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+div.settings .settings-form-wrapper {
+    margin: 32px 0;
+}
+
+div.settings .settings-form-title {
+    text-align: center;
+    text-transform: capitalize;
+    color: #f37022;
+}
+
+div.settings .settings-net-wrapper {
+    margin: 32px 0;
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+    div.settings .settings-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 180px) !important;
+        width: 360px;
+        height: 780px;
+        padding: 30px;
+    }
+
+    div.settings .settings-ctn {
+        height: 240px;
+    }
+
+    div.settings .settings-net {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 180px) !important;
+        width: 360px;
+        height: 200px;
+        padding: 30px;
+    }
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+    div.settings .settings-form {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 275px) !important;
+        width: 550px;
+        height: 700px;
+        padding: 30px;
+    }
+
+    div.settings .settings-ctn {
+        height: 190px;
+    }
+
+    div.settings .settings-net {
+        margin-top: 45px !important;
+        margin-left: calc(50% - 275px) !important;
+        width: 550px;
+        height: 200px;
+        padding: 30px;
+    }
+}
