@@ -9,11 +9,8 @@ export default function SimpleBackdrop(props) {
     return (
         <div>
             <Backdrop
-                open={true}
-                sx={{
-                    zIndex: 9999,
-                    color: '#fff',
-                }}
+                open
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             >
                 {props.text}
                 {props.progress ? <CircularProgress color="inherit" /> : null}
