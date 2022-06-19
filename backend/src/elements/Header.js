@@ -281,7 +281,7 @@ export default function Header(props) {
     return (
         <div style={props.hidden ? { display: 'none' } : classes.grow} >
             <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
-                <Toolbar>
+                <Toolbar className='toolbar'>
                     {isLoaded && !loading && isSignedIn && <IconButton
                         edge="start"
                         sx={classes.menuButton}

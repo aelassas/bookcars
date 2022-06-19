@@ -204,7 +204,7 @@ class CarList extends Component {
         if (element) {
             element.onscroll = (event) => {
                 const { fetch, loading, page, offset } = this.state;
-
+                console.log('offset', offset)
                 let _offset = 0;
                 if (Env.isMobile()) _offset = offset;
 
