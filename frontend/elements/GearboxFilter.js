@@ -9,6 +9,9 @@ import styles from '../styles/gearbox-filter.module.css'
 
 class GearboxFilter extends Component {
 
+    automaticRef = null;
+    manualRef = null;
+
     constructor(props) {
         super(props);
 
@@ -84,18 +87,15 @@ class GearboxFilter extends Component {
 
     handleUncheckAllChange = (e) => {
         const { allChecked } = this.state;
-        const checkboxes = document.querySelectorAll(`.${styles.gearboxCheckbox}`);
 
         if (allChecked) { // uncheck all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            this.automaticRef.checked = false;
+            this.manualRef.checked = false;
 
             this.setState({ allChecked: false, values: [] });
         } else { // check all
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.automaticRef.checked = true;
+            this.manualRef.checked = true;
 
             const values = [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL];
 
@@ -114,11 +114,8 @@ class GearboxFilter extends Component {
         const { allChecked } = this.state;
 
         if (allChecked) {
-            const checkboxes = document.querySelectorAll(`.${styles.gearboxCheckbox}`);
-
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+            this.automaticRef.checked = true;
+            this.manualRef.checked = true;
         }
     }
 
@@ -129,11 +126,11 @@ class GearboxFilter extends Component {
             <Accordion title={strings.GEARBOX} className={`${this.props.className ? `${this.props.className} ` : ''}${styles.gearboxFilter}`}>
                 <div className={styles.filterElements}>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.gearboxCheckbox} onChange={this.handleCheckAutomaticChange} />
+                        <input ref={ref => this.automaticRef = ref} type='checkbox' className={styles.gearboxCheckbox} onChange={this.handleCheckAutomaticChange} />
                         <label onClick={this.handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</label>
                     </div>
                     <div className={styles.filterElement}>
-                        <input type='checkbox' className={styles.gearboxCheckbox} onChange={this.handleCheckManualChange} />
+                        <input ref={ref => this.manualRef = ref} type='checkbox' className={styles.gearboxCheckbox} onChange={this.handleCheckManualChange} />
                         <label onClick={this.handleManualClick}>{strings.GEARBOX_MANUAL}</label>
                     </div>
                 </div>
