@@ -31,6 +31,7 @@ div.user div.col-1 .user-actions {
     }
 
     div.user div.col-1 {
+        padding-top: 10px;
         padding-bottom: 15px;
         background: #fefefe;
         border-bottom: #eee solid 1px;
