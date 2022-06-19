@@ -247,201 +247,199 @@ class CarList extends Component {
         const fr = language === 'fr';
 
         return (
-            <>
-                <section className={`${(this.props.className ? `${this.props.className} ` : '')}${styles.carList}`}>
-                    {rows.length === 0 ?
-                        !loading && !this.props.loading &&
-                        <Card variant="outlined" className={styles.emptyList}>
-                            <CardContent>
-                                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-                            </CardContent>
-                        </Card>
-                        :
-                        ((from && to) || this.props.hidePrice) && rows.map((car, index) => (
-                            <article key={car._id}>
-                                <div className={styles.name}><h2>{car.name}</h2></div>
-                                <div className={styles.car}>
-                                    <div style={{
-                                        position: 'relative',
-                                        width: '100%',
-                                        maxWidth: Env.CAR_IMAGE_WIDTH,
-                                        height: Env.CAR_IMAGE_HEIGHT,
-                                    }}>
-                                        <Image
-                                            src={Helper.joinURL(Env.CDN_CARS, car.image)}
-                                            alt={car.name} className={styles.carImg}
-                                            layout='fill'
-                                            objectFit='contain'
-                                        />
-                                    </div>
-                                    {!this.props.hideCompany &&
-                                        <div className={styles.carCompany}>
-                                            <div style={{
-                                                position: 'relative',
-                                                width: Env.COMPANY_IMAGE_WIDTH,
-                                                height: Env.COMPANY_IMAGE_HEIGHT
-                                            }}>
-                                                <Image
-                                                    src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                                    alt={car.company.fullName}
-                                                    layout='fill'
-                                                    objectFit='contain'
-                                                />
-                                            </div>
-                                            <label className={styles.carCompanyInfo}>{car.company.fullName}</label>
+            <section className={`${(this.props.className ? `${this.props.className} ` : '')}${styles.carList}`}>
+                {rows.length === 0 ?
+                    !loading && !this.props.loading &&
+                    <Card variant="outlined" className={styles.emptyList}>
+                        <CardContent>
+                            <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                        </CardContent>
+                    </Card>
+                    :
+                    ((from && to) || this.props.hidePrice) && rows.map((car, index) => (
+                        <article key={car._id}>
+                            <div className={styles.name}><h2>{car.name}</h2></div>
+                            <div className={styles.car}>
+                                <div style={{
+                                    position: 'relative',
+                                    width: '100%',
+                                    maxWidth: Env.CAR_IMAGE_WIDTH,
+                                    height: Env.CAR_IMAGE_HEIGHT,
+                                }}>
+                                    <Image
+                                        src={Helper.joinURL(Env.CDN_CARS, car.image)}
+                                        alt={car.name} className={styles.carImg}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
+                                {!this.props.hideCompany &&
+                                    <div className={styles.carCompany}>
+                                        <div style={{
+                                            position: 'relative',
+                                            width: Env.COMPANY_IMAGE_WIDTH,
+                                            height: Env.COMPANY_IMAGE_HEIGHT
+                                        }}>
+                                            <Image
+                                                src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                alt={car.company.fullName}
+                                                layout='fill'
+                                                objectFit='contain'
+                                            />
                                         </div>
-                                    }
-                                </div>
-                                <div className={styles.carInfo}>
-                                    <ul className={styles.carInfoList}>
-                                        <li className={styles.carType}>
-                                            <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement='top'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <FuelIcon />
-                                                    <span className={styles.carInfoListText}>{Helper.getCarTypeShort(car.type)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li className={styles.gearbox}>
-                                            <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement='top'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <GearboxIcon />
-                                                    <span className={styles.carInfoListText}>{Helper.getGearboxTypeShort(car.gearbox)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li className={styles.seats}>
-                                            <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <SeatsIcon className={styles.icon} />
-                                                    <span className={styles.carInfoListText}>{car.seats}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li className={styles.doors}>
-                                            <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <div className={styles.carDoors}>
-                                                        <Image
-                                                            src='/img/car-door.png'
-                                                            alt=''
-                                                            layout='fill'
-                                                            objectFit='contain'
-                                                            className={styles.carDoors}
-                                                        />
-                                                    </div>
-                                                    <span className={styles.carInfoListText}>{car.doors}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        {car.aircon &&
-                                            <li className={styles.aircon}>
-                                                <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
-                                                    <div className={styles.carInfoListItem}>
-                                                        <AirconIcon />
-                                                    </div>
-                                                </Tooltip>
-                                            </li>
-                                        }
-                                        <li className={styles.mileage}>
-                                            <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <MileageIcon />
-                                                    <span className={styles.carInfoListText}>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li className={styles.fuelPolicy}>
-                                            <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    <FuelIcon />
-                                                    <span className={styles.carInfoListText}>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                    </ul>
-
-                                    <ul className={styles.extrasList}>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('cancellation', car.cancellation)}
-                                                    <span className={styles.carInfoListText}>{Helper.getCancellation(car.cancellation, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('amendments', car.amendments)}
-                                                    <span className={styles.carInfoListText}>{Helper.getAmendments(car.amendments, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
-                                                    <span className={styles.carInfoListText}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('theftProtection', car.theftProtection)}
-                                                    <span className={styles.carInfoListText}>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('fullInsurance', car.fullInsurance)}
-                                                    <span className={styles.carInfoListText}>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                        <li>
-                                            <Tooltip title={this.props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
-                                                <div className={styles.carInfoListItem}>
-                                                    {this.getExtraIcon('additionalDriver', car.additionalDriver)}
-                                                    <span className={styles.carInfoListText}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                    </ul>
-                                </div>
-                                {!this.props.hidePrice &&
-                                    <div className={styles.price}>
-                                        <label className={styles.priceDays}>
-                                            {Helper.getDays(days)}
-                                        </label>
-                                        <label className={styles.priceMain}>
-                                            {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
-                                        </label>
-                                        <label className={styles.priceDay}>
-                                            {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}
-                                        </label>
+                                        <label className={styles.carCompanyInfo}>{car.company.fullName}</label>
                                     </div>
                                 }
-                                {!this.props.hidePrice &&
-                                    <div className={styles.action}>
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            className={`${styles.btnBook} btn-margin-bottom`}
-                                            href={`/create-booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
-                                        >
-                                            {strings.BOOK}
-                                        </Button>
-                                    </div>}
-                            </article>
-                        ))
-                    }
-                </section>
+                            </div>
+                            <div className={styles.carInfo}>
+                                <ul className={styles.carInfoList}>
+                                    <li className={styles.carType}>
+                                        <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement='top'>
+                                            <div className={styles.carInfoListItem}>
+                                                <FuelIcon />
+                                                <span className={styles.carInfoListText}>{Helper.getCarTypeShort(car.type)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li className={styles.gearbox}>
+                                        <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement='top'>
+                                            <div className={styles.carInfoListItem}>
+                                                <GearboxIcon />
+                                                <span className={styles.carInfoListText}>{Helper.getGearboxTypeShort(car.gearbox)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li className={styles.seats}>
+                                        <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
+                                            <div className={styles.carInfoListItem}>
+                                                <SeatsIcon className={styles.icon} />
+                                                <span className={styles.carInfoListText}>{car.seats}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li className={styles.doors}>
+                                        <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
+                                            <div className={styles.carInfoListItem}>
+                                                <div className={styles.carDoors}>
+                                                    <Image
+                                                        src='/img/car-door.png'
+                                                        alt=''
+                                                        layout='fill'
+                                                        objectFit='contain'
+                                                        className={styles.carDoors}
+                                                    />
+                                                </div>
+                                                <span className={styles.carInfoListText}>{car.doors}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    {car.aircon &&
+                                        <li className={styles.aircon}>
+                                            <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
+                                                <div className={styles.carInfoListItem}>
+                                                    <AirconIcon />
+                                                </div>
+                                            </Tooltip>
+                                        </li>
+                                    }
+                                    <li className={styles.mileage}>
+                                        <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                <MileageIcon />
+                                                <span className={styles.carInfoListText}>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li className={styles.fuelPolicy}>
+                                        <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                <FuelIcon />
+                                                <span className={styles.carInfoListText}>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                </ul>
+
+                                <ul className={styles.extrasList}>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('cancellation', car.cancellation)}
+                                                <span className={styles.carInfoListText}>{Helper.getCancellation(car.cancellation, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('amendments', car.amendments)}
+                                                <span className={styles.carInfoListText}>{Helper.getAmendments(car.amendments, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
+                                                <span className={styles.carInfoListText}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('theftProtection', car.theftProtection)}
+                                                <span className={styles.carInfoListText}>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('fullInsurance', car.fullInsurance)}
+                                                <span className={styles.carInfoListText}>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                    <li>
+                                        <Tooltip title={this.props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
+                                            <div className={styles.carInfoListItem}>
+                                                {this.getExtraIcon('additionalDriver', car.additionalDriver)}
+                                                <span className={styles.carInfoListText}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                </ul>
+                            </div>
+                            {!this.props.hidePrice &&
+                                <div className={styles.price}>
+                                    <label className={styles.priceDays}>
+                                        {Helper.getDays(days)}
+                                    </label>
+                                    <label className={styles.priceMain}>
+                                        {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                    <label className={styles.priceDay}>
+                                        {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}
+                                    </label>
+                                </div>
+                            }
+                            {!this.props.hidePrice &&
+                                <div className={styles.action}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className={`${styles.btnBook} btn-margin-bottom`}
+                                        href={`/create-booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
+                                    >
+                                        {strings.BOOK}
+                                    </Button>
+                                </div>}
+                        </article>
+                    ))
+                }
                 {loading && <Backdrop text={commonStrings.LOADING} />}
-            </>
+            </section>
         );
     }
 }
