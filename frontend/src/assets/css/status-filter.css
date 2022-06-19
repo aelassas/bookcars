@@ -1,0 +1,85 @@
+div.status-filter {
+    background: #fafafa;
+    margin: 10px 10px 0 0;
+    border: 1px solid #dadada;
+    font-size: 13px;
+    text-align: center;
+}
+
+div.status-filter ul.status-list {
+    list-style-type: none;
+    font-size: 13px;
+    margin: 15px 0 0 0;
+    padding: 0;
+    display: inline-block;
+    width: 250px;
+}
+
+div.status-filter ul.status-list li {
+    width: 42%;
+    float: left;
+    margin-bottom: 12px;
+    margin-left: 4%;
+    margin-right: 4%;
+    clear: none;
+}
+
+div.status-filter ul.status-list li label.bs {
+    padding: 3px;
+    width: 80px;
+    text-align: center;
+    color: #fff;
+    box-shadow: none;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+    left: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 0;
+    display: inline-block;
+    opacity: 1;
+}
+
+div.status-filter ul.status-list li input[type='checkbox'].status-checkbox {
+    cursor: pointer;
+}
+
+div.status-filter ul.status-list li label.bs:hover {
+    opacity: .9;
+}
+
+div.status-filter ul.status-list li label.bs-void {
+    background: #999;
+}
+
+div.status-filter ul.status-list li label.bs-pending {
+    background: #e98003;
+}
+
+div.status-filter ul.status-list li label.bs-deposit {
+    background: #22bba7;
+}
+
+div.status-filter ul.status-list li label.bs-paid {
+    background: #77bc23;
+}
+
+div.status-filter ul.status-list li label.bs-reserved {
+    background: #188ace;
+}
+
+div.status-filter ul.status-list li label.bs-cancelled {
+    background: #bc2143;
+}
+
+div.status-filter div.filter-actions {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+div.status-filter div.filter-actions span.uncheckall {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0064C8;
+}

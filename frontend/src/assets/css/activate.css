@@ -1,0 +1,94 @@
+/* Passwprd Reset */
+
+div.activate {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-bottom: 40px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow-y: auto;
+}
+
+div.activate h1.activate-form-title {
+	text-align: center;
+	margin-top: 0;
+}
+
+div.resend {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-bottom: 40px;
+}
+
+.activate-form h1,
+.resend-form h1 {
+	text-align: center;
+	color: #f37022;
+}
+
+.resend-form div.resend-form-content {
+	display: inline-block;
+	width: 350px;
+	position: relative;
+	left: calc(50% - 150px);
+}
+
+.resend-form div.resend-form-content label {
+	float: left;
+}
+
+.resend-form div.resend-form-content .btn-resend {
+	float: left;
+	clear: left;
+	width: 90px;
+	margin-left: calc(50% - 65px) !important;
+	margin-top: 20px !important;
+}
+
+.resend-form div.resend-form-content p.go-to-home {
+	float: left;
+	clear: left;
+	width: 200px;
+	margin-left: calc(50% - 100px);
+}
+
+/* Device width is less than or equal to 960px */
+
+@media only screen and (max-width: 960px) {
+	.activate-form {
+		margin-top: 40px;
+		width: 330px;
+		height: 440px;
+		padding: 30px;
+	}
+
+	.resend-form {
+		margin-top: 40px;
+		width: 330px;
+		height: 330px;
+		padding: 30px;
+	}
+}
+
+/* Device width is greater than or equal to 960px */
+
+@media only screen and (min-width: 960px) {
+	.activate-form {
+		margin-top: 40px;
+		width: 450px;
+		height: 390px;
+		padding: 30px;
+	}
+
+	.resend-form {
+		margin-top: 40px;
+		width: 430px;
+		height: 270px;
+		padding: 30px;
+	}
+}

@@ -5,9 +5,7 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking-list';
 import Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
-import StatusList from './StatusList';
 import Backdrop from '../elements/SimpleBackdrop';
-import { toast } from 'react-toastify';
 import {
     DataGrid,
     frFR,
@@ -16,22 +14,24 @@ import {
 import {
     Tooltip,
     IconButton,
-    Link,
+    Card,
+    CardContent,
+    Typography,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
     Button,
-    Card,
-    CardContent,
-    Typography
+    CircularProgress,
+    Stack
 } from '@mui/material';
 import {
-    Edit as EditIcon,
-    Delete as DeleteIcon,
+    Visibility as ViewIcon,
     Check as CheckIcon,
+    Cancel as CancelIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
+import { toast } from 'react-toastify';
 
 import '../assets/css/booking-list.css';
 
@@ -40,17 +40,14 @@ class BookingList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loggedUser: null,
             user: null,
             page: 0,
-            pageSize: Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE,
+            pageSize: Env.BOOKINGS_PAGE_SIZE,
             columns: [],
             rows: [],
             rowCount: 0,
             loading: true,
-            fetch: false,
             selectedId: null,
-            selectedIndex: -1,
             selectedIds: [],
             openUpdateDialog: false,
             openDeleteDialog: false,
@@ -60,6 +57,9 @@ class BookingList extends Component {
             filter: props.filter,
             reload: props.reload,
             car: props.car,
+            openCancelDialog: false,
+            cancelRequestSent: false,
+            cancelRequestProcessing: false,
             offset: 0
         };
     }
@@ -69,16 +69,8 @@ class BookingList extends Component {
         return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`;
     };
 
-    getColumns = (user) => {
+    getColumns = () => {
         const columns = [
-            {
-                field: 'driver',
-                headerName: strings.DRIVER,
-                flex: 1,
-                renderCell: (params) => (
-                    <Link href={`/user?u=${params.value._id}`}>{params.value.fullName}</Link>
-                ),
-            },
             {
                 field: 'from',
                 headerName: commonStrings.FROM,
@@ -120,60 +112,32 @@ class BookingList extends Component {
                 sortable: false,
                 disableColumnMenu: true,
                 renderCell: (params) => {
-                    const handleDelete = (e) => {
+                    const cancelBooking = (e) => {
                         e.stopPropagation(); // don't select this row after clicking
-                        this.setState({ selectedId: params.row._id, openDeleteDialog: true });
+                        this.setState({ selectedId: params.row._id, openCancelDialog: true });
                     };
 
                     return (
-                        <div>
-                            <Tooltip title={commonStrings.UPDATE}>
-                                <IconButton
-                                    href={`booking?b=${params.row._id}`}
-                                >
-                                    <EditIcon />
+                        <>
+                            <Tooltip title={strings.VIEW}>
+                                <IconButton href={`booking?b=${params.row._id}`}>
+                                    <ViewIcon />
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip title={commonStrings.DELETE}>
-                                <IconButton
-                                    onClick={handleDelete}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Tooltip>
-
-                        </div>
+                            {params.row.cancellation && !params.row.cancelRequest &&
+                                <Tooltip title={strings.CANCEL}>
+                                    <IconButton onClick={cancelBooking}>
+                                        <CancelIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                        </>
                     );
                 },
-                renderHeader: () => {
-                    const { selectedIds } = this.state;
-
-                    return (
-                        selectedIds.length > 0 ?
-                            <div>
-                                <Tooltip title={strings.UPDATE_SELECTION}>
-                                    <IconButton onClick={() => {
-                                        this.setState({ openUpdateDialog: true });
-                                    }}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={strings.DELETE_SELECTION}>
-                                    <IconButton
-                                        onClick={() => {
-                                            this.setState({ openDeleteDialog: true });
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                            : <></>
-                    );
-                }
             }
         ];
 
-        if (this.props.hideDates) columns.splice(1, 2);
+        if (this.props.hideDates) columns.splice(0, 2);
 
         if (!this.props.hideCarColumn) {
             columns.unshift({
@@ -181,22 +145,20 @@ class BookingList extends Component {
                 headerName: strings.CAR,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/car?cr=${params.value._id}`}>{params.value.name}</Link>
+                    params.value.name
                 ),
             });
         }
 
-        if (Helper.admin(user) && !this.props.hideCompanyColumn) {
+        if (!this.props.hideCompanyColumn) {
             columns.unshift({
                 field: 'company',
                 headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/company?c=${params.value._id}`} className='cell-company'>
-                        <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                            alt={params.value.fullName}
-                            style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
-                    </Link>
+                    <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
+                        alt={params.value.fullName}
+                        style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                 ),
             });
         }
@@ -204,93 +166,41 @@ class BookingList extends Component {
         return columns;
     }
 
-    handleCancelUpdate = () => {
-        this.setState({ openUpdateDialog: false });
+    handleCloseCancelBooking = () => {
+        const { cancelRequestSent } = this.state;
+        this.setState({ openCancelDialog: false }, () => {
+            if (cancelRequestSent) {
+                setTimeout(() => {
+                    this.setState({ cancelRequestSent: false });
+                }, 500);
+            }
+        });
     };
 
-    handleStatusChange = (status) => {
-        this.setState({ status });
-    };
+    handleConfirmCancelBooking = async () => {
+        try {
+            const { rows, selectedId } = this.state;
 
-    handleConfirmUpdate = () => {
-        const { selectedIds, status, rows } = this.state;
-        const data = { ids: selectedIds, status };
+            this.setState({ cancelRequestProcessing: true });
+            const status = await BookingService.cancel(selectedId);
+            if (status === 200) {
+                const row = rows.find(r => r._id === selectedId);
+                row.cancelRequest = true;
 
-        BookingService.updateStatus(data)
-            .then(s => {
-                if (s === 200) {
-                    rows.forEach(row => {
-                        if (selectedIds.includes(row._id)) {
-                            row.status = status;
-                        }
-                    });
-                    this.setState({ rows });
-                } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                }
-
-                this.setState({ openUpdateDialog: false });
-            })
-            .catch(() => {
-                UserService.signout();
-            });
-    };
-
-    handleDelete = (e) => {
-        const selectedId = e.currentTarget.getAttribute('data-id');
-        const selectedIndex = e.currentTarget.getAttribute('data-index');
-
-        this.setState({ selectedId, selectedIndex, openDeleteDialog: true });
-    };
-    handleCancelDelete = () => {
-        this.setState({ openDeleteDialog: false, selectedId: undefined });
-    };
-
-    handleConfirmDelete = () => {
-        if (Env.isMobile()) {
-            const { selectedId, selectedIndex, rows } = this.state;
-            const ids = [selectedId];
-
-            BookingService.delete(ids)
-                .then(status => {
-                    if (status === 200) {
-                        rows.splice(selectedIndex, 1);
-                        this.setState({ rows, selectedId: '', selectedIndex: -1 });
-                    } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    }
-
-                    this.setState({ openDeleteDialog: false });
-                })
-                .catch(() => {
-                    UserService.signout();
-                });
-        } else {
-            const { selectedIds, selectedId, rows } = this.state;
-            const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
-
-            BookingService.delete(ids)
-                .then(status => {
-                    if (status === 200) {
-                        if (selectedIds.length > 0) {
-                            this.setState({ rows: rows.filter((row) => !selectedIds.includes(row._id)) });
-                        } else {
-                            this.setState({ rows: rows.filter((row) => row._id !== selectedId) });
-                        }
-                    } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
-                    }
-
-                    this.setState({ openDeleteDialog: false });
-                })
-                .catch(() => {
-                    UserService.signout();
-                });
+                this.setState({ cancelRequestSent: true, rows, selectedId: '', cancelRequestProcessing: false });
+            } else {
+                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
+            }
+        } catch (err) {
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
         }
     };
 
     fetch = () => {
-        const { companies, statuses, filter, car, page, user, rows, pageSize } = this.state;
+        const { companies, statuses, filter, car, page, user, rows } = this.state;
+        const pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE;
 
         if (companies.length > 0) {
             this.setState({ loading: true });
@@ -302,7 +212,6 @@ class BookingList extends Component {
                     if (Env.isMobile()) {
                         const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
                         this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
-
                             if (this.props.onLoad) {
                                 this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                             }
@@ -385,13 +294,13 @@ class BookingList extends Component {
 
     componentDidMount() {
 
-        if (this.props.loggedUser) {
-            const columns = this.getColumns(this.props.loggedUser);
-            this.setState({ loggedUser: this.props.loggedUser, user: this.props.user, columns }, () => this.fetch());
+        if (this.props.user) {
+            const columns = this.getColumns();
+            this.setState({ user: this.props.user, columns }, () => this.fetch());
         }
 
         if (Env.isMobile()) {
-            const element = this.props.containerClassName ? document.querySelector(`.${this.props.containerClassName}`) : document.querySelector('div.bookings');
+            const element = document.querySelector(`.${this.props.containerClassName}`);
 
             if (element) {
                 element.onscroll = (event) => {
@@ -412,29 +321,29 @@ class BookingList extends Component {
 
     render() {
         const {
-            loggedUser,
             columns,
             rows,
             rowCount,
             loading,
             page,
             pageSize,
-            openDeleteDialog,
-            openUpdateDialog,
-            selectedIds,
-            user
-        } = this.state, admin = Helper.admin(user);
+            user,
+            openCancelDialog,
+            cancelRequestSent,
+            cancelRequestProcessing
+        } = this.state;
+
         const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
         const locale = this.props.language === 'fr' ? 'fr-FR' : 'en-US';
         const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         const fr = this.props.language === 'fr';
 
         return (
-            <div className='bs-list' >
+            <div className='bs-list'>
 
-                {loggedUser && (
+                {user && (
                     rows.length === 0 ?
-                        !loading && !this.props.loading && !admin &&
+                        !loading && !this.props.loading &&
                         <Card variant="outlined" className="empty-list">
                             <CardContent>
                                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
@@ -456,13 +365,7 @@ class BookingList extends Component {
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.CAR}</label>
                                                 <div className='booking-detail-value'>
-                                                    <Link href={`car/?cr=${booking.car._id}`}>{booking.car.name}</Link>
-                                                </div>
-                                            </div>
-                                            <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                                <label className='booking-detail-title'>{strings.DRIVER}</label>
-                                                <div className='booking-detail-value'>
-                                                    <Link href={`user/?u=${booking.driver._id}`}>{booking.driver.fullName}</Link>
+                                                    {`${booking.car.name} (${booking.car.price} ${csStrings.CAR_CURRENCY})`}
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
@@ -551,7 +454,6 @@ class BookingList extends Component {
                                                     </div>
                                                 </>
                                             }
-
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.COST}</label>
                                                 <div className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
@@ -559,24 +461,17 @@ class BookingList extends Component {
 
                                             <div className='bs-buttons'>
 
-                                                <Button
-                                                    variant="contained"
-                                                    className='btn-primary'
-                                                    size="small"
-                                                    href={`booking?b=${booking._id}`}
-                                                >
-                                                    {commonStrings.UPDATE}
-                                                </Button>
-                                                <Button
-                                                    variant="contained"
-                                                    className='btn-secondary'
-                                                    size="small"
-                                                    data-id={booking._id}
-                                                    data-index={index}
-                                                    onClick={this.handleDelete}
-                                                >
-                                                    {commonStrings.DELETE}
-                                                </Button>
+                                                {booking.cancellation && !booking.cancelRequest &&
+                                                    <Button
+                                                        variant="contained"
+                                                        className='btn-secondary'
+                                                        onClick={() => {
+                                                            this.setState({ selectedId: booking._id, openCancelDialog: true });
+                                                        }}
+                                                    >
+                                                        {strings.CANCEL}
+                                                    </Button>
+                                                }
 
                                             </div>
                                         </div>
@@ -598,7 +493,7 @@ class BookingList extends Component {
                                 paginationMode='server'
                                 onPageChange={(page) => this.setState({ page }, () => this.fetch())}
                                 onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
-                                localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                                localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
                                 components={{
                                     NoRowsOverlay: () => ''
                                 }}
@@ -606,34 +501,33 @@ class BookingList extends Component {
                                 disableSelectionOnClick
                             />)
                 }
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openUpdateDialog}
-                >
-                    <DialogTitle className='dialog-header'>{strings.UPDATE_STATUS}</DialogTitle>
-                    <DialogContent className='bs-update-status'>
-                        <StatusList
-                            label={strings.NEW_STATUS}
-                            onChange={this.handleStatusChange}
-                        />
-                    </DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
-                    </DialogActions>
-                </Dialog>
 
                 <Dialog
                     disableEscapeKeyDown
                     maxWidth="xs"
-                    open={openDeleteDialog}
+                    open={openCancelDialog}
                 >
-                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
+                    <DialogTitle className='dialog-header'>{!cancelRequestSent && !cancelRequestProcessing && commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent className='dialog-content'>
+                        {
+                            cancelRequestProcessing ? <Stack sx={{ color: '#f37022' }}><CircularProgress color='inherit' /></Stack>
+                                : cancelRequestSent ? strings.CANCEL_BOOKING_REQUEST_SENT
+                                    : strings.CANCEL_BOOKING
+                        }
+                    </DialogContent>
                     <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                        {
+                            !cancelRequestProcessing &&
+                            <Button onClick={this.handleCloseCancelBooking} variant='contained' className='btn-secondary'>
+                                {commonStrings.CLOSE}
+                            </Button>
+                        }
+                        {
+                            !cancelRequestSent && !cancelRequestProcessing &&
+                            <Button onClick={this.handleConfirmCancelBooking} variant='contained' className='btn-primary'>
+                                {commonStrings.CONFIRM}
+                            </Button>
+                        }
                     </DialogActions>
                 </Dialog>
 

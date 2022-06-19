@@ -1,0 +1,53 @@
+li.bs-s {
+    padding: 7px;
+    text-align: center;
+    font-weight: 200;
+    color: #fff;
+    margin: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bs-s:hover {
+    opacity: .93;
+}
+
+.bs-s-void,
+.bs-s-void:hover {
+    background: #999 !important;
+}
+
+.bs-s-pending,
+.bs-s-pending:hover {
+    background: #e98003 !important;
+}
+
+.bs-s-deposit,
+.bs-s-deposit:hover {
+    background: #22bba7 !important;
+}
+
+.bs-s-paid,
+.bs-s-paid:hover {
+    background: #77bc23 !important;
+}
+
+.bs-s-reserved,
+.bs-s-reserved:hover {
+    background: #188ace !important;
+}
+
+.bs-s-cancelled,
+.bs-s-cancelled:hover {
+    background: #bc2143 !important;
+}
+
+.bs-s-sv {
+    display: inherit;
+    text-align: center;
+    font-weight: 200;
+    color: #fff;
+    padding: 3px;
+    opacity: .93;
+}
