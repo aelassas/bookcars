@@ -136,6 +136,11 @@ class CarList extends Component {
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
 
+                    if (page === 1) {
+                        const className = this.props.containerClassName ? this.props.containerClassName : 'car-list';
+                        document.querySelector(`.${className}`).scrollTo(0, 0);
+                    }
+
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }

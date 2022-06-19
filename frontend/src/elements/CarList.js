@@ -73,6 +73,9 @@ class CarList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
+                    if (page === 1) {
+                        document.querySelector(`.${this.props.containerClassName}`).scrollTo(0, 0);
+                    }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
@@ -204,7 +207,7 @@ class CarList extends Component {
         if (element) {
             element.onscroll = (event) => {
                 const { fetch, loading, page, offset } = this.state;
-                console.log('offset', offset)
+
                 let _offset = 0;
                 if (Env.isMobile()) _offset = offset;
 
