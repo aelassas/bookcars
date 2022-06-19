@@ -35,7 +35,8 @@ export default class Cars extends Component {
             fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
             gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
             mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
-            deposit: -1
+            deposit: -1,
+            offset: 0
         };
     }
 
@@ -125,8 +126,14 @@ export default class Cars extends Component {
                 const allCompanies = await CompanyService.getAllCompanies();
                 const companies = Helper.flattenCompanies(allCompanies);
 
-                this.setState({ allCompanies, companies, pickupLocation, dropOffLocation, from, to, visible: true, loading: false });
+                this.setState({
+                    allCompanies, companies, pickupLocation,
+                    dropOffLocation, from, to, visible: true, loading: false
+                }, () => {
+                    this.setState({ offset: document.querySelector(`.${styles.col1}`).clientHeight });
+                });
             } catch (err) {
+                console.log(err);
                 Helper.error();
             }
 
@@ -138,7 +145,7 @@ export default class Cars extends Component {
     }
 
     render() {
-        const { allCompanies, companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit } = this.state;
+        const { allCompanies, companies, pickupLocation, dropOffLocation, loading, reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit, offset } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
@@ -170,6 +177,8 @@ export default class Cars extends Component {
                         </div>
                         <div className={styles.col2}>
                             <CarList
+                                containerClassName={styles.cars}
+                                offset={offset}
                                 companies={companies}
                                 fuel={fuel}
                                 gearbox={gearbox}

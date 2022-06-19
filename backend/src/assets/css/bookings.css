@@ -26,20 +26,16 @@ div.bookings {
     div.bookings div.col-1 .cl-company-filter,
     div.bookings div.col-1 .cl-status-filter,
     div.bookings div.col-1 .cl-booking-filter {
-        margin: 10px;
+        margin: 5px 10px;
         background-color: #fff;
         max-width: 480px;
+        width: calc(100% - 20px);
     }
 
     div.bookings div.col-1 .cl-booking-filter div.panel,
     div.bookings div.col-1 .cl-booking-filter div.panel-collapse {
         padding-right: 15px;
         padding-left: 15px;
-    }
-
-    div.bookings div.col-1 .cl-status-filter,
-    div.bookings div.col-1 .cl-booking-filter {
-        margin-bottom: 10px;
     }
 
     div.bookings div.col-1 .cl-new-booking {

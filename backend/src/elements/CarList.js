@@ -61,7 +61,8 @@ class CarList extends Component {
             mileage: props.mileage,
             deposit: props.deposit,
             availability: props.availability,
-            cars: []
+            cars: [],
+            offset: 0
         };
     }
 
@@ -134,13 +135,6 @@ class CarList extends Component {
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
                 this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
-                    if (page === 1) {
-                        if (this.props.from && this.props.from === 'cars') {
-                            document.querySelector('div.cars').scrollTo(0, 0);
-                        } else {
-                            document.querySelector('section.car-list').scrollTo(0, 0);
-                        }
-                    }
                     if (this.props.onLoad) {
                         this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
                     }
@@ -150,7 +144,7 @@ class CarList extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability, cars } = prevState;
+        const { keyword, companies, reload, fuel, gearbox, mileage, deposit, availability, cars, offset } = prevState;
 
         if (keyword !== nextProps.keyword) {
             return { keyword: nextProps.keyword };
@@ -186,6 +180,10 @@ class CarList extends Component {
 
         if (reload !== nextProps.reload) {
             return { reload: nextProps.reload };
+        }
+
+        if (offset !== nextProps.offset) {
+            return { offset: nextProps.offset };
         }
 
         return null;
@@ -252,18 +250,19 @@ class CarList extends Component {
     };
 
     componentDidMount() {
-        const element = this.props.from && this.props.from === 'cars' ? document.querySelector('div.cars')
-            : this.props.from && this.props.from === 'company' && Env.isMobile() ? document.querySelector('div.company')
-                : document.querySelector('section.car-list');
+        const element = this.props.containerClassName ? document.querySelector(`.${this.props.containerClassName}`) : document.querySelector('section.car-list');
 
         if (element) {
             element.onscroll = (event) => {
-                const { fetch, loading, page } = this.state;
+                const { fetch, loading, page, offset } = this.state;
+
+                let _offset = 0;
+                if (Env.isMobile()) _offset = offset;
 
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
                     this.setState({ page: page + 1 }, () => {
                         this.fetch();
                     });

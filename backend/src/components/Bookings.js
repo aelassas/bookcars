@@ -31,7 +31,8 @@ export default class Bookings extends Component {
             loading: true,
             admin: false,
             reload: false,
-            loadingCompanies: true
+            loadingCompanies: true,
+            offset: 0
         };
     }
 
@@ -59,12 +60,14 @@ export default class Bookings extends Component {
         this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin }, async () => {
             const allCompanies = await CompanyService.getAllCompanies();
             const companies = Helper.flattenCompanies(allCompanies);
-            this.setState({ allCompanies, companies, leftPanel: true, loadingCompanies: false });
+            this.setState({ allCompanies, companies, leftPanel: true, loadingCompanies: false }, () => {
+                this.setState({ offset: document.querySelector('.col-1').clientHeight });
+            });
         });
     };
 
     render() {
-        const { user, allCompanies, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies } = this.state;
+        const { user, allCompanies, admin, companies, statuses, filter, leftPanel, reload, loadingCompanies, offset } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -103,6 +106,8 @@ export default class Bookings extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
+                                containerClassName='bookings'
+                                offset={offset}
                                 language={user.language}
                                 loggedUser={user}
                                 companies={companies}

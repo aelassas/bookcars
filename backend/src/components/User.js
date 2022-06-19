@@ -43,6 +43,7 @@ export default class User extends Component {
             openDeleteDialog: false,
             companies: [],
             statuses: Helper.getBookingStatuses().map(status => status.value),
+            offset: 0
         };
     }
 
@@ -104,6 +105,8 @@ export default class User extends Component {
                                         bio: user.bio,
                                         loading: false,
                                         visible: true,
+                                    }, () => {
+                                        this.setState({ offset: document.querySelector('.col-1').clientHeight });
                                     });
                                 };
 
@@ -138,7 +141,7 @@ export default class User extends Component {
     }
 
     render() {
-        const { visible, loading, error, noMatch, loggedUser, user, openDeleteDialog, companies, statuses } = this.state;
+        const { visible, loading, error, noMatch, loggedUser, user, openDeleteDialog, companies, statuses, offset } = this.state;
         const edit = (loggedUser && user) &&
             (loggedUser.type === Env.RECORD_TYPE.ADMIN
                 || loggedUser._id === user._id
@@ -188,7 +191,8 @@ export default class User extends Component {
                         </div>
                         <div className='col-2'>
                             <BookingList
-                                from='user'
+                                containerClassName='user'
+                                offset={offset}
                                 loggedUser={loggedUser}
                                 user={company ? undefined : user}
                                 companies={company ? [user._id] : companies}

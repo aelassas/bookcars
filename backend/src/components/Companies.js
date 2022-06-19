@@ -19,7 +19,8 @@ export default class Companies extends Component {
             user: null,
             keyword: '',
             reload: false,
-            rowCount: -1
+            rowCount: -1,
+            offset: 0
         };
     }
 
@@ -38,14 +39,16 @@ export default class Companies extends Component {
     };
 
     onLoad = (user) => {
-        this.setState({ user });
+        this.setState({ user }, () => {
+            this.setState({ offset: document.querySelector('.col-1').clientHeight });
+        });
     }
 
     componentDidMount() {
     }
 
     render() {
-        const { user, keyword, reload, rowCount } = this.state, admin = Helper.admin(user);
+        const { user, keyword, reload, rowCount, offset } = this.state, admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -74,6 +77,8 @@ export default class Companies extends Component {
                         </div>
                         <div className='col-2'>
                             <CompanyList
+                                containerClassName='companies'
+                                offset={offset}
                                 user={user}
                                 keyword={keyword}
                                 reload={reload}
