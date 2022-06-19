@@ -13,7 +13,6 @@ div.booking div.col-2 div.col-2-header {
 
 div.booking div.col-2 div.col-2-header div.price {
     width: fit-content;
-    float: right;
 }
 
 div.booking div.col-2 div.col-2-header label.price-main {
@@ -54,6 +53,12 @@ div.booking div.col-2 div.col-2-header label.price-day {
     }
 }
 
+@media only screen and (max-width: 1270px) {
+    div.booking div.col-2 .car {
+        display: none;
+    }
+}
+
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
@@ -80,5 +85,8 @@ div.booking div.col-2 div.col-2-header label.price-day {
 
     div.booking div.col-2 div.col-2-header {
         padding-right: 25px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
     }
 }

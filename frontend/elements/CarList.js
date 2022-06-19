@@ -245,7 +245,7 @@ class CarList extends Component {
 
         return (
             <>
-                <section className={styles.carList}>
+                <section className={`${(this.props.className ? `${this.props.className} ` : '')}${styles.carList}`}>
                     {rows.length === 0 ?
                         !loading && !this.props.loading &&
                         <Card variant="outlined" className={styles.emptyList}>
