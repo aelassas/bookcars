@@ -6,18 +6,14 @@ div.home {
     left: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 50px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
 div.home footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    width: 100%;
     height: 50px;
     flex-shrink: 0;
     box-sizing: border-box;
@@ -46,7 +42,7 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content {
         width: 100%;
-        height: calc(100% - 200px);
+        margin: 75px 0;
     }
 
     div.home div.home-content div.home-logo {
@@ -162,8 +158,11 @@ div.home footer div.copyright span.part2 {
 
     div.home div.home-content {
         width: 980px;
-        height: 300px;
-        margin-top: -130px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 75px;
     }
 
     div.home div.home-content div.home-logo {
@@ -277,13 +276,4 @@ div.home footer div.copyright span.part2 {
     div.home footer div.secure-payment img {
         height: 32px;
     }
-
-}
-
-@media only screen and (max-height: 800px) {
-
-    div.home div.home-content {
-        margin-top: -50px;
-    }
-
 }
