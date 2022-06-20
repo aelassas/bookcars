@@ -23,7 +23,6 @@ import {
     Clear as UncheckIcon,
     Info as InfoIcon
 } from '@mui/icons-material';
-import { toast } from 'react-toastify';
 
 import DoorsIcon from '../assets/img/car-door.png';
 
@@ -83,8 +82,8 @@ class CarList extends Component {
                     this.setState({ loading: false });
                 });
             })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            .catch((err) => {
+                Helper.error(err);
             });
     };
 

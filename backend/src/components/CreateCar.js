@@ -16,7 +16,6 @@ import GearboxList from '../elements/GearboxList';
 import SeatsList from '../elements/SeatsList';
 import DoorsList from '../elements/DoorsList';
 import FuelPolicyList from '../elements/FuelPolicyList';
-import { toast } from 'react-toastify';
 import {
     Input,
     InputLabel,
@@ -269,10 +268,9 @@ export default class CreateCar extends Component {
         CarService.create(data)
             .then(car => {
                 if (car && car._id) {
-                    // window.location = `/car?cr=${car._id}`;
                     window.location = '/cars';
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => {

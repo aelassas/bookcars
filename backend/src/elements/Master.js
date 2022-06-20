@@ -5,8 +5,8 @@ import UserService from '../services/UserService';
 import Unauthorized from '../components/Unauthorized';
 import Error from '../components/Error';
 import { Button } from '@mui/material';
-import { toast } from 'react-toastify';
 import Env from '../config/env.config';
+import Helper from '../common/Helper';
 
 export default class Master extends Component {
 
@@ -26,12 +26,12 @@ export default class Master extends Component {
 
         UserService.resendLink(data).then(status => {
             if (status === 200) {
-                toast(strings.VALIDATION_EMAIL_SENT, { type: 'info' });
+                Helper.info(strings.VALIDATION_EMAIL_SENT);
             } else {
-                toast(strings.VALIDATION_EMAIL_ERROR, { type: 'error' });
+                Helper.error(null, strings.VALIDATION_EMAIL_ERROR);
             }
         }).catch(err => {
-            toast(strings.VALIDATION_EMAIL_ERROR, { type: 'error' });
+            Helper.error(null, strings.VALIDATION_EMAIL_ERROR);
         });
     };
 

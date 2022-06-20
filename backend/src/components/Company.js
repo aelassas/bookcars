@@ -11,7 +11,6 @@ import CarList from '../elements/CarList';
 import InfoBox from '../elements/InfoBox';
 import Error from './Error';
 import NoMatch from './NoMatch';
-import { toast } from 'react-toastify';
 import {
     Typography,
     IconButton,
@@ -66,11 +65,11 @@ export default class Company extends Component {
                 if (status === 200) {
                     window.location.href = '/companies';
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                     this.setState({ loading: false });
                 }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
+            }).catch((err) => {
+                Helper.error(err);
                 this.setState({ loading: false });
             });
         });

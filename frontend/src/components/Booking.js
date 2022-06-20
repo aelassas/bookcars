@@ -24,7 +24,6 @@ import {
     Button
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
-import { toast } from 'react-toastify';
 
 import '../assets/css/booking.css';
 
@@ -148,7 +147,7 @@ export default class Booking extends Component {
     };
 
     error = (hideLoading) => {
-        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        Helper.error();
         if (hideLoading) this.setState({ loading: false });
     };
 
@@ -196,7 +195,7 @@ export default class Booking extends Component {
         BookingService.update(data)
             .then(status => {
                 if (status === 200) {
-                    toast(commonStrings.UPDATED, { type: 'info' });
+                    Helper.info(commonStrings.UPDATED);
                 } else {
                     this.error();
                 }
@@ -353,7 +352,7 @@ export default class Booking extends Component {
                                                         this.setState({ booking, price, from, minDate: from });
                                                     },
                                                     (err) => {
-                                                        this.error();
+                                                        this.error(err);
                                                     });
                                             }
                                         }}
@@ -379,7 +378,7 @@ export default class Booking extends Component {
                                                         this.setState({ booking, price, to });
                                                     },
                                                     (err) => {
-                                                        this.error();
+                                                        this.error(err);
                                                     });
                                             }
                                         }}

@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as clStrings } from '../lang/create-location';
 import { strings } from '../lang/update-location';
 import LocationService from '../services/LocationService';
-import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
 import Error from './Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -17,6 +16,7 @@ import {
     Paper
 } from '@mui/material';
 import UserService from '../services/UserService';
+import Helper from '../common/Helper';
 
 import '../assets/css/update-location.css';
 
@@ -65,7 +65,7 @@ export default class UpdateLocation extends Component {
 
     error = () => {
         this.setState({ loading: false });
-        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        Helper.error();
     }
 
     handleSubmit = (e) => {
@@ -80,7 +80,7 @@ export default class UpdateLocation extends Component {
                     if (status === 200) {
                         location.name = name;
                         this.setState({ loading: false, location });
-                        toast(strings.LOCATION_UPDATED, { type: 'info' });
+                        Helper.info(strings.LOCATION_UPDATED);
                     } else {
                         this.error();
                     }

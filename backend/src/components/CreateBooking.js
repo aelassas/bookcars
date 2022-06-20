@@ -150,7 +150,7 @@ export default class CreateBooking extends Component {
                         if (booking && booking._id) {
                             window.location = '/';
                         } else {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error();
                         }
                     })
                     .catch(() => {

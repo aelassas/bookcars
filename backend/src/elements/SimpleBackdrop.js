@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     Backdrop,
-    CircularProgress
+    CircularProgress,
+    Typography
 } from '@mui/material';
 
 export default function SimpleBackdrop(props) {
@@ -12,8 +13,8 @@ export default function SimpleBackdrop(props) {
                 open
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
             >
-                {props.text}
-                {props.progress ? <CircularProgress color="inherit" /> : null}
+                {props.progress && <CircularProgress color='inherit' sx={{ marginRight: 5 }} />}
+                <Typography color='inherit' >{props.text}</Typography>
             </Backdrop>
         </div>
     );

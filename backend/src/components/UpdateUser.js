@@ -12,7 +12,6 @@ import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
 import DatePicker from '../elements/DatePicker';
-import { toast } from 'react-toastify';
 import {
     Input,
     InputLabel,
@@ -228,13 +227,13 @@ export default class CreateUser extends Component {
         UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
             .then(status => {
                 if (status === 200) {
-                    toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            .catch((err) => {
+                Helper.error(err);
             });
     };
 
@@ -286,9 +285,9 @@ export default class CreateUser extends Component {
                     user.fullName = fullName;
                     user.type = type;
                     this.setState({ user });
-                    toast(commonStrings.UPDATED, { type: 'info' });
+                    Helper.info(commonStrings.UPDATED);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
 
                     this.setState({
                         error: false,
@@ -332,8 +331,10 @@ export default class CreateUser extends Component {
                                 this.setState({ loading: false, noMatch: true });
                             }
                         })
-                        .catch(() => {
-                            this.setState({ loading: false, visible: false }, () => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                        .catch((err) => {
+                            this.setState({ loading: false, visible: false }, () => {
+                                Helper.error(err);
+                            });
                         });
                 } else {
                     this.setState({ loading: false, noMatch: true });

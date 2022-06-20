@@ -5,7 +5,6 @@ import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as blStrings } from '../lang/booking-list';
 import { strings } from '../lang/booking-car-list';
 import CarService from '../services/CarService';
-import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 import {
     Dialog,
@@ -14,6 +13,7 @@ import {
     DialogActions,
     Button
 } from '@mui/material';
+import Helper from '../common/Helper';
 
 class CarSelectList extends Component {
 
@@ -70,7 +70,7 @@ class CarSelectList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch((err) => Helper.error(err));
     };
 
     handleCloseDialog = () => {

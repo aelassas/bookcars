@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
 import CompanyService from '../services/CompanyService';
 import Helper from '../common/Helper';
-import { toast } from 'react-toastify';
 import MultipleSelect from './MultipleSelect';
 
 class CompanySelectList extends Component {
@@ -43,7 +41,7 @@ class CompanySelectList extends Component {
                     }
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch((err) => Helper.error(err));
     };
 
     handleChange = (values, key, reference) => {

@@ -10,7 +10,6 @@ import { Avatar } from '../elements/Avatar';
 import BookingList from '../elements/BookingList';
 import Error from './Error';
 import NoMatch from './NoMatch';
-import { toast } from 'react-toastify';
 import {
     Typography,
     IconButton,
@@ -67,11 +66,11 @@ export default class User extends Component {
                 if (status === 200) {
                     window.location.href = '/users';
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                     this.setState({ loading: false });
                 }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            }).catch((err) => {
+                Helper.error(err);
                 this.setState({ loading: false });
             });
         });
@@ -117,7 +116,7 @@ export default class User extends Component {
                                             const companyIds = Helper.flattenCompanies(companies);
                                             setState(companyIds);
                                         })
-                                        .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                                        .catch((err) => Helper.error(err));
                                 } else {
                                     setState([loggedUser._id]);
                                 }
@@ -125,8 +124,8 @@ export default class User extends Component {
                                 this.setState({ loading: false, noMatch: true });
                             }
                         })
-                        .catch(() => {
-                            this.setState({ loading: false, visible: false }, () => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                        .catch((err) => {
+                            this.setState({ loading: false, visible: false }, () => Helper.error(err));
                         });
                 } else {
                     this.setState({ loading: false, noMatch: true });

@@ -31,7 +31,6 @@ import {
     Cancel as CancelIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
-import { toast } from 'react-toastify';
 
 import '../assets/css/booking-list.css';
 
@@ -189,11 +188,11 @@ class BookingList extends Component {
 
                 this.setState({ cancelRequestSent: true, rows, selectedId: '', cancelRequestProcessing: false });
             } else {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error();
                 this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
             }
         } catch (err) {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            Helper.error(err);
             this.setState({ openCancelDialog: false, cancelRequestProcessing: false });
         }
     };

@@ -18,7 +18,7 @@ import {
     Paper,
     Link
 } from '@mui/material';
-import { toast } from 'react-toastify';
+import Helper from '../common/Helper';
 
 import '../assets/css/activate.css';
 
@@ -100,25 +100,25 @@ export default class Activate extends Component {
                                         if (status === 200) {
                                             window.location.href = '/';
                                         } else {
-                                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                            Helper.error();
                                         }
                                     })
-                                    .catch(() => {
-                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    .catch((err) => {
+                                        Helper.error(err);
                                     });
                             } else {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                Helper.error();
                             }
                         })
-                        .catch(() => {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        .catch((err) => {
+                            Helper.error(err);
                         });
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            .catch((err) => {
+                Helper.error(err);
             });
 
     };
@@ -129,13 +129,13 @@ export default class Activate extends Component {
         UserService.resend(email, false, Env.APP_TYPE)
             .then(status => {
                 if (status === 200) {
-                    toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            .catch((err) => {
+                Helper.error(err);
             });
     };
 

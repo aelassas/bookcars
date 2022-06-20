@@ -10,7 +10,6 @@ import NoMatch from './NoMatch';
 import Error from './Error';
 import { Avatar } from '../elements/Avatar';
 import BookingList from '../elements/BookingList';
-import { toast } from 'react-toastify';
 import Helper from '../common/Helper';
 import {
     Button,
@@ -76,11 +75,11 @@ export default class Car extends Component {
                 if (status === 200) {
                     window.location.href = '/cars';
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                     this.setState({ loading: false });
                 }
-            }).catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' })
+            }).catch((err) => {
+                Helper.error(err);
                 this.setState({ loading: false });
             });
         });
@@ -104,7 +103,7 @@ export default class Car extends Component {
                                             const companyIds = Helper.flattenCompanies(companies);
                                             this.setState({ companies: companyIds, car, loading: false, visible: true }, setOffset);
                                         })
-                                        .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+                                        .catch((err) => Helper.error(err));
                                 } else if (car.company._id === user._id) {
                                     this.setState({ companies: [user._id], car, loading: false, visible: true }, setOffset);
                                 } else {

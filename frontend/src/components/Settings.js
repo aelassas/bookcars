@@ -7,7 +7,6 @@ import UserService from '../services/UserService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import DatePicker from '../elements/DatePicker';
-import { toast } from 'react-toastify';
 import { Avatar } from '../elements/Avatar';
 import {
     Input,
@@ -21,6 +20,7 @@ import {
 } from '@mui/material';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
+import Helper from '../common/Helper';
 
 import '../assets/css/settings.css';
 
@@ -110,7 +110,7 @@ export default class Settings extends Component {
             .then(status => {
                 if (status === 200) {
                     this.setState({ user });
-                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
+                    Helper.info(strings.SETTINGS_UPDATED);
                 }
             })
             .catch(err => {
@@ -163,9 +163,9 @@ export default class Settings extends Component {
         UserService.updateUser(data)
             .then(status => {
                 if (status === 200) {
-                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
+                    Helper.info(strings.SETTINGS_UPDATED);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => {

@@ -18,9 +18,9 @@ import {
     Checkbox,
     Link
 } from '@mui/material';
-import { toast } from 'react-toastify';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
+import Helper from '../common/Helper';
 
 import '../assets/css/signup.css';
 
@@ -82,7 +82,7 @@ export default class SignUp extends Component {
                         return false;
                     }
                 } catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error(err);
                     this.setState({ emailError: false, emailValid: true });
                     return false;
                 }
