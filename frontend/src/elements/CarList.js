@@ -81,7 +81,7 @@ class CarList extends Component {
 
                     setTimeout(() => {
                         this.setState({ loading: false });
-                    }, 100);
+                    }, 300);
                 });
             })
             .catch((err) => {

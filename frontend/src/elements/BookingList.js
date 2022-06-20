@@ -217,7 +217,7 @@ class BookingList extends Component {
 
                             setTimeout(() => {
                                 this.setState({ loading: false });
-                            }, 100);
+                            }, 300);
                         });
                     } else {
                         this.setState({ rows: _data.resultData, rowCount: totalRecords }, () => {
@@ -227,7 +227,7 @@ class BookingList extends Component {
 
                             setTimeout(() => {
                                 this.setState({ loading: false });
-                            }, 100);
+                            }, 300);
                         });
                     }
                 })
