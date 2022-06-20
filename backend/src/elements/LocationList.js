@@ -3,7 +3,6 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/locations';
 import LocationService from '../services/LocationService';
-import { toast } from 'react-toastify';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,
@@ -28,8 +27,9 @@ import {
     LocationOn as LocationIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
+import Helper from '../common/Helper';
 
-import '../assets/css/location-list.css';;
+import '../assets/css/location-list.css';
 
 class LocationList extends Component {
     constructor(props) {
@@ -62,7 +62,7 @@ class LocationList extends Component {
                 } else if (status === 200) {
                     this.setState({ openInfoDialog: true });
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => UserService.signout());
@@ -87,14 +87,14 @@ class LocationList extends Component {
                             }
                         });
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                         this.setState({ loading: false, locationId: '', locationIndex: -1 });
                     }
                 }).catch(() => {
                     UserService.signout();
                 });
         } else {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            Helper.error();
             this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });
         }
     };
@@ -122,7 +122,7 @@ class LocationList extends Component {
                     this.setState({ loading: false });
                 });
             })
-            .catch(() => toast(commonStrings.GENERIC_ERROR, { type: 'error' }));
+            .catch((err) => Helper.error(err));
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {

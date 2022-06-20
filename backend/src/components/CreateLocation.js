@@ -3,7 +3,6 @@ import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-location';
 import LocationService from '../services/LocationService';
-import { toast } from 'react-toastify';
 import {
     Input,
     InputLabel,
@@ -13,6 +12,7 @@ import {
     Paper
 } from '@mui/material';
 import UserService from '../services/UserService';
+import Helper from '../common/Helper';
 
 import '../assets/css/create-location.css';
 
@@ -38,7 +38,7 @@ export default class CreateLocation extends Component {
     };
 
     error = () => {
-        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        Helper.error();
     };
 
     handleSubmit = (e) => {
@@ -57,7 +57,7 @@ export default class CreateLocation extends Component {
                     .then(status => {
                         if (status === 200) {
                             this.setState({ name: '' });
-                            toast(strings.LOCATION_CREATED, { type: 'info' });
+                            Helper.info(strings.LOCATION_CREATED);
                         } else {
                             this.error();
                         }

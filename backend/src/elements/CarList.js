@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import Helper from '../common/Helper';
 import CarService from '../services/CarService';
-import { toast } from 'react-toastify';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,
@@ -78,7 +77,7 @@ class CarList extends Component {
             } else if (status === 204) {
                 this.setState({ openDeleteDialog: true, carId, carIndex });
             } else {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error();
             }
         } catch (err) {
             UserService.signout();
@@ -105,14 +104,14 @@ class CarList extends Component {
                             }
                         });
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                         this.setState({ loading: false, carId: '', carIndex: -1 });
                     }
                 }).catch((err) => {
                     UserService.signout();
                 });
         } else {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            Helper.error();
             this.setState({ openDeleteDialog: false, carId: '', carIndex: -1 });
         }
     };

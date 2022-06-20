@@ -13,8 +13,8 @@ import {
     Paper,
     Link
 } from '@mui/material';
-import { toast } from 'react-toastify';
 import validator from 'validator';
+import Helper from '../common/Helper';
 
 import '../assets/css/reset-password.css';
 
@@ -60,7 +60,7 @@ export default class Activate extends Component {
                         return true;
                     }
                 } catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error(err);
                     this.setState({ error: false, emailValid: true });
                     return false;
                 }

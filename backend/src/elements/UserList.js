@@ -5,7 +5,6 @@ import { strings } from '../lang/user-list';
 import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
-import { toast } from 'react-toastify';
 import {
     DataGrid,
     frFR,
@@ -232,7 +231,7 @@ class BookingList extends Component {
                         this.setState({ rows: rows.filter((row) => row._id !== selectedId) });
                     }
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
 
                 this.setState({ loading: false });

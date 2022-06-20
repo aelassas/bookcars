@@ -3,7 +3,6 @@ import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import { strings as commonStrings } from '../lang/common';
 import UserService from '../services/UserService';
-import { toast } from 'react-toastify';
 import {
     Button,
     Avatar as MaterialAvatar,
@@ -47,26 +46,26 @@ export const Avatar = (props) => {
                                         props.onChange(user);
                                     }
                                 } else {
-                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    Helper.error();
                                     if (props.onChange) {
                                         props.onChange(user);
                                     }
                                 }
                             }).catch(err => {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                Helper.error(err);
                                 if (props.onChange) {
                                     props.onChange(user);
                                 }
                             });
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                         if (props.onChange) {
                             props.onChange(user);
                         }
                     }
                 }
             ).catch(err => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error(err);
                 if (props.onChange) {
                     props.onChange(user);
                 }
@@ -115,16 +114,16 @@ export const Avatar = (props) => {
                                 }
                                 closeDialog();
                             } else {
-                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                Helper.error();
                             }
                         }).catch(err => {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error(err);
                         });
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             }).catch(err => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error(err);
             });
     };
 

@@ -7,7 +7,6 @@ import Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
 import StatusList from './StatusList';
 import Backdrop from '../elements/SimpleBackdrop';
-import { toast } from 'react-toastify';
 import {
     DataGrid,
     frFR,
@@ -226,7 +225,7 @@ class BookingList extends Component {
                     });
                     this.setState({ rows });
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
 
                 this.setState({ openUpdateDialog: false });
@@ -257,7 +256,7 @@ class BookingList extends Component {
                         rows.splice(selectedIndex, 1);
                         this.setState({ rows, selectedId: '', selectedIndex: -1 });
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                     }
 
                     this.setState({ openDeleteDialog: false });
@@ -278,7 +277,7 @@ class BookingList extends Component {
                             this.setState({ rows: rows.filter((row) => row._id !== selectedId) });
                         }
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                     }
 
                     this.setState({ openDeleteDialog: false });

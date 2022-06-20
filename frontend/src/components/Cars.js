@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 import LocationService from '../services/LocationService';
 import CompanyService from '../services/CompanyService';
@@ -13,7 +12,6 @@ import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';
 import CarList from '../elements/CarList';
-import { toast } from 'react-toastify';
 
 import '../assets/css/cars.css';
 
@@ -134,7 +132,7 @@ export default class Cars extends Component {
                 });
 
             } catch (err) {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error(err);
             }
 
         });

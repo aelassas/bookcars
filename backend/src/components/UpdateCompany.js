@@ -8,7 +8,6 @@ import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import { toast } from 'react-toastify';
 import NoMatch from './NoMatch';
 import { Avatar } from '../elements/Avatar';
 import {
@@ -148,13 +147,13 @@ export default class UpdateCompany extends Component {
         UserService.resend(company.email, false, Env.APP_TYPE)
             .then(status => {
                 if (status === 200) {
-                    toast(commonStrings.ACTIVATION_EMAIL_SENT, { type: 'info' });
+                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
-            .catch(() => {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            .catch((err) => {
+                Helper.error(err);
             });
     };
 
@@ -196,9 +195,9 @@ export default class UpdateCompany extends Component {
                 if (status === 200) {
                     company.fullName = fullName;
                     this.setState({ company });
-                    toast(commonStrings.UPDATED, { type: 'info' });
+                    Helper.info(commonStrings.UPDATED);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => {

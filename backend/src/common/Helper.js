@@ -2,8 +2,22 @@ import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
 import CarService from "../services/CarService";
+import { toast } from 'react-toastify';
 
 export default class Helper {
+
+    static info(message) {
+        toast(message, { type: 'info' });
+    }
+
+    static error(err, message) {
+        if (err && console && console.error) console.error(err);
+        if (message) {
+            toast(message, { type: 'error' });
+        } else {
+            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+        }
+    }
 
     static joinURL(part1, part2) {
         if (part1.charAt(part1.length - 1) === '/') {

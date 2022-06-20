@@ -18,7 +18,6 @@ import GearboxList from '../elements/GearboxList';
 import SeatsList from '../elements/SeatsList';
 import DoorsList from '../elements/DoorsList';
 import FuelPolicyList from '../elements/FuelPolicyList';
-import { toast } from 'react-toastify';
 import {
     Input,
     InputLabel,
@@ -272,9 +271,9 @@ export default class CreateCar extends Component {
         CarService.update(data)
             .then(status => {
                 if (status === 200) {
-                    toast(commonStrings.UPDATED, { type: 'info' });
+                    Helper.info(commonStrings.UPDATED);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => {
@@ -334,8 +333,8 @@ export default class CreateCar extends Component {
                                 this.setState({ loading: false, noMatch: true });
                             }
                         })
-                        .catch(() => {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        .catch((err) => {
+                            Helper.error(err);
                             this.setState({ loading: false, error: true, visible: false });
                         });
                 } else {

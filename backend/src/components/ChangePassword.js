@@ -16,6 +16,7 @@ import {
     FormHelperText,
     Button
 } from '@mui/material';
+import Helper from '../common/Helper';
 
 import '../assets/css/change-password.css';
 
@@ -104,7 +105,7 @@ export default class ChangePassword extends Component {
                                 .then(_user => {
                                     if (_user) {
                                         this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
-                                        toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                                        Helper.info(strings.PASSWORD_UPDATE);
                                     } else {
                                         toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
                                     }
@@ -114,10 +115,10 @@ export default class ChangePassword extends Component {
                                 });
                         } else {
                             this.setState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                            toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                            Helper.info(strings.PASSWORD_UPDATE);
                         }
                     } else {
-                        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+                        Helper.error(null, strings.PASSWORD_UPDATE_ERROR);
                     }
                 })
                 .catch(() => {

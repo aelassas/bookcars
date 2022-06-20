@@ -32,7 +32,6 @@ import {
     Person as DriverIcon,
     EventSeat as BookingIcon
 } from '@mui/icons-material';
-import { toast } from 'react-toastify';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
 
@@ -159,7 +158,7 @@ export default class CreateBooking extends Component {
                         return false;
                     }
                 } catch (err) {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error(err);
                     this.setState({ emailRegitered: false, emailValid: true, emailInfo: true });
                     return false;
                 }
@@ -457,12 +456,12 @@ export default class CreateBooking extends Component {
                     this.setState({ loading: false, visible: false, success: true });
                 } else {
                     this.setState({ loading: false });
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 this.setState({ loading: false });
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error(err);
             });
 
     };
@@ -531,7 +530,7 @@ export default class CreateBooking extends Component {
                 });
 
             } catch (err) {
-                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                Helper.error(err);
             }
 
         });

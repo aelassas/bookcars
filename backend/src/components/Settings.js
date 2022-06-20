@@ -6,7 +6,6 @@ import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import { toast } from 'react-toastify';
 import { Avatar } from '../elements/Avatar';
 import {
     Input,
@@ -105,9 +104,9 @@ export default class Settings extends Component {
         UserService.updateUser(data)
             .then(status => {
                 if (status === 200) {
-                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
+                    Helper.info(strings.SETTINGS_UPDATED);
                 } else {
-                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                    Helper.error();
                 }
             })
             .catch(() => {
@@ -122,7 +121,7 @@ export default class Settings extends Component {
             .then(status => {
                 if (status === 200) {
                     this.setState({ user });
-                    toast(strings.SETTINGS_UPDATED, { type: 'info' });
+                    Helper.info(strings.SETTINGS_UPDATED);
                 }
             })
             .catch(err => {

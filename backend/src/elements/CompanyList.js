@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/company-list';
 import CompanyService from '../services/CompanyService';
 import Helper from '../common/Helper';
-import { toast } from 'react-toastify';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,
@@ -72,14 +71,14 @@ class CompanyList extends Component {
                             }
                         });
                     } else {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error();
                         this.setState({ loading: false, companyId: '', companyIndex: -1 });
                     }
                 }).catch(() => {
                     UserService.signout();
                 });
         } else {
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            Helper.error();
             this.setState({ openDeleteDialog: false, companyId: '', companyIndex: -1 });
         }
     };

@@ -6,7 +6,6 @@ import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
-import { toast } from 'react-toastify';
 import {
     Paper,
     Input,
@@ -15,6 +14,7 @@ import {
     FormHelperText,
     Button
 } from '@mui/material';
+import Helper from '../common/Helper';
 
 import '../assets/css/change-password.css';
 
@@ -57,7 +57,7 @@ export default class ChangePassword extends Component {
     };
 
     error = () => {
-        toast(strings.PASSWORD_UPDATE_ERROR, { type: 'error' });
+        Helper.error(null, strings.PASSWORD_UPDATE_ERROR);
     };
 
     handleSubmit = (e) => {
@@ -106,7 +106,7 @@ export default class ChangePassword extends Component {
                             .then(_user => {
                                 if (_user) {
                                     this.setState({ user: _user, newPasswordError: false, currentPassword: '', newPassword: '', confirmPassword: '' });
-                                    toast(strings.PASSWORD_UPDATE, { type: 'info' });
+                                    Helper.info(strings.PASSWORD_UPDATE);
                                 } else {
                                     this.error();
                                 }

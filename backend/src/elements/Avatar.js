@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common';
 import Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import CarService from '../services/CarService';
-import { toast } from 'react-toastify';
 import {
     Button,
     Avatar as MaterialAvatar,
@@ -109,13 +108,13 @@ export const Avatar = (props) => {
                                                     props.onChange(user.avatar);
                                                 }
                                             } else {
-                                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                                Helper.error();
                                             }
                                         }).catch(err => {
                                             UserService.signout();
                                         });
                                 } else {
-                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    Helper.error();
                                 }
                             })
                             .catch(err => {
@@ -161,13 +160,13 @@ export const Avatar = (props) => {
                                                     props.onChange(car);
                                                 }
                                             } else {
-                                                toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                                Helper.error();
                                             }
                                         }).catch(err => {
                                             UserService.signout();
                                         });
                                 } else {
-                                    toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                    Helper.error();
                                 }
                             })
                             .catch(err => {
@@ -232,13 +231,13 @@ export const Avatar = (props) => {
                                         }
                                         closeDialog();
                                     } else {
-                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                        Helper.error();
                                     }
                                 }).catch(err => {
                                     UserService.signout();
                                 });
                         } else {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error();
                         }
                     })
                     .catch(err => {
@@ -254,11 +253,11 @@ export const Avatar = (props) => {
                             }
                             closeDialog();
                         } else {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error();
                         }
                     })
                     .catch(err => {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error(err);
                     });
             }
         } else if (props.type === Env.RECORD_TYPE.CAR) {
@@ -272,11 +271,11 @@ export const Avatar = (props) => {
                             }
                             closeDialog();
                         } else {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error();
                         }
                     })
                     .catch(err => {
-                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                        Helper.error(err);
                     });
             } else if (record && props.mode === 'update') {
                 const { _id } = record;
@@ -293,13 +292,13 @@ export const Avatar = (props) => {
                                         }
                                         closeDialog();
                                     } else {
-                                        toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                                        Helper.error();
                                     }
                                 }).catch(err => {
                                     UserService.signout();
                                 });
                         } else {
-                            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+                            Helper.error();
                         }
                     })
                     .catch(err => {
@@ -335,7 +334,7 @@ export const Avatar = (props) => {
             }
         } else {
             setError(true);
-            toast(commonStrings.GENERIC_ERROR, { type: 'error' });
+            Helper.error();
         }
     }, [props.record, props.type, props.mode]);
 
