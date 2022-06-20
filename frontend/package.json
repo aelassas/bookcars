@@ -22,8 +22,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build --stats",
-    "analyze": "webpack-bundle-analyzer build/bundle-stats.json",
+    "build": "react-scripts build",
+    "build:stats": "react-scripts build --stats",
+    "analyze": "webpack-bundle-analyzer build/bundle-stats.json -p 5000",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
