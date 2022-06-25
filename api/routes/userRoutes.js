@@ -528,7 +528,8 @@ routes.route(routeNames.validateEmail).post((req, res) => {
             return res.sendStatus(200);
         }
     } catch (err) {
-
+        console.error('[user.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.email, err);
+        return res.status(400).send(strings.DB_ERROR + err);
     }
 });
 
