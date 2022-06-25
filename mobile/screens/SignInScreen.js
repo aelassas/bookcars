@@ -95,6 +95,9 @@ export default function SignInScreen({ navigation, route }) {
         setEmailRequired(false);
         setEmailValid(true);
         setEmailError(false);
+        setPasswordRequired(false);
+        setPasswordLengthError(false);
+        setPasswordError(false);
     };
 
     const validatePassword = () => {
