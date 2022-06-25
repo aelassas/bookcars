@@ -19,10 +19,7 @@
       "icon": "./assets/icon.png",
       "splash": {
         "backgroundColor": "#f37022",
-        "image": "./assets/splash.png",
-        "mdpi": "./assets/splash.png",
-        "hdpi": "./assets/splash-hdpi.png",
-        "xhdpi": "./assets/splash-xhdpi.png"
+        "image": "./assets/splash.png"
       }
     },
     "ios": {
