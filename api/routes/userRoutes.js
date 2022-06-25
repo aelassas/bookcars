@@ -518,7 +518,7 @@ routes.route(routeNames.signin).post((req, res) => {
 });
 
 // Email validation Router
-routes.route(routeNames.validateEmail).post((req, res) => {
+routes.route(routeNames.validateEmail).post(async (req, res) => {
     try {
         const exists = await User.exists({ email: req.body.email });
 
