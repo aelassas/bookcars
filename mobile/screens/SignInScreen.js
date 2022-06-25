@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import validator from 'validator';
 
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
@@ -18,8 +19,11 @@ export default function SignInScreen({ navigation, route }) {
     const [stayConnected, setStayConnected] = useState(false);
 
     const [emailRequired, setEmailRequired] = useState(false);
+    const [emailValid, setEmailValid] = useState(true);
+    const [emailError, setEmailError] = useState(false);
     const [passwordRequired, setPasswordRequired] = useState(false);
-    const [signInError, setSignInError] = useState(false);
+    const [passwordLengthError, setPasswordLengthError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
     const [blacklisted, setBlacklisted] = useState(false);
 
     const emailRef = useRef(null);
@@ -33,6 +37,14 @@ export default function SignInScreen({ navigation, route }) {
         setPassword('');
         setStayConnected(false);
 
+        setEmailRequired(false);
+        setEmailValid(true);
+        setEmailError(false);
+        setPasswordRequired(false);
+        setPasswordLengthError(false);
+        setPasswordError(false);
+        setBlacklisted(false);
+
         if (emailRef.current) emailRef.current.clear();
         if (passwordRef.current) passwordRef.current.clear();
     };
@@ -43,28 +55,88 @@ export default function SignInScreen({ navigation, route }) {
         }
     }, [route.params, isFocused]);
 
+    const validateEmail = async () => {
+        if (email) {
+            setEmailRequired(false);
+
+            if (validator.isEmail(email)) {
+                try {
+                    const status = await UserService.validateEmail({ email });
+                    if (status === 204) {
+                        setEmailError(false);
+                        setEmailValid(true);
+                        return true;
+                    } else {
+                        setEmailError(true);
+                        setEmailValid(true);
+                        return false;
+                    }
+                } catch (err) {
+                    Helper.error(err);
+                    setEmailError(false);
+                    setEmailValid(true);
+                    return false;
+                }
+            } else {
+                setEmailError(false);
+                setEmailValid(false);
+                return false;
+            }
+        } else {
+            setEmailError(false);
+            setEmailValid(true);
+            setEmailRequired(true);
+            return false;
+        }
+    };
+
     const onChangeEmail = (text) => {
         setEmail(text);
         setEmailRequired(false);
+        setEmailValid(true);
+        setEmailError(false);
+    };
+
+    const validatePassword = () => {
+        if (!password) {
+            setPasswordRequired(true);
+            setPasswordLengthError(false);
+            return false;
+        }
+
+        if (password.length < 6) {
+            setPasswordLengthError(true);
+            setPasswordRequired(false);
+            return false;
+        }
+
+        return true;
     };
 
     const onChangePassword = (text) => {
         setPassword(text);
         setPasswordRequired(false);
+        setPasswordLengthError(false);
+        setPasswordError(false);
     };
 
     const onChangeStayConnected = (checked) => {
         setStayConnected(checked);
     };
 
-    const onPressSignIn = () => {
+    const onPressSignIn = async () => {
 
-        if (!email) {
-            return setEmailRequired(true);
+        emailRef.current.blur();
+        passwordRef.current.blur();
+
+        const emailValid = await validateEmail();
+        if (!emailValid) {
+            return;
         }
 
-        if (!password) {
-            return setPasswordRequired(true);
+        const passwordValid = validatePassword();
+        if (!passwordValid) {
+            return;
         }
 
         const data = { email, password, stayConnected };
@@ -74,14 +146,16 @@ export default function SignInScreen({ navigation, route }) {
                 if (res.status === 200) {
                     if (res.data.blacklisted) {
                         await UserService.signout(navigation, false);
-                        setSignInError(false);
+                        setPasswordError(false);
                         setBlacklisted(true);
                     } else {
-                        setSignInError(false);
+                        setPasswordError(false);
+                        setBlacklisted(false);
                         navigation.navigate('Home', { d: new Date().getTime() });
                     }
                 } else {
-                    setSignInError(true);
+                    setPasswordError(true);
+                    setBlacklisted(false);
                 }
             }).catch((err) => {
                 Helper.error(err);
@@ -108,8 +182,12 @@ export default function SignInScreen({ navigation, route }) {
                     style={styles.component}
                     label={i18n.t('EMAIL')}
                     value={email}
-                    error={emailRequired}
-                    helperText={((emailRequired && i18n.t('REQUIRED')) || '')}
+                    error={emailRequired || !emailValid || emailError}
+                    helperText={
+                        ((emailRequired && i18n.t('REQUIRED')) || '')
+                        || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                        || ((emailError && i18n.t('RESET_EMAIL_ERROR')) || '')
+                    }
                     onChangeText={onChangeEmail}
                 />
 
@@ -119,9 +197,14 @@ export default function SignInScreen({ navigation, route }) {
                     secureTextEntry
                     label={i18n.t('PASSWORD')}
                     value={password}
-                    error={passwordRequired}
-                    helperText={((passwordRequired && i18n.t('REQUIRED')) || '')}
+                    error={passwordRequired || passwordLengthError || passwordError}
+                    helperText={
+                        ((passwordRequired && i18n.t('REQUIRED')) || '')
+                        || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
+                        || ((passwordError && i18n.t('CURRENT_PASSWORD_ERROR')) || '')
+                    }
                     onChangeText={onChangePassword}
+                    onSubmitEditing={onPressSignIn}
                 />
 
                 <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
@@ -132,7 +215,6 @@ export default function SignInScreen({ navigation, route }) {
 
                 <Link style={styles.link} label={i18n.t('FORGOT_PASSWORD')} onPress={onPressForgotPassword} />
 
-                {signInError && <Error style={styles.error} message={i18n.t('SIGN_IN_ERROR')} />}
                 {blacklisted && <Error style={styles.error} message={i18n.t('IS_BLACKLISTED')} />}
             </View>
         </ScrollView>

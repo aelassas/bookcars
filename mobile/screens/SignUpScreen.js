@@ -116,7 +116,7 @@ export default function SignUpScreen({ navigation, route }) {
                         return false;
                     }
                 } catch (err) {
-                    Helper.toast(i18n.t('GENERIC_ERROR'));
+                    Helper.error(err);
                     setEmailError(false);
                     setEmailValid(true);
                     return false;

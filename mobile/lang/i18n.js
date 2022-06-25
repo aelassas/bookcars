@@ -131,7 +131,7 @@ i18n.translations = {
         ENABLE_EMAIL_NOTIFICATIONS: 'Activer les notifications par email',
         SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
         CURRENT_PASSWORD: 'Mot de passe actuel',
-        CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
+        CURRENT_PASSWORD_ERROR: 'Mot de passe incorrect',
         NEW_PASSWORD: 'Nouveau mot de passe',
         PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
         PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",

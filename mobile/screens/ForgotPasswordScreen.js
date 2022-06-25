@@ -127,7 +127,7 @@ export default function ForgotPasswordScreen({ navigation, route }) {
                             || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
                             || ((emailError && i18n.t('RESET_EMAIL_ERROR')) || '')
                         }
-                        onSubmitEditing={() => onPressReset()}
+                        onSubmitEditing={onPressReset}
                         onChangeText={onChangeEmail} />
 
                     <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
