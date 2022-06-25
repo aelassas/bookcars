@@ -23,8 +23,7 @@
         "mdpi": "./assets/splash.png",
         "hdpi": "./assets/splash-hdpi.png",
         "xhdpi": "./assets/splash-xhdpi.png"
-      },
-      "package": "com.bookcars"
+      }
     },
     "ios": {
       "buildNumber": "1.0.0",
@@ -34,8 +33,7 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png",
         "tabletImage": "./assets/splash-tablet.png"
-      },
-      "bundleIdentifier": "com.bookcars"
+      }
     }
   }
 }
