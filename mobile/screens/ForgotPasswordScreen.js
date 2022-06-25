@@ -125,7 +125,7 @@ export default function ForgotPasswordScreen({ navigation, route }) {
                         helperText={
                             ((emailRequired && i18n.t('REQUIRED')) || '')
                             || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
-                            || ((emailError && i18n.t('RESET_EMAIL_ERROR')) || '')
+                            || ((emailError && i18n.t('EMAIL_ERROR')) || '')
                         }
                         onSubmitEditing={onPressReset}
                         onChangeText={onChangeEmail} />

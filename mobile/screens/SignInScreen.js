@@ -186,7 +186,7 @@ export default function SignInScreen({ navigation, route }) {
                     helperText={
                         ((emailRequired && i18n.t('REQUIRED')) || '')
                         || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
-                        || ((emailError && i18n.t('RESET_EMAIL_ERROR')) || '')
+                        || ((emailError && i18n.t('EMAIL_ERROR')) || '')
                     }
                     onChangeText={onChangeEmail}
                 />
@@ -201,7 +201,7 @@ export default function SignInScreen({ navigation, route }) {
                     helperText={
                         ((passwordRequired && i18n.t('REQUIRED')) || '')
                         || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
-                        || ((passwordError && i18n.t('CURRENT_PASSWORD_ERROR')) || '')
+                        || ((passwordError && i18n.t('PASSWORD_ERROR')) || '')
                     }
                     onChangeText={onChangePassword}
                     onSubmitEditing={onPressSignIn}
