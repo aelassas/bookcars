@@ -197,7 +197,7 @@ export default function SettingsScreen({ navigation, route }) {
 
     return (
         visible && language &&
-        <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
+        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
             <ScrollView
                 contentContainerStyle={styles.container}
                 keyboardShouldPersistTaps='handled'

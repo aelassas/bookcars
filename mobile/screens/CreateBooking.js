@@ -613,7 +613,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const days = Helper.days(from, to);
 
     return (
-        <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload}>
+        <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
             {visible &&
                 <>
                     {

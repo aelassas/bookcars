@@ -9,14 +9,19 @@ export default function Master(props) {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
-    const exit = () => {
+    const exit = (reload = false) => {
         if (props.strict) {
             UserService.signout(props.navigation, false, true);
         } else {
             setLoading(false);
             UserService.signout(props.navigation, false, false);
+
             if (props.onLoad) {
                 props.onLoad();
+            }
+
+            if (reload && props.navigation && props.route) {
+                props.navigation.navigate(props.route.name, { d: new Date().getTime() });
             }
         }
     };
@@ -62,7 +67,7 @@ export default function Master(props) {
             }
         } catch (err) {
             Helper.error(err, false);
-            exit();
+            exit(true);
         }
     };
 

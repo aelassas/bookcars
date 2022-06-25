@@ -92,7 +92,7 @@ export default function BookingsScreen({ navigation, route }) {
     };
 
     return (
-        <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
+        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
             {visible &&
                 <BookingList
                     user={user._id}

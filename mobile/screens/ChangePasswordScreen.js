@@ -174,7 +174,7 @@ export default function ChangePasswordScreen({ navigation, route }) {
     };
 
     return (
-        <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} strict>
+        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
             {visible &&
                 <ScrollView
                     contentContainerStyle={styles.container}
