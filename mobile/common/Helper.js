@@ -47,12 +47,12 @@ export default class Helper {
         return dateTime;
     };
 
-    static error(err) {
+    static error(err, toast = true) {
         if (err) console.log(err);
         if (err.request?._response) {
             console.log(err.request?._response);
         }
-        Helper.toast(i18n.t('GENERIC_ERROR'));
+        if (toast) Helper.toast(i18n.t('GENERIC_ERROR'));
     }
 
     static joinURL(part1, part2) {
