@@ -92,12 +92,10 @@ export default function Master(props) {
                 ?
                 props.children
                 :
-                (
-                    <View style={styles.validate}>
-                        <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
-                        <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
-                    </View>
-                )
+                <View style={styles.validate}>
+                    <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
+                    <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
+                </View>
             }
         </View>
     );

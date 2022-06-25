@@ -60,7 +60,7 @@ export default class UserService {
 
     static async validateAccessToken() {
         const authHeader = await UserService.authHeader();
-        return axios.post(`${Env.API_HOST}/api/validate-access-token`, null, { headers: authHeader }).then(res => res.status);
+        return axios.post(`${Env.API_HOST}/api/validate-access-token`, null, { headers: authHeader, timeout: Env.TIMEOUT }).then(res => res.status);
     }
 
     static confirmEmail(email, token) {
