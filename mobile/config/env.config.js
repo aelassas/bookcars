@@ -24,7 +24,7 @@ const Env = {
         FR: 'fr',
         EN: 'en'
     },
-    TIMEOUT: 5000, // ms
+    AXIOS_TIMEOUT: 5000, // ms
     PAGE_SIZE: parseInt(BC_PAGE_SIZE || 20),
     CARS_PAGE_SIZE: parseInt(BC_CARS_PAGE_SIZE || 8),
     BOOKINGS_PAGE_SIZE: parseInt(BC_BOOKINGS_PAGE_SIZE || 8),
