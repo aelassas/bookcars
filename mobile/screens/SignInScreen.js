@@ -126,9 +126,6 @@ export default function SignInScreen({ navigation, route }) {
 
     const onPressSignIn = async () => {
 
-        emailRef.current.blur();
-        passwordRef.current.blur();
-
         const emailValid = await validateEmail();
         if (!emailValid) {
             return;
