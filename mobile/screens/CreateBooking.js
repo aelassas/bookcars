@@ -260,7 +260,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                         return false;
                     }
                 } catch (err) {
-                    Helper.toast(i18n.t('GENERIC_ERROR'));
+                    Helper.error(err);
                     setEmailInfo(true);
                     setEmailError(false);
                     setEmailValid(true);
