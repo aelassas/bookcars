@@ -191,7 +191,7 @@ export default function ChangePasswordScreen({ navigation, route }) {
                             error={currentPasswordRequired || currentPasswordError}
                             helperText={
                                 ((currentPasswordRequired && i18n.t('REQUIRED')) || '')
-                                || ((currentPasswordError && i18n.t('CURRENT_PASSWORD_ERROR')) || '')
+                                || ((currentPasswordError && i18n.t('PASSWORD_ERROR')) || '')
                             }
                             onChangeText={onChangeCurrentPassword}
                         />
