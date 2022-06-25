@@ -489,7 +489,7 @@ routes.route(routeNames.signin).post((req, res) => {
                             let options = { expiresIn: JWT_EXPIRE_AT };
                             if (req.body.stayConnected) options = {};
                             console.log('options', options);
-                            
+
                             const token = jwt.sign(payload, JWT_SECRET, options);
 
                             res.status(200).send({
@@ -519,12 +519,17 @@ routes.route(routeNames.signin).post((req, res) => {
 
 // Email validation Router
 routes.route(routeNames.validateEmail).post((req, res) => {
-    User.findOne({ email: req.body.email })
-        .then(user => user || !validator.isEmail(req.body.email) ? res.sendStatus(204) : res.sendStatus(200))
-        .catch(err => {
-            console.error('[user.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.email, err);
-            res.status(400).send(strings.DB_ERROR + err);
-        })
+    try {
+        const exists = await User.exists({ email: req.body.email });
+
+        if (exists) {
+            return res.sendStatus(204);
+        } else { // email does not exist in db (can be added)
+            return res.sendStatus(200);
+        }
+    } catch (err) {
+
+    }
 });
 
 // Validate JWT token Router
