@@ -488,7 +488,6 @@ routes.route(routeNames.signin).post((req, res) => {
 
                             let options = { expiresIn: JWT_EXPIRE_AT };
                             if (req.body.stayConnected) options = {};
-                            console.log('options', options);
 
                             const token = jwt.sign(payload, JWT_SECRET, options);
 
