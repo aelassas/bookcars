@@ -86,8 +86,9 @@ export default function Master(props) {
                 } else {
                     Helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'));
                 }
-            }).catch(err => {
-                UserService.signout();
+            }).catch(async (err) => {
+                Helper.error(err);
+                await UserService.signout();
             });
     };
 

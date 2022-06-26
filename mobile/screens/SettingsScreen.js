@@ -43,13 +43,15 @@ export default function SettingsScreen({ navigation, route }) {
             const currentUser = await UserService.getCurrentUser();
 
             if (!currentUser) {
-                UserService.signout(navigation, false, true);
+                await UserService.signout(navigation, false, true);
+                return;
             }
 
             const user = await UserService.getUser(currentUser.id);
 
             if (!user) {
-                UserService.signout(navigation, false, true);
+                await UserService.signout(navigation, false, true);
+                return;
             }
 
             setUser(user);
@@ -63,7 +65,7 @@ export default function SettingsScreen({ navigation, route }) {
 
             setVisible(true);
         } catch (err) {
-            UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true);
         }
     };
 
