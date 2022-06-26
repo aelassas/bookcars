@@ -12,6 +12,10 @@ export default function Master(props) {
     const exit = async (reload = false) => {
         if (props.strict) {
             await UserService.signout(props.navigation, false, true);
+
+            if (props.onLoad) {
+                props.onLoad();
+            }
         } else {
             await UserService.signout(props.navigation, false, false);
 
