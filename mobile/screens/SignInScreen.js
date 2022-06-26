@@ -152,6 +152,7 @@ export default function SignInScreen({ navigation, route }) {
                         setPasswordError(false);
                         setBlacklisted(false);
                         navigation.navigate('Home', { d: new Date().getTime() });
+                        await _init();
                     }
                 } else {
                     setPasswordError(true);

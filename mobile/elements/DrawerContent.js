@@ -110,7 +110,7 @@ class DrawerContent extends Component {
                         })
                     }
                     {this.props.loggedIn &&
-                        <TouchableOpacity style={styles.signout} onPress={() => UserService.signout(this.props.navigation)}>
+                        <TouchableOpacity style={styles.signout} onPress={async () => await UserService.signout(this.props.navigation)}>
                             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
                             <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
                         </TouchableOpacity>
