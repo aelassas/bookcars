@@ -172,7 +172,8 @@ export default function CreateBookingScreen({ navigation, route }) {
                 || !route.params.from
                 || !route.params.to
             ) {
-                UserService.signout(navigation);
+                await UserService.signout(navigation);
+                return;
             }
 
             const car = await CarService.getCar(route.params.car);
@@ -209,7 +210,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             setVisible(true);
             setFormVisible(true);
         } catch (err) {
-            UserService.signout(navigation);
+            await UserService.signout(navigation);
         }
     };
 

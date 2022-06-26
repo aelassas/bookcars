@@ -29,10 +29,7 @@ export default function SignInScreen({ navigation, route }) {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
-    const _init = async () => {
-        const language = await UserService.getLanguage();
-        i18n.locale = language;
-
+    const clear = () => {
         setEmail('');
         setPassword('');
         setStayConnected(false);
@@ -47,6 +44,13 @@ export default function SignInScreen({ navigation, route }) {
 
         if (emailRef.current) emailRef.current.clear();
         if (passwordRef.current) passwordRef.current.clear();
+    };
+
+    const _init = async () => {
+        const language = await UserService.getLanguage();
+        i18n.locale = language;
+
+        clear();
     };
 
     useEffect(() => {
@@ -152,7 +156,7 @@ export default function SignInScreen({ navigation, route }) {
                         setPasswordError(false);
                         setBlacklisted(false);
                         navigation.navigate('Home', { d: new Date().getTime() });
-                        await _init();
+                        clear();
                     }
                 } else {
                     setPasswordError(true);

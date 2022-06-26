@@ -33,6 +33,7 @@ export default function ChangePasswordScreen({ navigation, route }) {
         setCurrentPassword('');
         setPassword('');
         setConfirmPassword('');
+
         if (currentPasswordRef.current) currentPasswordRef.current.clear();
         if (passwordRef.current) passwordRef.current.clear();
         if (confirmPasswordRef.current) confirmPasswordRef.current.clear();
@@ -48,20 +49,22 @@ export default function ChangePasswordScreen({ navigation, route }) {
             const currentUser = await UserService.getCurrentUser();
 
             if (!currentUser) {
-                UserService.signout(navigation, false, true);
+                await UserService.signout(navigation, false, true);
+                return;
             }
 
             const user = await UserService.getUser(currentUser.id);
 
             if (!user) {
-                UserService.signout(navigation, false, true);
+                await UserService.signout(navigation, false, true);
+                return;
             }
 
             setUser(user);
             setVisible(true);
         }
         catch (err) {
-            UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true);
         }
     };
 
@@ -123,7 +126,7 @@ export default function ChangePasswordScreen({ navigation, route }) {
             return true;
         }
         catch (err) {
-            UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true);
         }
     };
 
@@ -169,7 +172,7 @@ export default function ChangePasswordScreen({ navigation, route }) {
                 Helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'));
             }
         } catch (err) {
-            UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true);
         }
     };
 
