@@ -484,7 +484,7 @@ routes.route(routeNames.signin).post((req, res) => {
                 bcrypt.compare(req.body.password, user.password)
                     .then(async passwordMatch => {
                         if (passwordMatch) {
-                            const payload = { id: user.id };
+                            const payload = { id: user._id };
 
                             let options = { expiresIn: JWT_EXPIRE_AT };
                             if (req.body.stayConnected) options = {};
