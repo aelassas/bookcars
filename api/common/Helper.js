@@ -9,4 +9,8 @@ export default class Helper {
         }
         return part1 + '/' + part2;
     }
+
+    static clone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
 };

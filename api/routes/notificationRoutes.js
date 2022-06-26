@@ -79,6 +79,7 @@ routes.route(routeNames.notify).post(authJwt.verifyToken, async (req, res) => {
                                             + '<br><br>' + strings.REGARDS + '<br>'
                                             + '</p>'
                                     };
+
                                     await transporter.sendMail(mailOptions, (err, info) => {
                                         if (err) {
                                             console.error(strings.SMTP_ERROR, err);

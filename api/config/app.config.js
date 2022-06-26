@@ -41,7 +41,12 @@ export default new LocalizedStrings.default({
 
         CANCEL_BOOKING_SUBJECT: "Demande d'annulation de la réservation",
         CANCEL_BOOKING_PART1: "L'utilisateur ",
-        CANCEL_BOOKING_PART2: " a fait une demande d'annulation de la réservation : "
+        CANCEL_BOOKING_PART2: " a fait une demande d'annulation de la réservation : ",
+
+        BOOKING_NOTIFICATION: 'a payé la réservation',
+        CANCEL_BOOKING_NOTIFICATION: "a fait une demande d'annulation de la réservation",
+        BOOKING_UPDATED_NOTIFICATION_PART1: 'Le statut de la réservation',
+        BOOKING_UPDATED_NOTIFICATION_PART2: 'a été modifié.',
     },
     en: {
         ERROR: 'Internal error: ',
@@ -82,8 +87,13 @@ export default new LocalizedStrings.default({
         BOOKING_CONFIRMED_PART14: "You can follow your booking on: ",
 
         CANCEL_BOOKING_SUBJECT: 'Cancel request of the booking',
-        CANCEL_BOOKING_PART1: "The user ",
-        CANCEL_BOOKING_PART2: " made a request to cancel the reservation: "
+        CANCEL_BOOKING_PART1: 'The user ',
+        CANCEL_BOOKING_PART2: ' made a request to cancel the booking: ',
+
+        BOOKING_NOTIFICATION: 'paid the booking',
+        CANCEL_BOOKING_NOTIFICATION: 'made a request to cancel the booking',
+        BOOKING_UPDATED_NOTIFICATION_PART1: 'The status of the booking',
+        BOOKING_UPDATED_NOTIFICATION_PART2: 'changed.',
 
     }
 });
