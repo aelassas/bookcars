@@ -12,9 +12,8 @@ const notificationSchema = new Schema({
         type: String,
         required: [true, "can't be blank"],
     },
-    notifiedAt: {
-        type: Date,
-        default: Date.now
+    link: {
+        type: String
     },
     isRead: {
         type: Boolean,

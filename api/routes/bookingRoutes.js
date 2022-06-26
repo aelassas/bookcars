@@ -6,6 +6,8 @@ import User from '../schema/User.js';
 import Token from '../schema/Token.js';
 import Car from '../schema/Car.js';
 import Location from '../schema/Location.js';
+import Notification from '../schema/Notification.js';
+import NotificationCounter from '../schema/NotificationCounter.js';
 import authJwt from '../middlewares/authJwt.js';
 import mongoose from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
@@ -33,6 +35,52 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
             res.status(400).send(strings.DB_ERROR + err);
         });
 });
+
+const notifyCompany = async (user, booking, company, notificationMessage, sendEmail) => {
+
+    // notification
+    const message = `${user.fullName} ${notificationMessage} ${booking._id}.`;
+    const link = Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`);
+    const notification = new Notification({ user: company._id, message, link });
+    console.log('company._id', company._id)
+    await notification.save();
+    let counter = await NotificationCounter.findOne({ user: company._id });
+    if (counter) {
+        counter.count++;
+        console.log('counter.count', counter.count)
+        await counter.save();
+    } else {
+        counter = new NotificationCounter({ user: company._id, count: 1 });
+        await counter.save();
+    }
+
+    // mail
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS
+        }
+    });
+
+    strings.setLanguage(company.language);
+
+    const mailOptions = {
+        from: SMTP_FROM,
+        to: company.email,
+        subject: message,
+        html: '<p>' + strings.HELLO + company.fullName + ',<br><br>'
+            + message + '<br><br>'
+
+            + link
+            + '<br><br>'
+
+            + strings.REGARDS + '<br>'
+            + '</p>'
+    };
+    await transporter.sendMail(mailOptions);
+};
 
 routes.route(routeNames.book).post(async (req, res) => {
     try {
@@ -122,6 +170,11 @@ routes.route(routeNames.book).post(async (req, res) => {
         };
         await transporter.sendMail(mailOptions);
 
+        // Notify company
+        const company = await User.findById(booking.company);
+        strings.setLanguage(company.language);
+        await notifyCompany(user, booking, company, strings.BOOKING_NOTIFICATION);
+
         return res.sendStatus(200);
     }
     catch (err) {
@@ -130,66 +183,112 @@ routes.route(routeNames.book).post(async (req, res) => {
     }
 });
 
-routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
+const notifyDriver = async (booking) => {
+    const driver = await User.findById(booking.driver);
+    strings.setLanguage(driver.language);
 
-    Booking.findById(req.body._id)
-        .then(booking => {
-            if (booking) {
-                const {
-                    company,
-                    car,
-                    driver,
-                    pickupLocation,
-                    dropOffLocation,
-                    from,
-                    to,
-                    status,
-                    cancellation,
-                    amendments,
-                    theftProtection,
-                    collisionDamageWaiver,
-                    fullInsurance,
-                    additionalDriver,
-                    price
-                } = req.body;
+    const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`;
+    const link = Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`);
+    const notification = new Notification({ user: driver._id, message, link });
+    await notification.save();
+    let counter = await NotificationCounter.findOne({ user: driver._id });
+    if (counter) {
+        counter.count++;
+        await counter.save();
+    } else {
+        counter = new NotificationCounter({ user: driver._id, count: 1 });
+        await counter.save();
+    }
 
-                booking.company = company;
-                booking.car = car;
-                booking.driver = driver;
-                booking.pickupLocation = pickupLocation;
-                booking.dropOffLocation = dropOffLocation;
-                booking.from = from;
-                booking.to = to;
-                booking.status = status;
-                booking.cancellation = cancellation;
-                booking.amendments = amendments;
-                booking.theftProtection = theftProtection;
-                booking.collisionDamageWaiver = collisionDamageWaiver;
-                booking.fullInsurance = fullInsurance;
-                booking.additionalDriver = additionalDriver;
-                booking.price = price;
+    // mail
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS
+        }
+    });
 
-                booking.save()
-                    .then(() => res.sendStatus(200))
-                    .catch(err => {
-                        console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
-                        res.status(400).send(strings.DB_ERROR + err);
-                    });
-            } else {
-                console.error('[booking.update] Booking not found:', req.body._id);
-                res.sendStatus(204);
+    const mailOptions = {
+        from: SMTP_FROM,
+        to: driver.email,
+        subject: message,
+        html: '<p>' + strings.HELLO + driver.fullName + ',<br><br>'
+            + message + '<br><br>'
+
+            + link
+            + '<br><br>'
+
+            + strings.REGARDS + '<br>'
+            + '</p>'
+    };
+    await transporter.sendMail(mailOptions);
+};
+
+routes.route(routeNames.update).put(authJwt.verifyToken, async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.body._id);
+
+        if (booking) {
+            const {
+                company,
+                car,
+                driver,
+                pickupLocation,
+                dropOffLocation,
+                from,
+                to,
+                status,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver,
+                price
+            } = req.body;
+            const previousStatus = booking.status;
+
+            booking.company = company;
+            booking.car = car;
+            booking.driver = driver;
+            booking.pickupLocation = pickupLocation;
+            booking.dropOffLocation = dropOffLocation;
+            booking.from = from;
+            booking.to = to;
+            booking.status = status;
+            booking.cancellation = cancellation;
+            booking.amendments = amendments;
+            booking.theftProtection = theftProtection;
+            booking.collisionDamageWaiver = collisionDamageWaiver;
+            booking.fullInsurance = fullInsurance;
+            booking.additionalDriver = additionalDriver;
+            booking.price = price;
+
+            await booking.save();
+
+            if (previousStatus !== status) { // notify driver
+                await notifyDriver(booking);
             }
-        })
-        .catch(err => {
-            console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
-            res.status(400).send(strings.DB_ERROR + err);
-        });
+
+            res.sendStatus(200);
+        } else {
+            console.error('[booking.update] Booking not found:', req.body._id);
+            res.sendStatus(204);
+        }
+    }
+    catch (err) {
+        console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
+        res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
-routes.route(routeNames.updateStatus).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.updateStatus).post(authJwt.verifyToken, async (req, res) => {
     try {
         const { ids: _ids, status } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
         const bulk = Booking.collection.initializeOrderedBulkOp();
+        const bookings = await Booking.find({ _id: { $in: ids } });
 
         bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } });
         bulk.execute((err, response) => {
@@ -197,6 +296,12 @@ routes.route(routeNames.updateStatus).post(authJwt.verifyToken, (req, res) => {
                 console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err);
                 return res.status(400).send(strings.DB_ERROR + err);
             }
+
+            bookings.forEach(async (booking) => {
+                if (booking.status !== status) {
+                    await notifyDriver(booking);
+                }
+            });
 
             return res.sendStatus(200);
         });
@@ -476,34 +581,12 @@ routes.route(routeNames.cancelBooking).post(authJwt.verifyToken, (req, res) => {
         .then(async booking => {
             if (booking && booking.cancellation && !booking.cancelRequest) {
 
-                const transporter = nodemailer.createTransport({
-                    host: SMTP_HOST,
-                    port: SMTP_PORT,
-                    auth: {
-                        user: SMTP_USER,
-                        pass: SMTP_PASS
-                    }
-                });
-
-                strings.setLanguage(booking.company.language);
-
-                const mailOptions = {
-                    from: SMTP_FROM,
-                    to: booking.company.email,
-                    subject: `${strings.CANCEL_BOOKING_SUBJECT} ${booking._id}`,
-                    html: '<p>' + strings.HELLO + booking.company.fullName + ',<br><br>'
-                        + strings.CANCEL_BOOKING_PART1 + booking.driver.fullName + strings.CANCEL_BOOKING_PART2 + '<br><br>'
-
-                        + Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)
-                        + '<br><br>'
-
-                        + strings.REGARDS + '<br>'
-                        + '</p>'
-                };
-                await transporter.sendMail(mailOptions);
-
                 booking.cancelRequest = true;
                 await booking.save();
+
+                // Notify company
+                await notifyCompany(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION);
+
                 return res.sendStatus(200);
             }
             return res.sendStatus(204);
