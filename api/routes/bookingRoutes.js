@@ -36,7 +36,7 @@ routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
         });
 });
 
-const notifyCompany = async (user, booking, company, notificationMessage, sendEmail) => {
+const notifyCompany = async (user, booking, company, notificationMessage) => {
 
     // notification
     const message = `${user.fullName} ${notificationMessage} ${booking._id}.`;

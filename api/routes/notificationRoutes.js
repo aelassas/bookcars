@@ -134,13 +134,42 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
     try {
         const userId = mongoose.Types.ObjectId(req.params.userId);
         const page = parseInt(req.params.page);
-        const pageSize = parseInt(req.params.pageSize);
+        const size = parseInt(req.params.size);
+
+        // for (let i = 0; i < 40; i++) {
+        //     const notification = new Notification({
+        //         user: userId,
+        //         message: 'John Doe a payé la réservation 62b8b55628d7476ed08b341a ZZ.',
+        //         link: 'http://localhost:3000/booking?b=62b8b55628d7476ed08b341a'
+        //     });
+        //     await notification.save();
+        // }
+
+        // let counter = await NotificationCounter.findOne({ user: userId });
+        // counter.count += 40;
+        // await counter.save();
+
+        // await Notification.deleteMany({ user: userId, message: { $regex: 'ZZ' } });
+        // let counter = await NotificationCounter.findOne({ user: userId });
+        // counter.count -= 40;
+        // await counter.save();
 
         const notifications = await Notification.aggregate([
             { $match: { user: userId } },
-            { $sort: { createdAt: -1 } },
-            { $skip: ((page - 1) * pageSize) },
-            { $limit: pageSize }
+            {
+                $facet: {
+                    resultData: [
+                        { $sort: { createdAt: -1 } },
+                        { $skip: ((page - 1) * size) },
+                        { $limit: size },
+                    ],
+                    pageInfo: [
+                        {
+                            $count: 'totalRecords'
+                        }
+                    ]
+                }
+            }
         ]);
 
         res.json(notifications);
