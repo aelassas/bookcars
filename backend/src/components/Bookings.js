@@ -57,9 +57,9 @@ export default class Bookings extends Component {
 
     onLoad = (user) => {
         const admin = Helper.admin(user);
-        this.setState({ user, admin, companies: admin ? [] : [user._id], leftPanel: !admin, loadingCompanies: admin }, async () => {
-            const allCompanies = await CompanyService.getAllCompanies();
-            const companies = Helper.flattenCompanies(allCompanies);
+        this.setState({ user, admin, leftPanel: !admin, loadingCompanies: admin }, async () => {
+            const allCompanies = admin ? await CompanyService.getAllCompanies() : [];
+            const companies = admin ? Helper.flattenCompanies(allCompanies) : [user._id];
             this.setState({ allCompanies, companies, leftPanel: true, loadingCompanies: false }, () => {
                 this.setState({ offset: document.querySelector('.col-1').clientHeight });
             });

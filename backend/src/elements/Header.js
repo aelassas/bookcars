@@ -333,7 +333,7 @@ export default function Header(props) {
                     <div className='header-desktop'>
                         {isSignedIn &&
                             <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="error">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>}
