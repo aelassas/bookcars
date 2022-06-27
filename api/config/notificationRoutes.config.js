@@ -1,8 +1,8 @@
 export default {
     notificationCounter: '/api/notification-counter/:userId',
     notify: '/api/notify',
-    markAsRead: '/api/mark-notification-as-read/:notificationId',
-    markAsUnRead: '/api/mark-notification-as-unread/:notificationId',
-    getNotifications: '/api/notifications/:userId/:page/:size',
-    delete: '/api/delete-notification/:notificationId'
+    markAsRead: '/api/mark-notifications-as-read/:userId',
+    markAsUnRead: '/api/mark-notifications-as-unread/:userId',
+    delete: '/api/delete-notifications/:userId',
+    getNotifications: '/api/notifications/:userId/:page/:size'
 };

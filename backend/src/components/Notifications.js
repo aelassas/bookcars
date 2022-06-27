@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/notifications';
 import Master from '../elements/Master';
-// import UserService from '../services/UserService';
+import UserService from '../services/UserService';
 import NotificationService from '../services/NotificationService';
-import { Card, CardContent, Checkbox, IconButton, Tooltip, Typography } from '@mui/material';
+import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
 import {
     Visibility as ViewIcon,
     Drafts as MarkReadIcon,
@@ -25,6 +25,9 @@ export default function Notifications() {
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState([]);
     const [totalRecords, setTotalRecords] = useState(-1);
+    const [notificationCount, setNotificationCount] = useState(-1);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
     const notificationsListRef = useRef(null);
 
     const locale = user && user.language === 'en' ? 'en-US' : 'fr-FR';
@@ -40,13 +43,11 @@ export default function Notifications() {
                 const _totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 setTotalRecords(_totalRecords);
                 setRows(_rows);
-                // setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length);
-                setLoading(false);
                 if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0);
+                setLoading(false);
             }
             catch (err) {
-                // UserService.signout();
-                console.log(err);
+                UserService.signout();
             }
         }
     }, [user, page]);
@@ -54,6 +55,18 @@ export default function Notifications() {
     useEffect(() => {
         fetch();
     }, [fetch]);
+
+    useEffect(() => {
+        if (user) {
+            const _init = async () => {
+                const notificationCounter = await NotificationService.getNotificationCounter(user._id);
+                const _notificationCount = notificationCounter.count;
+                setNotificationCount(_notificationCount);
+            };
+
+            _init();
+        }
+    }, [user]);
 
     const onLoad = async (user) => {
         setUser(user);
@@ -64,8 +77,7 @@ export default function Notifications() {
     const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length;
 
     return (
-        <Master onLoad={onLoad} strict>
-
+        <Master onLoad={onLoad} notificationCount={notificationCount} strict>
 
             <div className='notifications'>
 
@@ -98,18 +110,65 @@ export default function Notifications() {
                                 {
                                     checkedRows.length > 0 &&
                                     <div className='header-actions'>
-                                        <Tooltip title={strings.MARK_ALL_AS_READ}>
-                                            <IconButton>
-                                                <MarkReadIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={strings.MARK_ALL_AS_UNREAD}>
-                                            <IconButton>
-                                                <MarkUnreadIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                        {
+                                            checkedRows.some(row => !row.isRead) &&
+                                            <Tooltip title={strings.MARK_ALL_AS_READ}>
+                                                <IconButton onClick={async () => {
+                                                    try {
+                                                        const _rows = checkedRows.filter(row => !row.isRead);
+                                                        const ids = _rows.map(row => row._id);
+                                                        const status = await NotificationService.markAsRead(user._id, ids);
+
+                                                        if (status === 200) {
+                                                            _rows.forEach(row => {
+                                                                row.isRead = true;
+                                                            });
+                                                            setRows(Helper.clone(rows));
+                                                            setNotificationCount(notificationCount - _rows.length);
+                                                        } else {
+                                                            Helper.error();
+                                                        }
+                                                    }
+                                                    catch (err) {
+                                                        UserService.signout();
+                                                    }
+                                                }}>
+                                                    <MarkReadIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                        {
+                                            checkedRows.some(row => row.isRead) &&
+                                            <Tooltip title={strings.MARK_ALL_AS_UNREAD}>
+                                                <IconButton onClick={async () => {
+                                                    try {
+                                                        const _rows = checkedRows.filter(row => row.isRead);
+                                                        const ids = _rows.map(row => row._id);
+                                                        const status = await NotificationService.markAsUnread(user._id, ids);
+
+                                                        if (status === 200) {
+                                                            _rows.forEach(row => {
+                                                                row.isRead = false;
+                                                            });
+                                                            setRows(Helper.clone(rows));
+                                                            setNotificationCount(notificationCount + _rows.length);
+                                                        } else {
+                                                            Helper.error();
+                                                        }
+                                                    }
+                                                    catch (err) {
+                                                        UserService.signout();
+                                                    }
+                                                }}>
+                                                    <MarkUnreadIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
                                         <Tooltip title={strings.DELETE_ALL}>
-                                            <IconButton>
+                                            <IconButton onClick={() => {
+                                                setSelectedRows(checkedRows);
+                                                setOpenDeleteDialog(true);
+                                            }}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </Tooltip>
@@ -147,19 +206,52 @@ export default function Notifications() {
                                                     {
                                                         !row.isRead ?
                                                             <Tooltip title={strings.MARK_AS_READ}>
-                                                                <IconButton>
+                                                                <IconButton onClick={async () => {
+                                                                    try {
+                                                                        const status = await NotificationService.markAsRead(user._id, [row._id]);
+
+                                                                        if (status === 200) {
+                                                                            row.isRead = true;
+                                                                            setRows(Helper.clone(rows));
+                                                                            setNotificationCount(notificationCount - 1);
+                                                                        } else {
+                                                                            Helper.error();
+                                                                        }
+                                                                    }
+                                                                    catch (err) {
+                                                                        UserService.signout();
+                                                                    }
+                                                                }}>
                                                                     <MarkReadIcon />
                                                                 </IconButton>
                                                             </Tooltip>
                                                             :
                                                             <Tooltip title={strings.MARK_AS_UNREAD}>
-                                                                <IconButton>
+                                                                <IconButton onClick={async () => {
+                                                                    try {
+                                                                        const status = await NotificationService.markAsUnread(user._id, [row._id]);
+
+                                                                        if (status === 200) {
+                                                                            row.isRead = false;
+                                                                            setRows(Helper.clone(rows));
+                                                                            setNotificationCount(notificationCount + 1);
+                                                                        } else {
+                                                                            Helper.error();
+                                                                        }
+                                                                    }
+                                                                    catch (err) {
+                                                                        UserService.signout();
+                                                                    }
+                                                                }}>
                                                                     <MarkUnreadIcon />
                                                                 </IconButton>
                                                             </Tooltip>
                                                     }
                                                     <Tooltip title={commonStrings.DELETE}>
-                                                        <IconButton>
+                                                        <IconButton onClick={async () => {
+                                                            setSelectedRows([row]);
+                                                            setOpenDeleteDialog(true);
+                                                        }}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Tooltip>
@@ -196,6 +288,41 @@ export default function Notifications() {
                             </div>
 
                         </div>
+
+                        <Dialog
+                            disableEscapeKeyDown
+                            maxWidth="xs"
+                            open={openDeleteDialog}
+                        >
+                            <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                            <DialogContent>{selectedRows.length > 1 ? strings.DELETE_NOTIFICATIONS : strings.DELETE_NOTIFICATION}</DialogContent>
+                            <DialogActions className='dialog-actions'>
+                                <Button onClick={() => {
+                                    setOpenDeleteDialog(false);
+                                }} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                                <Button onClick={async () => {
+                                    try {
+                                        const ids = selectedRows.map(row => row._id);
+                                        const status = await NotificationService.delete(user._id, ids);
+
+                                        if (status === 200) {
+                                            if (page > 1) {
+                                                setPage(1);
+                                            } else {
+                                                fetch();
+                                            }
+                                            setNotificationCount(notificationCount - selectedRows.length);
+                                            setOpenDeleteDialog(false);
+                                        } else {
+                                            Helper.error();
+                                        }
+                                    }
+                                    catch (err) {
+                                        UserService.signout();
+                                    }
+                                }} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                            </DialogActions>
+                        </Dialog>
                     </>
                 }
             </div>

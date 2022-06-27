@@ -17,7 +17,11 @@ div.notifications .empty-list {
 }
 
 div.notifications div.header-container {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 54px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,11 +39,17 @@ div.notifications div.header-container div.header {
 }
 
 div.notifications div.notifications-list {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    bottom: 55px;
+    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     padding-top: 15px;
+    padding-right: 10px;
     overflow-y: overlay;
 }
 
@@ -91,13 +101,16 @@ div.notifications div.notifications-list div.notification-container div.notifica
 }
 
 div.notifications div.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 54px;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    width: 100%;
     border-top: 1px solid #ddd;
-    padding: 5px 0;
-    margin-right: 10px;
+    padding: 5px 10px 5px 0;
 }
 
 div.notifications div.footer div.row-count {
@@ -105,10 +118,15 @@ div.notifications div.footer div.row-count {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-bottom: 3px;
-    margin-right: 5px;
+    margin-right: 7px;
+}
+
+div.notifications div.footer div.actions {
+    display: flex;
+    flex-direction: row;
 }
 
 div.notifications div.footer div.actions .icon {
     font-size: 16px;
+    width: 24px;
 }

@@ -50,7 +50,7 @@ export default function Header(props) {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
     const [sideAnchorEl, setSideAnchorEl] = useState(null);
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const [notificationsCount, setNotificationsCount] = useState(0);
+    const [notificationCount, setNotificationCount] = useState(0);
     const [loading, setIsLoading] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -193,7 +193,7 @@ export default function Header(props) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
                         setIsSignedIn(true);
-                        setNotificationsCount(notificationCounter.count);
+                        setNotificationCount(notificationCounter.count);
                         setIsLoading(false);
                         setIsLoaded(true);
                     });
@@ -206,13 +206,13 @@ export default function Header(props) {
 
     useEffect(() => {
         if (!props.hidden) {
-            if (props.notificationsCount) {
-                setNotificationsCount(props.notificationsCount);
+            if (props.notificationCount) {
+                setNotificationCount(props.notificationCount);
             } else {
-                setNotificationsCount(0);
+                setNotificationCount(0);
             }
         }
-    }, [props.hidden, props.notificationsCount]);
+    }, [props.hidden, props.notificationCount]);
 
     const menuId = 'primary-account-menu';
     const renderMenu = (
@@ -333,7 +333,7 @@ export default function Header(props) {
                     <div className='header-desktop'>
                         {isSignedIn &&
                             <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="error">
+                                <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>}
@@ -374,7 +374,7 @@ export default function Header(props) {
                             </Button>}
                         {isSignedIn &&
                             <IconButton color="inherit" onClick={handleNotificationsClick}>
-                                <Badge badgeContent={notificationsCount > 0 ? notificationsCount : null} color="secondary">
+                                <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="error">
                                     <NotificationsIcon />
                                 </Badge>
                             </IconButton>}
