@@ -136,7 +136,7 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
 
-        // const count = 10;
+        // const count = 7;
         // for (let i = 0; i < count; i++) {
         //     const notification = new Notification({
         //         user: userId,
