@@ -28,6 +28,7 @@ export default function Notifications() {
     const [notificationCount, setNotificationCount] = useState(-1);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
+    const [rowCount, setRowCount] = useState(-1);
     const notificationsListRef = useRef(null);
 
     const locale = user && user.language === 'en' ? 'en-US' : 'fr-FR';
@@ -42,6 +43,7 @@ export default function Notifications() {
                 const _rows = _data.resultData.map(row => ({ checked: false, ...row }));
                 const _totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 setTotalRecords(_totalRecords);
+                setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length);
                 setRows(_rows);
                 if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0);
                 setLoading(false);
@@ -101,9 +103,15 @@ export default function Notifications() {
                                         checked={allChecked}
                                         indeterminate={indeterminate}
                                         onChange={(event) => {
-                                            rows.forEach(row => {
-                                                row.checked = event.target.checked;
-                                            });
+                                            if (indeterminate) {
+                                                rows.forEach(row => {
+                                                    row.checked = false;
+                                                });
+                                            } else {
+                                                rows.forEach(row => {
+                                                    row.checked = event.target.checked;
+                                                });
+                                            }
                                             setRows(Helper.clone(rows));
                                         }} />
                                 </div>
@@ -265,22 +273,29 @@ export default function Notifications() {
                         </div>
                         <div className='footer'>
 
-                            <div className='row-count'>
-                                {`${((page - 1) * Env.PAGE_SIZE) + 1}-${page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? ((page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : totalRecords} ${commonStrings.OF} ${totalRecords}`}
-                            </div>
+                            {
+                                rowCount > -1 &&
+                                <div className='row-count'>
+                                    {`${((page - 1) * Env.PAGE_SIZE) + 1}-${rowCount} ${commonStrings.OF} ${totalRecords}`}
+                                </div>
+                            }
 
                             <div className='actions'>
                                 <IconButton
                                     disabled={page === 1}
                                     onClick={() => {
-                                        setPage(page - 1);
+                                        const _page = page - 1;
+                                        setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? ((_page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : totalRecords);
+                                        setPage(_page);
                                     }}>
                                     <PreviousPageIcon className='icon' />
                                 </IconButton>
                                 <IconButton
                                     disabled={(((page - 1) * Env.PAGE_SIZE) + rows.length) === totalRecords}
                                     onClick={() => {
-                                        setPage(page + 1);
+                                        const _page = page + 1;
+                                        setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? ((_page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : totalRecords);
+                                        setPage(_page);
                                     }}
                                 >
                                     <NextPageIcon className='icon' />
@@ -306,10 +321,23 @@ export default function Notifications() {
                                         const status = await NotificationService.delete(user._id, ids);
 
                                         if (status === 200) {
-                                            if (page > 1) {
-                                                setPage(1);
+                                            if (selectedRows.length === rows.length) {
+                                                const _page = 1;
+                                                const _totalRecords = totalRecords - selectedRows.length;
+                                                setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? ((_page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : _totalRecords);
+
+                                                if (page > 1) {
+                                                    setPage(1);
+                                                } else {
+                                                    fetch();
+                                                }
                                             } else {
-                                                fetch();
+                                                selectedRows.forEach(row => {
+                                                    rows.splice(rows.findIndex(row => row._id === selectedRows[0]._id), 1);
+                                                });
+                                                setRows(Helper.clone(rows));
+                                                setRowCount(rowCount - selectedRows.length);
+                                                setTotalRecords(totalRecords - selectedRows.length);
                                             }
                                             setNotificationCount(notificationCount - selectedRows.length);
                                             setOpenDeleteDialog(false);

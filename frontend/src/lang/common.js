@@ -76,7 +76,8 @@ export const strings = new LocalizedStrings({
         SUPPLIER: 'Fournisseur',
         STATUS: 'Statut',
         OPTIONS: 'Options',
-        VIEW: 'Consulter'
+        VIEW: 'Consulter',
+        OF: 'sur'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -151,7 +152,8 @@ export const strings = new LocalizedStrings({
         SUPPLIER: 'Supplier',
         STATUS: 'Status',
         OPTIONS: 'Options',
-        VIEW: 'View'
+        VIEW: 'View',
+        OF: 'of'
     }
 });
 

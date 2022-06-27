@@ -71,7 +71,6 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Lieu de prise en charge',
         DROP_OFF_LOCATION: 'Lieu de restitution',
         OPTIONS: 'Options',
-
         OF: 'sur'
     },
     en: {
@@ -142,7 +141,6 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Pickup location',
         DROP_OFF_LOCATION: 'Drop-off location',
         OPTIONS: 'Options',
-
         OF: 'of'
     }
 });
