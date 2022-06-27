@@ -136,7 +136,8 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
 
-        // for (let i = 0; i < 40; i++) {
+        // const count = 10;
+        // for (let i = 0; i < count; i++) {
         //     const notification = new Notification({
         //         user: userId,
         //         message: 'John Doe a payé la réservation 62b8b55628d7476ed08b341a ZZ.',
@@ -144,9 +145,8 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
         //     });
         //     await notification.save();
         // }
-
         // let counter = await NotificationCounter.findOne({ user: userId });
-        // counter.count += 40;
+        // counter.count += count;
         // await counter.save();
 
         // await Notification.deleteMany({ user: userId, message: { $regex: 'ZZ' } });
@@ -180,139 +180,86 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
 });
 
 // Mark as read router
-routes.route(routeNames.markAsRead).post(authJwt.verifyToken, (req, res) => {
-    Notification.findById(req.params.notificationId)
-        .then(notification => {
-            if (notification) {
-                if (!notification.isRead) {
-                    notification.isRead = true;
-                    notification.save()
-                        .then(nn => {
-                            NotificationCounter.findOne({ user: notification.user })
-                                .then(counter => {
-                                    if (counter) {
-                                        counter.count = counter.count - 1;
-                                        counter.save()
-                                            .then(ct => {
-                                                res.sendStatus(200);
-                                            })
-                                            .catch(err => {
-                                                console.error(strings.DB_ERROR, err);
-                                                res.status(400).send(strings.DB_ERROR + err);
-                                            });
-                                    } else {
-                                        console.error('[notification.markAsRead] Counter not found:', notification.user);
-                                        res.sendStatus(204);
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err);
-                                    res.status(400).send(strings.DB_ERROR + err);
-                                });
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err);
-                            res.status(400).send(strings.DB_ERROR + err);
-                        });
-                }
-                else {
-                    res.sendStatus(400);
-                }
-            } else {
-                console.error('[notification.markAsRead] Notification not found:', req.params);
-                res.sendStatus(204);
+routes.route(routeNames.markAsRead).post(authJwt.verifyToken, async (req, res) => {
+
+    try {
+        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
+        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId);
+
+        const bulk = Notification.collection.initializeOrderedBulkOp();
+        const notifications = await Notification.find({ _id: { $in: ids } });
+
+        bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } });
+        bulk.execute(async (err, response) => {
+            if (err) {
+                console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err);
+                return res.status(400).send(strings.DB_ERROR + err);
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err);
-            res.status(400).send(strings.DB_ERROR + err);
+
+            const counter = await NotificationCounter.findOne({ user: userId });
+            counter.count -= notifications.filter(notification => !notification.isRead).length;
+            await counter.save();
+
+            return res.sendStatus(200);
         });
+
+    } catch (err) {
+        console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
+
 });
 
 // Mark as unread router
-routes.route(routeNames.markAsUnRead).post(authJwt.verifyToken, (req, res) => {
-    Notification.findById(req.params.notificationId)
-        .then(notification => {
-            if (notification) {
-                if (notification.isRead) {
-                    notification.isRead = false;
-                    notification.save()
-                        .then(nn => {
-                            NotificationCounter.findOne({ user: notification.user })
-                                .then(counter => {
-                                    if (counter) {
-                                        counter.count = counter.count + 1;
-                                        counter.save()
-                                            .then(ct => {
-                                                res.sendStatus(200);
-                                            })
-                                            .catch(err => {
-                                                console.error(strings.DB_ERROR, err);
-                                                res.status(400).send(strings.DB_ERROR + err);
-                                            });
-                                    } else {
-                                        console.error('[notification.markAsUnRead] Counter not found:', notification.user);
-                                        res.sendStatus(204);
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err);
-                                    res.status(400).send(strings.DB_ERROR + err);
-                                });
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err);
-                            res.status(400).send(strings.DB_ERROR + err);
-                        });
-                } else {
-                    res.sendStatus(400);
-                }
-            } else {
-                console.error('[notification.markAsUnRead] Notification not found:', req.params);
-                res.sendStatus(204);
+routes.route(routeNames.markAsUnRead).post(authJwt.verifyToken, async (req, res) => {
+
+    try {
+        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
+        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId);
+
+        const bulk = Notification.collection.initializeOrderedBulkOp();
+        const notifications = await Notification.find({ _id: { $in: ids } });
+
+        bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } });
+        bulk.execute(async (err, response) => {
+            if (err) {
+                console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err);
+                return res.status(400).send(strings.DB_ERROR + err);
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err);
-            res.status(400).send(strings.DB_ERROR + err);
+
+            const counter = await NotificationCounter.findOne({ user: userId });
+            counter.count += notifications.filter(notification => notification.isRead).length;
+            await counter.save();
+
+            return res.sendStatus(200);
         });
+
+    } catch (err) {
+        console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
+
 });
 
 // Delete Notification Router
-routes.route(routeNames.delete).delete(authJwt.verifyToken, (req, res) => {
-    Notification.findByIdAndDelete(req.params.notificationId)
-        .then(notification => {
-            if (!notification.isRead) {
-                NotificationCounter.findOne({ user: notification.user })
-                    .then(counter => {
-                        if (counter) {
-                            counter.count = counter.count - 1;
-                            counter.save()
-                                .then(ct => {
-                                    res.sendStatus(200);
-                                })
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err);
-                                    res.status(400).send(strings.DB_ERROR + err);
-                                });
-                        } else {
-                            console.error('[notification.delete] Counter not found:', notification.user);
-                            res.sendStatus(204);
-                        }
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err);
-                        res.status(400).send(strings.DB_ERROR + err);
-                    });
-            } else {
-                res.sendStatus(200);
-            }
+routes.route(routeNames.delete).post(authJwt.verifyToken, async (req, res) => {
 
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err);
-            res.status(400).send(strings.DB_ERROR + err);
-        });
+    try {
+        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
+        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId);
+
+        const result = await Notification.deleteMany({ _id: { $in: ids } });
+
+        const counter = await NotificationCounter.findOne({ user: userId });
+        counter.count -= result.deletedCount;
+        await counter.save();
+
+        return res.sendStatus(200);
+
+    } catch (err) {
+        console.error(`[notification.delete] ${strings.DB_ERROR}`, err);
+        return res.status(400).send(strings.DB_ERROR + err);
+    }
 });
 
 export default routes;

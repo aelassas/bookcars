@@ -10,7 +10,9 @@ export const strings = new LocalizedStrings({
         MARK_AS_UNREAD: 'Marquer comme non lu',
         MARK_ALL_AS_READ: 'Tout marquer comme lu',
         MARK_ALL_AS_UNREAD: 'Tout marquer comme non lu',
-        DELETE_ALL: 'Tout supprimer'
+        DELETE_ALL: 'Tout supprimer',
+        DELETE_NOTIFICATION: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
+        DELETE_NOTIFICATIONS: 'Êtes-vous sûr de vouloir supprimer ces notifications ?'
     },
     en: {
         EMPTY_LIST: 'No notifications',
@@ -19,7 +21,9 @@ export const strings = new LocalizedStrings({
         MARK_AS_UNREAD: 'Mark as unread',
         MARK_ALL_AS_READ: 'Mark all as read',
         MARK_ALL_AS_UNREAD: 'Mark all as unread',
-        DELETE_ALL: 'Delete all'
+        DELETE_ALL: 'Delete all',
+        DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
+        DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?'
     }
 });
 
