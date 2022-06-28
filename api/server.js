@@ -8,7 +8,6 @@ import strings from './config/app.config.js';
 import userRoutes from './routes/userRoutes.js';
 import carRoutes from './routes/carRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
-import messageRoutes from './routes/messageRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
@@ -73,7 +72,6 @@ app.use('/', locationRoutes);
 app.use('/', carRoutes);
 app.use('/', bookingRoutes);
 app.use('/', notificationRoutes);
-app.use('/', messageRoutes);
 
 strings.setLanguage(process.env.BC_DEFAULT_LANGUAGE);
 

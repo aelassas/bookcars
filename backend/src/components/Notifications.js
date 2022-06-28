@@ -204,9 +204,9 @@ export default function Notifications() {
                                                 </div>
                                                 <div className='actions'>
                                                     {
-                                                        row.link &&
+                                                        row.booking &&
                                                         <Tooltip title={strings.VIEW}>
-                                                            <IconButton href={row.link}>
+                                                            <IconButton href={`/booking?b=${row.booking}`}>
                                                                 <ViewIcon />
                                                             </IconButton>
                                                         </Tooltip>
@@ -256,7 +256,7 @@ export default function Notifications() {
                                                             </Tooltip>
                                                     }
                                                     <Tooltip title={commonStrings.DELETE}>
-                                                        <IconButton onClick={async () => {
+                                                        <IconButton onClick={() => {
                                                             setSelectedRows([row]);
                                                             setOpenDeleteDialog(true);
                                                         }}>
@@ -333,7 +333,7 @@ export default function Notifications() {
                                                 }
                                             } else {
                                                 selectedRows.forEach(row => {
-                                                    rows.splice(rows.findIndex(row => row._id === selectedRows[0]._id), 1);
+                                                    rows.splice(rows.findIndex(_row => _row._id === row._id), 1);
                                                 });
                                                 setRows(Helper.clone(rows));
                                                 setRowCount(rowCount - selectedRows.length);

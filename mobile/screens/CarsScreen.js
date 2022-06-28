@@ -70,7 +70,6 @@ export default function CarsScreen({ navigation, route }) {
     };
 
     return (
-        route.params &&
         <Master style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
             {visible &&
                 <CarList

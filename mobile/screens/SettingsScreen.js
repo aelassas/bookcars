@@ -198,83 +198,85 @@ export default function SettingsScreen({ navigation, route }) {
     };
 
     return (
-        visible && language &&
         <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
-            <ScrollView
-                contentContainerStyle={styles.container}
-                keyboardShouldPersistTaps='handled'
-                nestedScrollEnabled
-            >
-                <View style={styles.contentContainer}>
-                    <TextInput
-                        style={styles.component}
-                        label={i18n.t('FULL_NAME')}
-                        value={fullName}
-                        error={fullNameRequired}
-                        helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
-                        onChangeText={onChangeFullName}
-                    />
+            {
+                visible && language &&
+                <ScrollView
+                    contentContainerStyle={styles.container}
+                    keyboardShouldPersistTaps='handled'
+                    nestedScrollEnabled
+                >
+                    <View style={styles.contentContainer}>
+                        <TextInput
+                            style={styles.component}
+                            label={i18n.t('FULL_NAME')}
+                            value={fullName}
+                            error={fullNameRequired}
+                            helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
+                            onChangeText={onChangeFullName}
+                        />
 
-                    <TextInput
-                        style={styles.component}
-                        label={i18n.t('EMAIL')}
-                        value={email}
-                        readOnly
-                    />
+                        <TextInput
+                            style={styles.component}
+                            label={i18n.t('EMAIL')}
+                            value={email}
+                            readOnly
+                        />
 
-                    <TextInput
-                        style={styles.component}
-                        label={i18n.t('PHONE')}
-                        value={phone}
-                        error={phoneRequired || !phoneValid}
-                        helperText={
-                            ((phoneRequired && i18n.t('REQUIRED')) || '')
-                            || ((!phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
-                        }
-                        onChangeText={onChangePhone}
-                    />
+                        <TextInput
+                            style={styles.component}
+                            label={i18n.t('PHONE')}
+                            value={phone}
+                            error={phoneRequired || !phoneValid}
+                            helperText={
+                                ((phoneRequired && i18n.t('REQUIRED')) || '')
+                                || ((!phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
+                            }
+                            onChangeText={onChangePhone}
+                        />
 
-                    <DateTimePicker
-                        mode='date'
-                        locale={language}
-                        style={styles.date}
-                        label={i18n.t('BIRTH_DATE')}
-                        value={birthDate}
-                        error={birthDateRequired || !birthDateValid}
-                        helperText={
-                            ((birthDateRequired && i18n.t('REQUIRED')) || '')
-                            || ((!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || '')
-                        }
-                        onChange={onChangeBirthDate}
-                    />
+                        <DateTimePicker
+                            mode='date'
+                            locale={language}
+                            style={styles.date}
+                            label={i18n.t('BIRTH_DATE')}
+                            value={birthDate}
+                            error={birthDateRequired || !birthDateValid}
+                            helperText={
+                                ((birthDateRequired && i18n.t('REQUIRED')) || '')
+                                || ((!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || '')
+                            }
+                            onChange={onChangeBirthDate}
+                        />
 
-                    <TextInput
-                        style={styles.component}
-                        label={i18n.t('LOCATION')}
-                        value={location}
-                        onChangeText={onChangeLocation}
-                    />
+                        <TextInput
+                            style={styles.component}
+                            label={i18n.t('LOCATION')}
+                            value={location}
+                            onChangeText={onChangeLocation}
+                        />
 
-                    <TextInput
-                        style={styles.component}
-                        label={i18n.t('BIO')}
-                        value={bio}
-                        onChangeText={onChangeBio}
-                    />
+                        <TextInput
+                            style={styles.component}
+                            label={i18n.t('BIO')}
+                            value={bio}
+                            onChangeText={onChangeBio}
+                        />
 
-                    <Switch
-                        style={styles.component}
-                        textStyle={styles.enableEmailNotificationsText}
-                        label={i18n.t('ENABLE_EMAIL_NOTIFICATIONS')}
-                        value={enableEmailNotifications}
-                        onValueChange={onChangeEnableEmailNotificationsChecked} />
+                        <Switch
+                            style={styles.component}
+                            textStyle={styles.enableEmailNotificationsText}
+                            label={i18n.t('ENABLE_EMAIL_NOTIFICATIONS')}
+                            value={enableEmailNotifications}
+                            onValueChange={onChangeEnableEmailNotificationsChecked} />
 
-                    <Button style={styles.component} label={i18n.t('SAVE')} onPress={onPressSave} />
+                        <Button style={styles.component} label={i18n.t('SAVE')} onPress={onPressSave} />
 
-                    <Button style={styles.component} color='secondary' label={i18n.t('CHANGE_PASSWORD')} onPress={onPressChangePassword} />
+                        <Button style={styles.component} color='secondary' label={i18n.t('CHANGE_PASSWORD')} onPress={onPressChangePassword} />
 
-                </View>
-            </ScrollView>
+                    </View>
+                </ScrollView>
+            }
         </Master>
     );
 }

@@ -11,6 +11,7 @@ import Error from '../elements/Error';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import Switch from '../elements/Switch';
+import Header from '../elements/Header';
 
 export default function SignInScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -176,57 +177,64 @@ export default function SignInScreen({ navigation, route }) {
     };
 
     return (
-        <ScrollView
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps="handled"
-            nestedScrollEnabled
-        >
-            <View style={styles.contentContainer}>
-                <TextInput
-                    ref={emailRef}
-                    style={styles.component}
-                    label={i18n.t('EMAIL')}
-                    value={email}
-                    error={emailRequired || !emailValid || emailError}
-                    helperText={
-                        ((emailRequired && i18n.t('REQUIRED')) || '')
-                        || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
-                        || ((emailError && i18n.t('EMAIL_ERROR')) || '')
-                    }
-                    onChangeText={onChangeEmail}
-                />
+        <View style={styles.master}>
+            <Header title={i18n.t('SIGN_IN_TITLE')} hideTitle={false} loggedIn={false} notificationCount={0} />
 
-                <TextInput
-                    ref={passwordRef}
-                    style={styles.component}
-                    secureTextEntry
-                    label={i18n.t('PASSWORD')}
-                    value={password}
-                    error={passwordRequired || passwordLengthError || passwordError}
-                    helperText={
-                        ((passwordRequired && i18n.t('REQUIRED')) || '')
-                        || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
-                        || ((passwordError && i18n.t('PASSWORD_ERROR')) || '')
-                    }
-                    onChangeText={onChangePassword}
-                    onSubmitEditing={onPressSignIn}
-                />
+            <ScrollView
+                contentContainerStyle={styles.container}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
+            >
+                <View style={styles.contentContainer}>
+                    <TextInput
+                        ref={emailRef}
+                        style={styles.component}
+                        label={i18n.t('EMAIL')}
+                        value={email}
+                        error={emailRequired || !emailValid || emailError}
+                        helperText={
+                            ((emailRequired && i18n.t('REQUIRED')) || '')
+                            || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                            || ((emailError && i18n.t('EMAIL_ERROR')) || '')
+                        }
+                        onChangeText={onChangeEmail}
+                    />
 
-                <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
+                    <TextInput
+                        ref={passwordRef}
+                        style={styles.component}
+                        secureTextEntry
+                        label={i18n.t('PASSWORD')}
+                        value={password}
+                        error={passwordRequired || passwordLengthError || passwordError}
+                        helperText={
+                            ((passwordRequired && i18n.t('REQUIRED')) || '')
+                            || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
+                            || ((passwordError && i18n.t('PASSWORD_ERROR')) || '')
+                        }
+                        onChangeText={onChangePassword}
+                        onSubmitEditing={onPressSignIn}
+                    />
 
-                <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
+                    <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
 
-                <Button style={styles.component} color='secondary' label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
+                    <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
 
-                <Link style={styles.link} label={i18n.t('FORGOT_PASSWORD')} onPress={onPressForgotPassword} />
+                    <Button style={styles.component} color='secondary' label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
 
-                {blacklisted && <Error style={styles.error} message={i18n.t('IS_BLACKLISTED')} />}
-            </View>
-        </ScrollView>
+                    <Link style={styles.link} label={i18n.t('FORGOT_PASSWORD')} onPress={onPressForgotPassword} />
+
+                    {blacklisted && <Error style={styles.error} message={i18n.t('IS_BLACKLISTED')} />}
+                </View>
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    master: {
+        flex: 1,
+    },
     container: {
         justifyContent: 'center',
         alignItems: 'center',

@@ -5,16 +5,37 @@ import { useIsFocused } from '@react-navigation/native';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import Master from './Master';
+import BookingList from '../elements/BookingList';
+import Env from '../config/env.config';
 
-export default function AboutScreen({ navigation, route }) {
+export default function BookingScreen({ navigation, route }) {
     const isFocused = useIsFocused();
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [user, setUser] = useState(null);
 
     const _init = async () => {
         setVisible(false);
         const language = await UserService.getLanguage();
+        setLanguage(language);
         i18n.locale = language;
+
+        const currentUser = await UserService.getCurrentUser();
+
+        if (!currentUser) {
+            await UserService.signout(navigation, false, true);
+            return;
+        }
+
+        const user = await UserService.getUser(currentUser.id);
+
+        if (!user) {
+            await UserService.signout(navigation, false, true);
+            return;
+        }
+
+        setUser(user);
         setVisible(true);
     };
 
@@ -32,15 +53,13 @@ export default function AboutScreen({ navigation, route }) {
     };
 
     return (
-        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
+        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
             {visible &&
-                <ScrollView
-                    contentContainerStyle={styles.container}
-                    keyboardShouldPersistTaps="handled"
-                    nestedScrollEnabled
-                >
-                    <Text style={{ fontSize: 16 }}>About!</Text>
-                </ScrollView>
+                <BookingList
+                    user={user._id}
+                    booking={route.params.id}
+                    language={language}
+                />
             }
         </Master>
     );
@@ -49,9 +68,5 @@ export default function AboutScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     master: {
         flex: 1
-    },
-    container: {
-        flexGrow: 1,
-        alignItems: 'center'
     }
 });

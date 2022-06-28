@@ -200,7 +200,12 @@ i18n.translations = {
         LESS_THAN_7500: 'Moins de 7500 DH',
         CANCEL_BOOKING_BTN: 'Annuler cette réservation',
         CANCEL_BOOKING: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
-        CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation."
+        CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
+
+        OF: 'sur',
+        EMPTY_NOTIFICATION_LIST: 'Pas de notifications',
+        DELETE_NOTIFICATION: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
+        DELETE_NOTIFICATIONS: 'Êtes-vous sûr de vouloir supprimer ces notifications ?'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -399,7 +404,12 @@ i18n.translations = {
         LESS_THAN_7500: 'Less than 7500 DH',
         CANCEL_BOOKING_BTN: 'Cancel this booking',
         CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
-        CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.'
+        CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
+
+        OF: 'of',
+        EMPTY_NOTIFICATION_LIST: 'No notifications',
+        DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
+        DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
     }
 };
 
