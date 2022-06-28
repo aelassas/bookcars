@@ -136,112 +136,113 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   return (
-    init && visible &&
     <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-        nestedScrollEnabled
-      >
-        <View style={styles.contentContainer}>
+      {init && visible &&
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          <View style={styles.contentContainer}>
 
-          <View style={styles.logo}>
-            <Text style={styles.logoMain}>BookCars</Text>
-            <Text style={styles.logoRegistered}>®</Text>
-          </View>
+            <View style={styles.logo}>
+              <Text style={styles.logoMain}>BookCars</Text>
+              <Text style={styles.logoRegistered}>®</Text>
+            </View>
 
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              opacity: 0,
-              width: '100%',
-              height: '100%',
-              left: 0,
-              top: 0
-            }}
-            onPress={handleTouchableOpacityClick} />
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                opacity: 0,
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0
+              }}
+              onPress={handleTouchableOpacityClick} />
 
-          <LocationSelectList
-            label={i18n.t('PICKUP_LOCATION')}
-            style={styles.component}
-            onSelectItem={handlePickupLocationSelect}
-            selectedItem={pickupLocation}
-            onFetch={() => {
-              setClosePickupLocation(false);
-            }}
-            onFocus={() => {
-              setBlur(false);
-              setCloseDropOffLocation(true);
-            }}
-            close={closePickupLocation}
-            blur={blur}
-          />
-
-          <DateTimePicker
-            mode='date'
-            locale={language}
-            style={styles.component}
-            label={i18n.t('FROM_DATE')}
-            value={fromDate}
-            onChange={(date) => setFromDate(date)}
-            onPress={blurLocations}
-          />
-
-          <DateTimePicker
-            mode='time'
-            locale={language}
-            style={styles.component}
-            label={i18n.t('FROM_TIME')}
-            value={fromTime}
-            onChange={(time) => setFromTime(time)}
-            onPress={blurLocations}
-          />
-
-          <DateTimePicker
-            mode='date'
-            locale={language}
-            style={styles.component}
-            label={i18n.t('TO_DATE')}
-            value={toDate}
-            minimumDate={fromDate}
-            onChange={(date) => setToDate(date)}
-            onPress={blurLocations}
-          />
-
-          <DateTimePicker
-            mode='time'
-            locale={language}
-            style={styles.component}
-            label={i18n.t('TO_TIME')}
-            value={toTime}
-            onChange={(time) => setToTime(time)}
-            onPress={blurLocations}
-          />
-
-          <Button style={styles.component} label={i18n.t('SEARCH')} onPress={handleSearch} />
-
-          {!sameLocation &&
             <LocationSelectList
-              label={i18n.t('DROP_OFF_LOCATION')}
+              label={i18n.t('PICKUP_LOCATION')}
               style={styles.component}
-              onSelectItem={handleDropOffLocationSelect}
-              selectedItem={dropOffLocation}
+              onSelectItem={handlePickupLocationSelect}
+              selectedItem={pickupLocation}
               onFetch={() => {
-                setCloseDropOffLocation(false);
+                setClosePickupLocation(false);
               }}
               onFocus={() => {
                 setBlur(false);
-                setClosePickupLocation(true);
+                setCloseDropOffLocation(true);
               }}
-              close={closeDropOffLocation}
+              close={closePickupLocation}
               blur={blur}
             />
-          }
 
-          <Switch style={styles.component} label={i18n.t('SAME_LOCATION')} value={sameLocation} onValueChange={handleSameLocationChange} />
-        </View>
-      </ScrollView>
+            <DateTimePicker
+              mode='date'
+              locale={language}
+              style={styles.component}
+              label={i18n.t('FROM_DATE')}
+              value={fromDate}
+              onChange={(date) => setFromDate(date)}
+              onPress={blurLocations}
+            />
+
+            <DateTimePicker
+              mode='time'
+              locale={language}
+              style={styles.component}
+              label={i18n.t('FROM_TIME')}
+              value={fromTime}
+              onChange={(time) => setFromTime(time)}
+              onPress={blurLocations}
+            />
+
+            <DateTimePicker
+              mode='date'
+              locale={language}
+              style={styles.component}
+              label={i18n.t('TO_DATE')}
+              value={toDate}
+              minimumDate={fromDate}
+              onChange={(date) => setToDate(date)}
+              onPress={blurLocations}
+            />
+
+            <DateTimePicker
+              mode='time'
+              locale={language}
+              style={styles.component}
+              label={i18n.t('TO_TIME')}
+              value={toTime}
+              onChange={(time) => setToTime(time)}
+              onPress={blurLocations}
+            />
+
+            <Button style={styles.component} label={i18n.t('SEARCH')} onPress={handleSearch} />
+
+            {!sameLocation &&
+              <LocationSelectList
+                label={i18n.t('DROP_OFF_LOCATION')}
+                style={styles.component}
+                onSelectItem={handleDropOffLocationSelect}
+                selectedItem={dropOffLocation}
+                onFetch={() => {
+                  setCloseDropOffLocation(false);
+                }}
+                onFocus={() => {
+                  setBlur(false);
+                  setClosePickupLocation(true);
+                }}
+                close={closeDropOffLocation}
+                blur={blur}
+              />
+            }
+
+            <Switch style={styles.component} label={i18n.t('SAME_LOCATION')} value={sameLocation} onValueChange={handleSameLocationChange} />
+          </View>
+        </ScrollView>
+      }
     </Master>
   );
 

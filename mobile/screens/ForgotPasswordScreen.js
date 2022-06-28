@@ -9,6 +9,7 @@ import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import Link from '../elements/Link';
+import Header from '../elements/Header';
 
 export default function ForgotPasswordScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -102,42 +103,49 @@ export default function ForgotPasswordScreen({ navigation, route }) {
     };
 
     return (
-        <ScrollView
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps="handled"
-            nestedScrollEnabled
-        >
-            {sent &&
-                <View style={styles.contentContainer}>
-                    <Text style={styles.text}>{i18n.t('RESET_EMAIL_SENT')}</Text>
-                    <Link label={i18n.t('GO_TO_HOME')} onPress={() => navigation.navigate('Home')} />
-                </View>
-            }
-            {!sent &&
-                <View style={styles.contentContainer}>
-                    <Text style={styles.text}>{i18n.t('RESET_PASSWORD')}</Text>
+        <View style={styles.master}>
+            <Header title={i18n.t('FORGOT_PASSWORD')} hideTitle={false} loggedIn={false} notificationCount={0} />
 
-                    <TextInput
-                        ref={ref}
-                        style={styles.component}
-                        label={i18n.t('EMAIL')}
-                        error={emailRequired || !emailValid || emailError}
-                        helperText={
-                            ((emailRequired && i18n.t('REQUIRED')) || '')
-                            || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
-                            || ((emailError && i18n.t('EMAIL_ERROR')) || '')
-                        }
-                        onSubmitEditing={onPressReset}
-                        onChangeText={onChangeEmail} />
+            <ScrollView
+                contentContainerStyle={styles.container}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
+            >
+                {sent &&
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.text}>{i18n.t('RESET_EMAIL_SENT')}</Text>
+                        <Link label={i18n.t('GO_TO_HOME')} onPress={() => navigation.navigate('Home')} />
+                    </View>
+                }
+                {!sent &&
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.text}>{i18n.t('RESET_PASSWORD')}</Text>
 
-                    <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
-                </View>
-            }
-        </ScrollView>
+                        <TextInput
+                            ref={ref}
+                            style={styles.component}
+                            label={i18n.t('EMAIL')}
+                            error={emailRequired || !emailValid || emailError}
+                            helperText={
+                                ((emailRequired && i18n.t('REQUIRED')) || '')
+                                || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                                || ((emailError && i18n.t('EMAIL_ERROR')) || '')
+                            }
+                            onSubmitEditing={onPressReset}
+                            onChangeText={onChangeEmail} />
+
+                        <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
+                    </View>
+                }
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    master: {
+        flex: 1
+    },
     text: {
         color: 'rgba(0, 0, 0, 0.6)',
         fontSize: 15,

@@ -136,12 +136,12 @@ routes.route(routeNames.getNotifications).get(authJwt.verifyToken, async (req, r
         const page = parseInt(req.params.page);
         const size = parseInt(req.params.size);
 
-        // const count = 7;
+        // const count = 37;
         // for (let i = 0; i < count; i++) {
         //     const notification = new Notification({
         //         user: userId,
         //         message: 'John Doe a payé la réservation 62b8b55628d7476ed08b341a ZZ.',
-        //         link: 'http://localhost:3000/booking?b=62b8b55628d7476ed08b341a'
+        //         booking: '62b8b84d3a5162bd9acecb3d'
         //     });
         //     await notification.save();
         // }

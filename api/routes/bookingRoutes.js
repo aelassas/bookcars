@@ -40,8 +40,7 @@ const notifyCompany = async (user, booking, company, notificationMessage) => {
 
     // notification
     const message = `${user.fullName} ${notificationMessage} ${booking._id}.`;
-    const link = Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`);
-    const notification = new Notification({ user: company._id, message, link });
+    const notification = new Notification({ user: company._id, message, booking: booking._id });
     console.log('company._id', company._id)
     await notification.save();
     let counter = await NotificationCounter.findOne({ user: company._id });
@@ -188,8 +187,7 @@ const notifyDriver = async (booking) => {
     strings.setLanguage(driver.language);
 
     const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`;
-    const link = Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`);
-    const notification = new Notification({ user: driver._id, message, link });
+    const notification = new Notification({ user: driver._id, message, booking: booking._id });
     await notification.save();
     let counter = await NotificationCounter.findOne({ user: driver._id });
     if (counter) {

@@ -66,12 +66,31 @@ export default function BookingList(props) {
     }, [page]);
 
     useEffect(() => {
-        if (page > 0) {
-            _fetch(true);
-        } else {
-            _fetch();
+        if (props.companies) {
+            if (page > 0) {
+                _fetch(true);
+            } else {
+                _fetch();
+            }
         }
     }, [props.companies, props.statuses, props.filter]);
+
+    useEffect(() => {
+        async function init() {
+            try {
+                setLoading(true);
+                setFetch(true);
+                const booking = await BookingService.getBooking(props.booking);
+                setRows([booking]);
+                setFetch(false);
+                setLoading(false);
+            } catch (err) {
+                Helper.error(err);
+            }
+        }
+
+        if (props.booking) init();
+    }, [props.booking]);
 
     return (
         <View style={styles.container}>
@@ -269,7 +288,7 @@ export default function BookingList(props) {
                 }}
                 keyExtractor={(item, index) => item._id}
                 onEndReached={() => {
-                    if (fetch) {
+                    if (fetch && props.companies) {
                         setPage(page + 1);
                     }
                 }}

@@ -6,14 +6,16 @@ const notificationSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         required: [true, "can't be blank"],
-        ref: 'User'
+        ref: 'User',
+        index: true
     },
     message: {
         type: String,
-        required: [true, "can't be blank"],
+        required: [true, "can't be blank"]
     },
-    link: {
-        type: String
+    booking: {
+        type: Schema.Types.ObjectId,
+        ref: 'Booking'
     },
     isRead: {
         type: Boolean,

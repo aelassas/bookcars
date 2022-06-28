@@ -4,10 +4,14 @@ import UserService from '../services/UserService';
 import Button from '../elements/Button';
 import i18n from '../lang/i18n';
 import Helper from '../common/Helper';
+import Header from '../elements/Header';
+import NotificationService from '../services/NotificationService';
 
 export default function Master(props) {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [notificationCount, setNotificationCount] = useState(0);
 
     const exit = async (reload = false) => {
         if (props.strict) {
@@ -18,6 +22,7 @@ export default function Master(props) {
             }
         } else {
             await UserService.signout(props.navigation, false, false);
+            setLoggedIn(false);
 
             if (props.onLoad) {
                 props.onLoad();
@@ -53,8 +58,12 @@ export default function Master(props) {
                             return;
                         }
 
-                        setLoading(false);
+                        const notificationCounter = await NotificationService.getNotificationCounter(currentUser.id);
+                        setNotificationCount(notificationCounter.count);
+
+                        setLoggedIn(true);
                         setUser(user);
+                        setLoading(false);
 
                         if (props.onLoad) {
                             props.onLoad(user);
@@ -80,6 +89,10 @@ export default function Master(props) {
         if (props.reload) _init();
     }, [props.reload]);
 
+    useEffect(() => {
+        setNotificationCount(props.notificationCount);
+    }, [props.notificationCount]);
+
     const handleResend = () => {
         const data = { email: user.email };
 
@@ -97,16 +110,19 @@ export default function Master(props) {
     };
 
     return (
-        !loading &&
         <View style={{ ...styles.container, ...props.style }}>
-            {((!user && !props.strict) || (user && user.verified))
-                ?
-                props.children
-                :
-                <View style={styles.validate}>
-                    <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
-                    <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
-                </View>
+            <Header title={props.title} hideTitle={props.hideTitle} loggedIn={loggedIn} notificationCount={notificationCount} />
+            {!loading &&
+                (
+                    ((!user && !props.strict) || (user && user.verified))
+                        ?
+                        props.children
+                        :
+                        <View style={styles.validate}>
+                            <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
+                            <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
+                        </View>
+                )
             }
         </View>
     );

@@ -17,6 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import HomeScreen from '../screens/HomeScreen';
 import BookingsScreen from '../screens/BookingsScreen';
+import BookingScreen from '../screens/BookingScreen';
 import AboutScreen from '../screens/AboutScreen';
 import ToSScreen from '../screens/ToSScreen';
 import ContactScreen from '../screens/ContactScreen';
@@ -24,7 +25,6 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import CarsScreen from '../screens/CarsScreen';
-import Header from './Header';
 import UserService from '../services/UserService';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
@@ -32,6 +32,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DrawerContent from './DrawerContent';
 import CreateBookingScreen from '../screens/CreateBooking';
+import NotificationsScreen from '../screens/NotificationsScreen';
 
 export default function DrawerNavigator(props) {
     const buildLink = useLinkBuilder();
@@ -70,6 +71,13 @@ export default function DrawerNavigator(props) {
                 title: i18n.t('BOOKINGS'),
                 iconName: 'event-seat',
                 hidden: !loggedIn
+            },
+            {
+                name: 'Booking',
+                title: '',
+                iconName: 'event-seat',
+                hidden: true,
+                hideTitle: true
             },
             {
                 name: 'About',
@@ -115,7 +123,14 @@ export default function DrawerNavigator(props) {
                 title: i18n.t('FORGOT_PASSWORD'),
                 iconName: 'login',
                 hidden: true
-            }
+            },
+            {
+                name: 'Notifications',
+                title: '',
+                iconName: 'notifications',
+                hidden: true,
+                hideTitle: true
+            },
         ];
 
     useEffect(() => {
@@ -170,15 +185,17 @@ export default function DrawerNavigator(props) {
                                     : drawer.name === 'Cars' ? CarsScreen
                                         : drawer.name === 'CreateBooking' ? CreateBookingScreen
                                             : drawer.name === 'Bookings' ? BookingsScreen
-                                                : drawer.name === 'About' ? AboutScreen
-                                                    : drawer.name === 'ToS' ? ToSScreen
-                                                        : drawer.name === 'Contact' ? ContactScreen
-                                                            : drawer.name === 'Settings' ? SettingsScreen
-                                                                : drawer.name === 'ChangePassword' ? ChangePasswordScreen
-                                                                    : drawer.name === 'SignIn' ? SignInScreen
-                                                                        : drawer.name === 'SignUp' ? SignUpScreen
-                                                                            : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
-                                                                                : null
+                                                : drawer.name === 'Booking' ? BookingScreen
+                                                    : drawer.name === 'About' ? AboutScreen
+                                                        : drawer.name === 'ToS' ? ToSScreen
+                                                            : drawer.name === 'Contact' ? ContactScreen
+                                                                : drawer.name === 'Settings' ? SettingsScreen
+                                                                    : drawer.name === 'ChangePassword' ? ChangePasswordScreen
+                                                                        : drawer.name === 'SignIn' ? SignInScreen
+                                                                            : drawer.name === 'SignUp' ? SignUpScreen
+                                                                                : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen
+                                                                                    : drawer.name === 'Notifications' ? NotificationsScreen
+                                                                                        : null
                             }
                             options={{
                                 title: drawer.title,
@@ -198,14 +215,14 @@ export default function DrawerNavigator(props) {
                                         color='rgba(0, 0, 0, 0.54)'
                                     />
                                 ,
-                                headerShown: true,
-                                header: ({ navigation, route, options }) => {
-                                    const title = getHeaderTitle(options, route.name);
+                                headerShown: false,
+                                // header: ({ navigation, route, options }) => {
+                                //     const title = getHeaderTitle(options, route.name);
 
-                                    return (
-                                        <Header title={title} hideTitle={drawer.hideTitle} />
-                                    );
-                                }
+                                //     return (
+                                //         <Header title={title} hideTitle={drawer.hideTitle} loggedIn={loggedIn} />
+                                //     );
+                                // }
                             }}
                         />
 

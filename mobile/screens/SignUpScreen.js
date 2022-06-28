@@ -14,6 +14,7 @@ import moment from 'moment';
 import Env from '../config/env.config';
 import Error from '../elements/Error';
 import Backdrop from '../elements/Backdrop';
+import Header from '../elements/Header';
 
 export default function SignUpScreen({ navigation, route }) {
     const isFocused = useIsFocused();
@@ -306,100 +307,103 @@ export default function SignUpScreen({ navigation, route }) {
     };
 
     return (
-        language &&
         <View style={styles.master}>
-            <ScrollView
-                contentContainerStyle={styles.container}
-                keyboardShouldPersistTaps='handled'
-                nestedScrollEnabled
-            >
-                <View style={styles.contentContainer}>
-                    <TextInput
-                        ref={fullNameRef}
-                        style={styles.component}
-                        label={i18n.t('FULL_NAME')}
-                        value={fullName}
-                        error={fullNameRequired}
-                        helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
-                        onChangeText={onChangeFullName}
-                    />
+            <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} notificationCount={0} />
 
-                    <TextInput
-                        ref={emailRef}
-                        style={styles.component}
-                        label={i18n.t('EMAIL')}
-                        value={email}
-                        error={emailRequired || !emailValid || emailError}
-                        helperText={
-                            ((emailRequired && i18n.t('REQUIRED')) || '')
-                            || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
-                            || ((emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || '')
-                        }
-                        onChangeText={onChangeEmail}
-                    />
+            {language &&
+                <ScrollView
+                    contentContainerStyle={styles.container}
+                    keyboardShouldPersistTaps='handled'
+                    nestedScrollEnabled
+                >
+                    <View style={styles.contentContainer}>
+                        <TextInput
+                            ref={fullNameRef}
+                            style={styles.component}
+                            label={i18n.t('FULL_NAME')}
+                            value={fullName}
+                            error={fullNameRequired}
+                            helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
+                            onChangeText={onChangeFullName}
+                        />
 
-                    <TextInput
-                        ref={phoneRef}
-                        style={styles.component}
-                        label={i18n.t('PHONE')}
-                        value={phone}
-                        error={phoneRequired || !phoneValid}
-                        helperText={
-                            ((phoneRequired && i18n.t('REQUIRED')) || '')
-                            || ((!phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
-                        }
-                        onChangeText={onChangePhone}
-                    />
+                        <TextInput
+                            ref={emailRef}
+                            style={styles.component}
+                            label={i18n.t('EMAIL')}
+                            value={email}
+                            error={emailRequired || !emailValid || emailError}
+                            helperText={
+                                ((emailRequired && i18n.t('REQUIRED')) || '')
+                                || ((!emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                                || ((emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || '')
+                            }
+                            onChangeText={onChangeEmail}
+                        />
 
-                    <DateTimePicker
-                        mode='date'
-                        locale={language}
-                        style={styles.date}
-                        label={i18n.t('BIRTH_DATE')}
-                        value={birthDate}
-                        error={birthDateRequired || !birthDateValid}
-                        helperText={
-                            ((birthDateRequired && i18n.t('REQUIRED')) || '')
-                            || ((!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || '')
-                        }
-                        onChange={onChangeBirthDate}
-                    />
+                        <TextInput
+                            ref={phoneRef}
+                            style={styles.component}
+                            label={i18n.t('PHONE')}
+                            value={phone}
+                            error={phoneRequired || !phoneValid}
+                            helperText={
+                                ((phoneRequired && i18n.t('REQUIRED')) || '')
+                                || ((!phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
+                            }
+                            onChangeText={onChangePhone}
+                        />
 
-                    <TextInput
-                        ref={passwordRef}
-                        style={styles.component}
-                        secureTextEntry
-                        label={i18n.t('PASSWORD')}
-                        value={password}
-                        error={passwordRequired || passwordLengthError}
-                        helperText={
-                            ((passwordRequired && i18n.t('REQUIRED')) || '')
-                            || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
-                        }
-                        onChangeText={onChangePassword}
-                    />
+                        <DateTimePicker
+                            mode='date'
+                            locale={language}
+                            style={styles.date}
+                            label={i18n.t('BIRTH_DATE')}
+                            value={birthDate}
+                            error={birthDateRequired || !birthDateValid}
+                            helperText={
+                                ((birthDateRequired && i18n.t('REQUIRED')) || '')
+                                || ((!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || '')
+                            }
+                            onChange={onChangeBirthDate}
+                        />
 
-                    <TextInput
-                        ref={confirmPasswordRef}
-                        style={styles.component}
-                        secureTextEntry
-                        label={i18n.t('CONFIRM_PASSWORD')}
-                        value={confirmPassword}
-                        error={confirmPasswordRequired || confirmPasswordError}
-                        helperText={
-                            ((confirmPasswordRequired && i18n.t('REQUIRED')) || '')
-                            || ((confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || '')
-                        }
-                        onChangeText={onChangeConfirmPassword}
-                    />
+                        <TextInput
+                            ref={passwordRef}
+                            style={styles.component}
+                            secureTextEntry
+                            label={i18n.t('PASSWORD')}
+                            value={password}
+                            error={passwordRequired || passwordLengthError}
+                            helperText={
+                                ((passwordRequired && i18n.t('REQUIRED')) || '')
+                                || ((passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '')
+                            }
+                            onChangeText={onChangePassword}
+                        />
 
-                    <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
+                        <TextInput
+                            ref={confirmPasswordRef}
+                            style={styles.component}
+                            secureTextEntry
+                            label={i18n.t('CONFIRM_PASSWORD')}
+                            value={confirmPassword}
+                            error={confirmPasswordRequired || confirmPasswordError}
+                            helperText={
+                                ((confirmPasswordRequired && i18n.t('REQUIRED')) || '')
+                                || ((confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || '')
+                            }
+                            onChangeText={onChangeConfirmPassword}
+                        />
 
-                    <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
+                        <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 
-                    {tosError && <Error message={i18n.t('TOS_ERROR')} />}
-                </View>
-            </ScrollView>
+                        <Button style={styles.component} label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
+
+                        {tosError && <Error message={i18n.t('TOS_ERROR')} />}
+                    </View>
+                </ScrollView>
+            }
 
             {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
         </View>
