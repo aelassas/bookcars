@@ -243,15 +243,21 @@ export default function NotificationsScreen({ navigation, route }) {
                                                                 style={styles.action}
                                                                 onPress={async () => {
                                                                     try {
-                                                                        const status = await NotificationService.markAsRead(user._id, [row._id]);
+                                                                        const navigate = () => navigation.navigate('Booking', { id: row.booking });
 
-                                                                        if (status === 200) {
-                                                                            row.isRead = true;
-                                                                            setRows(Helper.clone(rows));
-                                                                            setNotificationCount(notificationCount - 1);
-                                                                            navigation.navigate('Booking', { id: row.booking });
+                                                                        if (!row.isRead) {
+                                                                            const status = await NotificationService.markAsRead(user._id, [row._id]);
+
+                                                                            if (status === 200) {
+                                                                                row.isRead = true;
+                                                                                setRows(Helper.clone(rows));
+                                                                                setNotificationCount(notificationCount - 1);
+                                                                                navigate();
+                                                                            } else {
+                                                                                Helper.error();
+                                                                            }
                                                                         } else {
-                                                                            Helper.error();
+                                                                            navigate();
                                                                         }
                                                                     }
                                                                     catch (err) {
