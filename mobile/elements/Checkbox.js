@@ -4,11 +4,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function Checkbox({ indeterminate, checked, onChange }) {
 
     return (
-        <Pressable onPress={() => {
-            if (onChange) {
-                onChange(!checked);
-            }
-        }}>
+        <Pressable
+            onPress={() => {
+                if (onChange) {
+                    onChange(!checked);
+                }
+            }}>
             <MaterialIcons
                 name={
                     indeterminate ? 'indeterminate-check-box'
