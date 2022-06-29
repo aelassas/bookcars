@@ -9,7 +9,6 @@ import { Provider } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
 import Helper from './common/Helper';
-import UserService from './services/UserService';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,8 +26,6 @@ export default function App() {
       try {
         // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
-        const loggedIn = await UserService.loggedIn();
-        if (loggedIn) await Helper.registerForPushNotificationsAsync(false);
         await new Promise(resolve => setTimeout(resolve, 500));
       } catch (err) {
         Helper.error(err);
