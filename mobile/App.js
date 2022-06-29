@@ -37,7 +37,8 @@ export default function App() {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
       try {
         if (navigattionRef.current) {
-          const data = response.notification.request.content.data;
+          const data = (notification || response.notification).request.content.data;
+
           if (data.booking) {
             if (data.notification) {
               const user = await UserService.getCurrentUser();
