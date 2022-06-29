@@ -4,11 +4,14 @@
   },
   "build": {
     "development": {
+      "developmentClient": true,
       "distribution": "internal",
       "android": {
+        "image": "latest",
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
+        "image": "latest",
         "buildConfiguration": "Debug"
       }
     },

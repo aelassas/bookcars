@@ -132,7 +132,7 @@ export default function HomeScreen({ navigation, route }) {
     }
 
     const params = { pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
-    navigation.navigate('Cars', params)
+    navigation.navigate('Cars', params);
   };
 
   return (

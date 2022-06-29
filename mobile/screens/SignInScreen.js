@@ -156,8 +156,8 @@ export default function SignInScreen({ navigation, route }) {
                     } else {
                         setPasswordError(false);
                         setBlacklisted(false);
-                        navigation.navigate('Home', { d: new Date().getTime() });
                         clear();
+                        navigation.navigate('Home', { d: new Date().getTime() });
                     }
                 } else {
                     setPasswordError(true);
