@@ -557,7 +557,6 @@ routes.route(routeNames.deletePushToken).post(authJwt.verifyToken, async (req, r
     }
 });
 
-
 // Email validation Router
 routes.route(routeNames.validateEmail).post(async (req, res) => {
     try {
