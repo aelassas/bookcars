@@ -10,7 +10,7 @@ export default function Checkbox({ indeterminate, checked, onChange }) {
                     onChange(!checked);
                 }
             }}
-            hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+            hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
             style={styles.checkbox}
         >
             <MaterialIcons
@@ -28,7 +28,7 @@ export default function Checkbox({ indeterminate, checked, onChange }) {
 
 const styles = StyleSheet.create({
     checkbox: {
-        paddingTop: 10,
-        paddingBottom: 10
+        paddingTop: 5,
+        paddingBottom: 5
     }
 })
