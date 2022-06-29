@@ -547,6 +547,16 @@ routes.route(routeNames.createPushToken).post(authJwt.verifyToken, async (req, r
     }
 });
 
+routes.route(routeNames.deletePushToken).post(authJwt.verifyToken, async (req, res) => {
+    try {
+        await PushNotification.deleteMany({ user: req.params.userId });
+        return res.sendStatus(200);
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        return res.status(400).send(strings.ERROR + err);
+    }
+});
+
 
 // Email validation Router
 routes.route(routeNames.validateEmail).post(async (req, res) => {

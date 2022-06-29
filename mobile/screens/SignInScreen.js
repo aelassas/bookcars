@@ -156,14 +156,13 @@ export default function SignInScreen({ navigation, route }) {
                     setBlacklisted(true);
                 } else {
                     const userId = res.data.id;
-                    const tokenResponse = await UserService.getPushToken(userId);
-                    if (tokenResponse.status === 204) {
-                        const token = await Helper.registerForPushNotificationsAsync();
-                        const status = await UserService.createPushToken(userId, token);
-                        if (status !== 200) {
-                            Helper.error();
-                        }
+                    await UserService.deletePushToken(userId);
+                    const token = await Helper.registerForPushNotificationsAsync();
+                    const status = await UserService.createPushToken(userId, token);
+                    if (status !== 200) {
+                        Helper.error();
                     }
+
                     setPasswordError(false);
                     setBlacklisted(false);
                     clear();
