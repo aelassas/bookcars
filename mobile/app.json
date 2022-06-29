@@ -7,13 +7,13 @@
     "plugins": [
       "@notifee/react-native"
     ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "backgroundColor": "#f37022",
       "image": "./assets/splash.png"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "android": {
       "versionCode": 1,
       "adaptiveIcon": {
