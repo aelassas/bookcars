@@ -35,6 +35,7 @@ BC_DEFAULT_LANGUAGE = fr
 BC_BACKEND_HOST = https://bookcars.ddns.net:3000/
 BC_FRONTEND_HOST = https://bookcars.ddns.net/
 BC_MINIMUM_AGE = 21
+BC_EXPO_ACCESS_TOKEN = TOKEN
 ```
 
 ## backend/.env
