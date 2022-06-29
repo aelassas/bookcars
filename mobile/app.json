@@ -4,9 +4,6 @@
     "version": "1.0.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
-    "plugins": [
-      "@notifee/react-native"
-    ],
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -23,8 +20,7 @@
       "splash": {
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png"
-      },
-      "package": "com.bookcars"
+      }
     },
     "ios": {
       "buildNumber": "1.0.0",
@@ -34,8 +30,7 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png",
         "tabletImage": "./assets/splash-tablet.png"
-      },
-      "bundleIdentifier": "com.bookcars"
+      }
     }
   }
 }

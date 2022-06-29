@@ -1505,11 +1505,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
-"@notifee/react-native@^5.4.0":
-  "integrity" "sha512-El5azrKLSjKCbdsxAZTx8a9QiI67aVWEbTCxiue520vlj6ihxIddaMOnBVOTPYSc28TiWVpkYVVXlYQFQ2j06Q=="
-  "resolved" "https://registry.npmjs.org/@notifee/react-native/-/react-native-5.4.0.tgz"
-  "version" "5.4.0"
-
 "@npmcli/fs@^1.0.0":
   "integrity" "sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ=="
   "resolved" "https://registry.npmjs.org/@npmcli/fs/-/fs-1.1.1.tgz"
@@ -3153,6 +3148,42 @@
   dependencies:
     "@expo/config" "^6.0.14"
     "uuid" "^3.3.2"
+
+"expo-dev-client@~1.0.0":
+  "integrity" "sha512-hqCf7IRaVOsiekFXoIifC+knGmS/hqnx6Kr+bdNbUi7UppJr7Wltww2+m0JQFIUSbjVpIEGLJIotClAi/1Vfew=="
+  "resolved" "https://registry.npmjs.org/expo-dev-client/-/expo-dev-client-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+    "expo-dev-launcher" "1.0.0"
+    "expo-dev-menu" "1.0.0"
+    "expo-dev-menu-interface" "0.7.0"
+    "expo-manifests" "~0.3.0"
+    "expo-updates-interface" "~0.6.0"
+
+"expo-dev-launcher@1.0.0":
+  "integrity" "sha512-yRqDdhCo7gBJorFSypkur1o1JHrIiG1eRnAbMb3E7LXg7RdgcirwXJrgt7WtnWTrYHKR//2BBlTlqFBIG5pteA=="
+  "resolved" "https://registry.npmjs.org/expo-dev-launcher/-/expo-dev-launcher-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+    "expo-dev-menu" "1.0.0"
+    "resolve-from" "^5.0.0"
+    "semver" "^7.3.5"
+
+"expo-dev-menu-interface@0.7.0":
+  "integrity" "sha512-f/9gWLpuvXvQPeVBHH0T7qm4v2/Ynygs7dzebxqSWGDcCabfqRhuX+dv/t7CGu85m6waC9xYYnjLG7l8LC/i3Q=="
+  "resolved" "https://registry.npmjs.org/expo-dev-menu-interface/-/expo-dev-menu-interface-0.7.0.tgz"
+  "version" "0.7.0"
+
+"expo-dev-menu@1.0.0":
+  "integrity" "sha512-1420lih/NZR5NHcA2tgCfx6M2UoWBDJB9fY9Bb5/XDGXVeSsrubmu6Ck80Y4qdpDpPesQ/saZxVuilkfzBoNmQ=="
+  "resolved" "https://registry.npmjs.org/expo-dev-menu/-/expo-dev-menu-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+    "expo-dev-menu-interface" "0.7.0"
+    "semver" "^7.3.5"
 
 "expo-eas-client@~0.2.0":
   "integrity" "sha512-XlZr57iHxqo3+AT2TtcRipMuQEyXnTUAv7H5+KVvj6EEJEAHmwc9wZZdKzqf0MbVRUTOawZsl/b2iYanf+kQsQ=="
