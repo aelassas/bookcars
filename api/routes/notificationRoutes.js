@@ -248,10 +248,11 @@ routes.route(routeNames.delete).post(authJwt.verifyToken, async (req, res) => {
         const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id));
         const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId);
 
-        const result = await Notification.deleteMany({ _id: { $in: ids } });
+        const count = await Notification.find({ _id: { $in: ids }, isRead: false }).count();
+        await Notification.deleteMany({ _id: { $in: ids } });
 
         const counter = await NotificationCounter.findOne({ user: userId });
-        counter.count -= result.deletedCount;
+        counter.count -= count;
         await counter.save();
 
         return res.sendStatus(200);
