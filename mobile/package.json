@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "prebuild": "expo prebuild --clean",
     "build:android": "eas build --profile production --platform android",
-    "build:ios": "eas build --platform ios",
+    "build:ios": "eas build --profile production --platform ios",
     "eject": "expo eject"
   },
   "dependencies": {
