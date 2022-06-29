@@ -532,7 +532,7 @@ routes.route(routeNames.pushToken).get(authJwt.verifyToken, async (req, res) => 
 
 routes.route(routeNames.createPushToken).post(authJwt.verifyToken, async (req, res) => {
     try {
-        const exist = await PushNotification.exists({ user: mongoose.Types.ObjectId(req.params.userId) });
+        const exist = await PushNotification.exists({ user: req.params.userId });
 
         if (!exist) {
             const pushNotification = new PushNotification({ user: req.params.userId, token: req.params.token });
