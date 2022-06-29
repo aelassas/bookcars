@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
@@ -9,6 +9,8 @@ import { Provider } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
 import Helper from './common/Helper';
+import NotificationService from './services/NotificationService';
+import UserService from './services/UserService';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,6 +22,43 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+  const navigattionRef = useRef();
+
+  useEffect(() => {
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
+      try {
+        if (navigattionRef.current) {
+          const data = response.notification.request.content.data;
+          if (data.booking) {
+            if (data.notification) {
+              const user = await UserService.getCurrentUser();
+              if (user) await NotificationService.markAsRead(user.id, [data.notification]);
+            }
+            navigattionRef.current.navigate('Booking', { id: response.notification.request.content.data.booking });
+          } else {
+            navigattionRef.current.navigate('Notifications');
+          }
+
+        }
+      } catch (err) {
+        Helper.error(err, false);
+      }
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   useEffect(() => {
     async function prepare() {
@@ -57,7 +96,7 @@ export default function App() {
     <SafeAreaProvider>
       <Provider>
         <RootSiblingParent>
-          <NavigationContainer onReady={onReady}>
+          <NavigationContainer ref={navigattionRef} onReady={onReady}>
             <ExpoStatusBar style='light' backgroundColor='rgba(0, 0, 0, .9)' />
             <DrawerNavigator />
           </NavigationContainer>

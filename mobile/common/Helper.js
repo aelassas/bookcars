@@ -30,7 +30,6 @@ export default class Helper {
                     return;
                 }
                 token = (await Notifications.getExpoPushTokenAsync()).data;
-                console.log(token);
             } else {
                 alert('Must use physical device for Push Notifications');
             }
@@ -44,7 +43,7 @@ export default class Helper {
                 });
             }
         } catch (err) {
-            Helper.error(err);
+            Helper.error(err, false);
         }
 
         return token;

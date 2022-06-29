@@ -241,7 +241,7 @@ const notifyDriver = async (booking) => {
             to: pushToken,
             sound: 'default',
             body: message,
-            data: { user: driver._id, booking: booking._id },
+            data: { user: driver._id, notification: notification._id, booking: booking._id },
         }];
 
         // The Expo push notification service accepts batches of notifications so
