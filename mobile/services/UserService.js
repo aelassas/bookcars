@@ -47,6 +47,16 @@ export default class UserService {
         });
     }
 
+    static async getPushToken(userId) {
+        const headers = await UserService.authHeader();
+        return axios.get(`${Env.API_HOST}/api/push-token/${encodeURIComponent(userId)}`, { headers }).then(res => ({ status: res.status, data: res.data }));
+    }
+
+    static async createPushToken(userId, token) {
+        const headers = await UserService.authHeader();
+        return axios.post(`${Env.API_HOST}/api/create-push-token/${encodeURIComponent(userId)}/${encodeURIComponent(token)}`, null, { headers }).then(res => res.status);
+    }
+
     static async signout(navigation, redirect = true, redirectSignin = false) {
         await AsyncStorage.removeItem('bc-user');
 

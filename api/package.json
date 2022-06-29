@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "escape-string-regexp": "^5.0.0",
+    "expo-server-sdk": "^3.6.0",
     "express": "^4.18.1",
     "fs": "^0.0.2",
     "helmet": "^5.1.0",

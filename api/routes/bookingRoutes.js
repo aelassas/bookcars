@@ -8,11 +8,13 @@ import Car from '../schema/Car.js';
 import Location from '../schema/Location.js';
 import Notification from '../schema/Notification.js';
 import NotificationCounter from '../schema/NotificationCounter.js';
+import PushNotification from '../schema/PushNotification.js';
 import authJwt from '../middlewares/authJwt.js';
 import mongoose from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
 import nodemailer from 'nodemailer';
 import { v1 as uuid } from 'uuid';
+import { Expo } from 'expo-server-sdk';
 import Helper from '../common/Helper.js';
 
 const SMTP_HOST = process.env.BC_SMTP_HOST;
@@ -20,8 +22,9 @@ const SMTP_PORT = process.env.BC_SMTP_PORT;
 const SMTP_USER = process.env.BC_SMTP_USER;
 const SMTP_PASS = process.env.BC_SMTP_PASS;
 const SMTP_FROM = process.env.BC_SMTP_FROM;
-const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
 const BACKEND_HOST = process.env.BC_BACKEND_HOST;
+const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
+const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN;
 
 const routes = express.Router();
 
@@ -72,7 +75,7 @@ const notifyCompany = async (user, booking, company, notificationMessage) => {
         html: '<p>' + strings.HELLO + company.fullName + ',<br><br>'
             + message + '<br><br>'
 
-            + link
+            + Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)
             + '<br><br>'
 
             + strings.REGARDS + '<br>'
@@ -215,13 +218,59 @@ const notifyDriver = async (booking) => {
         html: '<p>' + strings.HELLO + driver.fullName + ',<br><br>'
             + message + '<br><br>'
 
-            + link
+            + Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`)
             + '<br><br>'
 
             + strings.REGARDS + '<br>'
             + '</p>'
     };
     await transporter.sendMail(mailOptions);
+
+    // push notification
+    const pushNotification = await PushNotification.findOne({ user: driver._id });
+    if (pushNotification) {
+        const pushToken = pushNotification.token;
+        let expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN });
+
+        if (!Expo.isExpoPushToken(pushToken)) {
+            console.log(`Push token ${pushToken} is not a valid Expo push token.`);
+            return;
+        }
+
+        const messages = [{
+            to: pushToken,
+            sound: 'default',
+            body: message,
+            data: { user: driver._id, booking: booking._id },
+        }];
+
+        // The Expo push notification service accepts batches of notifications so
+        // that you don't need to send 1000 requests to send 1000 notifications. We
+        // recommend you batch your notifications to reduce the number of requests
+        // and to compress them (notifications with similar content will get
+        // compressed).
+        let chunks = expo.chunkPushNotifications(messages);
+        let tickets = [];
+        (async () => {
+            // Send the chunks to the Expo push notification service. There are
+            // different strategies you could use. A simple one is to send one chunk at a
+            // time, which nicely spreads the load out over time:
+            for (let chunk of chunks) {
+                try {
+                    let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+                    console.log(ticketChunk);
+                    tickets.push(...ticketChunk);
+                    // NOTE: If a ticket contains an error code in ticket.details.error, you
+                    // must handle it appropriately. The error codes are listed in the Expo
+                    // documentation:
+                    // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        })();
+
+    }
 };
 
 routes.route(routeNames.update).put(authJwt.verifyToken, async (req, res) => {

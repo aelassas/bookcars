@@ -1,6 +1,8 @@
 
 import { Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
 
@@ -10,6 +12,42 @@ export default class Helper {
 
     static android() {
         return ANDROID;
+    }
+
+    static async registerForPushNotificationsAsync() {
+        let token;
+
+        try {
+            if (Device.isDevice) {
+                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                let finalStatus = existingStatus;
+                if (existingStatus !== 'granted') {
+                    const { status } = await Notifications.requestPermissionsAsync();
+                    finalStatus = status;
+                }
+                if (finalStatus !== 'granted') {
+                    alert('Failed to get push token for push notification!');
+                    return;
+                }
+                token = (await Notifications.getExpoPushTokenAsync()).data;
+                console.log(token);
+            } else {
+                alert('Must use physical device for Push Notifications');
+            }
+
+            if (Helper.android()) {
+                Notifications.setNotificationChannelAsync('default', {
+                    name: 'default',
+                    importance: Notifications.AndroidImportance.MAX,
+                    vibrationPattern: [0, 250, 250, 250],
+                    lightColor: '#FF231F7C',
+                });
+            }
+        } catch (err) {
+            Helper.error(err);
+        }
+
+        return token;
     }
 
     static arrayEqual(a, b) {

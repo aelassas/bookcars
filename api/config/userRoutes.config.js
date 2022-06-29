@@ -10,6 +10,8 @@ export default {
     resendLink: '/api/resend-link',
     validateEmail: '/api/validate-email',
     signin: '/api/sign-in/:type',
+    pushToken: '/api/push-token/:userId',
+    createPushToken: '/api/create-push-token/:userId/:token',
     validateAccessToken: '/api/validate-access-token',
     getUser: '/api/user/:id',
     update: '/api/update-user',

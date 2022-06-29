@@ -1,5 +1,4 @@
 import express from 'express';
-import validator from 'validator';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
@@ -14,6 +13,7 @@ import Env from '../config/env.config.js';
 import User from '../schema/User.js';
 import Booking from '../schema/Booking.js';
 import Token from '../schema/Token.js';
+import PushNotification from '../schema/PushNotification.js';
 import authJwt from '../middlewares/authJwt.js';
 import mongoose from 'mongoose';
 import Helper from '../common/Helper.js';
@@ -515,6 +515,38 @@ routes.route(routeNames.signin).post((req, res) => {
             return res.status(400).send(strings.DB_ERROR + err);
         });
 });
+
+routes.route(routeNames.pushToken).get(authJwt.verifyToken, async (req, res) => {
+    try {
+        const pushNotification = await PushNotification.findOne({ user: req.params.userId });
+        if (pushNotification) {
+            return res.status(200).json(pushNotification.token);
+        }
+
+        return res.sendStatus(204);
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        return res.status(400).send(strings.ERROR + err);
+    }
+});
+
+routes.route(routeNames.createPushToken).post(authJwt.verifyToken, async (req, res) => {
+    try {
+        const exist = await PushNotification.exists({ user: mongoose.Types.ObjectId(req.params.userId) });
+
+        if (!exist) {
+            const pushNotification = new PushNotification({ user: req.params.userId, token: req.params.token });
+            await pushNotification.save();
+            return res.sendStatus(200);
+        }
+
+        return res.status(400).send('Push Token already exists.');
+    } catch (err) {
+        console.error(strings.ERROR, err);
+        return res.status(400).send(strings.ERROR + err);
+    }
+});
+
 
 // Email validation Router
 routes.route(routeNames.validateEmail).post(async (req, res) => {
