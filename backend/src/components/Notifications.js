@@ -206,7 +206,31 @@ export default function Notifications() {
                                                     {
                                                         row.booking &&
                                                         <Tooltip title={strings.VIEW}>
-                                                            <IconButton href={`/booking?b=${row.booking}`}>
+                                                            <IconButton onClick={async () => {
+                                                                try {
+                                                                    const navigate = () => {
+                                                                        window.location.href = `/booking?b=${row.booking}`;
+                                                                    };
+
+                                                                    if (!row.isRead) {
+                                                                        const status = await NotificationService.markAsRead(user._id, [row._id]);
+
+                                                                        if (status === 200) {
+                                                                            row.isRead = true;
+                                                                            setRows(Helper.clone(rows));
+                                                                            setNotificationCount(notificationCount - 1);
+                                                                            navigate();
+                                                                        } else {
+                                                                            Helper.error();
+                                                                        }
+                                                                    } else {
+                                                                        navigate();
+                                                                    }
+                                                                }
+                                                                catch (err) {
+                                                                    UserService.signout();
+                                                                }
+                                                            }}>
                                                                 <ViewIcon />
                                                             </IconButton>
                                                         </Tooltip>
@@ -355,6 +379,6 @@ export default function Notifications() {
                 }
             </div>
             {loading && <Backdrop text={commonStrings.LOADING} />}
-        </Master>
+        </Master >
     );
 }
