@@ -44,11 +44,10 @@ export default function App() {
               const user = await UserService.getCurrentUser();
               if (user) await NotificationService.markAsRead(user.id, [data.notification]);
             }
-            navigationRef.current.navigate('Booking', { id: response.notification.request.content.data.booking });
+            navigationRef.current.navigate('Booking', { id: data.booking });
           } else {
             navigationRef.current.navigate('Notifications');
           }
-
         }
       } catch (err) {
         Helper.error(err, false);
