@@ -42,7 +42,7 @@ export default new LocalizedStrings.default({
         BOOKING_NOTIFICATION: 'a payé la réservation',
         CANCEL_BOOKING_NOTIFICATION: "a fait une demande d'annulation de la réservation",
         BOOKING_UPDATED_NOTIFICATION_PART1: 'Le statut de la réservation',
-        BOOKING_UPDATED_NOTIFICATION_PART2: 'a été modifié.',
+        BOOKING_UPDATED_NOTIFICATION_PART2: 'a été mis à jour.',
     },
     en: {
         ERROR: 'Internal error: ',
@@ -85,7 +85,7 @@ export default new LocalizedStrings.default({
         BOOKING_NOTIFICATION: 'paid the booking',
         CANCEL_BOOKING_NOTIFICATION: 'made a request to cancel the booking',
         BOOKING_UPDATED_NOTIFICATION_PART1: 'The status of the booking',
-        BOOKING_UPDATED_NOTIFICATION_PART2: 'changed.',
+        BOOKING_UPDATED_NOTIFICATION_PART2: 'was updated.',
 
     }
 });
