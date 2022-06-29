@@ -25,7 +25,7 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const navigattionRef = useRef();
+  const navigationRef = useRef();
 
   useEffect(() => {
     // This listener is fired whenever a notification is received while the app is foregrounded
@@ -36,7 +36,7 @@ export default function App() {
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
       try {
-        if (navigattionRef.current) {
+        if (navigationRef.current) {
           const data = (notification || response.notification).request.content.data;
 
           if (data.booking) {
@@ -44,9 +44,9 @@ export default function App() {
               const user = await UserService.getCurrentUser();
               if (user) await NotificationService.markAsRead(user.id, [data.notification]);
             }
-            navigattionRef.current.navigate('Booking', { id: response.notification.request.content.data.booking });
+            navigationRef.current.navigate('Booking', { id: response.notification.request.content.data.booking });
           } else {
-            navigattionRef.current.navigate('Notifications');
+            navigationRef.current.navigate('Notifications');
           }
 
         }
@@ -97,7 +97,7 @@ export default function App() {
     <SafeAreaProvider>
       <Provider>
         <RootSiblingParent>
-          <NavigationContainer ref={navigattionRef} onReady={onReady}>
+          <NavigationContainer ref={navigationRef} onReady={onReady}>
             <ExpoStatusBar style='light' backgroundColor='rgba(0, 0, 0, .9)' />
             <DrawerNavigator />
           </NavigationContainer>
