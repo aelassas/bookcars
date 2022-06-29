@@ -40,9 +40,8 @@ export default function App() {
           const data = (notification || response.notification).request.content.data;
 
           if (data.booking) {
-            if (data.notification) {
-              const user = await UserService.getCurrentUser();
-              if (user) await NotificationService.markAsRead(user.id, [data.notification]);
+            if (data.user && data.notification) {
+              await NotificationService.markAsRead(data.user, [data.notification]);
             }
             navigationRef.current.navigate('Booking', { id: data.booking });
           } else {
