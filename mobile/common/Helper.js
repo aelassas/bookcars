@@ -5,6 +5,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
+import UserService from '../services/UserService';
 
 const ANDROID = Platform.OS === 'android';
 
@@ -47,6 +48,19 @@ export default class Helper {
         }
 
         return token;
+    }
+
+    static async registerPushToken(userId) {
+        try {
+            await UserService.deletePushToken(userId);
+            const token = await Helper.registerForPushNotificationsAsync();
+            const status = await UserService.createPushToken(userId, token);
+            if (status !== 200) {
+                Helper.error();
+            }
+        } catch (err) {
+            Helper.error(err, false);
+        }
     }
 
     static arrayEqual(a, b) {
