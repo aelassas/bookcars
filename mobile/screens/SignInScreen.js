@@ -146,26 +146,38 @@ export default function SignInScreen({ navigation, route }) {
 
         const data = { email, password, stayConnected };
 
-        UserService.signin(data)
-            .then(async res => {
-                if (res.status === 200) {
-                    if (res.data.blacklisted) {
-                        await UserService.signout(navigation, false);
-                        setPasswordError(false);
-                        setBlacklisted(true);
-                    } else {
-                        setPasswordError(false);
-                        setBlacklisted(false);
-                        clear();
-                        navigation.navigate('Home', { d: new Date().getTime() });
-                    }
+        const res = await UserService.signin(data);
+
+        try {
+            if (res.status === 200) {
+                if (res.data.blacklisted) {
+                    await UserService.signout(navigation, false);
+                    setPasswordError(false);
+                    setBlacklisted(true);
                 } else {
-                    setPasswordError(true);
+                    const userId = res.data.id;
+                    const tokenResponse = await UserService.getPushToken(userId);
+                    if (tokenResponse.status === 204) {
+                        const token = await Helper.registerForPushNotificationsAsync();
+                        const status = await UserService.createPushToken(userId, token);
+                        if (status !== 200) {
+                            Helper.error();
+                        }
+                    }
+                    setPasswordError(false);
                     setBlacklisted(false);
+                    clear();
+                    navigation.navigate('Home', { d: new Date().getTime() });
                 }
-            }).catch((err) => {
-                Helper.error(err);
-            });
+            } else {
+                setPasswordError(true);
+                setBlacklisted(false);
+            }
+        }
+        catch (err) {
+            Helper.error(err);
+        }
+
     };
 
     const onPressSignUp = () => {

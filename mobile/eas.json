@@ -7,11 +7,11 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "image": "latest",
+        "image": "default",
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
-        "image": "latest",
+        "image": "default",
         "buildConfiguration": "Debug"
       }
     },
@@ -20,11 +20,11 @@
     },
     "production": {
       "android": {
-        "image": "latest",
+        "image": "default",
         "buildType": "apk"
       },
       "ios": {
-        "image": "latest"
+        "image": "default"
       }
     }
   },
