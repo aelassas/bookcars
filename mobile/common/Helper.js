@@ -15,45 +15,45 @@ export default class Helper {
         return ANDROID;
     }
 
-    static async registerForPushNotificationsAsync() {
-        let token;
+    static async registerPushToken(userId) {
+        async function registerForPushNotificationsAsync() {
+            let token;
 
-        try {
-            if (Device.isDevice) {
-                const { status: existingStatus } = await Notifications.getPermissionsAsync();
-                let finalStatus = existingStatus;
-                if (existingStatus !== 'granted') {
-                    const { status } = await Notifications.requestPermissionsAsync();
-                    finalStatus = status;
+            try {
+                if (Device.isDevice) {
+                    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                    let finalStatus = existingStatus;
+                    if (existingStatus !== 'granted') {
+                        const { status } = await Notifications.requestPermissionsAsync();
+                        finalStatus = status;
+                    }
+                    if (finalStatus !== 'granted') {
+                        alert('Failed to get push token for push notification!');
+                        return;
+                    }
+                    token = (await Notifications.getExpoPushTokenAsync()).data;
+                } else {
+                    alert('Must use physical device for Push Notifications');
                 }
-                if (finalStatus !== 'granted') {
-                    alert('Failed to get push token for push notification!');
-                    return;
+
+                if (Helper.android()) {
+                    Notifications.setNotificationChannelAsync('default', {
+                        name: 'default',
+                        importance: Notifications.AndroidImportance.MAX,
+                        vibrationPattern: [0, 250, 250, 250],
+                        lightColor: '#FF231F7C',
+                    });
                 }
-                token = (await Notifications.getExpoPushTokenAsync()).data;
-            } else {
-                alert('Must use physical device for Push Notifications');
+            } catch (err) {
+                Helper.error(err, false);
             }
 
-            if (Helper.android()) {
-                Notifications.setNotificationChannelAsync('default', {
-                    name: 'default',
-                    importance: Notifications.AndroidImportance.MAX,
-                    vibrationPattern: [0, 250, 250, 250],
-                    lightColor: '#FF231F7C',
-                });
-            }
-        } catch (err) {
-            Helper.error(err, false);
+            return token;
         }
 
-        return token;
-    }
-
-    static async registerPushToken(userId) {
         try {
             await UserService.deletePushToken(userId);
-            const token = await Helper.registerForPushNotificationsAsync();
+            const token = await registerForPushNotificationsAsync();
             const status = await UserService.createPushToken(userId, token);
             if (status !== 200) {
                 Helper.error();
