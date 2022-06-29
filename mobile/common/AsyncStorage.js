@@ -1,13 +1,20 @@
 import ReactAsyncStorage from '@react-native-async-storage/async-storage';
-import Helper from './Helper';
+import Toast from 'react-native-root-toast';
 
 export default class AsyncStorage {
+
+    static error(err) {
+        if (err) console.log(err);
+        Toast.show(i18n.t('GENERIC_ERROR'), {
+            duration: Toast.durations.LONG,
+        });
+    }
 
     static async storeString(key, value) {
         try {
             await ReactAsyncStorage.setItem(key, value);
         } catch (err) {
-            Helper.error(err);
+            AsyncStorage.error(err);
         }
     }
 
@@ -16,7 +23,7 @@ export default class AsyncStorage {
             const value = await ReactAsyncStorage.getItem(key);
             return value;
         } catch (err) {
-            Helper.error(err);
+            AsyncStorage.error(err);
         }
     }
 
@@ -25,7 +32,7 @@ export default class AsyncStorage {
             const jsonValue = JSON.stringify(value);
             await ReactAsyncStorage.setItem(key, jsonValue);
         } catch (err) {
-            Helper.error(err);
+            AsyncStorage.error(err);
         }
     }
 
@@ -35,7 +42,7 @@ export default class AsyncStorage {
             const jsonValue = value != null ? JSON.parse(value) : null;
             return jsonValue;
         } catch (err) {
-            Helper.error(err);
+            AsyncStorage.error(err);
         }
     }
 
@@ -43,7 +50,7 @@ export default class AsyncStorage {
         try {
             await ReactAsyncStorage.removeItem(key);
         } catch (err) {
-            Helper.error(err);
+            AsyncStorage.error(err);
         }
     }
 }

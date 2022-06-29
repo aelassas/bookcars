@@ -10,6 +10,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
 import Helper from './common/Helper';
 import NotificationService from './services/NotificationService';
+import UserService from './services/UserService';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,6 +28,17 @@ export default function App() {
   const navigationRef = useRef();
 
   useEffect(() => {
+    async function register() {
+      const loggedIn = await UserService.loggedIn();
+      if (loggedIn) {
+        const currentUser = await UserService.getCurrentUser();
+        await Helper.registerPushToken(currentUser.id);
+      }
+    }
+
+    // Register push notifiations token
+    register();
+
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
