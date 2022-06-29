@@ -365,3 +365,22 @@ def isNewArchitectureEnabled() {
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
     return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
+
+buildscript {
+  repositories {
+    google()  // Google's Maven repository
+  }
+
+  dependencies {
+    classpath 'com.google.gms:google-services:4.3.12'  // Google Services plugin
+  }
+}
+
+allprojects {
+  repositories {
+    google()  // Google's Maven repository
+  }
+}
+
+
+apply plugin: 'com.google.gms.google-services'

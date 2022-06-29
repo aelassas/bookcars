@@ -21,7 +21,8 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png"
       },
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.bookcars"
     },
     "ios": {
       "buildNumber": "1.0.0",
