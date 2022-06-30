@@ -132,9 +132,15 @@ export default class UpdateCompany extends Component {
     };
 
     onAvatarChange = (avatar) => {
-        const { company } = this.state;
-        company.avatar = avatar;
-        this.setState({ company, avatar, loading: false });
+        const { user, company } = this.state;
+        const _company = Helper.clone(company);
+        _company.avatar = avatar;
+        if (user._id === company._id) {
+            const _user = Helper.clone(user);
+            _user.avatar = avatar;
+            this.setState({ user: _user });
+        }
+        this.setState({ loading: false, company: _company });
 
         if (avatar) {
             this.setState({ avatarError: false });
@@ -263,7 +269,7 @@ export default class UpdateCompany extends Component {
         } = this.state, admin = Helper.admin(user);
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} strict={true} user={user}>
                 {visible &&
                     <div className='update-company'>
                         <Paper className="company-form-update company-form-wrapper" elevation={10}>

@@ -193,10 +193,19 @@ export default class CreateUser extends Component {
     };
 
     onAvatarChange = (avatar) => {
-        const { user, type } = this.state;
-        user.avatar = avatar;
 
-        this.setState({ loading: false, user, avatar });
+        const { loggedUser, user, type } = this.state;
+
+        if (loggedUser._id === user._id) {
+            const _loggedUser = Helper.clone(loggedUser);
+            _loggedUser.avatar = avatar;
+            this.setState({ loggedUser: _loggedUser });
+        }
+
+        const _user = Helper.clone(user);
+        _user.avatar = avatar;
+
+        this.setState({ loading: false, user: _user, avatar });
 
         if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
             this.setState({ avatarError: false });
@@ -373,7 +382,7 @@ export default class CreateUser extends Component {
                 || (loggedUser && user && loggedUser.type === Env.RECORD_TYPE.COMPANY && user.type === Env.RECORD_TYPE.USER && user.company === loggedUser._id);
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} user={loggedUser} strict={true}>
                 {loggedUser && user && visible &&
                     <div className='update-user'>
                         <Paper className="user-form user-form-wrapper" elevation={10}>

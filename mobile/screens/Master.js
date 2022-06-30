@@ -111,7 +111,7 @@ export default function Master(props) {
 
     return (
         <View style={{ ...styles.container, ...props.style }}>
-            <Header title={props.title} hideTitle={props.hideTitle} loggedIn={loggedIn} notificationCount={notificationCount} />
+            <Header title={props.title} hideTitle={props.hideTitle} loggedIn={loggedIn} notificationCount={notificationCount} reload={props.reload} _avatar={props.avatar} />
             {!loading &&
                 (
                     ((!user && !props.strict) || (user && user.verified))

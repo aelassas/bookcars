@@ -498,7 +498,8 @@ routes.route(routeNames.signin).post((req, res) => {
                                 language: user.language,
                                 enableEmailNotifications: user.enableEmailNotifications,
                                 accessToken: token,
-                                blacklisted: user.blacklisted
+                                blacklisted: user.blacklisted,
+                                avatar: user.avatar
                             });
                         } else {
                             res.sendStatus(204);

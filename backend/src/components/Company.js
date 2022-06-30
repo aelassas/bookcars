@@ -49,7 +49,14 @@ export default class Company extends Component {
         this.setState({ loading: true });
     };
 
-    onAvatarChange = () => {
+    onAvatarChange = (avatar) => {
+        const { user, company } = this.state;
+
+        if (user._id === company._id) {
+            const _user = Helper.clone(user);
+            _user.avatar = avatar;
+            this.setState({ user: _user });
+        }
         this.setState({ loading: false });
     };
 
@@ -128,7 +135,7 @@ export default class Company extends Component {
         const edit = (user && company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
         return (
-            <Master onLoad={this.onLoad} strict={true}>
+            <Master onLoad={this.onLoad} user={user} strict={true}>
                 {visible && company &&
                     <div className='company'>
                         <div className='col-1'>
@@ -193,6 +200,7 @@ export default class Company extends Component {
                                 reload={false}
                                 onLoad={this.handleCarListLoad}
                                 onDelete={this.handleCarDelete}
+                                hideCompany
                             />
                         </div>
                     </div>

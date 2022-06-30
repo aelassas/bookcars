@@ -43,6 +43,16 @@ export default class Master extends Component {
         }
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { user } = prevState;
+
+        if (user && nextProps.user && user.avatar !== nextProps.user.avatar) {
+            return { user: nextProps.user };
+        }
+
+        return null;
+    }
+
     componentDidMount() {
         const currentUser = UserService.getCurrentUser();
 
