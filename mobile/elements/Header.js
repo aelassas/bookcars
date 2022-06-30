@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Avatar, Badge } from 'react-native-paper';
@@ -33,12 +33,12 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
+            <Pressable
                 onPress={() => navigation.toggleDrawer()}
-                hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
             >
                 <MaterialIcons name="menu" size={24} color="#fff" />
-            </TouchableOpacity>
+            </Pressable>
             {
                 !hideTitle &&
                 <View>
@@ -48,7 +48,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
             {
                 loggedIn &&
                 <View style={styles.actions}>
-                    <TouchableOpacity
+                    <Pressable
                         onPress={() => navigation.navigate('Notifications')}
                     >
                         {
@@ -56,8 +56,8 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                             <Badge style={styles.badge} size={18}>{notificationCount}</Badge>
                         }
                         <MaterialIcons name="notifications" size={24} color="#fff" style={styles.badgeIcon} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
+                    </Pressable>
+                    <Pressable
                         style={styles.avatar}
                         onPress={() => navigation.navigate('Settings')}
                     >
@@ -66,7 +66,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                                 <Avatar.Image size={24} source={{ uri: avatar }} />
                                 : <MaterialIcons name='account-circle' size={24} color='#fff' />
                         }
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             }
         </View>
