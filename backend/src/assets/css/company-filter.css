@@ -21,6 +21,7 @@ div.company-filter ul.company-list li {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 32px;
 }
 
 div.company-filter ul.company-list li label {
