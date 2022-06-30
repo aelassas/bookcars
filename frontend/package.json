@@ -6,7 +6,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.8.5",
+    "@mui/material": "^5.8.6",
     "@mui/x-data-grid": "^5.12.3",
     "@mui/x-date-pickers": "^5.0.0-alpha.7",
     "axios": "^0.27.2",
