@@ -266,8 +266,7 @@ export default function SettingsScreen({ navigation, route }) {
                                                 }
                                             }
                                             catch (err) {
-                                                Helper.error(err);
-                                                // await UserService.signout(navigation);
+                                                await UserService.signout(navigation);
                                             }
 
                                         }}>
