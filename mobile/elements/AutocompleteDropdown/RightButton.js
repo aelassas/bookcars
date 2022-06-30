@@ -41,7 +41,7 @@ export const RightButton = memo(
           ...buttonsContainerStyle
         }}>
         {!loading && showClear && (
-          <Pressable onPress={onClearPress} style={styles.clearButton}>
+          <Pressable onPress={onClearPress} hitSlop={15} style={styles.clearButton}>
             {ClearIconComponent ?? <MaterialIcons name='clear' size={20} color='rgba(0, 0, 0, 0.54)' />}
           </Pressable>
         )}
@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     width: 26,
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 5
   },
   chevronButton: {
     width: 26,

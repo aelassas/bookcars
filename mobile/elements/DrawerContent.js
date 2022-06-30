@@ -51,6 +51,16 @@ class DrawerContent extends Component {
         }
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { language } = prevState;
+
+        if (language !== nextProps.language) {
+            return { language: nextProps.language };
+        }
+
+        return null;
+    }
+
     render() {
         const { openLanguageMenu, language } = this.state;
 
@@ -109,7 +119,7 @@ class DrawerContent extends Component {
                         })
                     }
                     {this.props.loggedIn &&
-                        <Pressable style={styles.signout} onPress={async () => await UserService.signout(this.props.navigation)}>
+                        <Pressable style={styles.signout} hitSlop={15} onPress={async () => await UserService.signout(this.props.navigation)}>
                             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
                             <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
                         </Pressable>
@@ -117,7 +127,7 @@ class DrawerContent extends Component {
                 </View>
 
                 <View style={styles.language}>
-                    <Pressable style={styles.languageButton} onPress={() => { this.setState({ openLanguageMenu: !openLanguageMenu }) }}>
+                    <Pressable style={styles.languageButton} hitSlop={15} onPress={() => { this.setState({ openLanguageMenu: !openLanguageMenu }) }}>
                         <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
                         <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
                     </Pressable>
@@ -160,9 +170,10 @@ const styles = StyleSheet.create({
     signout: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 13,
-        marginLeft: 20,
-        marginBottom: 25
+        marginTop: 8,
+        marginLeft: 15,
+        marginBottom: 25,
+        padding: 5
     },
     signoutIcon: {
         marginRight: 5
@@ -174,13 +185,14 @@ const styles = StyleSheet.create({
     },
     language: {
         justifyContent: 'flex-end',
-        marginBottom: 25,
-        marginLeft: 20,
+        marginBottom: 20,
+        marginLeft: 15,
         marginTop: 100
     },
     languageButton: {
         flexDirection: 'row',
         alignItems: 'center',
+        padding: 5
     },
     languageIcon: {
         marginRight: 5
