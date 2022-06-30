@@ -7,8 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "prebuild": "expo prebuild",
-    "build:android": "eas build --profile production --platform android",
-    "build:ios": "eas build --profile production --platform ios",
+    "build-android": "eas build --profile production --platform android",
+    "build-ios": "eas build --profile production --platform ios",
     "eject": "expo eject"
   },
   "dependencies": {
