@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, ScrollView, View, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper';
@@ -149,7 +149,7 @@ export default function NotificationsScreen({ navigation, route }) {
                                         <View style={styles.headerActions}>
                                             {
                                                 checkedRows.some(row => !row.isRead) &&
-                                                <TouchableOpacity
+                                                <Pressable
                                                     style={styles.action}
                                                     onPress={async () => {
                                                         try {
@@ -173,11 +173,11 @@ export default function NotificationsScreen({ navigation, route }) {
                                                     }}
                                                 >
                                                     <MaterialIcons name="drafts" size={24} color={iconColor} />
-                                                </TouchableOpacity>
+                                                </Pressable>
                                             }
                                             {
                                                 checkedRows.some(row => row.isRead) &&
-                                                <TouchableOpacity
+                                                <Pressable
                                                     style={styles.action}
                                                     onPress={async () => {
                                                         try {
@@ -201,9 +201,9 @@ export default function NotificationsScreen({ navigation, route }) {
                                                     }}
                                                 >
                                                     <MaterialIcons name="markunread" size={24} color={iconColor} />
-                                                </TouchableOpacity>
+                                                </Pressable>
                                             }
-                                            <TouchableOpacity
+                                            <Pressable
                                                 style={styles.action}
                                                 onPress={() => {
                                                     setSelectedRows(checkedRows);
@@ -211,7 +211,7 @@ export default function NotificationsScreen({ navigation, route }) {
                                                 }}
                                             >
                                                 <MaterialIcons name="delete" size={24} color={iconColor} />
-                                            </TouchableOpacity>
+                                            </Pressable>
                                         </View>
                                     }
                                 </View>
@@ -239,7 +239,7 @@ export default function NotificationsScreen({ navigation, route }) {
                                                     <Text style={{ ...styles.message, fontWeight: !row.isRead ? '700' : '400' }}>{row.message}</Text>
                                                     <View style={styles.notificationActions}>
                                                         {row.booking &&
-                                                            <TouchableOpacity
+                                                            <Pressable
                                                                 style={styles.action}
                                                                 onPress={async () => {
                                                                     try {
@@ -266,10 +266,10 @@ export default function NotificationsScreen({ navigation, route }) {
                                                                 }}
                                                             >
                                                                 <MaterialIcons name="visibility" size={24} color={iconColor} />
-                                                            </TouchableOpacity>
+                                                            </Pressable>
                                                         }
                                                         {!row.isRead ?
-                                                            <TouchableOpacity
+                                                            <Pressable
                                                                 style={styles.action}
                                                                 onPress={async () => {
                                                                     try {
@@ -289,9 +289,9 @@ export default function NotificationsScreen({ navigation, route }) {
                                                                 }}
                                                             >
                                                                 <MaterialIcons name="drafts" size={24} color={iconColor} />
-                                                            </TouchableOpacity>
+                                                            </Pressable>
                                                             :
-                                                            <TouchableOpacity
+                                                            <Pressable
                                                                 style={styles.action}
                                                                 onPress={async () => {
                                                                     try {
@@ -311,9 +311,9 @@ export default function NotificationsScreen({ navigation, route }) {
                                                                 }}
                                                             >
                                                                 <MaterialIcons name="markunread" size={24} color={iconColor} />
-                                                            </TouchableOpacity>
+                                                            </Pressable>
                                                         }
-                                                        <TouchableOpacity
+                                                        <Pressable
                                                             style={styles.action}
                                                             onPress={() => {
                                                                 setSelectedRows([row]);
@@ -321,7 +321,7 @@ export default function NotificationsScreen({ navigation, route }) {
                                                             }}
                                                         >
                                                             <MaterialIcons name="delete" size={24} color={iconColor} />
-                                                        </TouchableOpacity>
+                                                        </Pressable>
                                                     </View>
                                                 </View>
                                             </View>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import i18n from '../lang/i18n';
 import { MaterialIcons } from '@expo/vector-icons';
 import { CommonActions, DrawerActions } from '@react-navigation/routers';
@@ -110,36 +109,36 @@ class DrawerContent extends Component {
                         })
                     }
                     {this.props.loggedIn &&
-                        <TouchableOpacity style={styles.signout} onPress={async () => await UserService.signout(this.props.navigation)}>
+                        <Pressable style={styles.signout} onPress={async () => await UserService.signout(this.props.navigation)}>
                             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
                             <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     }
                 </View>
 
                 <View style={styles.language}>
-                    <TouchableOpacity style={styles.languageButton} onPress={() => { this.setState({ openLanguageMenu: !openLanguageMenu }) }}>
+                    <Pressable style={styles.languageButton} onPress={() => { this.setState({ openLanguageMenu: !openLanguageMenu }) }}>
                         <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
                         <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     {openLanguageMenu &&
                         <View style={styles.languageMenu}>
-                            <TouchableOpacity style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
+                            <Pressable style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
                                 if (language === Env.LANGUAGE.EN) {
                                     await this.updateLanguage(Env.LANGUAGE.FR);
                                     this.setState({ openLanguageMenu: false });
                                 }
                             }}>
                                 <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
+                            </Pressable>
+                            <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
                                 if (language === Env.LANGUAGE.FR) {
                                     await this.updateLanguage(Env.LANGUAGE.EN);
                                     this.setState({ openLanguageMenu: false });
                                 }
                             }}>
                                 <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     }
                 </View>

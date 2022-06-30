@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ScrollView, Pressable } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper';
@@ -226,7 +226,7 @@ export default function SettingsScreen({ navigation, route }) {
                                 <View style={styles.avatarActions}>
                                     {
                                         avatar &&
-                                        <TouchableOpacity
+                                        <Pressable
                                             style={styles.deleteAvatar}
                                             onPress={() => {
                                                 setOpenDeleteDialog(true);
@@ -234,9 +234,9 @@ export default function SettingsScreen({ navigation, route }) {
                                             <Badge style={styles.badge} size={36}>
                                                 <MaterialIcons name='broken-image' size={22} color='#373737' />
                                             </Badge>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     }
-                                    <TouchableOpacity
+                                    <Pressable
                                         style={styles.updateAvatar}
                                         onPress={async () => {
                                             try {
@@ -275,7 +275,7 @@ export default function SettingsScreen({ navigation, route }) {
                                         <Badge style={styles.badge} size={36}>
                                             <MaterialIcons name='photo-camera' size={22} color='#373737' />
                                         </Badge>
-                                    </TouchableOpacity>
+                                    </Pressable>
                                 </View>
                             </View>
 

@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { Dimensions, Keyboard, Platform, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
+import { Dimensions, Keyboard, Platform, ScrollView, Pressable, View, TextInput } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { withFadeAnimation } from './HOC/withFadeAnimation'
 import { NothingFound } from './NothingFound'
@@ -219,9 +219,9 @@ export const AutocompleteDropdown = memo(
 
         if (typeof props.renderItem === 'function') {
           const EL = props.renderItem(item, searchText)
-          return <TouchableOpacity onPress={() => {
+          return <Pressable onPress={() => {
             _onSelectItem(item)
-          }}>{EL}</TouchableOpacity>
+          }}>{EL}</Pressable>
         }
 
         const EL = withFadeAnimation(
