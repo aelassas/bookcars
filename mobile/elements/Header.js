@@ -34,8 +34,9 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
     return (
         <View style={styles.container}>
             <Pressable
+                hitSlop={15}
+                style={styles.pressable}
                 onPress={() => navigation.toggleDrawer()}
-                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
             >
                 <MaterialIcons name="menu" size={24} color="#fff" />
             </Pressable>
@@ -49,6 +50,8 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                 loggedIn &&
                 <View style={styles.actions}>
                     <Pressable
+                        hitSlop={15}
+                        style={styles.pressable}
                         onPress={() => navigation.navigate('Notifications')}
                     >
                         {
@@ -59,6 +62,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                     </Pressable>
                     <Pressable
                         style={styles.avatar}
+                        hitSlop={15}
                         onPress={() => navigation.navigate('Settings')}
                     >
                         {
@@ -80,30 +84,29 @@ const styles = StyleSheet.create({
         height: 50,
         display: 'flex',
         flexDirection: 'row',
-        paddingHorizontal: 20,
+        paddingLeft: 15,
+        paddingRight: 15,
         alignItems: 'center',
         justifyContent: 'space-between'
     },
     text: {
         color: '#fff'
     },
-    signout: {
-        flexDirection: 'row'
-    },
-    signoutIcon: {
-        marginRight: 5
+    pressable: {
+        padding: 5
     },
     actions: {
         flexDirection: 'row'
     },
     avatar: {
-        marginLeft: 13
+        marginLeft: 8,
+        padding: 5
     },
     badge: {
         backgroundColor: '#1976d2',
         position: 'absolute',
-        top: -10,
-        right: -6,
+        top: -2,
+        right: -2,
         zIndex: 2
     },
     badgeIcon: {

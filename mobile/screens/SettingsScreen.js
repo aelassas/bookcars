@@ -228,6 +228,7 @@ export default function SettingsScreen({ navigation, route }) {
                                         avatar &&
                                         <Pressable
                                             style={styles.deleteAvatar}
+                                            hitSlop={15}
                                             onPress={() => {
                                                 setOpenDeleteDialog(true);
                                             }}>
@@ -238,6 +239,7 @@ export default function SettingsScreen({ navigation, route }) {
                                     }
                                     <Pressable
                                         style={styles.updateAvatar}
+                                        hitSlop={15}
                                         onPress={async () => {
                                             try {
                                                 let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();

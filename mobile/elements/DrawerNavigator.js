@@ -152,7 +152,6 @@ export default function DrawerNavigator(props) {
     });
 
     return (
-        drawerItems.length > 0 &&
         <View style={styles.container}>
             <Drawer.Navigator
                 drawerType='front'
