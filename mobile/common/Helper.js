@@ -6,6 +6,7 @@ import * as Notifications from 'expo-notifications';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
 import UserService from '../services/UserService';
+import * as mime from 'mime';
 
 const ANDROID = Platform.OS === 'android';
 
@@ -13,6 +14,14 @@ export default class Helper {
 
     static android() {
         return ANDROID;
+    }
+
+    static getFileName(path) {
+        return path.replace(/^.*[\\\/]/, '');
+    }
+
+    static getMimeType(fileName) {
+        return mime.getType(fileName);
     }
 
     static async registerPushToken(userId) {
@@ -100,7 +109,7 @@ export default class Helper {
 
     static error(err, toast = true) {
         if (err) console.log(err);
-        if (err.request?._response) console.log(err.request?._response);
+        if (err && err.request && err.request._response) console.log(err.request._response);
         if (toast) Helper.toast(i18n.t('GENERIC_ERROR'));
     }
 

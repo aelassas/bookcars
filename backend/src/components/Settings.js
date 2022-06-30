@@ -139,8 +139,9 @@ export default class Settings extends Component {
 
     onAvatarChange = (avatar) => {
         const { user } = this.state;
-        user.avatar = avatar;
-        this.setState({ loading: false, user });
+        const _user = Helper.clone(user);
+        _user.avatar = avatar;
+        this.setState({ loading: false, user: _user });
     };
 
     onLoad = (user) => {

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Env from '../config/env.config';
 import AsyncStorage from '../common/AsyncStorage';
+import * as FileSystem from 'expo-file-system';
 
 export default class UserService {
 
@@ -158,13 +159,30 @@ export default class UserService {
         return axios.post(`${Env.API_HOST}/api/change-password/ `, data, { headers: authHeader }).then(res => res.status);
     }
 
-    static async updateAvatar(userId, file) {
-        const user = await AsyncStorage.getObject('bc-user');
-        var formData = new FormData();
-        formData.append('image', file);
-        return axios.post(`${Env.API_HOST}/api/update-avatar/` + encodeURIComponent(userId), formData,
-            user && user.accessToken ? { headers: { 'x-access-token': user.accessToken, 'Content-Type': 'multipart/form-data' } }
-                : { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.status);
+    static async updateAvatar(userId, image) {
+        async function _updateAvatar() {
+            const user = await AsyncStorage.getObject('bc-user');
+            const uri = Platform.OS === 'android' ? image.uri : image.uri.replace('file://', '');
+            const formData = new FormData();
+            formData.append('image', {
+                uri,
+                name: image.name,
+                type: image.type
+            });
+            return axios.post(`${Env.API_HOST}/api/update-avatar/` + encodeURIComponent(userId), formData,
+                user && user.accessToken ? { headers: { 'x-access-token': user.accessToken, 'Content-Type': 'multipart/form-data' } }
+                    : { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.status);
+        }
+
+        let retries = 5;
+        while (retries > 0) {
+            try {
+                return await _updateAvatar();
+            } catch (err) {
+                // Retry if Stream Closed
+                retries--;
+            }
+        }
     }
 
     static async deleteAvatar(userId) {

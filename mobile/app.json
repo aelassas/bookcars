@@ -26,6 +26,7 @@
     "ios": {
       "buildNumber": "1.0.0",
       "supportsTablet": true,
+      "usesIcloudStorage": true,
       "icon": "./assets/icon.png",
       "splash": {
         "backgroundColor": "#f37022",
