@@ -231,7 +231,7 @@ export default function SettingsScreen({ navigation, route }) {
                                             onPress={() => {
                                                 setOpenDeleteDialog(true);
                                             }}>
-                                            <MaterialIcons name='broken-image' size={32} color='rgba(0, 0, 0, 0.67)' />
+                                            <MaterialIcons name='broken-image' size={32} color='#787878' />
                                         </TouchableOpacity>
                                     }
                                     <TouchableOpacity
@@ -270,7 +270,7 @@ export default function SettingsScreen({ navigation, route }) {
                                             }
 
                                         }}>
-                                        <MaterialIcons name='photo-camera' size={32} color='rgba(0, 0, 0, 0.67)' />
+                                        <MaterialIcons name='photo-camera' size={32} color='#787878' />
                                     </TouchableOpacity>
                                 </View>
                             </View>
