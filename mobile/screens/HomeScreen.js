@@ -184,6 +184,7 @@ export default function HomeScreen({ navigation, route }) {
               style={styles.component}
               label={i18n.t('FROM_DATE')}
               value={fromDate}
+              minimumDate={_fromDate}
               onChange={(date) => setFromDate(date)}
               onPress={blurLocations}
             />
