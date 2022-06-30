@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper';
+import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import validator from 'validator';
 import moment from 'moment';
@@ -231,7 +231,9 @@ export default function SettingsScreen({ navigation, route }) {
                                             onPress={() => {
                                                 setOpenDeleteDialog(true);
                                             }}>
-                                            <MaterialIcons name='broken-image' size={32} color='#787878' />
+                                            <Badge style={styles.badge} size={36}>
+                                                <MaterialIcons name='broken-image' size={22} color='#373737' />
+                                            </Badge>
                                         </TouchableOpacity>
                                     }
                                     <TouchableOpacity
@@ -270,7 +272,9 @@ export default function SettingsScreen({ navigation, route }) {
                                             }
 
                                         }}>
-                                        <MaterialIcons name='photo-camera' size={32} color='#787878' />
+                                        <Badge style={styles.badge} size={36}>
+                                            <MaterialIcons name='photo-camera' size={22} color='#373737' />
+                                        </Badge>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -425,6 +429,9 @@ const styles = StyleSheet.create({
     deleteAvatar: {
         alignSelf: 'flex-start',
         padding: 5
+    },
+    badge: {
+        backgroundColor: '#ddd'
     },
     component: {
         alignSelf: 'stretch',
