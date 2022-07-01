@@ -62,7 +62,11 @@ export default function SettingsScreen({ navigation, route }) {
             }
 
             setUser(user);
-            if (user.avatar) setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar));
+            if (user.avatar) {
+                setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar));
+            } else {
+                setAvatar(null);
+            }
             setFullName(user.fullName);
             setEmail(user.email);
             setPhone(user.phone);
