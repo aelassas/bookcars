@@ -206,6 +206,7 @@ i18n.translations = {
         DELETE_NOTIFICATION: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
         DELETE_NOTIFICATIONS: 'Êtes-vous sûr de vouloir supprimer ces notifications ?',
         DELETE_AVATAR: 'Êtes-vous sûr de vouloir supprimer votre photo de profil ?',
+        CAMERA_PERMISSION: 'Permission to access camera roll is required!'
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -410,6 +411,7 @@ i18n.translations = {
         DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
         DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
         DELETE_AVATAR: 'Are you sure you want to delete your profile picture?',
+        CAMERA_PERMISSION: "L'autorisation d'accéder aux fichiers et contenus multimédias est requise!"
     }
 };
 
