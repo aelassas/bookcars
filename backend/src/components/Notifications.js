@@ -32,7 +32,7 @@ export default function Notifications() {
     const notificationsListRef = useRef(null);
 
     const locale = user && user.language === 'en' ? 'en-US' : 'fr-FR';
-    const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const options = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
     const fetch = useCallback(async () => {
         if (user) {
