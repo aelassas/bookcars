@@ -21,11 +21,27 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
   const [appIsReady, setAppIsReady] = useState(false);
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
   const responseListener = useRef();
   const navigationRef = useRef();
+
+  const handleNotification = async (data) => {
+    try {
+      if (navigationRef.current) {
+        if (data.booking) {
+          if (data.user && data.notification) {
+            await NotificationService.markAsRead(data.user, [data.notification]);
+          }
+          navigationRef.current.navigate('Booking', { id: data.booking });
+        } else {
+          navigationRef.current.navigate('Notifications');
+        }
+      }
+    } catch (err) {
+      Helper.error(err, false);
+    }
+  };
 
   useEffect(() => {
     async function register() {
@@ -39,36 +55,38 @@ export default function App() {
     // Register push notifiations token
     register();
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
-
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
-      try {
-        if (navigationRef.current) {
-          const data = (notification || response.notification).request.content.data;
 
-          if (data.booking) {
-            if (data.user && data.notification) {
-              await NotificationService.markAsRead(data.user, [data.notification]);
-            }
-            navigationRef.current.navigate('Booking', { id: data.booking });
-          } else {
-            navigationRef.current.navigate('Notifications');
-          }
+      const data = response.notification.request.content.data;
+
+      await handleNotification(data);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        if (
+          lastNotificationResponse
+          && lastNotificationResponse.notification.request.content.data
+          && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+        ) {
+          const data = lastNotificationResponse.notification.request.content.data;
+
+          await handleNotification(data);
         }
       } catch (err) {
         Helper.error(err, false);
       }
-    });
+    }
 
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+    init();
+  }, [lastNotificationResponse]);
 
   useEffect(() => {
     async function prepare() {
