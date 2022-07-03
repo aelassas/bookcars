@@ -33,11 +33,11 @@ export default function SettingsScreen({ navigation, route }) {
     const [avatar, setAvatar] = useState(null);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-    const [fullNameRequired, setFullNameError] = useState(false);
-    const [phoneValid, setPhoneValid] = useState(true);
+    const [fullNameRequired, setFullNameRequired] = useState(false);
     const [phoneRequired, setPhoneRequired] = useState(false);
-    const [birthDateRequired, setbirthDateRequired] = useState(false);
-    const [birthDateValid, setbirthDateValid] = useState(true);
+    const [phoneValid, setPhoneValid] = useState(true);
+    const [birthDateRequired, setBirthDateRequired] = useState(false);
+    const [birthDateValid, setBirthDateValid] = useState(true);
 
     const _init = async () => {
         try {
@@ -73,6 +73,12 @@ export default function SettingsScreen({ navigation, route }) {
             setBio(user.bio);
             setEnableEmailNotifications(user.enableEmailNotifications);
 
+            setFullNameRequired(false);
+            setPhoneRequired(false);
+            setPhoneValid(true);
+            setBirthDateRequired(false);
+            setBirthDateValid(true);
+
             setVisible(true);
         } catch (err) {
             await UserService.signout(navigation, false, true);
@@ -94,7 +100,7 @@ export default function SettingsScreen({ navigation, route }) {
 
     const validateFullName = () => {
         const valid = fullName !== '';
-        setFullNameError(!valid);
+        setFullNameRequired(!valid);
         return valid;
     };
 
@@ -102,7 +108,7 @@ export default function SettingsScreen({ navigation, route }) {
         setFullName(text);
 
         if (text) {
-            setFullNameError(false);
+            setFullNameRequired(false);
         }
     };
 
@@ -129,16 +135,16 @@ export default function SettingsScreen({ navigation, route }) {
 
     const validateBirthDate = () => {
         if (birthDate) {
-            setbirthDateRequired(false);
+            setBirthDateRequired(false);
 
             const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-            setbirthDateValid(birthDateValid);
+            setBirthDateValid(birthDateValid);
             return birthDateValid;
         } else {
-            setbirthDateRequired(true);
-            setbirthDateValid(true);
+            setBirthDateRequired(true);
+            setBirthDateValid(true);
 
             return false;
         }
@@ -146,8 +152,8 @@ export default function SettingsScreen({ navigation, route }) {
 
     const onChangeBirthDate = (date) => {
         setBirthDate(date);
-        setbirthDateRequired(false);
-        setbirthDateValid(true);
+        setBirthDateRequired(false);
+        setBirthDateValid(true);
     };
 
     const onChangeLocation = (text) => {
