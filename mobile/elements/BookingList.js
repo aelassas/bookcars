@@ -203,7 +203,7 @@ export default function BookingList(props) {
 
                                 {booking.cancellation
                                     && !booking.cancelRequest
-                                    && booking.status !== Env.BOOKING_STATUS.CANCELLED
+                                    && booking.status !== Env.BOOKING_STATUS.RESERVED && booking.status !== Env.BOOKING_STATUS.CANCELLED
                                     && <Button
                                         size='small'
                                         color='secondary'

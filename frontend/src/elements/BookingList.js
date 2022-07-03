@@ -123,8 +123,10 @@ class BookingList extends Component {
                                     <ViewIcon />
                                 </IconButton>
                             </Tooltip>
-                            {params.row.cancellation && !params.row.cancelRequest &&
-                                <Tooltip title={strings.CANCEL}>
+                            {params.row.cancellation
+                                && !params.row.cancelRequest
+                                && params.row.status !== Env.BOOKING_STATUS.RESERVED && params.row.status !== Env.BOOKING_STATUS.CANCELLED
+                                && <Tooltip title={strings.CANCEL}>
                                     <IconButton onClick={cancelBooking}>
                                         <CancelIcon />
                                     </IconButton>
@@ -460,8 +462,10 @@ class BookingList extends Component {
 
                                             <div className='bs-buttons'>
 
-                                                {booking.cancellation && !booking.cancelRequest &&
-                                                    <Button
+                                                {booking.cancellation
+                                                    && !booking.cancelRequest
+                                                    && booking.status !== Env.BOOKING_STATUS.RESERVED && booking.status !== Env.BOOKING_STATUS.CANCELLED
+                                                    && <Button
                                                         variant="contained"
                                                         className='btn-secondary'
                                                         onClick={() => {
