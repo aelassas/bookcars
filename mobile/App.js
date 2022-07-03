@@ -57,9 +57,7 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async response => {
-
       const data = response.notification.request.content.data;
-
       await handleNotification(data);
     });
 
@@ -77,7 +75,6 @@ export default function App() {
           && lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
         ) {
           const data = lastNotificationResponse.notification.request.content.data;
-
           await handleNotification(data);
         }
       } catch (err) {
