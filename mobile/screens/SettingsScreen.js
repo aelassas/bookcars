@@ -5,8 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import validator from 'validator';
-import moment from 'moment';
-import 'moment/locale/fr';
+import { intervalToDuration } from 'date-fns';
 
 import Master from './Master';
 import i18n from '../lang/i18n';
@@ -45,7 +44,6 @@ export default function SettingsScreen({ navigation, route }) {
             const language = await UserService.getLanguage();
             i18n.locale = language;
             setLanguage(language);
-            moment.locale(language);
 
             const currentUser = await UserService.getCurrentUser();
 
@@ -133,7 +131,7 @@ export default function SettingsScreen({ navigation, route }) {
         if (birthDate) {
             setbirthDateRequired(false);
 
-            const sub = moment().diff(birthDate, 'years');
+            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
             setbirthDateValid(birthDateValid);
