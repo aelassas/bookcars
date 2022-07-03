@@ -201,8 +201,10 @@ export default function BookingList(props) {
                                 <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
                                 <Text style={styles.detailTextBold}>{`${booking.price} ${i18n.t('CURRENCY')}`}</Text>
 
-                                {booking.cancellation && !booking.cancelRequest &&
-                                    <Button
+                                {booking.cancellation
+                                    && !booking.cancelRequest
+                                    && booking.status !== Env.BOOKING_STATUS.CANCELLED
+                                    && <Button
                                         size='small'
                                         color='secondary'
                                         style={styles.button}
