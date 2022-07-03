@@ -3,8 +3,8 @@ import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper';
-import moment from 'moment';
-import 'moment/locale/fr';
+import { format } from 'date-fns';
+import { enUS, fr } from 'date-fns/locale';
 
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -27,13 +27,14 @@ export default function NotificationsScreen({ navigation, route }) {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
     const [rowCount, setRowCount] = useState(-1);
+    const [locale, setLoacle] = useState(fr);
     const notificationsListRef = useRef(null);
 
     const _init = async () => {
         setVisible(false);
         const language = await UserService.getLanguage();
         i18n.locale = language;
-        moment.locale(language);
+        setLoacle(language === Env.LANGUAGE.FR ? fr : enUS);
 
         const currentUser = await UserService.getCurrentUser();
 
@@ -103,7 +104,7 @@ export default function NotificationsScreen({ navigation, route }) {
         }
     }, [user]);
 
-    const format = 'ddd D MMMM, HH:mm';
+    const _format = 'eee d LLLL, kk:mm';
     const iconColor = 'rgba(0, 0, 0, 0.54)';
     const disabledIconColor = '#c6c6c6';
 
@@ -234,7 +235,7 @@ export default function NotificationsScreen({ navigation, route }) {
                                                 }} />
                                             </View>
                                             <View style={styles.notification}>
-                                                <Text style={{ ...styles.date, fontWeight: !row.isRead ? '700' : '400' }}>{Helper.capitalize(moment(row.createdAt).format(format))}</Text>
+                                                <Text style={{ ...styles.date, fontWeight: !row.isRead ? '700' : '400' }}>{Helper.capitalize(format(new Date(row.createdAt), _format, { locale }))}</Text>
                                                 <View style={styles.messageContainer}>
                                                     <Text style={{ ...styles.message, fontWeight: !row.isRead ? '700' : '400' }}>{row.message}</Text>
                                                     <View style={styles.notificationActions}>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { intervalToDuration } from 'date-fns';
 
 import i18n from '../lang/i18n';
 import TextInput from '../elements/TextInput';
@@ -10,7 +11,6 @@ import validator from 'validator';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import DateTimePicker from '../elements/DateTimePicker';
-import moment from 'moment';
 import Env from '../config/env.config';
 import Error from '../elements/Error';
 import Backdrop from '../elements/Backdrop';
@@ -167,7 +167,7 @@ export default function SignUpScreen({ navigation, route }) {
         if (birthDate) {
             setBirthDateRequired(false);
 
-            const sub = moment().diff(birthDate, 'years');
+            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
             setBirthDateValid(birthDateValid);

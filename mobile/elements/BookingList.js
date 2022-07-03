@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, View, Text, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper';
-import moment from 'moment';
-import 'moment/locale/fr';
+import { format } from 'date-fns';
+import { enUS, fr } from 'date-fns/locale';
 
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
@@ -21,13 +21,7 @@ export default function BookingList(props) {
     const [openCancelDialog, setOpenCancelDialog] = useState(false);
     const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false);
     const [cancelRequestSent, setCancelRequestSent] = useState(false);
-
-    const fr = props.language === Env.LANGUAGE.FR;
-    const format = 'ddd D MMMM YYYY HH:mm';
-    const iconSize = 24;
-    const iconColor = '#000';
-    const extraIconColor = '#1f9201';
-    const extraIconSize = 16;
+    const [locale, setLoacle] = useState(fr);
 
     const _fetch = async (reset = false) => {
         try {
@@ -56,7 +50,7 @@ export default function BookingList(props) {
     };
 
     useEffect(() => {
-        moment.locale(props.language);
+        setLoacle(props.language === Env.LANGUAGE.FR ? fr : enUS);
     }, [props.language]);
 
     useEffect(() => {
@@ -92,6 +86,13 @@ export default function BookingList(props) {
         if (props.booking) init();
     }, [props.booking]);
 
+    const _fr = props.language === Env.LANGUAGE.FR;
+    const _format = 'eee d LLLL yyyy kk:mm';
+    const iconSize = 24;
+    const iconColor = '#000';
+    const extraIconColor = '#1f9201';
+    const extraIconSize = 16;
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -117,7 +118,7 @@ export default function BookingList(props) {
 
                                 <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
                                 <Text style={styles.detailText}>
-                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(moment(from).format(format))} - ${Helper.capitalize(moment(to).format(format))})`}
+                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}
                                 </Text>
 
                                 <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
@@ -148,7 +149,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('CANCELLATION')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getCancellationOption(booking.car.cancellation, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</Text>
                                                 </View>
                                             }
 
@@ -156,7 +157,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('AMENDMENTS')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getAmendmentsOption(booking.car.amendments, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</Text>
                                                 </View>
                                             }
 
@@ -164,7 +165,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('COLLISION_DAMAGE_WAVER')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</Text>
                                                 </View>
                                             }
 
@@ -172,7 +173,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('THEFT_PROTECTION')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</Text>
                                                 </View>
                                             }
 
@@ -180,7 +181,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('FULL_INSURANCE')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</Text>
                                                 </View>
                                             }
 
@@ -188,7 +189,7 @@ export default function BookingList(props) {
                                                 <View style={styles.extra}>
                                                     <MaterialIcons style={styles.extraIcon} name='check' size={extraIconSize} color={extraIconColor} />
                                                     <Text style={styles.extraTitle}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
-                                                    <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, fr, true)}</Text>
+                                                    <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</Text>
                                                 </View>
                                             }
                                         </View>

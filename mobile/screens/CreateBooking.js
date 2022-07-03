@@ -3,8 +3,8 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import validator from 'validator';
-import moment from 'moment';
-import 'moment/locale/fr';
+import { format, intervalToDuration } from 'date-fns';
+import { enUS, fr } from 'date-fns/locale';
 
 import Master from './Master';
 import i18n from '../lang/i18n';
@@ -75,6 +75,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [cardDateError, setCardDateError] = useState(false);
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(true);
+    const [locale, setLoacle] = useState(fr);
 
     const fullNameRef = useRef(null);
     const emailRef = useRef(null);
@@ -92,7 +93,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             const language = await UserService.getLanguage();
             i18n.locale = language;
             setLanguage(language);
-            moment.locale(language);
+            setLoacle(language === Env.LANGUAGE.FR ? fr : enUS);
 
             setAuthenticated(false);
             setUser(null);
@@ -324,7 +325,7 @@ export default function CreateBookingScreen({ navigation, route }) {
         if (birthDate) {
             setBirthDateRequired(false);
 
-            const sub = moment().diff(birthDate, 'years');
+            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
             setBirthDateValid(birthDateValid);
@@ -609,8 +610,8 @@ export default function CreateBookingScreen({ navigation, route }) {
 
     const iconSize = 18;
     const iconColor = '#000';
-    const format = 'ddd D MMMM YYYY HH:mm';
-    const fr = language === Env.LANGUAGE.FR;
+    const _format = 'eee d LLLL yyyy kk:mm';
+    const _fr = language === Env.LANGUAGE.FR;
     const days = Helper.days(from, to);
 
     return (
@@ -639,7 +640,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('CANCELLATION')}
                                             value={cancellation}
                                             onValueChange={onCancellationChange} />
-                                        <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, _fr)}</Text>
                                     </View>
 
                                     <View style={styles.extra}>
@@ -649,7 +650,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('AMENDMENTS')}
                                             value={amendments}
                                             onValueChange={onAmendmentsChange} />
-                                        <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, _fr)}</Text>
                                     </View>
 
                                     <View style={styles.extra}>
@@ -659,7 +660,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('COLLISION_DAMAGE_WAVER')}
                                             value={collisionDamageWaiver}
                                             onValueChange={onCollisionDamageWaiverChange} />
-                                        <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
                                     </View>
 
                                     <View style={styles.extra}>
@@ -669,7 +670,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('THEFT_PROTECTION')}
                                             value={theftProtection}
                                             onValueChange={onTheftProtectionChange} />
-                                        <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
                                     </View>
 
                                     <View style={styles.extra}>
@@ -679,7 +680,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('FULL_INSURANCE')}
                                             value={fullInsurance}
                                             onValueChange={onFullInsuranceChange} />
-                                        <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
                                     </View>
 
                                     <View style={styles.extra}>
@@ -689,7 +690,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('ADDITIONAL_DRIVER')}
                                             value={additionalDriver}
                                             onValueChange={onAdditionalDriverChange} />
-                                        <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, fr)}</Text>
+                                        <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
                                     </View>
 
                                 </View>
@@ -702,7 +703,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
                                     <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
                                     <Text style={styles.detailText}>
-                                        {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(moment(from).format(format))} - ${Helper.capitalize(moment(to).format(format))})`}
+                                        {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}
                                     </Text>
 
                                     <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>

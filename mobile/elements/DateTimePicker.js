@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Pressable, Text } from 'react-native';
 import ReactDateTimePicker from '@react-native-community/datetimepicker';
+import { format } from 'date-fns';
+import { enUS, fr } from 'date-fns/locale';
 
 import Helper from '../common/Helper';
-import moment from 'moment';
-import 'moment/locale/fr';
+import Env from '../config/env.config';
 
 export default function DateTimePicker(props) {
     const [label, setLabel] = useState('');
     const [value, setValue] = useState(props.value);
     const [show, setShow] = useState(false);
-    const format = props.mode === 'date' ? 'dddd, D MMMM YYYY' : 'HH:mm';
+    const [locale, setLoacle] = useState(props.locale === Env.LANGUAGE.FR ? fr : enUS);
+    const _format = props.mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm';
     const now = new Date();
     const small = props.size === 'small';
 
     useEffect(() => {
-        moment.locale(props.locale);
-        setLabel((value && Helper.capitalize(moment(value).format(format))) || props.label);
+        const _locale = props.locale === Env.LANGUAGE.FR ? fr : enUS;
+        setLoacle(_locale);
+        setLabel((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || props.label);
     }, [props.locale]);
 
     useEffect(() => {
         setValue(props.value);
-        setLabel((value && Helper.capitalize(moment(value).format(format))) || props.label);
+        setLabel((value && Helper.capitalize(format(value, _format, { locale }))) || props.label);
     }, [props.value]);
 
     const styles = StyleSheet.create({
