@@ -125,7 +125,8 @@ class BookingList extends Component {
                             </Tooltip>
                             {params.row.cancellation
                                 && !params.row.cancelRequest
-                                && params.row.status !== Env.BOOKING_STATUS.RESERVED && params.row.status !== Env.BOOKING_STATUS.CANCELLED
+                                && params.row.status !== Env.BOOKING_STATUS.CANCELLED
+                                && new Date(params.row.from) > new Date()
                                 && <Tooltip title={strings.CANCEL}>
                                     <IconButton onClick={cancelBooking}>
                                         <CancelIcon />
@@ -464,7 +465,8 @@ class BookingList extends Component {
 
                                                 {booking.cancellation
                                                     && !booking.cancelRequest
-                                                    && booking.status !== Env.BOOKING_STATUS.RESERVED && booking.status !== Env.BOOKING_STATUS.CANCELLED
+                                                    && booking.status !== Env.BOOKING_STATUS.CANCELLED
+                                                    && new Date(booking.from) > new Date()
                                                     && <Button
                                                         variant="contained"
                                                         className='btn-secondary'
