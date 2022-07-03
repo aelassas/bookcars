@@ -21,6 +21,7 @@ export default function BookingList(props) {
     const [openCancelDialog, setOpenCancelDialog] = useState(false);
     const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false);
     const [cancelRequestSent, setCancelRequestSent] = useState(false);
+    const [deleted, setDeleted] = useState(false);
     const [locale, setLoacle] = useState(fr);
 
     const _fetch = async (reset = false) => {
@@ -75,7 +76,8 @@ export default function BookingList(props) {
                 setLoading(true);
                 setFetch(true);
                 const booking = await BookingService.getBooking(props.booking);
-                setRows([booking]);
+                setRows(booking ? [booking] : []);
+                if (!booking) setDeleted(true);
                 setFetch(false);
                 setLoading(false);
             } catch (err) {
@@ -298,7 +300,7 @@ export default function BookingList(props) {
                 ListEmptyComponent={
                     !loading &&
                     <View style={styles.container}>
-                        <Text style={styles.text}>{i18n.t('EMPTY_BOOKING_LIST')}</Text>
+                        <Text style={styles.text}>{deleted ? i18n.t('BOOKING_DELETED') : i18n.t('EMPTY_BOOKING_LIST')}</Text>
                     </View>
                 }
                 refreshing={loading}
