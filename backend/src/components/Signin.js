@@ -74,7 +74,7 @@ export default class SignIn extends Component {
                             if (params.has('u')) {
                                 window.location.href = '/user' + window.location.search;
                             } else if (params.has('c')) {
-                                window.location.href = '/company' + window.location.search;
+                                window.location.href = '/supplier' + window.location.search;
                             } else if (params.has('cr')) {
                                 window.location.href = '/car' + window.location.search;
                             } else if (params.has('b')) {

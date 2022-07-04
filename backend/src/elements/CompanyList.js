@@ -203,13 +203,13 @@ class CompanyList extends Component {
                                     }
                                     {edit &&
                                         <Tooltip title={commonStrings.UPDATE}>
-                                            <IconButton href={`/update-company?c=${company._id}`}>
+                                            <IconButton href={`/update-supplier?c=${company._id}`}>
                                                 <EditIcon />
                                             </IconButton>
                                         </Tooltip>
                                     }
                                     <Tooltip title={strings.VIEW_COMPANY}>
-                                        <IconButton href={`/company?c=${company._id}`}>
+                                        <IconButton href={`/supplier?c=${company._id}`}>
                                             <ViewIcon />
                                         </IconButton>
                                     </Tooltip>

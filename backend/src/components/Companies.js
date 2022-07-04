@@ -64,7 +64,7 @@ export default class Companies extends Component {
                                         variant="contained"
                                         className='btn-primary new-company'
                                         size="small"
-                                        href='/create-company'
+                                        href='/create-supplier'
                                     >
                                         {strings.NEW_COMPANY}
                                     </Button>

@@ -298,7 +298,7 @@ export default function Header(props) {
                                     <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.DASHBOARD} />
                                 </ListItemLink>
-                                <ListItemLink href="/companies">
+                                <ListItemLink href="/suppliers">
                                     <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
                                     <ListItemText primary={strings.COMPANIES} />
                                 </ListItemLink>

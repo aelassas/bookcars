@@ -44,10 +44,10 @@ const App = () => {
 						<Route exact path='/reset-user-password' element={<ResetUserPassword />} />
 						{/* <Route exact path='/sign-up' element={<Signup />} /> */}
 						<Route exact path='/' element={<Bookings />} />
-						<Route exact path='/companies' element={<Companies />} />
-						<Route exact path='/company' element={<Company />} />
-						<Route exact path='/create-company' element={<CreateCompany />} />
-						<Route exact path='/update-company' element={<UpdateCompany />} />
+						<Route exact path='/suppliers' element={<Companies />} />
+						<Route exact path='/supplier' element={<Company />} />
+						<Route exact path='/create-supplier' element={<CreateCompany />} />
+						<Route exact path='/update-supplier' element={<UpdateCompany />} />
 						<Route exact path='/locations' element={<Locations />} />
 						<Route exact path='/create-location' element={<CreateLocation />} />
 						<Route exact path='/update-location' element={<UpdateLocation />} />

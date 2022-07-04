@@ -333,7 +333,7 @@ class CarList extends Component {
                                                 }}
                                             />
                                         </span>
-                                        <a href={`/company?c=${car.company._id}`} className='car-company-info'>
+                                        <a href={`/supplier?c=${car.company._id}`} className='car-company-info'>
                                             {car.company.fullName}
                                         </a>
                                     </div>}

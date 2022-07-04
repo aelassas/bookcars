@@ -6,7 +6,7 @@ export const strings = new LocalizedStrings({
     fr: {
         DASHBOARD: 'Tableau de bord',
         HOME: 'Accueil',
-        COMPANIES: 'Sociétés de location',
+        COMPANIES: 'Fournisseurs',
         LOCATIONS: 'Lieux',
         CARS: 'Voitures',
         USERS: 'Utilisateurs',
@@ -22,7 +22,7 @@ export const strings = new LocalizedStrings({
     en: {
         DASHBOARD: 'Dashboard',
         HOME: 'Home',
-        COMPANIES: 'Booking companies',
+        COMPANIES: 'Suppliers',
         LOCATIONS: 'Locations',
         CARS: 'Cars',
         USERS: 'Users',

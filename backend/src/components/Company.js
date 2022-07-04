@@ -70,7 +70,7 @@ export default class Company extends Component {
         this.setState({ loading: true, openDeleteDialog: false }, () => {
             CompanyService.delete(company._id).then(status => {
                 if (status === 200) {
-                    window.location.href = '/companies';
+                    window.location.href = '/suppliers';
                 } else {
                     Helper.error();
                     this.setState({ loading: false });
