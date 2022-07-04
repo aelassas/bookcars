@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "name": "BookCars",
     "version": "1.0.0",
     "slug": "bookcars",

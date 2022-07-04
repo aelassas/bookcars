@@ -35,7 +35,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
         <View style={styles.container}>
             <Pressable
                 hitSlop={15}
-                style={styles.pressable}
+                style={styles.menu}
                 onPress={() => navigation.toggleDrawer()}
             >
                 <MaterialIcons name="menu" size={24} color="#fff" />
@@ -50,8 +50,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                 loggedIn &&
                 <View style={styles.actions}>
                     <Pressable
-                        hitSlop={15}
-                        style={styles.pressable}
+                        style={styles.notifications}
                         onPress={() => navigation.navigate('Notifications')}
                     >
                         {
@@ -62,7 +61,6 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
                     </Pressable>
                     <Pressable
                         style={styles.avatar}
-                        hitSlop={15}
                         onPress={() => navigation.navigate('Settings')}
                     >
                         {
@@ -92,21 +90,27 @@ const styles = StyleSheet.create({
     text: {
         color: '#fff'
     },
-    pressable: {
+    menu: {
         padding: 5
     },
     actions: {
         flexDirection: 'row'
     },
+    notifications: {
+        paddingTop: 5,
+        paddingRight: 10,
+        paddingBottom: 5,
+        paddingLeft: 5
+    },
     avatar: {
-        marginLeft: 8,
+        marginLeft: 2,
         padding: 5
     },
     badge: {
         backgroundColor: '#1976d2',
         position: 'absolute',
         top: -2,
-        right: -2,
+        right: 2,
         zIndex: 2
     },
     badgeIcon: {

@@ -10,7 +10,7 @@ export default function Checkbox({ indeterminate, checked, onChange }) {
                     onChange(!checked);
                 }
             }}
-            hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+            hitSlop={15}
             style={styles.checkbox}
         >
             <MaterialIcons
