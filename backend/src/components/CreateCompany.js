@@ -212,7 +212,7 @@ export default class CreateCompany extends Component {
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    window.location = '/companies';
+                    window.location.href = '/suppliers';
                 } else
                     this.setState({
                         error: true,
@@ -248,13 +248,13 @@ export default class CreateCompany extends Component {
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    window.location.href = '/companies';
+                    window.location.href = '/suppliers';
                 })
                 .catch(() => {
-                    window.location.href = '/companies';
+                    window.location.href = '/suppliers';
                 });
         } else {
-            window.location.href = '/companies';
+            window.location.href = '/suppliers';
         }
     };
 

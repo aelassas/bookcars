@@ -4,14 +4,14 @@ import UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
-        NEW_COMPANY: 'Nouvelle société',
-        COMPANY: 'société',
-        COMPANIES: 'sociétés'
+        NEW_COMPANY: 'Nouveau fournisseur',
+        COMPANY: 'fournisseur',
+        COMPANIES: 'fournisseurs'
     },
     en: {
-        NEW_COMPANY: 'New company',
-        COMPANY: 'company',
-        COMPANIES: 'companies'
+        NEW_COMPANY: 'New supplier',
+        COMPANY: 'supplier',
+        COMPANIES: 'suppliers'
     }
 });
 

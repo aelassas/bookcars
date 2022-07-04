@@ -388,7 +388,7 @@ export default class UpdateCompany extends Component {
                                         variant="contained"
                                         className='btn-secondary btn-margin-bottom'
                                         size="small"
-                                        href="/companies"
+                                        href="/suppliers"
                                     >
                                         {commonStrings.CANCEL}
                                     </Button>
