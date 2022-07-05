@@ -13,10 +13,10 @@ import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';
 import AvailabilityFilter from '../elements/AvailabilityFilter';
 import CarList from '../elements/CarList';
+import CompanyService from '../services/CompanyService';
 import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';
-import CompanyService from '../services/CompanyService';
 
 export default class Cars extends Component {
 
@@ -102,6 +102,7 @@ export default class Cars extends Component {
 
     render() {
         const { allCompanies, user, keyword, companies, reload, rowCount, loading, fuel, gearbox, mileage, deposit, availability, offset } = this.state;
+        const admin = Helper.admin(user);
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -133,12 +134,14 @@ export default class Cars extends Component {
 
                                 {rowCount > -1 &&
                                     <>
-
                                         <FuelFilter className='car-filter' onChange={this.handleFuelFilterChange} />
                                         <GearboxFilter className='car-filter' onChange={this.handleGearboxFilterChange} />
                                         <MileageFilter className='car-filter' onChange={this.handleMileageFilterChange} />
                                         <DepositFilter className='car-filter' onChange={this.handleDepositFilterChange} />
-                                        <AvailabilityFilter className='car-filter' onChange={this.handleAvailabilityFilterChange} />
+                                        {
+                                            admin &&
+                                            <AvailabilityFilter className='car-filter' onChange={this.handleAvailabilityFilterChange} />
+                                        }
                                     </>
                                 }
                             </div>
