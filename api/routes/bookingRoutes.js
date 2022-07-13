@@ -440,20 +440,27 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
                 model: 'User'
             }
         })
+        .populate('driver')
         .populate({
-            path: 'car',
+            path: 'pickupLocation',
             populate: {
-                path: 'locations',
-                model: 'Location'
+                path: 'values',
+                model: 'LocationValue',
             }
         })
-        .populate('driver')
-        .populate('pickupLocation')
-        .populate('dropOffLocation')
+        .populate({
+            path: 'dropOffLocation',
+            populate: {
+                path: 'values',
+                model: 'LocationValue',
+            }
+        })
         .populate('_additionalDriver')
         .lean()
         .then(booking => {
             if (booking) {
+                const language = req.params.language;
+
                 if (booking.company) {
                     const { _id, fullName, avatar } = booking.company;
                     booking.company = { _id, fullName, avatar };
@@ -462,6 +469,10 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
                     const { _id, fullName, avatar } = booking.car.company;
                     booking.car.company = { _id, fullName, avatar };
                 }
+
+                booking.pickupLocation.name = booking.pickupLocation.values.filter(value => value.language === language)[0].value;
+                booking.dropOffLocation.name = booking.dropOffLocation.values.filter(value => value.language === language)[0].value;
+
                 res.json(booking);
             } else {
                 console.error('[booking.getBooking] Car not found:', req.params.id);

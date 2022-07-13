@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import UserService from '../services/UserService';
 import Helper from '../common/Helper';
+import Env from '../config/env.config';
 
 import '../assets/css/create-location.css';
 
@@ -22,52 +23,49 @@ export default class CreateLocation extends Component {
         super(props);
         this.state = {
             visible: false,
-            name: '',
-            nameError: false
+            names: [],
+            nameErrors: []
         };
     }
-
-    handleOnChangeName = (e) => {
-        this.setState({ name: e.target.value });
-    };
-
-    handleOnKeyDownName = (e) => {
-        if (e.key === 'Enter') {
-            this.handleSubmit(e);
-        }
-    };
 
     error = () => {
         Helper.error();
     };
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { name } = this.state;
-        const data = { name };
+        try {
+            const { names, nameErrors } = this.state;
 
-        LocationService.validate(data).then(status => {
-            if (status === 204) {
-                this.setState({ nameError: true });
-            } else {
-                this.setState({ nameError: false });
+            let isValid = true;
 
-                LocationService.create(data)
-                    .then(status => {
-                        if (status === 200) {
-                            this.setState({ name: '' });
-                            Helper.info(strings.LOCATION_CREATED);
-                        } else {
-                            this.error();
-                        }
-                    }).catch(() => {
-                        UserService.signout();
-                    });
+            for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false;
+
+            for (let i = 0; i < names.length; i++) {
+                const name = names[i];
+                const _isValid = await LocationService.validate(name) === 200;
+                isValid = isValid && _isValid;
+                if (!_isValid) nameErrors[i] = true;
             }
-        }).catch(() => {
+
+            this.setState({ nameErrors });
+
+            if (isValid) {
+                const status = await LocationService.create(names);
+
+                if (status === 200) {
+                    for (let i = 0; i < names.length; i++) names[i].name = '';
+                    this.setState({ names });
+                    Helper.info(strings.LOCATION_CREATED);
+                } else {
+                    this.error();
+                }
+            }
+        }
+        catch (err) {
             UserService.signout();
-        });
+        }
     };
 
     onLoad = (user) => {
@@ -75,7 +73,7 @@ export default class CreateLocation extends Component {
     };
 
     render() {
-        const { visible, name, nameError } = this.state;
+        const { visible, names, nameErrors } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true}>
@@ -83,21 +81,28 @@ export default class CreateLocation extends Component {
                     <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
                         <h1 className="location-form-title"> {strings.NEW_LOCATION_HEADING} </h1>
                         <form onSubmit={this.handleSubmit}>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{strings.LOCATION_NAME}</InputLabel>
-                                <Input
-                                    type="text"
-                                    value={name}
-                                    error={nameError}
-                                    required
-                                    onChange={this.handleOnChangeName}
-                                    onKeyDown={this.handleOnKeyDownName}
-                                    autoComplete="off"
-                                />
-                                <FormHelperText error={nameError}>
-                                    {nameError ? strings.INVALID_LOCATION : ''}
-                                </FormHelperText>
-                            </FormControl>
+                            {
+                                Env._LANGUAGES.map((language, index) => (
+                                    <FormControl key={index} fullWidth margin="dense">
+                                        <InputLabel className='required'>{language.label}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            value={(names[index] && names[index].name) || ''}
+                                            error={nameErrors[index]}
+                                            required
+                                            onChange={(e) => {
+                                                nameErrors[index] = false;
+                                                names[index] = { language: language.code, name: e.target.value };
+                                                this.setState({ names });
+                                            }}
+                                            autoComplete="off"
+                                        />
+                                        <FormHelperText error={nameErrors[index]}>
+                                            {(nameErrors[index] && strings.INVALID_LOCATION) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                ))
+                            }
 
                             <div className="buttons">
                                 <Button

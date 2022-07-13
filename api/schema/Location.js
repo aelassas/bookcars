@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 
 const locationSchema = new Schema({
     name: {
-        type: String,
-        required: [true, "can't be blank"],
-        index: true,
-        trim: true
+        type: String
+    },
+    values: {
+        type: [Schema.Types.ObjectId],
+        ref: 'LocationValue',
+        validate: (value) => Array.isArray(value) && value.length > 1
     }
 }, {
     timestamps: true,
