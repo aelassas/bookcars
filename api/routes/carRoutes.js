@@ -287,7 +287,13 @@ routes.route(routeNames.deleteTempImage).post((req, res) => {
 routes.route(routeNames.getCar).get((req, res) => {
     Car.findById(req.params.id)
         .populate('company')
-        .populate('locations')
+        .populate({
+            path: 'locations',
+            populate: {
+                path: 'values',
+                model: 'LocationValue',
+            }
+        })
         .lean()
         .then(car => {
             if (car) {
@@ -295,6 +301,12 @@ routes.route(routeNames.getCar).get((req, res) => {
                     const { _id, fullName, avatar } = car.company;
                     car.company = { _id, fullName, avatar };
                 }
+
+                for (let i = 0; i < car.locations.length; i++) {
+                    const location = car.locations[i];
+                    location.name = location.values.filter(value => value.language === req.params.language)[0].value;
+                }
+
                 res.json(car);
             } else {
                 console.error('[car.getCar] Car not found:', req.params.id);

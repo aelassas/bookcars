@@ -21,7 +21,8 @@ export default class BookingService {
     }
 
     static getBooking(id) {
-        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.data);
+        const language = UserService.getLanguage();
+        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${language}`, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getBookings(payload, page, size) {
