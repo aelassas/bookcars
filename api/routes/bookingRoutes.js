@@ -9,6 +9,7 @@ import Location from '../schema/Location.js';
 import Notification from '../schema/Notification.js';
 import NotificationCounter from '../schema/NotificationCounter.js';
 import PushNotification from '../schema/PushNotification.js';
+import AdditionalDriver from '../schema/AdditionalDriver.js';
 import authJwt from '../middlewares/authJwt.js';
 import mongoose from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
@@ -28,8 +29,15 @@ const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN;
 
 const routes = express.Router();
 
-routes.route(routeNames.create).post(authJwt.verifyToken, (req, res) => {
-    const booking = new Booking(req.body);
+routes.route(routeNames.create).post(authJwt.verifyToken, async (req, res) => {
+
+    if (req.body.booking.additionalDriver) {
+        const additionalDriver = new AdditionalDriver(req.body.additionalDriver);
+        await additionalDriver.save();
+        req.body.booking._additionalDriver = additionalDriver._id;
+    }
+
+    const booking = new Booking(req.body.booking);
 
     booking.save()
         .then((booking) => res.json(booking))
@@ -132,6 +140,13 @@ routes.route(routeNames.book).post(async (req, res) => {
         } else {
             user = await User.findById(req.body.booking.driver);
             strings.setLanguage(user.language);
+        }
+
+        // additionalDriver
+        if (req.body.booking.additionalDriver && req.body.additionalDriver) {
+            const additionalDriver = new AdditionalDriver(req.body.additionalDriver);
+            await additionalDriver.save();
+            req.body.booking._additionalDriver = additionalDriver._id;
         }
 
         const booking = new Booking(req.body.booking);
@@ -275,9 +290,37 @@ const notifyDriver = async (booking) => {
 
 routes.route(routeNames.update).put(authJwt.verifyToken, async (req, res) => {
     try {
-        const booking = await Booking.findById(req.body._id);
+        const booking = await Booking.findById(req.body.booking._id);
 
         if (booking) {
+
+            if (!req.body.booking.additionalDriver && booking._additionalDriver) {
+                await AdditionalDriver.deleteOne({ _id: booking._additionalDriver });
+            }
+
+            if (req.body.additionalDriver) {
+                const { fullName, email, phone, birthDate } = req.body.additionalDriver;
+
+                if (booking._additionalDriver) {
+                    const additionalDriver = await AdditionalDriver.findOne({ _id: booking._additionalDriver });
+                    additionalDriver.fullName = fullName;
+                    additionalDriver.email = email;
+                    additionalDriver.phone = phone;
+                    additionalDriver.birthDate = birthDate;
+                    await additionalDriver.save();
+                } else {
+                    const additionalDriver = new AdditionalDriver({
+                        fullName: fullName,
+                        email: email,
+                        phone: phone,
+                        birthDate: birthDate,
+                    });
+
+                    await additionalDriver.save();
+                    booking._additionalDriver = additionalDriver._id;
+                }
+            }
+
             const {
                 company,
                 car,
@@ -294,7 +337,8 @@ routes.route(routeNames.update).put(authJwt.verifyToken, async (req, res) => {
                 fullInsurance,
                 additionalDriver,
                 price
-            } = req.body;
+            } = req.body.booking;
+
             const previousStatus = booking.status;
 
             booking.company = company;
@@ -312,6 +356,10 @@ routes.route(routeNames.update).put(authJwt.verifyToken, async (req, res) => {
             booking.fullInsurance = fullInsurance;
             booking.additionalDriver = additionalDriver;
             booking.price = price;
+
+            if (!additionalDriver && booking._additionalDriver) {
+                booking._additionalDriver = null;
+            }
 
             await booking.save();
 
@@ -358,15 +406,20 @@ routes.route(routeNames.updateStatus).post(authJwt.verifyToken, async (req, res)
     }
 });
 
-routes.route(routeNames.delete).post(authJwt.verifyToken, (req, res) => {
+routes.route(routeNames.delete).post(authJwt.verifyToken, async (req, res) => {
     try {
         const ids = req.body.map(id => mongoose.Types.ObjectId(id));
 
-        Booking.deleteMany({ _id: { $in: ids } }, (err, response) => {
+        const bookings = await Booking.find({ _id: { $in: ids }, additionalDriver: true, _additionalDriver: { $ne: null } });
+
+        Booking.deleteMany({ _id: { $in: ids } }, async (err, response) => {
             if (err) {
                 console.error(strings.DB_ERROR + err);
                 return res.status(400).send(strings.DB_ERROR + err);
             }
+
+            const additionalDivers = bookings.map(booking => mongoose.Types.ObjectId(booking._additionalDriver));
+            await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } });
 
             return res.sendStatus(200);
         });
@@ -397,6 +450,7 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
         .populate('driver')
         .populate('pickupLocation')
         .populate('dropOffLocation')
+        .populate('_additionalDriver')
         .lean()
         .then(booking => {
             if (booking) {

@@ -20,6 +20,7 @@ import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
 import DateTimePicker from '../elements/DateTimePicker';
+import DatePicker from '../elements/DatePicker';
 import {
     FormControl,
     FormControlLabel,
@@ -28,9 +29,17 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogActions
+    DialogActions,
+    FormHelperText,
+    InputLabel,
+    Input,
 } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
+import {
+    Info as InfoIcon,
+    Person as DriverIcon,
+} from '@mui/icons-material';
+import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/booking.css';
 
@@ -61,7 +70,14 @@ export default class Booking extends Component {
             fullInsurance: false,
             additionalDriver: false,
             openDeleteDialog: false,
-            minDate: null
+            minDate: null,
+            _fullName: '',
+            _email: '',
+            _phone: '',
+            _birthDate: null,
+            _emailValid: true,
+            _phoneValid: true,
+            _birthDateValid: true
         };
     }
 
@@ -239,6 +255,48 @@ export default class Booking extends Component {
         });
     };
 
+    _validateEmail = (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                this.setState({ _emailValid: true });
+                return true;
+            } else {
+                this.setState({ _emailValid: false });
+                return false;
+            }
+        } else {
+            this.setState({ _emailValid: true });
+            return false;
+        }
+    };
+
+    _validatePhone = (phone) => {
+        if (phone) {
+            const _phoneValid = validator.isMobilePhone(phone);
+            this.setState({ _phoneValid });
+
+            return _phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    _validateBirthDate = (date) => {
+        if (date) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const _birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid: _birthDateValid });
+            return _birthDateValid;
+        } else {
+            this.setState({ _birthDateValid: true });
+            return true;
+        }
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
 
@@ -258,10 +316,31 @@ export default class Booking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             additionalDriver,
-            price
+            price,
+            _fullName,
+            _email,
+            _phone,
+            _birthDate
         } = this.state;
 
-        const data = {
+        if (additionalDriver) {
+            const emailValid = this._validateEmail(_email);
+            if (!emailValid) {
+                return;
+            }
+
+            const phoneValid = this._validatePhone(_phone);
+            if (!phoneValid) {
+                return;
+            }
+
+            const birthDateValid = this._validateBirthDate(_birthDate);
+            if (!birthDateValid) {
+                return;
+            }
+        }
+
+        const _booking = {
             _id: booking._id,
             company: company._id,
             car: car._id,
@@ -280,9 +359,27 @@ export default class Booking extends Component {
             price
         };
 
-        BookingService.update(data)
+        let _additionalDriver;
+        if (additionalDriver) {
+            _additionalDriver = {
+                fullName: _fullName,
+                email: _email,
+                phone: _phone,
+                birthDate: _birthDate
+            };
+        }
+
+        BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
             .then(status => {
                 if (status === 200) {
+                    if (!additionalDriver) {
+                        this.setState({
+                            _fullName: '',
+                            _email: '',
+                            _phone: '',
+                            _birthDate: null
+                        });
+                    }
                     Helper.info(commonStrings.UPDATED);
                 } else {
                     this.error();
@@ -327,8 +424,17 @@ export default class Booking extends Component {
                                     theftProtection: booking.theftProtection,
                                     collisionDamageWaiver: booking.collisionDamageWaiver,
                                     fullInsurance: booking.fullInsurance,
-                                    additionalDriver: booking.additionalDriver
+                                    additionalDriver: booking.additionalDriver,
                                 });
+
+                                if (booking.additionalDriver && booking._additionalDriver) {
+                                    this.setState({
+                                        _fullName: booking._additionalDriver.fullName,
+                                        _email: booking._additionalDriver.email,
+                                        _phone: booking._additionalDriver.phone,
+                                        _birthDate: new Date(booking._additionalDriver.birthDate)
+                                    });
+                                }
 
                             } else {
                                 this.setState({ loading: false, noMatch: true });
@@ -344,9 +450,6 @@ export default class Booking extends Component {
                 this.setState({ loading: false, noMatch: true });
             }
         });
-    }
-
-    componentDidMount() {
     }
 
     render() {
@@ -374,7 +477,14 @@ export default class Booking extends Component {
             additionalDriver,
             price,
             openDeleteDialog,
-            minDate
+            minDate,
+            _fullName,
+            _email,
+            _phone,
+            _birthDate,
+            _emailValid,
+            _phoneValid,
+            _birthDateValid
         } = this.state, days = Helper.days(from, to);
 
         return (
@@ -569,6 +679,93 @@ export default class Booking extends Component {
                                         className='checkbox-fcl'
                                     />
                                 </FormControl>
+
+                                {
+                                    additionalDriver &&
+                                    <>
+                                        <div className='info'>
+                                            <DriverIcon />
+                                            <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                                        </div>
+                                        <FormControl fullWidth margin="dense">
+                                            <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                            <Input
+                                                type="text"
+                                                label={commonStrings.FULL_NAME}
+                                                value={_fullName}
+                                                required
+                                                onChange={(e) => {
+                                                    this.setState({ _fullName: e.target.value });
+                                                }}
+                                                autoComplete="off"
+                                            />
+                                        </FormControl>
+                                        <FormControl fullWidth margin="dense">
+                                            <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                            <Input
+                                                type="text"
+                                                label={commonStrings.EMAIL}
+                                                value={_email}
+                                                error={!_emailValid}
+                                                onBlur={(e) => {
+                                                    this._validateEmail(e.target.value);
+                                                }}
+                                                onChange={(e) => {
+                                                    this.setState({ _email: e.target.value });
+
+                                                    if (!e.target.value) {
+                                                        this.setState({ _emailValid: true });
+                                                    }
+                                                }}
+                                                required
+                                                autoComplete="off"
+                                            />
+                                            <FormHelperText error={!_emailValid}>
+                                                {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                            </FormHelperText>
+                                        </FormControl>
+                                        <FormControl fullWidth margin="dense">
+                                            <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                            <Input
+                                                type="text"
+                                                label={commonStrings.PHONE}
+                                                value={_phone}
+                                                error={!_phoneValid}
+                                                onBlur={(e) => {
+                                                    this._validatePhone(e.target.value);
+                                                }}
+                                                onChange={(e) => {
+                                                    this.setState({ _phone: e.target.value });
+
+                                                    if (!e.target.value) {
+                                                        this.setState({ _phoneValid: true });
+                                                    }
+                                                }}
+                                                required
+                                                autoComplete="off"
+                                            />
+                                            <FormHelperText error={!_phoneValid}>
+                                                {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                            </FormHelperText>
+                                        </FormControl>
+                                        <FormControl fullWidth margin="dense">
+                                            <DatePicker
+                                                label={commonStrings.BIRTH_DATE}
+                                                value={_birthDate}
+                                                error={!_birthDateValid}
+                                                required
+                                                onChange={(_birthDate) => {
+                                                    const _birthDateValid = this._validateBirthDate(_birthDate);
+                                                    this.setState({ _birthDate, _birthDateValid });
+                                                }}
+                                                language={UserService.getLanguage()}
+                                            />
+                                            <FormHelperText error={!_birthDateValid}>
+                                                {(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}
+                                            </FormHelperText>
+                                        </FormControl>
+                                    </>
+                                }
 
                                 <div>
                                     <div className="buttons">

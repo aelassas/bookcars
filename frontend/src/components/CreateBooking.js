@@ -77,7 +77,14 @@ export default class CreateBooking extends Component {
             cardDateError: false,
             success: false,
             loading: false,
-            birthDateValid: true
+            birthDateValid: true,
+            _fullName: '',
+            _email: '',
+            _phone: '',
+            _birthDate: null,
+            _emailValid: true,
+            _phoneValid: true,
+            _birthDateValid: true
         };
     }
 
@@ -172,6 +179,22 @@ export default class CreateBooking extends Component {
         }
     };
 
+    // additionalDriver
+    _validateEmail = (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                this.setState({ _emailValid: true });
+                return true;
+            } else {
+                this.setState({ _emailValid: false });
+                return false;
+            }
+        } else {
+            this.setState({ _emailValid: true });
+            return false;
+        }
+    };
+
     handleEmailBlur = async (e) => {
         await this.validateEmail(e.target.value);
     };
@@ -197,6 +220,20 @@ export default class CreateBooking extends Component {
         }
     };
 
+    // additionalDriver
+    _validatePhone = (phone) => {
+        if (phone) {
+            const _phoneValid = validator.isMobilePhone(phone);
+            this.setState({ _phoneValid });
+
+            return _phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
     handlePhoneBlur = (e) => {
         this.validatePhone(e.target.value);
     };
@@ -213,6 +250,23 @@ export default class CreateBooking extends Component {
             return birthDateValid;
         } else {
             this.setState({ birthDateValid: true });
+            return true;
+        }
+    };
+
+    // additionalDriver
+    _validateBirthDate = (date) => {
+        if (date) {
+            const { car } = this.state;
+
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const _birthDateValid = sub >= car.minimumAge;
+
+            this.setState({ birthDateValid: _birthDateValid });
+            return _birthDateValid;
+        } else {
+            this.setState({ _birthDateValid: true });
             return true;
         }
     };
@@ -359,7 +413,8 @@ export default class CreateBooking extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { authenticated, email, phone, birthDate, tosChecked, cardNumber, cardMonth, cardYear, cvv } = this.state;
+        const { authenticated, email, phone, birthDate, tosChecked, cardNumber, cardMonth, cardYear, cvv,
+            additionalDriver, _email, _phone, _birthDate } = this.state;
 
         if (!authenticated) {
             const emailValid = await this.validateEmail(email);
@@ -407,6 +462,23 @@ export default class CreateBooking extends Component {
             return this.setState({ cardDateError: true });
         }
 
+        if (additionalDriver) {
+            const emailValid = this._validateEmail(_email);
+            if (!emailValid) {
+                return;
+            }
+
+            const phoneValid = this._validatePhone(_phone);
+            if (!phoneValid) {
+                return;
+            }
+
+            const birthDateValid = this._validateBirthDate(_birthDate);
+            if (!birthDateValid) {
+                return;
+            }
+        }
+
         this.setState({ loading: true });
 
         const { user,
@@ -421,11 +493,11 @@ export default class CreateBooking extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver,
-            price
+            price,
+            _fullName
         } = this.state;
 
-        let booking, driver;
+        let booking, driver, _additionalDriver;
 
         if (!authenticated) driver = { email, phone, fullName, birthDate, language: UserService.getLanguage() };
 
@@ -447,7 +519,16 @@ export default class CreateBooking extends Component {
             price
         };
 
-        const payload = { driver, booking };
+        if (additionalDriver) {
+            _additionalDriver = {
+                fullName: _fullName,
+                email: _email,
+                phone: _phone,
+                birthDate: _birthDate
+            };
+        }
+
+        const payload = { driver, booking, additionalDriver: _additionalDriver };
 
         BookingService.book(payload)
             .then(status => {
@@ -569,7 +650,10 @@ export default class CreateBooking extends Component {
             cardDateError,
             success,
             loading,
-            birthDateValid } = this.state;
+            birthDateValid,
+            _emailValid,
+            _phoneValid,
+            _birthDateValid } = this.state;
 
         const locale = language === 'fr' ? 'fr-FR' : 'en-US';
         const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -740,7 +824,8 @@ export default class CreateBooking extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    {!authenticated &&
+                                    {
+                                        !authenticated &&
                                         <div className='driver-details'>
                                             <div className='booking-info'>
                                                 <DriverIcon />
@@ -830,6 +915,91 @@ export default class CreateBooking extends Component {
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    {
+                                        additionalDriver &&
+                                        <div className='driver-details'>
+                                            <div className='booking-info'>
+                                                <DriverIcon />
+                                                <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                                            </div>
+                                            <div className='driver-details-form'>
+                                                <FormControl fullWidth margin="dense">
+                                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={commonStrings.FULL_NAME}
+                                                        required
+                                                        onChange={(e) => {
+                                                            this.setState({ _fullName: e.target.value });
+                                                        }}
+                                                        autoComplete="off"
+                                                    />
+                                                </FormControl>
+                                                <FormControl fullWidth margin="dense">
+                                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={commonStrings.EMAIL}
+                                                        error={!_emailValid}
+                                                        onBlur={(e) => {
+                                                            this._validateEmail(e.target.value);
+                                                        }}
+                                                        onChange={(e) => {
+                                                            this.setState({ _email: e.target.value });
+
+                                                            if (!e.target.value) {
+                                                                this.setState({ _emailValid: true });
+                                                            }
+                                                        }}
+                                                        required
+                                                        autoComplete="off"
+                                                    />
+                                                    <FormHelperText error={!_emailValid}>
+                                                        {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                                    </FormHelperText>
+                                                </FormControl>
+                                                <FormControl fullWidth margin="dense">
+                                                    <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={commonStrings.PHONE}
+                                                        error={!_phoneValid}
+                                                        onBlur={(e) => {
+                                                            this._validatePhone(e.target.value);
+                                                        }}
+                                                        onChange={(e) => {
+                                                            this.setState({ _phone: e.target.value });
+
+                                                            if (!e.target.value) {
+                                                                this.setState({ _phoneValid: true });
+                                                            }
+                                                        }}
+                                                        required
+                                                        autoComplete="off"
+                                                    />
+                                                    <FormHelperText error={!_phoneValid}>
+                                                        {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                                    </FormHelperText>
+                                                </FormControl>
+                                                <FormControl fullWidth margin="dense">
+                                                    <DatePicker
+                                                        label={commonStrings.BIRTH_DATE}
+                                                        variant='outlined'
+                                                        error={!_birthDateValid}
+                                                        required
+                                                        onChange={(_birthDate) => {
+                                                            const _birthDateValid = this._validateBirthDate(_birthDate);
+                                                            this.setState({ _birthDate, _birthDateValid });
+                                                        }}
+                                                        language={language}
+                                                    />
+                                                    <FormHelperText error={!_birthDateValid}>
+                                                        {(!_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                                                    </FormHelperText>
+                                                </FormControl>
                                             </div>
                                         </div>
                                     }

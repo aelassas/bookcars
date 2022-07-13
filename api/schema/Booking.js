@@ -73,6 +73,10 @@ const bookingSchema = new Schema({
         type: Boolean,
         default: false
     },
+    _additionalDriver: {
+        type: Schema.Types.ObjectId,
+        ref: 'AdditionalDriver'
+    },
     price: {
         type: Number,
         required: [true, "can't be blank"],

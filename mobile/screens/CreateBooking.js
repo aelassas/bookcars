@@ -52,6 +52,10 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
     const [fullInsurance, setFullInsurance] = useState(false);
     const [additionalDriver, setAdditionalDriver] = useState(false);
+    const [_fullName, set_FullName] = useState('');
+    const [_email, set_Email] = useState('');
+    const [_phone, set_Phone] = useState('');
+    const [_birthDate, set_BirthDate] = useState(null);
 
     const [fullNameRequired, setFullNameRequired] = useState(false);
     const [emailInfo, setEmailInfo] = useState(true);
@@ -76,6 +80,13 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(true);
     const [locale, setLoacle] = useState(fr);
+    const [_fullNameRequired, set_FullNameRequired] = useState(false);
+    const [_emailRequired, set_EmailRequired] = useState(false);
+    const [_emailValid, set_EmailValid] = useState(true);
+    const [_phoneRequired, set_PhoneRequired] = useState(false);
+    const [_phoneValid, set_PhoneValid] = useState(true);
+    const [_birthDateRequired, set_BirthDateRequired] = useState(false);
+    const [_birthDateValid, set_BirthDateValid] = useState(true);
 
     const fullNameRef = useRef(null);
     const emailRef = useRef(null);
@@ -84,6 +95,9 @@ export default function CreateBookingScreen({ navigation, route }) {
     const cardMonthRef = useRef(null);
     const cardYearRef = useRef(null);
     const cvvRef = useRef(null);
+    const _fullNameRef = useRef(null);
+    const _emailRef = useRef(null);
+    const _phoneRef = useRef(null);
 
     const _init = async () => {
         try {
@@ -134,6 +148,14 @@ export default function CreateBookingScreen({ navigation, route }) {
                 if (emailRef.current) emailRef.current.clear();
                 if (phoneRef.current) phoneRef.current.clear();
             }
+
+            set_FullName('');
+            set_Email('');
+            set_Phone('');
+            set_BirthDate(null);
+            if (_fullNameRef.current) _fullNameRef.current.clear();
+            if (_emailRef.current) _emailRef.current.clear();
+            if (_phoneRef.current) _phoneRef.current.clear();
 
             setCardNumber('');
             setCardMonth('');
@@ -235,6 +257,13 @@ export default function CreateBookingScreen({ navigation, route }) {
         return valid;
     };
 
+    const _validateFullName = () => {
+        const valid = _fullName !== '';
+        set_FullNameRequired(!valid);
+        setError(!valid);
+        return valid;
+    };
+
     const onChangeFullName = (text) => {
         setFullName(text);
         setFullNameRequired(false);
@@ -285,6 +314,27 @@ export default function CreateBookingScreen({ navigation, route }) {
         }
     };
 
+    const _validateEmail = () => {
+        if (_email) {
+            set_EmailRequired(false);
+
+            if (validator.isEmail(_email)) {
+                set_EmailValid(true);
+                setError(false);
+                return true;
+            } else {
+                set_EmailValid(false);
+                setError(true);
+                return false;
+            }
+        } else {
+            set_EmailRequired(true);
+            set_EmailValid(true);
+            setError(true);
+            return false;
+        }
+    };
+
     const onChangeEmail = (text) => {
         setEmail(text);
         setEmailInfo(true);
@@ -313,6 +363,23 @@ export default function CreateBookingScreen({ navigation, route }) {
         }
     };
 
+    const _validatePhone = () => {
+        if (_phone) {
+            const phoneValid = validator.isMobilePhone(_phone);
+            set_PhoneRequired(false);
+            set_PhoneValid(phoneValid);
+            setError(!phoneValid);
+
+            return phoneValid;
+        } else {
+            set_PhoneRequired(true);
+            set_PhoneValid(true);
+            setError(true);
+
+            return false;
+        }
+    };
+
     const onChangePhone = (text) => {
         setPhone(text);
         setPhoneInfo(true);
@@ -334,6 +401,25 @@ export default function CreateBookingScreen({ navigation, route }) {
         } else {
             setBirthDateRequired(true);
             setBirthDateValid(true);
+            setError(true);
+
+            return false;
+        }
+    };
+
+    const _validateBirthDate = () => {
+        if (_birthDate) {
+            set_BirthDateRequired(false);
+
+            const sub = intervalToDuration({ start: _birthDate, end: new Date() }).years;
+            const birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            set_BirthDateValid(birthDateValid);
+            setError(!birthDateValid);
+            return birthDateValid;
+        } else {
+            set_BirthDateRequired(true);
+            set_BirthDateValid(true);
             setError(true);
 
             return false;
@@ -539,6 +625,28 @@ export default function CreateBookingScreen({ navigation, route }) {
             }
         }
 
+        if (additionalDriver) {
+            const fullNameValid = _validateFullName();
+            if (!fullNameValid) {
+                return;
+            }
+
+            const emailValid = _validateEmail();
+            if (!emailValid) {
+                return;
+            }
+
+            const phoneValid = _validatePhone();
+            if (!phoneValid) {
+                return;
+            }
+
+            const birthDateValid = _validateBirthDate();
+            if (!birthDateValid) {
+                return;
+            }
+        }
+
         const cardNumberValid = validateCardNumber();
         if (!cardNumberValid) {
             return;
@@ -566,7 +674,7 @@ export default function CreateBookingScreen({ navigation, route }) {
 
         setLoading(true);
 
-        let booking, driver;
+        let booking, driver, _additionalDriver;
 
         if (!authenticated) {
             const language = await UserService.getLanguage();
@@ -591,7 +699,16 @@ export default function CreateBookingScreen({ navigation, route }) {
             price
         };
 
-        const payload = { driver, booking };
+        if (additionalDriver) {
+            _additionalDriver = {
+                fullName: _fullName,
+                email: _email,
+                phone: _phone,
+                birthDate: _birthDate
+            };
+        }
+
+        const payload = { driver, booking, additionalDriver: _additionalDriver };
 
         BookingService.book(payload)
             .then(status => {
@@ -725,7 +842,8 @@ export default function CreateBookingScreen({ navigation, route }) {
                                     <Text style={styles.detailTextBold}>{`${price} ${i18n.t('CURRENCY')}`}</Text>
                                 </View>
 
-                                {!authenticated &&
+                                {
+                                    !authenticated &&
                                     <View style={styles.section}>
                                         <View style={styles.sectionHeader}>
                                             <MaterialIcons name='person' size={iconSize} color={iconColor} />
@@ -783,7 +901,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             error={birthDateRequired || !birthDateValid}
                                             helperText={
                                                 ((birthDateRequired && i18n.t('REQUIRED')) || '')
-                                                || ((!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || '')
+                                                || ((!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || '')
                                             }
                                             onChange={onChangeBirthDate}
                                             backgroundColor='#fbfbfb'
@@ -795,6 +913,89 @@ export default function CreateBookingScreen({ navigation, route }) {
                                             label={i18n.t('ACCEPT_TOS')}
                                             value={tosChecked}
                                             onValueChange={onChangeToS} />
+                                    </View>
+                                }
+
+                                {
+                                    additionalDriver &&
+                                    <View style={styles.section}>
+                                        <View style={styles.sectionHeader}>
+                                            <MaterialIcons name='person' size={iconSize} color={iconColor} />
+                                            <Text style={styles.sectionHeaderText}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
+                                        </View>
+
+                                        <TextInput
+                                            ref={_fullNameRef}
+                                            style={styles.component}
+                                            label={i18n.t('FULL_NAME')}
+                                            value={_fullName}
+                                            error={_fullNameRequired}
+                                            helperText={(_fullNameRequired && i18n.t('REQUIRED')) || ''}
+                                            onChangeText={(text) => {
+                                                set_FullName(text);
+                                                set_FullNameRequired(false);
+                                                setError(false);
+                                            }}
+                                            backgroundColor='#fbfbfb'
+                                        />
+
+                                        <TextInput
+                                            ref={_emailRef}
+                                            style={styles.component}
+                                            label={i18n.t('EMAIL')}
+                                            value={_email}
+                                            error={_emailRequired || !_emailValid}
+                                            helperText={
+                                                ((_emailRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!_emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                                            }
+                                            onChangeText={(text) => {
+                                                set_Email(text);
+                                                set_EmailRequired(false);
+                                                set_EmailValid(true);
+                                                setError(false);
+                                            }}
+                                            backgroundColor='#fbfbfb'
+                                        />
+
+                                        <TextInput
+                                            ref={_phoneRef}
+                                            style={styles.component}
+                                            label={i18n.t('PHONE')}
+                                            value={_phone}
+                                            error={_phoneRequired || !_phoneValid}
+                                            helperText={
+                                                ((_phoneRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!_phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
+                                            }
+                                            onChangeText={(text) => {
+                                                set_Phone(text);
+                                                set_PhoneRequired(false);
+                                                set_PhoneValid(true);
+                                                setError(false);
+                                            }}
+                                            backgroundColor='#fbfbfb'
+                                        />
+
+                                        <DateTimePicker
+                                            mode='date'
+                                            locale={language}
+                                            style={styles.date}
+                                            label={i18n.t('BIRTH_DATE')}
+                                            value={_birthDate}
+                                            error={_birthDateRequired || !_birthDateValid}
+                                            helperText={
+                                                ((_birthDateRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || '')
+                                            }
+                                            onChange={(date) => {
+                                                set_BirthDate(date);
+                                                set_BirthDateRequired(false);
+                                                set_BirthDateValid(true);
+                                                setError(false);
+                                            }}
+                                            backgroundColor='#fbfbfb'
+                                        />
                                     </View>
                                 }
 

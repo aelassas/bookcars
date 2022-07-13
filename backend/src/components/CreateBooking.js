@@ -16,14 +16,23 @@ import LocationSelectList from '../elements/LocationSelectList';
 import CarSelectList from '../elements/CarSelectList';
 import StatusList from '../elements/StatusList';
 import DateTimePicker from '../elements/DateTimePicker';
+import DatePicker from '../elements/DatePicker';
 import {
     FormControl,
     Button,
     Paper,
     FormControlLabel,
-    Switch
+    Switch,
+    FormHelperText,
+    InputLabel,
+    Input,
 } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
+import {
+    Info as InfoIcon,
+    Person as DriverIcon,
+} from '@mui/icons-material';
+import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/create-booking.css';
 
@@ -50,7 +59,14 @@ export default class CreateBooking extends Component {
             collisionDamageWaiver: false,
             fullInsurance: false,
             additionalDriver: false,
-            minDate: null
+            minDate: null,
+            _fullName: '',
+            _email: '',
+            _phone: '',
+            _birthDate: null,
+            _emailValid: true,
+            _phoneValid: true,
+            _birthDateValid: true
         };
     }
 
@@ -102,8 +118,51 @@ export default class CreateBooking extends Component {
         this.setState({ additionalDriver: e.target.checked });
     };
 
+    _validateEmail = (email) => {
+        if (email) {
+            if (validator.isEmail(email)) {
+                this.setState({ _emailValid: true });
+                return true;
+            } else {
+                this.setState({ _emailValid: false });
+                return false;
+            }
+        } else {
+            this.setState({ _emailValid: true });
+            return false;
+        }
+    };
+
+    _validatePhone = (phone) => {
+        if (phone) {
+            const _phoneValid = validator.isMobilePhone(phone);
+            this.setState({ _phoneValid });
+
+            return _phoneValid;
+        } else {
+            this.setState({ phoneValid: true });
+
+            return true;
+        }
+    };
+
+    _validateBirthDate = (date) => {
+        if (date) {
+            const now = new Date();
+            const sub = intervalToDuration({ start: date, end: now }).years;
+            const _birthDateValid = sub >= Env.MINIMUM_AGE;
+
+            this.setState({ birthDateValid: _birthDateValid });
+            return _birthDateValid;
+        } else {
+            this.setState({ _birthDateValid: true });
+            return true;
+        }
+    };
+
     handleSubmit = (e) => {
         e.preventDefault();
+
         const {
             company,
             car,
@@ -118,10 +177,31 @@ export default class CreateBooking extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver
+            additionalDriver,
+            _fullName,
+            _email,
+            _phone,
+            _birthDate
         } = this.state;
 
-        const data = {
+        if (additionalDriver) {
+            const emailValid = this._validateEmail(_email);
+            if (!emailValid) {
+                return;
+            }
+
+            const phoneValid = this._validatePhone(_phone);
+            if (!phoneValid) {
+                return;
+            }
+
+            const birthDateValid = this._validateBirthDate(_birthDate);
+            if (!birthDateValid) {
+                return;
+            }
+        }
+
+        const booking = {
             company,
             car,
             driver,
@@ -135,16 +215,26 @@ export default class CreateBooking extends Component {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver
+            additionalDriver,
         };
 
+        let _additionalDriver;
+        if (additionalDriver) {
+            _additionalDriver = {
+                fullName: _fullName,
+                email: _email,
+                phone: _phone,
+                birthDate: _birthDate
+            };
+        }
+
         Helper.price(
-            data,
+            booking,
             null,
             (price) => {
-                data.price = price;
+                booking.price = price;
 
-                BookingService.create(data)
+                BookingService.create({ booking, additionalDriver: _additionalDriver })
                     .then(booking => {
                         if (booking && booking._id) {
                             window.location = '/';
@@ -186,7 +276,11 @@ export default class CreateBooking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             additionalDriver,
-            minDate
+            minDate,
+
+            _emailValid,
+            _phoneValid,
+            _birthDateValid
         } = this.state;
 
         return (
@@ -350,6 +444,89 @@ export default class CreateBooking extends Component {
                                     className='checkbox-fcl'
                                 />
                             </FormControl>
+
+                            {
+                                additionalDriver &&
+                                <>
+                                    <div className='info'>
+                                        <DriverIcon />
+                                        <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                                    </div>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            label={commonStrings.FULL_NAME}
+                                            required
+                                            onChange={(e) => {
+                                                this.setState({ _fullName: e.target.value });
+                                            }}
+                                            autoComplete="off"
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            label={commonStrings.EMAIL}
+                                            error={!_emailValid}
+                                            onBlur={(e) => {
+                                                this._validateEmail(e.target.value);
+                                            }}
+                                            onChange={(e) => {
+                                                this.setState({ _email: e.target.value });
+
+                                                if (!e.target.value) {
+                                                    this.setState({ _emailValid: true });
+                                                }
+                                            }}
+                                            required
+                                            autoComplete="off"
+                                        />
+                                        <FormHelperText error={!_emailValid}>
+                                            {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                        <Input
+                                            type="text"
+                                            label={commonStrings.PHONE}
+                                            error={!_phoneValid}
+                                            onBlur={(e) => {
+                                                this._validatePhone(e.target.value);
+                                            }}
+                                            onChange={(e) => {
+                                                this.setState({ _phone: e.target.value });
+
+                                                if (!e.target.value) {
+                                                    this.setState({ _phoneValid: true });
+                                                }
+                                            }}
+                                            required
+                                            autoComplete="off"
+                                        />
+                                        <FormHelperText error={!_phoneValid}>
+                                            {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                    <FormControl fullWidth margin="dense">
+                                        <DatePicker
+                                            label={commonStrings.BIRTH_DATE}
+                                            error={!_birthDateValid}
+                                            required
+                                            onChange={(_birthDate) => {
+                                                const _birthDateValid = this._validateBirthDate(_birthDate);
+                                                this.setState({ _birthDate, _birthDateValid });
+                                            }}
+                                            language={UserService.getLanguage()}
+                                        />
+                                        <FormHelperText error={!_birthDateValid}>
+                                            {(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}
+                                        </FormHelperText>
+                                    </FormControl>
+                                </>
+                            }
 
                             <div>
                                 <div className="buttons">

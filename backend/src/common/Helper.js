@@ -460,5 +460,9 @@ export default class Helper {
             return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${commonStrings.CURRENCY} (${additionalDriver} ${strings.CAR_CURRENCY})`;
         }
     }
+
+    static getBirthDateError(minimumAge) {
+        return `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`;
+    }
 }
 

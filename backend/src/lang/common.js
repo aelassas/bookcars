@@ -71,7 +71,10 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Lieu de prise en charge',
         DROP_OFF_LOCATION: 'Lieu de restitution',
         OPTIONS: 'Options',
-        OF: 'sur'
+        OF: 'sur',
+        BIRTH_DATE: 'Date de naissance',
+        BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
+        BIRTH_DATE_NOT_VALID_PART2: 'ans.',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -141,7 +144,10 @@ export const strings = new LocalizedStrings({
         PICKUP_LOCATION: 'Pickup location',
         DROP_OFF_LOCATION: 'Drop-off location',
         OPTIONS: 'Options',
-        OF: 'of'
+        OF: 'of',
+        BIRTH_DATE: 'Birthdate',
+        BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
+        BIRTH_DATE_NOT_VALID_PART2: 'years old.',
     }
 });
 
