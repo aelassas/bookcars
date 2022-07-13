@@ -379,4 +379,8 @@ export default class Helper {
         return JSON.parse(JSON.stringify(obj));
     }
 
+    static getBirthDateError(minimumAge) {
+        return `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t('BIRTH_DATE_NOT_VALID_PART2')} `;
+    }
+
 }
