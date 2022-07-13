@@ -8,8 +8,9 @@ export default class CarService {
         return axios.post(`${Env.API_HOST}/api/frontend-cars/${page}/${size}}`, data).then(res => res.data);
     }
 
-    static getCar(id) {
-        return axios.get(`${Env.API_HOST}/api/car/${encodeURIComponent(id)}`).then(res => res.data);
+    static async getCar(id) {
+        const language = await UserService.getLanguage();
+        return axios.get(`${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${language}`).then(res => res.data);
     }
 
     static async getBookingCars(keyword, data, page, size) {
