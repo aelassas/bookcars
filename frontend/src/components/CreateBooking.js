@@ -24,13 +24,16 @@ import {
     Checkbox,
     Link,
     FormControlLabel,
-    Switch
+    Switch,
+    RadioGroup,
+    Radio
 } from '@mui/material';
 import {
     DirectionsCar as CarIcon,
     Lock as LockIcon,
     Person as DriverIcon,
-    EventSeat as BookingIcon
+    EventSeat as BookingIcon,
+    Settings as PaymentOptionsIcon
 } from '@mui/icons-material';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
@@ -84,7 +87,8 @@ export default class CreateBooking extends Component {
             _birthDate: null,
             _emailValid: true,
             _phoneValid: true,
-            _birthDateValid: true
+            _birthDateValid: true,
+            payLater: false
         };
     }
 
@@ -494,7 +498,8 @@ export default class CreateBooking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             price,
-            _fullName
+            _fullName,
+            payLater
         } = this.state;
 
         let booking, driver, _additionalDriver;
@@ -528,7 +533,7 @@ export default class CreateBooking extends Component {
             };
         }
 
-        const payload = { driver, booking, additionalDriver: _additionalDriver };
+        const payload = { driver, booking, additionalDriver: _additionalDriver, payLater };
 
         BookingService.book(payload)
             .then(status => {
@@ -653,7 +658,8 @@ export default class CreateBooking extends Component {
             birthDateValid,
             _emailValid,
             _phoneValid,
-            _birthDateValid } = this.state;
+            _birthDateValid,
+            payLater } = this.state;
 
         const locale = language === 'fr' ? 'fr-FR' : 'en-US';
         const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -1003,96 +1009,133 @@ export default class CreateBooking extends Component {
                                             </div>
                                         </div>
                                     }
-                                    <div className='payment'>
 
-                                        <div className='cost'>
-                                            <div className='secure-payment-label'>
+                                    {
+                                        car.company.payLater &&
+                                        <div className='payment-options-container'>
+                                            <div className='booking-info'>
+                                                <PaymentOptionsIcon />
+                                                <label>{strings.PAYMENT_OPTIONS}</label>
+                                            </div>
+                                            <div className='payment-options'>
+                                                <FormControl>
+                                                    <RadioGroup
+                                                        defaultValue="payOnline"
+                                                        onChange={(event) => {
+                                                            this.setState({ payLater: event.target.value === 'payLater' });
+                                                        }}
+                                                    >
+                                                        <FormControlLabel value="payLater" control={<Radio />} label={
+                                                            <span className='payment-button'>
+                                                                <span>{strings.PAY_LATER}</span>
+                                                                <span className='payment-info'>{`(${strings.PAY_LATER_INFO})`}</span>
+                                                            </span>
+                                                        } />
+                                                        <FormControlLabel value="payOnline" control={<Radio />} label={
+                                                            <span className='payment-button'>
+                                                                <span>{strings.PAY_ONLINE}</span>
+                                                                <span className='payment-info'>{`(${strings.PAY_ONLINE_INFO})`}</span>
+                                                            </span>
+                                                        } />
+                                                    </RadioGroup>
+                                                </FormControl>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    {
+                                        (!car.company.payLater || !payLater) &&
+                                        <div className='payment'>
+
+                                            <div className='cost'>
+                                                <div className='secure-payment-label'>
+                                                    <LockIcon className='secure-payment-lock' />
+                                                    <label>{strings.PAYMENT}</label>
+                                                </div>
+                                                <div className='secure-payment-cost'>
+                                                    <label className='cost-title'>{strings.COST}</label>
+                                                    <label className='cost-value'>{`${price} ${commonStrings.CURRENCY}`}</label>
+                                                </div>
+                                            </div>
+
+                                            <div className='secure-payment-logo'>
+                                                <img src={SecurePayment} alt='' />
+                                            </div>
+
+                                            <div className='card'>
+                                                <FormControl margin="dense" className='card-number' fullWidth>
+                                                    <InputLabel className='required'>{strings.CARD_NUMBER}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={strings.CARD_NUMBER}
+                                                        error={!cardNumberValid}
+                                                        onBlur={this.handleCardNumberBlur}
+                                                        onChange={this.handleCardNumberChange}
+                                                        required
+                                                        autoComplete="off"
+                                                    />
+                                                    <FormHelperText error={!cardNumberValid}>
+                                                        {(!cardNumberValid && strings.CARD_NUMBER_NOT_VALID) || ''}
+                                                    </FormHelperText>
+                                                </FormControl>
+                                                <div className='card-date'>
+                                                    <FormControl margin="dense" className='card-month' fullWidth>
+                                                        <InputLabel className='required'>{strings.CARD_MONTH}</InputLabel>
+                                                        <OutlinedInput
+                                                            type="text"
+                                                            label={strings.CARD_MONTH}
+                                                            error={!cardMonthValid}
+                                                            onBlur={this.handleCardMonthBlur}
+                                                            onChange={this.handleCardMonthChange}
+                                                            required
+                                                            autoComplete="off"
+                                                        // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
+                                                        />
+                                                        <FormHelperText error={!cardMonthValid}>
+                                                            {(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                    <FormControl margin="dense" className='card-year' fullWidth>
+                                                        <InputLabel className='required'>{strings.CARD_YEAR}</InputLabel>
+                                                        <OutlinedInput
+                                                            type="text"
+                                                            label={strings.CARD_YEAR}
+                                                            error={!cardYearValid}
+                                                            onBlur={this.handleCardYearBlur}
+                                                            onChange={this.handleCardYearChange}
+                                                            required
+                                                            autoComplete="off"
+                                                        // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
+                                                        />
+                                                        <FormHelperText error={!cardYearValid}>
+                                                            {(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}
+                                                        </FormHelperText>
+                                                    </FormControl>
+                                                </div>
+                                                <FormControl margin="dense" className='cvv' fullWidth>
+                                                    <InputLabel className='required'>{strings.CVV}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={strings.CVV}
+                                                        error={!cvvValid}
+                                                        onBlur={this.handleCvvBlur}
+                                                        onChange={this.handleCvvChange}
+                                                        required
+                                                        autoComplete="off"
+                                                    // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
+                                                    />
+                                                    <FormHelperText error={!cvvValid}>
+                                                        {(!cvvValid && strings.CVV_NOT_VALID) || ''}
+                                                    </FormHelperText>
+                                                </FormControl>
+                                            </div>
+
+                                            <div className='secure-payment-info'>
                                                 <LockIcon className='secure-payment-lock' />
-                                                <label>{strings.PAYMENT}</label>
-                                            </div>
-                                            <div className='secure-payment-cost'>
-                                                <label className='cost-title'>{strings.COST}</label>
-                                                <label className='cost-value'>{`${price} ${commonStrings.CURRENCY}`}</label>
+                                                <label>{strings.SECURE_PAYMENT_INFO}</label>
                                             </div>
                                         </div>
-
-                                        <div className='secure-payment-logo'>
-                                            <img src={SecurePayment} alt='' />
-                                        </div>
-
-                                        <div className='card'>
-                                            <FormControl margin="dense" className='card-number' fullWidth>
-                                                <InputLabel className='required'>{strings.CARD_NUMBER}</InputLabel>
-                                                <OutlinedInput
-                                                    type="text"
-                                                    label={strings.CARD_NUMBER}
-                                                    error={!cardNumberValid}
-                                                    onBlur={this.handleCardNumberBlur}
-                                                    onChange={this.handleCardNumberChange}
-                                                    required
-                                                    autoComplete="off"
-                                                />
-                                                <FormHelperText error={!cardNumberValid}>
-                                                    {(!cardNumberValid && strings.CARD_NUMBER_NOT_VALID) || ''}
-                                                </FormHelperText>
-                                            </FormControl>
-                                            <div className='card-date'>
-                                                <FormControl margin="dense" className='card-month' fullWidth>
-                                                    <InputLabel className='required'>{strings.CARD_MONTH}</InputLabel>
-                                                    <OutlinedInput
-                                                        type="text"
-                                                        label={strings.CARD_MONTH}
-                                                        error={!cardMonthValid}
-                                                        onBlur={this.handleCardMonthBlur}
-                                                        onChange={this.handleCardMonthChange}
-                                                        required
-                                                        autoComplete="off"
-                                                    // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
-                                                    />
-                                                    <FormHelperText error={!cardMonthValid}>
-                                                        {(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}
-                                                    </FormHelperText>
-                                                </FormControl>
-                                                <FormControl margin="dense" className='card-year' fullWidth>
-                                                    <InputLabel className='required'>{strings.CARD_YEAR}</InputLabel>
-                                                    <OutlinedInput
-                                                        type="text"
-                                                        label={strings.CARD_YEAR}
-                                                        error={!cardYearValid}
-                                                        onBlur={this.handleCardYearBlur}
-                                                        onChange={this.handleCardYearChange}
-                                                        required
-                                                        autoComplete="off"
-                                                    // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
-                                                    />
-                                                    <FormHelperText error={!cardYearValid}>
-                                                        {(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}
-                                                    </FormHelperText>
-                                                </FormControl>
-                                            </div>
-                                            <FormControl margin="dense" className='cvv' fullWidth>
-                                                <InputLabel className='required'>{strings.CVV}</InputLabel>
-                                                <OutlinedInput
-                                                    type="text"
-                                                    label={strings.CVV}
-                                                    error={!cvvValid}
-                                                    onBlur={this.handleCvvBlur}
-                                                    onChange={this.handleCvvChange}
-                                                    required
-                                                    autoComplete="off"
-                                                // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
-                                                />
-                                                <FormHelperText error={!cvvValid}>
-                                                    {(!cvvValid && strings.CVV_NOT_VALID) || ''}
-                                                </FormHelperText>
-                                            </FormControl>
-                                        </div>
-
-                                        <div className='secure-payment-info'>
-                                            <LockIcon className='secure-payment-lock' />
-                                            <label>{strings.SECURE_PAYMENT_INFO}</label>
-                                        </div>
-                                    </div>
+                                    }
                                     <div className="booking-buttons">
                                         <Button
                                             type="submit"
