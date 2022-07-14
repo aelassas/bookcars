@@ -20,7 +20,7 @@ section.car-list article .btn-book {
     background: #f37022;
     font-size: 1.5em;
     font-weight: 700;
-    padding: 1em;
+    padding: 0 2em;
 }
 
 /* Device width is less than or equal to 960px */
@@ -71,8 +71,8 @@ section.car-list article .btn-book {
         display: flex;
         align-items: center;
         position: absolute;
-        bottom: 10px;
-        left: 5px;
+        bottom: 70px;
+        left: 7px;
     }
 
     section.car-list article div.car div.car-company span.car-company-logo {
@@ -213,9 +213,13 @@ section.car-list article .btn-book {
 
     section.car-list article div.action {
         position: absolute;
-        right: 0;
-        bottom: 5px;
         right: 7px;
+        bottom: 5px;
+        left: 7px;
+    }
+
+    section.car-list article .btn-book {
+        width: 100%;
     }
 }
 
