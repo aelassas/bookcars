@@ -462,12 +462,12 @@ routes.route(routeNames.getBooking).get(authJwt.verifyToken, (req, res) => {
                 const language = req.params.language;
 
                 if (booking.company) {
-                    const { _id, fullName, avatar } = booking.company;
-                    booking.company = { _id, fullName, avatar };
+                    const { _id, fullName, avatar, payLater } = booking.company;
+                    booking.company = { _id, fullName, avatar, payLater };
                 }
                 if (booking.car.company) {
-                    const { _id, fullName, avatar } = booking.car.company;
-                    booking.car.company = { _id, fullName, avatar };
+                    const { _id, fullName, avatar, payLater } = booking.car.company;
+                    booking.car.company = { _id, fullName, avatar, payLater };
                 }
 
                 booking.pickupLocation.name = booking.pickupLocation.values.filter(value => value.language === language)[0].value;

@@ -19,7 +19,9 @@ import {
     Button,
     Paper,
     Select,
-    MenuItem
+    MenuItem,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
@@ -50,7 +52,8 @@ export default class CreateUser extends Component {
             birthDate: null,
             emailValid: true,
             phoneValid: true,
-            birthDateValid: true
+            birthDateValid: true,
+            payLater: true
         };
     }
 
@@ -190,70 +193,6 @@ export default class CreateUser extends Component {
         });
     };
 
-    handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const { email, phone, type, fullName, birthDate } = this.state;
-
-        const fullNameValid = await this.validateFullName(fullName);
-        if (!fullNameValid) {
-            return;
-        }
-
-        const emailValid = await this.validateEmail(email);
-        if (!emailValid) {
-            return;
-        }
-
-        const phoneValid = this.validatePhone(phone);
-        if (!phoneValid) {
-            return;
-        }
-
-        const birthDateValid = this.validateBirthDate(birthDate);
-        if (!birthDateValid) {
-            return;
-        }
-
-        if (type === Env.RECORD_TYPE.COMPANY && !this.state.avatar) {
-            this.setState({
-                avatarError: true,
-                error: false
-            });
-            return;
-        }
-
-        this.setState({ loading: true });
-
-        const {
-            admin,
-            user,
-            location,
-            bio,
-            avatar
-        } = this.state;
-
-        const language = UserService.getLanguage();
-        const company = admin ? undefined : user._id;
-
-        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company };
-
-        UserService.create(data)
-            .then(status => {
-                if (status === 200) {
-                    window.location = '/users';
-                } else {
-                    this.setState({
-                        error: true,
-                        loading: false
-                    });
-                }
-            }).catch(() => {
-                UserService.signout();
-            });
-
-    };
-
     handleChange = (e) => {
         e.preventDefault();
     };
@@ -295,6 +234,73 @@ export default class CreateUser extends Component {
         this.setState({ user: user, admin, visible: true, type: admin ? '' : Env.RECORD_TYPE.USER });
     };
 
+    handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const { email, phone, type, fullName, birthDate } = this.state;
+
+        const fullNameValid = await this.validateFullName(fullName);
+        if (!fullNameValid) {
+            return;
+        }
+
+        const emailValid = await this.validateEmail(email);
+        if (!emailValid) {
+            return;
+        }
+
+        const phoneValid = this.validatePhone(phone);
+        if (!phoneValid) {
+            return;
+        }
+
+        const birthDateValid = this.validateBirthDate(birthDate);
+        if (!birthDateValid) {
+            return;
+        }
+
+        if (type === Env.RECORD_TYPE.COMPANY && !this.state.avatar) {
+            this.setState({
+                avatarError: true,
+                error: false
+            });
+            return;
+        }
+
+        this.setState({ loading: true });
+
+        const {
+            admin,
+            user,
+            location,
+            bio,
+            avatar,
+            payLater
+        } = this.state;
+
+        const language = UserService.getLanguage();
+        const company = admin ? undefined : user._id;
+
+        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company };
+
+        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater;
+
+        UserService.create(data)
+            .then(status => {
+                if (status === 200) {
+                    window.location = '/users';
+                } else {
+                    this.setState({
+                        error: true,
+                        loading: false
+                    });
+                }
+            }).catch(() => {
+                UserService.signout();
+            });
+
+    };
+
     render() {
         const {
             user,
@@ -309,7 +315,8 @@ export default class CreateUser extends Component {
             birthDate,
             emailValid,
             phoneValid,
-            birthDateValid
+            birthDateValid,
+            payLater
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER;
@@ -444,6 +451,18 @@ export default class CreateUser extends Component {
                                     autoComplete="off"
                                 />
                             </FormControl>
+
+                            {
+                                company &&
+                                <FormControl component="fieldset" style={{ marginTop: 15 }}>
+                                    <FormControlLabel
+                                        control={<Switch checked={payLater} onChange={(e) => {
+                                            this.setState({ payLater: e.target.checked });
+                                        }} color="primary" />}
+                                        label={commonStrings.PAY_LATER}
+                                    />
+                                </FormControl>
+                            }
 
                             <div className="buttons">
                                 <Button

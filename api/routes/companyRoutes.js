@@ -29,11 +29,12 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
     User.findById(req.body._id)
         .then(company => {
             if (company) {
-                const { fullName, phone, location, bio } = req.body;
+                const { fullName, phone, location, bio, payLater } = req.body;
                 company.fullName = fullName;
                 company.phone = phone;
                 company.location = location;
                 company.bio = bio;
+                company.payLater = payLater;
 
                 company.save()
                     .then(() => res.sendStatus(200))
@@ -84,8 +85,8 @@ routes.route(routeNames.getCompany).get(authJwt.verifyToken, (req, res) => {
                 console.error('[company.getCompany] Company not found:', req.params);
                 res.sendStatus(204);
             } else {
-                const { _id, email, fullName, avatar, phone, location, bio } = user;
-                res.json({ _id, email, fullName, avatar, phone, location, bio });
+                const { _id, email, fullName, avatar, phone, location, bio, payLater } = user;
+                res.json({ _id, email, fullName, avatar, phone, location, bio, payLater });
             }
         })
         .catch(err => {

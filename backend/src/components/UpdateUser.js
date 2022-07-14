@@ -21,7 +21,9 @@ import {
     Paper,
     Select,
     MenuItem,
-    Link
+    Link,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import { intervalToDuration } from 'date-fns';
@@ -55,7 +57,8 @@ export default class CreateUser extends Component {
             type: '',
             birthDate: null,
             birthDateValid: true,
-            phoneValid: true
+            phoneValid: true,
+            payLater: false
         };
     }
 
@@ -246,6 +249,50 @@ export default class CreateUser extends Component {
             });
     };
 
+    onLoad = (loggedUser) => {
+
+        this.setState({ loading: true }, () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('u')) {
+                const id = params.get('u');
+                if (id && id !== '') {
+                    UserService.getUser(id)
+                        .then(user => {
+                            if (user) {
+                                this.setState({
+                                    loggedUser,
+                                    user,
+                                    admin: Helper.admin(loggedUser),
+                                    type: user.type,
+                                    email: user.email,
+                                    avatar: user.avatar,
+                                    fullName: user.fullName,
+                                    phone: user.phone,
+                                    location: user.location,
+                                    bio: user.bio,
+                                    birthDate: user.birthDate ? new Date(user.birthDate) : null,
+                                    payLater: user.payLater,
+                                    loading: false,
+                                    visible: true
+                                });
+                            } else {
+                                this.setState({ loading: false, noMatch: true });
+                            }
+                        })
+                        .catch((err) => {
+                            this.setState({ loading: false, visible: false }, () => {
+                                Helper.error(err);
+                            });
+                        });
+                } else {
+                    this.setState({ loading: false, noMatch: true });
+                }
+            } else {
+                this.setState({ loading: false, noMatch: true });
+            }
+        });
+    };
+
     handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -275,7 +322,7 @@ export default class CreateUser extends Component {
             });
         }
 
-        const { user, location, bio, avatar } = this.state, language = UserService.getLanguage();
+        const { user, location, bio, avatar, payLater } = this.state, language = UserService.getLanguage();
         const data = {
             _id: user._id,
             phone,
@@ -287,6 +334,8 @@ export default class CreateUser extends Component {
             avatar,
             birthDate
         };
+
+        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater;
 
         UserService.updateUser(data)
             .then(status => {
@@ -311,49 +360,6 @@ export default class CreateUser extends Component {
 
     };
 
-    onLoad = (loggedUser) => {
-
-        this.setState({ loading: true }, () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('u')) {
-                const id = params.get('u');
-                if (id && id !== '') {
-                    UserService.getUser(id)
-                        .then(user => {
-                            if (user) {
-                                this.setState({
-                                    loggedUser,
-                                    user,
-                                    admin: Helper.admin(loggedUser),
-                                    type: user.type,
-                                    email: user.email,
-                                    avatar: user.avatar,
-                                    fullName: user.fullName,
-                                    phone: user.phone,
-                                    location: user.location,
-                                    bio: user.bio,
-                                    birthDate: user.birthDate ? new Date(user.birthDate) : null,
-                                    loading: false,
-                                    visible: true
-                                });
-                            } else {
-                                this.setState({ loading: false, noMatch: true });
-                            }
-                        })
-                        .catch((err) => {
-                            this.setState({ loading: false, visible: false }, () => {
-                                Helper.error(err);
-                            });
-                        });
-                } else {
-                    this.setState({ loading: false, noMatch: true });
-                }
-            } else {
-                this.setState({ loading: false, noMatch: true });
-            }
-        });
-    }
-
     render() {
         const {
             loggedUser,
@@ -366,7 +372,6 @@ export default class CreateUser extends Component {
             fullNameError,
             avatarError,
             loading,
-
             fullName,
             email,
             phone,
@@ -374,7 +379,8 @@ export default class CreateUser extends Component {
             bio,
             birthDate,
             birthDateValid,
-            phoneValid
+            phoneValid,
+            payLater
         } = this.state,
             company = type === Env.RECORD_TYPE.COMPANY,
             driver = type === Env.RECORD_TYPE.USER,
@@ -469,6 +475,18 @@ export default class CreateUser extends Component {
                                         <FormHelperText error={!birthDateValid}>
                                             {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
                                         </FormHelperText>
+                                    </FormControl>
+                                }
+
+                                {
+                                    company &&
+                                    <FormControl component="fieldset" style={{ marginTop: 15 }}>
+                                        <FormControlLabel
+                                            control={<Switch checked={payLater} onChange={(e) => {
+                                                this.setState({ payLater: e.target.checked });
+                                            }} color="primary" />}
+                                            label={commonStrings.PAY_LATER}
+                                        />
                                     </FormControl>
                                 }
 
