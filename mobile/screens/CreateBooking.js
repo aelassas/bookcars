@@ -16,6 +16,7 @@ import Link from '../elements/Link';
 import Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Button from '../elements/Button';
+import RadioButton from '../elements/RadioButton';
 import CarService from '../services/CarService';
 import LocationService from '../services/LocationService';
 import BookingService from '../services/BookingService';
@@ -56,6 +57,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [_email, set_Email] = useState('');
     const [_phone, set_Phone] = useState('');
     const [_birthDate, set_BirthDate] = useState(null);
+    const [payLater, setPayLater] = useState(false);
 
     const [fullNameRequired, setFullNameRequired] = useState(false);
     const [emailInfo, setEmailInfo] = useState(true);
@@ -181,6 +183,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             setCardMonthValid(true);
             setCardCvvRequired(false);
             setCardCvvValid(true);
+            setPayLater(false);
             setSuccess(false);
 
             if (cardNumberRef.current) cardNumber.current.clear();
@@ -647,29 +650,31 @@ export default function CreateBookingScreen({ navigation, route }) {
             }
         }
 
-        const cardNumberValid = validateCardNumber();
-        if (!cardNumberValid) {
-            return;
-        }
+        if (!payLater) {
+            const cardNumberValid = validateCardNumber();
+            if (!cardNumberValid) {
+                return;
+            }
 
-        const cardMonthValid = validateCardMonth();
-        if (!cardMonthValid) {
-            return;
-        }
+            const cardMonthValid = validateCardMonth();
+            if (!cardMonthValid) {
+                return;
+            }
 
-        const cardYearValid = validateCardYear();
-        if (!cardYearValid) {
-            return;
-        }
+            const cardYearValid = validateCardYear();
+            if (!cardYearValid) {
+                return;
+            }
 
-        const cvvValid = validateCvv();
-        if (!cvvValid) {
-            return;
-        }
+            const cvvValid = validateCvv();
+            if (!cvvValid) {
+                return;
+            }
 
-        const cardDateValid = validateCardDate(cardMonth, cardYear);
-        if (!cardDateValid) {
-            return setCardDateError(true);
+            const cardDateValid = validateCardDate(cardMonth, cardYear);
+            if (!cardDateValid) {
+                return setCardDateError(true);
+            }
         }
 
         setLoading(true);
@@ -689,7 +694,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             dropOffLocation: dropOffLocation._id,
             from: from,
             to: to,
-            status: Env.BOOKING_STATUS.PAID,
+            status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
             cancellation,
             amendments,
             theftProtection,
@@ -708,7 +713,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             };
         }
 
-        const payload = { driver, booking, additionalDriver: _additionalDriver };
+        const payload = { driver, booking, additionalDriver: _additionalDriver, payLater };
 
         BookingService.book(payload)
             .then(status => {
@@ -999,93 +1004,115 @@ export default function CreateBookingScreen({ navigation, route }) {
                                     </View>
                                 }
 
-                                <View style={styles.payment}>
+                                {
+                                    car.company.payLater &&
+                                    <View style={styles.section}>
+                                        <View style={styles.sectionHeader}>
+                                            <MaterialIcons name='settings' size={iconSize} color={iconColor} />
+                                            <Text style={styles.sectionHeaderText}>{i18n.t('PAYMENT_OPTIONS')}</Text>
+                                        </View>
 
-                                    <View style={styles.paymentHeader}>
+                                        <RadioButton label={i18n.t('PAY_LATER')} checked={payLater} onValueChange={(checked) => {
+                                            setPayLater(checked);
+                                        }} />
+                                        <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
+
+                                        <RadioButton label={i18n.t('PAY_ONLINE')} checked={!payLater} onValueChange={(checked) => {
+                                            setPayLater(!checked);
+                                        }} />
+                                        <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
+                                    </View>
+                                }
+
+                                {
+                                    (!car.company.payLater || !payLater) &&
+                                    <View style={styles.payment}>
+
+                                        <View style={styles.paymentHeader}>
+                                            <View style={styles.securePaymentInfo}>
+                                                <MaterialIcons name='lock' size={iconSize} color='#1c8901' />
+                                                <Text style={styles.securePaymentInfoText}>{i18n.t('PAYMENT')}</Text>
+                                            </View>
+
+                                            <View style={styles.securePaymentInfo}>
+                                                <Text style={styles.totalText}>{i18n.t('COST')}</Text>
+                                                <Text style={styles.costText}>{`${price} ${i18n.t('CURRENCY')}`}</Text>
+                                            </View>
+                                        </View>
+
+                                        <Image source={require('../assets/secure-payment.png')} style={styles.paymentImage} />
+
+                                        <TextInput
+                                            ref={cardNumberRef}
+                                            style={styles.component}
+                                            label={i18n.t('CARD_NUMBER')}
+                                            keyboardType='numeric'
+                                            maxLength={16}
+                                            value={cardNumber}
+                                            error={cardNumberRequired || !cardNumberValid}
+                                            helperText={
+                                                ((cardNumberRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || '')
+                                            }
+                                            backgroundColor='#e5efe5'
+                                            onChangeText={onCardNumberChange}
+                                        />
+
+                                        <TextInput
+                                            ref={cardMonthRef}
+                                            style={styles.component}
+                                            label={i18n.t('CARD_MONTH')}
+                                            keyboardType='numeric'
+                                            maxLength={2}
+                                            value={cardMonth}
+                                            error={cardMonthRequired || !cardMonthValid}
+                                            helperText={
+                                                ((cardMonthRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || '')
+                                            }
+                                            backgroundColor='#e5efe5'
+                                            onChangeText={onCardMonthChange}
+                                        />
+
+                                        <TextInput
+                                            ref={cardYearRef}
+                                            style={styles.component}
+                                            label={i18n.t('CARD_YEAR')}
+                                            keyboardType='numeric'
+                                            maxLength={2}
+                                            value={cardYear}
+                                            error={cardYearRequired || !cardYearValid}
+                                            helperText={
+                                                ((cardYearRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || '')
+                                            }
+                                            backgroundColor='#e5efe5'
+                                            onChangeText={onCardYearChange}
+                                        />
+
+                                        <TextInput
+                                            ref={cvvRef}
+                                            style={styles.component}
+                                            keyboardType='numeric'
+                                            maxLength={4}
+                                            label={i18n.t('CVV')}
+                                            value={cvv}
+                                            error={cvvRequired || !cvvValid}
+                                            helperText={
+                                                ((cvvRequired && i18n.t('REQUIRED')) || '')
+                                                || ((!cvvValid && i18n.t('CVV_NOT_VALID')) || '')
+                                            }
+                                            backgroundColor='#e5efe5'
+                                            onChangeText={onCardCvvChange}
+                                        />
+
                                         <View style={styles.securePaymentInfo}>
                                             <MaterialIcons name='lock' size={iconSize} color='#1c8901' />
-                                            <Text style={styles.securePaymentInfoText}>{i18n.t('PAYMENT')}</Text>
+                                            <Text style={styles.securePaymentInfoText}>{i18n.t('SECURE_PAYMENT_INFO')}</Text>
                                         </View>
 
-                                        <View style={styles.securePaymentInfo}>
-                                            <Text style={styles.totalText}>{i18n.t('COST')}</Text>
-                                            <Text style={styles.costText}>{`${price} ${i18n.t('CURRENCY')}`}</Text>
-                                        </View>
                                     </View>
-
-                                    <Image source={require('../assets/secure-payment.png')} style={styles.paymentImage} />
-
-                                    <TextInput
-                                        ref={cardNumberRef}
-                                        style={styles.component}
-                                        label={i18n.t('CARD_NUMBER')}
-                                        keyboardType='numeric'
-                                        maxLength={16}
-                                        value={cardNumber}
-                                        error={cardNumberRequired || !cardNumberValid}
-                                        helperText={
-                                            ((cardNumberRequired && i18n.t('REQUIRED')) || '')
-                                            || ((!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || '')
-                                        }
-                                        backgroundColor='#e5efe5'
-                                        onChangeText={onCardNumberChange}
-                                    />
-
-                                    <TextInput
-                                        ref={cardMonthRef}
-                                        style={styles.component}
-                                        label={i18n.t('CARD_MONTH')}
-                                        keyboardType='numeric'
-                                        maxLength={2}
-                                        value={cardMonth}
-                                        error={cardMonthRequired || !cardMonthValid}
-                                        helperText={
-                                            ((cardMonthRequired && i18n.t('REQUIRED')) || '')
-                                            || ((!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || '')
-                                        }
-                                        backgroundColor='#e5efe5'
-                                        onChangeText={onCardMonthChange}
-                                    />
-
-                                    <TextInput
-                                        ref={cardYearRef}
-                                        style={styles.component}
-                                        label={i18n.t('CARD_YEAR')}
-                                        keyboardType='numeric'
-                                        maxLength={2}
-                                        value={cardYear}
-                                        error={cardYearRequired || !cardYearValid}
-                                        helperText={
-                                            ((cardYearRequired && i18n.t('REQUIRED')) || '')
-                                            || ((!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || '')
-                                        }
-                                        backgroundColor='#e5efe5'
-                                        onChangeText={onCardYearChange}
-                                    />
-
-                                    <TextInput
-                                        ref={cvvRef}
-                                        style={styles.component}
-                                        keyboardType='numeric'
-                                        maxLength={4}
-                                        label={i18n.t('CVV')}
-                                        value={cvv}
-                                        error={cvvRequired || !cvvValid}
-                                        helperText={
-                                            ((cvvRequired && i18n.t('REQUIRED')) || '')
-                                            || ((!cvvValid && i18n.t('CVV_NOT_VALID')) || '')
-                                        }
-                                        backgroundColor='#e5efe5'
-                                        onChangeText={onCardCvvChange}
-                                    />
-
-                                    <View style={styles.securePaymentInfo}>
-                                        <MaterialIcons name='lock' size={iconSize} color='#1c8901' />
-                                        <Text style={styles.securePaymentInfoText}>{i18n.t('SECURE_PAYMENT_INFO')}</Text>
-                                    </View>
-
-                                </View>
-
+                                }
                                 <View style={styles.footer}>
 
                                     <Button style={styles.component} label={i18n.t('BOOK_NOW')} onPress={onPressBook} />
@@ -1102,7 +1129,7 @@ export default function CreateBookingScreen({ navigation, route }) {
                     }
                     {success &&
                         <View style={styles.sucess}>
-                            <Text style={styles.sucessText}>{i18n.t('BOOKING_SUCCESS')}</Text>
+                            <Text style={styles.sucessText}>{payLater ? i18n.t('PAY_LATER_SUCCESS') : i18n.t('BOOKING_SUCCESS')}</Text>
                             <Link style={styles.sucessLink} label={i18n.t('GO_TO_HOME')} onPress={() => {
                                 navigation.navigate('Home');
                             }} />
@@ -1210,6 +1237,11 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         marginBottom: 25,
     },
+    paymentInfo: {
+        color: 'rgba(0, 0, 0, 0.35)',
+        fontSize: 12,
+        marginLeft: 25
+    },
     payment: {
         alignSelf: 'stretch',
         backgroundColor: '#e5efe5',
@@ -1218,7 +1250,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginTop: 45,
         marginRight: 10,
-        marginBottom: 15,
         marginLeft: 10,
         padding: 25,
         justifyContent: 'center',
@@ -1262,6 +1293,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         alignSelf: 'stretch',
+        marginTop: 15,
         marginRight: 10,
         marginBottom: 40,
         marginLeft: 10,

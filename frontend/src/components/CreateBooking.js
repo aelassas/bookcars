@@ -418,7 +418,7 @@ export default class CreateBooking extends Component {
         e.preventDefault();
 
         const { authenticated, email, phone, birthDate, tosChecked, cardNumber, cardMonth, cardYear, cvv,
-            additionalDriver, _email, _phone, _birthDate } = this.state;
+            additionalDriver, _email, _phone, _birthDate, payLater } = this.state;
 
         if (!authenticated) {
             const emailValid = await this.validateEmail(email);
@@ -441,29 +441,31 @@ export default class CreateBooking extends Component {
             }
         }
 
-        const cardNumberValid = this.validateCardNumber(cardNumber);
-        if (!cardNumberValid) {
-            return;
-        }
+        if (!payLater) {
+            const cardNumberValid = this.validateCardNumber(cardNumber);
+            if (!cardNumberValid) {
+                return;
+            }
 
-        const cardMonthValid = this.validateCardMonth(cardMonth);
-        if (!cardMonthValid) {
-            return;
-        }
+            const cardMonthValid = this.validateCardMonth(cardMonth);
+            if (!cardMonthValid) {
+                return;
+            }
 
-        const cardYearValid = this.validateCardYear(cardYear);
-        if (!cardYearValid) {
-            return;
-        }
+            const cardYearValid = this.validateCardYear(cardYear);
+            if (!cardYearValid) {
+                return;
+            }
 
-        const cvvValid = this.validateCvv(cvv);
-        if (!cvvValid) {
-            return;
-        }
+            const cvvValid = this.validateCvv(cvv);
+            if (!cvvValid) {
+                return;
+            }
 
-        const cardDateValid = this.validateCardDate(cardMonth, cardYear);
-        if (!cardDateValid) {
-            return this.setState({ cardDateError: true });
+            const cardDateValid = this.validateCardDate(cardMonth, cardYear);
+            if (!cardDateValid) {
+                return this.setState({ cardDateError: true });
+            }
         }
 
         if (additionalDriver) {
@@ -498,8 +500,7 @@ export default class CreateBooking extends Component {
             collisionDamageWaiver,
             fullInsurance,
             price,
-            _fullName,
-            payLater
+            _fullName
         } = this.state;
 
         let booking, driver, _additionalDriver;
@@ -514,7 +515,7 @@ export default class CreateBooking extends Component {
             dropOffLocation: dropOffLocation._id,
             from: from,
             to: to,
-            status: Env.BOOKING_STATUS.PAID,
+            status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
             cancellation,
             amendments,
             theftProtection,
@@ -1164,7 +1165,7 @@ export default class CreateBooking extends Component {
                     </div>
                 }
                 {noMatch && <NoMatch hideHeader />}
-                {success && <Info message={strings.SUCCESS} />}
+                {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
                 {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             </Master>
         );
