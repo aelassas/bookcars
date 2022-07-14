@@ -149,8 +149,6 @@ routes.route(routeNames.book).post(async (req, res) => {
             req.body.booking._additionalDriver = additionalDriver._id;
         }
 
-        if (!req.body.payLater) req.body.booking.status = 'pending';
-
         const booking = new Booking(req.body.booking);
 
         await booking.save();

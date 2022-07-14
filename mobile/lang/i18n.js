@@ -203,7 +203,13 @@ i18n.translations = {
         DELETE_NOTIFICATIONS: 'Êtes-vous sûr de vouloir supprimer ces notifications ?',
         DELETE_AVATAR: 'Êtes-vous sûr de vouloir supprimer votre photo de profil ?',
         CAMERA_PERMISSION: "L'autorisation d'accéder aux fichiers et contenus multimédias est requise!",
-        BOOKING_DELETED: 'Cette réservation a été supprimée.'
+        BOOKING_DELETED: 'Cette réservation a été supprimée.',
+        PAYMENT_OPTIONS: 'Options de paiement',
+        PAY_LATER: 'Payer plus tard',
+        PAY_LATER_INFO: 'Modification et annulation gratuites',
+        PAY_ONLINE: 'Payer en ligne',
+        PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
+        PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -405,7 +411,13 @@ i18n.translations = {
         DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
         DELETE_AVATAR: 'Are you sure you want to delete your profile picture?',
         CAMERA_PERMISSION: 'Permission to access camera roll is required!',
-        BOOKING_DELETED: 'This booking was deleted.'
+        BOOKING_DELETED: 'This booking was deleted.',
+        PAYMENT_OPTIONS: 'Payment options',
+        PAY_LATER: 'Paye later',
+        PAY_LATER_INFO: 'Free amendments and cancellation',
+        PAY_ONLINE: 'Pay online',
+        PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
+        PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
     }
 };
 
