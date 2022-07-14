@@ -9,7 +9,7 @@ export default class BookingService {
     }
 
     static getBookings(payload, page, size) {
-        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}}`, payload, { headers: UserService.authHeader() }).then(res => res.data);
+        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}/${UserService.getLanguage()}`, payload, { headers: UserService.authHeader() }).then(res => res.data);
     }
 
     static getBooking(id) {
