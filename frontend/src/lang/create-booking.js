@@ -27,7 +27,12 @@ export const strings = new LocalizedStrings({
         SIGN_IN: 'Se connecter ?',
         SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
         CARD_DATE_ERROR: 'Date de carte non valide.',
-        SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.'
+        SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
+        PAYMENT_OPTIONS: 'Options de paiement',
+        PAY_LATER: 'Payer plus tard',
+        PAY_LATER_INFO: 'Modification et annulation gratuites',
+        PAY_ONLINE: 'Payer en ligne',
+        PAY_ONLINE_INFO: 'Modification et annulation sous conditions'
     },
     en: {
         BOOKING_HEADING: 'Book now',
@@ -53,7 +58,12 @@ export const strings = new LocalizedStrings({
         SIGN_IN: 'Sign in?',
         SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
         CARD_DATE_ERROR: 'Invalid card date.',
-        SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.'
+        SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.',
+        PAYMENT_OPTIONS: 'Payment options',
+        PAY_LATER: 'Paye later',
+        PAY_LATER_INFO: 'Free amendments and cancellation',
+        PAY_ONLINE: 'Pay online',
+        PAY_ONLINE_INFO: 'Amendments and cancellation under conditions'
     }
 });
 

@@ -149,6 +149,8 @@ routes.route(routeNames.book).post(async (req, res) => {
             req.body.booking._additionalDriver = additionalDriver._id;
         }
 
+        if (!req.body.payLater) req.body.booking.status = 'pending';
+
         const booking = new Booking(req.body.booking);
 
         await booking.save();
@@ -158,16 +160,18 @@ routes.route(routeNames.book).post(async (req, res) => {
         const from = booking.from.toLocaleString(locale, options);
         const to = booking.to.toLocaleString(locale, options);
         const car = await Car.findById(booking.car).populate('company');
-        const pickupLocation = await Location.findById(booking.pickupLocation);
-        const dropOffLocation = await Location.findById(booking.dropOffLocation);
-
+        const pickupLocation = await Location.findById(booking.pickupLocation).populate('values');
+        pickupLocation.name = pickupLocation.values.filter(value => value.language === user.language)[0].value;
+        const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values');
+        dropOffLocation.name = dropOffLocation.values.filter(value => value.language === user.language)[0].value;
+        console.log('req.body.payLater', req.body.payLater)
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
             subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
             html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
 
-                + `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>'
+                + (!req.body.payLater ? (`${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>') : '')
 
                 + `${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}`
                 + `${from} ${strings.BOOKING_CONFIRMED_PART6}`

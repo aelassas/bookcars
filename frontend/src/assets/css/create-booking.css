@@ -32,16 +32,35 @@ div.booking div.booking-info label {
 }
 
 div.booking div.booking-options-container,
-div.booking div.booking-details-container {
+div.booking div.booking-details-container,
+div.booking div.payment-options-container {
     background: #fbfbfb;
     border: 1px solid #d9d8d9;
     padding: 25px;
     margin-bottom: 15px;
 }
 
-div.booking div.booking-options {
+div.booking div.booking-options,
+div.booking div.payment-options {
     color: #333;
     user-select: none;
+}
+
+div.booking div.payment-options span.payment-info {
+    margin-left: 10px;
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 13px;
+}
+
+@media only screen and (max-width: 960px) {
+    div.booking div.payment-options span.payment-button {
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.booking div.payment-options span.payment-info {
+        margin-left: 0;
+    }
 }
 
 div.booking div.booking-options span.booking-option-label {
