@@ -298,8 +298,8 @@ routes.route(routeNames.getCar).get((req, res) => {
         .then(car => {
             if (car) {
                 if (car.company) {
-                    const { _id, fullName, avatar } = car.company;
-                    car.company = { _id, fullName, avatar };
+                    const { _id, fullName, avatar, payLater } = car.company;
+                    car.company = { _id, fullName, avatar, payLater };
                 }
 
                 for (let i = 0; i < car.locations.length; i++) {

@@ -679,7 +679,7 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 console.error('[user.update] User not found:', req.body.email);
                 res.sendStatus(204);
             } else {
-                const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications } = req.body;
+                const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body;
                 if (fullName) user.fullName = fullName;
                 user.phone = phone;
                 user.location = location;
@@ -687,6 +687,7 @@ routes.route(routeNames.update).post(authJwt.verifyToken, (req, res) => {
                 user.birthDate = birthDate;
                 if (type) user.type = type;
                 if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications;
+                if (typeof payLater !== 'undefined') user.payLater = payLater;
 
                 user.save()
                     .then(() => {
@@ -769,7 +770,8 @@ routes.route(routeNames.getUser).get(authJwt.verifyToken, (req, res) => {
         location: 1,
         type: 1,
         blacklisted: 1,
-        birthDate: 1
+        birthDate: 1,
+        payLater: 1
     })
         .lean()
         .then(user => {

@@ -14,7 +14,9 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper
+    Paper,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
@@ -40,7 +42,8 @@ export default class CreateCompany extends Component {
             avatar: null,
             avatarError: false,
             emailValid: true,
-            phoneValid: true
+            phoneValid: true,
+            payLater: true
         };
     }
 
@@ -166,7 +169,42 @@ export default class CreateCompany extends Component {
         event.preventDefault();
     };
 
-    preventDefault = (event) => event.preventDefault();
+    handleChange = (e) => {
+        e.preventDefault();
+    };
+
+    onBeforeUpload = () => {
+        this.setState({ loading: true });
+    };
+
+    onAvatarChange = (avatar) => {
+        this.setState({ loading: false, avatar });
+        if (avatar !== null) {
+            this.setState({ avatarError: false });
+        }
+    };
+
+    handleCancel = () => {
+        const { avatar } = this.state;
+
+        if (avatar) {
+            this.setState({ loading: true });
+
+            UserService.deleteTempAvatar(avatar)
+                .then(() => {
+                    window.location.href = '/suppliers';
+                })
+                .catch(() => {
+                    window.location.href = '/suppliers';
+                });
+        } else {
+            window.location.href = '/suppliers';
+        }
+    };
+
+    onLoad = (user) => {
+        this.setState({ language: user.language, visible: true });
+    };
 
     handleSubmit = async (e) => {
         e.preventDefault();
@@ -206,7 +244,8 @@ export default class CreateCompany extends Component {
             bio: this.state.bio,
             language: UserService.getLanguage(),
             type: Env.RECORD_TYPE.COMPANY,
-            avatar: this.state.avatar
+            avatar: this.state.avatar,
+            payLater: this.state.payLater
         };
 
         UserService.create(data)
@@ -225,46 +264,6 @@ export default class CreateCompany extends Component {
             });
     };
 
-    handleChange = (e) => {
-        e.preventDefault();
-    };
-
-    onBeforeUpload = () => {
-        this.setState({ loading: true });
-    };
-
-    onAvatarChange = (avatar) => {
-        this.setState({ loading: false, avatar });
-        if (avatar !== null) {
-            this.setState({ avatarError: false });
-        }
-    };
-
-    handleCancel = () => {
-        const { avatar } = this.state;
-
-        if (avatar) {
-            this.setState({ loading: true });
-
-            UserService.deleteTempAvatar(avatar)
-                .then(() => {
-                    window.location.href = '/suppliers';
-                })
-                .catch(() => {
-                    window.location.href = '/suppliers';
-                });
-        } else {
-            window.location.href = '/suppliers';
-        }
-    };
-
-    onLoad = (user) => {
-        this.setState({ language: user.language, visible: true });
-    }
-
-    componentDidMount() {
-    }
-
     render() {
         const {
             error,
@@ -276,7 +275,8 @@ export default class CreateCompany extends Component {
             visible,
             loading,
             emailValid,
-            phoneValid } = this.state;
+            phoneValid,
+            payLater } = this.state;
 
         return (
             <Master onLoad={this.onLoad} strict={true} admin={true}>
@@ -334,6 +334,15 @@ export default class CreateCompany extends Component {
                                     {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                                     {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                                 </FormHelperText>
+                            </FormControl>
+
+                            <FormControl component="fieldset" style={{ marginTop: 15 }}>
+                                <FormControlLabel
+                                    control={<Switch checked={payLater} onChange={(e) => {
+                                        this.setState({ payLater: e.target.checked });
+                                    }} color="primary" />}
+                                    label={commonStrings.PAY_LATER}
+                                />
                             </FormControl>
 
                             <div className='info'>

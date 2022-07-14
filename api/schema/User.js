@@ -90,7 +90,11 @@ const userSchema = new Schema({
     blacklisted: {
         type: Boolean,
         default: false
-    }
+    },
+    payLater: {
+        type: Boolean,
+        default: true
+    },
 }, {
     timestamps: true,
     strict: true,

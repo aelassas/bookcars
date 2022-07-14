@@ -230,9 +230,11 @@
     }
 
     .buttons {
-        float: right;
         margin-top: 15px;
         margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
     }
 
 }

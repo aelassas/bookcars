@@ -17,7 +17,9 @@ import {
     FormHelperText,
     Button,
     Paper,
-    Link
+    Link,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import validator from 'validator';
@@ -43,7 +45,8 @@ export default class UpdateCompany extends Component {
             avatar: null,
             avatarError: false,
             email: '',
-            phoneValid: true
+            phoneValid: true,
+            payLater: false
         };
     }
 
@@ -163,6 +166,43 @@ export default class UpdateCompany extends Component {
             });
     };
 
+    onLoad = (user) => {
+        this.setState({ user, loading: true }, () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('c')) {
+                const id = params.get('c');
+                if (id && id !== '') {
+                    CompanyService.getCompany(id)
+                        .then(company => {
+                            if (company) {
+                                this.setState({
+                                    company,
+                                    email: company.email,
+                                    avatar: company.avatar,
+                                    fullName: company.fullName,
+                                    phone: company.phone,
+                                    location: company.location,
+                                    bio: company.bio,
+                                    payLater: company.payLater,
+                                    loading: false,
+                                    visible: true
+                                });
+                            } else {
+                                this.setState({ loading: false, noMatch: true });
+                            }
+                        })
+                        .catch(() => {
+                            this.setState({ loading: false, error: true, visible: false });
+                        });
+                } else {
+                    this.setState({ loading: false, noMatch: true });
+                }
+            } else {
+                this.setState({ loading: false, noMatch: true });
+            }
+        });
+    };
+
     handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -186,14 +226,15 @@ export default class UpdateCompany extends Component {
             return;
         }
 
-        const { company, location, bio } = this.state;
+        const { company, location, bio, payLater } = this.state;
 
         const data = {
             _id: company._id,
             fullName,
             phone,
             location,
-            bio
+            bio,
+            payLater
         };
 
         CompanyService.update(data)
@@ -211,45 +252,6 @@ export default class UpdateCompany extends Component {
             });
     };
 
-    onLoad = (user) => {
-        this.setState({ user, loading: true }, () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('c')) {
-                const id = params.get('c');
-                if (id && id !== '') {
-                    CompanyService.getCompany(id)
-                        .then(company => {
-                            if (company) {
-                                this.setState({
-                                    company,
-                                    email: company.email,
-                                    avatar: company.avatar,
-                                    fullName: company.fullName,
-                                    phone: company.phone,
-                                    location: company.location,
-                                    bio: company.bio,
-                                    loading: false,
-                                    visible: true
-                                });
-                            } else {
-                                this.setState({ loading: false, noMatch: true });
-                            }
-                        })
-                        .catch(() => {
-                            this.setState({ loading: false, error: true, visible: false });
-                        });
-                } else {
-                    this.setState({ loading: false, noMatch: true });
-                }
-            } else {
-                this.setState({ loading: false, noMatch: true });
-            }
-        });
-    }
-
-    componentDidMount() {
-    }
-
     render() {
         const {
             user,
@@ -265,7 +267,8 @@ export default class UpdateCompany extends Component {
             loading,
             noMatch,
             avatarError,
-            phoneValid
+            phoneValid,
+            payLater
         } = this.state, admin = Helper.admin(user);
 
         return (
@@ -318,6 +321,15 @@ export default class UpdateCompany extends Component {
                                         type="text"
                                         value={email}
                                         disabled
+                                    />
+                                </FormControl>
+
+                                <FormControl component="fieldset" style={{ marginTop: 15 }}>
+                                    <FormControlLabel
+                                        control={<Switch checked={payLater} onChange={(e) => {
+                                            this.setState({ payLater: e.target.checked });
+                                        }} color="primary" />}
+                                        label={commonStrings.PAY_LATER}
                                     />
                                 </FormControl>
 
