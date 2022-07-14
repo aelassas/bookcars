@@ -597,8 +597,7 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
                                         $match: {
                                             $and: [
                                                 { $expr: { $in: ['$_id', '$$values'] } },
-                                                { $expr: { $eq: ['$language', language] } },
-                                                { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } }
+                                                { $expr: { $eq: ['$language', language] } }
                                             ]
                                         }
                                     }
@@ -633,8 +632,7 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
                                         $match: {
                                             $and: [
                                                 { $expr: { $in: ['$_id', '$$values'] } },
-                                                { $expr: { $eq: ['$language', language] } },
-                                                { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } }
+                                                { $expr: { $eq: ['$language', language] } }
                                             ]
                                         }
                                     }
