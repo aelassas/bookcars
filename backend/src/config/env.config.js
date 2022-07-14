@@ -13,7 +13,7 @@ const Env = {
         {
             code: 'en',
             label: 'English'
-        },
+        }
     ],
     DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'fr',
     PAGE_SIZE: parseInt(process.env.REACT_APP_BC_PAGE_SIZE || 30),
