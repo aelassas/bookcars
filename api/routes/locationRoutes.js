@@ -57,8 +57,18 @@ routes.route(routeNames.update).put(authJwt.verifyToken, (req, res) => {
                 for (let i = 0; i < names.length; i++) {
                     const name = names[i];
                     const locationValue = location.values.filter(value => value.language === name.language)[0];
-                    locationValue.value = name.name;
-                    await locationValue.save();
+                    if (locationValue) {
+                        locationValue.value = name.name;
+                        await locationValue.save();
+                    } else {
+                        const locationValue = new LocationValue({
+                            language: name.language,
+                            value: name.name
+                        });
+                        await locationValue.save();
+                        location.values.push(locationValue._id);
+                        await location.save();
+                    }
                 }
                 return res.sendStatus(200);
             } else {

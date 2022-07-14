@@ -143,9 +143,17 @@ export default class UpdateLocation extends Component {
                     LocationService.getLocation(id)
                         .then(location => {
                             if (location) {
+                                Env._LANGUAGES.forEach(lang => {
+                                    if (!location.values.some(value => value.language === lang.code)) {
+                                        location.values.push({ language: lang.code, name: '' });
+                                    }
+                                });
+
+                                const names = location.values.map(value => ({ language: value.language, name: value.value }));
+
                                 this.setState({
                                     location,
-                                    names: location.values.map(value => ({ _id: value._id, language: value.language, name: value.value })),
+                                    names,
                                     loading: false,
                                     visible: true
                                 });
