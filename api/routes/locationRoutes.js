@@ -149,7 +149,7 @@ routes.route(routeNames.getLocations).get(async (req, res) => {
                 }
             },
             { $unwind: { path: '$value', preserveNullAndEmptyArrays: false } },
-            { '$addFields': { 'name': '$value.value' } },
+            { $addFields: { name: '$value.value' } },
             {
                 $facet: {
                     resultData: [

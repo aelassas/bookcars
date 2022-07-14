@@ -10,12 +10,14 @@ export default class BookingService {
 
     static async getBookings(payload, page, size) {
         const headers = await UserService.authHeader();
-        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}}`, payload, { headers }).then(res => res.data);
+        const language = await UserService.getLanguage();
+        return axios.post(`${Env.API_HOST}/api/bookings/${page}/${size}/${language}`, payload, { headers }).then(res => res.data);
     }
 
     static async getBooking(id) {
         const headers = await UserService.authHeader();
-        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}`, { headers }).then(res => res.data);
+        const language = await UserService.getLanguage();
+        return axios.get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${language}`, { headers }).then(res => res.data);
     }
 
     static async hasBookings(driver) {

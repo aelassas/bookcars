@@ -530,6 +530,8 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
             }
         }
 
+        const language = req.params.language;
+
         const data = await Booking.aggregate([
             {
                 $lookup: {
@@ -585,6 +587,27 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
                             $match: {
                                 $expr: { $eq: ['$_id', '$$pickupLocationId'] }
                             }
+                        },
+                        {
+                            $lookup: {
+                                from: 'LocationValue',
+                                let: { values: '$values' },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $and: [
+                                                { $expr: { $in: ['$_id', '$$values'] } },
+                                                { $expr: { $eq: ['$language', language] } },
+                                                { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                as: 'value'
+                            }
+                        },
+                        {
+                            $addFields: { name: '$value.value' }
                         }
                     ],
                     as: 'pickupLocation'
@@ -600,6 +623,27 @@ routes.route(routeNames.getBookings).post(authJwt.verifyToken, async (req, res) 
                             $match: {
                                 $expr: { $eq: ['$_id', '$$dropOffLocationId'] }
                             }
+                        },
+                        {
+                            $lookup: {
+                                from: 'LocationValue',
+                                let: { values: '$values' },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $and: [
+                                                { $expr: { $in: ['$_id', '$$values'] } },
+                                                { $expr: { $eq: ['$language', language] } },
+                                                { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                as: 'value'
+                            }
+                        },
+                        {
+                            $addFields: { name: '$value.value' }
                         }
                     ],
                     as: 'dropOffLocation'
