@@ -37,6 +37,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [phone, setPhone] = useState('');
     const [birthDate, setBirthDate] = useState(null);
     const [tosChecked, setTosChecked] = useState(false);
+    const [cardName, setCardName] = useState('');
     const [cardNumber, setCardNumber] = useState('');
     const [cardMonth, setCardMonth] = useState('');
     const [cardYear, setCardYear] = useState('');
@@ -70,6 +71,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const [birthDateRequired, setBirthDateRequired] = useState(false);
     const [birthDateValid, setBirthDateValid] = useState(true);
     const [tosError, setTosError] = useState(false);
+    const [cardNameRequired, setCardNameRequired] = useState(false);
     const [cardNumberRequired, setCardNumberRequired] = useState(false);
     const [cardNumberValid, setCardNumberValid] = useState(true);
     const [cardMonthRequired, setCardMonthRequired] = useState(false);
@@ -93,6 +95,7 @@ export default function CreateBookingScreen({ navigation, route }) {
     const fullNameRef = useRef(null);
     const emailRef = useRef(null);
     const phoneRef = useRef(null);
+    const cardNameRef = useRef(null);
     const cardNumberRef = useRef(null);
     const cardMonthRef = useRef(null);
     const cardYearRef = useRef(null);
@@ -159,6 +162,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             if (_emailRef.current) _emailRef.current.clear();
             if (_phoneRef.current) _phoneRef.current.clear();
 
+            setCardName('');
             setCardNumber('');
             setCardMonth('');
             setCardYear('');
@@ -175,6 +179,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             setBirthDateRequired(false);
             setTosError(false);
             setError(false);
+            setCardNameRequired(false);
             setCardNumberRequired(false);
             setCardNumberValid(true);
             setCardYearRequired(false);
@@ -186,6 +191,7 @@ export default function CreateBookingScreen({ navigation, route }) {
             setPayLater(false);
             setSuccess(false);
 
+            if (cardNameRef.current) cardNameRef.current.clear();
             if (cardNumberRef.current) cardNumber.current.clear();
             if (cardMonthRef.current) cardMonthRef.current.clear();
             if (cardYearRef.current) cardYearRef.current.clear();
@@ -441,6 +447,21 @@ export default function CreateBookingScreen({ navigation, route }) {
         if (checked) setTosError(false);
     };
 
+    const validateCardName = () => {
+        if (cardName) {
+            setCardNameRequired(false);
+            return true;
+        } else {
+            setCardNameRequired(true);
+            return false;
+        }
+    };
+
+    const onCardNameChange = (text) => {
+        setCardName(text);
+        setCardNameRequired(false);
+    };
+
     const validateCardNumber = () => {
         if (cardNumber) {
             const cardNumberValid = validator.isCreditCard(cardNumber);
@@ -651,6 +672,11 @@ export default function CreateBookingScreen({ navigation, route }) {
         }
 
         if (!payLater) {
+            const cardNameValid = validateCardName();
+            if (!cardNameValid) {
+                return;
+            }
+
             const cardNumberValid = validateCardNumber();
             if (!cardNumberValid) {
                 return;
@@ -1041,6 +1067,19 @@ export default function CreateBookingScreen({ navigation, route }) {
                                         </View>
 
                                         <Image source={require('../assets/secure-payment.png')} style={styles.paymentImage} />
+
+                                        <TextInput
+                                            ref={cardNameRef}
+                                            style={styles.component}
+                                            label={i18n.t('CARD_NAME')}
+                                            value={cardName}
+                                            error={cardNameRequired}
+                                            helperText={
+                                                ((cardNameRequired && i18n.t('REQUIRED')) || '')
+                                            }
+                                            backgroundColor='#e5efe5'
+                                            onChangeText={onCardNameChange}
+                                        />
 
                                         <TextInput
                                             ref={cardNumberRef}
