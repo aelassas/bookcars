@@ -60,14 +60,15 @@ export default class CreateBooking extends Component {
             tosChecked: false,
             tosError: false,
             error: false,
-            cardNumberValid: true,
+            cardName: '',
             cardNumber: '',
-            cardMonthValid: true,
+            cardNumberValid: true,
             cardMonth: '',
-            cardYearValid: true,
+            cardMonthValid: true,
             cardYear: '',
-            cvvValid: true,
+            cardYearValid: true,
             cvv: '',
+            cvvValid: true,
             price: 0,
             emailInfo: true,
             phoneInfo: true,
@@ -1064,6 +1065,18 @@ export default class CreateBooking extends Component {
                                             </div>
 
                                             <div className='card'>
+                                                <FormControl margin="dense" className='card-number' fullWidth>
+                                                    <InputLabel className='required'>{strings.CARD_NAME}</InputLabel>
+                                                    <OutlinedInput
+                                                        type="text"
+                                                        label={strings.CARD_NAME}
+                                                        onChange={(e) => {
+                                                            this.setState({ cardName: e.target.value });
+                                                        }}
+                                                        required
+                                                        autoComplete="off"
+                                                    />
+                                                </FormControl>
                                                 <FormControl margin="dense" className='card-number' fullWidth>
                                                     <InputLabel className='required'>{strings.CARD_NUMBER}</InputLabel>
                                                     <OutlinedInput
