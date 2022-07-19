@@ -78,7 +78,7 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => 
                 await Booking.deleteMany({ company: id });
                 const cars = await Car.find({ company: id });
                 await Car.deleteMany({ company: id });
-                cars.forEach(async car => {
+                cars.forEach(car => {
                     const image = path.join(CDN_CARS, car.image);
                     if (fs.existsSync(image)) {
                         fs.unlinkSync(image);
