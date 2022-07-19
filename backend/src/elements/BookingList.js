@@ -31,6 +31,8 @@ import {
     Check as CheckIcon,
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
+import { format } from 'date-fns';
+import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale";
 
 import '../assets/css/booking-list.css';
 
@@ -423,10 +425,11 @@ class BookingList extends Component {
             selectedIds,
             user
         } = this.state, admin = Helper.admin(user);
+
+        const _fr = this.props.language === 'fr';
+        const _locale = _fr ? dfnsFR : dfnsENUS;
+        const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
         const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
-        const locale = this.props.language === 'fr' ? 'fr-FR' : 'en-US';
-        const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        const fr = this.props.language === 'fr';
 
         return (
             <div className='bs-list' >
@@ -467,7 +470,7 @@ class BookingList extends Component {
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.DAYS}</label>
                                                 <div className='booking-detail-value'>
-                                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${from.toLocaleString(locale, options)} - ${to.toLocaleString(locale, options)})`}
+                                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
@@ -504,7 +507,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.CANCELLATION}</label>
-                                                                <label className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</label>
                                                             </div>
                                                         }
 
@@ -512,7 +515,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.AMENDMENTS}</label>
-                                                                <label className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</label>
                                                             </div>
                                                         }
 
@@ -520,7 +523,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.COLLISION_DAMAGE_WAVER}</label>
-                                                                <label className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</label>
                                                             </div>
                                                         }
 
@@ -528,7 +531,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.THEFT_PROTECTION}</label>
-                                                                <label className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</label>
                                                             </div>
                                                         }
 
@@ -536,7 +539,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.FULL_INSURANCE}</label>
-                                                                <label className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</label>
                                                             </div>
                                                         }
 
@@ -544,7 +547,7 @@ class BookingList extends Component {
                                                             <div className='extra'>
                                                                 <CheckIcon className='extra-icon' />
                                                                 <label className='extra-title'>{csStrings.ADDITIONAL_DRIVER}</label>
-                                                                <label className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, fr, true)}</label>
+                                                                <label className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</label>
                                                             </div>
                                                         }
                                                     </div>

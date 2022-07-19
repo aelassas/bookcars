@@ -3,10 +3,15 @@ import routeNames from '../config/companyRoutes.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import strings from '../config/app.config.js';
 import Env from '../config/env.config.js';
-import User from '../schema/User.js';
+import User from '../models/User.js';
+import Notification from '../models/Notification.js';
+import AdditionalDriver from '../models/AdditionalDriver.js';
+import Booking from '../models/Booking.js';
+import Car from '../models/Car.js';
 import escapeStringRegexp from 'escape-string-regexp';
 import path from 'path';
 import fs from 'fs';
+import mongoose from 'mongoose';
 
 const CDN = process.env.BC_CDN_USERS;
 
@@ -65,6 +70,12 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => 
                 if (fs.existsSync(avatar)) {
                     fs.unlinkSync(avatar);
                 }
+                await Notification.deleteMany({ user: id });
+                const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 }).lean();
+                const additionalDrivers = _additionalDrivers.map(b => new mongoose.Types.ObjectId(b._additionalDriver));
+                await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } });
+                await Booking.deleteMany({ company: id });
+                await Car.deleteMany({ company: id });
             }
         } else {
             return res.sendStatus(404);

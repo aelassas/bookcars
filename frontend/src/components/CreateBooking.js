@@ -36,7 +36,8 @@ import {
     Settings as PaymentOptionsIcon
 } from '@mui/icons-material';
 import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
+import { format, intervalToDuration } from 'date-fns';
+import { fr, enUS } from "date-fns/locale";
 
 import SecurePayment from '../assets/img/secure-payment.png';
 import '../assets/css/create-booking.css';
@@ -663,11 +664,12 @@ export default class CreateBooking extends Component {
             _birthDateValid,
             payLater } = this.state;
 
-        const locale = language === 'fr' ? 'fr-FR' : 'en-US';
-        const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const _fr = language === 'fr';
+        const _locale = _fr ? fr : enUS;
+        const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
         const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
         const days = Helper.days(from, to);
-        const fr = language === 'fr';
+
 
         return (
             <Master onLoad={this.onLoad} strict={false}>
@@ -695,7 +697,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.CANCELLATION}</span>
-                                                            <span className='booking-option-value'>{Helper.getCancellationOption(car.cancellation, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getCancellationOption(car.cancellation, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -712,7 +714,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.AMENDMENTS}</span>
-                                                            <span className='booking-option-value'>{Helper.getAmendmentsOption(car.amendments, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getAmendmentsOption(car.amendments, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -729,7 +731,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                                                            <span className='booking-option-value'>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -746,7 +748,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.THEFT_PROTECTION}</span>
-                                                            <span className='booking-option-value'>{Helper.getTheftProtectionOption(car.theftProtection, days, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -763,7 +765,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.FULL_INSURANCE}</span>
-                                                            <span className='booking-option-value'>{Helper.getFullInsuranceOption(car.fullInsurance, days, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -780,7 +782,7 @@ export default class CreateBooking extends Component {
                                                     label={
                                                         <span>
                                                             <span className='booking-option-label'>{csStrings.ADDITIONAL_DRIVER}</span>
-                                                            <span className='booking-option-value'>{Helper.getAdditionalDriverOption(car.additionalDriver, days, fr)}</span>
+                                                            <span className='booking-option-value'>{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</span>
                                                         </span>
                                                     }
                                                 />
@@ -797,7 +799,7 @@ export default class CreateBooking extends Component {
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                                 <label className='booking-detail-title'>{strings.DAYS}</label>
                                                 <div className='booking-detail-value'>
-                                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${from.toLocaleString(locale, options)} - ${to.toLocaleString(locale, options)})`}
+                                                    {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}
                                                 </div>
                                             </div>
                                             <div className='booking-detail' style={{ height: bookingDetailHeight }}>

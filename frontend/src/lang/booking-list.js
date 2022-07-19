@@ -5,7 +5,7 @@ import UserService from '../services/UserService';
 export const strings = new LocalizedStrings({
     fr: {
         CAR: 'Voiture',
-        COMPANY: 'Société',
+        COMPANY: 'Fournisseur',
         DRIVER: 'Conducteur',
         PRICE: 'Prix',
         CURRENCY: 'DH',
@@ -28,7 +28,7 @@ export const strings = new LocalizedStrings({
     },
     en: {
         CAR: 'Car',
-        COMPANY: 'Company',
+        COMPANY: 'Supplier',
         DRIVER: 'Driver',
         PRICE: 'Price',
         CURRENCY: 'DH',

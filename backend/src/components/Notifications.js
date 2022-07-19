@@ -16,6 +16,8 @@ import {
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 import Backdrop from '../elements/SimpleBackdrop';
+import { format } from 'date-fns';
+import { fr, enUS } from "date-fns/locale";
 
 import '../assets/css/notifications.css';
 
@@ -31,8 +33,9 @@ export default function Notifications() {
     const [rowCount, setRowCount] = useState(-1);
     const notificationsListRef = useRef(null);
 
-    const locale = user && user.language === 'en' ? 'en-US' : 'fr-FR';
-    const options = { weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const _fr = user && user.language === 'fr';
+    const _locale = _fr ? fr : enUS;
+    const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm';
 
     const fetch = useCallback(async () => {
         if (user) {
@@ -196,7 +199,7 @@ export default function Notifications() {
                                         </div>
                                         <div className={`notification${!row.isRead ? ' unread' : ''}`}>
                                             <div className='date'>
-                                                {new Date(row.createdAt).toLocaleString(locale, options)}
+                                                {Helper.capitalize(format(new Date(row.createdAt), _format, { locale: _locale }))}
                                             </div>
                                             <div className='message-container'>
                                                 <div className='message'>
