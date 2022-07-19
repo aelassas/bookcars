@@ -2,9 +2,9 @@ import express from 'express';
 import routeNames from '../config/notificationRoutes.config.js';
 import authJwt from '../middlewares/authJwt.js';
 import strings from '../config/app.config.js';
-import Notification from '../schema/Notification.js';
-import NotificationCounter from '../schema/NotificationCounter.js';
-import User from '../schema/User.js';
+import Notification from '../models/Notification.js';
+import NotificationCounter from '../models/NotificationCounter.js';
+import User from '../models/User.js';
 import nodemailer from "nodemailer";
 import mongoose from 'mongoose';
 

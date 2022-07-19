@@ -6,6 +6,10 @@ import { toast } from 'react-toastify';
 
 export default class Helper {
 
+    static capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     static info(message) {
         toast(message, { type: 'info' });
     }

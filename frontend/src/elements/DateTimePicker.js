@@ -3,7 +3,9 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TextField } from '@mui/material';
+import { format } from 'date-fns';
 import { fr, enUS } from "date-fns/locale";
+import Helper from '../common/Helper';
 
 class DateTimePicker extends Component {
 
@@ -18,8 +20,8 @@ class DateTimePicker extends Component {
 
     render() {
         const { value } = this.state;
-        const locale = this.props.language === 'fr' ? 'fr-FR' : 'en-US';
-        const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const _locale = this.props.language === 'fr' ? fr : enUS;
+        const _format = this.props.language === 'fr' ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
 
         return (
             <LocalizationProvider adapterLocale={this.props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
@@ -44,7 +46,7 @@ class DateTimePicker extends Component {
                         autoComplete='off'
                         inputProps={{
                             ...params.inputProps,
-                            value: ((value && value.toLocaleString(locale, options)) || ''),
+                            value: ((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || ''),
                             readOnly: true
                         }}
                     />

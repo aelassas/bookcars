@@ -3,9 +3,9 @@ import Env from '../config/env.config.js';
 import routeNames from '../config/locationRoutes.config.js';
 import strings from '../config/app.config.js';
 import authJwt from '../middlewares/authJwt.js';
-import Location from '../schema/Location.js';
-import LocationValue from '../schema/LocationValue.js';
-import Car from '../schema/Car.js';
+import Location from '../models/Location.js';
+import LocationValue from '../models/LocationValue.js';
+import Car from '../models/Car.js';
 import escapeStringRegexp from 'escape-string-regexp';
 import mongoose from 'mongoose';
 
