@@ -14,6 +14,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 
 const CDN = process.env.BC_CDN_USERS;
+const CDN_CARS = process.env.BC_CDN_CARS;
 
 const routes = express.Router();
 
@@ -71,11 +72,18 @@ routes.route(routeNames.delete).delete(authJwt.verifyToken, async (req, res) => 
                     fs.unlinkSync(avatar);
                 }
                 await Notification.deleteMany({ user: id });
-                const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 }).lean();
+                const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 });
                 const additionalDrivers = _additionalDrivers.map(b => new mongoose.Types.ObjectId(b._additionalDriver));
                 await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } });
                 await Booking.deleteMany({ company: id });
+                const cars = await Car.find({ company: id });
                 await Car.deleteMany({ company: id });
+                cars.forEach(async car => {
+                    const image = path.join(CDN_CARS, car.image);
+                    if (fs.existsSync(image)) {
+                        fs.unlinkSync(image);
+                    }
+                });
             }
         } else {
             return res.sendStatus(404);
