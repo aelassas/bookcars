@@ -129,8 +129,7 @@ export default class UpdateLocation extends Component {
             }
         }
         catch (err) {
-            console.log(err);
-            // UserService.signout();
+            UserService.signout();
         }
     };
 
