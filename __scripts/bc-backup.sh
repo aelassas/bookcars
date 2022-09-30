@@ -21,7 +21,7 @@ mongodump --verbose  --host=$HOST --port=$PORT --username=$USERNAME --password=$
 echo "Backup written in ${BACKUP}"
 
 echo "Backuping cdn"
-cd /var/www/bookcars.ma/cdn/
+cd /var/www/cdn/bookcars
 sudo zip -r $CDN .
 cd $_PWD
 echo "cdn copied in ${CDN}"
