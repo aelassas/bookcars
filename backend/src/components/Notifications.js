@@ -26,11 +26,11 @@ export default function Notifications() {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState([]);
+    const [rowCount, setRowCount] = useState(-1);
     const [totalRecords, setTotalRecords] = useState(-1);
     const [notificationCount, setNotificationCount] = useState(-1);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
-    const [rowCount, setRowCount] = useState(-1);
     const notificationsListRef = useRef(null);
 
     const _fr = user && user.language === 'fr';
