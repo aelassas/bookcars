@@ -1,7 +1,7 @@
 [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml)
 [![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml)
 
-BookCars is an Open Source Car Rental Platform, supplier oriented, with a backend for managing car fleet and bookings, a frontend and a mobile app for renting cars.
+BookCars is an Open Source Car Rental Platform, supplier oriented, with a backend for managing car fleet and booking, a frontend and a mobile app for car rental.
 
 BookCars API is built with Node.js, Express and MongoDB.
 
