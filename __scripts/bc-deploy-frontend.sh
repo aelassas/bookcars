@@ -12,9 +12,9 @@ cd /opt/bookcars/frontend
 npm ci
 npm run build
 
-sudo rm -rf /var/www/bookcars.ma/frontend
-sudo mkdir -p /var/www/bookcars.ma/frontend
-sudo cp -rf build/* /var/www/bookcars.ma/frontend
+sudo rm -rf /var/www/bookcars/frontend
+sudo mkdir -p /var/www/bookcars/frontend
+sudo cp -rf build/* /var/www/bookcars/frontend
 
 sudo rm -rf /var/cache/nginx
 sudo systemctl restart nginx

@@ -15,7 +15,6 @@ import {
     Button,
     Paper
 } from '@mui/material';
-import { toast } from 'react-toastify';
 import validator from 'validator';
 import Helper from '../common/Helper';
 

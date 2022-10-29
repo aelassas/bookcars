@@ -16,15 +16,3 @@ sync {
  source = "/home/aelassas/bookcars",
  target = "/mnt/sdb/__bookcars__"
 }
-
-sync {
-  default.rsync,
-  source = "/opt/wexstream",
-  target = "/mnt/sdb/wexstream"
-}
-
-sync {
-  default.rsync,
-  source = "/home/aelassas/wexstream",
-  target = "/mnt/sdb/__wexstream__"
- }
