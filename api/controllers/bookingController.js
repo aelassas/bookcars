@@ -48,12 +48,11 @@ const notifyCompany = async (user, booking, company, notificationMessage) => {
     // notification
     const message = `${user.fullName} ${notificationMessage} ${booking._id}.`;
     const notification = new Notification({ user: company._id, message, booking: booking._id });
-    console.log('company._id', company._id)
+
     await notification.save();
     let counter = await NotificationCounter.findOne({ user: company._id });
     if (counter) {
         counter.count++;
-        console.log('counter.count', counter.count)
         await counter.save();
     } else {
         counter = new NotificationCounter({ user: company._id, count: 1 });

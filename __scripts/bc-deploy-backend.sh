@@ -13,9 +13,9 @@ sudo rm -rf build
 npm ci
 npm run build
 
-sudo rm -rf /var/www/bookcars.ma/backend
-sudo mkdir -p /var/www/bookcars.ma/backend
-sudo cp -rf build/* /var/www/bookcars.ma/backend
+sudo rm -rf /var/www/bookcars/backend
+sudo mkdir -p /var/www/bookcars/backend
+sudo cp -rf build/* /var/www/bookcars/backend
 
 sudo rm -rf /var/cache/nginx
 sudo systemctl restart nginx
