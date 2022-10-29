@@ -9,6 +9,16 @@ BookCars backend and frontend are built with Node.js and React.
 
 BookCars mobile app is built with React Native and Expo.
 
+# Features
+
+* Car fleet management
+* Supplier management
+* Bookings management
+* Client management
+* Multiple payment methods
+* Responsive backend and frontend
+* Native Mobile app for Android and iOS
+
 # Installation
 
 You can find installation instructions in the [wiki](https://github.com/aelassas/bookcars/wiki/Installation).
