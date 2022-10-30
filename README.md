@@ -16,6 +16,7 @@ BookCars mobile app is built with React Native and Expo.
 * Booking management
 * Client management
 * Multiple payment methods
+* Multiple language support
 * Responsive backend and frontend
 * Native Mobile app for Android and iOS
 
