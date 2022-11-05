@@ -28,7 +28,7 @@ You can find installation instructions in the [wiki](https://github.com/aelassas
 
 You can find instructions in the [wiki](https://github.com/aelassas/bookcars/wiki/Run-from-code) to run BookCars from code.
 
-# Screenshots
+# Quick Overview
 
 ## Frontend
 
