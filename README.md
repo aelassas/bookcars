@@ -11,8 +11,8 @@ No more endless forms filling and redirecting. BookCars frontend and mobile app
 
 # Features
 
-* Car fleet management
 * Supplier management
+* Car fleet management
 * Booking management
 * Client management
 * Multiple payment methods
