@@ -60,11 +60,11 @@ Below is the checkout page where the user can set rental options and checkout. I
 
 ![Frontend](screenshots/frontend-3.png)
 
-Below is the sign up page.
+Below is the sign in page.
 
 ![Frontend](screenshots/frontend-4.png)
 
-Below is the sign in page.
+Below is the sign up page.
 
 ![Frontend](screenshots/frontend-5.png)
 
@@ -99,7 +99,7 @@ Below is the main page of the mobile app where the user can choose pickup and 
   <img src="screenshots/mobileapp-6.jpg" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="screenshots/mobileapp-7.jpg" alt="" width="200" style="float: left; margin: 5px"/>
   <p>
-  Below are sign up and sign in pages.
+  Below are sign in and sign up pages.
   </p>
   <img src="screenshots/mobileapp-8.jpg" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="screenshots/mobileapp-9.jpg" alt="" width="200" style="float: left; margin: 5px"/>
@@ -144,23 +144,23 @@ Below is the dashboard page of the backend where admins and suppliers can see an
 
 ![Backend](screenshots/backend-2.png)
 
-Below is the page where to edit bookings.
+Below is the page where car fleet is displayed and can be managed.
 
 ![Backend](screenshots/backend-3.png)
 
-Below is the page where car fleet is displayed and can be managed.
+Below is the page where admins and suppliers can create new cars by providing an image and car info. 
 
 ![Backend](screenshots/backend-4.png)
 
-Below is the page where admins and suppliers can create new cars by providing an image and car info. 
+Below is the page where admins and suppliers can edit cars.
 
 ![Backend](screenshots/backend-5.png)
 
-Below is the page where admins and suppliers can edit cars.
+Below is the page where admins can manage platform users.
 
 ![Backend](screenshots/backend-6.png)
 
-Below is the page where admins can manage platform users.
+Below is the page where to edit bookings.
 
 ![Backend](screenshots/backend-7.png)
 
