@@ -1,30 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Master from '../elements/Master';
 
 import '../assets/css/about.css';
 
-export default class About extends Component {
+export default function About() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null
-        };
-    }
+    const onLoad = (user) => {
+    };
 
-    onLoad = (user) => {
-        this.setState({ user });
-    }
-
-    componentDidMount() {
-    }
-
-    render() {
-
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                About!
-            </Master>
-        );
-    }
+    return (
+        <Master onLoad={onLoad} strict>
+            About!
+        </Master>
+    );
 }
