@@ -81,25 +81,23 @@ That's it. That's the main pages of the frontend.
 <div>
   <p style="float: left; width: 100%"> 
 From the mobile app, the user can search for available cars, choose a car and checkout.
-<br/>
-<br/>
+
 The user can also receive push notifications, if the status of his booking is updated.
-<br/>
-<br/>
+
 Below is the main page of the mobile app where the user can choose pickup and drop-off locations, dates and time booking, and search for available cars.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-1.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-2.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-3.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
 
-  <p style="float: left; width: 100%"> 
+  <p> 
   Below is the search result of the main page where user can choose a car for rental and checkout pages.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-4.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-5.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-6.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-7.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <p style="float: left; width: 100%"> 
+  <p> 
   Below are sign in and sign up pages.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-8.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
@@ -113,7 +111,7 @@ Below is the main page of the mobile app where the user can choose pickup and 
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-13.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-14.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-15.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <p style="float: left; width: 100%"> 
+  <p> 
   Below are the pages where the user can update his profile information, change his password and see his notifications.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-16.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
