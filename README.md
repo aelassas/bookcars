@@ -7,8 +7,6 @@
 
 [BookCars](https://bookcars.github.io/) is an open source car rental platform, supplier oriented, with a backend for managing car fleet and bookings, a frontend and a mobile app for car rental.
 
-No more endless forms filling and redirecting. BookCars frontend and mobile app are straightforward, easy to use and secure. Book your car quickly and stay informed about your booking with push notifications.
-
 # Features
 
 * Supplier management
@@ -50,75 +48,78 @@ From the frontend, the user can search for available cars, choose a car and chec
 
 Below is the main page of the frontend where the user can choose a pickup and drop-off locations, dates and time booking, and search for available cars.
 
-![Frontend](screenshots/frontend-1.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-1.png?raw=true)
 
 Below is the search result of the main page where the user can choose a car for rental.
 
-![Frontend](screenshots/frontend-2.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-2.png?raw=true)
 
 Below is the checkout page where the user can set rental options and checkout. If the user is not registered, he can checkout and register at the same time. He will receive a confirmation and activation email to set his password if he is not registered yet.
 
-![Frontend](screenshots/frontend-3.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-3.png?raw=true)
 
 Below is the sign in page.
 
-![Frontend](screenshots/frontend-4.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-4.png?raw=true)
 
 Below is the sign up page.
 
-![Frontend](screenshots/frontend-5.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-5.png?raw=true)
 
 Below is page where the user can see and manage his bookings.
 
-![Frontend](screenshots/frontend-6.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-6.png?raw=true)
 
 Below is the page where the user can see a booking in detail.
 
-![Frontend](screenshots/frontend-7.png)
+![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-7.png?raw=true)
 
 That's it. That's the main pages of the frontend.
 
 ## Mobile App
 
 <div>
-  <p>
+  <p style="float: left; width: 100%"> 
 From the mobile app, the user can search for available cars, choose a car and checkout.
-
+<br/>
+<br/>
 The user can also receive push notifications, if the status of his booking is updated.
-
+<br/>
+<br/>
 Below is the main page of the mobile app where the user can choose pickup and drop-off locations, dates and time booking, and search for available cars.
   </p>
-  <img src="screenshots/mobileapp-1.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-2.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-3.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-    <p> 
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-1.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-2.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-3.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+
+  <p style="float: left; width: 100%"> 
   Below is the search result of the main page where user can choose a car for rental and checkout pages.
   </p>
-  <img src="screenshots/mobileapp-4.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-5.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-6.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-7.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <p>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-4.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-5.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-6.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-7.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <p style="float: left; width: 100%"> 
   Below are sign in and sign up pages.
   </p>
-  <img src="screenshots/mobileapp-8.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-9.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-10.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <p> 
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-8.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-9.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-10.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <p style="float: left; width: 100%"> 
   Below are the pages where the user can see and manage his bookings.
   </p>
-  <img src="screenshots/mobileapp-11.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-12.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-13.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-14.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-15.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-    <p> 
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-11.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-12.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-13.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-14.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-15.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <p style="float: left; width: 100%"> 
   Below are the pages where the user can update his profile information, change his password and see his notifications.
   </p>
-  <img src="screenshots/mobileapp-16.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-17.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-18.jpg" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="screenshots/mobileapp-19.jpg" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-16.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-17.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-18.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-19.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
 </div>
 
 That's it for the main pages of the mobile app.
@@ -138,31 +139,31 @@ When the admin user creates a new supplier, the supplier will receive an automa
 
 Below is the sign in page of the backend.
 
-![Backend](screenshots/backend-1.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-1.png?raw=true)
 
 Below is the dashboard page of the backend where admins and suppliers can see and manage bookings.
 
-![Backend](screenshots/backend-2.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-2.png?raw=true)
 
 Below is the page where car fleet is displayed and can be managed.
 
-![Backend](screenshots/backend-3.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-3.png?raw=true)
 
 Below is the page where admins and suppliers can create new cars by providing an image and car info. 
 
-![Backend](screenshots/backend-4.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-4.png?raw=true)
 
 Below is the page where admins and suppliers can edit cars.
 
-![Backend](screenshots/backend-5.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-5.png?raw=true)
 
 Below is the page where admins can manage platform users.
 
-![Backend](screenshots/backend-6.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-6.png?raw=true)
 
 Below is the page where to edit bookings.
 
-![Backend](screenshots/backend-7.png)
+![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-7.png?raw=true)
 
 That's it. That's the main pages of the backend.
 
@@ -179,7 +180,7 @@ BookCars mobile app is built with React Native and Expo.
 ## API
 
 <p align="center">
-  <img src="https://bookcars.github.io/content/bookcars-architecture.drawio.png" alt="" width="500" />
+  <img src="https://bookcars.github.io/content/bookcars-architecture.drawio.png?raw=true" alt="" width="500" />
 </p>
 
 BookCars API exposes all BookCars functions needed for the backend, the frontend and the mobile app. The API follows the MVC design pattern. JWT is used for authentication. There are some functions that need authentication and others that does not need authentication.
