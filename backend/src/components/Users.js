@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../lang/users';
@@ -10,84 +10,77 @@ import { Button } from '@mui/material';
 
 import '../assets/css/users.css';
 
-export default class Users extends Component {
+const Users = () => {
+    const [user, setUser] = useState();
+    const [admin, setAdmin] = useState(false);
+    const [types, setTypes] = useState([]);
+    const [keyword, setKeyword] = useState('');
+    const [reload, setReload] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            admin: false,
-            types: [],
-            keyword: '',
-            reload: false
-        };
+    const handleUserListLoad = () => {
+        setReload(false);
     }
 
-    handleUserListLoad = () => {
-        this.setState({ reload: false });
-    }
-
-    handleUserTypeFilterChange = (newTypes) => {
-        const { types } = this.state;
-        this.setState({ types: newTypes, reload: Helper.arrayEqual(types, newTypes) });
+    const handleUserTypeFilterChange = (newTypes) => {
+        setTypes(newTypes);
+        setReload(Helper.arrayEqual(types, newTypes));
     };
 
-    handleSearch = (newKeyword) => {
-        const { keyword } = this.state;
-        this.setState({ keyword: newKeyword, reload: keyword === newKeyword });
+    const handleSearch = (newKeyword) => {
+        setKeyword(newKeyword);
+        setReload(keyword === newKeyword);
     }
 
-    onLoad = (user) => {
-        const admin = Helper.admin(user), types = admin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.COMPANY, Env.RECORD_TYPE.USER];
-        this.setState({ user, admin, types });
+    const onLoad = (user) => {
+        const admin = Helper.admin(user);
+        const types = admin ? Helper.getUserTypes().map(userType => userType.value) : [Env.RECORD_TYPE.COMPANY, Env.RECORD_TYPE.USER];
+
+        setUser(user);
+        setAdmin(admin);
+        setTypes(types);
     }
 
-    componentDidMount() {
-    }
-
-    render() {
-        const { user, admin, types, keyword, reload } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {user && <div className='users'>
-                    <div className='col-1'>
-                        <div className='div.col-1-container'>
-                            <Search
-                                onSubmit={this.handleSearch}
-                                className='search'
-                            />
-
-                            {admin &&
-                                <UserTypeFilter
-                                    className='user-type-filter'
-                                    onChange={this.handleUserTypeFilterChange}
-                                />
-                            }
-
-                            <Button
-                                variant="contained"
-                                className='btn-primary new-user'
-                                size="small"
-                                href='/create-user'
-                            >
-                                {strings.NEW_USER}
-                            </Button>
-                        </div>
-                    </div>
-                    <div className='col-2'>
-                        <UserList
-                            user={user}
-                            types={types}
-                            keyword={keyword}
-                            checkboxSelection={!Env.isMobile() && admin}
-                            hideDesktopColumns={Env.isMobile()}
-                            reload={reload}
-                            onLoad={this.handleUserListLoad}
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {user && <div className='users'>
+                <div className='col-1'>
+                    <div className='div.col-1-container'>
+                        <Search
+                            onSubmit={handleSearch}
+                            className='search'
                         />
+
+                        {admin &&
+                            <UserTypeFilter
+                                className='user-type-filter'
+                                onChange={handleUserTypeFilterChange}
+                            />
+                        }
+
+                        <Button
+                            variant="contained"
+                            className='btn-primary new-user'
+                            size="small"
+                            href='/create-user'
+                        >
+                            {strings.NEW_USER}
+                        </Button>
                     </div>
-                </div>}
-            </Master>
-        );
-    }
-}
+                </div>
+                <div className='col-2'>
+                    <UserList
+                        user={user}
+                        types={types}
+                        keyword={keyword}
+                        checkboxSelection={!Env.isMobile() && admin}
+                        hideDesktopColumns={Env.isMobile()}
+                        reload={reload}
+                        onLoad={handleUserListLoad}
+                    />
+                </div>
+            </div>}
+        </Master>
+    );
+};
+
+export default Users;

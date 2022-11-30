@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
@@ -10,99 +10,94 @@ import CompanyService from '../services/CompanyService';
 
 import '../assets/css/bookings.css';
 
-export default class Bookings extends Component {
+const Bookings = () => {
+    const [user, setUser] = useState();
+    const [allCompanies, setAllCompanies] = useState([]);
+    const [companies, setCompanies] = useState([]);
+    const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map(status => status.value));
+    const [filter, setFilter] = useState();
+    const [reload, setReload] = useState(false);
+    const [loadingCompanies, setLoadingCompanies] = useState(true);
+    const [offset, setOffset] = useState(0);
 
-    constructor(props) {
-        super(props);
+    useEffect(() => {
+        if (user && user.verified) {
+            setOffset(document.querySelector('div.col-1').clientHeight);
+        }
+    }, [user]);
 
-        this.state = {
-            user: null,
-            allCompanies: [],
-            companies: [],
-            statuses: Helper.getBookingStatuses().map(status => status.value),
-            filter: null,
-            loading: true,
-            reload: false,
-            loadingCompanies: true,
-            offset: 0
-        };
+    const handleCompanyFilterChange = (newCompanies) => {
+        setCompanies(newCompanies);
+        setReload(Helper.arrayEqual(companies, newCompanies));
+    };
+
+    const handleStatusFilterChange = (newStatuses) => {
+        setStatuses(newStatuses);
+        setReload(Helper.arrayEqual(statuses, newStatuses))
+    };
+
+    const handleBookingFilterSubmit = (newFilter) => {
+        setFilter(newFilter);
+        setReload(Helper.filterEqual(filter, newFilter))
+    };
+
+    const handleBookingListLoad = () => {
+        setReload(false);
     }
 
-    handleCompanyFilterChange = (newCompanies) => {
-        const { companies } = this.state;
-        this.setState({ companies: newCompanies, reload: Helper.arrayEqual(companies, newCompanies) });
+    const onLoad = async (user) => {
+        setUser(user);
+        setLoadingCompanies(true);
+
+        const allCompanies = await CompanyService.getAllCompanies();
+        const companies = Helper.flattenCompanies(allCompanies);
+        setAllCompanies(allCompanies);
+        setCompanies(companies);
+        setLoadingCompanies(false);
     };
 
-    handleStatusFilterChange = (newStatuses) => {
-        const { statuses } = this.state;
-        this.setState({ statuses: newStatuses, reload: Helper.arrayEqual(statuses, newStatuses) });
-    };
-
-    handleBookingFilterSubmit = (newFilter) => {
-        const { filter } = this.state;
-        this.setState({ filter: newFilter, reload: Helper.filterEqual(filter, newFilter) });
-    };
-
-    handleBookingListLoad = () => {
-        this.setState({ reload: false });
-    }
-
-    onLoad = (user) => {
-        this.setState({ user, loadingCompanies: true }, async () => {
-            const allCompanies = await CompanyService.getAllCompanies();
-            const companies = Helper.flattenCompanies(allCompanies);
-            this.setState({ allCompanies, companies }, () => {
-                this.setState({ loadingCompanies: false }, () => {
-                    this.setState({ offset: document.querySelector('div.col-1').clientHeight });
-                });
-            });
-        });
-    };
-
-    render() {
-        const { user, allCompanies, companies, statuses, filter, reload, loadingCompanies, offset } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {user &&
-                    <div className='bookings'>
-                        <div className='col-1'>
-                            <div>
-                                <CompanyFilter
-                                    companies={allCompanies}
-                                    onChange={this.handleCompanyFilterChange}
-                                    className='cl-company-filter'
-                                />
-                                <StatusFilter
-                                    onChange={this.handleStatusFilterChange}
-                                    className='cl-status-filter'
-                                />
-                                <BookingFilter
-                                    onSubmit={this.handleBookingFilterSubmit}
-                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                    className='cl-booking-filter'
-                                    collapse={!Env.isMobile()}
-                                />
-                            </div>
-                        </div>
-                        <div className='col-2'>
-                            <BookingList
-                                containerClassName='bookings'
-                                offset={offset}
-                                user={user}
-                                language={user.language}
-                                companies={companies}
-                                statuses={statuses}
-                                filter={filter}
-                                loading={loadingCompanies}
-                                reload={reload}
-                                onLoad={this.handleBookingListLoad}
-                                hideDates={Env.isMobile()}
-                                checkboxSelection={false}
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {user &&
+                <div className='bookings'>
+                    <div className='col-1'>
+                        <div>
+                            <CompanyFilter
+                                companies={allCompanies}
+                                onChange={handleCompanyFilterChange}
+                                className='cl-company-filter'
+                            />
+                            <StatusFilter
+                                onChange={handleStatusFilterChange}
+                                className='cl-status-filter'
+                            />
+                            <BookingFilter
+                                onSubmit={handleBookingFilterSubmit}
+                                language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                                className='cl-booking-filter'
+                                collapse={!Env.isMobile()}
                             />
                         </div>
-                    </div>}
-            </Master>
-        );
-    }
-}
+                    </div>
+                    <div className='col-2'>
+                        <BookingList
+                            containerClassName='bookings'
+                            offset={offset}
+                            user={user}
+                            language={user.language}
+                            companies={companies}
+                            statuses={statuses}
+                            filter={filter}
+                            loading={loadingCompanies}
+                            reload={reload}
+                            onLoad={handleBookingListLoad}
+                            hideDates={Env.isMobile()}
+                            checkboxSelection={false}
+                        />
+                    </div>
+                </div>}
+        </Master>
+    );
+};
+
+export default Bookings;

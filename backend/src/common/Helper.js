@@ -10,6 +10,10 @@ export default class Helper {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    static isDate(date) {
+        return date instanceof Date && !isNaN(date.valueOf());
+    }
+
     static info(message) {
         toast(message, { type: 'info' });
     }
@@ -300,6 +304,12 @@ export default class Helper {
     static clone(obj) {
         return JSON.parse(JSON.stringify(obj));
     }
+
+    static cloneArray(arr) {
+        if (typeof arr === 'undefined') return undefined;
+        if (arr == null) return null;
+        return [...arr];
+    };
 
     static filterEqual(a, b) {
         if (a === b) return true;

@@ -13,10 +13,13 @@ class CarFilter extends Component {
     constructor(props) {
         super(props);
 
+        const minDate = new Date(this.props.from);
+        minDate.setDate(this.props.from.getDate() + 1);
+
         this.state = {
             pickupLocation: this.props.pickupLocation,
             dropOffLocation: this.props.dropOffLocation,
-            minDate: this.props.from,
+            minDate,
             from: this.props.from,
             to: this.props.to,
             sameLocation: this.props.pickupLocation === this.props.dropOffLocation
@@ -110,11 +113,14 @@ class CarFilter extends Component {
                         <DateTimePicker
                             label={commonStrings.FROM}
                             value={from}
-                            minDate={minDate}
+                            minDate={new Date()}
                             variant='standard'
                             required
                             onChange={(from) => {
-                                this.setState({ from });
+                                const minDate = new Date(from);
+                                minDate.setDate(from.getDate() + 1);
+
+                                this.setState({ from, minDate });
                             }}
                             language={UserService.getLanguage()}
                         />
@@ -123,7 +129,7 @@ class CarFilter extends Component {
                         <DateTimePicker
                             label={commonStrings.TO}
                             value={to}
-                            minDate={from}
+                            minDate={minDate}
                             variant='standard'
                             required
                             onChange={(to) => {

@@ -1,29 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Master from '../elements/Master';
+
 import '../assets/css/tos.css';
 
-export default class ToS extends Component {
+const ToS = () => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null
-        };
-    }
+    const onLoad = (user) => {
+    };
 
-    onLoad = (user) => {
-        this.setState({ user });
-    }
+    return (
+        <Master onLoad={onLoad} strict>
+            ToS!
+        </Master>
+    );
+};
 
-    componentDidMount() {
-    }
-
-    render() {
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                ToS!
-            </Master>
-        );
-    }
-}
+export default ToS;

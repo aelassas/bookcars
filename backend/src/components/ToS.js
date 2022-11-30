@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 
 import '../assets/css/tos.css';
 
-export default function ToS() {
+const ToS = () => {
 
     const onLoad = (user) => {
     };
@@ -13,4 +13,6 @@ export default function ToS() {
             ToS!
         </Master>
     );
-}
+};
+
+export default ToS;

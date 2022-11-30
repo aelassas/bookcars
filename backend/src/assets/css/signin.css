@@ -42,8 +42,8 @@ div.signin div.stay-connected label {
     color: rgba(0, 0, 0, 0.6);
 }
 
-.signin-form .reset-password {
-    margin-right: 20px;
+div.signin div.forgot-password {
+    margin-top: 15px;
 }
 
 /* Device width is less than or equal to 960px */

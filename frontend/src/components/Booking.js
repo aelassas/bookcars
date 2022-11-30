@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings as blStrings } from '../lang/booking-list';
 import { strings as bfStrings } from '../lang/booking-filter';
@@ -27,151 +27,132 @@ import { Info as InfoIcon } from '@mui/icons-material';
 
 import '../assets/css/booking.css';
 
-export default class Booking extends Component {
+const Booking = () => {
+    const [user, setUser] = useState();
+    const [loading, setLoading] = useState(false);
+    const [noMatch, setNoMatch] = useState(false);
+    const [error, setError] = useState(false);
+    const [booking, setBooking] = useState();
+    const [visible, setVisible] = useState(false);
+    const [company, setCompany] = useState();
+    const [car, setCar] = useState();
+    const [price, setPrice] = useState();
+    const [driver, setDriver] = useState();
+    const [pickupLocation, setPickupLocation] = useState();
+    const [dropOffLocation, setDropOffLocation] = useState();
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
+    const [status, setStatus] = useState();
+    const [cancellation, setCancellation] = useState(false);
+    const [amendments, setAmendments] = useState(false);
+    const [theftProtection, setTheftProtection] = useState(false);
+    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
+    const [fullInsurance, setFullInsurance] = useState(false);
+    const [additionalDriver, setAdditionalDriver] = useState(false);
+    const [minDate, setMinDate] = useState();
+    const edit = false;
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            loading: false,
-            noMatch: false,
-            error: false,
-            booking: null,
-            visible: false,
-            company: null,
-            car: null,
-            driver: null,
-            pickupLocation: null,
-            dropOffLocation: null,
-            from: null,
-            to: null,
-            status: null,
-            cancellation: false,
-            amendments: false,
-            theftProtection: false,
-            collisionDamageWaiver: false,
-            fullInsurance: false,
-            additionalDriver: false,
-            minDate: null,
-            edit: false
-        };
-    }
-
-    handleCompanyChange = (values) => {
-        this.setState({ company: values.length > 0 ? values[0] : null, companyId: values.length > 0 ? values[0]._id : '-1' });
+    const handleCompanyChange = (values) => {
+        setCompany(values.length > 0 ? values[0] : null);
     };
 
-    handlePickupLocationChange = (values) => {
-        this.setState({ pickupLocation: values.length > 0 ? values[0] : null, pickupLocationId: values.length > 0 ? values[0]._id : '-1' });
+    const handlePickupLocationChange = (values) => {
+        setPickupLocation(values.length > 0 ? values[0] : null);
     };
 
-    handleDropOffLocationChange = (values) => {
-        this.setState({ dropOffLocation: values.length > 0 ? values[0] : null });
+    const handleDropOffLocationChange = (values) => {
+        setDropOffLocation(values.length > 0 ? values[0] : null);
     };
 
-    handleCarSelectListChange = (values) => {
-        const { booking, car, from, to } = this.state, newCar = values.length > 0 ? values[0] : null;
+    const handleCarSelectListChange = (values) => {
+        const newCar = values.length > 0 ? values[0] : null;
 
         if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
             CarService.getCar(newCar._id)
                 .then(car => {
                     if (car) {
-                        booking.car = car;
-                        const price = Helper.price(car, from, to, booking);
+                        const _booking = Helper.clone(booking);
+                        _booking.car = car;
+                        const price = Helper.price(car, from, to, _booking);
 
-                        this.setState({ booking, price, car: newCar });
+                        setBooking(_booking);
+                        setPrice(price);
+                        setCar(newCar);
                     } else {
-                        this.error();
+                        Helper.error();
                     }
                 })
                 .catch((err) => {
                     UserService.signout();
                 });
         } else if (!newCar) {
-            this.setState({ car: newCar, price: 0 });
+            setPrice(0);
+            setCar(newCar);
         } else {
-            this.setState({ car: newCar });
+            setCar(newCar);
         }
     };
 
-    handleStatusChange = (value) => {
-        this.setState({ status: value });
+    const handleStatusChange = (value) => {
+        setStatus(value);
     };
 
-    handleCancellationChange = (e) => {
-        const { booking } = this.state;
+    const handleCancellationChange = (e) => {
         booking.cancellation = e.target.checked;
 
         const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, cancellation: booking.cancellation });
+        setBooking(booking);
+        setPrice(price);
+        setCancellation(booking.cancellation);
     };
 
-    handleAmendmentsChange = (e) => {
-        const { booking } = this.state;
+    const handleAmendmentsChange = (e) => {
         booking.amendments = e.target.checked;
 
         const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, amendments: booking.amendments });
+        setBooking(booking);
+        setPrice(price);
+        setAmendments(booking.amendments)
     };
 
-    handleTheftProtectionChange = (e) => {
-        const { booking } = this.state;
-        booking.theftProtection = e.target.checked;
-
-        const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, theftProtection: booking.theftProtection });
-    };
-
-    handleCollisionDamageWaiverChange = (e) => {
-        const { booking } = this.state;
+    const handleCollisionDamageWaiverChange = (e) => {
         booking.collisionDamageWaiver = e.target.checked;
 
         const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, collisionDamageWaiver: booking.collisionDamageWaiver });
+        setBooking(booking);
+        setPrice(price);
+        setCollisionDamageWaiver(booking.collisionDamageWaiver);
     };
 
-    handleFullInsuranceChange = (e) => {
-        const { booking } = this.state;
+    const handleTheftProtectionChange = (e) => {
+        booking.theftProtection = e.target.checked;
+
+        const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+        setBooking(booking);
+        setPrice(price);
+        setTheftProtection(booking.theftProtection);
+    };
+
+    const handleFullInsuranceChange = (e) => {
         booking.fullInsurance = e.target.checked;
 
         const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, fullInsurance: booking.fullInsurance });
+        setBooking(booking);
+        setPrice(price);
+        setFullInsurance(booking.fullInsurance);
     };
 
-    handleAdditionalDriverChange = (e) => {
-        const { booking } = this.state;
+    const handleAdditionalDriverChange = (e) => {
         booking.additionalDriver = e.target.checked;
 
         const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
-        this.setState({ booking, price, additionalDriver: booking.additionalDriver });
+        setBooking(booking);
+        setPrice(price);
+        setAdditionalDriver(booking.additionalDriver);
     };
 
-    error = (hideLoading) => {
-        Helper.error();
-        if (hideLoading) this.setState({ loading: false });
-    };
-
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        const {
-            booking,
-            company,
-            car,
-            driver,
-            pickupLocation,
-            dropOffLocation,
-            from,
-            to,
-            status,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price
-        } = this.state;
 
         const data = {
             _id: booking._id,
@@ -197,7 +178,7 @@ export default class Booking extends Component {
                 if (status === 200) {
                     Helper.info(commonStrings.UPDATED);
                 } else {
-                    this.error();
+                    Helper.error();
                 }
             })
             .catch((err) => {
@@ -205,326 +186,306 @@ export default class Booking extends Component {
             });
     };
 
-    onLoad = (user) => {
-        this.setState({ user, loading: true }, () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('b')) {
-                const id = params.get('b');
-                if (id && id !== '') {
-                    BookingService.getBooking(id)
-                        .then(booking => {
-                            if (booking) {
+    const onLoad = (user) => {
+        setUser(user);
+        setLoading(true);
 
-                                this.setState({
-                                    booking,
-                                    price: booking.price,
-                                    loading: false,
-                                    visible: true,
-                                    company: { _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar },
-                                    car: { _id: booking.car._id, name: booking.car.name, image: booking.car.image },
-                                    driver: { _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar },
-                                    pickupLocation: { _id: booking.pickupLocation._id, name: booking.pickupLocation.name },
-                                    dropOffLocation: { _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name },
-                                    from: new Date(booking.from),
-                                    minDate: new Date(booking.from),
-                                    to: new Date(booking.to),
-                                    status: booking.status,
-                                    cancellation: booking.cancellation,
-                                    amendments: booking.amendments,
-                                    theftProtection: booking.theftProtection,
-                                    collisionDamageWaiver: booking.collisionDamageWaiver,
-                                    fullInsurance: booking.fullInsurance,
-                                    additionalDriver: booking.additionalDriver
-                                });
-
-                            } else {
-                                this.setState({ loading: false, noMatch: true });
-                            }
-                        })
-                        .catch(() => {
-                            this.setState({ loading: false, error: true, visible: false });
-                        });
-                } else {
-                    this.setState({ loading: false, noMatch: true });
-                }
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('b')) {
+            const id = params.get('b');
+            if (id && id !== '') {
+                BookingService.getBooking(id)
+                    .then(booking => {
+                        if (booking) {
+                            setBooking(booking);
+                            setPrice(booking.price);
+                            setLoading(false);
+                            setVisible(true);
+                            setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar });
+                            setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image });
+                            setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar });
+                            setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name });
+                            setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name });
+                            setFrom(new Date(booking.from));
+                            setMinDate(new Date(booking.from));
+                            setTo(new Date(booking.to));
+                            setStatus(booking.status);
+                            setCancellation(booking.cancellation);
+                            setAmendments(booking.amendments);
+                            setTheftProtection(booking.theftProtection);
+                            setCollisionDamageWaiver(booking.collisionDamageWaiver);
+                            setFullInsurance(booking.fullInsurance);
+                            setAdditionalDriver(booking.additionalDriver);
+                        } else {
+                            setLoading(false);
+                            setNoMatch(true);
+                        }
+                    })
+                    .catch(() => {
+                        setLoading(false);
+                        setError(true);
+                        setVisible(false);
+                    });
             } else {
-                this.setState({ loading: false, noMatch: true });
+                setLoading(false);
+                setNoMatch(true);
             }
-        });
+        } else {
+            setLoading(false);
+            setNoMatch(true);
+        }
     }
 
-    componentDidMount() {
-    }
 
-    render() {
-        const {
-            visible,
-            loading,
-            noMatch,
-            error,
-            user,
-            booking,
-            company,
-            car,
-            pickupLocation,
-            dropOffLocation,
-            from,
-            to,
-            status,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price,
-            minDate,
-            edit
-        } = this.state, days = Helper.days(from, to);
+    const days = Helper.days(from, to);
 
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {visible && booking &&
-                    <div className='booking'>
-                        <div className='col-1'>
-                            <form onSubmit={this.handleSubmit}>
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {visible && booking &&
+                <div className='booking'>
+                    <div className='col-1'>
+                        <form onSubmit={handleSubmit}>
 
-                                <FormControl fullWidth margin="dense">
-                                    <CompanySelectList
-                                        label={blStrings.COMPANY}
-                                        required
-                                        variant='standard'
-                                        onChange={this.handleCompanyChange}
-                                        value={company}
-                                        readOnly={!edit}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <LocationSelectList
-                                        label={bfStrings.PICKUP_LOCATION}
-                                        required
-                                        variant='standard'
-                                        onChange={this.handlePickupLocationChange}
-                                        value={pickupLocation}
-                                        init
-                                        readOnly={!edit}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <LocationSelectList
-                                        label={bfStrings.DROP_OFF_LOCATION}
-                                        required
-                                        variant='standard'
-                                        onChange={this.handleDropOffLocationChange}
-                                        value={dropOffLocation}
-                                        init
-                                        readOnly={!edit}
-                                    />
-                                </FormControl>
-
-                                <CarSelectList
-                                    label={blStrings.CAR}
-                                    company={company && company._id}
-                                    pickupLocation={pickupLocation && pickupLocation._id}
-                                    onChange={this.handleCarSelectListChange}
+                            <FormControl fullWidth margin="dense">
+                                <CompanySelectList
+                                    label={blStrings.COMPANY}
                                     required
-                                    value={car}
+                                    variant='standard'
+                                    onChange={handleCompanyChange}
+                                    value={company}
                                     readOnly={!edit}
                                 />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <DateTimePicker
-                                        label={commonStrings.FROM}
-                                        value={from}
-                                        required
-                                        readOnly={!edit}
-                                        onChange={(from) => {
-                                            if (from) {
-                                                const { booking } = this.state;
-                                                booking.from = from;
+                            <FormControl fullWidth margin="dense">
+                                <LocationSelectList
+                                    label={bfStrings.PICKUP_LOCATION}
+                                    required
+                                    variant='standard'
+                                    onChange={handlePickupLocationChange}
+                                    value={pickupLocation}
+                                    init
+                                    readOnly={!edit}
+                                />
+                            </FormControl>
 
-                                                Helper.price(
-                                                    booking,
-                                                    booking.car,
-                                                    (price) => {
-                                                        this.setState({ booking, price, from, minDate: from });
-                                                    },
-                                                    (err) => {
-                                                        this.error(err);
-                                                    });
-                                            }
-                                        }}
-                                        language={UserService.getLanguage()}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <DateTimePicker
-                                        label={commonStrings.TO}
-                                        value={to}
-                                        minDate={minDate}
-                                        required
-                                        readOnly={!edit}
-                                        onChange={(to) => {
-                                            if (to) {
-                                                const { booking } = this.state;
-                                                booking.to = to;
+                            <FormControl fullWidth margin="dense">
+                                <LocationSelectList
+                                    label={bfStrings.DROP_OFF_LOCATION}
+                                    required
+                                    variant='standard'
+                                    onChange={handleDropOffLocationChange}
+                                    value={dropOffLocation}
+                                    init
+                                    readOnly={!edit}
+                                />
+                            </FormControl>
 
-                                                Helper.price(
-                                                    booking,
-                                                    booking.car,
-                                                    (price) => {
-                                                        this.setState({ booking, price, to });
-                                                    },
-                                                    (err) => {
-                                                        this.error(err);
-                                                    });
-                                            }
-                                        }}
-                                        language={UserService.getLanguage()}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <StatusList
-                                        label={blStrings.STATUS}
-                                        onChange={this.handleStatusChange}
-                                        required
-                                        disabled
-                                        value={status}
-                                    />
-                                </FormControl>
-
-                                <div className='info'>
-                                    <InfoIcon />
-                                    <label>{commonStrings.OPTIONAL}</label>
-                                </div>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.cancellation === -1 || booking.car.cancellation === 0}
-                                        control={
-                                            <Switch checked={cancellation}
-                                                onChange={this.handleCancellationChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.CANCELLATION}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.amendments === -1 || booking.car.amendments === 0}
-                                        control={
-                                            <Switch checked={amendments}
-                                                onChange={this.handleAmendmentsChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.AMENDMENTS}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.theftProtection === -1 || booking.car.theftProtection === 0}
-                                        control={
-                                            <Switch checked={theftProtection}
-                                                onChange={this.handleTheftProtectionChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.THEFT_PROTECTION}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.collisionDamageWaiver === -1 || booking.car.collisionDamageWaiver === 0}
-                                        control={
-                                            <Switch checked={collisionDamageWaiver}
-                                                onChange={this.handleCollisionDamageWaiverChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.COLLISION_DAMAGE_WAVER}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.fullInsurance === -1 || booking.car.fullInsurance === 0}
-                                        control={
-                                            <Switch checked={fullInsurance}
-                                                onChange={this.handleFullInsuranceChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.FULL_INSURANCE}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        disabled={!edit || booking.car.additionalDriver === -1 || booking.car.additionalDriver === 0}
-                                        control={
-                                            <Switch checked={additionalDriver}
-                                                onChange={this.handleAdditionalDriverChange}
-                                                color="primary" />
-                                        }
-                                        label={csStrings.ADDITIONAL_DRIVER}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <div>
-                                    {edit &&
-                                        <div className="booking-buttons">
-                                            <Button
-                                                variant="contained"
-                                                className='btn-primary btn-margin-bottom'
-                                                size="small"
-                                                type="submit"
-                                            >
-                                                {commonStrings.SAVE}
-                                            </Button>
-                                        </div>
-                                    }
-                                </div>
-                            </form>
-                        </div>
-                        <div className='col-2'>
-                            <div className='col-2-header'>
-                                <div className='price'>
-                                    <label className='price-days'>
-                                        {Helper.getDays(days)}
-                                    </label>
-                                    <label className='price-main'>
-                                        {`${price} ${commonStrings.CURRENCY}`}
-                                    </label>
-                                    <label className='price-day'>
-                                        {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}
-                                    </label>
-                                </div>
-                            </div>
-                            <CarList
-                                className='car'
-                                user={user}
-                                booking={booking}
-                                cars={[booking.car]}
-                                hidePrice
+                            <CarSelectList
+                                label={blStrings.CAR}
+                                company={company && company._id}
+                                pickupLocation={pickupLocation && pickupLocation._id}
+                                onChange={handleCarSelectListChange}
+                                required
+                                value={car}
+                                readOnly={!edit}
                             />
-                        </div>
 
+                            <FormControl fullWidth margin="dense">
+                                <DateTimePicker
+                                    label={commonStrings.FROM}
+                                    value={from}
+                                    required
+                                    readOnly={!edit}
+                                    onChange={(from) => {
+                                        if (from) {
+                                            booking.from = from;
+
+                                            Helper.price(
+                                                booking,
+                                                booking.car,
+                                                (price) => {
+                                                    setBooking(booking);
+                                                    setPrice(price);
+                                                    setFrom(from);
+                                                    setMinDate(from);
+                                                },
+                                                (err) => {
+                                                    Helper.error(err);
+                                                });
+                                        }
+                                    }}
+                                    language={UserService.getLanguage()}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <DateTimePicker
+                                    label={commonStrings.TO}
+                                    value={to}
+                                    minDate={minDate}
+                                    required
+                                    readOnly={!edit}
+                                    onChange={(to) => {
+                                        if (to) {
+                                            booking.to = to;
+
+                                            Helper.price(
+                                                booking,
+                                                booking.car,
+                                                (price) => {
+                                                    setBooking(booking);
+                                                    setPrice(price);
+                                                    setTo(to);
+                                                },
+                                                (err) => {
+                                                    Helper.error(err);
+                                                });
+                                        }
+                                    }}
+                                    language={UserService.getLanguage()}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <StatusList
+                                    label={blStrings.STATUS}
+                                    onChange={handleStatusChange}
+                                    required
+                                    disabled
+                                    value={status}
+                                />
+                            </FormControl>
+
+                            <div className='info'>
+                                <InfoIcon />
+                                <label>{commonStrings.OPTIONAL}</label>
+                            </div>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.cancellation === -1 || booking.car.cancellation === 0}
+                                    control={
+                                        <Switch checked={cancellation}
+                                            onChange={handleCancellationChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.CANCELLATION}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.amendments === -1 || booking.car.amendments === 0}
+                                    control={
+                                        <Switch checked={amendments}
+                                            onChange={handleAmendmentsChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.AMENDMENTS}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.collisionDamageWaiver === -1 || booking.car.collisionDamageWaiver === 0}
+                                    control={
+                                        <Switch checked={collisionDamageWaiver}
+                                            onChange={handleCollisionDamageWaiverChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.COLLISION_DAMAGE_WAVER}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.theftProtection === -1 || booking.car.theftProtection === 0}
+                                    control={
+                                        <Switch checked={theftProtection}
+                                            onChange={handleTheftProtectionChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.THEFT_PROTECTION}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.fullInsurance === -1 || booking.car.fullInsurance === 0}
+                                    control={
+                                        <Switch checked={fullInsurance}
+                                            onChange={handleFullInsuranceChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.FULL_INSURANCE}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    disabled={!edit || booking.car.additionalDriver === -1 || booking.car.additionalDriver === 0}
+                                    control={
+                                        <Switch checked={additionalDriver}
+                                            onChange={handleAdditionalDriverChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.ADDITIONAL_DRIVER}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <div>
+                                {edit &&
+                                    <div className="booking-buttons">
+                                        <Button
+                                            variant="contained"
+                                            className='btn-primary btn-margin-bottom'
+                                            size="small"
+                                            type="submit"
+                                        >
+                                            {commonStrings.SAVE}
+                                        </Button>
+                                    </div>
+                                }
+                            </div>
+                        </form>
                     </div>
-                }
+                    <div className='col-2'>
+                        <div className='col-2-header'>
+                            <div className='price'>
+                                <label className='price-days'>
+                                    {Helper.getDays(days)}
+                                </label>
+                                <label className='price-main'>
+                                    {`${price} ${commonStrings.CURRENCY}`}
+                                </label>
+                                <label className='price-day'>
+                                    {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}
+                                </label>
+                            </div>
+                        </div>
+                        <CarList
+                            className='car'
+                            user={user}
+                            booking={booking}
+                            cars={[booking.car]}
+                            hidePrice
+                        />
+                    </div>
 
-                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {noMatch && <NoMatch hideHeader />}
-                {error && <Error />}
-            </Master>
-        );
-    }
-}
+                </div>
+            }
+
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+            {noMatch && <NoMatch hideHeader />}
+            {error && <Error />}
+        </Master>
+    );
+};
+
+export default Booking;

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import Env from '../config/env.config';
+import React, { useState } from 'react';
 import UserService from '../services/UserService';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
@@ -7,7 +6,6 @@ import { strings as cpStrings } from '../lang/change-password';
 import { strings as rpStrings } from '../lang/reset-password';
 import { strings as mStrings } from '../lang/master';
 import { strings } from '../lang/activate';
-import Error from './Error';
 import NoMatch from './NoMatch';
 import {
     Input,
@@ -22,70 +20,53 @@ import Helper from '../common/Helper';
 
 import '../assets/css/activate.css';
 
-export default class Activate extends Component {
+const Activate = () => {
+    const [userId, setUserId] = useState();
+    const [email, setEmail] = useState();
+    const [token, setToken] = useState();
+    const [visible, setVisible] = useState(false);
+    const [resend, setResend] = useState(false);
+    const [noMatch, setNoMatch] = useState(false);
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [passwordLengthError, setPasswordLengthError] = useState(false);
+    const [reset, setReset] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            userId: null,
-            email: null,
-            token: null,
-            resend: false,
-            visible: false,
-            error: false,
-            noMatch: false,
-            password: '',
-            confirmPassword: '',
-            passwordError: false,
-            confirmPasswordError: false,
-            passwordLengthError: false,
-            reset: false
-        };
-    }
-
-    handleNewPasswordChange = (e) => {
-        this.setState({ password: e.target.value });
+    const handleNewPasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
-    handleConfirmPasswordChange = (e) => {
-        this.setState({ confirmPassword: e.target.value });
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
     };
 
-    handleOnConfirmPasswordKeyDown = (e) => {
+    const handleOnConfirmPasswordKeyDown = (e) => {
         if (e.key === 'Enter') {
-            this.handleSubmit(e);
+            handleSubmit(e);
         }
     };
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (this.state.password.length < 6) {
-            return this.setState({
-                passwordLengthError: true,
-                confirmPasswordError: false,
-                passwordError: false
-            });
+        if (password.length < 6) {
+            setPasswordLengthError(true);
+            setConfirmPasswordError(false);
+            setPasswordError(false);
         } else {
-            this.setState({
-                passwordLengthError: false,
-                passwordError: false
-            });
+            setPasswordLengthError(false);
+            setPasswordError(false);
         }
 
-        if (this.state.password !== this.state.confirmPassword) {
-            return this.setState({
-                confirmPasswordError: true,
-                passwordError: false
-            });
+        if (password !== confirmPassword) {
+            setConfirmPasswordError(true);
+            setPasswordError(false);
         } else {
-            this.setState({
-                confirmPasswordError: false,
-                passwordError: false
-            });
+            setConfirmPasswordError(false);
+            setPasswordError(false);
         }
-
-        const { userId, email, token, password } = this.state;
 
         const data = { userId, token, password };
 
@@ -120,13 +101,11 @@ export default class Activate extends Component {
             .catch((err) => {
                 Helper.error(err);
             });
-
     };
 
-    handleResend = () => {
-        const { email } = this.state;
+    const handleResend = () => {
 
-        UserService.resend(email, false, Env.APP_TYPE)
+        UserService.resend(email, false)
             .then(status => {
                 if (status === 200) {
                     Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
@@ -139,9 +118,9 @@ export default class Activate extends Component {
             });
     };
 
-    onLoad = (user) => {
+    const onLoad = (user) => {
         if (user) {
-            this.setState({ noMatch: true });
+            setNoMatch(true);
         } else {
             const params = new URLSearchParams(window.location.search);
             if (params.has('u') && params.has('e') && params.has('t')) {
@@ -152,136 +131,123 @@ export default class Activate extends Component {
                     UserService.checkToken(userId, email, token)
                         .then(status => {
                             if (status === 200) {
-                                this.setState({ userId, email, token, visible: true });
+                                setUserId(userId);
+                                setEmail(email);
+                                setToken(token);
+                                setVisible(true);
 
                                 if (params.has('r')) {
                                     const reset = params.get('r') === 'true';
-                                    this.setState({ reset });
+                                    setReset(reset);
                                 }
                             } else if (status === 204) {
-                                this.setState({ email, resend: true });
+                                setEmail(email);
+                                setResend(true);
                             } else {
-                                this.setState({ noMatch: true });
+                                setNoMatch(true);
                             }
                         })
                         .catch((err) => {
-                            this.setState({ noMatch: true });
+                            setNoMatch(true);
                         });
                 } else {
-                    this.setState({ noMatch: true });
+                    setNoMatch(true);
                 }
             } else {
-                this.setState({ noMatch: true });
+                setNoMatch(true);
             }
         }
     }
 
-    componentDidMount() {
-    }
-
-    render() {
-        const {
-            resend,
-            visible,
-            error,
-            noMatch,
-            passwordError,
-            confirmPasswordError,
-            passwordLengthError,
-            password,
-            confirmPassword,
-            reset
-        } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                {resend &&
-                    <div className="resend">
-                        <Paper className="resend-form" elevation={10}>
-                            <h1>{strings.ACTIVATE_HEADING}</h1>
-                            <div className='resend-form-content'>
-                                <label>{strings.TOKEN_EXPIRED}</label>
+    return (
+        <Master onLoad={onLoad} strict={false}>
+            {resend &&
+                <div className="resend">
+                    <Paper className="resend-form" elevation={10}>
+                        <h1>{strings.ACTIVATE_HEADING}</h1>
+                        <div className='resend-form-content'>
+                            <label>{strings.TOKEN_EXPIRED}</label>
+                            <Button
+                                type="button"
+                                variant="contained"
+                                size="small"
+                                className="btn-primary btn-resend"
+                                onClick={handleResend}
+                            >{mStrings.RESEND}</Button>
+                            <p className='go-to-home'><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>
+                        </div>
+                    </Paper>
+                </div>
+            }
+            {visible &&
+                <div className="activate">
+                    <Paper className="activate-form" elevation={10}>
+                        <h1>{reset ? rpStrings.RESET_PASSWORD_HEADING : strings.ACTIVATE_HEADING}</h1>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required' error={passwordError}>
+                                    {cpStrings.NEW_PASSWORD}
+                                </InputLabel>
+                                <Input
+                                    id="password-new"
+                                    onChange={handleNewPasswordChange}
+                                    type='password'
+                                    value={password}
+                                    error={passwordError}
+                                    required
+                                />
+                                <FormHelperText
+                                    error={passwordError}
+                                >
+                                    {(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense" error={confirmPasswordError}>
+                                <InputLabel error={confirmPasswordError} className='required'>
+                                    {commonStrings.CONFIRM_PASSWORD}
+                                </InputLabel>
+                                <Input
+                                    id="password-confirm"
+                                    onChange={handleConfirmPasswordChange}
+                                    onKeyDown={handleOnConfirmPasswordKeyDown}
+                                    error={confirmPasswordError || passwordLengthError}
+                                    type='password'
+                                    value={confirmPassword}
+                                    required
+                                />
+                                <FormHelperText
+                                    error={confirmPasswordError || passwordLengthError}
+                                >
+                                    {confirmPasswordError
+                                        ? commonStrings.PASSWORDS_DONT_MATCH
+                                        : (passwordLengthError ? commonStrings.PASSWORD_ERROR : '')}
+                                </FormHelperText>
+                            </FormControl>
+                            <div className='buttons'>
                                 <Button
-                                    type="button"
-                                    variant="contained"
+                                    type="submit"
+                                    className='btn-primary btn-margin btn-margin-bottom'
                                     size="small"
-                                    className="btn-primary btn-resend"
-                                    onClick={this.handleResend}
-                                >{mStrings.RESEND}</Button>
-                                <p className='go-to-home'><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>
+                                    variant='contained'
+                                >
+                                    {reset ? commonStrings.UPDATE : strings.ACTIVATE}
+                                </Button>
+                                <Button
+                                    className='btn-secondary btn-margin-bottom'
+                                    size="small"
+                                    variant='contained'
+                                    href="/"
+                                >
+                                    {commonStrings.CANCEL}
+                                </Button>
                             </div>
-                        </Paper>
-                    </div>
-                }
-                {visible &&
-                    <div className="activate">
-                        <Paper className="activate-form" elevation={10}>
-                            <h1>{reset ? rpStrings.RESET_PASSWORD_HEADING : strings.ACTIVATE_HEADING}</h1>
-                            <form onSubmit={this.handleSubmit}>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required' error={passwordError}>
-                                        {cpStrings.NEW_PASSWORD}
-                                    </InputLabel>
-                                    <Input
-                                        id="password-new"
-                                        onChange={this.handleNewPasswordChange}
-                                        type='password'
-                                        value={password}
-                                        error={passwordError}
-                                        required
-                                    />
-                                    <FormHelperText
-                                        error={passwordError}
-                                    >
-                                        {(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense" error={confirmPasswordError}>
-                                    <InputLabel error={confirmPasswordError} className='required'>
-                                        {commonStrings.CONFIRM_PASSWORD}
-                                    </InputLabel>
-                                    <Input
-                                        id="password-confirm"
-                                        onChange={this.handleConfirmPasswordChange}
-                                        onKeyDown={this.handleOnConfirmPasswordKeyDown}
-                                        error={confirmPasswordError || passwordLengthError}
-                                        type='password'
-                                        value={confirmPassword}
-                                        required
-                                    />
-                                    <FormHelperText
-                                        error={confirmPasswordError || passwordLengthError}
-                                    >
-                                        {confirmPasswordError
-                                            ? commonStrings.PASSWORDS_DONT_MATCH
-                                            : (passwordLengthError ? commonStrings.PASSWORD_ERROR : '')}
-                                    </FormHelperText>
-                                </FormControl>
-                                <div className='buttons'>
-                                    <Button
-                                        type="submit"
-                                        className='btn-primary btn-margin btn-margin-bottom'
-                                        size="small"
-                                        variant='contained'
-                                    >
-                                        {reset ? commonStrings.UPDATE : strings.ACTIVATE}
-                                    </Button>
-                                    <Button
-                                        className='btn-secondary btn-margin-bottom'
-                                        size="small"
-                                        variant='contained'
-                                        href="/"
-                                    >
-                                        {commonStrings.CANCEL}
-                                    </Button>
-                                </div>
-                            </form>
-                        </Paper>
-                    </div>
-                }
-                {error && <Error />}
-                {noMatch && <NoMatch hideHeader />}
-            </Master>
-        );
-    }
-}
+                        </form>
+                    </Paper>
+                </div>
+            }
+            {noMatch && <NoMatch hideHeader />}
+        </Master>
+    );
+};
+
+export default Activate;

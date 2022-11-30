@@ -21,7 +21,7 @@ import { fr, enUS } from "date-fns/locale";
 
 import '../assets/css/notifications.css';
 
-export default function Notifications() {
+const Notifications = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -384,4 +384,6 @@ export default function Notifications() {
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </Master >
     );
-}
+};
+
+export default Notifications;

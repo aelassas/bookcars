@@ -117,7 +117,7 @@ export default function MultipleSelect({
                                         <>
                                             <InputAdornment position='start'>
                                                 {option.image ?
-                                                    < Avatar
+                                                    <Avatar
                                                         src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                                         className='avatar-small suo'
                                                     />
@@ -231,7 +231,7 @@ export default function MultipleSelect({
                             <li {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>
                                     {option.image ?
-                                        < Avatar
+                                        <Avatar
                                             src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                             className='avatar-medium'
                                         />

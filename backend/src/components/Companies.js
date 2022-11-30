@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Master from '../elements/Master';
 import { strings } from '../lang/companies';
 import Search from '../elements/Search';
@@ -7,88 +7,83 @@ import InfoBox from '../elements/InfoBox';
 import {
     Button,
 } from '@mui/material';
-
-import '../assets/css/companies.css';
 import Helper from '../common/Helper';
 
-export default class Companies extends Component {
+import '../assets/css/companies.css';
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            keyword: '',
-            reload: false,
-            rowCount: -1,
-            offset: 0
-        };
-    }
+const Companies = () => {
+    const [user, setUser] = useState();
+    const [keyword, setKeyword] = useState('');
+    const [reload, setReload] = useState(false);
+    const [rowCount, setRowCount] = useState(-1);
+    const [offset, setOffset] = useState(0);
 
-    handleSearch = (newKeyword) => {
-        const { keyword } = this.state;
+    useEffect(() => {
+        if (user && user.verified) {
+            setOffset(document.querySelector('.col-1').clientHeight);
+        }
+    }, [user]);
 
-        this.setState({ keyword: newKeyword, reload: newKeyword === keyword });
+    const handleSearch = (newKeyword) => {
+        setKeyword(newKeyword);
+        setReload(newKeyword === keyword);
     };
 
-    handleCompanyListLoad = (data) => {
-        this.setState({ reload: false, rowCount: data.rowCount });
+    const handleCompanyListLoad = (data) => {
+        setReload(false);
+        setRowCount(data.rowCount);
     };
 
-    handleCompanyDelete = (rowCount) => {
-        this.setState({ rowCount });
+    const handleCompanyDelete = (rowCount) => {
+        setRowCount(rowCount);
     };
 
-    onLoad = (user) => {
-        this.setState({ user }, () => {
-            this.setState({ offset: document.querySelector('.col-1').clientHeight });
-        });
+    const onLoad = (user) => {
+        setUser(user);
     }
 
-    componentDidMount() {
-    }
+    const admin = Helper.admin(user);
 
-    render() {
-        const { user, keyword, reload, rowCount, offset } = this.state, admin = Helper.admin(user);
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {user &&
+                <div className='companies'>
+                    <div className='col-1'>
+                        <div className='col-1-container'>
+                            <Search className='search' onSubmit={handleSearch} />
 
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {user &&
-                    <div className='companies'>
-                        <div className='col-1'>
-                            <div className='col-1-container'>
-                                <Search className='search' onSubmit={this.handleSearch} />
+                            {rowCount > -1 && admin &&
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary new-company'
+                                    size="small"
+                                    href='/create-supplier'
+                                >
+                                    {strings.NEW_COMPANY}
+                                </Button>
+                            }
 
-                                {rowCount > -1 && admin &&
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary new-company'
-                                        size="small"
-                                        href='/create-supplier'
-                                    >
-                                        {strings.NEW_COMPANY}
-                                    </Button>
-                                }
-
-                                {rowCount > 0 &&
-                                    <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
-                                }
-                            </div>
+                            {rowCount > 0 &&
+                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
+                            }
                         </div>
-                        <div className='col-2'>
-                            <CompanyList
-                                containerClassName='companies'
-                                offset={offset}
-                                user={user}
-                                keyword={keyword}
-                                reload={reload}
-                                onLoad={this.handleCompanyListLoad}
-                                onDelete={this.handleCompanyDelete}
-                            />
-                        </div>
-                    </div>}
+                    </div>
+                    <div className='col-2'>
+                        <CompanyList
+                            containerClassName='companies'
+                            offset={offset}
+                            user={user}
+                            keyword={keyword}
+                            reload={reload}
+                            onLoad={handleCompanyListLoad}
+                            onDelete={handleCompanyDelete}
+                        />
+                    </div>
+                </div>}
 
-            </Master>
-        );
-    }
-}
+        </Master>
+    );
+};
+
+export default Companies;

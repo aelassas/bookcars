@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Env from '../config/env.config';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
 import UserService from '../services/UserService';
-import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import DatePicker from '../elements/DatePicker';
 import { Avatar } from '../elements/Avatar';
@@ -24,92 +23,75 @@ import Helper from '../common/Helper';
 
 import '../assets/css/settings.css';
 
-export default class Settings extends Component {
+const Settings = () => {
+    const [user, setUser] = useState();
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [location, setLocation] = useState('');
+    const [bio, setBio] = useState('');
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [birthDate, setBirthDate] = useState();
+    const [birthDateValid, setBirthDateValid] = useState(true);
+    const [phoneValid, setPhoneValid] = useState(true);
+    const [enableEmailNotifications, setEnableEmailNotifications] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            fullName: '',
-            phone: '',
-            location: '',
-            bio: '',
-            error: false,
-            visible: false,
-            loading: false,
-            birthDate: null,
-            birthDateValid: true,
-            phoneValid: true
-        };
-    }
-
-    handleOnChangeFullName = e => {
-        this.setState({
-            fullName: e.target.value,
-        });
+    const handleOnChangeFullName = e => {
+        setFullName(e.target.value);
     };
 
-    validatePhone = (phone) => {
+    const validatePhone = (phone) => {
         if (phone) {
             const phoneValid = validator.isMobilePhone(phone);
-            this.setState({ phoneValid });
+            setPhoneValid(phoneValid);
 
             return phoneValid;
         } else {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
 
             return true;
         }
     };
 
-    handlePhoneChange = e => {
-        this.setState({
-            phone: e.target.value,
-        });
+    const handlePhoneChange = e => {
+        setPhone(e.target.value);
 
         if (!e.target.value) {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
         }
     };
 
-
-    handlePhoneBlur = (e) => {
-        this.validatePhone(e.target.value);
-    };
-
-    validateBirthDate = (date) => {
-        if (date) {
+    const validateBirthDate = (date) => {
+        if (Helper.isDate(date)) {
             const now = new Date();
             const sub = intervalToDuration({ start: date, end: now }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-            this.setState({ birthDateValid });
+            setBirthDateValid(birthDateValid);
             return birthDateValid;
         } else {
-            this.setState({ birthDateValid: true });
+            setBirthDateValid(true);
             return true;
         }
     };
 
-    handleOnChangeLocation = e => {
-        this.setState({
-            location: e.target.value,
-        });
+    const handleOnChangeLocation = e => {
+        setLocation(e.target.value);
     };
 
-    handleOnChangeBio = e => {
-        this.setState({
-            bio: e.target.value,
-        });
+    const handleOnChangeBio = e => {
+        setBio(e.target.value);
     };
 
-    handleEmailNotificationsChange = (e) => {
-        const { user } = this.state;
+    const handleEmailNotificationsChange = (e) => {
+        setEnableEmailNotifications(e.target.checked);
+
         user.enableEmailNotifications = e.target.checked;
+
         UserService.updateEmailNotifications(user)
             .then(status => {
                 if (status === 200) {
-                    this.setState({ user });
+                    setUser(user);
                     Helper.info(strings.SETTINGS_UPDATED);
                 }
             })
@@ -118,38 +100,31 @@ export default class Settings extends Component {
             });
     };
 
-    handleChange = (e) => {
-        e.preventDefault();
+    const onBeforeUpload = () => {
+        setLoading(true);
     };
 
-    onBeforeUpload = () => {
-        this.setState({ loading: true });
+    const onAvatarChange = (user) => {
+        setUser(user);
+        setLoading(false);
     };
 
-    onAvatarChange = (user) => {
-        this.setState({ loading: false, user });
+    const onError = () => {
+        setLoading(false);
     };
 
-    onError = () => {
-        this.setState({ loading: false });
-    };
-
-    handleSubmit = e => {
+    const handleSubmit = e => {
         e.preventDefault();
 
-        const { phone, birthDate } = this.state;
-
-        const phoneValid = this.validatePhone(phone);
+        const phoneValid = validatePhone(phone);
         if (!phoneValid) {
             return;
         }
 
-        const birthDateValid = this.validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate);
         if (!birthDateValid) {
             return;
         }
-
-        const { user, fullName, location, bio } = this.state;
 
         const data = {
             _id: user._id,
@@ -173,169 +148,150 @@ export default class Settings extends Component {
             });
     };
 
-    onLoad = (user) => {
-        this.setState({
-            user,
-            fullName: user.fullName,
-            phone: user.phone,
-            birthDate: new Date(user.birthDate),
-            location: user.location,
-            bio: user.bio,
-            loading: false,
-            visible: true
-        });
+    const onLoad = (user) => {
+        setUser(user);
+        setFullName(user.fullName);
+        setPhone(user.phone);
+        setBirthDate(new Date(user.birthDate));
+        setLocation(user.location);
+        setBio(user.bio);
+        setEnableEmailNotifications(user.enableEmailNotifications);
+        setVisible(true);
+        setLoading(false);
     };
 
-    componentDidMount() {
-        this.setState({ loading: true });
-    }
-
-    render() {
-        const {
-            user,
-            fullName,
-            phone,
-            location,
-            bio,
-            error,
-            visible,
-            loading,
-            birthDate,
-            birthDateValid,
-            phoneValid
-        } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} onError={this.onError} strict={true} user={user}>
-                {visible && user &&
-                    <div className='settings'>
-                        <Paper className="settings-form settings-form-wrapper" elevation={10}>
-                            <form onSubmit={this.handleSubmit}>
-                                <Avatar
-                                    type={user.type}
-                                    loggedUser={user}
-                                    user={user}
-                                    size='large'
-                                    readonly={false}
-                                    onBeforeUpload={this.onBeforeUpload}
-                                    onChange={this.onAvatarChange}
-                                    color='disabled'
-                                    className='avatar-ctn' />
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                    <Input
-                                        id="full-name"
-                                        type="text"
-                                        required
-                                        onChange={this.handleOnChangeFullName}
-                                        autoComplete="off"
-                                        value={fullName}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                    <Input
-                                        id="email"
-                                        type="text"
-                                        value={user.email}
-                                        disabled
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
-                                    <Input
-                                        id="phone"
-                                        type="text"
-                                        required
-                                        error={!phoneValid}
-                                        onChange={this.handlePhoneChange}
-                                        autoComplete="off"
-                                        value={phone}
-                                    />
-                                    <FormHelperText error={!phoneValid}>
-                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <DatePicker
-                                        label={commonStrings.BIRTH_DATE}
-                                        value={birthDate}
-                                        variant='standard'
-                                        error={!birthDateValid}
-                                        required
-                                        onChange={(birthDate) => {
-                                            const birthDateValid = this.validateBirthDate(birthDate);
-
-                                            this.setState({ birthDate, birthDateValid });
-                                        }}
-                                        language={user.language}
-                                    />
-                                    <FormHelperText error={!birthDateValid}>
-                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
-                                    </FormHelperText>
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                                    <Input
-                                        id="location"
-                                        type="text"
-                                        onChange={this.handleOnChangeLocation}
-                                        autoComplete="off"
-                                        value={location}
-                                    />
-                                </FormControl>
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel>{commonStrings.BIO}</InputLabel>
-                                    <Input
-                                        id="bio"
-                                        type="text"
-                                        onChange={this.handleOnChangeBio}
-                                        autoComplete="off"
-                                        value={bio}
-                                    />
-                                </FormControl>
-                                <div className="buttons">
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary btn-margin btn-margin-bottom'
-                                        size="small"
-                                        href='/change-password'
-                                    >
-                                        {commonStrings.RESET_PASSWORD}
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary btn-margin-bottom'
-                                        size="small"
-                                    >
-                                        {commonStrings.SAVE}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary btn-margin-bottom'
-                                        size="small"
-                                        href="/"
-                                    >
-                                        {commonStrings.CANCEL}
-                                    </Button>
-                                </div>
-                            </form>
-                        </Paper>
-                        <Paper className="settings-net settings-net-wrapper" elevation={10}>
-                            <h1 className="settings-form-title"> {strings.NETWORK_SETTINGS} </h1>
-                            <FormControl component="fieldset">
-                                <FormControlLabel
-                                    control={<Switch checked={user.enableEmailNotifications} onChange={this.handleEmailNotificationsChange} />}
-                                    label={strings.SETTINGS_EMAIL_NOTIFICATIONS}
+    return (
+        <Master onLoad={onLoad} onError={onError} strict={true} user={user}>
+            {visible && user &&
+                <div className='settings'>
+                    <Paper className="settings-form settings-form-wrapper" elevation={10}>
+                        <form onSubmit={handleSubmit}>
+                            <Avatar
+                                type={user.type}
+                                loggedUser={user}
+                                user={user}
+                                size='large'
+                                readonly={false}
+                                onBeforeUpload={onBeforeUpload}
+                                onChange={onAvatarChange}
+                                color='disabled'
+                                className='avatar-ctn' />
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                <Input
+                                    id="full-name"
+                                    type="text"
+                                    required
+                                    onChange={handleOnChangeFullName}
+                                    autoComplete="off"
+                                    value={fullName}
                                 />
                             </FormControl>
-                        </Paper>
-                    </div>}
-                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {error && <Error message={commonStrings.GENERIC_ERROR} style={{ marginTop: '25px' }} />}
-            </Master>
-        );
-    }
-}
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                <Input
+                                    id="email"
+                                    type="text"
+                                    value={user.email}
+                                    disabled
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                <Input
+                                    id="phone"
+                                    type="text"
+                                    required
+                                    error={!phoneValid}
+                                    onChange={handlePhoneChange}
+                                    autoComplete="off"
+                                    value={phone}
+                                />
+                                <FormHelperText error={!phoneValid}>
+                                    {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <DatePicker
+                                    label={commonStrings.BIRTH_DATE}
+                                    value={birthDate}
+                                    variant='standard'
+                                    error={!birthDateValid}
+                                    required
+                                    onChange={(birthDate) => {
+                                        const birthDateValid = validateBirthDate(birthDate);
+
+                                        setBirthDate(birthDate);
+                                        setBirthDateValid(birthDateValid);
+                                    }}
+                                    language={user.language}
+                                />
+                                <FormHelperText error={!birthDateValid}>
+                                    {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{commonStrings.LOCATION}</InputLabel>
+                                <Input
+                                    id="location"
+                                    type="text"
+                                    onChange={handleOnChangeLocation}
+                                    autoComplete="off"
+                                    value={location}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel>{commonStrings.BIO}</InputLabel>
+                                <Input
+                                    id="bio"
+                                    type="text"
+                                    onChange={handleOnChangeBio}
+                                    autoComplete="off"
+                                    value={bio}
+                                />
+                            </FormControl>
+                            <div className="buttons">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary btn-margin btn-margin-bottom'
+                                    size="small"
+                                    href='/change-password'
+                                >
+                                    {commonStrings.RESET_PASSWORD}
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary btn-margin-bottom'
+                                    size="small"
+                                >
+                                    {commonStrings.SAVE}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className='btn-secondary btn-margin-bottom'
+                                    size="small"
+                                    href="/"
+                                >
+                                    {commonStrings.CANCEL}
+                                </Button>
+                            </div>
+                        </form>
+                    </Paper>
+                    <Paper className="settings-net settings-net-wrapper" elevation={10}>
+                        <h1 className="settings-form-title"> {strings.NETWORK_SETTINGS} </h1>
+                        <FormControl component="fieldset">
+                            <FormControlLabel
+                                control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />}
+                                label={strings.SETTINGS_EMAIL_NOTIFICATIONS}
+                            />
+                        </FormControl>
+                    </Paper>
+                </div>}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+        </Master>
+    );
+};
+
+export default Settings;

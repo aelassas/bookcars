@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-up';
@@ -24,469 +24,407 @@ import Helper from '../common/Helper';
 
 import '../assets/css/signup.css';
 
-export default class SignUp extends Component {
+const SignUp = () => {
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [birthDate, setBirthDate] = useState();
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [reCaptchaToken, setReCaptchaToken] = useState('');
+    const [error, setError] = useState(false);
+    const [recaptchaError, setRecaptchaError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordsDontMatch, setPasswordsDontMatch] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [emailValid, setEmailValid] = useState(true);
+    const [tosChecked, setTosChecked] = useState(false);
+    const [tosError, setTosError] = useState(false);
+    const [phoneValid, setPhoneValid] = useState(true);
+    const [phone, setPhone] = useState('');
+    const [birthDateValid, setBirthDateValid] = useState(true);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            language: Env.DEFAULT_LANGUAGE,
-            fullName: '',
-            email: '',
-            birthDate: null,
-            password: '',
-            confirmPassword: '',
-            reCaptchaToken: '',
-            error: false,
-            recaptchaError: false,
-            passwordError: false,
-            passwordsDontMatch: false,
-            emailError: false,
-            visible: false,
-            loading: false,
-            emailValid: true,
-            tosChecked: false,
-            tosError: false,
-            phoneValid: true,
-            phone: '',
-            birthDateValid: true
-        };
-    }
-
-    handleOnChangeFullName = (e) => {
-        this.setState({
-            fullName: e.target.value,
-        });
+    const handleOnChangeFullName = (e) => {
+        setFullName(e.target.value);
     };
 
-    handleEmailChange = (e) => {
-        this.setState({
-            email: e.target.value,
-        });
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
 
         if (!e.target.value) {
-            this.setState({ emailError: false, emailValid: true });
+            setEmailError(false);
+            setEmailValid(true);
         }
     };
 
-    validateEmail = async (email) => {
+    const validateEmail = async (email) => {
         if (email) {
             if (validator.isEmail(email)) {
                 try {
                     const status = await UserService.validateEmail({ email });
                     if (status === 200) {
-                        this.setState({ emailError: false, emailValid: true });
+                        setEmailError(false);
+                        setEmailValid(true);
                         return true;
                     } else {
-                        this.setState({ emailError: true, emailValid: true, error: false });
+                        setEmailError(true);
+                        setEmailValid(true);
+                        setError(false);
                         return false;
                     }
                 } catch (err) {
                     Helper.error(err);
-                    this.setState({ emailError: false, emailValid: true });
+                    setEmailError(false);
+                    setEmailValid(true);
                     return false;
                 }
             } else {
-                this.setState({ emailError: false, emailValid: false });
+                setEmailError(false);
+                setEmailValid(false);
                 return false;
             }
         } else {
-            this.setState({ emailError: false, emailValid: true });
+            setEmailError(false);
+            setEmailValid(true);
             return false;
         }
     };
 
-    handleEmailBlur = async (e) => {
-        await this.validateEmail(e.target.value);
+    const handleEmailBlur = async (e) => {
+        await validateEmail(e.target.value);
     };
 
-    validatePhone = (phone) => {
+    const validatePhone = (phone) => {
         if (phone) {
             const phoneValid = validator.isMobilePhone(phone);
-            this.setState({ phoneValid });
+            setPhoneValid(phoneValid);
 
             return phoneValid;
         } else {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
 
             return true;
         }
     };
 
-    handlePhoneChange = (e) => {
-        this.setState({ phone: e.target.value });
+    const handlePhoneChange = (e) => {
+        setPhone(e.target.value);
 
         if (!e.target.value) {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
         }
     };
 
-    handlePhoneBlur = (e) => {
-        this.validatePhone(e.target.value);
+    const handlePhoneBlur = (e) => {
+        validatePhone(e.target.value);
     };
 
-    validateBirthDate = (date) => {
-        if (date) {
+    const validateBirthDate = (date) => {
+        if (Helper.isDate(date)) {
             const now = new Date();
             const sub = intervalToDuration({ start: date, end: now }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-            this.setState({ birthDateValid });
+            setBirthDateValid(birthDateValid);
             return birthDateValid;
         } else {
-            this.setState({ birthDateValid: true });
+            setBirthDateValid(true);
             return true;
         }
     };
 
-    handleOnChangePassword = (e) => {
-        this.setState({
-            password: e.target.value,
-        });
+    const handleOnChangePassword = (e) => {
+        setPassword(e.target.value);
     };
 
-    handleOnChangeConfirmPassword = (e) => {
-        this.setState({
-            confirmPassword: e.target.value,
-        });
+    const handleOnChangeConfirmPassword = (e) => {
+        setConfirmPassword(e.target.value);
     };
 
-    handleOnRecaptchaVerify = (token) => {
-        this.setState({ reCaptchaToken: token, recaptchaError: !token });
+    const handleOnRecaptchaVerify = (token) => {
+        setReCaptchaToken(token);
+        setRecaptchaError(!token);
     };
 
-    handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-
-    handleMouseDownConfirmPassword = (event) => {
-        event.preventDefault();
-    };
-
-    handleTosChange = (event) => {
-        this.setState({ tosChecked: event.target.checked });
+    const handleTosChange = (event) => {
+        setTosChecked(event.target.checked);
 
         if (event.target.checked) {
-            this.setState({ tosError: false });
+            setTosError(false);
         }
     };
 
-    handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, phone, birthDate } = this.state;
-
-        const emailValid = await this.validateEmail(email);
+        const emailValid = await validateEmail(email);
         if (!emailValid) {
             return;
         }
 
-        const phoneValid = this.validatePhone(phone);
+        const phoneValid = validatePhone(phone);
         if (!phoneValid) {
             return;
         }
 
-        const birthDateValid = this.validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate);
         if (!birthDateValid) {
             return;
         }
 
-        if (this.state.password.length < 6) {
-            this.setState({
-                passwordError: true,
-                recaptchaError: false,
-                passwordsDontMatch: false,
-                error: false,
-                register: false,
-                tosError: false
-            });
+        if (password.length < 6) {
+            setPasswordError(true);
+            setRecaptchaError(false);
+            setPasswordsDontMatch(false);
+            setError(false);
+            setTosError(false);
             return;
         }
 
-        if (this.state.password !== this.state.confirmPassword) {
-            this.setState({
-                passwordsDontMatch: true,
-                recaptchaError: false,
-                passwordError: false,
-                error: false,
-                register: false,
-                tosError: false
-            });
+        if (password !== confirmPassword) {
+            setPasswordError(false);
+            setRecaptchaError(false);
+            setPasswordsDontMatch(true);
+            setError(false);
+            setTosError(false);
             return;
         }
 
-        if (!this.state.reCaptchaToken) {
-            this.setState({
-                recaptchaError: true,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-                register: false,
-                tosError: false
-            });
+        if (!reCaptchaToken) {
+            setPasswordError(false);
+            setRecaptchaError(true);
+            setPasswordsDontMatch(false);
+            setError(false);
+            setTosError(false);
             return;
         }
 
-        if (!this.state.tosChecked) {
-            this.setState({
-                tosError: true,
-                recaptchaError: false,
-                passwordsDontMatch: false,
-                passwordError: false,
-                error: false,
-                register: false
-            });
+        if (!tosChecked) {
+            setPasswordError(false);
+            setRecaptchaError(false);
+            setPasswordsDontMatch(false);
+            setError(false);
+            setTosError(true);
             return;
         }
 
-        this.setState({ loading: true });
+        setLoading(true);
 
         const data = {
-            email: this.state.email,
-            phone: this.state.phone,
-            password: this.state.password,
-            fullName: this.state.fullName,
-            birthDate: this.state.birthDate,
+            email: email,
+            phone: phone,
+            password: password,
+            fullName: fullName,
+            birthDate: birthDate,
             language: UserService.getLanguage()
         };
 
         UserService.signup(data)
             .then(status => {
                 if (status === 200) {
-                    UserService.signin({ email: this.state.email, password: this.state.password })
+                    UserService.signin({ email: email, password: password })
                         .then(signInResult => {
                             if (signInResult.status === 200) {
                                 window.location.href = '/' + window.location.search;
                             } else {
-                                this.setState({
-                                    error: true,
-                                    passwordError: false,
-                                    passwordsDontMatch: false,
-                                    register: false,
-                                    loading: false,
-                                    recaptchaError: false
-                                });
+                                setPasswordError(false);
+                                setRecaptchaError(false);
+                                setPasswordsDontMatch(false);
+                                setError(true);
+                                setTosError(false);
                             }
                         }).catch(err => {
-                            this.setState({
-                                error: true,
-                                passwordError: false,
-                                passwordsDontMatch: false,
-                                register: false,
-                                loading: false,
-                                recaptchaError: false
-                            });
+                            setPasswordError(false);
+                            setRecaptchaError(false);
+                            setPasswordsDontMatch(false);
+                            setError(true);
+                            setTosError(false);
                         });
                 } else
-                    this.setState({
-                        error: true,
-                        passwordError: false,
-                        passwordsDontMatch: false,
-                        register: false,
-                        loading: false,
-                        recaptchaError: false
-                    });
+                    setPasswordError(false);
+                setRecaptchaError(false);
+                setPasswordsDontMatch(false);
+                setError(true);
+                setTosError(false);
             })
             .catch(err => {
-                this.setState({
-                    error: true,
-                    passwordError: false,
-                    passwordsDontMatch: false,
-                    register: false,
-                    loading: false,
-                    recaptchaError: false
-                });
+                setPasswordError(false);
+                setRecaptchaError(false);
+                setPasswordsDontMatch(false);
+                setError(true);
+                setTosError(false);
             });
-
     };
 
-    handleChange = (e) => {
-        e.preventDefault();
-    };
-
-    onLoad = (user) => {
+    const onLoad = (user) => {
         if (user) {
             window.location.href = '/';
         } else {
-            this.setState({ visible: true, language: UserService.getLanguage() });
+            setLanguage(UserService.getLanguage());
+            setVisible(true);
         }
     };
 
-    render() {
-        const {
-            error,
-            language,
-            passwordError,
-            passwordsDontMatch,
-            emailError,
-            recaptchaError,
-            visible,
-            loading,
-            emailValid,
-            birthDate,
-            tosChecked,
-            tosError,
-            phoneValid,
-            birthDateValid
-        } = this.state;
+    return (
+        <Master strict={false} onLoad={onLoad}>
+            {visible &&
+                <div className="signup">
+                    <Paper className="signup-form" elevation={10}>
+                        <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                                    <OutlinedInput
+                                        type="text"
+                                        label={commonStrings.FULL_NAME}
+                                        value={fullName}
+                                        required
+                                        onChange={handleOnChangeFullName}
+                                        autoComplete="off"
+                                    />
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                                    <OutlinedInput
+                                        type="text"
+                                        label={commonStrings.EMAIL}
+                                        error={!emailValid || emailError}
+                                        value={email}
+                                        onBlur={handleEmailBlur}
+                                        onChange={handleEmailChange}
+                                        required
+                                        autoComplete="off"
+                                    />
+                                    <FormHelperText error={!emailValid || emailError}>
+                                        {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                        {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+                                    </FormHelperText>
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
+                                    <OutlinedInput
+                                        type="text"
+                                        label={commonStrings.PHONE}
+                                        error={!phoneValid}
+                                        value={phone}
+                                        onBlur={handlePhoneBlur}
+                                        onChange={handlePhoneChange}
+                                        required
+                                        autoComplete="off"
+                                    />
+                                    <FormHelperText error={!phoneValid}>
+                                        {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                                    </FormHelperText>
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <DatePicker
+                                        label={commonStrings.BIRTH_DATE}
+                                        value={birthDate}
+                                        variant='outlined'
+                                        error={!birthDateValid}
+                                        required
+                                        onChange={(birthDate) => {
+                                            const birthDateValid = validateBirthDate(birthDate);
 
-
-        return (
-            <Master strict={false} onLoad={this.onLoad}>
-                {visible &&
-                    <div className="signup">
-                        <Paper className="signup-form" elevation={10}>
-                            <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
-                            <form onSubmit={this.handleSubmit}>
-                                <div>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                        <OutlinedInput
-                                            type="text"
-                                            label={commonStrings.FULL_NAME}
-                                            value={this.state.fullName}
-                                            required
-                                            onChange={this.handleOnChangeFullName}
-                                            autoComplete="off"
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                        <OutlinedInput
-                                            type="text"
-                                            label={commonStrings.EMAIL}
-                                            error={!emailValid || emailError}
-                                            value={this.state.email}
-                                            onBlur={this.handleEmailBlur}
-                                            onChange={this.handleEmailChange}
-                                            required
-                                            autoComplete="off"
-                                        />
-                                        <FormHelperText error={!emailValid || emailError}>
-                                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                                            {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
-                                        <OutlinedInput
-                                            type="text"
-                                            label={commonStrings.PHONE}
-                                            error={!phoneValid}
-                                            value={this.state.phone}
-                                            onBlur={this.handlePhoneBlur}
-                                            onChange={this.handlePhoneChange}
-                                            required
-                                            autoComplete="off"
-                                        />
-                                        <FormHelperText error={!phoneValid}>
-                                            {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <DatePicker
-                                            label={commonStrings.BIRTH_DATE}
-                                            value={birthDate}
-                                            variant='outlined'
-                                            error={!birthDateValid}
-                                            required
-                                            onChange={(birthDate) => {
-                                                const birthDateValid = this.validateBirthDate(birthDate);
-
-                                                this.setState({ birthDate, birthDateValid });
-                                            }}
-                                            language={language}
-                                        />
-                                        <FormHelperText error={!birthDateValid}>
-                                            {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
-                                        <OutlinedInput
-                                            label={commonStrings.PASSWORD}
-                                            value={this.state.password}
-                                            onChange={this.handleOnChangePassword}
-                                            required
-                                            type="password"
-                                            inputProps={{
-                                                autoComplete: 'new-password',
-                                                form: {
-                                                    autoComplete: 'off',
-                                                },
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
-                                        <OutlinedInput
-                                            label={commonStrings.CONFIRM_PASSWORD}
-                                            value={this.state.confirmPassword}
-                                            onChange={this.handleOnChangeConfirmPassword}
-                                            required
-                                            type="password"
-                                            inputProps={{
-                                                autoComplete: 'new-password',
-                                                form: {
-                                                    autoComplete: 'off',
-                                                },
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <div className="recaptcha">
-                                        <ReCAPTCHA
-                                            sitekey={Env.RECAPTCHA_SITE_KEY}
-                                            hl={language}
-                                            onChange={this.handleOnRecaptchaVerify}
-                                        />
-                                    </div>
-                                    <div className="signup-tos">
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <Checkbox
-                                                            checked={tosChecked}
-                                                            onChange={this.handleTosChange}
-                                                            color="primary"
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <Link href="/tos" target="_blank" rel="noreferrer">{commonStrings.TOS}</Link>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="buttons">
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            className='btn-primary btn-margin-bottom'
-                                            size="small"
-                                        >
-                                            {strings.SIGN_UP}
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            className='btn-secondary btn-margin-bottom'
-                                            size="small"
-                                            href="/"> {commonStrings.CANCEL}
-                                        </Button>
-                                    </div>
+                                            setBirthDate(birthDate);
+                                            setBirthDateValid(birthDateValid);
+                                        }}
+                                        language={language}
+                                    />
+                                    <FormHelperText error={!birthDateValid}>
+                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
+                                    </FormHelperText>
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.PASSWORD}</InputLabel>
+                                    <OutlinedInput
+                                        label={commonStrings.PASSWORD}
+                                        value={password}
+                                        onChange={handleOnChangePassword}
+                                        required
+                                        type="password"
+                                        inputProps={{
+                                            autoComplete: 'new-password',
+                                            form: {
+                                                autoComplete: 'off',
+                                            },
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormControl fullWidth margin="dense">
+                                    <InputLabel className='required'>{commonStrings.CONFIRM_PASSWORD}</InputLabel>
+                                    <OutlinedInput
+                                        label={commonStrings.CONFIRM_PASSWORD}
+                                        value={confirmPassword}
+                                        onChange={handleOnChangeConfirmPassword}
+                                        required
+                                        type="password"
+                                        inputProps={{
+                                            autoComplete: 'new-password',
+                                            form: {
+                                                autoComplete: 'off',
+                                            },
+                                        }}
+                                    />
+                                </FormControl>
+                                <div className="recaptcha">
+                                    <ReCAPTCHA
+                                        sitekey={Env.RECAPTCHA_SITE_KEY}
+                                        hl={language}
+                                        onChange={handleOnRecaptchaVerify}
+                                    />
                                 </div>
-                                <div className="form-error">
-                                    {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-                                    {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                    {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                                    {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                                    {error && <Error message={strings.SIGN_UP_ERROR} />}
+                                <div className="signup-tos">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <Checkbox
+                                                        checked={tosChecked}
+                                                        onChange={handleTosChange}
+                                                        color="primary"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <Link href="/tos" target="_blank" rel="noreferrer">{commonStrings.TOS}</Link>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </form>
-                        </Paper>
-                    </div>}
-                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-            </Master>
-        );
-    }
-}
+                                <div className="buttons">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        className='btn-primary btn-margin-bottom'
+                                        size="small"
+                                    >
+                                        {strings.SIGN_UP}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        className='btn-secondary btn-margin-bottom'
+                                        size="small"
+                                        href="/"> {commonStrings.CANCEL}
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="form-error">
+                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
+                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
+                                {tosError && <Error message={commonStrings.TOS_ERROR} />}
+                                {error && <Error message={strings.SIGN_UP_ERROR} />}
+                            </div>
+                        </form>
+                    </Paper>
+                </div>}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+        </Master>
+    );
+};
+
+export default SignUp;
