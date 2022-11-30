@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
@@ -29,193 +29,187 @@ import { intervalToDuration } from 'date-fns';
 
 import '../assets/css/create-user.css';
 
-export default class CreateUser extends Component {
+const CreateUser = () => {
+    const [user, setUser] = useState();
+    const [admin, setAdmin] = useState(false);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [location, setLocation] = useState('');
+    const [bio, setBio] = useState('');
+    const [error, setError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [fullNameError, setFullNameError] = useState(false);
+    const [avatar, setAvatar] = useState();
+    const [avatarError, setAvatarError] = useState(false);
+    const [type, setType] = useState('');
+    const [emailValid, setEmailValid] = useState(true);
+    const [phoneValid, setPhoneValid] = useState(true);
+    const [payLater, setPayLater] = useState(true);
+    const [birthDate, setBirthDate] = useState();
+    const [birthDateValid, setBirthDateValid] = useState(true);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            admin: false,
-            fullName: '',
-            email: '',
-            phone: '',
-            location: '',
-            bio: '',
-            error: false,
-            emailError: false,
-            visible: false,
-            loading: false,
-            fullNameError: false,
-            avatar: null,
-            avatarError: false,
-            type: '',
-            birthDate: null,
-            emailValid: true,
-            phoneValid: true,
-            birthDateValid: true,
-            payLater: true
-        };
-    }
+    const handleUserTypeChange = async (e) => {
+        const type = e.target.value;
 
-    handleUserTypeChange = (e) => {
-        this.setState({ type: e.target.value }, async () => await this.validateFullName(this.state.fullName));
-    };
+        setType(type);
 
-    handleOnChangeFullName = (e) => {
-        this.setState({
-            fullName: e.target.value,
-        });
-
-        if (!e.target.value) {
-            this.setState({ fullNameError: false });
+        if (type === Env.RECORD_TYPE.COMPANY) {
+            await validateFullName(fullName)
+        } else {
+            setFullNameError(false);
         }
     };
 
-    validateFullName = async (fullName) => {
+    const handleOnChangeFullName = (e) => {
+        setFullName(e.target.value);
+
+        if (!e.target.value) {
+            setFullNameError(false);
+        }
+    };
+
+    const validateFullName = async (fullName) => {
         if (fullName) {
-            if (this.state.type === Env.RECORD_TYPE.COMPANY) {
-                try {
-                    const status = await CompanyService.validate({ fullName });
-                    if (status === 200) {
-                        this.setState({ fullNameError: false });
-                        return true;
-                    } else {
-                        this.setState({ fullNameError: true, avatarError: false, error: false });
-                        return false;
-                    }
-                } catch (err) {
-                    UserService.signout();
+            try {
+                const status = await CompanyService.validate({ fullName });
+
+                if (status === 200) {
+                    setFullNameError(false);
+                    setError(false);
+                    return true;
+                } else {
+                    setFullNameError(true);
+                    setAvatarError(false);
+                    setError(false);
+                    return false;
                 }
-            } else {
-                this.setState({ fullNameError: false });
-                return true;
+            } catch (err) {
+                UserService.signout();
             }
         } else {
-            this.setState({ fullNameError: false });
+            setFullNameError(false);
             return true;
         }
     };
 
-    handleFullNameOnBlur = async (e) => {
-        await this.validateFullName(e.target.value);
-    };
-
-    handleEmailChange = (e) => {
-        this.setState({
-            email: e.target.value,
-        });
-
-        if (!e.target.value) {
-            this.setState({ emailError: false, emailValid: true });
+    const handleFullNameOnBlur = async (e) => {
+        if (type === Env.RECORD_TYPE.COMPANY) {
+            await validateFullName(e.target.value);
+        } else {
+            setFullNameError(false);
         }
     };
 
-    validateEmail = async (email) => {
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+
+        if (!e.target.value) {
+            setEmailError(false);
+            setEmailValid(true);
+        }
+    };
+
+    const validateEmail = async (email) => {
         if (email) {
             if (validator.isEmail(email)) {
                 try {
                     const status = await UserService.validateEmail({ email });
                     if (status === 200) {
-                        this.setState({ emailError: false, emailValid: true });
+                        setEmailError(false);
+                        setEmailValid(true);
                         return true;
                     } else {
-                        this.setState({ emailError: true, emailValid: true, avatarError: false, error: false });
+                        setEmailError(true);
+                        setEmailValid(true)
+                        setAvatarError(false);
+                        setError(false);
                         return false;
                     }
                 } catch (err) {
                     UserService.signout();
                 }
             } else {
-                this.setState({ emailError: false, emailValid: false });
+                setEmailError(false);
+                setEmailValid(false);
                 return false;
             }
         } else {
-            this.setState({ emailError: false, emailValid: true });
+            setEmailError(false);
+            setEmailValid(true);
             return false;
         }
     };
 
-    handleEmailBlur = async (e) => {
-        await this.validateEmail(e.target.value);
+    const handleEmailBlur = async (e) => {
+        await validateEmail(e.target.value);
     };
 
-    handlePhoneChange = (e) => {
-        this.setState({ phone: e.target.value });
+    const handlePhoneChange = (e) => {
+        setPhone(e.target.value);
 
         if (!e.target.value) {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
         }
     };
 
-    validatePhone = (phone) => {
+    const validatePhone = (phone) => {
         if (phone) {
             const phoneValid = validator.isMobilePhone(phone);
-            this.setState({ phoneValid });
+            setPhoneValid(phoneValid);
 
             return phoneValid;
         } else {
-            this.setState({ phoneValid: true });
+            setPhoneValid(true);
 
             return true;
         }
     };
 
-    handlePhoneBlur = (e) => {
-        this.validatePhone(e.target.value);
+    const handlePhoneBlur = (e) => {
+        validatePhone(e.target.value);
     };
 
-    validateBirthDate = (date) => {
-        const { type } = this.state;
-
-        if (date && type === Env.RECORD_TYPE.USER) {
+    const validateBirthDate = (date) => {
+        if (Helper.isDate(date) && type === Env.RECORD_TYPE.USER) {
             const now = new Date();
             const sub = intervalToDuration({ start: date, end: now }).years;
             const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-            this.setState({ birthDateValid });
+            setBirthDateValid(birthDateValid);
             return birthDateValid;
         } else {
-            this.setState({ birthDateValid: true });
+            setBirthDateValid(true);
             return true;
         }
     };
 
-
-    handleOnChangeLocation = (e) => {
-        this.setState({
-            location: e.target.value,
-        });
+    const handleOnChangeLocation = (e) => {
+        setLocation(e.target.value);
     };
 
-    handleOnChangeBio = (e) => {
-        this.setState({
-            bio: e.target.value,
-        });
+    const handleOnChangeBio = (e) => {
+        setBio(e.target.value);
     };
 
-    handleChange = (e) => {
-        e.preventDefault();
+    const onBeforeUpload = () => {
+        setLoading(true);
     };
 
-    onBeforeUpload = () => {
-        this.setState({ loading: true });
-    };
-
-    onAvatarChange = (avatar) => {
-        const { type } = this.state;
-
-        this.setState({ loading: false, avatar });
+    const onAvatarChange = (avatar) => {
+        setLoading(false);
+        setAvatar(avatar);
 
         if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
-            this.setState({ avatarError: false });
+            setAvatarError(false);
         }
     };
 
-    handleCancel = () => {
-        const { avatar } = this.state;
-
+    const handleCancel = () => {
         if (avatar) {
-            this.setState({ loading: true });
+            setLoading(true);
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
@@ -229,54 +223,51 @@ export default class CreateUser extends Component {
         }
     };
 
-    onLoad = (user) => {
-        const admin = Helper.admin(user);
-        this.setState({ user: user, admin, visible: true, type: admin ? '' : Env.RECORD_TYPE.USER });
+    const onLoad = (user) => {
+        if (user && user.verified) {
+            const admin = Helper.admin(user);
+            setUser(user);
+            setAdmin(admin);
+            setType(admin ? '' : Env.RECORD_TYPE.USER);
+            setVisible(true);
+        }
     };
 
-    handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { email, phone, type, fullName, birthDate } = this.state;
+        if (type === Env.RECORD_TYPE.COMPANY) {
+            const fullNameValid = await validateFullName(fullName);
 
-        const fullNameValid = await this.validateFullName(fullName);
-        if (!fullNameValid) {
-            return;
+            if (!fullNameValid) {
+                return;
+            }
+        } else {
+            setFullNameError(false);
         }
 
-        const emailValid = await this.validateEmail(email);
+        const emailValid = await validateEmail(email);
         if (!emailValid) {
             return;
         }
 
-        const phoneValid = this.validatePhone(phone);
+        const phoneValid = validatePhone(phone);
         if (!phoneValid) {
             return;
         }
 
-        const birthDateValid = this.validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate);
         if (!birthDateValid) {
             return;
         }
 
-        if (type === Env.RECORD_TYPE.COMPANY && !this.state.avatar) {
-            this.setState({
-                avatarError: true,
-                error: false
-            });
+        if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
+            setAvatarError(true);
+            setError(false);
             return;
         }
 
-        this.setState({ loading: true });
-
-        const {
-            admin,
-            user,
-            location,
-            bio,
-            avatar,
-            payLater
-        } = this.state;
+        setLoading(true);
 
         const language = UserService.getLanguage();
         const company = admin ? undefined : user._id;
@@ -290,10 +281,8 @@ export default class CreateUser extends Component {
                 if (status === 200) {
                     window.location = '/users';
                 } else {
-                    this.setState({
-                        error: true,
-                        loading: false
-                    });
+                    setError(true);
+                    setLoading(false);
                 }
             }).catch(() => {
                 UserService.signout();
@@ -301,198 +290,184 @@ export default class CreateUser extends Component {
 
     };
 
-    render() {
-        const {
-            user,
-            admin,
-            type,
-            error,
-            emailError,
-            fullNameError,
-            avatarError,
-            visible,
-            loading,
-            birthDate,
-            emailValid,
-            phoneValid,
-            birthDateValid,
-            payLater
-        } = this.state,
-            company = type === Env.RECORD_TYPE.COMPANY,
-            driver = type === Env.RECORD_TYPE.USER;
 
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {user && <div className='create-user'>
-                    <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
-                        <form onSubmit={this.handleSubmit}>
-                            <Avatar
-                                type={type}
-                                mode='create'
-                                record={null}
-                                size='large'
-                                readonly={false}
-                                onBeforeUpload={this.onBeforeUpload}
-                                onChange={this.onAvatarChange}
-                                color='disabled'
-                                className='avatar-ctn'
+    const company = type === Env.RECORD_TYPE.COMPANY;
+    const driver = type === Env.RECORD_TYPE.USER;
+
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {user && <div className='create-user'>
+                <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                    <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
+                    <form onSubmit={handleSubmit}>
+                        <Avatar
+                            type={type}
+                            mode='create'
+                            record={null}
+                            size='large'
+                            readonly={false}
+                            onBeforeUpload={onBeforeUpload}
+                            onChange={onAvatarChange}
+                            color='disabled'
+                            className='avatar-ctn'
+                        />
+
+                        {company && <div className='info'>
+                            <InfoIcon />
+                            <label>
+                                {ccStrings.RECOMMENDED_IMAGE_SIZE}
+                            </label>
+                        </div>}
+
+                        {admin &&
+                            <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                                <InputLabel className='required'>{commonStrings.TYPE}</InputLabel>
+                                <Select
+                                    label={commonStrings.TYPE}
+                                    value={type}
+                                    onChange={handleUserTypeChange}
+                                    variant='standard'
+                                    required
+                                    fullWidth
+                                >
+                                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
+                                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
+                                    <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
+                                </Select>
+                            </FormControl>
+                        }
+
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
+                            <Input
+                                id="full-name"
+                                type="text"
+                                error={fullNameError}
+                                required
+                                onBlur={handleFullNameOnBlur}
+                                onChange={handleOnChangeFullName}
+                                autoComplete="off"
                             />
+                            <FormHelperText error={fullNameError}>
+                                {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
+                            </FormHelperText>
+                        </FormControl>
 
-                            {company && <div className='info'>
-                                <InfoIcon />
-                                <label>
-                                    {ccStrings.RECOMMENDED_IMAGE_SIZE}
-                                </label>
-                            </div>}
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
+                            <Input
+                                id="email"
+                                type="text"
+                                error={!emailValid || emailError}
+                                onBlur={handleEmailBlur}
+                                onChange={handleEmailChange}
+                                autoComplete="off"
+                                required
+                            />
+                            <FormHelperText error={!emailValid || emailError}>
+                                {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                                {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
+                            </FormHelperText>
+                        </FormControl>
 
-                            {admin &&
-                                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
-                                    <InputLabel className='required'>{commonStrings.TYPE}</InputLabel>
-                                    <Select
-                                        label={commonStrings.TYPE}
-                                        value={type}
-                                        onChange={this.handleUserTypeChange}
-                                        variant='standard'
-                                        required
-                                        fullWidth
-                                    >
-                                        <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
-                                        <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
-                                        <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            }
-
+                        {driver &&
                             <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                <Input
-                                    id="full-name"
-                                    type="text"
-                                    error={fullNameError}
+                                <DatePicker
+                                    label={strings.BIRTH_DATE}
+                                    value={birthDate}
                                     required
-                                    onBlur={this.handleFullNameOnBlur}
-                                    onChange={this.handleOnChangeFullName}
-                                    autoComplete="off"
+                                    onChange={(birthDate) => {
+                                        const birthDateValid = validateBirthDate(birthDate);
+
+                                        setBirthDate(birthDate);
+                                        setBirthDateValid(birthDateValid);
+                                    }}
+                                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                 />
-                                <FormHelperText error={fullNameError}>
-                                    {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
+                                <FormHelperText error={!birthDateValid}>
+                                    {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
                                 </FormHelperText>
                             </FormControl>
+                        }
 
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                <Input
-                                    id="email"
-                                    type="text"
-                                    error={!emailValid || emailError}
-                                    onBlur={this.handleEmailBlur}
-                                    onChange={this.handleEmailChange}
-                                    autoComplete="off"
-                                    required
-                                />
-                                <FormHelperText error={!emailValid || emailError}>
-                                    {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
-                                </FormHelperText>
-                            </FormControl>
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel className={driver ? 'required' : ''}>{commonStrings.PHONE}</InputLabel>
+                            <Input
+                                id="phone"
+                                type="text"
+                                onBlur={handlePhoneBlur}
+                                onChange={handlePhoneChange}
+                                error={!phoneValid}
+                                required={driver ? true : false}
+                                autoComplete="off"
+                            />
+                            <FormHelperText error={!phoneValid}>
+                                {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                            </FormHelperText>
+                        </FormControl>
 
-                            {driver &&
-                                <FormControl fullWidth margin="dense">
-                                    <DatePicker
-                                        label={strings.BIRTH_DATE}
-                                        value={birthDate}
-                                        required
-                                        onChange={(birthDate) => {
-                                            const birthDateValid = this.validateBirthDate(birthDate);
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel>{commonStrings.LOCATION}</InputLabel>
+                            <Input
+                                id="location"
+                                type="text"
+                                onChange={handleOnChangeLocation}
+                                autoComplete="off"
+                            />
+                        </FormControl>
 
-                                            this.setState({ birthDate, birthDateValid });
-                                        }}
-                                        language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                                    />
-                                    <FormHelperText error={!birthDateValid}>
-                                        {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}
-                                    </FormHelperText>
-                                </FormControl>
-                            }
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel>{commonStrings.BIO}</InputLabel>
+                            <Input
+                                id="bio"
+                                type="text"
+                                onChange={handleOnChangeBio}
+                                autoComplete="off"
+                            />
+                        </FormControl>
 
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel className={driver ? 'required' : ''}>{commonStrings.PHONE}</InputLabel>
-                                <Input
-                                    id="phone"
-                                    type="text"
-                                    onBlur={this.handlePhoneBlur}
-                                    onChange={this.handlePhoneChange}
-                                    error={!phoneValid}
-                                    required={driver ? true : false}
-                                    autoComplete="off"
-                                />
-                                <FormHelperText error={!phoneValid}>
-                                    {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                                </FormHelperText>
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                                <Input
-                                    id="location"
-                                    type="text"
-                                    onChange={this.handleOnChangeLocation}
-                                    autoComplete="off"
+                        {
+                            company &&
+                            <FormControl component="fieldset" style={{ marginTop: 15 }}>
+                                <FormControlLabel
+                                    control={<Switch checked={payLater} onChange={(e) => {
+                                        setPayLater(e.target.checked);
+                                    }} color="primary" />}
+                                    label={commonStrings.PAY_LATER}
                                 />
                             </FormControl>
+                        }
 
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel>{commonStrings.BIO}</InputLabel>
-                                <Input
-                                    id="bio"
-                                    type="text"
-                                    onChange={this.handleOnChangeBio}
-                                    autoComplete="off"
-                                />
-                            </FormControl>
+                        <div className="buttons">
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                className='btn-primary btn-margin-bottom'
+                                size="small"
+                            >
+                                {commonStrings.CREATE}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                className='btn-secondary btn-margin-bottom'
+                                size="small"
+                                onClick={handleCancel}
+                            >
+                                {commonStrings.CANCEL}
+                            </Button>
+                        </div>
 
-                            {
-                                company &&
-                                <FormControl component="fieldset" style={{ marginTop: 15 }}>
-                                    <FormControlLabel
-                                        control={<Switch checked={payLater} onChange={(e) => {
-                                            this.setState({ payLater: e.target.checked });
-                                        }} color="primary" />}
-                                        label={commonStrings.PAY_LATER}
-                                    />
-                                </FormControl>
-                            }
+                        <div className="form-error">
+                            {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                            {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
+                        </div>
+                    </form>
 
-                            <div className="buttons">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary btn-margin-bottom'
-                                    size="small"
-                                >
-                                    {commonStrings.CREATE}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className='btn-secondary btn-margin-bottom'
-                                    size="small"
-                                    onClick={this.handleCancel}
-                                >
-                                    {commonStrings.CANCEL}
-                                </Button>
-                            </div>
+                </Paper>
+            </div>}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+        </Master>
+    );
+};
 
-                            <div className="form-error">
-                                {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                            </div>
-                        </form>
-
-                    </Paper>
-                </div>}
-                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-            </Master>
-        );
-    }
-}
+export default CreateUser;

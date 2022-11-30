@@ -382,7 +382,7 @@ export const resend = (req, res) => {
                                         html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
                                             + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>'
 
-                                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, (reset ? 'reset-user-password' : 'activate'))
+                                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, (reset ? 'reset-password' : 'activate'))
                                             + '/?u=' + encodeURIComponent(user._id)
                                             + '&e=' + encodeURIComponent(user.email)
                                             + '&t=' + encodeURIComponent(token.token)

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
 import UserService from '../services/UserService';
@@ -10,11 +10,15 @@ import { FormControl, Button } from '@mui/material';
 import SecurePayment from '../assets/img/secure-payment.png';
 import '../assets/css/home.css';
 
-export default class Home extends Component {
+const Home = () => {
+    const [pickupLocation, setPickupLocation] = useState();
+    const [dropOffLocation, setDropOffLocation] = useState();
+    const [minDate, setMinDate] = useState();
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
+    const [sameLocation, setSameLocation] = useState(true);
 
-    constructor(props) {
-        super(props);
-
+    useEffect(() => {
         const from = new Date();
         from.setDate(from.getDate() + 1);
         from.setHours(10);
@@ -25,62 +29,57 @@ export default class Home extends Component {
         const to = new Date(from);
         to.setDate(to.getDate() + 3);
 
-        this.state = {
-            user: null,
-            pickupLocation: null,
-            dropOffLocation: null,
-            minDate: from,
-            from,
-            to,
-            sameLocation: true
-        };
-    }
+        setMinDate(new Date());
+        setFrom(from);
+        setTo(to);
+    }, []);
 
-    handlePickupLocationChange = (values) => {
-        const { sameLocation } = this.state;
+    useEffect(() => {
+        if (from) {
+            const minDate = new Date(from);
+            minDate.setDate(from.getDate() + 1);
+            setMinDate(minDate);
+        }
+    }, [from]);
+
+    const handlePickupLocationChange = (values) => {
         const pickupLocation = ((values.length > 0 && values[0]._id) || null);
-
-        this.setState({ pickupLocation });
+        setPickupLocation(pickupLocation);
 
         if (sameLocation) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         }
     };
 
-    handleSameLocationChange = (e) => {
-        const { pickupLocation } = this.state;
-
-        this.setState({ sameLocation: e.target.checked });
+    const handleSameLocationChange = (e) => {
+        setSameLocation(e.target.checked);
 
         if (e.target.checked) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         } else {
-            this.setState({ dropOffLocation: null });
+            setDropOffLocation(null);
         }
     };
 
-    handleSameLocationClick = (e) => {
-        const { sameLocation, pickupLocation } = this.state, checked = !sameLocation;
+    const handleSameLocationClick = (e) => {
+        const checked = !sameLocation;
 
-        this.setState({ sameLocation: checked }, () => {
-            e.target.previousSibling.checked = checked;
-        });
+        setSameLocation(checked);
+        e.target.previousSibling.checked = checked;
 
         if (checked) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         } else {
-            this.setState({ dropOffLocation: null });
+            setDropOffLocation(null);
         }
     };
 
-    handleDropOffLocationChange = (values) => {
-        this.setState({ dropOffLocation: ((values.length > 0 && values[0]._id) || null) });
+    const handleDropOffLocationChange = (values) => {
+        setDropOffLocation((values.length > 0 && values[0]._id) || null);
     };
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        const { pickupLocation, dropOffLocation, from, to } = this.state;
 
         if (!pickupLocation || !dropOffLocation) {
             return;
@@ -89,98 +88,95 @@ export default class Home extends Component {
         window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`;
     };
 
-    onLoad = (user) => {
-        this.setState({ user });
+    const onLoad = (user) => {
     }
 
-    render() {
-        const { minDate, from, to, sameLocation } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                <div className='home'>
-                    <div className='home-content'>
-                        <div className='home-logo'>
-                            <label className='home-logo-main' />
-                            <label className='home-logo-registered' />
-                        </div>
-                        <div className='home-search'>
-                            <form onSubmit={this.handleSubmit} className='home-search-form'>
-                                <FormControl className='pickup-location'>
+    return (
+        <Master onLoad={onLoad} strict={false}>
+            <div className='home'>
+                <div className='home-content'>
+                    <div className='home-logo'>
+                        <label className='home-logo-main' />
+                        <label className='home-logo-registered' />
+                    </div>
+                    <div className='home-search'>
+                        <form onSubmit={handleSubmit} className='home-search-form'>
+                            <FormControl className='pickup-location'>
+                                <LocationSelectList
+                                    label={commonStrings.PICKUP_LOCATION}
+                                    hidePopupIcon
+                                    customOpen
+                                    required
+                                    variant='outlined'
+                                    onChange={handlePickupLocationChange}
+                                />
+                            </FormControl>
+                            <FormControl className='from'>
+                                <DateTimePicker
+                                    label={commonStrings.FROM}
+                                    value={from}
+                                    minDate={new Date()}
+                                    variant='outlined'
+                                    required
+                                    onChange={(from) => {
+                                        setFrom(from);
+                                    }}
+                                    language={UserService.getLanguage()}
+                                />
+                            </FormControl>
+                            <FormControl className='to'>
+                                <DateTimePicker
+                                    label={commonStrings.TO}
+                                    value={to}
+                                    minDate={minDate}
+                                    variant='outlined'
+                                    required
+                                    onChange={(to) => {
+                                        setTo(to);
+                                    }}
+                                    language={UserService.getLanguage()}
+                                />
+                            </FormControl>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                className='btn-search'
+                            >
+                                {commonStrings.SEARCH}
+                            </Button>
+                            {!sameLocation &&
+                                <FormControl className='drop-off-location'>
                                     <LocationSelectList
-                                        label={commonStrings.PICKUP_LOCATION}
+                                        label={commonStrings.DROP_OFF_LOCATION}
+                                        // overflowHidden
                                         hidePopupIcon
                                         customOpen
                                         required
                                         variant='outlined'
-                                        onChange={this.handlePickupLocationChange}
+                                        onChange={handleDropOffLocationChange}
                                     />
                                 </FormControl>
-                                <FormControl className='from'>
-                                    <DateTimePicker
-                                        label={commonStrings.FROM}
-                                        value={from}
-                                        minDate={minDate}
-                                        variant='outlined'
-                                        required
-                                        onChange={(from) => {
-                                            this.setState({ from });
-                                        }}
-                                        language={UserService.getLanguage()}
-                                    />
-                                </FormControl>
-                                <FormControl className='to'>
-                                    <DateTimePicker
-                                        label={commonStrings.TO}
-                                        value={to}
-                                        minDate={from}
-                                        variant='outlined'
-                                        required
-                                        onChange={(to) => {
-                                            this.setState({ to });
-                                        }}
-                                        language={UserService.getLanguage()}
-                                    />
-                                </FormControl>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-search'
-                                >
-                                    {commonStrings.SEARCH}
-                                </Button>
-                                {!sameLocation &&
-                                    <FormControl className='drop-off-location'>
-                                        <LocationSelectList
-                                            label={commonStrings.DROP_OFF_LOCATION}
-                                            // overflowHidden
-                                            hidePopupIcon
-                                            customOpen
-                                            required
-                                            variant='outlined'
-                                            onChange={this.handleDropOffLocationChange}
-                                        />
-                                    </FormControl>
-                                }
-                                <FormControl className='chk-same-location'>
-                                    <input type='checkbox' checked={sameLocation} onChange={this.handleSameLocationChange} />
-                                    <label onClick={this.handleSameLocationClick}>{strings.DROP_OFF}</label>
-                                </FormControl>
-                            </form>
-                        </div>
+                            }
+                            <FormControl className='chk-same-location'>
+                                <input type='checkbox' checked={sameLocation} onChange={handleSameLocationChange} />
+                                <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
+                            </FormControl>
+                        </form>
                     </div>
-                    <footer>
-                        <div className='copyright'>
-                            <span className='part1'>{strings.COPYRIGHT_PART1}</span>
-                            <span className='part2'>{strings.COPYRIGHT_PART2}</span>
-                            <span className='part3'>{strings.COPYRIGHT_PART3}</span>
-                        </div>
-                        <div className='secure-payment'>
-                            <img src={SecurePayment} alt='' />
-                        </div>
-                    </footer>
                 </div>
-            </Master>
-        );
-    }
-}
+                <footer>
+                    <div className='copyright'>
+                        <span className='part1'>{strings.COPYRIGHT_PART1}</span>
+                        <span className='part2'>{strings.COPYRIGHT_PART2}</span>
+                        <span className='part3'>{strings.COPYRIGHT_PART3}</span>
+                    </div>
+                    <div className='secure-payment'>
+                        <img src={SecurePayment} alt='' />
+                    </div>
+                </footer>
+            </div>
+        </Master>
+    );
+};
+
+export default Home;

@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 
 import '../assets/css/about.css';
 
-export default function About() {
+const About = () => {
 
     const onLoad = (user) => {
     };
@@ -13,4 +13,6 @@ export default function About() {
             About!
         </Master>
     );
-}
+};
+
+export default About;

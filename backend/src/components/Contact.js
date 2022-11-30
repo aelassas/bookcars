@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 
 import '../assets/css/contact.css';
 
-export default function Contact() {
+const Contact = () => {
 
     const onLoad = (user) => {
     };
@@ -13,4 +13,6 @@ export default function Contact() {
             Contact!
         </Master>
     );
-}
+};
+
+export default Contact;

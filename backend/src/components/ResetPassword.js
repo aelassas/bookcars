@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import Env from '../config/env.config';
+import React, { useState } from 'react';
 import UserService from '../services/UserService';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/reset-password';
+import { strings as cpStrings } from '../lang/change-password';
+import { strings as rpStrings } from '../lang/reset-password';
+import Error from './Error';
 import NoMatch from './NoMatch';
 import {
     Input,
@@ -11,175 +12,202 @@ import {
     FormControl,
     FormHelperText,
     Button,
-    Paper,
-    Link
+    Paper
 } from '@mui/material';
-import validator from 'validator';
 import Helper from '../common/Helper';
 
 import '../assets/css/reset-password.css';
 
-export default class ResetPassword extends Component {
+const ResetPassword = () => {
+    const [userId, setUserId] = useState();
+    const [email, setEmail] = useState();
+    const [token, setToken] = useState();
+    const [visible, setVisible] = useState(false);
+    const [error, setError] = useState(false);
+    const [noMatch, setNoMatch] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [passwordLengthError, setPasswordLengthError] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: null,
-            visible: false,
-            error: false,
-            emailValid: true,
-            noMatch: false,
-            sent: false
-        };
-    }
-
-    handleEmailChange = (e) => {
-        this.setState({ email: e.target.value });
-
-        if (!e.target.value) {
-            this.setState({ error: false, emailValid: true });
-        }
+    const handleNewPasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
-    handleEmailKeyDown = (e) => {
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
+
+    const handleOnConfirmPasswordKeyDown = (e) => {
         if (e.key === 'Enter') {
-            this.handleSubmit(e);
-        }
-    }
-
-    validateEmail = async (email) => {
-        if (email) {
-            if (validator.isEmail(email)) {
-                try {
-                    const status = await UserService.validateEmail({ email });
-
-                    if (status === 200) { // user not found (error)
-                        this.setState({ error: true, emailValid: true });
-                        return false;
-                    } else {
-                        this.setState({ error: false, emailValid: true });
-                        return true;
-                    }
-                } catch (err) {
-                    Helper.error(err);
-                    this.setState({ error: false, emailValid: true });
-                    return false;
-                }
-            } else {
-                this.setState({ error: false, emailValid: false });
-                return false;
-            }
-        } else {
-            this.setState({ error: false, emailValid: true });
-            return false;
+            handleSubmit(e);
         }
     };
 
-    handleEmailBlur = async (e) => {
-        await this.validateEmail(e.target.value);
-    };
-
-    handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        const { email } = this.state;
-
-        const emailValid = await this.validateEmail(email);
-        if (!emailValid) {
+        if (password.length < 6) {
+            setPasswordLengthError(true);
+            setConfirmPasswordError(false);
+            setPasswordError(false);
             return;
+        } else {
+            setPasswordLengthError(false);
+            setPasswordError(false);
         }
 
-        UserService.resend(email, true, Env.APP_TYPE)
+        if (password !== confirmPassword) {
+            setConfirmPasswordError(true);
+            setPasswordError(false);
+            return;
+        } else {
+            setConfirmPasswordError(false);
+            setPasswordError(false);
+        }
+
+        const data = { userId, token, password };
+
+        UserService.activate(data)
             .then(status => {
                 if (status === 200) {
-                    this.setState({ error: false, emailValid: true, sent: true });
+                    UserService.signin({ email, password })
+                        .then(signInResult => {
+                            if (signInResult.status === 200) {
+                                UserService.deleteTokens(userId)
+                                    .then(status => {
+                                        if (status === 200) {
+                                            window.location.href = '/';
+                                        } else {
+                                            Helper.error();
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        Helper.error(err);
+                                    });
+                            } else {
+                                Helper.error();
+                            }
+                        })
+                        .catch((err) => {
+                            Helper.error(err);
+                        });
                 } else {
-                    this.setState({ error: true, emailValid: true });
+                    Helper.error();
                 }
             })
-            .catch(() => {
-                this.setState({ error: true, emailValid: true });
+            .catch((err) => {
+                Helper.error(err);
             });
+
     };
 
-    onLoad = (user) => {
+    const onLoad = (user) => {
         if (user) {
-            this.setState({ noMatch: true });
+            setNoMatch(true);
         } else {
-            this.setState({ visible: true });
-        }
-    }
-
-    componentDidMount() {
-    }
-
-    render() {
-        const {
-            visible,
-            emailValid,
-            error,
-            noMatch,
-            sent
-        } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                {visible &&
-                    <div className="reset-password">
-                        <Paper className="reset-password-form" elevation={10}>
-                            <h1 className='reset-password-title'> {strings.RESET_PASSWORD_HEADING} </h1>
-                            {sent &&
-                                <div>
-                                    <label>{strings.EMAIL_SENT}</label>
-                                    <p><Link href='/'>{commonStrings.GO_TO_HOME}</Link></p>
-                                </div>}
-                            {!sent &&
-                                <form onSubmit={this.handleSubmit}>
-                                    <label>{strings.RESET_PASSWORD}</label>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>
-                                            {commonStrings.EMAIL}
-                                        </InputLabel>
-                                        <Input
-                                            onChange={this.handleEmailChange}
-                                            onKeyDown={this.handleEmailKeyDown}
-                                            onBlur={this.handleEmailBlur}
-                                            type='text'
-                                            error={error || !emailValid}
-                                            autoComplete='off'
-                                            required
-                                        />
-                                        <FormHelperText error={error || !emailValid}>
-                                            {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                                            {(error && strings.EMAIL_ERROR) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-
-                                    <div className='buttons'>
-                                        <Button
-                                            type="submit"
-                                            className='btn-primary btn-margin btn-margin-bottom'
-                                            size="small"
-                                            variant='contained'
-                                        >
-                                            {strings.RESET}
-                                        </Button>
-                                        <Button
-                                            className='btn-secondary btn-margin-bottom'
-                                            size="small"
-                                            variant='contained'
-                                            href="/"
-                                        >
-                                            {commonStrings.CANCEL}
-                                        </Button>
-                                    </div>
-                                </form>
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('u') && params.has('e') && params.has('t')) {
+                const userId = params.get('u');
+                const email = params.get('e');
+                const token = params.get('t');
+                if (userId && email && token) {
+                    UserService.checkToken(userId, email, token)
+                        .then(status => {
+                            if (status === 200) {
+                                setUserId(userId);
+                                setEmail(email);
+                                setToken(token);
+                                setVisible(true);
+                            } else {
+                                setNoMatch(true);
                             }
-                        </Paper>
-                    </div>
+                        })
+                        .catch((err) => {
+                            setError(true);
+                        });
+                } else {
+                    setNoMatch(true);
                 }
-                {noMatch && <NoMatch hideHeader />}
-            </Master >
-        );
-    }
-}
+            } else {
+                setNoMatch(true);
+            }
+        }
+    };
+
+    return (
+        <Master onLoad={onLoad} strict={false}>
+            {visible &&
+                <div className="reset-password">
+                    <Paper className="reset-password-form" elevation={10}>
+                        <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
+                        <form onSubmit={handleSubmit}>
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required' error={passwordError}>
+                                    {cpStrings.NEW_PASSWORD}
+                                </InputLabel>
+                                <Input
+                                    id="password-new"
+                                    onChange={handleNewPasswordChange}
+                                    type='password'
+                                    value={password}
+                                    error={passwordError}
+                                    required
+                                />
+                                <FormHelperText
+                                    error={passwordError}
+                                >
+                                    {(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl fullWidth margin="dense" error={confirmPasswordError}>
+                                <InputLabel error={confirmPasswordError} className='required'>
+                                    {commonStrings.CONFIRM_PASSWORD}
+                                </InputLabel>
+                                <Input
+                                    id="password-confirm"
+                                    onChange={handleConfirmPasswordChange}
+                                    onKeyDown={handleOnConfirmPasswordKeyDown}
+                                    error={confirmPasswordError || passwordLengthError}
+                                    type='password'
+                                    value={confirmPassword}
+                                    required
+                                />
+                                <FormHelperText
+                                    error={confirmPasswordError || passwordLengthError}
+                                >
+                                    {confirmPasswordError
+                                        ? commonStrings.PASSWORDS_DONT_MATCH
+                                        : (passwordLengthError ? commonStrings.PASSWORD_ERROR : '')}
+                                </FormHelperText>
+                            </FormControl>
+                            <div className='buttons'>
+                                <Button
+                                    type="submit"
+                                    className='btn-primary btn-margin btn-margin-bottom'
+                                    size="small"
+                                    variant='contained'
+                                >
+                                    {commonStrings.UPDATE}
+                                </Button>
+                                <Button
+                                    className='btn-secondary btn-margin-bottom'
+                                    size="small"
+                                    variant='contained'
+                                    href="/"
+                                >
+                                    {commonStrings.CANCEL}
+                                </Button>
+                            </div>
+                        </form>
+                    </Paper>
+                </div>
+            }
+            {error && <Error />}
+            {noMatch && <NoMatch hideHeader />}
+        </Master>
+    );
+};
+
+export default ResetPassword;

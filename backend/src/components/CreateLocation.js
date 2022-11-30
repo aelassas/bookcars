@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-location';
@@ -17,27 +17,15 @@ import Env from '../config/env.config';
 
 import '../assets/css/create-location.css';
 
-export default class CreateLocation extends Component {
+const CreateLocation = () => {
+    const [visible, setVisible] = useState(false);
+    const [names, setNames] = useState([]);
+    const [nameErrors, setNameErrors] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: false,
-            names: [],
-            nameErrors: []
-        };
-    }
-
-    error = () => {
-        Helper.error();
-    };
-
-    handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const { names, nameErrors } = this.state;
-
             let isValid = true;
 
             for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false;
@@ -49,17 +37,17 @@ export default class CreateLocation extends Component {
                 if (!_isValid) nameErrors[i] = true;
             }
 
-            this.setState({ nameErrors });
+            setNameErrors(Helper.cloneArray(nameErrors));
 
             if (isValid) {
                 const status = await LocationService.create(names);
 
                 if (status === 200) {
                     for (let i = 0; i < names.length; i++) names[i].name = '';
-                    this.setState({ names });
+                    setNames(Helper.cloneArray(names));
                     Helper.info(strings.LOCATION_CREATED);
                 } else {
-                    this.error();
+                    Helper.error();
                 }
             }
         }
@@ -68,65 +56,65 @@ export default class CreateLocation extends Component {
         }
     };
 
-    onLoad = (user) => {
-        this.setState({ visible: true });
+    const onLoad = (user) => {
+        setVisible(true);
     };
 
-    render() {
-        const { visible, names, nameErrors } = this.state;
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            <div className='create-location'>
+                <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                    <h1 className="location-form-title"> {strings.NEW_LOCATION_HEADING} </h1>
+                    <form onSubmit={handleSubmit}>
+                        {
+                            Env._LANGUAGES.map((language, index) => (
+                                <FormControl key={index} fullWidth margin="dense">
+                                    <InputLabel className='required'>{language.label}</InputLabel>
+                                    <Input
+                                        type="text"
+                                        value={(names[index] && names[index].name) || ''}
+                                        error={nameErrors[index]}
+                                        required
+                                        onChange={(e) => {
+                                            names[index] = { language: language.code, name: e.target.value };
+                                            setNames(Helper.cloneArray(names));
 
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                <div className='create-location'>
-                    <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                        <h1 className="location-form-title"> {strings.NEW_LOCATION_HEADING} </h1>
-                        <form onSubmit={this.handleSubmit}>
-                            {
-                                Env._LANGUAGES.map((language, index) => (
-                                    <FormControl key={index} fullWidth margin="dense">
-                                        <InputLabel className='required'>{language.label}</InputLabel>
-                                        <Input
-                                            type="text"
-                                            value={(names[index] && names[index].name) || ''}
-                                            error={nameErrors[index]}
-                                            required
-                                            onChange={(e) => {
-                                                nameErrors[index] = false;
-                                                names[index] = { language: language.code, name: e.target.value };
-                                                this.setState({ names });
-                                            }}
-                                            autoComplete="off"
-                                        />
-                                        <FormHelperText error={nameErrors[index]}>
-                                            {(nameErrors[index] && strings.INVALID_LOCATION) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                ))
-                            }
+                                            nameErrors[index] = false;
+                                            setNameErrors(Helper.cloneArray(nameErrors));
+                                        }}
+                                        autoComplete="off"
+                                    />
+                                    <FormHelperText error={nameErrors[index]}>
+                                        {(nameErrors[index] && strings.INVALID_LOCATION) || ''}
+                                    </FormHelperText>
+                                </FormControl>
+                            ))
+                        }
 
-                            <div className="buttons">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary btn-margin-bottom'
-                                    size="small"
-                                >
-                                    {commonStrings.CREATE}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className='btn-secondary btn-margin-bottom'
-                                    size="small"
-                                    href='/locations'
-                                >
-                                    {commonStrings.CANCEL}
-                                </Button>
-                            </div>
-                        </form>
+                        <div className="buttons">
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                className='btn-primary btn-margin-bottom'
+                                size="small"
+                            >
+                                {commonStrings.CREATE}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                className='btn-secondary btn-margin-bottom'
+                                size="small"
+                                href='/locations'
+                            >
+                                {commonStrings.CANCEL}
+                            </Button>
+                        </div>
+                    </form>
 
-                    </Paper>
-                </div>
-            </Master>
-        );
-    }
-}
+                </Paper>
+            </div>
+        </Master>
+    );
+};
+
+export default CreateLocation;

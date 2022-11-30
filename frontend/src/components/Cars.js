@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import LocationService from '../services/LocationService';
@@ -15,183 +15,174 @@ import CarList from '../elements/CarList';
 
 import '../assets/css/cars.css';
 
-export default class Cars extends Component {
+const Cars = () => {
+    const [visible, setVisible] = useState(false);
+    const [noMatch, setNoMatch] = useState(false);
+    const [pickupLocation, setPickupLocation] = useState();
+    const [dropOffLocation, setDropOffLocation] = useState();
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
+    const [allCompanies, setAllCompanies] = useState([]);
+    const [companies, setCompanies] = useState([]);
+    const [reload, setReload] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]);
+    const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]);
+    const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED]);
+    const [deposit, setDeposit] = useState(-1);
+    const [offset, setOffset] = useState(0);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            visible: false,
-            noMatch: false,
-            pickupLocation: null,
-            dropOffLocation: null,
-            from: null,
-            to: null,
-            allCompanies: [],
-            companies: [],
-            reload: false,
-            loading: true,
-            fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
-            mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
-            deposit: -1,
-            offset: 0
-        };
-    }
+    useEffect(() => {
+        if (visible) {
+            setOffset(document.querySelector('div.col-1').clientHeight);
+        }
+    }, [visible]);
 
-    handleCarListLoad = (data) => {
-        this.setState({ reload: false });
+    const handleCarListLoad = (data) => {
+        setReload(false);
     };
 
-    handleCompanyFilterChange = (newCompanies) => {
-        const { companies } = this.state;
-
-        this.setState({ companies: newCompanies, reload: Helper.arrayEqual(newCompanies, companies) });
+    const handleCompanyFilterChange = (newCompanies) => {
+        setCompanies(newCompanies);
+        setReload(Helper.arrayEqual(newCompanies, companies));
     };
 
-    handleCarFilterSubmit = (data) => {
-        const { pickupLocation } = this.state;
-
-        this.setState({
-            pickupLocation: data.pickupLocation,
-            dropOffLocation: data.dropOffLocation,
-            from: data.from,
-            to: data.to,
-            reload: pickupLocation._id === data.pickupLocation._id
-        });
+    const handleCarFilterSubmit = (data) => {
+        setPickupLocation(data.pickupLocation);
+        setDropOffLocation(data.dropOffLocation);
+        setFrom(data.from);
+        setTo(data.to);
+        setReload(pickupLocation._id === data.pickupLocation._id);
     };
 
-    handleFuelFilterChange = (values) => {
-        const { fuel } = this.state;
-
-        this.setState({ fuel: values, reload: Helper.arrayEqual(values, fuel) });
+    const handleFuelFilterChange = (values) => {
+        setFuel(values);
+        setReload(Helper.arrayEqual(values, fuel));
     };
 
-    handleGearboxFilterChange = (values) => {
-        const { gearbox } = this.state;
-
-        this.setState({ gearbox: values, reload: Helper.arrayEqual(values, gearbox) });
+    const handleGearboxFilterChange = (values) => {
+        setGearbox(values);
+        setReload(Helper.arrayEqual(values, gearbox));
     };
 
-    handleMileageFilterChange = (values) => {
-        const { mileage } = this.state;
-
-        this.setState({ mileage: values, reload: Helper.arrayEqual(values, mileage) });
+    const handleMileageFilterChange = (values) => {
+        setMileage(values);
+        setReload(Helper.arrayEqual(values, mileage));
     };
 
-    handleDepositFilterChange = (value) => {
-        const { deposit } = this.state;
-
-        this.setState({ deposit: value, reload: value === deposit });
+    const handleDepositFilterChange = (value) => {
+        setDeposit(value);
+        setReload(value === deposit);
     };
 
-    onLoad = (user) => {
-        this.setState({ user }, async () => {
+    const onLoad = async (user) => {
+        let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to;
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('p')) pickupLocationId = params.get('p');
+        if (params.has('d')) dropOffLocationId = params.get('d');
+        if (params.has('f')) {
+            const val = params.get('f');
+            from = Helper.isNumber(val) && new Date(parseInt(val));
+        }
+        if (params.has('t')) {
+            const val = params.get('t');
+            to = Helper.isNumber(val) && new Date(parseInt(val));
+        }
 
-            let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to;
-            const params = new URLSearchParams(window.location.search);
-            if (params.has('p')) pickupLocationId = params.get('p');
-            if (params.has('d')) dropOffLocationId = params.get('d');
-            if (params.has('f')) {
-                const val = params.get('f');
-                from = Helper.isNumber(val) && new Date(parseInt(val));
-            }
-            if (params.has('t')) {
-                const val = params.get('t');
-                to = Helper.isNumber(val) && new Date(parseInt(val));
-            }
+        if (!pickupLocationId || !dropOffLocationId || !from || !to) {
+            setLoading(false);
+            setNoMatch(true);
+            return;
+        }
 
-            if (!pickupLocationId || !dropOffLocationId || !from || !to) {
-                return this.setState({ loading: false, noMatch: true });
-            }
+        try {
+            pickupLocation = await LocationService.getLocation(pickupLocationId);
 
-            try {
-                pickupLocation = await LocationService.getLocation(pickupLocationId);
-
-                if (!pickupLocation) {
-                    return this.setState({ loading: false, noMatch: true });
-                }
-
-                if (dropOffLocationId !== pickupLocationId) {
-                    dropOffLocation = await LocationService.getLocation(dropOffLocationId);
-                } else {
-                    dropOffLocation = pickupLocation;
-                }
-
-                if (!dropOffLocation) {
-                    return this.setState({ loading: false, noMatch: true });
-                }
-
-                const allCompanies = await CompanyService.getAllCompanies();
-                const companies = Helper.flattenCompanies(allCompanies);
-
-                this.setState({ pickupLocation, dropOffLocation, from, to, visible: true, allCompanies, companies }, () => {
-                    this.setState({ loading: false }, () => {
-                        this.setState({ offset: document.querySelector('div.col-1').clientHeight });
-                    });
-                });
-
-            } catch (err) {
-                Helper.error(err);
+            if (!pickupLocation) {
+                setLoading(false);
+                setNoMatch(true);
+                return;
             }
 
-        });
+            if (dropOffLocationId !== pickupLocationId) {
+                dropOffLocation = await LocationService.getLocation(dropOffLocationId);
+            } else {
+                dropOffLocation = pickupLocation;
+            }
+
+            if (!dropOffLocation) {
+                setLoading(false);
+                setNoMatch(true);
+                return;
+            }
+
+            const allCompanies = await CompanyService.getAllCompanies();
+            const companies = Helper.flattenCompanies(allCompanies);
+
+            setPickupLocation(pickupLocation);
+            setDropOffLocation(dropOffLocation);
+            setFrom(from);
+            setTo(to);
+            setAllCompanies(allCompanies);
+            setCompanies(companies);
+            setLoading(false);
+            if (!user || (user && user.verified)) setVisible(true);
+        } catch (err) {
+            Helper.error(err);
+        }
     };
 
-    render() {
-        const { allCompanies, companies, pickupLocation, dropOffLocation, loading,
-            reload, visible, noMatch, from, to, fuel, gearbox, mileage, deposit, offset } = this.state;
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                {visible && companies && pickupLocation && dropOffLocation && from && to &&
-                    <div className='cars'>
-                        <div className='col-1'>
-                            {!loading &&
-                                <>
-                                    <CarFilter
-                                        className='filter'
-                                        pickupLocation={pickupLocation}
-                                        dropOffLocation={dropOffLocation}
-                                        from={from}
-                                        to={to}
-                                        onSubmit={this.handleCarFilterSubmit}
-                                    />
-                                    <CompanyFilter
-                                        className='filter'
-                                        companies={allCompanies}
-                                        onChange={this.handleCompanyFilterChange}
-                                        collapse={!Env.isMobile()}
-                                    />
-                                    <FuelFilter className='filter' onChange={this.handleFuelFilterChange} />
-                                    <GearboxFilter className='filter' onChange={this.handleGearboxFilterChange} />
-                                    <MileageFilter className='filter' onChange={this.handleMileageFilterChange} />
-                                    <DepositFilter className='filter' onChange={this.handleDepositFilterChange} />
-                                </>
-                            }
-                        </div>
-                        <div className='col-2'>
-                            <CarList
-                                containerClassName='cars'
-                                offset={offset}
-                                companies={companies}
-                                fuel={fuel}
-                                gearbox={gearbox}
-                                mileage={mileage}
-                                deposit={deposit}
-                                pickupLocation={pickupLocation._id}
-                                dropOffLocation={dropOffLocation._id}
-                                reload={reload}
-                                loading={loading}
-                                from={from}
-                                to={to}
-                                onLoad={this.handleCarListLoad}
-                            />
-                        </div>
+    return (
+        <Master onLoad={onLoad} strict={false}>
+            {visible && companies && pickupLocation && dropOffLocation && from && to &&
+                <div className='cars'>
+                    <div className='col-1'>
+                        {!loading &&
+                            <>
+                                <CarFilter
+                                    className='filter'
+                                    pickupLocation={pickupLocation}
+                                    dropOffLocation={dropOffLocation}
+                                    from={from}
+                                    to={to}
+                                    onSubmit={handleCarFilterSubmit}
+                                />
+                                <CompanyFilter
+                                    className='filter'
+                                    companies={allCompanies}
+                                    onChange={handleCompanyFilterChange}
+                                    collapse={!Env.isMobile()}
+                                />
+                                <FuelFilter className='filter' onChange={handleFuelFilterChange} />
+                                <GearboxFilter className='filter' onChange={handleGearboxFilterChange} />
+                                <MileageFilter className='filter' onChange={handleMileageFilterChange} />
+                                <DepositFilter className='filter' onChange={handleDepositFilterChange} />
+                            </>
+                        }
                     </div>
-                }
-                {noMatch && <NoMatch hideHeader />}
-            </Master >
-        );
-    }
-}
+                    <div className='col-2'>
+                        <CarList
+                            containerClassName='cars'
+                            offset={offset}
+                            companies={companies}
+                            fuel={fuel}
+                            gearbox={gearbox}
+                            mileage={mileage}
+                            deposit={deposit}
+                            pickupLocation={pickupLocation._id}
+                            dropOffLocation={dropOffLocation._id}
+                            reload={reload}
+                            loading={loading}
+                            from={from}
+                            to={to}
+                            onLoad={handleCarListLoad}
+                        />
+                    </div>
+                </div>
+            }
+            {noMatch && <NoMatch hideHeader />}
+        </Master >
+    );
+};
+
+export default Cars;

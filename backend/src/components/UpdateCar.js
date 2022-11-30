@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
@@ -35,213 +35,180 @@ import UserService from '../services/UserService';
 import '../assets/css/create-car.css';
 import '../assets/css/update-car.css';
 
-export default class CreateCar extends Component {
+const UpdateCar = () => {
+    const [user, setUser] = useState();
+    const [car, setCar] = useState();
+    const [noMatch, setNoMatch] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [error, setError] = useState(false);
+    const [imageRequired, setImageRequired] = useState(false);
+    const [imageSizeError, setImageSizeError] = useState(false);
+    const [image, setImage] = useState();
+    const [name, setName] = useState('');
+    const [company, setCompany] = useState('');
+    const [locations, setLocations] = useState([]);
+    const [available, setAvailable] = useState(false);
+    const [type, setType] = useState('');
+    const [gearbox, setGearbox] = useState('');
+    const [price, setPrice] = useState('');
+    const [seats, setSeats] = useState('');
+    const [doors, setDoors] = useState('');
+    const [aircon, setAircon] = useState(false);
+    const [mileage, setMileage] = useState('');
+    const [fuelPolicy, setFuelPolicy] = useState('');
+    const [cancellation, setCancellation] = useState('');
+    const [amendments, setAmendments] = useState('');
+    const [theftProtection, setTheftProtection] = useState('');
+    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('');
+    const [fullInsurance, setFullInsurance] = useState('');
+    const [additionalDriver, setAdditionalDriver] = useState('');
+    const [minimumAge, setMinimumAge] = useState(Env.MINIMUM_AGE.toString());
+    const [minimumAgeValid, setMinimumAgeValid] = useState(true);
+    const [formError, setFormError] = useState(false);
+    const [deposit, setDeposit] = useState('');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            car: null,
-            noMatch: false,
-            loading: false,
-            visible: false,
-            error: false,
-            imageRequired: false,
-            imageSizeError: false,
-            image: null,
-            companies: [],
-            name: '',
-            company: null,
-            locations: [],
-            available: false,
-            type: '',
-            gearbox: '',
-            price: '',
-            seats: '',
-            doors: '',
-            aircon: false,
-            mileage: '',
-            fuelPolicy: '',
-            cancellation: '',
-            amendments: '',
-            theftProtection: '',
-            collisionDamageWaiver: '',
-            fullInsurance: '',
-            additionalDriver: '',
-            minimumAge: '',
-            minimumAgeValid: true,
-            formError: false,
-            deposit: ''
-        };
-    }
-
-    handleBeforeUpload = () => {
-        this.setState({ loading: true });
+    const handleBeforeUpload = () => {
+        setLoading(true);
     };
 
-    handleImageChange = (image) => {
-        this.setState({ loading: false, image });
+    const handleImageChange = (image) => {
+        setLoading(false);
+        setImage(image);
+
         if (image !== null) {
-            this.setState({ imageRequired: false });
+            setImageRequired(false);
         }
     };
 
-    handleImageValidate = (valid) => {
+    const handleImageValidate = (valid) => {
         if (!valid) {
-            this.setState({
-                imageSizeError: true,
-                imageRequired: false,
-                error: false,
-                loading: false,
-            });
+            setImageSizeError(true);
+            setImageRequired(false);
+            setError(false);
+            setLoading(false);
         } else {
-            this.setState({
-                imageSizeError: false,
-                imageRequired: false,
-                error: false,
-            });
+            setImageSizeError(false);
+            setImageRequired(false);
+            setError(false);
         }
     };
-
-    handleNameChange = (e) => {
-        this.setState({ name: e.target.value });
+    const handleNameChange = (e) => {
+        setName(e.target.value);
     }
 
-    handleCompanyChange = (values) => {
-        this.setState({ company: values.length > 0 ? values[0] : null });
+    const handleCompanyChange = (values) => {
+        setCompany(values.length > 0 ? values[0] : null);
     };
 
-    validateMinimumAge = (age, updateState = true) => {
+    const validateMinimumAge = (age, updateState = true) => {
         if (age) {
             const _age = parseInt(age);
             const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99;
-            if (updateState) this.setState({ minimumAgeValid });
-            if (minimumAgeValid) this.setState({ formError: false });
+            if (updateState) setMinimumAgeValid(minimumAgeValid);
+            if (minimumAgeValid) setFormError(false);
             return minimumAgeValid;
         } else {
-            this.setState({ minimumAgeValid: true, formError: false });
+            setMinimumAgeValid(true);
+            setFormError(false);
             return true;
         }
     };
 
-    handleMinimumAgeChange = (e) => {
-        this.setState({ minimumAge: e.target.value });
+    const handleMinimumAgeChange = (e) => {
+        setMinimumAge(e.target.value);
 
-        const minimumAgeValid = this.validateMinimumAge(e.target.value, false);
+        const minimumAgeValid = validateMinimumAge(e.target.value, false);
         if (minimumAgeValid) {
-            this.setState({ minimumAgeValid: true, formError: false });
+            setMinimumAgeValid(true);
+            setFormError(false);
         }
     };
 
-    handleLocationsChange = (locations) => {
-        this.setState({ locations });
+    const handleLocationsChange = (locations) => {
+        setLocations(locations);
     };
 
-    handleAvailableChange = (e) => {
-        this.setState({ available: e.target.checked });
+    const handleAvailableChange = (e) => {
+        setAvailable(e.target.checked);
     };
 
-    handleCarTypeChange = (value) => {
-        this.setState({ type: value });
+    const handleCarTypeChange = (value) => {
+        setType(value);
     };
 
-    handleGearboxChange = (value) => {
-        this.setState({ gearbox: value });
+    const handleGearboxChange = (value) => {
+        setGearbox(value);
     };
 
-    handleAirconChange = (e) => {
-        this.setState({ aircon: e.target.checked });
+    const handleAirconChange = (e) => {
+        setAircon(e.target.checked);
     };
 
-    handlePriceChange = (e) => {
-        this.setState({ price: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handlePriceChange = (e) => {
+        setPrice(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleDepositChange = (e) => {
-        this.setState({ deposit: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleDepositChange = (e) => {
+        setDeposit(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleSeatsChange = (value) => {
-        this.setState({ seats: value });
+    const handleSeatsChange = (value) => {
+        setSeats(value);
     };
 
-    handleDoorsChange = (value) => {
-        this.setState({ doors: value });
+    const handleDoorsChange = (value) => {
+        setDoors(value);
     };
 
-    handleMileageChange = (e) => {
-        this.setState({ mileage: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleMileageChange = (e) => {
+        setMileage(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleFuelPolicyChange = (value) => {
-        this.setState({ fuelPolicy: value });
+    const handleFuelPolicyChange = (value) => {
+        setFuelPolicy(value);
     };
 
-    handleCancellationChange = (e) => {
-        this.setState({ cancellation: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleCancellationChange = (e) => {
+        setCancellation(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleAmendmentsChange = (e) => {
-        this.setState({ amendments: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleAmendmentsChange = (e) => {
+        setAmendments(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleTheftProtectionChange = (e) => {
-        this.setState({ theftProtection: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleTheftProtectionChange = (e) => {
+        setTheftProtection(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleCollisionDamageWaiverChange = (e) => {
-        this.setState({ collisionDamageWaiver: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleCollisionDamageWaiverChange = (e) => {
+        setCollisionDamageWaiver(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleFullinsuranceChange = (e) => {
-        this.setState({ fullInsurance: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleFullinsuranceChange = (e) => {
+        setFullInsurance(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    handleAdditionalDriverChange = (e) => {
-        this.setState({ additionalDriver: Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value });
+    const handleAdditionalDriverChange = (e) => {
+        setAdditionalDriver(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value);
     };
 
-    getCarExtra = (extra) => (
+    const getCarExtra = (extra) => (
         extra === -1 ? '' : extra
     );
 
-    getExtra = (extra) => (
+    const getExtra = (extra) => (
         extra === '' ? -1 : parseFloat(extra)
     );
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
-        const { minimumAge } = this.state;
-
-        const minimumAgeValid = this.validateMinimumAge(minimumAge);
+        const minimumAgeValid = validateMinimumAge(minimumAge);
         if (!minimumAgeValid) {
-            return this.setState({ formError: true });
+            setFormError(true);
+            return;
         }
-
-        const {
-            car,
-            name,
-            company,
-            locations,
-            price,
-            deposit,
-            available,
-            type,
-            gearbox,
-            aircon,
-            image,
-            seats,
-            doors,
-            fuelPolicy,
-            mileage,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver
-        } = this.state;
 
         const data = {
             _id: car._id,
@@ -259,13 +226,13 @@ export default class CreateCar extends Component {
             seats,
             doors,
             fuelPolicy,
-            mileage: this.getExtra(mileage),
-            cancellation: this.getExtra(cancellation),
-            amendments: this.getExtra(amendments),
-            theftProtection: this.getExtra(theftProtection),
-            collisionDamageWaiver: this.getExtra(collisionDamageWaiver),
-            fullInsurance: this.getExtra(fullInsurance),
-            additionalDriver: this.getExtra(additionalDriver)
+            mileage: getExtra(mileage),
+            cancellation: getExtra(cancellation),
+            amendments: getExtra(amendments),
+            theftProtection: getExtra(theftProtection),
+            collisionDamageWaiver: getExtra(collisionDamageWaiver),
+            fullInsurance: getExtra(fullInsurance),
+            additionalDriver: getExtra(additionalDriver)
         };
 
         CarService.update(data)
@@ -281,9 +248,10 @@ export default class CreateCar extends Component {
             });
     };
 
-    onLoad = (user) => {
-
-        this.setState({ user, loading: true }, () => {
+    const onLoad = (user) => {
+        if (user && user.verified) {
+            setLoading(true);
+            setUser(user);
             const params = new URLSearchParams(window.location.search);
             if (params.has('cr')) {
                 const id = params.get('cr');
@@ -292,398 +260,366 @@ export default class CreateCar extends Component {
                         .then(car => {
                             if (car) {
                                 if (user.type === Env.RECORD_TYPE.COMPANY && user._id !== car.company._id) {
-                                    this.setState({ loading: false, noMatch: true });
+                                    setLoading(false);
+                                    setNoMatch(true);
                                     return;
                                 }
 
                                 const company = { _id: car.company._id, name: car.company.fullName, image: car.company.avatar };
 
-                                this.setState({
-                                    car,
-                                    loading: false,
-                                    visible: true,
-
-                                    imageRequired: !car.image,
-                                    name: car.name,
-                                    company,
-                                    minimumAge: car.minimumAge,
-                                    locations: car.locations.map(l => {
-                                        const { _id, name } = l;
-                                        return { _id, name };
-                                    }),
-                                    price: car.price,
-                                    deposit: car.deposit,
-                                    available: car.available,
-                                    type: car.type,
-                                    gearbox: car.gearbox,
-                                    aircon: car.aircon,
-                                    seats: car.seats,
-                                    doors: car.doors,
-                                    fuelPolicy: car.fuelPolicy,
-
-                                    mileage: this.getCarExtra(car.mileage),
-                                    cancellation: this.getCarExtra(car.cancellation),
-                                    amendments: this.getCarExtra(car.amendments),
-                                    theftProtection: this.getCarExtra(car.theftProtection),
-                                    collisionDamageWaiver: this.getCarExtra(car.collisionDamageWaiver),
-                                    fullInsurance: this.getCarExtra(car.fullInsurance),
-                                    additionalDriver: this.getCarExtra(car.additionalDriver)
-                                });
+                                setCar(car);
+                                setImageRequired(!car.image);
+                                setName(car.name);
+                                setCompany(company);
+                                setMinimumAge(car.minimumAge);
+                                setLocations(car.locations.map(l => {
+                                    const { _id, name } = l;
+                                    return { _id, name };
+                                }));
+                                setPrice(car.price);
+                                setDeposit(car.deposit);
+                                setAvailable(car.available);
+                                setType(car.type);
+                                setGearbox(car.gearbox);
+                                setAircon(car.aircon);
+                                setSeats(car.seats);
+                                setDoors(car.doors);
+                                setFuelPolicy(car.fuelPolicy);
+                                setMileage(getCarExtra(car.mileage))
+                                setCancellation(getCarExtra(car.cancellation));
+                                setAmendments(getCarExtra(car.amendments));
+                                setTheftProtection(getCarExtra(car.theftProtection));
+                                setCollisionDamageWaiver(getCarExtra(car.collisionDamageWaiver));
+                                setFullInsurance(getCarExtra(car.fullInsurance));
+                                setAdditionalDriver(getCarExtra(car.additionalDriver));
+                                setVisible(true);
+                                setLoading(false);
                             } else {
-                                this.setState({ loading: false, noMatch: true });
+                                setLoading(false);
+                                setNoMatch(true);
                             }
                         })
                         .catch((err) => {
                             Helper.error(err);
-                            this.setState({ loading: false, error: true, visible: false });
+                            setLoading(false);
+                            setError(true);
+                            setVisible(false);
                         });
                 } else {
-                    this.setState({ loading: false, noMatch: true });
+                    setLoading(false);
+                    setNoMatch(true);
                 }
             } else {
-                this.setState({ loading: false, noMatch: true });
+                setLoading(false);
+                setNoMatch(true);
             }
-        });
+        }
     };
 
-    render() {
-        const {
-            user,
-            car,
-            visible,
-            noMatch,
-            error,
-            imageRequired,
-            imageSizeError,
-            loading,
+    const admin = user && user.type === Env.RECORD_TYPE.ADMIN;
 
-            name,
-            company,
-            locations,
-            price,
-            available,
-            type,
-            gearbox,
-            aircon,
-            seats,
-            doors,
-            fuelPolicy,
-            mileage,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            minimumAge,
-            minimumAgeValid,
-            formError,
-            deposit
-        } = this.state;
+    return (
+        <Master onLoad={onLoad} strict={true}>
+            {!error && !noMatch &&
+                <div className='update-car'>
+                    <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                        <form onSubmit={handleSubmit}>
+                            <Avatar
+                                type={Env.RECORD_TYPE.CAR}
+                                mode='update'
+                                record={car}
+                                hideDelete={true}
+                                size='large'
+                                readonly={false}
+                                onBeforeUpload={handleBeforeUpload}
+                                onChange={handleImageChange}
+                                onValidate={handleImageValidate}
+                                color='disabled'
+                                className='avatar-ctn'
+                            />
 
-        const admin = user && user.type === Env.RECORD_TYPE.ADMIN;
+                            <div className='info'>
+                                <InfoIcon />
+                                <label>
+                                    {strings.RECOMMENDED_IMAGE_SIZE}
+                                </label>
+                            </div>
 
-        return (
-            <Master onLoad={this.onLoad} strict={true}>
-                {!error && !noMatch &&
-                    <div className='update-car'>
-                        <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
-                            <form onSubmit={this.handleSubmit}>
-                                <Avatar
-                                    type={Env.RECORD_TYPE.CAR}
-                                    mode='update'
-                                    record={car}
-                                    hideDelete={true}
-                                    size='large'
-                                    readonly={false}
-                                    onBeforeUpload={this.handleBeforeUpload}
-                                    onChange={this.handleImageChange}
-                                    onValidate={this.handleImageValidate}
-                                    color='disabled'
-                                    className='avatar-ctn'
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.NAME}</InputLabel>
+                                <Input
+                                    type="text"
+                                    required
+                                    value={name}
+                                    autoComplete="off"
+                                    onChange={handleNameChange}
                                 />
+                            </FormControl>
 
+                            {admin &&
+                                <FormControl fullWidth margin="dense">
+                                    <CompanySelectList
+                                        label={strings.COMPANY}
+                                        required
+                                        value={company}
+                                        type={Env.RECORD_TYPE.COMPANY}
+                                        variant='standard'
+                                        onChange={handleCompanyChange}
+                                    />
+                                </FormControl>
+                            }
+
+                            <FormControl fullWidth margin="dense">
+                                <InputLabel className='required'>{strings.MINIMUM_AGE}</InputLabel>
+                                <Input
+                                    type="text"
+                                    required
+                                    error={!minimumAgeValid}
+                                    value={minimumAge}
+                                    autoComplete="off"
+                                    onChange={handleMinimumAgeChange}
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
+                                />
+                                <FormHelperText error={!minimumAgeValid}>
+                                    {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
+                                </FormHelperText>
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <LocationSelectList
+                                    label={strings.LOCATIONS}
+                                    multiple
+                                    required
+                                    variant='standard'
+                                    value={locations}
+                                    onChange={handleLocationsChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d{3,}(\.\\d+)?$' }}
+                                    onChange={handlePriceChange}
+                                    required
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={price}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleDepositChange}
+                                    required
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={deposit}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    control={
+                                        <Switch checked={available}
+                                            onChange={handleAvailableChange}
+                                            color="primary" />
+                                    }
+                                    label={strings.AVAILABLE}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <CarTypeList
+                                    label={strings.CAR_TYPE}
+                                    variant='standard'
+                                    required
+                                    value={type}
+                                    onChange={handleCarTypeChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <GearboxList
+                                    label={strings.GEARBOX}
+                                    variant='standard'
+                                    required
+                                    value={gearbox}
+                                    onChange={handleGearboxChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <SeatsList
+                                    label={strings.SEATS}
+                                    variant='standard'
+                                    required
+                                    value={seats}
+                                    onChange={handleSeatsChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <DoorsList
+                                    label={strings.DOORS}
+                                    variant='standard'
+                                    required
+                                    value={doors}
+                                    onChange={handleDoorsChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
+                                <FuelPolicyList
+                                    label={csStrings.FUEL_POLICY}
+                                    variant='standard'
+                                    required
+                                    value={fuelPolicy}
+                                    onChange={handleFuelPolicyChange}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense">
                                 <div className='info'>
                                     <InfoIcon />
-                                    <label>
-                                        {strings.RECOMMENDED_IMAGE_SIZE}
-                                    </label>
+                                    <label>{commonStrings.OPTIONAL}</label>
                                 </div>
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{strings.NAME}</InputLabel>
-                                    <Input
-                                        type="text"
-                                        required
-                                        value={name}
-                                        autoComplete="off"
-                                        onChange={this.handleNameChange}
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    control={
+                                        <Switch checked={aircon}
+                                            onChange={handleAirconChange}
+                                            color="primary" />
+                                    }
+                                    label={strings.AIRCON}
+                                    className='checkbox-fcl'
+                                />
+                            </FormControl>
 
-                                {admin &&
-                                    <FormControl fullWidth margin="dense">
-                                        <CompanySelectList
-                                            label={strings.COMPANY}
-                                            required
-                                            value={company}
-                                            type={Env.RECORD_TYPE.COMPANY}
-                                            variant='standard'
-                                            onChange={this.handleCompanyChange}
-                                        />
-                                    </FormControl>
-                                }
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleMileageChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={mileage}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <InputLabel className='required'>{strings.MINIMUM_AGE}</InputLabel>
-                                    <Input
-                                        type="text"
-                                        required
-                                        error={!minimumAgeValid}
-                                        value={minimumAge}
-                                        autoComplete="off"
-                                        onChange={this.handleMinimumAgeChange}
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
-                                    />
-                                    <FormHelperText error={!minimumAgeValid}>
-                                        {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
-                                    </FormHelperText>
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleCancellationChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={cancellation}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <LocationSelectList
-                                        label={strings.LOCATIONS}
-                                        multiple
-                                        required
-                                        variant='standard'
-                                        value={locations}
-                                        onChange={this.handleLocationsChange}
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleAmendmentsChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={amendments}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d{3,}(\.\\d+)?$' }}
-                                        onChange={this.handlePriceChange}
-                                        required
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={price}
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleTheftProtectionChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={theftProtection}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleDepositChange}
-                                        required
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={deposit}
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleCollisionDamageWaiverChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={collisionDamageWaiver}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch checked={available}
-                                                onChange={this.handleAvailableChange}
-                                                color="primary" />
-                                        }
-                                        label={strings.AVAILABLE}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleFullinsuranceChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={fullInsurance}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <CarTypeList
-                                        label={strings.CAR_TYPE}
-                                        variant='standard'
-                                        required
-                                        value={type}
-                                        onChange={this.handleCarTypeChange}
-                                    />
-                                </FormControl>
+                            <FormControl fullWidth margin="dense">
+                                <TextField
+                                    label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
+                                    // eslint-disable-next-line
+                                    inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                    onChange={handleAdditionalDriverChange}
+                                    variant='standard'
+                                    autoComplete='off'
+                                    value={additionalDriver}
+                                />
+                            </FormControl>
 
-                                <FormControl fullWidth margin="dense">
-                                    <GearboxList
-                                        label={strings.GEARBOX}
-                                        variant='standard'
-                                        required
-                                        value={gearbox}
-                                        onChange={this.handleGearboxChange}
-                                    />
-                                </FormControl>
+                            <div className="buttons">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-primary btn-margin-bottom'
+                                    size="small"
+                                >
+                                    {commonStrings.SAVE}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className='btn-secondary btn-margin-bottom'
+                                    size="small"
+                                    href='/cars'
+                                >
+                                    {commonStrings.CANCEL}
+                                </Button>
+                            </div>
 
-                                <FormControl fullWidth margin="dense">
-                                    <SeatsList
-                                        label={strings.SEATS}
-                                        variant='standard'
-                                        required
-                                        value={seats}
-                                        onChange={this.handleSeatsChange}
-                                    />
-                                </FormControl>
+                            <div className="form-error">
+                                {imageRequired && <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />}
+                                {imageSizeError && <ErrorMessage message={strings.CAR_IMAGE_SIZE_ERROR} />}
+                                {formError && <ErrorMessage message={commonStrings.FORM_ERROR} />}
+                            </div>
+                        </form>
 
-                                <FormControl fullWidth margin="dense">
-                                    <DoorsList
-                                        label={strings.DOORS}
-                                        variant='standard'
-                                        required
-                                        value={doors}
-                                        onChange={this.handleDoorsChange}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <FuelPolicyList
-                                        label={csStrings.FUEL_POLICY}
-                                        variant='standard'
-                                        required
-                                        value={fuelPolicy}
-                                        onChange={this.handleFuelPolicyChange}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <div className='info'>
-                                        <InfoIcon />
-                                        <label>{commonStrings.OPTIONAL}</label>
-                                    </div>
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch checked={aircon}
-                                                onChange={this.handleAirconChange}
-                                                color="primary" />
-                                        }
-                                        label={strings.AIRCON}
-                                        className='checkbox-fcl'
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleMileageChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={mileage}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleCancellationChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={cancellation}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleAmendmentsChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={amendments}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleTheftProtectionChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={theftProtection}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleCollisionDamageWaiverChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={collisionDamageWaiver}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleFullinsuranceChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={fullInsurance}
-                                    />
-                                </FormControl>
-
-                                <FormControl fullWidth margin="dense">
-                                    <TextField
-                                        label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
-                                        // eslint-disable-next-line
-                                        inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
-                                        onChange={this.handleAdditionalDriverChange}
-                                        variant='standard'
-                                        autoComplete='off'
-                                        value={additionalDriver}
-                                    />
-                                </FormControl>
-
-                                <div className="buttons">
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-primary btn-margin-bottom'
-                                        size="small"
-                                    >
-                                        {commonStrings.SAVE}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary btn-margin-bottom'
-                                        size="small"
-                                        href='/cars'
-                                    >
-                                        {commonStrings.CANCEL}
-                                    </Button>
-                                </div>
-
-                                <div className="form-error">
-                                    {imageRequired && <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />}
-                                    {imageSizeError && <ErrorMessage message={strings.CAR_IMAGE_SIZE_ERROR} />}
-                                    {formError && <ErrorMessage message={commonStrings.FORM_ERROR} />}
-                                </div>
-                            </form>
-
-                        </Paper>
-                    </div>}
-                {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-                {error && <Error />}
-                {noMatch && <NoMatch hideHeader />}
-            </Master>
-        );
-    }
+                    </Paper>
+                </div>}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+            {error && <Error />}
+            {noMatch && <NoMatch hideHeader />}
+        </Master>
+    );
 }
+
+export default UpdateCar;

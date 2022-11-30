@@ -1,29 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Master from '../elements/Master';
+
 import '../assets/css/contact.css';
 
-export default class Contact extends Component {
+const Contact = () => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null
-        };
-    }
+    const onLoad = (user) => {
+    };
 
-    onLoad = (user) => {
-        this.setState({ user });
-    }
+    return (
+        <Master onLoad={onLoad} strict>
+            Contact!
+        </Master>
+    );
+};
 
-    componentDidMount() {
-    }
-
-    render() {
-
-        return (
-            <Master onLoad={this.onLoad} strict={false}>
-                Contact!
-            </Master>
-        );
-    }
-}
+export default Contact;
