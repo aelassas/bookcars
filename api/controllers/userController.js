@@ -12,7 +12,7 @@ import Booking from '../models/Booking.js';
 import Token from '../models/Token.js';
 import PushNotification from '../models/PushNotification.js';
 import mongoose from 'mongoose';
-import Helper from '../common/Helper.js';
+import * as Helper from '../common/Helper.js';
 
 const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE;
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true';

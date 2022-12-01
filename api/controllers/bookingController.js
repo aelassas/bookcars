@@ -14,7 +14,7 @@ import escapeStringRegexp from 'escape-string-regexp';
 import nodemailer from 'nodemailer';
 import { v1 as uuid } from 'uuid';
 import { Expo } from 'expo-server-sdk';
-import Helper from '../common/Helper.js';
+import * as Helper from '../common/Helper.js';
 
 const SMTP_HOST = process.env.BC_SMTP_HOST;
 const SMTP_PORT = process.env.BC_SMTP_PORT;
