@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings } from '../lang/header';
-import UserService from '../services/UserService';
-import NotificationService from '../services/NotificationService';
+import * as UserService from '../services/UserService';
+import * as NotificationService from '../services/NotificationService';
 import { toast } from 'react-toastify';
 import { Avatar } from './Avatar';
 import {

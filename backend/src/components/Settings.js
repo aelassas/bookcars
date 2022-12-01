@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
 import {

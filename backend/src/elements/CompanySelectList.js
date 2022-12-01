@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelect';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 class CompanySelectList extends Component {
 

@@ -4,7 +4,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-car';
-import CarService from '../services/CarService';
+import * as CarService from '../services/CarService';
 import * as Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -28,7 +28,7 @@ import {
     FormHelperText
 } from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 import '../assets/css/create-car.css';
 
@@ -335,7 +335,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d{3,}(\.\\d+)?$' }}
+                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
                                 onChange={handlePriceChange}
                                 required
                                 variant='standard'

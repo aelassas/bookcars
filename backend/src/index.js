@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from './App';
 import Env from './config/env.config';
 import { strings as commonStrings } from './lang/common';
-import UserService from './services/UserService';
+import * as UserService from './services/UserService';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer, toast } from 'react-toastify';

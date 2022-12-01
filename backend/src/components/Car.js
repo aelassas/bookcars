@@ -3,8 +3,8 @@ import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
-import CarService from '../services/CarService';
-import CompanyService from '../services/CompanyService';
+import * as CarService from '../services/CarService';
+import * as CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
@@ -69,7 +69,7 @@ const Car = () => {
         setLoading(true);
         setOpenDeleteDialog(false);
 
-        CarService.delete(car._id)
+        CarService.deleteCar(car._id)
             .then(status => {
                 if (status === 200) {
                     window.location.href = '/cars';

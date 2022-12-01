@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelect';
 

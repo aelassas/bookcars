@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import * as Helper from '../common/Helper';
-import CarService from '../services/CarService';
+import * as CarService from '../services/CarService';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,
@@ -30,7 +30,7 @@ import {
     Delete as DeleteIcon,
     Info as InfoIcon
 } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 import DoorsIcon from '../assets/img/car-door.png';
 
@@ -94,7 +94,7 @@ class CarList extends Component {
         if (carId !== '' && carIndex > -1) {
             this.setState({ loading: true, openDeleteDialog: false });
 
-            CarService.delete(carId)
+            CarService.deleteCar(carId)
                 .then(status => {
                     if (status === 200) {
                         rows.splice(carIndex, 1);

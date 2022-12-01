@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking-list';
 import * as Helper from '../common/Helper';
-import BookingService from '../services/BookingService';
+import * as BookingService from '../services/BookingService';
 import StatusList from './StatusList';
 import Backdrop from '../elements/SimpleBackdrop';
 import {
@@ -30,7 +30,7 @@ import {
     Delete as DeleteIcon,
     Check as CheckIcon,
 } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import { format } from 'date-fns';
 import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale";
 
@@ -252,7 +252,7 @@ class BookingList extends Component {
             const { selectedId, selectedIndex, rows } = this.state;
             const ids = [selectedId];
 
-            BookingService.delete(ids)
+            BookingService.deleteBookings(ids)
                 .then(status => {
                     if (status === 200) {
                         rows.splice(selectedIndex, 1);
@@ -270,7 +270,7 @@ class BookingList extends Component {
             const { selectedIds, selectedId, rows } = this.state;
             const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
 
-            BookingService.delete(ids)
+            BookingService.deleteBookings(ids)
                 .then(status => {
                     if (status === 200) {
                         if (selectedIds.length > 0) {

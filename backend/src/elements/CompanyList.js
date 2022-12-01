@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/company-list';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 import * as Helper from '../common/Helper';
 import Backdrop from './SimpleBackdrop';
 import {
@@ -22,7 +22,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 import '../assets/css/company-list.css';
 
@@ -61,7 +61,7 @@ class CompanyList extends Component {
 
         if (companyId !== '' && companyIndex > -1) {
             this.setState({ loading: true, openDeleteDialog: false });
-            CompanyService.delete(companyId)
+            CompanyService.deleteCompany(companyId)
                 .then(status => {
                     if (status === 200) {
                         rows.splice(companyIndex, 1);

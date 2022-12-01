@@ -1,7 +1,7 @@
 import Env from "../config/env.config";
 import { strings as commonStrings } from "../lang/common";
 import { strings } from "../lang/cars";
-import CarService from "../services/CarService";
+import * as CarService from "../services/CarService";
 import { toast } from 'react-toastify';
 
 export const capitalize = (str) => {

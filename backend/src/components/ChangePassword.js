@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/change-password';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import {
     Paper,

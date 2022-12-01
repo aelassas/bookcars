@@ -3,7 +3,7 @@ import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings as clStrings } from '../lang/create-location';
 import { strings } from '../lang/update-location';
-import LocationService from '../services/LocationService';
+import * as LocationService from '../services/LocationService';
 import NoMatch from './NoMatch';
 import Error from './Error';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -15,7 +15,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 
 import '../assets/css/update-location.css';

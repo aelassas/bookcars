@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/locations';
-import LocationService from '../services/LocationService';
+import * as LocationService from '../services/LocationService';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,
@@ -26,7 +26,7 @@ import {
     Delete as DeleteIcon,
     LocationOn as LocationIcon
 } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 
 import '../assets/css/location-list.css';
@@ -77,7 +77,7 @@ class LocationList extends Component {
 
         if (locationId !== '' && locationIndex > -1) {
             this.setState({ loading: true, openDeleteDialog: false });
-            LocationService.delete(locationId)
+            LocationService.deleteLocation(locationId)
                 .then(status => {
                     if (status === 200) {
                         rows.splice(locationIndex, 1);
