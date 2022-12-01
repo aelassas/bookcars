@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/user-type-filter.css';
 

@@ -16,7 +16,7 @@ import {
     Paper,
     Link
 } from '@mui/material';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/activate.css';
 

@@ -4,7 +4,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as ccStrings } from '../lang/create-company';
 import { strings } from '../lang/create-user';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import CompanyService from '../services/CompanyService';
 import NoMatch from './NoMatch';

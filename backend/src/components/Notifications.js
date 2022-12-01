@@ -13,7 +13,7 @@ import {
     ArrowBackIos as PreviousPageIcon,
     ArrowForwardIos as NextPageIcon
 } from '@mui/icons-material';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import Backdrop from '../elements/SimpleBackdrop';
 import { format } from 'date-fns';

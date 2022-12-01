@@ -5,7 +5,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-car';
 import CarService from '../services/CarService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Error from './Error';
 import ErrorMessage from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';

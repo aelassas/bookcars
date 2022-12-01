@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import { strings } from '../lang/cars';
 import { strings as commonStrings } from '../lang/common';
 import Master from '../elements/Master';

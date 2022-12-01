@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../lang/bookings';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import StatusFilter from '../elements/StatusFilter';

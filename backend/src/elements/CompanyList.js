@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/company-list';
 import CompanyService from '../services/CompanyService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Backdrop from './SimpleBackdrop';
 import {
     IconButton,

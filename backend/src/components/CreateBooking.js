@@ -8,7 +8,7 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-booking';
 import UserService from '../services/UserService';
 import BookingService from '../services/BookingService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import CompanySelectList from '../elements/CompanySelectList';
 import UserSelectList from '../elements/UserSelectList';
 import LocationSelectList from '../elements/LocationSelectList';

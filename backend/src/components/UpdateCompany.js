@@ -5,7 +5,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as ccStrings } from '../lang/create-company';
 import CompanyService from '../services/CompanyService';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';

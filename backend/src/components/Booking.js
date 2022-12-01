@@ -5,7 +5,7 @@ import { strings as blStrings } from '../lang/booking-list';
 import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import UserService from '../services/UserService';
 import BookingService from '../services/BookingService';

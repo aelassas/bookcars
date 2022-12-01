@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings } from '../lang/users';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import UserTypeFilter from '../elements/UserTypeFilter';
 import Search from '../elements/Search';
 import UserList from '../elements/UserList';

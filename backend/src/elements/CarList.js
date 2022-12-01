@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import CarService from '../services/CarService';
 import Backdrop from './SimpleBackdrop';
 import {
