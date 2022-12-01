@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import CarService from '../services/CarService';
 import {

@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking-list';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import BookingService from '../services/BookingService';
 import StatusList from './StatusList';
 import Backdrop from '../elements/SimpleBackdrop';

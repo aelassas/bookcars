@@ -12,7 +12,7 @@ import {
     Paper
 } from '@mui/material';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 
 import '../assets/css/create-location.css';

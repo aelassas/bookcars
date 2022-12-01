@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelect';
 
 class UserSelectList extends Component {

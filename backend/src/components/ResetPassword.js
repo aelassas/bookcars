@@ -14,7 +14,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/reset-password.css';
 

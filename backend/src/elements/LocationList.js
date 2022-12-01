@@ -27,7 +27,7 @@ import {
     LocationOn as LocationIcon
 } from '@mui/icons-material';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/location-list.css';
 

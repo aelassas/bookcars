@@ -10,7 +10,7 @@ import NoMatch from './NoMatch';
 import Error from './Error';
 import { Avatar } from '../elements/Avatar';
 import BookingList from '../elements/BookingList';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import {
     Button,
     Dialog,

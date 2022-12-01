@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/user-list';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import {

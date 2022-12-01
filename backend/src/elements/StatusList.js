@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 import '../assets/css/status-list.css';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 class StatusList extends Component {
 

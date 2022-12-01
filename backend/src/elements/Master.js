@@ -6,7 +6,7 @@ import Unauthorized from '../components/Unauthorized';
 import Error from '../components/Error';
 import { Button } from '@mui/material';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 export default class Master extends Component {
 

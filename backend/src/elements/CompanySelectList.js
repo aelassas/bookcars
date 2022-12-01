@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import CompanyService from '../services/CompanyService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelect';
 import UserService from '../services/UserService';
 

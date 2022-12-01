@@ -16,7 +16,7 @@ import {
     Paper
 } from '@mui/material';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/update-location.css';
 import Env from '../config/env.config';

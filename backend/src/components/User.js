@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as ulStrings } from '../lang/user-list';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
 import { Avatar } from '../elements/Avatar';
