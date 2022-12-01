@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import validator from 'validator';
-
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 import Link from '../elements/Link';
@@ -13,7 +12,7 @@ import Helper from '../common/Helper';
 import Switch from '../elements/Switch';
 import Header from '../elements/Header';
 
-export default function SignInScreen({ navigation, route }) {
+const SignInScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -270,3 +269,5 @@ const styles = StyleSheet.create({
         marginTop: 15
     }
 });
+
+export default SignInScreen;

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import Master from './Master';
 
-export default function ContactScreen({ navigation, route }) {
+const ContactScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -55,3 +54,5 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
+
+export default ContactScreen;

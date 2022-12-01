@@ -5,7 +5,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import validator from 'validator';
 import { format, intervalToDuration } from 'date-fns';
 import { enUS, fr } from 'date-fns/locale';
-
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -23,7 +22,7 @@ import BookingService from '../services/BookingService';
 import Env from '../config/env.config';
 import Backdrop from '../elements/Backdrop';
 
-export default function CreateBookingScreen({ navigation, route }) {
+const CreateBookingScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -1353,3 +1352,5 @@ const styles = StyleSheet.create({
         marginTop: 10
     }
 });
+
+export default CreateBookingScreen;

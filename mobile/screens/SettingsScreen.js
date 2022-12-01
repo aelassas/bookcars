@@ -6,7 +6,6 @@ import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from
 import * as ImagePicker from 'expo-image-picker';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
-
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -17,7 +16,7 @@ import Button from '../elements/Button';
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 
-export default function SettingsScreen({ navigation, route }) {
+const SettingsScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -32,7 +31,6 @@ export default function SettingsScreen({ navigation, route }) {
     const [enableEmailNotifications, setEnableEmailNotifications] = useState(false);
     const [avatar, setAvatar] = useState(null);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
     const [fullNameRequired, setFullNameRequired] = useState(false);
     const [phoneRequired, setPhoneRequired] = useState(false);
     const [phoneValid, setPhoneValid] = useState(true);
@@ -468,3 +466,5 @@ const styles = StyleSheet.create({
         height: 75
     },
 });
+
+export default SettingsScreen;

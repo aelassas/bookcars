@@ -7,7 +7,7 @@ import Helper from '../common/Helper';
 import Header from '../elements/Header';
 import NotificationService from '../services/NotificationService';
 
-export default function Master(props) {
+const Master = (props) => {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
@@ -146,3 +146,5 @@ const styles = StyleSheet.create({
         marginTop: 15
     }
 });
+
+export default Master;

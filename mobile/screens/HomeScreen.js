@@ -8,7 +8,6 @@ import {
   Keyboard
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -19,7 +18,7 @@ import Button from '../elements/Button';
 import LocationSelectList from '../elements/LocationSelectList';
 import DateTimePicker from '../elements/DateTimePicker';
 
-export default function HomeScreen({ navigation, route }) {
+const HomeScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
 
   const _fromDate = new Date();
@@ -313,3 +312,5 @@ const styles = StyleSheet.create({
     top: -5
   }
 });
+
+export default HomeScreen;
