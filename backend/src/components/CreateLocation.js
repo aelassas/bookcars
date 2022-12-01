@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/create-location';
-import LocationService from '../services/LocationService';
+import * as LocationService from '../services/LocationService';
 import {
     Input,
     InputLabel,
@@ -11,7 +11,7 @@ import {
     Button,
     Paper
 } from '@mui/material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 

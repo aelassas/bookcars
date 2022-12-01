@@ -7,9 +7,9 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking';
 import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
-import UserService from '../services/UserService';
-import BookingService from '../services/BookingService';
-import CarService from '../services/CarService';
+import * as UserService from '../services/UserService';
+import * as BookingService from '../services/BookingService';
+import * as CarService from '../services/CarService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
@@ -240,7 +240,7 @@ const Booking = () => {
         setLoading(true);
         setOpenDeleteDialog(false);
 
-        BookingService.delete([booking._id])
+        BookingService.deleteBookings([booking._id])
             .then(status => {
                 if (status === 200) {
                     window.location.href = '/';

@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as blStrings } from '../lang/booking-list';
 import { strings } from '../lang/booking-car-list';
-import CarService from '../services/CarService';
+import * as CarService from '../services/CarService';
 import MultipleSelect from './MultipleSelect';
 import {
     Dialog,
@@ -13,7 +13,7 @@ import {
     DialogActions,
     Button
 } from '@mui/material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 class CarSelectList extends Component {
 

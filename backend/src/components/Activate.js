@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Master from '../elements/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings as cpStrings } from '../lang/change-password';

@@ -1,37 +1,31 @@
 import axios from 'axios';
 import Env from '../config/env.config';
-import UserService from './UserService';
+import * as UserService from './UserService';
 
-export default class LocationService {
+export const validate = (data) => (
+    axios.post(`${Env.API_HOST}/api/validate-location`, data, { headers: UserService.authHeader() }).then(res => res.status)
+);
 
-    static validate(data) {
-        return axios.post(`${Env.API_HOST}/api/validate-location`, data, { headers: UserService.authHeader() }).then(res => res.status);
-    }
+export const create = (data) => (
+    axios.post(`${Env.API_HOST}/api/create-location`, data, { headers: UserService.authHeader() }).then(res => res.status)
+);
 
-    static create(data) {
-        return axios.post(`${Env.API_HOST}/api/create-location`, data, { headers: UserService.authHeader() }).then(res => res.status);
-    }
+export const update = (id, data) => (
+    axios.put(`${Env.API_HOST}/api/update-location/${id}`, data, { headers: UserService.authHeader() }).then(res => res.status)
+);
 
-    static update(id, data) {
-        return axios.put(`${Env.API_HOST}/api/update-location/${id}`, data, { headers: UserService.authHeader() }).then(res => res.status);
-    }
+export const deleteLocation = (id) => (
+    axios.delete(`${Env.API_HOST}/api/delete-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status)
+);
 
-    static delete(id) {
-        return axios.delete(`${Env.API_HOST}/api/delete-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status);
-    }
+export const getLocation = (id) => (
+    axios.get(`${Env.API_HOST}/api/location/${encodeURIComponent(id)}/${UserService.getLanguage()}`, { headers: UserService.authHeader() }).then(res => res.data)
+);
 
-    static getLocation(id) {
-        const language = UserService.getLanguage();
-        return axios.get(`${Env.API_HOST}/api/location/${encodeURIComponent(id)}/${language}`, { headers: UserService.authHeader() }).then(res => res.data);
-    }
+export const getLocations = (keyword, page, size) => (
+    axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/${UserService.getLanguage()}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data)
+);
 
-    static getLocations(keyword, page, size) {
-        const language = UserService.getLanguage();
-        return axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/${language}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then(res => res.data);
-    }
-
-    static check(id) {
-        return axios.get(`${Env.API_HOST}/api/check-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status);
-    }
-
-}
+export const check = (id) => (
+    axios.get(`${Env.API_HOST}/api/check-location/${encodeURIComponent(id)}`, { headers: UserService.authHeader() }).then(res => res.status)
+);

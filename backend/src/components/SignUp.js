@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-up';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Master from '../elements/Master';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Error from '../elements/Error';

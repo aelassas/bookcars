@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as clStrings } from '../lang/company-list';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -70,17 +70,18 @@ const Company = () => {
         setLoading(true);
         setOpenDeleteDialog(false);
 
-        CompanyService.delete(company._id).then(status => {
-            if (status === 200) {
-                window.location.href = '/suppliers';
-            } else {
-                Helper.error();
+        CompanyService.deleteCompany(company._id)
+            .then(status => {
+                if (status === 200) {
+                    window.location.href = '/suppliers';
+                } else {
+                    Helper.error();
+                    setLoading(false);
+                }
+            }).catch((err) => {
+                Helper.error(err);
                 setLoading(false);
-            }
-        }).catch((err) => {
-            Helper.error(err);
-            setLoading(false);
-        });
+            });
     };
 
     const handleCancelDelete = () => {

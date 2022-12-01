@@ -13,7 +13,7 @@ import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';
 import AvailabilityFilter from '../elements/AvailabilityFilter';
 import CarList from '../elements/CarList';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 import { Button } from '@mui/material';
 
 import '../assets/css/cars.css';

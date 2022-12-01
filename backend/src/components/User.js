@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as ulStrings } from '../lang/user-list';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
@@ -23,7 +23,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 
 import '../assets/css/user.css';
 
@@ -61,7 +61,7 @@ const User = () => {
         setLoading(true);
         setOpenDeleteDialog(false);
 
-        UserService.delete([user._id]).then(status => {
+        UserService.deleteUsers([user._id]).then(status => {
             if (status === 200) {
                 window.location.href = '/users';
             } else {

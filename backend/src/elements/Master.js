@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { strings } from '../lang/master';
 import Header from './Header';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Unauthorized from '../components/Unauthorized';
 import Error from '../components/Error';
 import { Button } from '@mui/material';

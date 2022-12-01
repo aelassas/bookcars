@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import * as Helper from '../common/Helper';
-import UserService from '../services/UserService';
-import CarService from '../services/CarService';
+import * as UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
 import {
     Button,
     Avatar as MaterialAvatar,

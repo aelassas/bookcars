@@ -8,7 +8,7 @@ import CompanyFilter from '../elements/CompanyFilter';
 import StatusFilter from '../elements/StatusFilter';
 import BookingFilter from '../elements/BookingFilter';
 import { Button } from '@mui/material';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 
 import '../assets/css/bookings.css';
 

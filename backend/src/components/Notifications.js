@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/notifications';
 import Master from '../elements/Master';
-import UserService from '../services/UserService';
-import NotificationService from '../services/NotificationService';
+import * as UserService from '../services/UserService';
+import * as NotificationService from '../services/NotificationService';
 import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
 import {
     Visibility as ViewIcon,
@@ -345,7 +345,7 @@ const Notifications = () => {
                                 <Button onClick={async () => {
                                     try {
                                         const ids = selectedRows.map(row => row._id);
-                                        const status = await NotificationService.delete(user._id, ids);
+                                        const status = await NotificationService.deleteNotifications(user._id, ids);
 
                                         if (status === 200) {
                                             if (selectedRows.length === rows.length) {

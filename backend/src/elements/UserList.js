@@ -3,7 +3,7 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/user-list';
 import * as Helper from '../common/Helper';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
 import {
     DataGrid,
@@ -222,7 +222,7 @@ class BookingList extends Component {
 
         this.setState({ openDeleteDialog: false, loading: true });
 
-        UserService.delete(ids)
+        UserService.deleteUsers(ids)
             .then(status => {
                 if (status === 200) {
                     if (selectedIds.length > 0) {
