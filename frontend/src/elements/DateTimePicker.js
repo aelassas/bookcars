@@ -5,7 +5,7 @@ import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTim
 import { TextField } from '@mui/material';
 import { format } from 'date-fns';
 import { fr, enUS } from "date-fns/locale";
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 class DateTimePicker extends Component {
 

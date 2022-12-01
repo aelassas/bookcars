@@ -3,7 +3,7 @@ import { strings } from '../lang/master';
 import Header from '../elements/Header';
 import UserService from '../services/UserService';
 import { Button } from '@mui/material';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 export default class Master extends Component {
 
