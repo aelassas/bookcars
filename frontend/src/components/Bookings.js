@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import StatusFilter from '../elements/StatusFilter';

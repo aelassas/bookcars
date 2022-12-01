@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 import '../assets/css/settings.css';
 

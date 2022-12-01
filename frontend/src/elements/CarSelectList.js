@@ -13,7 +13,7 @@ import {
     DialogActions,
     Button
 } from '@mui/material';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 class CarSelectList extends Component {
 

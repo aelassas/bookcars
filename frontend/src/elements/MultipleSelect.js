@@ -1,6 +1,6 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import {
     Autocomplete,
     TextField,

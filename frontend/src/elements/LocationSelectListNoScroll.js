@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
 import LocationService from '../services/LocationService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelectNoScroll';
 
 class LocationSelectList extends Component {

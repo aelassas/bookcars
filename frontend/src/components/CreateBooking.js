@@ -4,7 +4,7 @@ import BookingService from '../services/BookingService';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-booking';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import UserService from '../services/UserService';
 import CarService from '../services/CarService';
 import LocationService from '../services/LocationService';

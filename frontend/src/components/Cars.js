@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import LocationService from '../services/LocationService';
 import CompanyService from '../services/CompanyService';
 import Master from '../elements/Master';
