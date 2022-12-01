@@ -12,7 +12,7 @@ import TextInput from '../elements/TextInput';
 import DateTimePicker from '../elements/DateTimePicker';
 import Switch from '../elements/Switch';
 import Link from '../elements/Link';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Button from '../elements/Button';
 import RadioButton from '../elements/RadioButton';

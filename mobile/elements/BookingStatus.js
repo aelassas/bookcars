@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 
 const BookingStatus = ({ style, status }) => (

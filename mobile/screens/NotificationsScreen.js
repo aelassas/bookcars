@@ -10,7 +10,7 @@ import UserService from '../services/UserService';
 import Master from './Master';
 import NotificationService from '../services/NotificationService';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Checkbox from '../elements/Checkbox';
 
 const NotificationsScreen = ({ navigation, route }) => {

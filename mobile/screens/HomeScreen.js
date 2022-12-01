@@ -11,7 +11,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Master from './Master';
 import Switch from '../elements/Switch';
 import Button from '../elements/Button';

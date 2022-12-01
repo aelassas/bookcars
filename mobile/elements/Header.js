@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Avatar, Badge } from 'react-native-paper';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 
 const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar }) => {

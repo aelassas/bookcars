@@ -4,7 +4,7 @@ import Env from '../config/env.config';
 import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
 import { MaterialIcons } from '@expo/vector-icons';
 import LocationService from '../services/LocationService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 
 class LocationSelectList extends Component {
 

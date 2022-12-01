@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';

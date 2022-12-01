@@ -8,7 +8,7 @@ import Link from '../elements/Link';
 import i18n from '../lang/i18n';
 import Error from '../elements/Error';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Switch from '../elements/Switch';
 import Header from '../elements/Header';
 

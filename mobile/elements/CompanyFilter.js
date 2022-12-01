@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import CompanyService from '../services/CompanyService';
