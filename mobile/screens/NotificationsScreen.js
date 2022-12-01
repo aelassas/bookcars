@@ -5,7 +5,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper';
 import { format } from 'date-fns';
 import { enUS, fr } from 'date-fns/locale';
-
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import Master from './Master';
@@ -14,7 +13,7 @@ import Env from '../config/env.config';
 import Helper from '../common/Helper';
 import Checkbox from '../elements/Checkbox';
 
-export default function NotificationsScreen({ navigation, route }) {
+const NotificationsScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -550,3 +549,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     }
 });
+
+export default NotificationsScreen;

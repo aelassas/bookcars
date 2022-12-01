@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -9,7 +8,6 @@ import CarList from '../elements/CarList';
 import CompanyFilter from '../elements/CompanyFilter';
 import FuelFilter from '../elements/FuelFilter';
 import Env from '../config/env.config';
-import Helper from '../common/Helper';
 import GearboxFilter from '../elements/GearboxFilter';
 import MileageFilter from '../elements/MileageFilter';
 import DepositFilter from '../elements/DepositFilter';

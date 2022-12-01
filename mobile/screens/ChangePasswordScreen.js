@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
@@ -9,7 +8,7 @@ import Helper from '../common/Helper';
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 
-export default function ChangePasswordScreen({ navigation, route }) {
+const ChangePasswordScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -256,3 +255,5 @@ const styles = StyleSheet.create({
         margin: 10
     }
 });
+
+export default ChangePasswordScreen;

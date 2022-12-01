@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import validator from 'validator';
-
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 import i18n from '../lang/i18n';
@@ -11,7 +10,7 @@ import Helper from '../common/Helper';
 import Link from '../elements/Link';
 import Header from '../elements/Header';
 
-export default function ForgotPasswordScreen({ navigation, route }) {
+const ForgotPasswordScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [email, setEmail] = useState('');
     const [emailRequired, setEmailRequired] = useState(false);
@@ -170,3 +169,5 @@ const styles = StyleSheet.create({
         margin: 10,
     },
 });
+
+export default ForgotPasswordScreen;

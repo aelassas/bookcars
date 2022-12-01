@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
 import Master from './Master';
 import BookingList from '../elements/BookingList';
 import Env from '../config/env.config';
 
-export default function BookingScreen({ navigation, route }) {
+const BookingScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
     const [reload, setReload] = useState(false);
@@ -70,3 +69,5 @@ const styles = StyleSheet.create({
         flex: 1
     }
 });
+
+export default BookingScreen;

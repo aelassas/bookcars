@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { intervalToDuration } from 'date-fns';
-
 import i18n from '../lang/i18n';
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
@@ -16,7 +15,7 @@ import Error from '../elements/Error';
 import Backdrop from '../elements/Backdrop';
 import Header from '../elements/Header';
 
-export default function SignUpScreen({ navigation, route }) {
+const SignUpScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const [language, setLanguage] = useState(null);
     const [fullName, setFullName] = useState('');
@@ -27,7 +26,6 @@ export default function SignUpScreen({ navigation, route }) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [tosChecked, setTosChecked] = useState(false);
     const [loading, setLoading] = useState(false);
-
     const [fullNameRequired, setFullNameRequired] = useState(false);
     const [emailRequired, setEmailRequired] = useState(false);
     const [emailValid, setEmailValid] = useState(true);
@@ -440,3 +438,5 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 });
+
+export default SignUpScreen;
