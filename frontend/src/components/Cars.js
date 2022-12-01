@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
-import LocationService from '../services/LocationService';
-import CompanyService from '../services/CompanyService';
+import * as LocationService from '../services/LocationService';
+import * as CompanyService from '../services/CompanyService';
 import Master from '../elements/Master';
 import NoMatch from './NoMatch';
 import CarFilter from '../elements/CarFilter';

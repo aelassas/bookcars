@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import LocationSelectList from './LocationSelectList';
 import DateTimePicker from './DateTimePicker'
 import { FormControl, Button } from '@mui/material';

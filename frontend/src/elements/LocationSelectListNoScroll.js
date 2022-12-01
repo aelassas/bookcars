@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Env from '../config/env.config';
-import LocationService from '../services/LocationService';
+import * as LocationService from '../services/LocationService';
 import * as Helper from '../common/Helper';
 import MultipleSelect from './MultipleSelectNoScroll';
 

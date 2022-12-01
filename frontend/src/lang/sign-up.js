@@ -1,11 +1,11 @@
 import LocalizedStrings from 'react-localization';
 import Env from '../config/env.config';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 export const strings = new LocalizedStrings({
     fr: {
         SIGN_UP_HEADING: 'Inscription',
-        SIGN_UP: "S'inscrire",        
+        SIGN_UP: "S'inscrire",
         SIGN_UP_ERROR: "Une erreur s'est produite lors de l'inscription."
     },
     en: {

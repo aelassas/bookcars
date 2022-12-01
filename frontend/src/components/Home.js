@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Master from '../elements/Master';
 import LocationSelectList from '../elements/LocationSelectList';
 import DateTimePicker from '../elements/DateTimePicker'
