@@ -25,7 +25,7 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import CarsScreen from '../screens/CarsScreen';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
 import SettingsScreen from '../screens/SettingsScreen';

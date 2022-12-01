@@ -4,7 +4,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
-import CompanyService from '../services/CompanyService';
+import * as CompanyService from '../services/CompanyService';
 import Link from './Link';
 import Switch from './Switch';
 import Accordion from './Accordion';

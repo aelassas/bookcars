@@ -8,7 +8,7 @@ import validator from 'validator';
 import { intervalToDuration } from 'date-fns';
 import Master from './Master';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import TextInput from '../elements/TextInput';
 import DateTimePicker from '../elements/DateTimePicker';
 import Switch from '../elements/Switch';

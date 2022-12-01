@@ -5,7 +5,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import i18n from '../lang/i18n';
 import Env from '../config/env.config';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as mime from 'mime';
 
 const ANDROID = Platform.OS === 'android';

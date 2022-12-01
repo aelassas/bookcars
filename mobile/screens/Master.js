@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Button from '../elements/Button';
 import i18n from '../lang/i18n';
 import * as Helper from '../common/Helper';
 import Header from '../elements/Header';
-import NotificationService from '../services/NotificationService';
+import * as NotificationService from '../services/NotificationService';
 
 const Master = (props) => {
     const [loading, setLoading] = useState(true);

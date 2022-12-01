@@ -3,12 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import BookingList from '../elements/BookingList';
 import CompanyFilter from '../elements/CompanyFilter';
 import Env from '../config/env.config';
 import StatusFilter from '../elements/StatusFilter';
-import BookingService from '../services/BookingService';
+import * as BookingService from '../services/BookingService';
 import BookingFilter from '../elements/BookingFilter';
 
 const BookingsScreen = ({ navigation, route }) => {
