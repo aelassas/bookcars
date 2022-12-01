@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Env from '../config/env.config';
-import AsyncStorage from '../common/AsyncStorage';
+import * as AsyncStorage from '../common/AsyncStorage';
 import * as FileSystem from 'expo-file-system';
 
 export default class UserService {
