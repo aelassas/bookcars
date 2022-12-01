@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking-list';
 import * as Helper from '../common/Helper';
-import BookingService from '../services/BookingService';
+import * as BookingService from '../services/BookingService';
 import Backdrop from '../elements/SimpleBackdrop';
 import {
     DataGrid,
@@ -30,7 +30,7 @@ import {
     Check as CheckIcon,
     Cancel as CancelIcon
 } from '@mui/icons-material';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import { format } from 'date-fns';
 import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale";
 

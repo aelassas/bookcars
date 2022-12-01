@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-in';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Header from '../elements/Header';
 import Error from '../elements/Error';
 import {

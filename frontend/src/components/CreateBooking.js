@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Env from '../config/env.config';
-import BookingService from '../services/BookingService';
+import * as BookingService from '../services/BookingService';
 import { strings as commonStrings } from '../lang/common';
 import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/create-booking';
 import * as Helper from '../common/Helper';
-import UserService from '../services/UserService';
-import CarService from '../services/CarService';
-import LocationService from '../services/LocationService';
+import * as UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
+import * as LocationService from '../services/LocationService';
 import Master from '../elements/Master';
 import Error from '../elements/Error';
 import DatePicker from '../elements/DatePicker';

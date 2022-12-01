@@ -3,8 +3,8 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import * as Helper from '../common/Helper';
-import CarService from '../services/CarService';
-import UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
+import * as UserService from '../services/UserService';
 import Backdrop from './SimpleBackdrop';
 import {
     Button,
