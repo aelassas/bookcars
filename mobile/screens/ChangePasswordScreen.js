@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 

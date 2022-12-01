@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import Accordion from './Accordion';

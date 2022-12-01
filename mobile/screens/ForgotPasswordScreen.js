@@ -6,7 +6,7 @@ import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 import i18n from '../lang/i18n';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Link from '../elements/Link';
 import Header from '../elements/Header';
 

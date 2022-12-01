@@ -13,7 +13,7 @@ import TextInput from '../elements/TextInput';
 import DateTimePicker from '../elements/DateTimePicker';
 import Switch from '../elements/Switch';
 import Button from '../elements/Button';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 
 const SettingsScreen = ({ navigation, route }) => {

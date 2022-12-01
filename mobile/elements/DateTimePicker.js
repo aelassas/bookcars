@@ -4,7 +4,7 @@ import ReactDateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { enUS, fr } from 'date-fns/locale';
 
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 
 const DateTimePicker = (props) => {

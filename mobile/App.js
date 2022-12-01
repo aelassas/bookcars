@@ -8,7 +8,7 @@ import DrawerNavigator from './elements/DrawerNavigator';
 import { Provider } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
-import Helper from './common/Helper';
+import * as Helper from './common/Helper';
 import NotificationService from './services/NotificationService';
 import UserService from './services/UserService';
 

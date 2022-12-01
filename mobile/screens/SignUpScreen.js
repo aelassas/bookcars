@@ -8,7 +8,7 @@ import Button from '../elements/Button';
 import Switch from '../elements/Switch';
 import validator from 'validator';
 import UserService from '../services/UserService';
-import Helper from '../common/Helper';
+import * as Helper from '../common/Helper';
 import DateTimePicker from '../elements/DateTimePicker';
 import Env from '../config/env.config';
 import Error from '../elements/Error';
