@@ -406,7 +406,7 @@ const SignUpScreen = ({ navigation, route }) => {
             {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     master: {

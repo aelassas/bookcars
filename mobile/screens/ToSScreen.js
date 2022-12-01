@@ -44,7 +44,7 @@ const ToSScreen = ({ navigation, route }) => {
             }
         </Master>
     );
-}
+};
 
 const styles = StyleSheet.create({
     master: {

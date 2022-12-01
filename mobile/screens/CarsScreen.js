@@ -94,7 +94,7 @@ export default function CarsScreen({ navigation, route }) {
             }
         </Master>
     );
-}
+};
 
 const styles = StyleSheet.create({
     master: {

@@ -139,7 +139,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
             </ScrollView>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     master: {

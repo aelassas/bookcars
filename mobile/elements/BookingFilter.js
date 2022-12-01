@@ -8,7 +8,7 @@ import DateTimePicker from "./DateTimePicker";
 import LocationSelectList from "./LocationSelectList";
 import TextInput from "./TextInput";
 
-export default function BookingFilter(props) {
+const BookingFilter = (props) => {
     const [init, setInit] = useState(false);
     const [from, setFrom] = useState(null);
     const [to, setTo] = useState(null);
@@ -144,7 +144,7 @@ export default function BookingFilter(props) {
             </Accordion>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -160,3 +160,5 @@ const styles = StyleSheet.create({
         margin: 10
     },
 });
+
+export default BookingFilter;

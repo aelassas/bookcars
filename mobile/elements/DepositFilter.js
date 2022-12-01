@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Helper from '../common/Helper';
-import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import Accordion from './Accordion';
-import Link from './Link';
 import RadioButton from './RadioButton';
-import Switch from './Switch';
 
-export default function DepositFilter(props) {
+const DepositFilter = (props) => {
     const [deposit_2500, setDeposit_2500] = useState(false);
     const [deposit_5000, setDeposit_5000] = useState(false);
     const [deposit_7500, setDeposit_7500] = useState(false);
@@ -75,7 +71,7 @@ export default function DepositFilter(props) {
             </Accordion>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -105,3 +101,5 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 });
+
+export default DepositFilter;

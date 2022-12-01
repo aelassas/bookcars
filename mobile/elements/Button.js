@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
 
-export default function Button(props) {
+const Button = (props) => {
     const small = props.size === 'small';
 
     const onPress = () => {
@@ -30,4 +30,6 @@ export default function Button(props) {
             <Text style={styles.text}>{props.label}</Text>
         </Pressable>
     );
-}
+};
+
+export default Button;

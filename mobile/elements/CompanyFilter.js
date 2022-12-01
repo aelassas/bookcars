@@ -9,7 +9,7 @@ import Link from './Link';
 import Switch from './Switch';
 import Accordion from './Accordion';
 
-export default function CompanyFilter(props) {
+const CompanyFilter = (props) => {
     const [companies, setCompanies] = useState([]);
     const [checkedCompanies, setCheckedCompanies] = useState([]);
     const [allChecked, setAllChecked] = useState(true);
@@ -101,7 +101,7 @@ export default function CompanyFilter(props) {
             </Accordion>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -134,4 +134,6 @@ const styles = StyleSheet.create({
     linkText: {
         fontSize: 12
     }
-})
+});
+
+export default CompanyFilter;

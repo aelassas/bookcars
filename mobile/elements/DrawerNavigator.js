@@ -34,7 +34,7 @@ import DrawerContent from './DrawerContent';
 import CreateBookingScreen from '../screens/CreateBooking';
 import NotificationsScreen from '../screens/NotificationsScreen';
 
-export default function DrawerNavigator(props) {
+const DrawerNavigator = (props) => {
     const buildLink = useLinkBuilder();
     const navigation = useNavigation();
     const routes = useNavigationState(state => state && state.routes);
@@ -230,4 +230,6 @@ export default function DrawerNavigator(props) {
             </Drawer.Navigator>
         </View>
     );
-}
+};
+
+export default DrawerNavigator;

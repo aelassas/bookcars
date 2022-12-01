@@ -8,7 +8,7 @@ import BookingStatus from './BookingStatus';
 import Link from './Link';
 import Switch from './Switch';
 
-export default function StatusFilter(props) {
+const StatusFilter = (props) => {
     const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map(status => ({ ...status, checked: true })));
     const [checkedStatuses, setCheckedStatuses] = useState(Helper.getBookingStatuses().map(status => status.value));
     const [allChecked, setAllChecked] = useState(true);
@@ -85,7 +85,7 @@ export default function StatusFilter(props) {
             </Accordion>
         </View>
     )
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -118,3 +118,5 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 });
+
+export default StatusFilter;

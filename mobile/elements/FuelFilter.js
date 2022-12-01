@@ -7,7 +7,7 @@ import Accordion from './Accordion';
 import Link from './Link';
 import Switch from './Switch';
 
-export default function FuelFilter(props) {
+const FuelFilter = (props) => {
     const [diesel, setDiesel] = useState(true);
     const [gasoline, setGasoline] = useState(true);
     const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]);
@@ -79,7 +79,7 @@ export default function FuelFilter(props) {
             </Accordion>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 });
+
+export default FuelFilter;

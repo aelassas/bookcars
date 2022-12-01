@@ -233,7 +233,7 @@ const SignInScreen = ({ navigation, route }) => {
             </ScrollView>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     master: {

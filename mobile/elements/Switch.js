@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Pressable, Switch as ReactSwitch } from 'react-native';
 
-export default function Switch(props) {
+const Switch = (props) => {
     const [value, setValue] = useState(props.value);
 
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function Switch(props) {
             }
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -58,3 +58,5 @@ const styles = StyleSheet.create({
         marginLeft: 5
     }
 });
+
+export default Switch;

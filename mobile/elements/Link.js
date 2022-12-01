@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, Pressable } from 'react-native';
 
-export default function Link(props) {
+const Link = (props) => {
 
     const onPress = () => {
         if (props.onPress) props.onPress();
@@ -9,10 +9,10 @@ export default function Link(props) {
 
     return (
         <Pressable style={props.style} onPress={onPress} >
-            <Text style={{...styles.text, ...props.textStyle}}>{props.label}</Text>
+            <Text style={{ ...styles.text, ...props.textStyle }}>{props.label}</Text>
         </Pressable>
     );
-}
+};
 
 const styles = StyleSheet.create({
     text: {
@@ -20,3 +20,5 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline'
     }
 });
+
+export default Link;

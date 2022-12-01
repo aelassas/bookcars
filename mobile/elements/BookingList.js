@@ -12,7 +12,7 @@ import BookingService from '../services/BookingService';
 import BookingStatus from './BookingStatus';
 import Button from './Button';
 
-export default function BookingList(props) {
+const BookingList = (props) => {
     const [loading, setLoading] = useState(true);
     const [fetch, setFetch] = useState(false);
     const [page, setPage] = useState(0);
@@ -310,7 +310,7 @@ export default function BookingList(props) {
             />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -442,3 +442,5 @@ const styles = StyleSheet.create({
         height: 75
     }
 });
+
+export default BookingList;
