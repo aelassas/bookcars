@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function Accordion(props) {
+const Accordion = (props) => {
     const [open, setOpen] = useState(false);
     const animatedController = useRef(new Animated.Value(0)).current;
 
@@ -104,4 +104,6 @@ export default function Accordion(props) {
             </View>
         </View>
     );
-}
+};
+
+export default Accordion;

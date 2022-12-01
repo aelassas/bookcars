@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const TextInput = React.forwardRef((props, ref) => {
+const TextInput = forwardRef((props, ref) => {
     const [value, setValue] = useState('');
     const _ref = useRef(null);
     const small = props.size === 'small';

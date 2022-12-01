@@ -7,7 +7,7 @@ import Accordion from './Accordion';
 import Link from './Link';
 import Switch from './Switch';
 
-export default function GearboxFilter(props) {
+const GearboxFilter = (props) => {
     const [automatic, setAutomatic] = useState(true);
     const [manual, setManual] = useState(true);
     const [values, setValues] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]);
@@ -79,7 +79,7 @@ export default function GearboxFilter(props) {
             </Accordion>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
         fontSize: 12
     }
 });
+
+export default GearboxFilter;

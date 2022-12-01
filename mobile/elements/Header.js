@@ -7,7 +7,7 @@ import UserService from '../services/UserService';
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 
-export default function Header({ title, hideTitle, loggedIn, notificationCount, reload, _avatar }) {
+const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar }) => {
     const navigation = useNavigation();
     const [avatar, setAvatar] = useState(null);
 
@@ -73,7 +73,7 @@ export default function Header({ title, hideTitle, loggedIn, notificationCount, 
             }
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -117,3 +117,5 @@ const styles = StyleSheet.create({
         zIndex: 1
     }
 });
+
+export default Header;

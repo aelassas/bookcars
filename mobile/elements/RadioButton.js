@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function RadioButton(props) {
+const RadioButton = (props) => {
 
     const onPress = () => {
         if (props.onValueChange) props.onValueChange(!props.checked);
@@ -16,7 +16,7 @@ export default function RadioButton(props) {
             </Pressable>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -33,3 +33,5 @@ const styles = StyleSheet.create({
         padding: 5
     },
 });
+
+export default RadioButton;

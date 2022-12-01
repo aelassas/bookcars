@@ -126,7 +126,7 @@ const Master = (props) => {
             }
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {

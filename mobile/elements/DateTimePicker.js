@@ -7,7 +7,7 @@ import { enUS, fr } from 'date-fns/locale';
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 
-export default function DateTimePicker(props) {
+const DateTimePicker = (props) => {
     const [label, setLabel] = useState('');
     const [value, setValue] = useState(props.value);
     const [show, setShow] = useState(false);
@@ -101,4 +101,6 @@ export default function DateTimePicker(props) {
             </View>
         </View>
     );
-}
+};
+
+export default DateTimePicker;

@@ -3,25 +3,22 @@ import { StyleSheet, Text, View } from 'react-native';
 import Helper from '../common/Helper';
 import Env from '../config/env.config';
 
-export default function BookingStatus(props) {
-
-    return (
-        <View style={{
-            ...styles.container,
-            ...props.style,
-            backgroundColor:
-                props.status === Env.BOOKING_STATUS.VOID ? '#999'
-                    : props.status === Env.BOOKING_STATUS.PENDING ? '#e98003'
-                        : props.status === Env.BOOKING_STATUS.DEPOSIT ? '#22bba7'
-                            : props.status === Env.BOOKING_STATUS.PAID ? '#77bc23'
-                                : props.status === Env.BOOKING_STATUS.RESERVED ? '#188ace'
-                                    : props.status === Env.BOOKING_STATUS.CANCELLED ? '#bc2143'
-                                        : 'transparent'
-        }}>
-            <Text style={styles.text}>{Helper.getBookingStatus(props.status)}</Text>
-        </View>
-    );
-}
+const BookingStatus = ({ style, status }) => (
+    <View style={{
+        ...styles.container,
+        ...style,
+        backgroundColor:
+            status === Env.BOOKING_STATUS.VOID ? '#999'
+                : status === Env.BOOKING_STATUS.PENDING ? '#e98003'
+                    : status === Env.BOOKING_STATUS.DEPOSIT ? '#22bba7'
+                        : status === Env.BOOKING_STATUS.PAID ? '#77bc23'
+                            : status === Env.BOOKING_STATUS.RESERVED ? '#188ace'
+                                : status === Env.BOOKING_STATUS.CANCELLED ? '#bc2143'
+                                    : 'transparent'
+    }}>
+        <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
+    </View>
+);
 
 const styles = StyleSheet.create({
     container: {
@@ -35,3 +32,5 @@ const styles = StyleSheet.create({
         fontWeight: '400'
     }
 });
+
+export default BookingStatus;
