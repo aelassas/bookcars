@@ -7,7 +7,7 @@ import TextInput from '../elements/TextInput';
 import Button from '../elements/Button';
 import Switch from '../elements/Switch';
 import validator from 'validator';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import DateTimePicker from '../elements/DateTimePicker';
 import Env from '../config/env.config';

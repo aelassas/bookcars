@@ -6,9 +6,9 @@ import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-
 import { format } from 'date-fns';
 import { enUS, fr } from 'date-fns/locale';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Master from './Master';
-import NotificationService from '../services/NotificationService';
+import * as NotificationService from '../services/NotificationService';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
 import Checkbox from '../elements/Checkbox';
@@ -383,7 +383,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                             onPress={async () => {
                                                 try {
                                                     const ids = selectedRows.map(row => row._id);
-                                                    const status = await NotificationService.delete(user._id, ids);
+                                                    const status = await NotificationService.deleteNotifications(user._id, ids);
 
                                                     if (status === 200) {
                                                         if (selectedRows.length === rows.length) {

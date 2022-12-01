@@ -8,7 +8,7 @@ import { enUS, fr } from 'date-fns/locale';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
 import * as Helper from '../common/Helper';
-import BookingService from '../services/BookingService';
+import * as BookingService from '../services/BookingService';
 import BookingStatus from './BookingStatus';
 import Button from './Button';
 

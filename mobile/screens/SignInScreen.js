@@ -7,7 +7,7 @@ import Button from '../elements/Button';
 import Link from '../elements/Link';
 import i18n from '../lang/i18n';
 import Error from '../elements/Error';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import Switch from '../elements/Switch';
 import Header from '../elements/Header';

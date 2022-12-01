@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import Master from './Master';
 import BookingList from '../elements/BookingList';
 import Env from '../config/env.config';

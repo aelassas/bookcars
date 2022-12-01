@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import i18n from "../lang/i18n";
-import BookingService from "../services/BookingService";
+import * as BookingService from "../services/BookingService";
 import Accordion from "./Accordion";
 import Button from "./Button";
 import DateTimePicker from "./DateTimePicker";

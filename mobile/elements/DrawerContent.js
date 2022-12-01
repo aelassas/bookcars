@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { CommonActions, DrawerActions } from '@react-navigation/routers';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 
 class DrawerContent extends Component {
 

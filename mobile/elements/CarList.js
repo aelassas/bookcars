@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'reac
 import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
-import CarService from '../services/CarService';
+import * as UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
 import { MaterialIcons } from '@expo/vector-icons';
 import Button from './Button';
 

@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
-import UserService from '../services/UserService';
+import * as UserService from '../services/UserService';
 import CarList from '../elements/CarList';
 import CompanyFilter from '../elements/CompanyFilter';
 import FuelFilter from '../elements/FuelFilter';
