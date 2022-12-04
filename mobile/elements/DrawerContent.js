@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import i18n from '../lang/i18n';
@@ -8,25 +8,25 @@ import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
 import * as UserService from '../services/UserService';
 
-class DrawerContent extends Component {
+let yOffset = 0;
 
-    constructor(props) {
-        super(props);
+const DrawerContent = (props) => {
+    const [openLanguageMenu, setopenLanguageMenu] = useState(false);
+    const [language, setLanguage] = useState(props.language);
+    const ref = useRef();
 
-        this.state = {
-            openLanguageMenu: false,
-            language: this.props.language
-        };
-    }
+    useEffect(() => {
+        setLanguage(props.language);
+    }, [props.language]);
 
     updateLanguage = async (language) => {
         try {
             const setLang = async (language) => {
                 i18n.locale = language;
                 await UserService.setLanguage(language);
-                this.setState({ language });
-                const route = this.props.state.routes[this.props.index];
-                this.props.navigation.navigate(route.name, { d: new Date().getTime(), ...route.params });
+                setLanguage(language);
+                const route = props.state.routes[props.index];
+                props.navigation.navigate(route.name, { d: new Date().getTime(), ...route.params });
             };
 
             const currentUser = await UserService.getCurrentUser();
@@ -51,111 +51,99 @@ class DrawerContent extends Component {
         }
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { language } = prevState;
+    return (
+        <DrawerContentScrollView
+            ref={ref}
+            onScroll={event => {
+                yOffset = event.nativeEvent.contentOffset.y;
+            }}
+            onContentSizeChange={() => {
+                if (ref.current) {
+                    ref.current.scrollTo({ x: 0, y: yOffset, animated: false })
+                }
+            }}
+            contentContainerStyle={styles.drawer}
+            {...props}
+        >
+            <View forceInset={styles.drawerList}>
+                {
+                    props.state.routes.map((route, i) => {
+                        const focused = i === props.state.index;
+                        const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options;
 
-        if (language !== nextProps.language) {
-            return { language: nextProps.language };
-        }
+                        const hidden = props.drawerItems.find(item => item.name === route.name).hidden;
+                        if (hidden) {
+                            return <View key={route.key} />
+                        }
 
-        return null;
-    }
-
-    render() {
-        const { openLanguageMenu, language } = this.state;
-
-        return (
-            <DrawerContentScrollView
-                ref={ref => this.ref = ref}
-                onScroll={event => {
-                    this.y = event.nativeEvent.contentOffset.y;
-                }}
-                onContentSizeChange={() => {
-                    this.ref.scrollTo({ x: 0, y: this.yOffset, animated: false })
-                }}
-                contentContainerStyle={styles.drawer}
-                {...this.props}
-            >
-                <View forceInset={styles.drawerList}>
-                    {
-                        this.props.state.routes.map((route, i) => {
-                            const focused = i === this.props.state.index;
-                            const { title, drawerLabel, drawerIcon } = this.props.descriptors[route.key].options;
-
-                            const hidden = this.props.drawerItems.find(item => item.name === route.name).hidden;
-                            if (hidden) {
-                                return <View key={route.key} />
-                            }
-
-                            return (
-                                <DrawerItem
-                                    key={route.key}
-                                    label={
-                                        drawerLabel !== undefined
-                                            ? drawerLabel
-                                            : title !== undefined
-                                                ? title
-                                                : route.name
-                                    }
-                                    icon={drawerIcon}
-                                    focused={focused}
-                                    activeTintColor={this.props.activeTintColor}
-                                    inactiveTintColor={this.props.inactiveTintColor}
-                                    activeBackgroundColor={this.props.activeBackgroundColor}
-                                    inactiveBackgroundColor={this.props.inactiveBackgroundColor}
-                                    labelStyle={this.props.labelStyle}
-                                    style={this.props.itemStyle}
-                                    to={this.props.buildLink(route.name, route.params)}
-                                    onPress={() => {
-                                        this.props.navigation.dispatch({
-                                            ...(focused
-                                                ? DrawerActions.closeDrawer()
-                                                : CommonActions.navigate(route.name)),
-                                            target: this.props.state.key,
-                                        })
-                                    }}
-                                />
-                            )
-                        })
-                    }
-                    {this.props.loggedIn &&
-                        <Pressable style={styles.signout} hitSlop={15} onPress={async () => await UserService.signout(this.props.navigation)}>
-                            <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
-                            <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
-                        </Pressable>
-                    }
-                </View>
-
-                <View style={styles.language}>
-                    <Pressable style={styles.languageButton} hitSlop={15} onPress={() => { this.setState({ openLanguageMenu: !openLanguageMenu }) }}>
-                        <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
-                        <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
+                        return (
+                            <DrawerItem
+                                key={route.key}
+                                label={
+                                    drawerLabel !== undefined
+                                        ? drawerLabel
+                                        : title !== undefined
+                                            ? title
+                                            : route.name
+                                }
+                                icon={drawerIcon}
+                                focused={focused}
+                                activeTintColor={props.activeTintColor}
+                                inactiveTintColor={props.inactiveTintColor}
+                                activeBackgroundColor={props.activeBackgroundColor}
+                                inactiveBackgroundColor={props.inactiveBackgroundColor}
+                                labelStyle={props.labelStyle}
+                                style={props.itemStyle}
+                                to={props.buildLink(route.name, route.params)}
+                                onPress={() => {
+                                    props.navigation.dispatch({
+                                        ...(focused
+                                            ? DrawerActions.closeDrawer()
+                                            : CommonActions.navigate(route.name)),
+                                        target: props.state.key,
+                                    })
+                                }}
+                            />
+                        )
+                    })
+                }
+                {props.loggedIn &&
+                    <Pressable style={styles.signout} hitSlop={15} onPress={async () => await UserService.signout(props.navigation)}>
+                        <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
+                        <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
                     </Pressable>
-                    {openLanguageMenu &&
-                        <View style={styles.languageMenu}>
-                            <Pressable style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
-                                if (language === Env.LANGUAGE.EN) {
-                                    await this.updateLanguage(Env.LANGUAGE.FR);
-                                    this.setState({ openLanguageMenu: false });
-                                }
-                            }}>
-                                <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
-                            </Pressable>
-                            <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
-                                if (language === Env.LANGUAGE.FR) {
-                                    await this.updateLanguage(Env.LANGUAGE.EN);
-                                    this.setState({ openLanguageMenu: false });
-                                }
-                            }}>
-                                <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
-                            </Pressable>
-                        </View>
-                    }
-                </View>
-            </DrawerContentScrollView>
-        );
-    }
-}
+                }
+            </View>
+
+            <View style={styles.language}>
+                <Pressable style={styles.languageButton} hitSlop={15} onPress={() => { setopenLanguageMenu(!openLanguageMenu) }}>
+                    <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
+                    <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
+                </Pressable>
+                {openLanguageMenu &&
+                    <View style={styles.languageMenu}>
+                        <Pressable style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
+                            if (language === Env.LANGUAGE.EN) {
+                                await updateLanguage(Env.LANGUAGE.FR);
+                                setopenLanguageMenu(false);
+                            }
+                        }}>
+                            <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
+                        </Pressable>
+                        <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
+                            if (language === Env.LANGUAGE.FR) {
+                                await updateLanguage(Env.LANGUAGE.EN);
+                                setopenLanguageMenu(false);
+                            }
+                        }}>
+                            <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
+                        </Pressable>
+                    </View>
+                }
+            </View>
+        </DrawerContentScrollView>
+    );
+};
 
 const styles = StyleSheet.create({
     drawer: {
