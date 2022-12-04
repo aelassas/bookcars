@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
@@ -8,294 +8,245 @@ import * as CarService from '../services/CarService';
 import { MaterialIcons } from '@expo/vector-icons';
 import Button from './Button';
 
-class CarList extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            language: Env.DEFAULT_LANGUAGE,
-            companies: [],
-            loading: true,
-            fetch: false,
-            reload: false,
-            rows: [],
-            page: 1,
-            size: Env.CARS_PAGE_SIZE,
-            from: props.from,
-            to: props.to,
-            pickupLocation: props.pickupLocation,
-            dropOffLocation: props.dropOffLocation,
-            fuel: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE],
-            gearbox: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL],
-            mileage: [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED],
-            deposit: -1,
-            cars: []
-        };
-    }
-
-    fetch = () => {
-        const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileage, deposit } = this.state;
-
-        if (companies.length > 0) {
-            this.setState({ loading: true, fetch: true });
-
-            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
-
-            CarService.getCars(payload, page, size)
-                .then(data => {
-                    const _data = data.length > 0 ? data[0] : {};
-                    if (_data.length === 0) _data.resultData = [];
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                    this.setState({ rows: _rows, rowCount: totalRecords, loading: false, fetch: _data.resultData.length > 0 }, () => {
-                        if (this.props.onLoad) {
-                            this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                        }
-                    });
-                })
-                .catch((err) => Helper.error(err));
-        } else {
-            this.setState({ rows: [], fetch: false });
-        }
-    };
-
-    getExtraIcon = (extra) => (
-        extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
-    )
-
-    getExtraColor = (extra) => (
-        extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
-    )
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, fuel, gearbox, mileage, deposit } = prevState;
-
-        if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
-            return { companies: Helper.clone(nextProps.companies) };
-        }
-
-        if (nextProps.fuel && !Helper.arrayEqual(fuel, nextProps.fuel)) {
-            return { fuel: Helper.clone(nextProps.fuel) };
-        }
-
-        if (nextProps.gearbox && !Helper.arrayEqual(gearbox, nextProps.gearbox)) {
-            return { gearbox: Helper.clone(nextProps.gearbox) };
-        }
-
-        if (nextProps.mileage && !Helper.arrayEqual(mileage, nextProps.mileage)) {
-            return { mileage: nextProps.mileage };
-        }
-
-        if (deposit !== nextProps.deposit) {
-            return { deposit: nextProps.deposit };
-        }
-
-        return null;
-    }
-    componentDidUpdate(prevProps, prevState) {
-        const { companies, fuel, gearbox, mileage, deposit } = this.state;
-
-        if (!Helper.arrayEqual(companies, prevState.companies)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(fuel, prevState.fuel)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(gearbox, prevState.gearbox)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(mileage, prevState.mileage)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (deposit !== prevState.deposit) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-    }
+const CarList = (props) => {
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+    const [loading, setLoading] = useState(true);
+    const [fetch, setFetch] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [page, setPage] = useState(1);
 
     _init = async () => {
         try {
             const language = await UserService.getLanguage();
             i18n.locale = language;
-            this.setState({ language });
+            setLanguage(language);
         } catch (err) {
             Helper.error(err);
         }
     };
 
-    async componentDidMount() {
-        await this._init();
-        this.fetch();
-    }
+    useEffect(() => {
+        (async function () {
+            await _init();
+        })();
+    }, []);
 
-    render() {
-        const { rows, loading, language, from, to, pickupLocation, dropOffLocation, page, fetch } = this.state;
-        const fr = language === Env.LANGUAGE.FR;
-        const iconSize = 24;
-        const iconColor = '#000';
+    const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
+        if (companies.length > 0) {
+            setLoading(true);
+            setFetch(true);
 
-        return (
-            <View style={styles.container}>
-                {(from && to) &&
-                    <FlatList
-                        keyboardShouldPersistTaps="handled"
-                        nestedScrollEnabled
-                        contentContainerStyle={styles.contentContainer}
-                        style={styles.flatList}
-                        data={rows}
-                        renderItem={({ item: car, index }) => (
-                            <View key={car._id} style={styles.carContainer}>
-                                <View style={styles.car}>
-                                    <Text style={styles.name}>{car.name}</Text>
+            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
 
-                                    <View style={styles.imgView}>
-                                        <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
-                                    </View>
+            CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+                .then(data => {
+                    const _data = data.length > 0 ? data[0] : {};
+                    if (_data.length === 0) _data.resultData = [];
+                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                    setRows(_rows);
+                    setFetch(_data.resultData.length > 0);
+                    if (props.onLoad) {
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    }
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    Helper.error(err);
+                });
+        } else {
+            setRows([]);
+            setFetch(false);
+            setLoading(false);
+        }
+    };
 
-                                    <View style={styles.infos}>
-                                        <View style={styles.info}>
-                                            <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
-                                        </View>
-                                        <View style={styles.info}>
-                                            <MaterialIcons name='account-tree' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
-                                        </View>
-                                        <View style={styles.info}>
-                                            <MaterialIcons name='person' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            <Text style={styles.text}>{car.seats}</Text>
-                                        </View>
-                                        <View style={styles.info}>
-                                            <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
-                                            <Text style={styles.text}>{car.doors}</Text>
-                                        </View>
-                                        {car.aircon &&
-                                            <View style={styles.info}>
-                                                <MaterialIcons name='ac-unit' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                            </View>
-                                        }
-                                    </View>
+    useEffect(() => {
+        if (props.companies) {
+            if (props.companies.length > 0) {
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit);
+            } else {
+                setRows([]);
+                setFetch(false);
+                if (props.onLoad) {
+                    props.onLoad({ rows: [], rowCount: 0 });
+                }
+            }
+        }
+    }, [page, props.companies, props.pickupLocatio, props.fuel, props.gearbox, props.mileage, props.deposit]);
 
-                                    <View style={styles.infos}>
-                                        <MaterialIcons name='directions-car' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                        <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
-                                    </View>
+    useEffect(() => {
+        setPage(1);
+    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]);
 
-                                    <View style={styles.infos}>
+    const getExtraIcon = (extra) => (
+        extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
+    );
+
+    const getExtraColor = (extra) => (
+        extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
+    );
+
+    const fr = language === Env.LANGUAGE.FR;
+    const iconSize = 24;
+    const iconColor = '#000';
+
+    return (
+        <View style={styles.container}>
+            {(props.from && props.to) &&
+                <FlatList
+                    keyboardShouldPersistTaps="handled"
+                    nestedScrollEnabled
+                    contentContainerStyle={styles.contentContainer}
+                    style={styles.flatList}
+                    data={rows}
+                    renderItem={({ item: car, index }) => (
+                        <View key={car._id} style={styles.carContainer}>
+                            <View style={styles.car}>
+                                <Text style={styles.name}>{car.name}</Text>
+
+                                <View style={styles.imgView}>
+                                    <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
+                                </View>
+
+                                <View style={styles.infos}>
+                                    <View style={styles.info}>
                                         <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
-                                        <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
+                                        <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
+                                    </View>
+                                    <View style={styles.info}>
+                                        <MaterialIcons name='account-tree' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                        <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
+                                    </View>
+                                    <View style={styles.info}>
+                                        <MaterialIcons name='person' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                        <Text style={styles.text}>{car.seats}</Text>
+                                    </View>
+                                    <View style={styles.info}>
+                                        <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
+                                        <Text style={styles.text}>{car.doors}</Text>
+                                    </View>
+                                    {car.aircon &&
+                                        <View style={styles.info}>
+                                            <MaterialIcons name='ac-unit' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                        </View>
+                                    }
+                                </View>
+
+                                <View style={styles.infos}>
+                                    <MaterialIcons name='directions-car' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                    <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
+                                </View>
+
+                                <View style={styles.infos}>
+                                    <MaterialIcons name='local-gas-station' size={iconSize} color={iconColor} style={styles.infoIcon} />
+                                    <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
+                                </View>
+
+                                <View style={styles.extras}>
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.cancellation)}
+                                            color={getExtraColor(car.cancellation)}
+                                            size={iconSize}
+                                            style={styles.infoIcon}
+                                        />
+                                        <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
                                     </View>
 
-                                    <View style={styles.extras}>
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.cancellation)}
-                                                color={this.getExtraColor(car.cancellation)}
-                                                size={iconSize}
-                                                style={styles.infoIcon}
-                                            />
-                                            <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
-                                        </View>
-
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.amendments)}
-                                                color={this.getExtraColor(car.amendments)}
-                                                size={iconSize}
-                                                style={styles.infoIcon}
-                                            />
-                                            <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
-                                        </View>
-
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.theftProtection)}
-                                                color={this.getExtraColor(car.theftProtection)}
-                                                size={iconSize}
-                                                style={styles.infoIcon}
-                                            />
-                                            <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
-                                        </View>
-
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.collisionDamageWaiver)}
-                                                color={this.getExtraColor(car.collisionDamageWaiver)}
-                                                size={iconSize}
-                                                style={styles.infoIcon}
-                                            />
-                                            <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
-                                        </View>
-
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.fullInsurance)}
-                                                color={this.getExtraColor(car.fullInsurance)}
-                                                size={iconSize}
-                                                style={styles.infoIcon}
-                                            />
-                                            <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
-                                        </View>
-
-                                        <View style={styles.extra}>
-                                            <MaterialIcons
-                                                name={this.getExtraIcon(car.additionalDriver)}
-                                                color={this.getExtraColor(car.additionalDriver)}
-                                                size={iconSize}
-                                                style={styles.infoIcon} />
-                                            <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
-                                        </View>
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.amendments)}
+                                            color={getExtraColor(car.amendments)}
+                                            size={iconSize}
+                                            style={styles.infoIcon}
+                                        />
+                                        <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
                                     </View>
 
-                                    <View style={styles.footer}>
-                                        <View style={styles.company}>
-                                            <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
-                                            <Text style={styles.companyText}>{car.company.fullName}</Text>
-                                        </View>
-
-                                        <View style={styles.price}>
-                                            <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(from, to))}</Text>
-                                            <Text style={styles.pricePrimary}>{`${Helper.price(car, from, to)} ${i18n.t('CURRENCY')}`}</Text>
-                                            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${car.price} ${i18n.t('CURRENCY')}`}</Text>
-                                        </View>
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.theftProtection)}
+                                            color={getExtraColor(car.theftProtection)}
+                                            size={iconSize}
+                                            style={styles.infoIcon}
+                                        />
+                                        <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
                                     </View>
 
-                                    <View style={styles.buttonContainer}>
-                                        <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
-                                            const params = { car: car._id, pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
-                                            this.props.navigation.navigate('CreateBooking', params);
-                                        }} />
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.collisionDamageWaiver)}
+                                            color={getExtraColor(car.collisionDamageWaiver)}
+                                            size={iconSize}
+                                            style={styles.infoIcon}
+                                        />
+                                        <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+                                    </View>
+
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.fullInsurance)}
+                                            color={getExtraColor(car.fullInsurance)}
+                                            size={iconSize}
+                                            style={styles.infoIcon}
+                                        />
+                                        <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
+                                    </View>
+
+                                    <View style={styles.extra}>
+                                        <MaterialIcons
+                                            name={getExtraIcon(car.additionalDriver)}
+                                            color={getExtraColor(car.additionalDriver)}
+                                            size={iconSize}
+                                            style={styles.infoIcon} />
+                                        <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
                                     </View>
                                 </View>
+
+                                <View style={styles.footer}>
+                                    <View style={styles.company}>
+                                        <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
+                                        <Text style={styles.companyText}>{car.company.fullName}</Text>
+                                    </View>
+
+                                    <View style={styles.price}>
+                                        <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(props.from, props.to))}</Text>
+                                        <Text style={styles.pricePrimary}>{`${Helper.price(car, props.from, props.to)} ${i18n.t('CURRENCY')}`}</Text>
+                                        <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${car.price} ${i18n.t('CURRENCY')}`}</Text>
+                                    </View>
+                                </View>
+
+                                <View style={styles.buttonContainer}>
+                                    <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
+                                        const params = { car: car._id, pickupLocation: props.pickupLocation, dropOffLocation: props.dropOffLocation, from: props.from.getTime(), to: props.to.getTime() };
+                                        props.navigation.navigate('CreateBooking', params);
+                                    }} />
+                                </View>
                             </View>
-                        )}
-                        keyExtractor={(item, index) => item._id}
-                        onEndReached={() => {
-                            if (fetch) {
-                                this.setState({ page: page + 1 }, () => {
-                                    this.fetch();
-                                });
-                            }
-                        }}
-                        ListHeaderComponent={this.props.header}
-                        ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
-                        ListEmptyComponent={
-                            !loading &&
-                            <View style={styles.container}>
-                                <Text style={styles.text}>{i18n.t('EMPTY_CAR_LIST')}</Text>
-                            </View>
+                        </View>
+                    )}
+                    keyExtractor={(item, index) => item._id}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={({ distanceFromEnd }) => {
+                        if (distanceFromEnd >= 0 && fetch) {
+                            setPage(page + 1);
                         }
-                        refreshing={loading}
-                    />
-                }
-            </View>
-        );
-    }
-}
+                    }}
+                    ListHeaderComponent={props.header}
+                    ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
+                    ListEmptyComponent={
+                        !loading &&
+                        <View style={styles.container}>
+                            <Text style={styles.text}>{i18n.t('EMPTY_CAR_LIST')}</Text>
+                        </View>
+                    }
+                    refreshing={loading}
+                />
+            }
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {

@@ -127,7 +127,7 @@ const LocationSelectList = (props) => {
             />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
