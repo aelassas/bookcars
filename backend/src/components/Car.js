@@ -8,7 +8,7 @@ import * as CompanyService from '../services/CompanyService';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import BookingList from '../elements/BookingList';
 import * as Helper from '../common/Helper';
 import {

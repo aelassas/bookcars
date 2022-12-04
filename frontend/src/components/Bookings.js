@@ -15,7 +15,7 @@ const Bookings = () => {
     const [allCompanies, setAllCompanies] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map(status => status.value));
-    const [filter, setFilter] = useState();
+    const [filter, setFilter] = useState(null);
     const [reload, setReload] = useState(false);
     const [loadingCompanies, setLoadingCompanies] = useState(true);
     const [offset, setOffset] = useState(0);
@@ -38,7 +38,7 @@ const Bookings = () => {
 
     const handleBookingFilterSubmit = (newFilter) => {
         setFilter(newFilter);
-        setReload(Helper.filterEqual(filter, newFilter))
+        setReload(Helper.filterEqual(filter, newFilter));
     };
 
     const handleBookingListLoad = () => {

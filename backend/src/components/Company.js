@@ -6,7 +6,7 @@ import * as CompanyService from '../services/CompanyService';
 import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import CarList from '../elements/CarList';
 import InfoBox from '../elements/InfoBox';
 import Error from './Error';
@@ -31,6 +31,7 @@ import '../assets/css/company.css';
 const Company = () => {
     const [user, setUser] = useState();
     const [company, setCompany] = useState();
+    const [companies, setCompanies] = useState([]);
     const [error, setError] = useState(false);
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -108,6 +109,7 @@ const Company = () => {
                         .then(company => {
                             if (company) {
                                 setCompany(company);
+                                setCompanies([company._id]);
                                 setVisible(true);
                                 setLoading(false);
                             } else {
@@ -135,7 +137,7 @@ const Company = () => {
 
     return (
         <Master onLoad={onLoad} user={user} strict={true}>
-            {visible && company &&
+            {visible && company && companies &&
                 <div className='company'>
                     <div className='col-1'>
                         <section className='company-avatar-sec'>
@@ -194,7 +196,7 @@ const Company = () => {
                             containerClassName={Env.isMobile() ? 'company' : null}
                             offset={offset}
                             user={user}
-                            companies={[company._id]}
+                            companies={companies}
                             keyword=''
                             reload={false}
                             onLoad={handleCarListLoad}

@@ -5,17 +5,16 @@ import {
     Typography
 } from '@mui/material';
 
-export default function SimpleBackdrop(props) {
+const SimpleBackdrop = ({ progress, text }) => (
+    <div>
+        <Backdrop
+            open
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+            {progress && <CircularProgress color='inherit' sx={{ marginRight: 5 }} />}
+            <Typography color='inherit' >{text}</Typography>
+        </Backdrop>
+    </div>
+);
 
-    return (
-        <div>
-            <Backdrop
-                open
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            >
-                {props.progress && <CircularProgress color='inherit' sx={{ marginRight: 5 }} />}
-                <Typography color='inherit' >{props.text}</Typography>
-            </Backdrop>
-        </div>
-    );
-}
+export default SimpleBackdrop;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
@@ -6,138 +6,121 @@ import Accordion from './Accordion';
 
 import '../assets/css/availability-filter.css'
 
-class AvailabilityFilter extends Component {
+const AvailabilityFilter = (props) => {
+    const [allChecked, setAllChecked] = useState(true);
+    const [values, setValues] = useState([Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE]);
 
-    availableRef = null;
-    unavailableRef = null;
+    const availableRef = useRef();
+    const unavailableRef = useRef();
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            allChecked: true,
-            values: [Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE]
+    useEffect(() => {
+        if (allChecked && availableRef.current && unavailableRef.current) {
+            availableRef.current.checked = true;
+            unavailableRef.current.checked = true;
         }
-    }
+    }, [allChecked]);
 
-    handleAvailableChange = (e) => {
-        const { values } = this.state;
-
+    const handleAvailableChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.AVAILABILITY.AVAILABLE);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.AVAILABILITY.AVAILABLE), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleAvailableClick = (e) => {
+    const handleAvailableClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleAvailableChange(event);
+        handleAvailableChange(event);
     };
 
-    handleUnavailableChange = (e) => {
-        const { values } = this.state;
-
+    const handleUnavailableChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.AVAILABILITY.UNAVAILABLE);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.AVAILABILITY.UNAVAILABLE), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleUnavailableClick = (e) => {
+    const handleUnavailableClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleUnavailableChange(event);
+        handleUnavailableChange(event);
     };
 
-    handleUncheckAllChange = (e) => {
-        const { allChecked } = this.state;
-
+    const handleUncheckAllChange = (e) => {
         if (allChecked) { // uncheck all
-            this.availableRef.checked = false;
-            this.unavailableRef.checked = false;
+            availableRef.current.checked = false;
+            unavailableRef.current.checked = false;
 
-            this.setState({ allChecked: false, values: [] });
+            setAllChecked(false);
+            setValues([]);
         } else { // check all
-            this.availableRef.checked = true;
-            this.unavailableRef.checked = true;
+            availableRef.current.checked = true;
+            unavailableRef.current.checked = true;
 
             const values = [Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED];
 
-            this.setState({ allChecked: true, values }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(values);
-                }
-            });
+            setAllChecked(true);
+            setValues(values);
+
+            if (props.onChange) {
+                props.onChange(values);
+            }
         }
     };
 
-    componentDidMount() {
-        const { allChecked } = this.state;
-
-        if (allChecked) {
-            this.availableRef.checked = true;
-            this.unavailableRef.checked = true;
-        }
-    }
-
-    render() {
-        const { allChecked } = this.state;
-
-        return (
-            <Accordion title={strings.AVAILABILITY} className={`${this.props.className ? `${this.props.className} ` : ''}availability-filter`}>
-                <div className='filter-elements'>
-                    <div className='filter-element'>
-                        <input ref={ref => this.availableRef = ref} type='checkbox' className='availability-checkbox' onChange={this.handleAvailableChange} />
-                        <label onClick={this.handleAvailableClick}>{strings.AVAILABLE}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.unavailableRef = ref} type='checkbox' className='availability-checkbox' onChange={this.handleUnavailableChange} />
-                        <label onClick={this.handleUnavailableClick}>{strings.UNAVAILABLE}</label>
-                    </div>
-                    <div className='filter-actions'>
-                        <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                        </span>
-                    </div>
+    return (
+        <Accordion title={strings.AVAILABILITY} className={`${props.className ? `${props.className} ` : ''}availability-filter`}>
+            <div className='filter-elements'>
+                <div className='filter-element'>
+                    <input ref={availableRef} type='checkbox' className='availability-checkbox' onChange={handleAvailableChange} />
+                    <label onClick={handleAvailableClick}>{strings.AVAILABLE}</label>
                 </div>
-            </Accordion>
-        );
-    }
+                <div className='filter-element'>
+                    <input ref={unavailableRef} type='checkbox' className='availability-checkbox' onChange={handleUnavailableChange} />
+                    <label onClick={handleUnavailableClick}>{strings.UNAVAILABLE}</label>
+                </div>
+                <div className='filter-actions'>
+                    <span onClick={handleUncheckAllChange} className='uncheckall'>
+                        {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                    </span>
+                </div>
+            </div>
+        </Accordion>
+    );
 }
 
 export default AvailabilityFilter;

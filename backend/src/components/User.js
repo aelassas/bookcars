@@ -6,7 +6,7 @@ import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import Master from '../elements/Master';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import BookingList from '../elements/BookingList';
 import NoMatch from './NoMatch';
 import {

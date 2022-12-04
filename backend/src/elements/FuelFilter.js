@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from "../lang/cars";
@@ -6,138 +6,121 @@ import Accordion from './Accordion';
 
 import '../assets/css/fuel-filter.css'
 
-class FuelFilter extends Component {
+const FuelFilter = (props) => {
+    const [allChecked, setAllChecked] = useState(true);
+    const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]);
 
-    dieselRef = null;
-    gasolineRef = null;
+    const dieselRef = useRef();
+    const gasolineRef = useRef();
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            allChecked: true,
-            values: [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]
+    useEffect(() => {
+        if (allChecked && dieselRef.current && gasolineRef.current) {
+            dieselRef.current.checked = true;
+            gasolineRef.current.checked = true;
         }
-    }
+    }, [allChecked]);
 
-    handleCheckDieselChange = (e) => {
-        const { values } = this.state;
-
+    const handleCheckDieselChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.CAR_TYPE.DIESEL);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.CAR_TYPE.DIESEL), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleDieselClick = (e) => {
+    const handleDieselClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckDieselChange(event);
+        handleCheckDieselChange(event);
     };
 
-    handleCheckGasolineChange = (e) => {
-        const { values } = this.state;
-
+    const handleCheckGasolineChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.CAR_TYPE.GASOLINE);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.CAR_TYPE.GASOLINE), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleGasolineClick = (e) => {
+    const handleGasolineClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckGasolineChange(event);
+        handleCheckGasolineChange(event);
     };
 
-    handleUncheckAllChange = (e) => {
-        const { allChecked } = this.state;
-
+    const handleUncheckAllChange = (e) => {
         if (allChecked) { // uncheck all
-            this.dieselRef.checked = false;
-            this.gasolineRef.checked = false;
+            dieselRef.current.checked = false;
+            gasolineRef.current.checked = false;
 
-            this.setState({ allChecked: false, values: [] });
+            setAllChecked(false);
+            setValues([]);
         } else { // check all
-            this.dieselRef.checked = true;
-            this.gasolineRef.checked = true;
+            dieselRef.current.checked = true;
+            gasolineRef.current.checked = true;
 
             const values = [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE];
 
-            this.setState({ allChecked: true, values }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(values);
-                }
-            });
+            setAllChecked(true);
+            setValues(values);
+
+            if (props.onChange) {
+                props.onChange(values);
+            }
         }
     };
 
-    componentDidMount() {
-        const { allChecked } = this.state;
-
-        if (allChecked) {
-            this.dieselRef.checked = true;
-            this.gasolineRef.checked = true;
-        }
-    }
-
-    render() {
-        const { allChecked } = this.state;
-
-        return (
-            <Accordion title={strings.ENGINE} className={`${this.props.className ? `${this.props.className} ` : ''}fuel-filter`}>
-                <div className='filter-elements'>
-                    <div className='filter-element'>
-                        <input ref={ref => this.dieselRef = ref} type='checkbox' className='fuel-checkbox' onChange={this.handleCheckDieselChange} />
-                        <label onClick={this.handleDieselClick}>{strings.DIESEL}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.gasolineRef = ref} type='checkbox' className='fuel-checkbox' onChange={this.handleCheckGasolineChange} />
-                        <label onClick={this.handleGasolineClick}>{strings.GASOLINE}</label>
-                    </div>
+    return (
+        <Accordion title={strings.ENGINE} className={`${props.className ? `${props.className} ` : ''}fuel-filter`}>
+            <div className='filter-elements'>
+                <div className='filter-element'>
+                    <input ref={dieselRef} type='checkbox' className='fuel-checkbox' onChange={handleCheckDieselChange} />
+                    <label onClick={handleDieselClick}>{strings.DIESEL}</label>
                 </div>
-                <div className='filter-actions'>
-                    <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                        {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                    </span>
+                <div className='filter-element'>
+                    <input ref={gasolineRef} type='checkbox' className='fuel-checkbox' onChange={handleCheckGasolineChange} />
+                    <label onClick={handleGasolineClick}>{strings.GASOLINE}</label>
                 </div>
-            </Accordion>
-        );
-    }
+            </div>
+            <div className='filter-actions'>
+                <span onClick={handleUncheckAllChange} className='uncheckall'>
+                    {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                </span>
+            </div>
+        </Accordion>
+    );
 }
 
 export default FuelFilter;

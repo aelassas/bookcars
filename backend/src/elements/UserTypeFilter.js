@@ -4,7 +4,7 @@ import * as Helper from '../common/Helper';
 
 import '../assets/css/user-type-filter.css';
 
-export default function UserTypeFilter(props) {
+const UserTypeFilter = (props) => {
     const userTypes = Helper.getUserTypes();
     const [checkedUserTypes, setCheckedUserTypes] = useState(userTypes.map(user => user.value));
     const [allChecked, setAllChecked] = useState(true);
@@ -92,4 +92,6 @@ export default function UserTypeFilter(props) {
             </div>
         </div>
     );
-}
+};
+
+export default UserTypeFilter;

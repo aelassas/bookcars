@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/user-list';
@@ -32,28 +32,83 @@ import {
 
 import '../assets/css/user-list.css';
 
-class BookingList extends Component {
+const UserList = (props) => {
+    const [user, setUser] = useState();
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(Env.PAGE_SIZE);
+    const [columns, setColumns] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [rowCount, setRowCount] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [selectedId, setSelectedId] = useState();
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [types, setTypes] = useState(props.types);
+    const [keyword, setKeyword] = useState(props.keyword);
+    const [reload, setReload] = useState(props.reload);
+    const [reloadColumns, setReloadColumns] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: null,
-            page: 0,
-            pageSize: Env.PAGE_SIZE,
-            columns: [],
-            rows: [],
-            rowCount: 0,
-            loading: true,
-            selectedId: null,
-            selectedIds: [],
-            openDeleteDialog: false,
-            types: props.types,
-            keyword: props.keyword,
-            reload: false
-        };
-    }
+    const _fetch = (page, user) => {
+        setLoading(true);
 
-    getColumns = (user) => {
+        const payload = { user: user._id, types };
+
+        UserService.getUsers(payload, keyword, page + 1, pageSize)
+            .then(data => {
+                const _data = data.length > 0 ? data[0] : {};
+                if (_data.length === 0) _data.resultData = [];
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                const _rows = _data.resultData;
+                setRows(_rows);
+                setRowCount(totalRecords);
+                if (props.onLoad) {
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                }
+                setLoading(false);
+            })
+            .catch((err) => {
+                UserService.signout();
+            });
+    };
+
+    useEffect(() => {
+        setTypes(props.types || []);
+    }, [props.types]);
+
+    useEffect(() => {
+        setKeyword(props.keyword || '');
+    }, [props.keyword]);
+
+
+    useEffect(() => {
+        setReload(props.reload || false)
+    }, [props.reload]);
+
+    useEffect(() => {
+        if (props.user) {
+            const columns = getColumns(props.user);
+            setColumns(columns);
+            setUser(props.user);
+            _fetch(page, props.user);
+        }
+    }, [props.user, page, pageSize, types, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (reload) {
+            setPage(0);
+            _fetch(0, user);
+        }
+    }, [reload]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (user && reloadColumns) {
+            const columns = getColumns(user);
+            setColumns(columns);
+            setReloadColumns(false);
+        }
+    }, [user, selectedIds, reloadColumns]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const getColumns = (user) => {
         const columns = [
             {
                 field: 'fullName',
@@ -158,7 +213,8 @@ class BookingList extends Component {
                 renderCell: (params) => {
                     const handleDelete = (e) => {
                         e.stopPropagation(); // don't select this row after clicking
-                        this.setState({ selectedId: params.row._id, openDeleteDialog: true });
+                        setSelectedId(params.row._id);
+                        setOpenDeleteDialog(true);
                     };
 
                     const _user = params.row;
@@ -182,8 +238,6 @@ class BookingList extends Component {
                     );
                 },
                 renderHeader: () => {
-                    const { selectedIds } = this.state;
-
                     return (
                         selectedIds.length > 0 ?
                             <div>
@@ -191,7 +245,7 @@ class BookingList extends Component {
                                 <Tooltip title={strings.DELETE_SELECTION}>
                                     <IconButton
                                         onClick={() => {
-                                            this.setState({ openDeleteDialog: true });
+                                            setOpenDeleteDialog(true);
                                         }}
                                     >
                                         <DeleteIcon />
@@ -204,7 +258,7 @@ class BookingList extends Component {
             }
         ];
 
-        if (this.props.hideDesktopColumns) {
+        if (props.hideDesktopColumns) {
             columns.splice(1, 3);
         }
 
@@ -212,159 +266,87 @@ class BookingList extends Component {
         return columns;
     }
 
-    handleCancelDelete = () => {
-        this.setState({ openDeleteDialog: false, selectedId: undefined });
+    const handleCancelDelete = () => {
+        setOpenDeleteDialog(false);
+        setSelectedId('');
     };
 
-    handleConfirmDelete = () => {
-        const { selectedIds, selectedId, rows } = this.state;
+    const handleConfirmDelete = () => {
         const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
 
-        this.setState({ openDeleteDialog: false, loading: true });
+        setOpenDeleteDialog(false);
+        setLoading(true);
 
         UserService.deleteUsers(ids)
             .then(status => {
                 if (status === 200) {
                     if (selectedIds.length > 0) {
-                        this.setState({ rows: rows.filter((row) => !selectedIds.includes(row._id)) });
+                        setRows(rows.filter((row) => !selectedIds.includes(row._id)));
                     } else {
-                        this.setState({ rows: rows.filter((row) => row._id !== selectedId) });
+                        setRows(rows.filter((row) => row._id !== selectedId));
                     }
                 } else {
                     Helper.error();
                 }
 
-                this.setState({ loading: false });
+                setLoading(false);
             })
             .catch(() => {
                 UserService.signout();
             });
     };
 
-    fetch = () => {
-        const { user, types, keyword, page, pageSize } = this.state;
+    return (
+        <div className='us-list' >
+            {user && columns.length > 0 &&
+                <DataGrid
+                    checkboxSelection={props.checkboxSelection}
+                    getRowId={(row) => row._id}
+                    columns={columns}
+                    rows={rows}
+                    rowCount={rowCount}
+                    // loading={loading}
+                    rowsPerPageOptions={[Env.PAGE_SIZE, 50, 100]}
+                    pagination
+                    page={page}
+                    pageSize={pageSize}
+                    paginationMode='server'
+                    onPageChange={(page) => {
+                        setPage(page);
+                    }}
+                    onPageSizeChange={(pageSize) => {
+                        setPage(0);
+                        setPageSize(pageSize);
+                    }}
+                    localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                    components={{
+                        NoRowsOverlay: () => ''
+                    }}
+                    onSelectionModelChange={(selectedIds) => {
+                        setSelectedIds(selectedIds);
+                        setReloadColumns(true);
+                    }}
+                    getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
+                    disableSelectionOnClick
+                />
+            }
 
-        this.setState({ loading: true });
+            <Dialog
+                disableEscapeKeyDown
+                maxWidth="xs"
+                open={openDeleteDialog}
+            >
+                <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_USER : strings.DELETE_USERS}</DialogContent>
+                <DialogActions className='dialog-actions'>
+                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                </DialogActions>
+            </Dialog>
 
-        const payload = { user: user._id, types };
-
-        UserService.getUsers(payload, keyword, page + 1, pageSize)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = _data.resultData;
-                this.setState({ rows: _rows, rowCount: totalRecords }, () => {
-
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                    }
-
-                    this.setState({ loading: false });
-                });
-            })
-            .catch((err) => {
-                UserService.signout();
-            });
-    };
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { types, keyword, reload } = prevState;
-
-        if (nextProps.types && !Helper.arrayEqual(types, nextProps.types)) {
-            return { types: Helper.clone(nextProps.types) };
-        }
-
-        if (keyword !== nextProps.keyword) {
-            return { keyword: nextProps.keyword };
-        }
-
-        if (reload !== nextProps.reload) {
-            return { reload: nextProps.reload };
-        }
-
-        return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (!Helper.arrayEqual(this.state.types, prevState.types)) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-
-        if (this.state.keyword !== prevState.keyword) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-
-        if (this.state.reload && !prevState.reload) {
-            return this.setState({ page: 0 }, () => this.fetch());
-        }
-    }
-
-    componentDidMount() {
-
-        if (this.props.user) {
-            const columns = this.getColumns(this.props.user);
-            this.setState({ user: this.props.user, columns }, () => this.fetch());
-        }
-    }
-
-    render() {
-        const {
-            user,
-            columns,
-            rows,
-            rowCount,
-            loading,
-            page,
-            pageSize,
-            openDeleteDialog,
-            selectedIds,
-        } = this.state;
-
-        return (
-            <div className='us-list' >
-                {user && columns.length > 0 &&
-                    <DataGrid
-                        checkboxSelection={this.props.checkboxSelection}
-                        getRowId={(row) => row._id}
-                        columns={columns}
-                        rows={rows}
-                        rowCount={rowCount}
-                        // loading={loading}
-                        rowsPerPageOptions={[Env.PAGE_SIZE, 50, 100]}
-                        pagination
-                        page={page}
-                        pageSize={pageSize}
-                        paginationMode='server'
-                        onPageChange={(page) => this.setState({ page }, () => this.fetch())}
-                        onPageSizeChange={(pageSize) => this.setState({ page: 0, pageSize }, () => this.fetch())}
-                        localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                        components={{
-                            NoRowsOverlay: () => ''
-                        }}
-                        onSelectionModelChange={(selectedIds) => this.setState({ selectedIds })}
-                        getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
-                        disableSelectionOnClick
-                    />
-                }
-
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openDeleteDialog}
-                >
-                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_USER : strings.DELETE_USERS}</DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                    </DialogActions>
-                </Dialog>
-
-                {loading && <Backdrop text={commonStrings.LOADING} />}
-            </div>
-        );
-    }
+            {loading && <Backdrop text={commonStrings.LOADING} />}
+        </div>
+    );
 }
 
-export default BookingList;
+export default UserList;

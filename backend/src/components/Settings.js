@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
 import * as UserService from '../services/UserService';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import {
     Input,
     InputLabel,

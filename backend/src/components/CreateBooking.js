@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Master from '../elements/Master';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
@@ -78,9 +78,9 @@ const CreateBooking = () => {
         setDropOffLocation(values.length > 0 ? values[0]._id : null);
     };
 
-    const handleCarSelectListChange = (values) => {
+    const handleCarSelectListChange = useCallback((values) => {
         setCar(values.length > 0 ? values[0]._id : null);
-    };
+    }, []);
 
     const handleStatusChange = (value) => {
         setStatus(value);

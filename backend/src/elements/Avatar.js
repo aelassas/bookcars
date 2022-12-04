@@ -24,7 +24,7 @@ import {
     Check as VerifiedIcon
 } from '@mui/icons-material';
 
-export const Avatar = (props) => {
+const Avatar = (props) => {
     const [error, setError] = useState(false);
     const [open, setOpen] = useState(false);
     const [openTypeDialog, setOpenTypeDialog] = useState(false);
@@ -526,4 +526,6 @@ export const Avatar = (props) => {
             :
             null
     );
-}
+};
+
+export default Avatar;

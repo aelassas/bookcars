@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as bfStrings } from '../lang/booking-filter';
@@ -13,182 +13,195 @@ import {
     DialogActions,
     Button
 } from '@mui/material';
-import * as Helper from '../common/Helper';
+import * as UserService from '../services/UserService';
 
-class CarSelectList extends Component {
+const CarSelectList = ({ label, readOnly, required, multiple, variant, value, company, pickupLocation, onChange }) => {
+    const [init, setInit] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [fetch, setFetch] = useState(true);
+    const [_company, set_Company] = useState('-1');
+    const [_pickupLocation, set_PickupLocation] = useState('-1');
+    const [keyword, setKeyword] = useState('');
+    const [page, setPage] = useState(1);
+    const [cars, setCars] = useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [closeDialog, setCloseDialog] = useState(false);
+    const [reload, setReload] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: false,
-            init: false,
-            fetch: false,
-            company: props.company ? props.company : '-1',
-            pickupLocation: props.pickupLocation ? props.pickupLocation : '-1',
-            keyword: '',
-            page: 1,
-            cars: [],
-            openDialog: false,
-            closeDialog: false,
-            reload: false,
-            selectedOptions: this.props.value ? [this.props.value] : []
+    useEffect(() => {
+        if (value) {
+            setSelectedOptions([value]);
+        } else {
+            setSelectedOptions([]);
         }
-    }
+    }, [value]);
 
-    handleChange = (values, key, reference) => {
-        if (this.props.onChange) {
-            this.props.onChange(values);
+    useEffect(() => {
+        if (company && _company !== company) {
+            set_Company(company || '-1');
+
+            if (_company !== '-1' && _pickupLocation !== '-1') {
+                setReload(true);
+                setSelectedOptions([]);
+                setPage(1);
+                setKeyword('');
+
+                if (onChange) {
+                    onChange([]);
+                }
+            }
+        }
+    }, [_company, company, _pickupLocation, onChange]);
+
+    useEffect(() => {
+        if (pickupLocation && _pickupLocation !== pickupLocation) {
+            set_PickupLocation(pickupLocation || '-1');
+
+            if (_company !== '-1' && _pickupLocation !== '-1') {
+                setReload(true);
+                setSelectedOptions([]);
+                setPage(1);
+                setKeyword('');
+
+                if (onChange) {
+                    onChange([]);
+                }
+            }
+        }
+    }, [_pickupLocation, _company, pickupLocation, onChange]);
+
+    useEffect(() => {
+        if (_pickupLocation !== pickupLocation) {
+            set_PickupLocation(pickupLocation);
+        }
+    }, [_pickupLocation, pickupLocation]);
+
+    const handleChange = (values, key, reference) => {
+        if (onChange) {
+            onChange(values);
         }
     };
 
-    getCars = (cars) => cars.map(car => {
+    const getCars = (cars) => cars.map(car => {
         const { _id, name, image } = car;
         return { _id, name, image };
     });
 
-    fetch = (onFetch) => {
-        const { company, pickupLocation, keyword, page, cars, closeDialog } = this.state;
+    const _fetch = (page, keyword, company, pickupLocation) => {
         const data = { company, pickupLocation };
 
         if (closeDialog) {
-            this.setState({ closeDialog: false });
+            setCloseDialog(false);
         }
 
         if (company === '-1' || pickupLocation === '-1') {
-            return this.setState({ openDialog: true });
+            setOpenDialog(true);
+            return;
         }
 
-        this.setState({ loading: true });
+        setLoading(true);
 
         CarService.getBookingCars(keyword, data, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = this.getCars(data);
+                const _data = getCars(data);
                 const _cars = page === 1 ? _data : [...cars, ..._data];
-                this.setState({ cars: _cars, loading: false, init: true, reload: false, fetch: data.length > 0 }, () => {
-                    if (onFetch) {
-                        onFetch();
-                    }
-                });
+
+                setCars(_cars);
+                setFetch(data.length > 0);
+                setReload(false);
+                setInit(true);
+                setLoading(false);
             })
-            .catch((err) => Helper.error(err));
+            .catch(() => {
+                UserService.signout()
+            });
     };
 
-    handleCloseDialog = () => {
-        this.setState({ openDialog: false, closeDialog: true });
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setCloseDialog(true);
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { company, pickupLocation } = prevState;
-
-        if (nextProps.company && company !== nextProps.company) {
-            return { company: nextProps.company };
-        }
-
-        if (nextProps.pickupLocation && pickupLocation !== nextProps.pickupLocation) {
-            return { pickupLocation: nextProps.pickupLocation };
-        }
-
-        return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-        if ((prevState.company !== '-1' && this.state.company === '-1')
-            || (prevState.pickupLocation !== '-1' && this.state.pickupLocation === '-1')) {
-            return this.setState({ reload: true, selectedOptions: [] }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange([]);
+    return (
+        <div>
+            <MultipleSelect
+                label={label}
+                readOnly={readOnly}
+                callbackFromMultipleSelect={handleChange}
+                options={cars}
+                selectedOptions={selectedOptions}
+                loading={loading}
+                required={required}
+                multiple={multiple}
+                type={Env.RECORD_TYPE.CAR}
+                variant={variant || 'standard'}
+                ListboxProps={{
+                    onScroll: (event) => {
+                        const listboxNode = event.currentTarget;
+                        if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
+                            const p = page + 1;
+                            setPage(p);
+                            _fetch(p, keyword, _company, _pickupLocation);
+                        }
+                    }
+                }}
+                onOpen={
+                    (event) => {
+                        if (!init || reload) {
+                            const p = 1;
+                            setCars([]);
+                            setPage(p);
+                            _fetch(p, keyword, _company, _pickupLocation);
+                        }
+                    }
                 }
-            });
-        }
+                onInputChange={
+                    (event) => {
+                        const value = (event && event.target ? event.target.value : null) || '';
 
-        if (((this.state.company !== '-1' && this.state.pickupLocation !== '-1')
-            && (this.state.company !== prevState.company || this.state.pickupLocation !== prevState.pickupLocation))) {
-            return this.setState({ reload: true, selectedOptions: [] });
-        }
-    }
-
-    render() {
-        const { loading, company, pickupLocation, openDialog, fetch, init, reload, keyword, page, cars, selectedOptions } = this.state;
-
-        return (
-            <div>
-                <MultipleSelect
-                    label={this.props.label}
-                    callbackFromMultipleSelect={this.handleChange}
-                    options={cars}
-                    selectedOptions={selectedOptions}
-                    loading={loading}
-                    required={this.props.required}
-                    readOnly={this.props.readOnly}
-                    multiple={this.props.multiple}
-                    type={Env.RECORD_TYPE.CAR}
-                    variant={this.props.variant || 'standard'}
-                    ListboxProps={{
-                        onScroll: (event) => {
-                            const listboxNode = event.currentTarget;
-                            if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
-                                const p = page + 1;
-                                this.setState({ page: p }, () => {
-                                    this.fetch();
-                                });
-                            }
-                        }
-                    }}
-                    onOpen={
-                        (event) => {
-                            if (!init || reload) {
-                                const p = 1;
-                                this.setState({ cars: [], page: p }, () => {
-                                    this.fetch();
-                                });
-                            }
+                        if (value !== keyword) {
+                            setCars([]);
+                            setPage(1);
+                            setKeyword(value);
+                            _fetch(1, value, _company, _pickupLocation);
                         }
                     }
-                    onInputChange={
-                        (event) => {
-                            const value = (event && event.target ? event.target.value : null) || '';
-
-                            if (value !== keyword) {
-                                this.setState({ cars: [], page: 1, keyword: value }, () => {
-                                    this.fetch();
-                                });
-                            }
-                        }
+                }
+                onClear={
+                    (event) => {
+                        setCars([]);
+                        setPage(1);
+                        setKeyword('');
+                        setFetch(true);
+                        _fetch(1, '', _company, _pickupLocation);
                     }
-                    onClear={
-                        (event) => {
-                            this.setState({ cars: [], page: 1, keyword: '', fetch: true }, () => {
-                                this.fetch();
-                            });
-                        }
+                }
+            />
+
+            <Dialog
+                disableEscapeKeyDown
+                maxWidth="xs"
+                open={openDialog}
+            >
+                <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
+                <DialogContent className='dialog-content'>
+                    {(_company === '-1' && _pickupLocation === '-1')
+                        ? `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
+                        : (
+                            _company === '-1' ? `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
+                                :
+                                _pickupLocation === '-1' ? `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}` : <></>
+                        )
                     }
-                />
+                </DialogContent>
+                <DialogActions className='dialog-actions'>
+                    <Button onClick={handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                </DialogActions>
+            </Dialog>
 
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openDialog}
-                >
-                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
-                    <DialogContent className='dialog-content'>
-                        {(company === '-1' && pickupLocation === '-1')
-                            ? `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
-                            : (
-                                company === '-1' ? `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
-                                    :
-                                    pickupLocation === '-1' ? `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}` : <></>
-                            )
-                        }
-                    </DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
-                    </DialogActions>
-                </Dialog>
-
-            </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default CarSelectList;

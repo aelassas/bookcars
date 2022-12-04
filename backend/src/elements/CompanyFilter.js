@@ -6,7 +6,7 @@ import Accordion from './Accordion';
 
 import '../assets/css/company-filter.css';
 
-export default function CompanyFilter(props) {
+const CompanyFilter = (props) => {
     const [companies, setCompanies] = useState([]);
     const [checkedCompanies, setCheckedCompanies] = useState([]);
     const [allChecked, setAllChecked] = useState(true);
@@ -113,4 +113,6 @@ export default function CompanyFilter(props) {
             </div>
         </Accordion>
     );
-}
+};
+
+export default CompanyFilter;

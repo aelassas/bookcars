@@ -9,7 +9,7 @@ import * as Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import {
     Input,
     InputLabel,

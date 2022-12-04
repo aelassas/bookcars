@@ -29,7 +29,7 @@ const ListBox = forwardRef(
     },
 );
 
-export default function MultipleSelect({
+const MultipleSelect = ({
     label,
     callbackFromMultipleSelect,
     reference,
@@ -47,14 +47,16 @@ export default function MultipleSelect({
     variant,
     onOpen,
     readOnly
-}) {
-    // const [init, setInit] = useState(false);
+}) => {
     const [values, setValues] = useState([]);
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
         setValues(selectedOptions);
-        if (selectedOptions && selectedOptions.length === 0) setInputValue('')
+
+        if (selectedOptions && selectedOptions.length === 0) {
+            setInputValue('');
+        }
     }, [selectedOptions, type]);
 
     return (
@@ -292,4 +294,6 @@ export default function MultipleSelect({
             />
         </div>
     );
-}
+};
+
+export default MultipleSelect;
