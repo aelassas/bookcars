@@ -10,7 +10,7 @@ import * as CompanyService from '../services/CompanyService';
 import NoMatch from './NoMatch';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import DatePicker from '../elements/DatePicker';
 import {
     Input,

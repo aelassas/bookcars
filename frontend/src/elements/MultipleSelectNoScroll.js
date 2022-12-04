@@ -12,7 +12,7 @@ import {
 
 import '../assets/css/multiple-select.css';
 
-export default function MultipleSelect({
+const MultipleSelect = ({
     label,
     callbackFromMultipleSelect,
     reference,
@@ -33,7 +33,7 @@ export default function MultipleSelect({
     readOnly,
     hidePopupIcon,
     customOpen
-}) {
+}) => {
     const [init, setInit] = React.useState(selectedOptions.length === 0);
     const [open, setOpen] = React.useState(false);
     const [values, setValues] = useState([]);
@@ -277,4 +277,6 @@ export default function MultipleSelect({
             />
         </div>
     );
-}
+};
+
+export default MultipleSelect;

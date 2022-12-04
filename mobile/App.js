@@ -20,7 +20,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export default function App() {
+const App = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const responseListener = useRef();
   const navigationRef = useRef();
@@ -106,4 +106,6 @@ export default function App() {
       </Provider>
     </SafeAreaProvider>
   );
-}
+};
+
+export default App;

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import '../assets/css/accordion.css'
+import '../assets/css/accordion.css';
 
-class Accordion extends Component {
+const Accordion = (props) => {
 
-    accordionRef = null;
+    const accordionRef = useRef();
 
-    handleAccordionClick = (e) => {
+    const handleAccordionClick = (e) => {
         e.currentTarget.classList.toggle('accordion-active');
         const panel = e.currentTarget.nextElementSibling;
         const collapse = panel.classList.contains('panel-collapse');
@@ -24,22 +24,20 @@ class Accordion extends Component {
         }
     };
 
-    componentDidMount() {
-        if (this.props.collapse) {
-            const panel = this.accordionRef.nextElementSibling;
-            this.accordionRef.classList.toggle('accordion-active');
-            panel.style.maxHeight = (panel.scrollHeight + this.props.offsetHeight) + 'px';
+    useEffect(() => {
+        if (props.collapse) {
+            const panel = accordionRef.current.nextElementSibling;
+            accordionRef.current.classList.toggle('accordion-active');
+            panel.style.maxHeight = (panel.scrollHeight + props.offsetHeight) + 'px';
         }
-    }
+    }, [props.collapse, props.offsetHeight]);
 
-    render() {
-        return (
-            <div className={`${this.props.className ? `${this.props.className} ` : ''}accordion-container`}>
-                <label ref={ref => this.accordionRef = ref} className='accordion' onClick={this.handleAccordionClick}>{this.props.title}</label>
-                <div className={this.props.collapse ? 'panel-collapse' : 'panel'}>{this.props.children}</div>
-            </div>
-        );
-    }
-}
+    return (
+        <div className={`${props.className ? `${props.className} ` : ''}accordion-container`}>
+            <label ref={accordionRef} className='accordion' onClick={handleAccordionClick}>{props.title}</label>
+            <div className={props.collapse ? 'panel-collapse' : 'panel'}>{props.children}</div>
+        </div>
+    );
+};
 
 export default Accordion;

@@ -9,7 +9,7 @@ import * as UserService from '../services/UserService';
 import * as CompanyService from '../services/CompanyService';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import DatePicker from '../elements/DatePicker';
 import {
     Input,

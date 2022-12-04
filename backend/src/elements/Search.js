@@ -1,61 +1,52 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { IconButton, TextField } from '@mui/material';
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 
 import '../assets/css/search.css'
 
-class Search extends Component {
+const Search = (props) => {
+    const [keyword, setKeyword] = useState('');
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            keyword: ''
-        };
-    }
-
-    handleSearchChange = (e) => {
-        this.setState({ keyword: e.target.value });
+    const handleSearchChange = (e) => {
+        setKeyword(e.target.value);
     };
 
-    handleSearchKeyDown = (e) => {
+    const handleSearchKeyDown = (e) => {
         if (e.key === 'Enter') {
-            this.handleSearch();
+            handleSearch();
         }
     }
 
-    handleSearch = (e) => {
-        if (this.props.onSubmit) this.props.onSubmit(this.state.keyword);
+    const handleSearch = (e) => {
+        if (props.onSubmit) props.onSubmit(keyword);
     };
 
-    render() {
-        const { keyword } = this.state;
-
-        return (
-            <div className={this.props.className}>
-                <TextField
-                    variant='standard'
-                    value={keyword}
-                    onKeyDown={this.handleSearchKeyDown}
-                    onChange={this.handleSearchChange}
-                    placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                    InputProps={{
-                        endAdornment: keyword ? (
-                            <IconButton size='small' onClick={() => this.setState({ keyword: '' })}>
-                                <ClearIcon style={{ width: 20, height: 20 }} />
-                            </IconButton>
-                        ) : <></>
-                    }}
-                    autoComplete='off'
-                    className='sc-search'
-                />
-                <IconButton onClick={this.handleSearch} >
-                    <SearchIcon />
-                </IconButton>
-            </div>
-        );
-    }
+    return (
+        <div className={props.className}>
+            <TextField
+                variant='standard'
+                value={keyword}
+                onKeyDown={handleSearchKeyDown}
+                onChange={handleSearchChange}
+                placeholder={commonStrings.SEARCH_PLACEHOLDER}
+                InputProps={{
+                    endAdornment: keyword ? (
+                        <IconButton size='small' onClick={() => {
+                            setKeyword('');
+                        }}>
+                            <ClearIcon style={{ width: 20, height: 20 }} />
+                        </IconButton>
+                    ) : <></>
+                }}
+                autoComplete='off'
+                className='sc-search'
+            />
+            <IconButton onClick={handleSearch} >
+                <SearchIcon />
+            </IconButton>
+        </div>
+    );
 }
 
 export default Search;

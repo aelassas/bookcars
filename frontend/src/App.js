@@ -1,8 +1,8 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-const Signin = lazy(() => import("./components/SignIn"));
-const Signup = lazy(() => import("./components/SignUp"));
+const SignIn = lazy(() => import("./components/SignIn"));
+const SignUp = lazy(() => import("./components/SignUp"));
 const Activate = lazy(() => import('./components/Activate'));
 const ForgotPassword = lazy(() => import('./components/ForgotPassword'));
 const ResetPassword = lazy(() => import('./components/ResetPassword'));
@@ -25,8 +25,8 @@ const App = () => {
 			<div className="App">
 				<Suspense fallback={<></>}>
 					<Routes>
-						<Route exact path="/sign-in" element={<Signin />} />
-						<Route exact path="/sign-up" element={<Signup />} />
+						<Route exact path="/sign-in" element={<SignIn />} />
+						<Route exact path="/sign-up" element={<SignUp />} />
 						<Route exact path='/activate' element={<Activate />} />
 						<Route exact path='/forgot-password' element={<ForgotPassword />} />
 						<Route exact path='/reset-password' element={<ResetPassword />} />

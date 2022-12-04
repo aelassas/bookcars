@@ -40,7 +40,7 @@ const Companies = () => {
 
     const onLoad = (user) => {
         setUser(user);
-    }
+    };
 
     const admin = Helper.admin(user);
 

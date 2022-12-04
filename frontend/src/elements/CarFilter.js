@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
 import * as UserService from '../services/UserService';
@@ -8,153 +8,143 @@ import { FormControl, Button } from '@mui/material';
 
 import '../assets/css/car-filter.css';
 
-class CarFilter extends Component {
+const CarFilter = (props) => {
+    const [from, setFrom] = useState(props.from);
+    const [to, setTo] = useState(props.to);
+    const [minDate, setMinDate] = useState(null);
+    const [pickupLocation, setPickupLocation] = useState(props.pickupLocation);
+    const [dropOffLocation, setDropOffLocation] = useState(props.dropOffLocation);
+    const [sameLocation, setSameLocation] = useState(props.pickupLocation === props.dropOffLocation);
 
-    constructor(props) {
-        super(props);
+    useEffect(() => {
+        if (props.from) {
+            const minDate = new Date(props.from);
+            minDate.setDate(props.from.getDate() + 1);
+            setMinDate(minDate);
+        }
+    }, [props.from]);
 
-        const minDate = new Date(this.props.from);
-        minDate.setDate(this.props.from.getDate() + 1);
-
-        this.state = {
-            pickupLocation: this.props.pickupLocation,
-            dropOffLocation: this.props.dropOffLocation,
-            minDate,
-            from: this.props.from,
-            to: this.props.to,
-            sameLocation: this.props.pickupLocation === this.props.dropOffLocation
-        };
-    }
-
-    handlePickupLocationChange = (values) => {
-        const { sameLocation } = this.state;
+    const handlePickupLocationChange = (values) => {
         const pickupLocation = ((values.length > 0 && values[0]) || null);
 
-        this.setState({ pickupLocation });
+        setPickupLocation(pickupLocation);
 
         if (sameLocation) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         }
     };
 
-    handleSameLocationChange = (e) => {
-        const { pickupLocation } = this.state;
+    const handleSameLocationChange = (e) => {
 
-        this.setState({ sameLocation: e.target.checked });
+        setSameLocation(e.target.checked);
 
         if (e.target.checked) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         }
     };
 
-    handleSameLocationClick = (e) => {
-        const { sameLocation, pickupLocation } = this.state, checked = !sameLocation;
+    const handleSameLocationClick = (e) => {
+        const checked = !sameLocation;
 
-        this.setState({ sameLocation: checked }, () => {
-            e.target.previousSibling.checked = checked;
-        });
+        setSameLocation(checked);
+        e.target.previousSibling.checked = checked;
 
         if (checked) {
-            this.setState({ dropOffLocation: pickupLocation });
+            setDropOffLocation(pickupLocation);
         }
     };
 
-    handleDropOffLocationChange = (values) => {
-        this.setState({ dropOffLocation: ((values.length > 0 && values[0]) || null) });
+    const handleDropOffLocationChange = (values) => {
+        setDropOffLocation((values.length > 0 && values[0]) || null);
     };
 
-    handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        const { pickupLocation, dropOffLocation, from, to } = this.state;
 
         if (!pickupLocation || !dropOffLocation) {
             return;
         }
 
-        if (this.props.onSubmit) {
-            this.props.onSubmit({ pickupLocation, dropOffLocation, from, to });
+        if (props.onSubmit) {
+            props.onSubmit({ pickupLocation, dropOffLocation, from, to });
         }
     };
 
-    render() {
-        const { pickupLocation, dropOffLocation, sameLocation, from, to, minDate } = this.state;
-
-        return (
-            <div className={`${this.props.className ? `${this.props.className} ` : ''}car-filter`}>
-                <form onSubmit={this.handleSubmit} className='home-search-form'>
-                    <FormControl fullWidth className='pickup-location'>
+    return (
+        <div className={`${props.className ? `${props.className} ` : ''}car-filter`}>
+            <form onSubmit={handleSubmit} className='home-search-form'>
+                <FormControl fullWidth className='pickup-location'>
+                    <LocationSelectList
+                        label={commonStrings.PICKUP_LOCATION}
+                        hidePopupIcon
+                        customOpen
+                        hidePopupOnload
+                        required
+                        variant='standard'
+                        value={pickupLocation}
+                        onChange={handlePickupLocationChange}
+                    />
+                </FormControl>
+                {!sameLocation &&
+                    <FormControl fullWidth className='drop-off-location'>
                         <LocationSelectList
-                            label={commonStrings.PICKUP_LOCATION}
+                            label={commonStrings.DROP_OFF_LOCATION}
+                            value={dropOffLocation}
                             hidePopupIcon
                             customOpen
                             hidePopupOnload
                             required
                             variant='standard'
-                            value={pickupLocation}
-                            onChange={this.handlePickupLocationChange}
+                            onChange={handleDropOffLocationChange}
                         />
                     </FormControl>
-                    {!sameLocation &&
-                        <FormControl fullWidth className='drop-off-location'>
-                            <LocationSelectList
-                                label={commonStrings.DROP_OFF_LOCATION}
-                                value={dropOffLocation}
-                                hidePopupIcon
-                                customOpen
-                                hidePopupOnload
-                                required
-                                variant='standard'
-                                onChange={this.handleDropOffLocationChange}
-                            />
-                        </FormControl>
-                    }
-                    <FormControl fullWidth className='from'>
-                        <DateTimePicker
-                            label={commonStrings.FROM}
-                            value={from}
-                            minDate={new Date()}
-                            variant='standard'
-                            required
-                            onChange={(from) => {
-                                const minDate = new Date(from);
-                                minDate.setDate(from.getDate() + 1);
+                }
+                <FormControl fullWidth className='from'>
+                    <DateTimePicker
+                        label={commonStrings.FROM}
+                        value={from}
+                        minDate={new Date()}
+                        variant='standard'
+                        required
+                        onChange={(from) => {
+                            const minDate = new Date(from);
+                            minDate.setDate(from.getDate() + 1);
 
-                                this.setState({ from, minDate });
-                            }}
-                            language={UserService.getLanguage()}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth className='to'>
-                        <DateTimePicker
-                            label={commonStrings.TO}
-                            value={to}
-                            minDate={minDate}
-                            variant='standard'
-                            required
-                            onChange={(to) => {
-                                this.setState({ to });
-                            }}
-                            language={UserService.getLanguage()}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth className='search'>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            className='btn-search'
-                        >
-                            {commonStrings.SEARCH}
-                        </Button>
-                    </FormControl>
-                    <FormControl fullWidth className='chk-same-location'>
-                        <input type='checkbox' checked={sameLocation} onChange={this.handleSameLocationChange} />
-                        <label onClick={this.handleSameLocationClick}>{strings.DROP_OFF}</label>
-                    </FormControl>
-                </form>
-            </div>
-        );
-    }
-}
+                            setFrom(from);
+                            setMinDate(minDate);
+                        }}
+                        language={UserService.getLanguage()}
+                    />
+                </FormControl>
+                <FormControl fullWidth className='to'>
+                    <DateTimePicker
+                        label={commonStrings.TO}
+                        value={to}
+                        minDate={minDate}
+                        variant='standard'
+                        required
+                        onChange={(to) => {
+                            setTo(to);
+                        }}
+                        language={UserService.getLanguage()}
+                    />
+                </FormControl>
+                <FormControl fullWidth className='search'>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        className='btn-search'
+                    >
+                        {commonStrings.SEARCH}
+                    </Button>
+                </FormControl>
+                <FormControl fullWidth className='chk-same-location'>
+                    <input type='checkbox' checked={sameLocation} onChange={handleSameLocationChange} />
+                    <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
+                </FormControl>
+            </form>
+        </div>
+    );
+};
 
 export default CarFilter;

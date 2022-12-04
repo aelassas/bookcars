@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/locations';
@@ -31,136 +31,67 @@ import * as Helper from '../common/Helper';
 
 import '../assets/css/location-list.css';
 
-class LocationList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            keyword: props.keyword,
-            loading: true,
-            fetch: false,
-            reload: false,
-            rows: [],
-            rowCount: 0,
-            page: 1,
-            size: Env.PAGE_SIZE,
-            openDeleteDialog: false,
-            openInfoDialog: false,
-            locationId: '',
-            locationIndex: -1,
-            offset: 0
-        };
-    }
+const LocationList = (props) => {
+    const [keyword, setKeyword] = useState(props.keyword);
+    const [reload, setReload] = useState(false);
+    const [offset, setOffset] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [fetch, setFetch] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [rowCount, setRowCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openInfoDialog, setOpenInfoDialog] = useState(false);
+    const [locationId, setLocationId] = useState('');
+    const [locationIndex, setLocationIndex] = useState(-1);
 
-    handleDelete = (e) => {
-        const locationId = e.currentTarget.getAttribute('data-id');
-        const locationIndex = e.currentTarget.getAttribute('data-index');
+    useEffect(() => {
+        setOffset(props.offset);
+    }, [props.offset]);
 
-        LocationService.check(locationId)
-            .then(status => {
-                if (status === 204) {
-                    this.setState({ openDeleteDialog: true, locationId, locationIndex });
-                } else if (status === 200) {
-                    this.setState({ openInfoDialog: true });
-                } else {
-                    Helper.error();
-                }
-            })
-            .catch(() => UserService.signout());
-    };
+    const _fetch = (page, keyword) => {
+        setLoading(true);
 
-    handleCloseInfo = () => {
-        this.setState({ openInfoDialog: false });
-    };
-
-    handleConfirmDelete = () => {
-        const { locationId, locationIndex, rows, rowCount } = this.state;
-
-        if (locationId !== '' && locationIndex > -1) {
-            this.setState({ loading: true, openDeleteDialog: false });
-            LocationService.deleteLocation(locationId)
-                .then(status => {
-                    if (status === 200) {
-                        rows.splice(locationIndex, 1);
-                        this.setState({ rows, rowCount: rowCount - 1, loading: false, locationId: '', locationIndex: -1 }, () => {
-                            if (this.props.onDelete) {
-                                this.props.onDelete(this.state.rowCount);
-                            }
-                        });
-                    } else {
-                        Helper.error();
-                        this.setState({ loading: false, locationId: '', locationIndex: -1 });
-                    }
-                }).catch(() => {
-                    UserService.signout();
-                });
-        } else {
-            Helper.error();
-            this.setState({ openDeleteDialog: false, locationId: '', locationIndex: -1 });
-        }
-    };
-
-    handleCancelDelete = () => {
-        this.setState({ openDeleteDialog: false, locationId: '' });
-    };
-
-    fetch = () => {
-        const { keyword, page, rows } = this.state;
-
-        this.setState({ loading: true });
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {};
                 if (_data.length === 0) _data.resultData = [];
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
                 const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
 
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                    }
+                setRows(_rows);
+                setRowCount(totalRecords);
+                setFetch(_data.resultData.length > 0);
 
-                    this.setState({ loading: false });
-                });
+                if (props.onLoad) {
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                }
+
+                setLoading(false);
             })
-            .catch((err) => Helper.error(err));
-    }
+            .catch((err) => {
+                Helper.error(err);
+            });
+    };
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { keyword, reload, offset } = prevState;
-
-        if (keyword !== nextProps.keyword) {
-            return { keyword: nextProps.keyword };
+    useEffect(() => {
+        if (props.keyword !== keyword) {
+            _fetch(1, props.keyword);
         }
+        setKeyword(props.keyword || '');
+    }, [props.keyword, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
 
-        if (reload !== nextProps.reload) {
-            return { reload: nextProps.reload };
+    useEffect(() => {
+        if (props.reload && !reload) {
+            _fetch(1, '');
         }
+        setReload(props.reload || false);
+    }, [props.reload, reload]); // eslint-disable-line react-hooks/exhaustive-deps
 
-        if (offset !== nextProps.offset) {
-            return { offset: nextProps.offset };
-        }
-
-        return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const { keyword, reload } = this.state;
-
-        if (keyword !== prevState.keyword) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (reload && !prevState.reload) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-    }
-
-    componentDidMount() {
-        const element = document.querySelector(`.${this.props.containerClassName}`);
+    useEffect(() => {
+        const element = document.querySelector(`.${props.containerClassName}`);
         if (element) {
             element.onscroll = (event) => {
-                const { fetch, loading, page, offset } = this.state;
-
                 let _offset = 0;
                 if (Env.isMobile()) _offset = offset;
 
@@ -168,91 +99,158 @@ class LocationList extends Component {
                     && !loading
                     && event.target.scrollTop > 0
                     && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
-                    this.setState({ page: page + 1 }, () => {
-                        this.fetch();
-                    });
+                    const p = page + 1;
+                    setPage(p);
+                    _fetch(p, keyword);
                 }
             };
         }
+    }, [props.containerClassName, offset, fetch, loading, page, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
 
-        this.fetch();
-    }
+    useEffect(() => {
+        _fetch(1, '');
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    render() {
-        const { loading, rows, openDeleteDialog, openInfoDialog } = this.state;
+    const handleDelete = (e) => {
+        const locationId = e.currentTarget.getAttribute('data-id');
+        const locationIndex = e.currentTarget.getAttribute('data-index');
 
-        return (
-            <section className='location-list'>
-                {rows.length === 0 ?
-                    !loading &&
-                    <Card variant="outlined" className="empty-list">
-                        <CardContent>
-                            <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-                        </CardContent>
-                    </Card>
-                    : <List>
-                        {rows.map((location, index) =>
-                        (
-                            <ListItem
-                                className='location-list-item'
-                                key={location._id}
-                                secondaryAction={
-                                    <div>
-                                        <Tooltip title={commonStrings.UPDATE}>
-                                            <IconButton edge="end" href={`/update-location?l=${location._id}`}>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={commonStrings.DELETE}>
-                                            <IconButton edge="end" data-id={location._id} data-index={index} onClick={this.handleDelete}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
+        LocationService.check(locationId)
+            .then(status => {
+                if (status === 204) {
+                    setOpenDeleteDialog(true);
+                    setLocationId(locationId);
+                    setLocationIndex(locationIndex);
+                } else if (status === 200) {
+                    setOpenInfoDialog(true);
+                } else {
+                    Helper.error();
+                }
+            })
+            .catch(() => {
+                UserService.signout();
+            });
+    };
+
+    const handleCloseInfo = () => {
+        setOpenInfoDialog(false);
+    };
+
+    const handleConfirmDelete = () => {
+        if (locationId !== '' && locationIndex > -1) {
+            setLoading(true);
+            setOpenDeleteDialog(false);
+
+            LocationService.deleteLocation(locationId)
+                .then(status => {
+                    if (status === 200) {
+                        const _rowCount = rowCount - 1;
+
+                        rows.splice(locationIndex, 1);
+
+                        setRows(rows);
+                        setRowCount(_rowCount);
+                        setLocationId('');
+                        setLocationIndex(-1);
+                        setLoading(false);
+
+                        if (props.onDelete) {
+                            props.onDelete(_rowCount);
+                        }
+                    } else {
+                        Helper.error();
+                        setLocationId('');
+                        setLocationIndex(-1);
+                        setLoading(false);
+                    }
+                }).catch(() => {
+                    UserService.signout();
+                });
+        } else {
+            Helper.error();
+            setOpenDeleteDialog(false);
+            setLocationId('');
+            setLocationIndex(-1);
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setOpenDeleteDialog(false);
+        setLocationId('');
+        setLocationIndex(-1);
+    };
+
+    return (
+        <section className='location-list'>
+            {rows.length === 0 ?
+                !loading &&
+                <Card variant="outlined" className="empty-list">
+                    <CardContent>
+                        <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                    </CardContent>
+                </Card>
+                : <List>
+                    {rows.map((location, index) =>
+                    (
+                        <ListItem
+                            className='location-list-item'
+                            key={location._id}
+                            secondaryAction={
+                                <div>
+                                    <Tooltip title={commonStrings.UPDATE}>
+                                        <IconButton edge="end" href={`/update-location?l=${location._id}`}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={commonStrings.DELETE}>
+                                        <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            }
+                        >
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <LocationIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={
+                                    <Typography className='location-title'>{location.name}</Typography>
                                 }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <LocationIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={
-                                        <Typography className='location-title'>{location.name}</Typography>
-                                    }
-                                />
-                            </ListItem>
-                        ))}
-                    </List>}
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openInfoDialog}
-                >
-                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
-                    <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
-                    </DialogActions>
-                </Dialog>
+                            />
+                        </ListItem>
+                    ))}
+                </List>}
+            <Dialog
+                disableEscapeKeyDown
+                maxWidth="xs"
+                open={openInfoDialog}
+            >
+                <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
+                <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
+                <DialogActions className='dialog-actions'>
+                    <Button onClick={handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                </DialogActions>
+            </Dialog>
 
-                <Dialog
-                    disableEscapeKeyDown
-                    maxWidth="xs"
-                    open={openDeleteDialog}
-                >
-                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                    <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
-                    <DialogActions className='dialog-actions'>
-                        <Button onClick={this.handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                        <Button onClick={this.handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                    </DialogActions>
-                </Dialog>
+            <Dialog
+                disableEscapeKeyDown
+                maxWidth="xs"
+                open={openDeleteDialog}
+            >
+                <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
+                <DialogActions className='dialog-actions'>
+                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                </DialogActions>
+            </Dialog>
 
-                {loading && <Backdrop text={commonStrings.LOADING} />}
-            </section>
-        );
-    }
-}
+            {loading && <Backdrop text={commonStrings.LOADING} />}
+        </section>
+    );
+};
 
 export default LocationList;

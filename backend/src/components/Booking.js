@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings as blStrings } from '../lang/booking-list';
@@ -92,7 +92,7 @@ const Booking = () => {
         setDropOffLocation(values.length > 0 ? values[0] : null);
     };
 
-    const handleCarSelectListChange = (values) => {
+    const handleCarSelectListChange = useCallback((values) => {
         const newCar = values.length > 0 ? values[0] : null;
 
         if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
@@ -101,10 +101,18 @@ const Booking = () => {
                     if (car) {
                         const _booking = Helper.clone(booking);
                         _booking.car = car;
-                        const price = Helper.price(car, from, to, _booking);
+                        Helper.price(
+                            _booking
+                            , car
+                            , (price) => {
+                                setPrice(price);
+                            }
+                            , (err) => {
+                                Helper.error();
+                            }
+                        );
 
                         setBooking(_booking);
-                        setPrice(price);
                         setCar(newCar);
                     } else {
                         Helper.error();
@@ -119,7 +127,7 @@ const Booking = () => {
         } else {
             setCar(newCar);
         }
-    };
+    }, [car, booking]);
 
     const handleStatusChange = (value) => {
         setStatus(value);
@@ -764,7 +772,7 @@ const Booking = () => {
                             className='car'
                             user={user}
                             booking={booking}
-                            cars={[booking.car]}
+                            cars={(car && [booking.car]) || []}
                             hidePrice
                         />
                     </div>

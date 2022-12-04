@@ -5,7 +5,7 @@ import Accordion from '../elements/Accordion';
 
 import '../assets/css/status-filter.css';
 
-export default function StatusFilter(props) {
+const StatusFilter = (props) => {
     const statuses = Helper.getBookingStatuses();
     const [checkedStatuses, setCheckedStatuses] = useState(statuses.map(status => status.value));
     const [allChecked, setAllChecked] = useState(true);
@@ -97,4 +97,6 @@ export default function StatusFilter(props) {
             </div>
         </Accordion>
     );
-}
+};
+
+export default StatusFilter;

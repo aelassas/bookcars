@@ -1,153 +1,136 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
 import Accordion from './Accordion';
 
 import '../assets/css/deposit-filter.css'
 
-class DepositFilter extends Component {
+const DepositFilter = (props) => {
+    const deposit2500Ref = useRef();
+    const deposit5000Ref = useRef();
+    const deposit7500Ref = useRef();
+    const depositAllRef = useRef();
 
-    deposit2500Ref = null;
-    deposit5000Ref = null;
-    deposit7500Ref = null;
-    depositAllRef = null;
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            value: -1
+    useEffect(() => {
+        if (depositAllRef.current) {
+            depositAllRef.current.checked = true;
         }
-    }
+    }, []);
 
-    handleAllDepositClick = (e) => {
+    const handleAllDepositClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         if (!checkbox.checked) {
             checkbox.checked = !checkbox.checked;
             const event = e;
             event.currentTarget = checkbox;
-            this.handleAllDepositChange(event);
+            handleAllDepositChange(event);
         }
     };
 
-    handleAllDepositChange = (e) => {
+    const handleAllDepositChange = (e) => {
         if (e.currentTarget.checked) {
             const value = -1;
-            this.deposit2500Ref.checked = false;
-            this.deposit5000Ref.checked = false;
-            this.deposit7500Ref.checked = false;
+            deposit2500Ref.current.checked = false;
+            deposit5000Ref.current.checked = false;
+            deposit7500Ref.current.checked = false;
 
-            this.setState({ value }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(value);
-                }
-            });
+            if (props.onChange) {
+                props.onChange(value);
+            }
         }
     };
 
-    handleDepositLessThan2500Click = (e) => {
+    const handleDepositLessThan2500Click = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         if (!checkbox.checked) {
             checkbox.checked = !checkbox.checked;
             const event = e;
             event.currentTarget = checkbox;
-            this.handleDepositLessThan2500Change(event);
+            handleDepositLessThan2500Change(event);
         }
     };
 
-    handleDepositLessThan2500Change = (e) => {
+    const handleDepositLessThan2500Change = (e) => {
         if (e.currentTarget.checked) {
             const value = 2500;
-            this.depositAllRef.checked = false;
-            this.deposit5000Ref.checked = false;
-            this.deposit7500Ref.checked = false;
+            depositAllRef.current.checked = false;
+            deposit5000Ref.current.checked = false;
+            deposit7500Ref.current.checked = false;
 
-            this.setState({ value }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(value);
-                }
-            });
+            if (props.onChange) {
+                props.onChange(value);
+            }
         }
     };
 
-    handleDepositLessThan5000Click = (e) => {
+    const handleDepositLessThan5000Click = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         if (!checkbox.checked) {
             checkbox.checked = !checkbox.checked;
             const event = e;
             event.currentTarget = checkbox;
-            this.handleDepositLessThan5000Change(event);
+            handleDepositLessThan5000Change(event);
         }
     };
 
-    handleDepositLessThan5000Change = (e) => {
+    const handleDepositLessThan5000Change = (e) => {
         if (e.currentTarget.checked) {
             const value = 5000;
-            this.depositAllRef.checked = false;
-            this.deposit2500Ref.checked = false;
-            this.deposit7500Ref.checked = false;
+            depositAllRef.current.checked = false;
+            deposit2500Ref.current.checked = false;
+            deposit7500Ref.current.checked = false;
 
-            this.setState({ value }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(value);
-                }
-            });
+            if (props.onChange) {
+                props.onChange(value);
+            }
         }
     };
 
-    handleDepositLessThan7500Click = (e) => {
+    const handleDepositLessThan7500Click = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         if (!checkbox.checked) {
             checkbox.checked = !checkbox.checked;
             const event = e;
             event.currentTarget = checkbox;
-            this.handleDepositLessThan7500Change(event);
+            handleDepositLessThan7500Change(event);
         }
     };
 
-    handleDepositLessThan7500Change = (e) => {
+    const handleDepositLessThan7500Change = (e) => {
         if (e.currentTarget.checked) {
             const value = 7500;
-            this.depositAllRef.checked = false;
-            this.deposit2500Ref.checked = false;
-            this.deposit5000Ref.checked = false;
+            depositAllRef.current.checked = false;
+            deposit2500Ref.current.checked = false;
+            deposit5000Ref.current.checked = false;
 
-            this.setState({ value }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(value);
-                }
-            });
+            if (props.onChange) {
+                props.onChange(value);
+            }
         }
     };
 
-    componentDidMount() {
-        this.depositAllRef.checked = true;
-    }
-
-    render() {
-        return (
-            <Accordion title={strings.DEPOSIT} className={`${this.props.className ? `${this.props.className} ` : ''}deposit-filter`}>
-                <div className='filter-elements'>
-                    <div className='filter-element'>
-                        <input ref={ref => this.deposit2500Ref = ref} type='radio' className='deposit-radio' onChange={this.handleDepositLessThan2500Change} />
-                        <label onClick={this.handleDepositLessThan2500Click}>{strings.LESS_THAN_2500}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.deposit5000Ref = ref} type='radio' className='deposit-radio' onChange={this.handleDepositLessThan5000Change} />
-                        <label onClick={this.handleDepositLessThan5000Click}>{strings.LESS_THAN_5000}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.deposit7500Ref = ref} type='radio' className='deposit-radio' onChange={this.handleDepositLessThan7500Change} />
-                        <label onClick={this.handleDepositLessThan7500Click}>{strings.LESS_THAN_7500}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.depositAllRef = ref} type='radio' className='deposit-radio' onChange={this.handleAllDepositChange} />
-                        <label onClick={this.handleAllDepositClick}>{commonStrings.ALL}</label>
-                    </div>
+    return (
+        <Accordion title={strings.DEPOSIT} className={`${props.className ? `${props.className} ` : ''}deposit-filter`}>
+            <div className='filter-elements'>
+                <div className='filter-element'>
+                    <input ref={deposit2500Ref} type='radio' className='deposit-radio' onChange={handleDepositLessThan2500Change} />
+                    <label onClick={handleDepositLessThan2500Click}>{strings.LESS_THAN_2500}</label>
                 </div>
-            </Accordion>
-        );
-    }
+                <div className='filter-element'>
+                    <input ref={deposit5000Ref} type='radio' className='deposit-radio' onChange={handleDepositLessThan5000Change} />
+                    <label onClick={handleDepositLessThan5000Click}>{strings.LESS_THAN_5000}</label>
+                </div>
+                <div className='filter-element'>
+                    <input ref={deposit7500Ref} type='radio' className='deposit-radio' onChange={handleDepositLessThan7500Change} />
+                    <label onClick={handleDepositLessThan7500Click}>{strings.LESS_THAN_7500}</label>
+                </div>
+                <div className='filter-element'>
+                    <input ref={depositAllRef} type='radio' className='deposit-radio' onChange={handleAllDepositChange} />
+                    <label onClick={handleAllDepositClick}>{commonStrings.ALL}</label>
+                </div>
+            </div>
+        </Accordion>
+    );
 }
 
 export default DepositFilter;

@@ -1,11 +1,11 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-const Signin = lazy(() => import('./components/SignIn'));
+const SignIn = lazy(() => import('./components/SignIn'));
 const Activate = lazy(() => import('./components/Activate'));
 const ForgotPassword = lazy(() => import('./components/ForgotPassword'));
 const ResetPassword = lazy(() => import('./components/ResetPassword'));
-const Signup = lazy(() => import('./components/SignUp'));
+const SignUp = lazy(() => import('./components/SignUp'));
 const Companies = lazy(() => import('./components/Companies'));
 const Company = lazy(() => import('./components/Company'));
 const CreateCompany = lazy(() => import('./components/CreateCompany'));
@@ -38,11 +38,11 @@ const App = () => {
 			<div className='App'>
 				<Suspense fallback={<></>}>
 					<Routes>
-						<Route exact path='/sign-in' element={<Signin />} />
+						<Route exact path='/sign-in' element={<SignIn />} />
 						<Route exact path='/activate' element={<Activate />} />
 						<Route exact path='/forgot-password' element={<ForgotPassword />} />
 						<Route exact path='/reset-password' element={<ResetPassword />} />
-						<Route exact path='/sign-up' element={<Signup />} />
+						<Route exact path='/sign-up' element={<SignUp />} />
 						<Route exact path='/' element={<Bookings />} />
 						<Route exact path='/suppliers' element={<Companies />} />
 						<Route exact path='/supplier' element={<Company />} />

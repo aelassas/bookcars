@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from "../lang/cars";
@@ -6,138 +6,121 @@ import Accordion from './Accordion';
 
 import '../assets/css/gearbox-filter.css'
 
-class GearboxFilter extends Component {
+const GearboxFilter = (props) => {
+    const [allChecked, setAllChecked] = useState(true);
+    const [values, setValues] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]);
 
-    automaticRef = null;
-    manualRef = null;
+    const automaticRef = useRef();
+    const manualRef = useRef();
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            allChecked: true,
-            values: [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]
+    useEffect(() => {
+        if (allChecked && automaticRef.current && manualRef.current) {
+            automaticRef.current.checked = true;
+            manualRef.current.checked = true;
         }
-    }
+    }, [allChecked]);
 
-    handleCheckAutomaticChange = (e) => {
-        const { values } = this.state;
-
+    const handleCheckAutomaticChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.GEARBOX_TYPE.AUTOMATIC);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.GEARBOX_TYPE.AUTOMATIC), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleAutomaticClick = (e) => {
+    const handleAutomaticClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckAutomaticChange(event);
+        handleCheckAutomaticChange(event);
     };
 
-    handleCheckManualChange = (e) => {
-        const { values } = this.state;
-
+    const handleCheckManualChange = (e) => {
         if (e.currentTarget.checked) {
             values.push(Env.GEARBOX_TYPE.MANUAL);
 
             if (values.length === 2) {
-                this.setState({ allChecked: true });
+                setAllChecked(true);
             }
         } else {
             values.splice(values.findIndex(v => v === Env.GEARBOX_TYPE.MANUAL), 1);
 
             if (values.length === 0) {
-                this.setState({ allChecked: false });
+                setAllChecked(false);
             }
         }
 
-        this.setState({ values }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(values);
-            }
-        });
+        setValues(values);
+
+        if (props.onChange) {
+            props.onChange(values);
+        }
     };
 
-    handleManualClick = (e) => {
+    const handleManualClick = (e) => {
         const checkbox = e.currentTarget.previousSibling;
         checkbox.checked = !checkbox.checked;
         const event = e;
         event.currentTarget = checkbox;
-        this.handleCheckManualChange(event);
+        handleCheckManualChange(event);
     };
 
-    handleUncheckAllChange = (e) => {
-        const { allChecked } = this.state;
-
+    const handleUncheckAllChange = (e) => {
         if (allChecked) { // uncheck all
-            this.automaticRef.checked = false;
-            this.manualRef.checked = false;
+            automaticRef.current.checked = false;
+            manualRef.current.checked = false;
 
-            this.setState({ allChecked: false, values: [] });
+            setAllChecked(false);
+            setValues([]);
         } else { // check all
-            this.automaticRef.checked = true;
-            this.manualRef.checked = true;
+            automaticRef.current.checked = true;
+            manualRef.current.checked = true;
 
             const values = [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL];
 
-            this.setState({ allChecked: true, values }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(values);
-                }
-            });
+            setAllChecked(true);
+            setValues(values);
+
+            if (props.onChange) {
+                props.onChange(values);
+            }
         }
     };
 
-    componentDidMount() {
-        const { allChecked } = this.state;
-
-        if (allChecked) {
-            this.automaticRef.checked = true;
-            this.manualRef.checked = true;
-        }
-    }
-
-    render() {
-        const { allChecked } = this.state;
-
-        return (
-            <Accordion title={strings.GEARBOX} className={`${this.props.className ? `${this.props.className} ` : ''}gearbox-filter`}>
-                <div className='filter-elements'>
-                    <div className='filter-element'>
-                        <input ref={ref => this.automaticRef = ref} type='checkbox' className='gearbox-checkbox' onChange={this.handleCheckAutomaticChange} />
-                        <label onClick={this.handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</label>
-                    </div>
-                    <div className='filter-element'>
-                        <input ref={ref => this.manualRef = ref} type='checkbox' className='gearbox-checkbox' onChange={this.handleCheckManualChange} />
-                        <label onClick={this.handleManualClick}>{strings.GEARBOX_MANUAL}</label>
-                    </div>
+    return (
+        <Accordion title={strings.GEARBOX} className={`${props.className ? `${props.className} ` : ''}gearbox-filter`}>
+            <div className='filter-elements'>
+                <div className='filter-element'>
+                    <input ref={automaticRef} type='checkbox' className='gearbox-checkbox' onChange={handleCheckAutomaticChange} />
+                    <label onClick={handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</label>
                 </div>
-                <div className='filter-actions'>
-                    <span onClick={this.handleUncheckAllChange} className='uncheckall'>
-                        {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
-                    </span>
+                <div className='filter-element'>
+                    <input ref={manualRef} type='checkbox' className='gearbox-checkbox' onChange={handleCheckManualChange} />
+                    <label onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</label>
                 </div>
-            </Accordion>
-        );
-    }
+            </div>
+            <div className='filter-actions'>
+                <span onClick={handleUncheckAllChange} className='uncheckall'>
+                    {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+                </span>
+            </div>
+        </Accordion>
+    );
 }
 
 export default GearboxFilter;

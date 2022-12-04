@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/cars';
@@ -28,185 +28,34 @@ import DoorsIcon from '../assets/img/car-door.png';
 
 import '../assets/css/car-list.css';
 
-class CarList extends Component {
+const CarList = (props) => {
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+    const [loading, setLoading] = useState(true);
+    const [fetch, setFetch] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [page, setPage] = useState(1);
+    const [offset, setOffset] = useState(0);
+    const [days, setDays] = useState(0);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            language: Env.DEFAULT_LANGUAGE,
-            companies: props.companies,
-            loading: true,
-            fetch: false,
-            reload: false,
-            rows: [],
-            rowCount: 0,
-            page: 1,
-            size: Env.CARS_PAGE_SIZE,
-            carId: '',
-            carIndex: -1,
-            from: null,
-            to: null,
-            days: 0,
-            pickupLocation: props.pickupLocation,
-            dropOffLocation: props.dropOffLocation,
-            fuel: props.fuel,
-            gearbox: props.gearbox,
-            mileage: props.mileage,
-            deposit: props.deposit,
-            cars: [],
-            offset: 0
-        };
-    }
+    useEffect(() => {
+        setLanguage(UserService.getLanguage());
+    }, []);
 
-    fetch = () => {
-        const { page, size, companies, pickupLocation, rows, fuel, gearbox, mileage, deposit } = this.state;
+    useEffect(() => {
+        setOffset(props.offset);
+    }, [props.offset]);
 
-        this.setState({ loading: true });
-
-        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
-
-        CarService.getCars(payload, page, size)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                this.setState({ rows: _rows, rowCount: totalRecords, fetch: _data.resultData.length > 0 }, () => {
-                    if (page === 1) {
-                        document.querySelector(`.${this.props.containerClassName}`).scrollTo(0, 0);
-                    }
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
-                    }
-
-                    this.setState({ loading: false });
-                });
-            })
-            .catch((err) => {
-                Helper.error(err);
-            });
-    };
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const { companies, pickupLocation, dropOffLocation, from, to, reload, fuel, gearbox, mileage, deposit, cars, offset } = prevState;
-
-        if (nextProps.companies && !Helper.arrayEqual(companies, nextProps.companies)) {
-            return { companies: Helper.clone(nextProps.companies) };
+    useEffect(() => {
+        if (props.from && props.to) {
+            setDays(Helper.days(props.from, props.to));
         }
+    }, [props.from, props.to]);
 
-        if (nextProps.fuel && !Helper.arrayEqual(fuel, nextProps.fuel)) {
-            return { fuel: Helper.clone(nextProps.fuel) };
-        }
+    useEffect(() => {
+        const element = document.querySelector(`.${props.containerClassName}`);
 
-        if (nextProps.gearbox && !Helper.arrayEqual(gearbox, nextProps.gearbox)) {
-            return { gearbox: Helper.clone(nextProps.gearbox) };
-        }
-
-        if (nextProps.mileage && !Helper.arrayEqual(mileage, nextProps.mileage)) {
-            return { mileage: nextProps.mileage };
-        }
-
-        if (deposit !== nextProps.deposit) {
-            return { deposit: nextProps.deposit };
-        }
-
-        if (pickupLocation !== nextProps.pickupLocation) {
-            return { pickupLocation: nextProps.pickupLocation };
-        }
-
-        if (dropOffLocation !== nextProps.dropOffLocation) {
-            return { dropOffLocation: nextProps.dropOffLocation };
-        }
-
-        if (from !== nextProps.from) {
-            return { from: nextProps.from };
-        }
-
-        if (to !== nextProps.to) {
-            return { to: nextProps.to };
-        }
-
-        if (nextProps.cars && !Helper.carsEqual(cars, nextProps.cars)) {
-            return { cars: Helper.clone(nextProps.cars) };
-        }
-
-        if (reload !== nextProps.reload) {
-            return { reload: nextProps.reload };
-        }
-
-        if (offset !== nextProps.offset) {
-            return { offset: nextProps.offset };
-        }
-
-        return null;
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const { companies, pickupLocation, from, to, reload, fuel, gearbox, mileage, deposit, cars } = this.state;
-
-        if (!Helper.arrayEqual(companies, prevState.companies)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(fuel, prevState.fuel)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(gearbox, prevState.gearbox)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (!Helper.arrayEqual(mileage, prevState.mileage)) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (deposit !== prevState.deposit) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (pickupLocation && pickupLocation !== prevState.pickupLocation) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-
-        if (from !== prevState.from || to !== prevState.to) {
-            return this.setState({ days: Helper.days(from, to) });
-        }
-
-        if (!Helper.carsEqual(cars, prevState.cars)) {
-            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
-                if (this.props.onLoad) {
-                    this.props.onLoad({ rows: cars, rowCount: cars.length });
-                }
-            });
-        }
-
-        if (reload && !prevState.reload) {
-            return this.setState({ page: 1 }, () => this.fetch());
-        }
-    }
-
-    getExtraIcon = (option, extra) => {
-        let available = false;
-        if (this.props.booking) {
-            if (option === 'cancellation' && this.props.booking.cancellation && extra > 0) available = true;
-            if (option === 'amendments' && this.props.booking.amendments && extra > 0) available = true;
-            if (option === 'collisionDamageWaiver' && this.props.booking.collisionDamageWaiver && extra > 0) available = true;
-            if (option === 'theftProtection' && this.props.booking.theftProtection && extra > 0) available = true;
-            if (option === 'fullInsurance' && this.props.booking.fullInsurance && extra > 0) available = true;
-            if (option === 'additionalDriver' && this.props.booking.additionalDriver && extra > 0) available = true;
-        }
-
-        return extra === -1 ? <UncheckIcon className='unavailable' />
-            : extra === 0 || available ? <CheckIcon className='available' />
-                : <InfoIcon className='extra-info' />
-    };
-
-    componentDidMount() {
-        const element = document.querySelector(`.${this.props.containerClassName}`);
         if (element) {
             element.onscroll = (event) => {
-                const { fetch, loading, page, offset } = this.state;
-
                 let _offset = 0;
                 if (Env.isMobile()) _offset = offset;
 
@@ -214,215 +63,269 @@ class CarList extends Component {
                     && !loading
                     && event.target.scrollTop > 0
                     && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
-                    this.setState({ page: page + 1 }, () => {
-                        this.fetch();
-                    });
+                    setPage(page + 1);
                 }
             };
         }
+    }, [props.containerClassName, fetch, loading, page, offset]);
 
-        const { companies, cars } = this.props;
+    const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
+        setLoading(true);
+        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
 
-        if (companies) {
-            if (companies.length > 0) {
-                this.fetch();
-            } else {
-                this.setState({ rows: [], rowCount: 0, loading: false, fetch: false }, () => {
-                    if (this.props.onLoad) {
-                        this.props.onLoad({ rows: [], rowCount: 0 });
-                    }
-                });
-            }
-        } else if (cars) {
-            this.setState({ rows: cars, rowCount: cars.length, loading: false, fetch: false }, () => {
-                if (this.props.onLoad) {
-                    this.props.onLoad({ rows: cars, rowCount: cars.length });
+        CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+            .then(data => {
+                const _data = data.length > 0 ? data[0] : {};
+                if (_data.length === 0) _data.resultData = [];
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                setRows(_rows);
+                setFetch(_data.resultData.length > 0);
+                if (page === 1) {
+                    const className = props.containerClassName ? props.containerClassName : 'car-list';
+                    document.querySelector(`.${className}`).scrollTo(0, 0);
                 }
+
+                if (props.onLoad) {
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                }
+                setLoading(false);
+            })
+            .catch(() => {
+                UserService.signout();
             });
+    };
+
+    useEffect(() => {
+        if (props.companies) {
+            if (props.companies.length > 0) {
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit);
+            } else {
+                setRows([]);
+                setFetch(false);
+                if (props.onLoad) {
+                    props.onLoad({ rows: [], rowCount: 0 });
+                }
+                setLoading(false);
+            }
+        }
+    }, [page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (props.cars) {
+            setRows(props.cars);
+            setFetch(false);
+            if (props.onLoad) {
+                props.onLoad({ rows: props.cars, rowCount: props.cars.length });
+            }
+            setLoading(false);
+        }
+    }, [props.cars]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        setPage(1);
+    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]);
+
+    useEffect(() => {
+        if (props.reload) {
+            setPage(1);
+            _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability);
+        }
+    }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const getExtraIcon = (option, extra) => {
+        let available = false;
+        if (props.booking) {
+            if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true;
+            if (option === 'amendments' && props.booking.amendments && extra > 0) available = true;
+            if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true;
+            if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true;
+            if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true;
+            if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true;
         }
 
-        this.setState({ language: UserService.getLanguage() })
-    }
+        return extra === -1 ? <UncheckIcon className='unavailable' />
+            : extra === 0 || available ? <CheckIcon className='available' />
+                : <InfoIcon className='extra-info' />
+    };
 
-    render() {
-        const { rows, loading, language, from, to, days, pickupLocation, dropOffLocation } = this.state;
-        const fr = language === 'fr';
+    const fr = language === 'fr';
 
-        return (
-            <section className={`${this.props.className ? `${this.props.className} ` : ''}car-list`}>
-                {rows.length === 0 ?
-                    !loading && !this.props.loading && <Card variant="outlined" className="empty-list">
-                        <CardContent>
-                            <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-                        </CardContent>
-                    </Card>
-                    :
-                    ((from && to) || this.props.hidePrice) && rows.map((car, index) => (
-                        <article key={car._id}>
-                            <div className='name'><h2>{car.name}</h2></div>
-                            <div className='car'>
-                                <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
-                                    alt={car.name} className='car-img'
-                                    style={{
-                                        maxWidth: Env.CAR_IMAGE_WIDTH,
-                                    }} />
-                                {!this.props.hideCompany &&
-                                    <div className='car-company'>
-                                        <span className='car-company-logo'>
-                                            <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                                alt={car.company.fullName}
-                                                style={{
-                                                    width: Env.COMPANY_IMAGE_WIDTH,
-                                                }}
-                                            />
-                                        </span>
-                                        <label className='car-company-info'>{car.company.fullName}</label>
-                                    </div>
-                                }
-                            </div>
-                            <div className='car-info'>
-                                <ul className='car-info-list'>
-                                    <li className='car-type'>
-                                        <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement='top'>
-                                            <div className='car-info-list-item'>
-                                                <FuelIcon />
-                                                <span className='car-info-list-text'>{Helper.getCarTypeShort(car.type)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li className='gearbox'>
-                                        <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement='top'>
-                                            <div className='car-info-list-item'>
-                                                <GearboxIcon />
-                                                <span className='car-info-list-text'>{Helper.getGearboxTypeShort(car.gearbox)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li className='seats'>
-                                        <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
-                                            <div className='car-info-list-item'>
-                                                <SeatsIcon />
-                                                <span className='car-info-list-text'>{car.seats}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li className='doors'>
-                                        <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
-                                            <div className='car-info-list-item'>
-                                                <img src={DoorsIcon} alt='' className='car-doors' />
-                                                <span className='car-info-list-text'>{car.doors}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    {car.aircon &&
-                                        <li className='aircon'>
-                                            <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
-                                                <div className='car-info-list-item'>
-                                                    <AirconIcon />
-                                                </div>
-                                            </Tooltip>
-                                        </li>
-                                    }
-                                    <li className='mileage'>
-                                        <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                <MileageIcon />
-                                                <span className='car-info-list-text'>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li className='fuel-policy'>
-                                        <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                <FuelIcon />
-                                                <span className='car-info-list-text'>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                </ul>
-
-                                <ul className='extras-list'>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('cancellation', car.cancellation)}
-                                                <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('amendments', car.amendments)}
-                                                <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
-                                                <span className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('theftProtection', car.theftProtection)}
-                                                <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('fullInsurance', car.fullInsurance)}
-                                                <span className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                    <li>
-                                        <Tooltip title={this.props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
-                                            <div className='car-info-list-item'>
-                                                {this.getExtraIcon('additionalDriver', car.additionalDriver)}
-                                                <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
-                                            </div>
-                                        </Tooltip>
-                                    </li>
-                                </ul>
-                            </div>
-                            {!this.props.hidePrice &&
-                                <div className='price'>
-                                    <label className='price-days'>
-                                        {Helper.getDays(days)}
-                                    </label>
-                                    <label className='price-main'>
-                                        {`${Helper.price(car, from, to)} ${commonStrings.CURRENCY}`}
-                                    </label>
-                                    <label className='price-day'>
-                                        {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}
-                                    </label>
+    return (
+        <section className={`${props.className ? `${props.className} ` : ''}car-list`}>
+            {rows.length === 0 ?
+                !loading && !props.loading && <Card variant="outlined" className="empty-list">
+                    <CardContent>
+                        <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                    </CardContent>
+                </Card>
+                :
+                ((props.from && props.to) || props.hidePrice) && (props.pickupLocation && props.dropOffLocation) &&
+                rows.map((car, index) => (
+                    <article key={car._id}>
+                        <div className='name'><h2>{car.name}</h2></div>
+                        <div className='car'>
+                            <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
+                                alt={car.name} className='car-img'
+                                style={{
+                                    maxWidth: Env.CAR_IMAGE_WIDTH,
+                                }} />
+                            {!props.hideCompany &&
+                                <div className='car-company'>
+                                    <span className='car-company-logo'>
+                                        <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                            alt={car.company.fullName}
+                                            style={{
+                                                width: Env.COMPANY_IMAGE_WIDTH,
+                                            }}
+                                        />
+                                    </span>
+                                    <label className='car-company-info'>{car.company.fullName}</label>
                                 </div>
                             }
-                            {!this.props.hidePrice &&
-                                <div className='action'>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className='btn-book btn-margin-bottom'
-                                        href={`/create-booking?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`}
-                                    >
-                                        {strings.BOOK}
-                                    </Button>
-                                </div>}
-                        </article>
-                    ))
-                }
-                {loading && <Backdrop text={commonStrings.LOADING} />}
-            </section>
-        );
-    }
+                        </div>
+                        <div className='car-info'>
+                            <ul className='car-info-list'>
+                                <li className='car-type'>
+                                    <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement='top'>
+                                        <div className='car-info-list-item'>
+                                            <FuelIcon />
+                                            <span className='car-info-list-text'>{Helper.getCarTypeShort(car.type)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li className='gearbox'>
+                                    <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement='top'>
+                                        <div className='car-info-list-item'>
+                                            <GearboxIcon />
+                                            <span className='car-info-list-text'>{Helper.getGearboxTypeShort(car.gearbox)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li className='seats'>
+                                    <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
+                                        <div className='car-info-list-item'>
+                                            <SeatsIcon />
+                                            <span className='car-info-list-text'>{car.seats}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li className='doors'>
+                                    <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
+                                        <div className='car-info-list-item'>
+                                            <img src={DoorsIcon} alt='' className='car-doors' />
+                                            <span className='car-info-list-text'>{car.doors}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                {car.aircon &&
+                                    <li className='aircon'>
+                                        <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
+                                            <div className='car-info-list-item'>
+                                                <AirconIcon />
+                                            </div>
+                                        </Tooltip>
+                                    </li>
+                                }
+                                <li className='mileage'>
+                                    <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            <MileageIcon />
+                                            <span className='car-info-list-text'>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li className='fuel-policy'>
+                                    <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            <FuelIcon />
+                                            <span className='car-info-list-text'>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                            </ul>
+
+                            <ul className='extras-list'>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('cancellation', car.cancellation)}
+                                            <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('amendments', car.amendments)}
+                                            <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
+                                            <span className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('theftProtection', car.theftProtection)}
+                                            <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('fullInsurance', car.fullInsurance)}
+                                            <span className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                                <li>
+                                    <Tooltip title={props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
+                                        <div className='car-info-list-item'>
+                                            {getExtraIcon('additionalDriver', car.additionalDriver)}
+                                            <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                                        </div>
+                                    </Tooltip>
+                                </li>
+                            </ul>
+                        </div>
+                        {!props.hidePrice &&
+                            <div className='price'>
+                                <label className='price-days'>
+                                    {Helper.getDays(days)}
+                                </label>
+                                <label className='price-main'>
+                                    {`${Helper.price(car, props.from, props.to)} ${commonStrings.CURRENCY}`}
+                                </label>
+                                <label className='price-day'>
+                                    {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}
+                                </label>
+                            </div>
+                        }
+                        {!props.hidePrice &&
+                            <div className='action'>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    className='btn-book btn-margin-bottom'
+                                    href={`/create-booking?c=${car._id}&p=${props.pickupLocation}&d=${props.dropOffLocation}&f=${props.from.getTime()}&t=${props.to.getTime()}`}
+                                >
+                                    {strings.BOOK}
+                                </Button>
+                            </div>}
+                    </article>
+                ))
+            }
+            {loading && <Backdrop text={commonStrings.LOADING} />}
+        </section>
+    );
 }
 
 export default CarList;

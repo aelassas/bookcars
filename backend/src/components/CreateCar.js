@@ -8,7 +8,7 @@ import * as CarService from '../services/CarService';
 import * as Helper from '../common/Helper';
 import Error from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import CompanySelectList from '../elements/CompanySelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarTypeList from '../elements/CarTypeList';

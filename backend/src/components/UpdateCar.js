@@ -10,7 +10,7 @@ import Error from './Error';
 import ErrorMessage from '../elements/Error';
 import Backdrop from '../elements/SimpleBackdrop';
 import NoMatch from './NoMatch';
-import { Avatar } from '../elements/Avatar';
+import Avatar from '../elements/Avatar';
 import CompanySelectList from '../elements/CompanySelectList';
 import LocationSelectList from '../elements/LocationSelectList';
 import CarTypeList from '../elements/CarTypeList';

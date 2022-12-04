@@ -23,7 +23,7 @@ const Cars = () => {
     const [admin, setAdmin] = useState(false);
     const [allCompanies, setAllCompanies] = useState([]);
     const [companies, setCompanies] = useState([]);
-    const [keyword, setKeyword] = useState([]);
+    const [keyword, setKeyword] = useState('');
     const [rowCount, setRowCount] = useState(0);
     const [reload, setReload] = useState(false);
     const [loading, setLoading] = useState(true);

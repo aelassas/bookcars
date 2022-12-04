@@ -4,7 +4,7 @@ import { strings } from '../lang/header';
 import * as UserService from '../services/UserService';
 import * as NotificationService from '../services/NotificationService';
 import { toast } from 'react-toastify';
-import { Avatar } from './Avatar';
+import Avatar from './Avatar';
 import {
     AppBar,
     Toolbar,
@@ -42,7 +42,7 @@ const ListItemLink = (props) => (
     <ListItem button component="a" {...props} />
 );
 
-export default function Header(props) {
+const Header = (props) => {
     const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE);
     const [anchorEl, setAnchorEl] = useState(null);
     const [langAnchorEl, setLangAnchorEl] = useState(null);
@@ -414,3 +414,5 @@ export default function Header(props) {
         </div >
     );
 };
+
+export default Header;

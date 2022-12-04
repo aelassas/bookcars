@@ -12,7 +12,6 @@ import * as CompanyService from '../services/CompanyService';
 
 import '../assets/css/bookings.css';
 
-
 const Bookings = () => {
     const [user, setUser] = useState();
     const [leftPanel, setLeftPanel] = useState(false);
@@ -20,7 +19,7 @@ const Bookings = () => {
     const [allCompanies, setAllCompanies] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map(status => status.value));
-    const [filter, setFilter] = useState();
+    const [filter, setFilter] = useState(null);
     const [reload, setReload] = useState(false);
     const [loadingCompanies, setLoadingCompanies] = useState(true);
     const [offset, setOffset] = useState(0);
