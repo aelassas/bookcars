@@ -9,7 +9,7 @@ const Contact = () => {
     };
 
     return (
-        <Master onLoad={onLoad} strict>
+        <Master onLoad={onLoad} strict={false}>
             Contact!
         </Master>
     );

@@ -9,7 +9,7 @@ const About = () => {
     };
 
     return (
-        <Master onLoad={onLoad} strict>
+        <Master onLoad={onLoad} strict={false}>
             About!
         </Master>
     );

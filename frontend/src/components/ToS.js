@@ -9,7 +9,7 @@ const ToS = () => {
     };
 
     return (
-        <Master onLoad={onLoad} strict>
+        <Master onLoad={onLoad} strict={false}>
             ToS!
         </Master>
     );
