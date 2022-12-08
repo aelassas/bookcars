@@ -87,10 +87,11 @@ const Master = (props) => {
     return (
         <>
             <Header user={user} hidden={loading} hideSignin={props.hideSignin} notificationCount={props.notificationCount} />
-            {((!user && !loading) || (user && user.verified)) ? (
+            {((!user && !loading) || (user && user.verified))
+                ?
                 <div className='content'>{props.children}</div>
-            ) :
-                (!loading && <div className="validate-email">
+                :
+                !loading && <div className="validate-email">
                     <span>{strings.VALIDATE_EMAIL}</span>
                     <Button
                         type="button"
@@ -99,7 +100,7 @@ const Master = (props) => {
                         className="btn-primary btn-resend"
                         onClick={handleResend}
                     >{strings.RESEND}</Button>
-                </div>)
+                </div>
             }
         </>
     );
