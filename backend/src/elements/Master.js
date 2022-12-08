@@ -6,7 +6,7 @@ import Unauthorized from '../components/Unauthorized';
 import { Button } from '@mui/material';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
-import { useInit } from '../common/customHooks.js';
+import { useInit } from '../common/customHooks';
 
 const Master = (props) => {
     const [user, setUser] = useState();
