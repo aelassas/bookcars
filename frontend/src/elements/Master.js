@@ -4,7 +4,7 @@ import Header from '../elements/Header';
 import * as UserService from '../services/UserService';
 import { Button } from '@mui/material';
 import * as Helper from '../common/Helper';
-import { useInit } from '../common/customHooks.js';
+import { useInit } from '../common/customHooks';
 
 const Master = (props) => {
     const [user, setUser] = useState();
