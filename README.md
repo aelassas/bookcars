@@ -18,19 +18,6 @@
 * Responsive backend and frontend
 * Native Mobile app for Android and iOS
 
-# Live Demo
-Here you can find the demo links.
-
-### Frontend
-* [Demo link](http://inspiron-560.ddns.net:6001/)
-* **Login:** jdoe@bookcars.ma
-* **Password:** B00kC4r5
-
-### Backend
-* [Demo link](http://inspiron-560.ddns.net:6002/)
-* **Login:** admin@bookcars.ma
-* **Password:** B00kC4r5
-
 # Download
 
 You can download the latest release from [here](https://github.com/aelassas/bookcars/releases/latest).
