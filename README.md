@@ -5,7 +5,7 @@
   <img src="https://bookcars.github.io/content/bookcars.drawio.png" alt="" width="500" />
 </p>
 
-[BookCars](https://bookcars.github.io/) is an open source car rental platform, supplier oriented, with a backend for managing car fleet and bookings, a frontend and a mobile app for car rental.
+BookCars is an open source car rental platform, supplier oriented, with a backend for managing car fleet and bookings, a frontend and a mobile app for car rental.
 
 # Features
 
@@ -17,19 +17,6 @@
 * Multiple language support
 * Responsive backend and frontend
 * Native Mobile app for Android and iOS
-
-# Live Demo
-Here you can find the demo links.
-
-### Frontend
-* [Demo link](http://inspiron-560.ddns.net:6001/)
-* **Login:** jdoe@bookcars.ma
-* **Password:** B00kC4r5
-
-### Backend
-* [Demo link](http://inspiron-560.ddns.net:6002/)
-* **Login:** admin@bookcars.ma
-* **Password:** B00kC4r5
 
 # Download
 
