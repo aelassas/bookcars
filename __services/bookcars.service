@@ -10,8 +10,6 @@ Type=simple
 Restart=always
 StandardOutput=append:/var/log/bookcars.log
 StandardError=append:/var/log/bookcars.log
-User=aelassas
-Group=aelassas
 
 [Install]
 WantedBy=multi-user.target
