@@ -1,5 +1,5 @@
 [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml)
-[![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml)
+[![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml) [![Open in vscode](https://img.shields.io/badge/Open%20in-vscode-1f425f.svg)](https://vscode.dev/github/aelassas/bookcars)
 
 <p align="center">
   <img src="https://bookcars.github.io/content/bookcars.drawio.png" alt="" width="500" />
