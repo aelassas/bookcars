@@ -5,8 +5,8 @@ import Master from './Master';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
-import TextInput from '../elements/TextInput';
-import Button from '../elements/Button';
+import TextInput from '../components/TextInput';
+import Button from '../components/Button';
 
 const ChangePasswordScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

@@ -8,19 +8,19 @@ import { enUS, fr } from 'date-fns/locale';
 import Master from './Master';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
-import TextInput from '../elements/TextInput';
-import DateTimePicker from '../elements/DateTimePicker';
-import Switch from '../elements/Switch';
-import Link from '../elements/Link';
+import TextInput from '../components/TextInput';
+import DateTimePicker from '../components/DateTimePicker';
+import Switch from '../components/Switch';
+import Link from '../components/Link';
 import * as Helper from '../common/Helper';
-import Error from '../elements/Error';
-import Button from '../elements/Button';
-import RadioButton from '../elements/RadioButton';
+import Error from '../components/Error';
+import Button from '../components/Button';
+import RadioButton from '../components/RadioButton';
 import * as CarService from '../services/CarService';
 import * as LocationService from '../services/LocationService';
 import * as BookingService from '../services/BookingService';
 import Env from '../config/env.config';
-import Backdrop from '../elements/Backdrop';
+import Backdrop from '../components/Backdrop';
 
 const CreateBookingScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

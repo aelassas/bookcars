@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import validator from 'validator';
-import TextInput from '../elements/TextInput';
-import Button from '../elements/Button';
+import TextInput from '../components/TextInput';
+import Button from '../components/Button';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
-import Link from '../elements/Link';
-import Header from '../elements/Header';
+import Link from '../components/Link';
+import Header from '../components/Header';
 
 const ForgotPasswordScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

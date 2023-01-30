@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import validator from 'validator';
-import TextInput from '../elements/TextInput';
-import Button from '../elements/Button';
-import Link from '../elements/Link';
+import TextInput from '../components/TextInput';
+import Button from '../components/Button';
+import Link from '../components/Link';
 import i18n from '../lang/i18n';
-import Error from '../elements/Error';
+import Error from '../components/Error';
 import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
-import Switch from '../elements/Switch';
-import Header from '../elements/Header';
+import Switch from '../components/Switch';
+import Header from '../components/Header';
 
 const SignInScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

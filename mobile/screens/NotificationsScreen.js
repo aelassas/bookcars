@@ -11,7 +11,7 @@ import Master from './Master';
 import * as NotificationService from '../services/NotificationService';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
-import Checkbox from '../elements/Checkbox';
+import Checkbox from '../components/Checkbox';
 
 const NotificationsScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

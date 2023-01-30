@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
 import Master from './Master';
-import BookingList from '../elements/BookingList';
+import BookingList from '../components/BookingList';
 import Env from '../config/env.config';
 
 const BookingScreen = ({ navigation, route }) => {

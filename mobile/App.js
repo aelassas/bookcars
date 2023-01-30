@@ -4,7 +4,7 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import DrawerNavigator from './elements/DrawerNavigator';
+import DrawerNavigator from './components/DrawerNavigator';
 import { Provider } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
