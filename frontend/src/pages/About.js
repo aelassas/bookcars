@@ -1,18 +1,18 @@
-import React from 'react';
-import Master from '../components/Master';
+import React from 'react'
+import Master from '../components/Master'
 
-import '../assets/css/about.css';
+import '../assets/css/about.css'
 
 const About = () => {
 
     const onLoad = (user) => {
-    };
+    }
 
     return (
         <Master onLoad={onLoad} strict={false}>
             About!
         </Master>
-    );
-};
+    )
+}
 
-export default About;
+export default About

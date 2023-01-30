@@ -1,23 +1,23 @@
-import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
-const SignIn = lazy(() => import('./pages/SignIn'));
-const SignUp = lazy(() => import('./pages/SignUp'));
-const Activate = lazy(() => import('./pages/Activate'));
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
-const ResetPassword = lazy(() => import('./pages/ResetPassword'));
-const Home = lazy(() => import('./pages/Home'));
-const Cars = lazy(() => import('./pages/Cars'));
-const CreateBooking = lazy(() => import('./pages/CreateBooking'));
-const Bookings = lazy(() => import('./pages/Bookings'));
-const Booking = lazy(() => import('./pages/Booking'));
-const Settings = lazy(() => import('./pages/Settings'));
-const Notifications = lazy(() => import('./pages/Notifications'));
-const ToS = lazy(() => import('./pages/ToS'));
-const About = lazy(() => import('./pages/About'));
-const ChangePassword = lazy(() => import('./pages/ChangePassword'));
-const Contact = lazy(() => import('./pages/Contact'));
-const NoMatch = lazy(() => import('./pages/NoMatch'));
+const SignIn = lazy(() => import('./pages/SignIn'))
+const SignUp = lazy(() => import('./pages/SignUp'))
+const Activate = lazy(() => import('./pages/Activate'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const Home = lazy(() => import('./pages/Home'))
+const Cars = lazy(() => import('./pages/Cars'))
+const CreateBooking = lazy(() => import('./pages/CreateBooking'))
+const Bookings = lazy(() => import('./pages/Bookings'))
+const Booking = lazy(() => import('./pages/Booking'))
+const Settings = lazy(() => import('./pages/Settings'))
+const Notifications = lazy(() => import('./pages/Notifications'))
+const ToS = lazy(() => import('./pages/ToS'))
+const About = lazy(() => import('./pages/About'))
+const ChangePassword = lazy(() => import('./pages/ChangePassword'))
+const Contact = lazy(() => import('./pages/Contact'))
+const NoMatch = lazy(() => import('./pages/NoMatch'))
 
 const App = () => (
 	<Router>
@@ -46,6 +46,6 @@ const App = () => (
 			</Suspense>
 		</div>
 	</Router>
-);
+)
 
-export default App;
+export default App

@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import Env from '../config/env.config';
-import * as UserService from '../services/UserService';
+import LocalizedStrings from 'react-localization'
+import Env from '../config/env.config'
+import * as UserService from '../services/UserService'
 
 export const strings = new LocalizedStrings({
     fr: {
@@ -11,12 +11,12 @@ export const strings = new LocalizedStrings({
         REQUIRED_FIELD: 'Please fill in the field: ',
         REQUIRED_FIELDS: 'Please fill in the fields: ',
     }
-});
+})
 
-let language = UserService.getQueryLanguage();
+let language = UserService.getQueryLanguage()
 
 if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage();
+    language = UserService.getLanguage()
 }
 
-strings.setLanguage(language);
+strings.setLanguage(language)

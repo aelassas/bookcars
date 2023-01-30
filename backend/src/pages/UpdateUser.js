@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as ccStrings } from '../lang/create-company';
-import { strings } from '../lang/create-user';
-import * as Helper from '../common/Helper';
-import * as UserService from '../services/UserService';
-import * as CompanyService from '../services/CompanyService';
-import NoMatch from './NoMatch';
-import Error from '../components/Error';
-import Backdrop from '../components/SimpleBackdrop';
-import Avatar from '../components/Avatar';
-import DatePicker from '../components/DatePicker';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as ccStrings } from '../lang/create-company'
+import { strings } from '../lang/create-user'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
+import * as CompanyService from '../services/CompanyService'
+import NoMatch from './NoMatch'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import Avatar from '../components/Avatar'
+import DatePicker from '../components/DatePicker'
 import {
     Input,
     InputLabel,
@@ -24,268 +24,268 @@ import {
     Link,
     FormControlLabel,
     Switch
-} from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
-import { intervalToDuration } from 'date-fns';
-import validator from 'validator';
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import { intervalToDuration } from 'date-fns'
+import validator from 'validator'
 
-import '../assets/css/update-user.css';
+import '../assets/css/update-user.css'
 
 const UpdateUser = () => {
-    const [loggedUser, setLoggedUser] = useState();
-    const [user, setUser] = useState();
-    const [visible, setVisible] = useState(false);
-    const [noMatch, setNoMatch] = useState(false);
-    const [admin, setAdmin] = useState(false);
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [location, setLocation] = useState('');
-    const [bio, setBio] = useState('');
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [fullNameError, setFullNameError] = useState(false);
-    const [avatar, setAvatar] = useState();
-    const [avatarError, setAvatarError] = useState(false);
-    const [type, setType] = useState('');
-    const [birthDate, setBirthDate] = useState();
-    const [birthDateValid, setBirthDateValid] = useState(true);
-    const [phoneValid, setPhoneValid] = useState(true);
-    const [payLater, setPayLater] = useState(true);
+    const [loggedUser, setLoggedUser] = useState()
+    const [user, setUser] = useState()
+    const [visible, setVisible] = useState(false)
+    const [noMatch, setNoMatch] = useState(false)
+    const [admin, setAdmin] = useState(false)
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [location, setLocation] = useState('')
+    const [bio, setBio] = useState('')
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [fullNameError, setFullNameError] = useState(false)
+    const [avatar, setAvatar] = useState()
+    const [avatarError, setAvatarError] = useState(false)
+    const [type, setType] = useState('')
+    const [birthDate, setBirthDate] = useState()
+    const [birthDateValid, setBirthDateValid] = useState(true)
+    const [phoneValid, setPhoneValid] = useState(true)
+    const [payLater, setPayLater] = useState(true)
 
     const handleUserTypeChange = async (e) => {
-        const type = e.target.value;
+        const type = e.target.value
 
-        setType(e.target.value);
+        setType(e.target.value)
 
         if (type === Env.RECORD_TYPE.COMPANY) {
             await validateFullName(fullName)
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
     const handleOnChangeFullName = (e) => {
-        setFullName(e.target.value);
+        setFullName(e.target.value)
 
         if (!e.target.value) {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
 
     const validateFullName = async (_fullName) => {
-        const __fullName = _fullName || fullName;
+        const __fullName = _fullName || fullName
 
         if (__fullName) {
             try {
-                const status = await CompanyService.validate({ fullName: __fullName });
+                const status = await CompanyService.validate({ fullName: __fullName })
 
                 if (status === 200) {
-                    setFullNameError(false);
-                    setError(false);
-                    return true;
+                    setFullNameError(false)
+                    setError(false)
+                    return true
                 } else {
-                    setFullNameError(true);
-                    setAvatarError(false);
-                    setError(false);
-                    return false;
+                    setFullNameError(true)
+                    setAvatarError(false)
+                    setError(false)
+                    return false
                 }
             } catch (err) {
-                UserService.signout();
+                UserService.signout()
             }
         } else {
-            setFullNameError(false);
-            return true;
+            setFullNameError(false)
+            return true
         }
-    };
+    }
 
     const handleFullNameOnBlur = async (e) => {
         if (type === Env.RECORD_TYPE.COMPANY) {
             await validateFullName(e.target.value)
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
     const handlePhoneChange = (e) => {
-        setPhone(e.target.value);
+        setPhone(e.target.value)
 
         if (!e.target.value) {
-            setPhoneValid(true);
+            setPhoneValid(true)
         }
-    };
+    }
 
     const validatePhone = (phone) => {
         if (phone) {
-            const phoneValid = validator.isMobilePhone(phone);
-            setPhoneValid(phoneValid);
+            const phoneValid = validator.isMobilePhone(phone)
+            setPhoneValid(phoneValid)
 
-            return phoneValid;
+            return phoneValid
         } else {
-            setPhoneValid(true);
+            setPhoneValid(true)
 
-            return true;
+            return true
         }
-    };
+    }
 
     const handlePhoneBlur = (e) => {
-        validatePhone(e.target.value);
-    };
+        validatePhone(e.target.value)
+    }
 
     const validateBirthDate = (date) => {
         if (Helper.isDate(date) && type === Env.RECORD_TYPE.USER) {
-            const now = new Date();
-            const sub = intervalToDuration({ start: date, end: now }).years;
-            const birthDateValid = sub >= Env.MINIMUM_AGE;
+            const now = new Date()
+            const sub = intervalToDuration({ start: date, end: now }).years
+            const birthDateValid = sub >= Env.MINIMUM_AGE
 
-            setBirthDateValid(birthDateValid);
-            return birthDateValid;
+            setBirthDateValid(birthDateValid)
+            return birthDateValid
         } else {
-            setBirthDateValid(true);
-            return true;
+            setBirthDateValid(true)
+            return true
         }
-    };
+    }
 
     const handleOnChangeLocation = (e) => {
-        setLocation(e.target.value);
-    };
+        setLocation(e.target.value)
+    }
 
     const handleOnChangeBio = (e) => {
-        setBio(e.target.value);
-    };
+        setBio(e.target.value)
+    }
 
 
     const onBeforeUpload = () => {
-        setLoading(true);
-    };
+        setLoading(true)
+    }
 
     const onAvatarChange = (avatar) => {
         if (loggedUser._id === user._id) {
-            const _loggedUser = Helper.clone(loggedUser);
-            _loggedUser.avatar = avatar;
+            const _loggedUser = Helper.clone(loggedUser)
+            _loggedUser.avatar = avatar
 
-            setLoggedUser(_loggedUser);
+            setLoggedUser(_loggedUser)
         }
 
-        const _user = Helper.clone(user);
-        _user.avatar = avatar;
+        const _user = Helper.clone(user)
+        _user.avatar = avatar
 
-        setLoading(false);
-        setUser(_user);
-        setAvatar(avatar);
+        setLoading(false)
+        setUser(_user)
+        setAvatar(avatar)
 
         if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
-            setAvatarError(false);
+            setAvatarError(false)
         }
-    };
+    }
 
     const handleCancel = () => {
         if (avatar) {
-            setLoading(true);
+            setLoading(true)
 
             UserService.deleteTempAvatar(avatar)
                 .then((status) => {
-                    window.location.href = '/users';
+                    window.location.href = '/users'
                 })
                 .catch(() => {
-                    window.location.href = '/users';
-                });
+                    window.location.href = '/users'
+                })
         } else {
-            window.location.href = '/users';
+            window.location.href = '/users'
         }
-    };
+    }
 
     const handleResendActivationLink = () => {
         UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
             .then(status => {
                 if (status === 200) {
-                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
+                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             })
             .catch((err) => {
-                Helper.error(err);
-            });
-    };
+                Helper.error(err)
+            })
+    }
 
     const onLoad = (loggedUser) => {
         if (loggedUser && loggedUser.verified) {
-            setLoading(true);
+            setLoading(true)
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search)
             if (params.has('u')) {
-                const id = params.get('u');
+                const id = params.get('u')
                 if (id && id !== '') {
                     UserService.getUser(id)
                         .then(user => {
                             if (user) {
-                                setLoggedUser(loggedUser);
-                                setUser(user);
-                                setAdmin(Helper.admin(loggedUser));
-                                setType(user.type);
-                                setEmail(user.email);
-                                setAvatar(user.avatar);
-                                setFullName(user.fullName);
-                                setPhone(user.phone);
-                                setLocation(user.location || '');
-                                setBio(user.bio || '');
-                                setBirthDate(user.birthDate ? new Date(user.birthDate) : null);
-                                setPayLater(user.payLater);
-                                setVisible(true);
-                                setLoading(false);
+                                setLoggedUser(loggedUser)
+                                setUser(user)
+                                setAdmin(Helper.admin(loggedUser))
+                                setType(user.type)
+                                setEmail(user.email)
+                                setAvatar(user.avatar)
+                                setFullName(user.fullName)
+                                setPhone(user.phone)
+                                setLocation(user.location || '')
+                                setBio(user.bio || '')
+                                setBirthDate(user.birthDate ? new Date(user.birthDate) : null)
+                                setPayLater(user.payLater)
+                                setVisible(true)
+                                setLoading(false)
                             } else {
-                                setLoading(false);
-                                setNoMatch(true);
+                                setLoading(false)
+                                setNoMatch(true)
                             }
                         })
                         .catch((err) => {
-                            setLoading(false);
-                            setVisible(false);
-                            Helper.error(err);
-                        });
+                            setLoading(false)
+                            setVisible(false)
+                            Helper.error(err)
+                        })
                 } else {
-                    setLoading(false);
-                    setNoMatch(true);
+                    setLoading(false)
+                    setNoMatch(true)
                 }
             } else {
-                setLoading(false);
-                setNoMatch(true);
+                setLoading(false)
+                setNoMatch(true)
             }
         }
-    };
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (type === Env.RECORD_TYPE.COMPANY) {
-            const fullNameValid = await validateFullName(fullName);
+            const fullNameValid = await validateFullName(fullName)
 
             if (!fullNameValid) {
-                return;
+                return
             }
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
 
-        const phoneValid = validatePhone(phone);
+        const phoneValid = validatePhone(phone)
         if (!phoneValid) {
-            return;
+            return
         }
 
-        const birthDateValid = validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate)
         if (!birthDateValid) {
-            return;
+            return
         }
 
         if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
-            setAvatarError(true);
-            setError(false);
-            return;
+            setAvatarError(true)
+            setError(false)
+            return
         }
 
-        const language = UserService.getLanguage();
+        const language = UserService.getLanguage()
         const data = {
             _id: user._id,
             phone,
@@ -296,32 +296,32 @@ const UpdateUser = () => {
             type,
             avatar,
             birthDate
-        };
+        }
 
-        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater;
+        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
 
         UserService.updateUser(data)
             .then(status => {
                 if (status === 200) {
-                    user.fullName = fullName;
-                    user.type = type;
-                    setUser(user);
-                    Helper.info(commonStrings.UPDATED);
+                    user.fullName = fullName
+                    user.type = type
+                    setUser(user)
+                    Helper.info(commonStrings.UPDATED)
                 } else {
-                    Helper.error();
+                    Helper.error()
 
-                    setError(false);
+                    setError(false)
                 }
             }).catch(() => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
 
-    const company = type === Env.RECORD_TYPE.COMPANY;
-    const driver = type === Env.RECORD_TYPE.USER;
+    const company = type === Env.RECORD_TYPE.COMPANY
+    const driver = type === Env.RECORD_TYPE.USER
     const activate = admin
-        || (loggedUser && user && loggedUser.type === Env.RECORD_TYPE.COMPANY && user.type === Env.RECORD_TYPE.USER && user.company === loggedUser._id);
+        || (loggedUser && user && loggedUser.type === Env.RECORD_TYPE.COMPANY && user.type === Env.RECORD_TYPE.USER && user.company === loggedUser._id)
 
     return (
         <Master onLoad={onLoad} user={loggedUser} strict={true}>
@@ -402,10 +402,10 @@ const UpdateUser = () => {
                                         value={birthDate}
                                         required
                                         onChange={(birthDate) => {
-                                            const birthDateValid = validateBirthDate(birthDate);
+                                            const birthDateValid = validateBirthDate(birthDate)
 
-                                            setBirthDate(birthDate);
-                                            setBirthDateValid(birthDateValid);
+                                            setBirthDate(birthDate)
+                                            setBirthDateValid(birthDateValid)
                                         }}
                                         language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                     />
@@ -420,7 +420,7 @@ const UpdateUser = () => {
                                 <FormControl component="fieldset" style={{ marginTop: 15 }}>
                                     <FormControlLabel
                                         control={<Switch checked={payLater} onChange={(e) => {
-                                            setPayLater(e.target.checked);
+                                            setPayLater(e.target.checked)
                                         }} color="primary" />}
                                         label={commonStrings.PAY_LATER}
                                     />
@@ -517,7 +517,7 @@ const UpdateUser = () => {
             {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
             {noMatch && <NoMatch hideHeader />}
         </Master>
-    );
-};
+    )
+}
 
-export default UpdateUser;
+export default UpdateUser

@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import Env from '../config/env.config';
-import * as UserService from '../services/UserService';
+import LocalizedStrings from 'react-localization'
+import Env from '../config/env.config'
+import * as UserService from '../services/UserService'
 
 export const strings = new LocalizedStrings({
     fr: {
@@ -37,12 +37,12 @@ export const strings = new LocalizedStrings({
         MINIMUM_AGE: 'Minimum age',
         MINIMUM_AGE_NOT_VALID: "Minimum age must be greater than or equal to " + Env.MINIMUM_AGE + ' years old.'
     }
-});
+})
 
-let language = UserService.getQueryLanguage();
+let language = UserService.getQueryLanguage()
 
 if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage();
+    language = UserService.getLanguage()
 }
 
-strings.setLanguage(language);
+strings.setLanguage(language)

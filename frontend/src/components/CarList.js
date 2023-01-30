@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/cars';
-import * as Helper from '../common/Helper';
-import * as CarService from '../services/CarService';
-import * as UserService from '../services/UserService';
-import Backdrop from './SimpleBackdrop';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as Helper from '../common/Helper'
+import * as CarService from '../services/CarService'
+import * as UserService from '../services/UserService'
+import Backdrop from './SimpleBackdrop'
 import {
     Button,
     Tooltip,
     Card,
     CardContent,
     Typography
-} from '@mui/material';
+} from '@mui/material'
 import {
     LocalGasStation as FuelIcon,
     AccountTree as GearboxIcon,
@@ -22,134 +22,134 @@ import {
     Check as CheckIcon,
     Clear as UncheckIcon,
     Info as InfoIcon
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
-import DoorsIcon from '../assets/img/car-door.png';
+import DoorsIcon from '../assets/img/car-door.png'
 
-import '../assets/css/car-list.css';
+import '../assets/css/car-list.css'
 
 const CarList = (props) => {
-    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
-    const [loading, setLoading] = useState(true);
-    const [fetch, setFetch] = useState(false);
-    const [rows, setRows] = useState([]);
-    const [page, setPage] = useState(1);
-    const [offset, setOffset] = useState(0);
-    const [days, setDays] = useState(0);
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+    const [loading, setLoading] = useState(true)
+    const [fetch, setFetch] = useState(false)
+    const [rows, setRows] = useState([])
+    const [page, setPage] = useState(1)
+    const [offset, setOffset] = useState(0)
+    const [days, setDays] = useState(0)
 
     useEffect(() => {
-        setLanguage(UserService.getLanguage());
-    }, []);
+        setLanguage(UserService.getLanguage())
+    }, [])
 
     useEffect(() => {
-        setOffset(props.offset);
-    }, [props.offset]);
+        setOffset(props.offset)
+    }, [props.offset])
 
     useEffect(() => {
         if (props.from && props.to) {
-            setDays(Helper.days(props.from, props.to));
+            setDays(Helper.days(props.from, props.to))
         }
-    }, [props.from, props.to]);
+    }, [props.from, props.to])
 
     useEffect(() => {
-        const element = document.querySelector(`.${props.containerClassName}`);
+        const element = document.querySelector(`.${props.containerClassName}`)
 
         if (element) {
             element.onscroll = (event) => {
-                let _offset = 0;
-                if (Env.isMobile()) _offset = offset;
+                let _offset = 0
+                if (Env.isMobile()) _offset = offset
 
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
                     && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
-                    setPage(page + 1);
+                    setPage(page + 1)
                 }
-            };
+            }
         }
-    }, [props.containerClassName, fetch, loading, page, offset]);
+    }, [props.containerClassName, fetch, loading, page, offset])
 
     const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
-        setLoading(true);
-        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
+        setLoading(true)
+        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit }
 
         CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                setRows(_rows);
-                setFetch(_data.resultData.length > 0);
+                const _data = data.length > 0 ? data[0] : {}
+                if (_data.length === 0) _data.resultData = []
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+                setRows(_rows)
+                setFetch(_data.resultData.length > 0)
                 if (page === 1) {
-                    const className = props.containerClassName ? props.containerClassName : 'car-list';
-                    document.querySelector(`.${className}`).scrollTo(0, 0);
+                    const className = props.containerClassName ? props.containerClassName : 'car-list'
+                    document.querySelector(`.${className}`).scrollTo(0, 0)
                 }
 
                 if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                 }
-                setLoading(false);
+                setLoading(false)
             })
             .catch(() => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit);
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
             } else {
-                setRows([]);
-                setFetch(false);
+                setRows([])
+                setFetch(false)
                 if (props.onLoad) {
-                    props.onLoad({ rows: [], rowCount: 0 });
+                    props.onLoad({ rows: [], rowCount: 0 })
                 }
-                setLoading(false);
+                setLoading(false)
             }
         }
-    }, [page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (props.cars) {
-            setRows(props.cars);
-            setFetch(false);
+            setRows(props.cars)
+            setFetch(false)
             if (props.onLoad) {
-                props.onLoad({ rows: props.cars, rowCount: props.cars.length });
+                props.onLoad({ rows: props.cars, rowCount: props.cars.length })
             }
-            setLoading(false);
+            setLoading(false)
         }
-    }, [props.cars]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.cars]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        setPage(1);
-    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]);
+        setPage(1)
+    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to])
 
     useEffect(() => {
         if (props.reload) {
-            setPage(1);
-            _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability);
+            setPage(1)
+            _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
         }
-    }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const getExtraIcon = (option, extra) => {
-        let available = false;
+        let available = false
         if (props.booking) {
-            if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true;
-            if (option === 'amendments' && props.booking.amendments && extra > 0) available = true;
-            if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true;
-            if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true;
-            if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true;
-            if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true;
+            if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true
+            if (option === 'amendments' && props.booking.amendments && extra > 0) available = true
+            if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true
+            if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true
+            if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true
+            if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true
         }
 
         return extra === -1 ? <UncheckIcon className='unavailable' />
             : extra === 0 || available ? <CheckIcon className='available' />
                 : <InfoIcon className='extra-info' />
-    };
+    }
 
-    const fr = language === 'fr';
+    const fr = language === 'fr'
 
     return (
         <section className={`${props.className ? `${props.className} ` : ''}car-list`}>
@@ -325,7 +325,7 @@ const CarList = (props) => {
             }
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </section>
-    );
+    )
 }
 
-export default CarList;
+export default CarList

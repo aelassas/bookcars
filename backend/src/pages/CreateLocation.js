@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/create-location';
-import * as LocationService from '../services/LocationService';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/create-location'
+import * as LocationService from '../services/LocationService'
 import {
     Input,
     InputLabel,
@@ -10,55 +10,55 @@ import {
     FormHelperText,
     Button,
     Paper
-} from '@mui/material';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
+} from '@mui/material'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
-import '../assets/css/create-location.css';
+import '../assets/css/create-location.css'
 
 const CreateLocation = () => {
-    const [visible, setVisible] = useState(false);
-    const [names, setNames] = useState([]);
-    const [nameErrors, setNameErrors] = useState([]);
+    const [visible, setVisible] = useState(false)
+    const [names, setNames] = useState([])
+    const [nameErrors, setNameErrors] = useState([])
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         try {
-            let isValid = true;
+            let isValid = true
 
-            for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false;
+            for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false
 
             for (let i = 0; i < names.length; i++) {
-                const name = names[i];
-                const _isValid = await LocationService.validate(name) === 200;
-                isValid = isValid && _isValid;
-                if (!_isValid) nameErrors[i] = true;
+                const name = names[i]
+                const _isValid = await LocationService.validate(name) === 200
+                isValid = isValid && _isValid
+                if (!_isValid) nameErrors[i] = true
             }
 
-            setNameErrors(Helper.cloneArray(nameErrors));
+            setNameErrors(Helper.cloneArray(nameErrors))
 
             if (isValid) {
-                const status = await LocationService.create(names);
+                const status = await LocationService.create(names)
 
                 if (status === 200) {
-                    for (let i = 0; i < names.length; i++) names[i].name = '';
-                    setNames(Helper.cloneArray(names));
-                    Helper.info(strings.LOCATION_CREATED);
+                    for (let i = 0; i < names.length; i++) names[i].name = ''
+                    setNames(Helper.cloneArray(names))
+                    Helper.info(strings.LOCATION_CREATED)
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             }
         }
         catch (err) {
-            UserService.signout();
+            UserService.signout()
         }
-    };
+    }
 
     const onLoad = (user) => {
-        setVisible(true);
-    };
+        setVisible(true)
+    }
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -76,11 +76,11 @@ const CreateLocation = () => {
                                         error={nameErrors[index]}
                                         required
                                         onChange={(e) => {
-                                            names[index] = { language: language.code, name: e.target.value };
-                                            setNames(Helper.cloneArray(names));
+                                            names[index] = { language: language.code, name: e.target.value }
+                                            setNames(Helper.cloneArray(names))
 
-                                            nameErrors[index] = false;
-                                            setNameErrors(Helper.cloneArray(nameErrors));
+                                            nameErrors[index] = false
+                                            setNameErrors(Helper.cloneArray(nameErrors))
                                         }}
                                         autoComplete="off"
                                     />
@@ -114,7 +114,7 @@ const CreateLocation = () => {
                 </Paper>
             </div>
         </Master>
-    );
-};
+    )
+}
 
-export default CreateLocation;
+export default CreateLocation

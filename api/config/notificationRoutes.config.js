@@ -5,4 +5,4 @@ export default {
     markAsUnRead: '/api/mark-notifications-as-unread/:userId',
     delete: '/api/delete-notifications/:userId',
     getNotifications: '/api/notifications/:userId/:page/:size'
-};
+}

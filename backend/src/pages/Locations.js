@@ -1,43 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import Master from '../components/Master';
-import { strings } from '../lang/locations';
-import Search from '../components/Search';
-import LocationList from '../components/LocationList';
-import InfoBox from '../components/InfoBox';
-import { Button } from '@mui/material';
+import React, { useState, useEffect } from 'react'
+import Master from '../components/Master'
+import { strings } from '../lang/locations'
+import Search from '../components/Search'
+import LocationList from '../components/LocationList'
+import InfoBox from '../components/InfoBox'
+import { Button } from '@mui/material'
 
-import '../assets/css/locations.css';
+import '../assets/css/locations.css'
 
 const Locations = () => {
-    const [user, setUser] = useState();
-    const [keyword, setKeyword] = useState('');
-    const [rowCount, setRowCount] = useState(-1);
-    const [reload, setReload] = useState(false);
-    const [offset, setOffset] = useState(0);
+    const [user, setUser] = useState()
+    const [keyword, setKeyword] = useState('')
+    const [rowCount, setRowCount] = useState(-1)
+    const [reload, setReload] = useState(false)
+    const [offset, setOffset] = useState(0)
 
     useEffect(() => {
         if (user && user.verified) {
-            setOffset(document.querySelector('.col-1').clientHeight);
+            setOffset(document.querySelector('.col-1').clientHeight)
         }
-    }, [user]);
+    }, [user])
 
     const handleSearch = (newKeyword) => {
-        setKeyword(newKeyword);
-        setReload(newKeyword === keyword);
-    };
+        setKeyword(newKeyword)
+        setReload(newKeyword === keyword)
+    }
 
     const handleLocationListLoad = (data) => {
-        setRowCount(data.rowCount);
-        setReload(false);
-    };
+        setRowCount(data.rowCount)
+        setReload(false)
+    }
 
     const handleLocationDelete = (rowCount) => {
-        setRowCount(rowCount);
-    };
+        setRowCount(rowCount)
+    }
 
     const onLoad = (user) => {
-        setUser(user);
-    };
+        setUser(user)
+    }
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -75,7 +75,7 @@ const Locations = () => {
             </div>
 
         </Master>
-    );
-};
+    )
+}
 
-export default Locations;
+export default Locations

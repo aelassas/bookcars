@@ -1,92 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/home';
-import * as UserService from '../services/UserService';
-import Master from '../components/Master';
-import LocationSelectList from '../components/LocationSelectList';
+import React, { useState, useEffect } from 'react'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/home'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
-import { FormControl, Button } from '@mui/material';
+import { FormControl, Button } from '@mui/material'
 
-import SecurePayment from '../assets/img/secure-payment.png';
-import '../assets/css/home.css';
+import SecurePayment from '../assets/img/secure-payment.png'
+import '../assets/css/home.css'
 
 const Home = () => {
-    const [pickupLocation, setPickupLocation] = useState();
-    const [dropOffLocation, setDropOffLocation] = useState();
-    const [minDate, setMinDate] = useState();
-    const [from, setFrom] = useState();
-    const [to, setTo] = useState();
-    const [sameLocation, setSameLocation] = useState(true);
+    const [pickupLocation, setPickupLocation] = useState()
+    const [dropOffLocation, setDropOffLocation] = useState()
+    const [minDate, setMinDate] = useState()
+    const [from, setFrom] = useState()
+    const [to, setTo] = useState()
+    const [sameLocation, setSameLocation] = useState(true)
 
     useEffect(() => {
-        const from = new Date();
-        from.setDate(from.getDate() + 1);
-        from.setHours(10);
-        from.setMinutes(0);
-        from.setSeconds(0);
-        from.setMilliseconds(0);
+        const from = new Date()
+        from.setDate(from.getDate() + 1)
+        from.setHours(10)
+        from.setMinutes(0)
+        from.setSeconds(0)
+        from.setMilliseconds(0)
 
-        const to = new Date(from);
-        to.setDate(to.getDate() + 3);
+        const to = new Date(from)
+        to.setDate(to.getDate() + 3)
 
-        setMinDate(new Date());
-        setFrom(from);
-        setTo(to);
-    }, []);
+        setMinDate(new Date())
+        setFrom(from)
+        setTo(to)
+    }, [])
 
     useEffect(() => {
         if (from) {
-            const minDate = new Date(from);
-            minDate.setDate(from.getDate() + 1);
-            setMinDate(minDate);
+            const minDate = new Date(from)
+            minDate.setDate(from.getDate() + 1)
+            setMinDate(minDate)
         }
-    }, [from]);
+    }, [from])
 
     const handlePickupLocationChange = (values) => {
-        const pickupLocation = ((values.length > 0 && values[0]._id) || null);
-        setPickupLocation(pickupLocation);
+        const pickupLocation = ((values.length > 0 && values[0]._id) || null)
+        setPickupLocation(pickupLocation)
 
         if (sameLocation) {
-            setDropOffLocation(pickupLocation);
+            setDropOffLocation(pickupLocation)
         }
-    };
+    }
 
     const handleSameLocationChange = (e) => {
-        setSameLocation(e.target.checked);
+        setSameLocation(e.target.checked)
 
         if (e.target.checked) {
-            setDropOffLocation(pickupLocation);
+            setDropOffLocation(pickupLocation)
         } else {
-            setDropOffLocation(null);
+            setDropOffLocation(null)
         }
-    };
+    }
 
     const handleSameLocationClick = (e) => {
-        const checked = !sameLocation;
+        const checked = !sameLocation
 
-        setSameLocation(checked);
-        e.target.previousSibling.checked = checked;
+        setSameLocation(checked)
+        e.target.previousSibling.checked = checked
 
         if (checked) {
-            setDropOffLocation(pickupLocation);
+            setDropOffLocation(pickupLocation)
         } else {
-            setDropOffLocation(null);
+            setDropOffLocation(null)
         }
-    };
+    }
 
     const handleDropOffLocationChange = (values) => {
-        setDropOffLocation((values.length > 0 && values[0]._id) || null);
-    };
+        setDropOffLocation((values.length > 0 && values[0]._id) || null)
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (!pickupLocation || !dropOffLocation) {
-            return;
+            return
         }
 
-        window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`;
-    };
+        window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`
+    }
 
     const onLoad = (user) => {
     }
@@ -119,7 +119,7 @@ const Home = () => {
                                     variant='outlined'
                                     required
                                     onChange={(from) => {
-                                        setFrom(from);
+                                        setFrom(from)
                                     }}
                                     language={UserService.getLanguage()}
                                 />
@@ -132,7 +132,7 @@ const Home = () => {
                                     variant='outlined'
                                     required
                                     onChange={(to) => {
-                                        setTo(to);
+                                        setTo(to)
                                     }}
                                     language={UserService.getLanguage()}
                                 />
@@ -176,7 +176,7 @@ const Home = () => {
                 </footer>
             </div>
         </Master>
-    );
-};
+    )
+}
 
-export default Home;
+export default Home

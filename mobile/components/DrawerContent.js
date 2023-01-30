@@ -1,53 +1,53 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
-import i18n from '../lang/i18n';
-import { MaterialIcons } from '@expo/vector-icons';
-import { CommonActions, DrawerActions } from '@react-navigation/routers';
-import Env from '../config/env.config';
-import * as Helper from '../common/Helper';
-import * as UserService from '../services/UserService';
+import React, { useState, useEffect, useRef } from 'react'
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
+import i18n from '../lang/i18n'
+import { MaterialIcons } from '@expo/vector-icons'
+import { CommonActions, DrawerActions } from '@react-navigation/routers'
+import Env from '../config/env.config'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
 
-let yOffset = 0;
+let yOffset = 0
 
 const DrawerContent = (props) => {
-    const [openLanguageMenu, setopenLanguageMenu] = useState(false);
-    const [language, setLanguage] = useState(props.language);
-    const ref = useRef();
+    const [openLanguageMenu, setopenLanguageMenu] = useState(false)
+    const [language, setLanguage] = useState(props.language)
+    const ref = useRef()
 
     useEffect(() => {
-        setLanguage(props.language);
-    }, [props.language]);
+        setLanguage(props.language)
+    }, [props.language])
 
     updateLanguage = async (language) => {
         try {
             const setLang = async (language) => {
-                i18n.locale = language;
-                await UserService.setLanguage(language);
-                setLanguage(language);
-                const route = props.state.routes[props.index];
-                props.navigation.navigate(route.name, { d: new Date().getTime(), ...route.params });
-            };
+                i18n.locale = language
+                await UserService.setLanguage(language)
+                setLanguage(language)
+                const route = props.state.routes[props.index]
+                props.navigation.navigate(route.name, { d: new Date().getTime(), ...route.params })
+            }
 
-            const currentUser = await UserService.getCurrentUser();
+            const currentUser = await UserService.getCurrentUser()
             if (currentUser) {
                 const data = {
                     id: currentUser.id,
                     language: language
-                };
-                const status = await UserService.updateLanguage(data);
+                }
+                const status = await UserService.updateLanguage(data)
 
                 if (status === 200) {
-                    await setLang(language);
+                    await setLang(language)
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             }
             else {
-                await setLang(language);
+                await setLang(language)
             }
         } catch (err) {
-            Helper.error(err);
+            Helper.error(err)
         }
     }
 
@@ -55,7 +55,7 @@ const DrawerContent = (props) => {
         <DrawerContentScrollView
             ref={ref}
             onScroll={event => {
-                yOffset = event.nativeEvent.contentOffset.y;
+                yOffset = event.nativeEvent.contentOffset.y
             }}
             onContentSizeChange={() => {
                 if (ref.current) {
@@ -68,10 +68,10 @@ const DrawerContent = (props) => {
             <View forceInset={styles.drawerList}>
                 {
                     props.state.routes.map((route, i) => {
-                        const focused = i === props.state.index;
-                        const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options;
+                        const focused = i === props.state.index
+                        const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options
 
-                        const hidden = props.drawerItems.find(item => item.name === route.name).hidden;
+                        const hidden = props.drawerItems.find(item => item.name === route.name).hidden
                         if (hidden) {
                             return <View key={route.key} />
                         }
@@ -124,16 +124,16 @@ const DrawerContent = (props) => {
                     <View style={styles.languageMenu}>
                         <Pressable style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
                             if (language === Env.LANGUAGE.EN) {
-                                await updateLanguage(Env.LANGUAGE.FR);
-                                setopenLanguageMenu(false);
+                                await updateLanguage(Env.LANGUAGE.FR)
+                                setopenLanguageMenu(false)
                             }
                         }}>
                             <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
                         </Pressable>
                         <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
                             if (language === Env.LANGUAGE.FR) {
-                                await updateLanguage(Env.LANGUAGE.EN);
-                                setopenLanguageMenu(false);
+                                await updateLanguage(Env.LANGUAGE.EN)
+                                setopenLanguageMenu(false)
                             }
                         }}>
                             <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
@@ -142,8 +142,8 @@ const DrawerContent = (props) => {
                 }
             </View>
         </DrawerContentScrollView>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     drawer: {
@@ -217,6 +217,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginLeft: 25
     }
-});
+})
 
-export default DrawerContent;
+export default DrawerContent

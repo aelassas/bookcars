@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as ccStrings } from '../lang/create-company';
-import { strings } from '../lang/create-user';
-import * as Helper from '../common/Helper';
-import * as UserService from '../services/UserService';
-import * as CompanyService from '../services/CompanyService';
-import Error from '../components/Error';
-import Backdrop from '../components/SimpleBackdrop';
-import Avatar from '../components/Avatar';
-import DatePicker from '../components/DatePicker';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as ccStrings } from '../lang/create-company'
+import { strings } from '../lang/create-user'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
+import * as CompanyService from '../services/CompanyService'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import Avatar from '../components/Avatar'
+import DatePicker from '../components/DatePicker'
 import {
     Input,
     InputLabel,
@@ -22,277 +22,277 @@ import {
     MenuItem,
     FormControlLabel,
     Switch
-} from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
-import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
 
-import '../assets/css/create-user.css';
+import '../assets/css/create-user.css'
 
 const CreateUser = () => {
-    const [user, setUser] = useState();
-    const [admin, setAdmin] = useState(false);
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [location, setLocation] = useState('');
-    const [bio, setBio] = useState('');
-    const [error, setError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [fullNameError, setFullNameError] = useState(false);
-    const [avatar, setAvatar] = useState();
-    const [avatarError, setAvatarError] = useState(false);
-    const [type, setType] = useState('');
-    const [emailValid, setEmailValid] = useState(true);
-    const [phoneValid, setPhoneValid] = useState(true);
-    const [payLater, setPayLater] = useState(true);
-    const [birthDate, setBirthDate] = useState();
-    const [birthDateValid, setBirthDateValid] = useState(true);
+    const [user, setUser] = useState()
+    const [admin, setAdmin] = useState(false)
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [location, setLocation] = useState('')
+    const [bio, setBio] = useState('')
+    const [error, setError] = useState(false)
+    const [emailError, setEmailError] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [fullNameError, setFullNameError] = useState(false)
+    const [avatar, setAvatar] = useState()
+    const [avatarError, setAvatarError] = useState(false)
+    const [type, setType] = useState('')
+    const [emailValid, setEmailValid] = useState(true)
+    const [phoneValid, setPhoneValid] = useState(true)
+    const [payLater, setPayLater] = useState(true)
+    const [birthDate, setBirthDate] = useState()
+    const [birthDateValid, setBirthDateValid] = useState(true)
 
     const handleUserTypeChange = async (e) => {
-        const type = e.target.value;
+        const type = e.target.value
 
-        setType(type);
+        setType(type)
 
         if (type === Env.RECORD_TYPE.COMPANY) {
             await validateFullName(fullName)
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
     const handleOnChangeFullName = (e) => {
-        setFullName(e.target.value);
+        setFullName(e.target.value)
 
         if (!e.target.value) {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
     const validateFullName = async (fullName) => {
         if (fullName) {
             try {
-                const status = await CompanyService.validate({ fullName });
+                const status = await CompanyService.validate({ fullName })
 
                 if (status === 200) {
-                    setFullNameError(false);
-                    setError(false);
-                    return true;
+                    setFullNameError(false)
+                    setError(false)
+                    return true
                 } else {
-                    setFullNameError(true);
-                    setAvatarError(false);
-                    setError(false);
-                    return false;
+                    setFullNameError(true)
+                    setAvatarError(false)
+                    setError(false)
+                    return false
                 }
             } catch (err) {
-                UserService.signout();
+                UserService.signout()
             }
         } else {
-            setFullNameError(false);
-            return true;
+            setFullNameError(false)
+            return true
         }
-    };
+    }
 
     const handleFullNameOnBlur = async (e) => {
         if (type === Env.RECORD_TYPE.COMPANY) {
-            await validateFullName(e.target.value);
+            await validateFullName(e.target.value)
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
-    };
+    }
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+        setEmail(e.target.value)
 
         if (!e.target.value) {
-            setEmailError(false);
-            setEmailValid(true);
+            setEmailError(false)
+            setEmailValid(true)
         }
-    };
+    }
 
     const validateEmail = async (email) => {
         if (email) {
             if (validator.isEmail(email)) {
                 try {
-                    const status = await UserService.validateEmail({ email });
+                    const status = await UserService.validateEmail({ email })
                     if (status === 200) {
-                        setEmailError(false);
-                        setEmailValid(true);
-                        return true;
-                    } else {
-                        setEmailError(true);
+                        setEmailError(false)
                         setEmailValid(true)
-                        setAvatarError(false);
-                        setError(false);
-                        return false;
+                        return true
+                    } else {
+                        setEmailError(true)
+                        setEmailValid(true)
+                        setAvatarError(false)
+                        setError(false)
+                        return false
                     }
                 } catch (err) {
-                    UserService.signout();
+                    UserService.signout()
                 }
             } else {
-                setEmailError(false);
-                setEmailValid(false);
-                return false;
+                setEmailError(false)
+                setEmailValid(false)
+                return false
             }
         } else {
-            setEmailError(false);
-            setEmailValid(true);
-            return false;
+            setEmailError(false)
+            setEmailValid(true)
+            return false
         }
-    };
+    }
 
     const handleEmailBlur = async (e) => {
-        await validateEmail(e.target.value);
-    };
+        await validateEmail(e.target.value)
+    }
 
     const handlePhoneChange = (e) => {
-        setPhone(e.target.value);
+        setPhone(e.target.value)
 
         if (!e.target.value) {
-            setPhoneValid(true);
+            setPhoneValid(true)
         }
-    };
+    }
 
     const validatePhone = (phone) => {
         if (phone) {
-            const phoneValid = validator.isMobilePhone(phone);
-            setPhoneValid(phoneValid);
+            const phoneValid = validator.isMobilePhone(phone)
+            setPhoneValid(phoneValid)
 
-            return phoneValid;
+            return phoneValid
         } else {
-            setPhoneValid(true);
+            setPhoneValid(true)
 
-            return true;
+            return true
         }
-    };
+    }
 
     const handlePhoneBlur = (e) => {
-        validatePhone(e.target.value);
-    };
+        validatePhone(e.target.value)
+    }
 
     const validateBirthDate = (date) => {
         if (Helper.isDate(date) && type === Env.RECORD_TYPE.USER) {
-            const now = new Date();
-            const sub = intervalToDuration({ start: date, end: now }).years;
-            const birthDateValid = sub >= Env.MINIMUM_AGE;
+            const now = new Date()
+            const sub = intervalToDuration({ start: date, end: now }).years
+            const birthDateValid = sub >= Env.MINIMUM_AGE
 
-            setBirthDateValid(birthDateValid);
-            return birthDateValid;
+            setBirthDateValid(birthDateValid)
+            return birthDateValid
         } else {
-            setBirthDateValid(true);
-            return true;
+            setBirthDateValid(true)
+            return true
         }
-    };
+    }
 
     const handleOnChangeLocation = (e) => {
-        setLocation(e.target.value);
-    };
+        setLocation(e.target.value)
+    }
 
     const handleOnChangeBio = (e) => {
-        setBio(e.target.value);
-    };
+        setBio(e.target.value)
+    }
 
     const onBeforeUpload = () => {
-        setLoading(true);
-    };
+        setLoading(true)
+    }
 
     const onAvatarChange = (avatar) => {
-        setLoading(false);
-        setAvatar(avatar);
+        setLoading(false)
+        setAvatar(avatar)
 
         if (avatar !== null && type === Env.RECORD_TYPE.COMPANY) {
-            setAvatarError(false);
+            setAvatarError(false)
         }
-    };
+    }
 
     const handleCancel = () => {
         if (avatar) {
-            setLoading(true);
+            setLoading(true)
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    window.location.href = '/users';
+                    window.location.href = '/users'
                 })
                 .catch(() => {
-                    window.location.href = '/users';
-                });
+                    window.location.href = '/users'
+                })
         } else {
-            window.location.href = '/users';
+            window.location.href = '/users'
         }
-    };
+    }
 
     const onLoad = (user) => {
         if (user && user.verified) {
-            const admin = Helper.admin(user);
-            setUser(user);
-            setAdmin(admin);
-            setType(admin ? '' : Env.RECORD_TYPE.USER);
-            setVisible(true);
+            const admin = Helper.admin(user)
+            setUser(user)
+            setAdmin(admin)
+            setType(admin ? '' : Env.RECORD_TYPE.USER)
+            setVisible(true)
         }
-    };
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (type === Env.RECORD_TYPE.COMPANY) {
-            const fullNameValid = await validateFullName(fullName);
+            const fullNameValid = await validateFullName(fullName)
 
             if (!fullNameValid) {
-                return;
+                return
             }
         } else {
-            setFullNameError(false);
+            setFullNameError(false)
         }
 
-        const emailValid = await validateEmail(email);
+        const emailValid = await validateEmail(email)
         if (!emailValid) {
-            return;
+            return
         }
 
-        const phoneValid = validatePhone(phone);
+        const phoneValid = validatePhone(phone)
         if (!phoneValid) {
-            return;
+            return
         }
 
-        const birthDateValid = validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate)
         if (!birthDateValid) {
-            return;
+            return
         }
 
         if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
-            setAvatarError(true);
-            setError(false);
-            return;
+            setAvatarError(true)
+            setError(false)
+            return
         }
 
-        setLoading(true);
+        setLoading(true)
 
-        const language = UserService.getLanguage();
-        const company = admin ? undefined : user._id;
+        const language = UserService.getLanguage()
+        const company = admin ? undefined : user._id
 
-        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company };
+        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company }
 
-        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater;
+        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
 
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    window.location = '/users';
+                    window.location = '/users'
                 } else {
-                    setError(true);
-                    setLoading(false);
+                    setError(true)
+                    setLoading(false)
                 }
             }).catch(() => {
-                UserService.signout();
-            });
+                UserService.signout()
+            })
 
-    };
+    }
 
 
-    const company = type === Env.RECORD_TYPE.COMPANY;
-    const driver = type === Env.RECORD_TYPE.USER;
+    const company = type === Env.RECORD_TYPE.COMPANY
+    const driver = type === Env.RECORD_TYPE.USER
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -377,10 +377,10 @@ const CreateUser = () => {
                                     value={birthDate}
                                     required
                                     onChange={(birthDate) => {
-                                        const birthDateValid = validateBirthDate(birthDate);
+                                        const birthDateValid = validateBirthDate(birthDate)
 
-                                        setBirthDate(birthDate);
-                                        setBirthDateValid(birthDateValid);
+                                        setBirthDate(birthDate)
+                                        setBirthDateValid(birthDateValid)
                                     }}
                                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                                 />
@@ -431,7 +431,7 @@ const CreateUser = () => {
                             <FormControl component="fieldset" style={{ marginTop: 15 }}>
                                 <FormControlLabel
                                     control={<Switch checked={payLater} onChange={(e) => {
-                                        setPayLater(e.target.checked);
+                                        setPayLater(e.target.checked)
                                     }} color="primary" />}
                                     label={commonStrings.PAY_LATER}
                                 />
@@ -467,7 +467,7 @@ const CreateUser = () => {
             </div>}
             {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
         </Master>
-    );
-};
+    )
+}
 
-export default CreateUser;
+export default CreateUser

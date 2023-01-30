@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Pressable, Switch as ReactSwitch } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, View, Text, Pressable, Switch as ReactSwitch } from 'react-native'
 
 const Switch = (props) => {
-    const [value, setValue] = useState(props.value);
+    const [value, setValue] = useState(props.value)
 
     useEffect(() => {
-        setValue(props.value);
+        setValue(props.value)
     }, [props.value])
 
     const onValueChange = (value) => {
-        setValue(value);
-        if (props.onValueChange) props.onValueChange(value);
-    };
+        setValue(value)
+        if (props.onValueChange) props.onValueChange(value)
+    }
 
     const onPress = () => {
-        if (!props.disabled) onValueChange(!value);
-    };
+        if (!props.disabled) onValueChange(!value)
+    }
 
     return (
         <View style={{ ...styles.container, ...props.style }}>
@@ -37,8 +37,8 @@ const Switch = (props) => {
                 </Pressable>
             }
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -57,6 +57,6 @@ const styles = StyleSheet.create({
     children: {
         marginLeft: 5
     }
-});
+})
 
-export default Switch;
+export default Switch

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import * as Helper from '../common/Helper';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import * as Helper from '../common/Helper'
 import {
     Autocomplete,
     TextField,
     InputAdornment
-} from '@mui/material';
+} from '@mui/material'
 import {
     LocationOn as LocationIcon
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
-import '../assets/css/multiple-select.css';
+import '../assets/css/multiple-select.css'
 
 const MultipleSelect = ({
     label,
@@ -34,15 +34,15 @@ const MultipleSelect = ({
     hidePopupIcon,
     customOpen
 }) => {
-    const [init, setInit] = React.useState(selectedOptions.length === 0);
-    const [open, setOpen] = React.useState(false);
-    const [values, setValues] = useState([]);
-    const [inputValue, setInputValue] = useState('');
+    const [init, setInit] = React.useState(selectedOptions.length === 0)
+    const [open, setOpen] = React.useState(false)
+    const [values, setValues] = useState([])
+    const [inputValue, setInputValue] = useState('')
 
     useEffect(() => {
-        setValues(selectedOptions);
-        if (selectedOptions && selectedOptions.length === 0) setInputValue('');
-    }, [selectedOptions, type]);
+        setValues(selectedOptions)
+        if (selectedOptions && selectedOptions.length === 0) setInputValue('')
+    }, [selectedOptions, type])
 
     return (
         <div className='multiple-select'>
@@ -57,22 +57,22 @@ const MultipleSelect = ({
                 onInputChange={(event, value) => {
                     if (init) {
                         if (!event) {
-                            setInputValue(value);
-                            setOpen(false);
-                            return;
+                            setInputValue(value)
+                            setOpen(false)
+                            return
                         }
 
                         if (value.length === 0) {
-                            if (open) setOpen(false);
+                            if (open) setOpen(false)
                         } else {
-                            if (!open) setOpen(true);
+                            if (!open) setOpen(true)
                         }
                     } else {
-                        setInit(true);
+                        setInit(true)
                     }
 
-                    setInputValue(value);
-                    if (onInputChange) onInputChange(event);
+                    setInputValue(value)
+                    if (onInputChange) onInputChange(event)
                 }}
                 onClose={() => {
                     setOpen(false)
@@ -82,29 +82,29 @@ const MultipleSelect = ({
                     if (!multiple
                         && event && event.type === 'keydown' && event.key === 'Enter'
                         && newValue && !newValue._id) {
-                        return;
+                        return
                     }
 
                     if (multiple) {
-                        setValues(newValue);
-                        callbackFromMultipleSelect(newValue, key, reference);
+                        setValues(newValue)
+                        callbackFromMultipleSelect(newValue, key, reference)
                         if (newValue.length === 0 && onClear) {
-                            onClear();
+                            onClear()
                         }
                     } else {
-                        const value = (newValue && [newValue]) || [];
-                        setValues(value);
-                        callbackFromMultipleSelect(value, key, reference);
+                        const value = (newValue && [newValue]) || []
+                        setValues(value)
+                        callbackFromMultipleSelect(value, key, reference)
                         if (!newValue) {
                             if (onClear) {
-                                onClear();
+                                onClear()
                             }
                         }
                     }
                 }}
                 onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                        e.preventDefault();
+                        e.preventDefault()
                     }
                 }}
                 clearOnBlur={false}
@@ -115,8 +115,8 @@ const MultipleSelect = ({
                 handleHomeEndKeys={false}
                 popupIcon={hidePopupIcon ? null : undefined}
                 renderInput={(params) => {
-                    const inputProps = params.inputProps;
-                    inputProps.autoComplete = 'off';
+                    const inputProps = params.inputProps
+                    inputProps.autoComplete = 'off'
 
                     if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 0) {
                         return (
@@ -137,7 +137,7 @@ const MultipleSelect = ({
                                     value: params.inputProps.value
                                 }}
                             />
-                        );
+                        )
                     }
 
                     if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 1 && values[0]) {
@@ -160,11 +160,11 @@ const MultipleSelect = ({
                                     )
                                 }}
                             />
-                        );
+                        )
                     }
 
                     if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
-                        const option = values[0];
+                        const option = values[0]
 
                         return (
                             <TextField
@@ -187,11 +187,11 @@ const MultipleSelect = ({
                                     ),
                                 }}
                             />
-                        );
+                        )
                     }
 
                     if (type === Env.RECORD_TYPE.CAR && !multiple && values.length === 1 && values[0]) {
-                        const option = values[0];
+                        const option = values[0]
 
                         return (
                             <TextField
@@ -215,7 +215,7 @@ const MultipleSelect = ({
                                     ),
                                 }}
                             />
-                        );
+                        )
                     }
 
                     return (
@@ -225,7 +225,7 @@ const MultipleSelect = ({
                             variant={variant || 'outlined'}
                             required={required && values && values.length === 0}
                         />
-                    );
+                    )
                 }}
                 renderOption={(props, option, { selected }) => {
                     if (type === Env.RECORD_TYPE.LOCATION) {
@@ -236,7 +236,7 @@ const MultipleSelect = ({
                                 </span>
                                 <span className='option-name'>{option.name}</span>
                             </li>
-                        );
+                        )
                     } else if (type === Env.RECORD_TYPE.COMPANY) {
                         return (
                             <li {...props} className={`${props.className} ms-option`}>
@@ -248,7 +248,7 @@ const MultipleSelect = ({
                                 </span>
                                 <span className='option-name'>{option.name}</span>
                             </li>
-                        );
+                        )
                     } else if (type === Env.RECORD_TYPE.CAR) {
                         return (
                             <li  {...props} className={`${props.className} ms-option`}>
@@ -261,14 +261,14 @@ const MultipleSelect = ({
                                 </span>
                                 <span className='car-option-name'>{option.name}</span>
                             </li>
-                        );
+                        )
                     }
 
                     return (
                         <li {...props} className={`${props.className} ms-option`}>
                             <span>{option.name}</span>
                         </li>
-                    );
+                    )
 
                 }}
                 ListboxProps={ListboxProps || null}
@@ -276,7 +276,7 @@ const MultipleSelect = ({
                 onOpen={onOpen || null}
             />
         </div>
-    );
-};
+    )
+}
 
-export default MultipleSelect;
+export default MultipleSelect

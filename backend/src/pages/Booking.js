@@ -1,26 +1,26 @@
-import React, { useState, useCallback } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as blStrings } from '../lang/booking-list';
-import { strings as bfStrings } from '../lang/booking-filter';
-import { strings as csStrings } from '../lang/cars';
-import { strings } from '../lang/booking';
-import * as Helper from '../common/Helper';
-import Master from '../components/Master';
-import * as UserService from '../services/UserService';
-import * as BookingService from '../services/BookingService';
-import * as CarService from '../services/CarService';
-import Backdrop from '../components/SimpleBackdrop';
-import NoMatch from './NoMatch';
-import Error from './Error';
-import CarList from '../components/CarList';
-import CompanySelectList from '../components/CompanySelectList';
-import UserSelectList from '../components/UserSelectList';
-import LocationSelectList from '../components/LocationSelectList';
-import CarSelectList from '../components/CarSelectList';
-import StatusList from '../components/StatusList';
-import DateTimePicker from '../components/DateTimePicker';
-import DatePicker from '../components/DatePicker';
+import React, { useState, useCallback } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as blStrings } from '../lang/booking-list'
+import { strings as bfStrings } from '../lang/booking-filter'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/booking'
+import * as Helper from '../common/Helper'
+import Master from '../components/Master'
+import * as UserService from '../services/UserService'
+import * as BookingService from '../services/BookingService'
+import * as CarService from '../services/CarService'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import CarList from '../components/CarList'
+import CompanySelectList from '../components/CompanySelectList'
+import UserSelectList from '../components/UserSelectList'
+import LocationSelectList from '../components/LocationSelectList'
+import CarSelectList from '../components/CarSelectList'
+import StatusList from '../components/StatusList'
+import DateTimePicker from '../components/DateTimePicker'
+import DatePicker from '../components/DatePicker'
 import {
     FormControl,
     FormControlLabel,
@@ -33,292 +33,292 @@ import {
     FormHelperText,
     InputLabel,
     Input,
-} from '@mui/material';
+} from '@mui/material'
 import {
     Info as InfoIcon,
     Person as DriverIcon,
-} from '@mui/icons-material';
-import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
+} from '@mui/icons-material'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
 
-import '../assets/css/booking.css';
+import '../assets/css/booking.css'
 
 const Booking = () => {
-    const [user, setUser] = useState();
-    const [loading, setLoading] = useState(false);
-    const [noMatch, setNoMatch] = useState(false);
-    const [error, setError] = useState(false);
-    const [booking, setBooking] = useState();
-    const [visible, setVisible] = useState(false);
-    const [isCompany, setIsCompany] = useState(false);
-    const [company, setCompany] = useState();
-    const [car, setCar] = useState();
-    const [price, setPrice] = useState();
-    const [driver, setDriver] = useState();
-    const [pickupLocation, setPickupLocation] = useState();
-    const [dropOffLocation, setDropOffLocation] = useState();
-    const [from, setFrom] = useState();
-    const [to, setTo] = useState();
-    const [status, setStatus] = useState();
-    const [cancellation, setCancellation] = useState(false);
-    const [amendments, setAmendments] = useState(false);
-    const [theftProtection, setTheftProtection] = useState(false);
-    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
-    const [fullInsurance, setFullInsurance] = useState(false);
-    const [additionalDriver, setAdditionalDriver] = useState(false);
-    const [minDate, setMinDate] = useState();
-    const [_fullName, set_FullName] = useState('');
-    const [_email, set_Email] = useState('');
-    const [_phone, set_Phone] = useState('');
-    const [_birthDate, set_BirthDate] = useState();
-    const [_emailValid, set_EmailValid] = useState(true);
-    const [_phoneValid, set_PhoneValid] = useState(true);
-    const [_birthDateValid, set_BirthDateValid] = useState(true);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [user, setUser] = useState()
+    const [loading, setLoading] = useState(false)
+    const [noMatch, setNoMatch] = useState(false)
+    const [error, setError] = useState(false)
+    const [booking, setBooking] = useState()
+    const [visible, setVisible] = useState(false)
+    const [isCompany, setIsCompany] = useState(false)
+    const [company, setCompany] = useState()
+    const [car, setCar] = useState()
+    const [price, setPrice] = useState()
+    const [driver, setDriver] = useState()
+    const [pickupLocation, setPickupLocation] = useState()
+    const [dropOffLocation, setDropOffLocation] = useState()
+    const [from, setFrom] = useState()
+    const [to, setTo] = useState()
+    const [status, setStatus] = useState()
+    const [cancellation, setCancellation] = useState(false)
+    const [amendments, setAmendments] = useState(false)
+    const [theftProtection, setTheftProtection] = useState(false)
+    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
+    const [fullInsurance, setFullInsurance] = useState(false)
+    const [additionalDriver, setAdditionalDriver] = useState(false)
+    const [minDate, setMinDate] = useState()
+    const [_fullName, set_FullName] = useState('')
+    const [_email, set_Email] = useState('')
+    const [_phone, set_Phone] = useState('')
+    const [_birthDate, set_BirthDate] = useState()
+    const [_emailValid, set_EmailValid] = useState(true)
+    const [_phoneValid, set_PhoneValid] = useState(true)
+    const [_birthDateValid, set_BirthDateValid] = useState(true)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
     const handleCompanyChange = (values) => {
-        setCompany(values.length > 0 ? values[0] : null);
-    };
+        setCompany(values.length > 0 ? values[0] : null)
+    }
 
     const handleDriverChange = (values) => {
-        setDriver(values.length > 0 ? values[0] : null);
-    };
+        setDriver(values.length > 0 ? values[0] : null)
+    }
 
     const handlePickupLocationChange = (values) => {
-        setPickupLocation(values.length > 0 ? values[0] : null);
-    };
+        setPickupLocation(values.length > 0 ? values[0] : null)
+    }
 
     const handleDropOffLocationChange = (values) => {
-        setDropOffLocation(values.length > 0 ? values[0] : null);
-    };
+        setDropOffLocation(values.length > 0 ? values[0] : null)
+    }
 
     const handleCarSelectListChange = useCallback((values) => {
-        const newCar = values.length > 0 ? values[0] : null;
+        const newCar = values.length > 0 ? values[0] : null
 
         if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
             CarService.getCar(newCar._id)
                 .then(car => {
                     if (car) {
-                        const _booking = Helper.clone(booking);
-                        _booking.car = car;
+                        const _booking = Helper.clone(booking)
+                        _booking.car = car
                         Helper.price(
                             _booking
                             , car
                             , (price) => {
-                                setPrice(price);
+                                setPrice(price)
                             }
                             , (err) => {
-                                Helper.error();
+                                Helper.error()
                             }
-                        );
+                        )
 
-                        setBooking(_booking);
-                        setCar(newCar);
+                        setBooking(_booking)
+                        setCar(newCar)
                     } else {
-                        Helper.error();
+                        Helper.error()
                     }
                 })
                 .catch((err) => {
-                    UserService.signout();
-                });
+                    UserService.signout()
+                })
         } else if (!newCar) {
-            setPrice(0);
-            setCar(newCar);
+            setPrice(0)
+            setCar(newCar)
         } else {
-            setCar(newCar);
+            setCar(newCar)
         }
-    }, [car, booking]);
+    }, [car, booking])
 
     const handleStatusChange = (value) => {
-        setStatus(value);
-    };
+        setStatus(value)
+    }
 
     const handleCancellationChange = (e) => {
-        booking.cancellation = e.target.checked;
+        booking.cancellation = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
-                setCancellation(booking.cancellation);
+                setBooking(booking)
+                setPrice(price)
+                setCancellation(booking.cancellation)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const handleAmendmentsChange = (e) => {
-        booking.amendments = e.target.checked;
+        booking.amendments = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
+                setBooking(booking)
+                setPrice(price)
                 setAmendments(booking.amendments)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const handleCollisionDamageWaiverChange = (e) => {
-        booking.collisionDamageWaiver = e.target.checked;
+        booking.collisionDamageWaiver = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
-                setCollisionDamageWaiver(booking.collisionDamageWaiver);
+                setBooking(booking)
+                setPrice(price)
+                setCollisionDamageWaiver(booking.collisionDamageWaiver)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const handleTheftProtectionChange = (e) => {
-        booking.theftProtection = e.target.checked;
+        booking.theftProtection = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
-                setTheftProtection(booking.theftProtection);
+                setBooking(booking)
+                setPrice(price)
+                setTheftProtection(booking.theftProtection)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const handleFullInsuranceChange = (e) => {
-        booking.fullInsurance = e.target.checked;
+        booking.fullInsurance = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
-                setFullInsurance(booking.fullInsurance);
+                setBooking(booking)
+                setPrice(price)
+                setFullInsurance(booking.fullInsurance)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const handleAdditionalDriverChange = (e) => {
-        booking.additionalDriver = e.target.checked;
+        booking.additionalDriver = e.target.checked
 
         Helper.price(
             booking,
             booking.car,
             (price) => {
-                setBooking(booking);
-                setPrice(price);
-                setAdditionalDriver(booking.additionalDriver);
+                setBooking(booking)
+                setPrice(price)
+                setAdditionalDriver(booking.additionalDriver)
             },
             (err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const err = (hideLoading) => {
-        Helper.error();
+        Helper.error()
         if (hideLoading) {
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     const handleDelete = () => {
-        setOpenDeleteDialog(true);
-    };
+        setOpenDeleteDialog(true)
+    }
 
     const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-    };
+        setOpenDeleteDialog(false)
+    }
 
     const handleConfirmDelete = () => {
-        setLoading(true);
-        setOpenDeleteDialog(false);
+        setLoading(true)
+        setOpenDeleteDialog(false)
 
         BookingService.deleteBookings([booking._id])
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/';
+                    window.location.href = '/'
                 } else {
-                    err(true);
+                    err(true)
                 }
             }).catch(() => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const _validateEmail = (email) => {
         if (email) {
             if (validator.isEmail(email)) {
-                set_EmailValid(true);
-                return true;
+                set_EmailValid(true)
+                return true
             } else {
-                set_EmailValid(false);
-                return false;
+                set_EmailValid(false)
+                return false
             }
         } else {
-            set_EmailValid(true);
-            return false;
+            set_EmailValid(true)
+            return false
         }
-    };
+    }
 
     const _validatePhone = (phone) => {
         if (phone) {
-            const _phoneValid = validator.isMobilePhone(phone);
-            set_PhoneValid(_phoneValid);
+            const _phoneValid = validator.isMobilePhone(phone)
+            set_PhoneValid(_phoneValid)
 
-            return _phoneValid;
+            return _phoneValid
         } else {
-            set_PhoneValid(true);
+            set_PhoneValid(true)
 
-            return true;
+            return true
         }
-    };
+    }
 
     const _validateBirthDate = (date) => {
         if (date) {
-            const now = new Date();
-            const sub = intervalToDuration({ start: date, end: now }).years;
-            const _birthDateValid = sub >= Env.MINIMUM_AGE;
+            const now = new Date()
+            const sub = intervalToDuration({ start: date, end: now }).years
+            const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-            set_BirthDateValid(_birthDateValid);
-            return _birthDateValid;
+            set_BirthDateValid(_birthDateValid)
+            return _birthDateValid
         } else {
-            set_BirthDateValid(true);
-            return true;
+            set_BirthDateValid(true)
+            return true
         }
-    };
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (additionalDriver) {
-            const emailValid = _validateEmail(_email);
+            const emailValid = _validateEmail(_email)
             if (!emailValid) {
-                return;
+                return
             }
 
-            const phoneValid = _validatePhone(_phone);
+            const phoneValid = _validatePhone(_phone)
             if (!phoneValid) {
-                return;
+                return
             }
 
-            const birthDateValid = _validateBirthDate(_birthDate);
+            const birthDateValid = _validateBirthDate(_birthDate)
             if (!birthDateValid) {
-                return;
+                return
             }
         }
 
@@ -339,105 +339,105 @@ const Booking = () => {
             fullInsurance,
             additionalDriver,
             price
-        };
+        }
 
-        let _additionalDriver;
+        let _additionalDriver
         if (additionalDriver) {
             _additionalDriver = {
                 fullName: _fullName,
                 email: _email,
                 phone: _phone,
                 birthDate: _birthDate
-            };
+            }
         }
 
         BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
             .then(status => {
                 if (status === 200) {
                     if (!additionalDriver) {
-                        set_FullName('');
-                        set_Email('');
-                        set_Phone('');
-                        set_BirthDate(null);
+                        set_FullName('')
+                        set_Email('')
+                        set_Phone('')
+                        set_BirthDate(null)
                     }
-                    Helper.info(commonStrings.UPDATED);
+                    Helper.info(commonStrings.UPDATED)
                 } else {
-                    err();
+                    err()
                 }
             })
             .catch((err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const onLoad = (user) => {
-        setUser(user);
-        setLoading(true);
+        setUser(user)
+        setLoading(true)
 
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search)
         if (params.has('b')) {
-            const id = params.get('b');
+            const id = params.get('b')
             if (id && id !== '') {
                 BookingService.getBooking(id)
                     .then(booking => {
                         if (booking) {
 
                             if (!Helper.admin(user) && booking.company._id !== user._id) {
-                                setLoading(false);
-                                setNoMatch(true);
-                                return;
+                                setLoading(false)
+                                setNoMatch(true)
+                                return
                             }
 
-                            setBooking(booking);
-                            setPrice(booking.price);
-                            setLoading(false);
-                            setVisible(true);
-                            setIsCompany(user.type === Env.RECORD_TYPE.COMPANY);
-                            setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar });
-                            setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image });
-                            setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar });
-                            setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name });
-                            setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name });
-                            setFrom(new Date(booking.from));
-                            setMinDate(new Date(booking.from));
-                            setTo(new Date(booking.to));
-                            setStatus(booking.status);
-                            setCancellation(booking.cancellation);
-                            setAmendments(booking.amendments);
-                            setTheftProtection(booking.theftProtection);
-                            setCollisionDamageWaiver(booking.collisionDamageWaiver);
-                            setFullInsurance(booking.fullInsurance);
-                            setAdditionalDriver(booking.additionalDriver);
+                            setBooking(booking)
+                            setPrice(booking.price)
+                            setLoading(false)
+                            setVisible(true)
+                            setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
+                            setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
+                            setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
+                            setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
+                            setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
+                            setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
+                            setFrom(new Date(booking.from))
+                            setMinDate(new Date(booking.from))
+                            setTo(new Date(booking.to))
+                            setStatus(booking.status)
+                            setCancellation(booking.cancellation)
+                            setAmendments(booking.amendments)
+                            setTheftProtection(booking.theftProtection)
+                            setCollisionDamageWaiver(booking.collisionDamageWaiver)
+                            setFullInsurance(booking.fullInsurance)
+                            setAdditionalDriver(booking.additionalDriver)
 
                             if (booking.additionalDriver && booking._additionalDriver) {
-                                set_FullName(booking._additionalDriver.fullName);
-                                set_Email(booking._additionalDriver.email);
-                                set_Phone(booking._additionalDriver.phone);
+                                set_FullName(booking._additionalDriver.fullName)
+                                set_Email(booking._additionalDriver.email)
+                                set_Phone(booking._additionalDriver.phone)
                                 set_BirthDate(new Date(booking._additionalDriver.birthDate))
                             }
 
                         } else {
-                            setLoading(false);
-                            setNoMatch(true);
+                            setLoading(false)
+                            setNoMatch(true)
                         }
                     })
                     .catch(() => {
-                        setLoading(false);
-                        setError(true);
-                        setVisible(false);
-                    });
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    })
             } else {
-                setLoading(false);
-                setNoMatch(true);
+                setLoading(false)
+                setNoMatch(true)
             }
         } else {
-            setLoading(false);
-            setNoMatch(true);
+            setLoading(false)
+            setNoMatch(true)
         }
 
     }
 
-    const days = Helper.days(from, to);
+    const days = Helper.days(from, to)
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -503,20 +503,20 @@ const Booking = () => {
                                     required
                                     onChange={(from) => {
                                         if (from) {
-                                            booking.from = from;
+                                            booking.from = from
 
                                             Helper.price(
                                                 booking,
                                                 booking.car,
                                                 (price) => {
-                                                    setBooking(booking);
-                                                    setPrice(price);
-                                                    setFrom(from);
-                                                    setMinDate(from);
+                                                    setBooking(booking)
+                                                    setPrice(price)
+                                                    setFrom(from)
+                                                    setMinDate(from)
                                                 },
                                                 (err) => {
-                                                    err();
-                                                });
+                                                    err()
+                                                })
                                         }
                                     }}
                                     language={UserService.getLanguage()}
@@ -530,19 +530,19 @@ const Booking = () => {
                                     required
                                     onChange={(to) => {
                                         if (to) {
-                                            booking.to = to;
+                                            booking.to = to
 
                                             Helper.price(
                                                 booking,
                                                 booking.car,
                                                 (price) => {
-                                                    setBooking(booking);
-                                                    setPrice(price);
-                                                    setTo(to);
+                                                    setBooking(booking)
+                                                    setPrice(price)
+                                                    setTo(to)
                                                 },
                                                 (err) => {
-                                                    err();
-                                                });
+                                                    err()
+                                                })
                                         }
                                     }}
                                     language={UserService.getLanguage()}
@@ -650,7 +650,7 @@ const Booking = () => {
                                             value={_fullName}
                                             required
                                             onChange={(e) => {
-                                                set_FullName(e.target.value);
+                                                set_FullName(e.target.value)
                                             }}
                                             autoComplete="off"
                                         />
@@ -663,13 +663,13 @@ const Booking = () => {
                                             value={_email}
                                             error={!_emailValid}
                                             onBlur={(e) => {
-                                                _validateEmail(e.target.value);
+                                                _validateEmail(e.target.value)
                                             }}
                                             onChange={(e) => {
-                                                set_Email(e.target.value);
+                                                set_Email(e.target.value)
 
                                                 if (!e.target.value) {
-                                                    set_EmailValid(true);
+                                                    set_EmailValid(true)
                                                 }
                                             }}
                                             required
@@ -687,13 +687,13 @@ const Booking = () => {
                                             value={_phone}
                                             error={!_phoneValid}
                                             onBlur={(e) => {
-                                                _validatePhone(e.target.value);
+                                                _validatePhone(e.target.value)
                                             }}
                                             onChange={(e) => {
-                                                set_Phone(e.target.value);
+                                                set_Phone(e.target.value)
 
                                                 if (!e.target.value) {
-                                                    set_PhoneValid(true);
+                                                    set_PhoneValid(true)
                                                 }
                                             }}
                                             required
@@ -710,9 +710,9 @@ const Booking = () => {
                                             error={!_birthDateValid}
                                             required
                                             onChange={(_birthDate) => {
-                                                const _birthDateValid = _validateBirthDate(_birthDate);
-                                                set_BirthDate(_birthDate);
-                                                set_BirthDateValid(_birthDateValid);
+                                                const _birthDateValid = _validateBirthDate(_birthDate)
+                                                set_BirthDate(_birthDate)
+                                                set_BirthDateValid(_birthDateValid)
                                             }}
                                             language={UserService.getLanguage()}
                                         />
@@ -796,7 +796,7 @@ const Booking = () => {
             {noMatch && <NoMatch hideHeader />}
             {error && <Error />}
         </Master>
-    );
-};
+    )
+}
 
-export default Booking;
+export default Booking

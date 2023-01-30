@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
 import {
     InputLabel,
     Select,
     MenuItem
-} from '@mui/material';
-import * as Helper from '../common/Helper';
+} from '@mui/material'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/status-list.css';
+import '../assets/css/status-list.css'
 
 const StatusList = (props) => {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('')
 
     useEffect(() => {
         if (props.value && props.value !== value) {
-            setValue(props.value);
+            setValue(props.value)
         }
 
     }, [props.value, value])
 
     const handleChange = (e) => {
-        setValue(e.target.value);
+        setValue(e.target.value)
 
         if (props.onChange) {
-            props.onChange(e.target.value);
+            props.onChange(e.target.value)
         }
-    };
+    }
 
     return (
         <div style={props.style}>
@@ -56,7 +56,7 @@ const StatusList = (props) => {
                 </>
             }
         </div>
-    );
+    )
 }
 
-export default StatusList;
+export default StatusList

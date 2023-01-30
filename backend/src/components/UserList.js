@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/user-list';
-import * as Helper from '../common/Helper';
-import * as UserService from '../services/UserService';
-import Backdrop from '../components/SimpleBackdrop';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/user-list'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
+import Backdrop from '../components/SimpleBackdrop'
 import {
     DataGrid,
     frFR,
     enUS
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid'
 import {
     Tooltip,
     IconButton,
@@ -22,91 +22,91 @@ import {
     Avatar,
     Badge,
     Box
-} from '@mui/material';
+} from '@mui/material'
 import {
     Edit as EditIcon,
     Delete as DeleteIcon,
     AccountCircle,
     Check as VerifiedIcon
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
-import '../assets/css/user-list.css';
+import '../assets/css/user-list.css'
 
 const UserList = (props) => {
-    const [user, setUser] = useState();
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(Env.PAGE_SIZE);
-    const [columns, setColumns] = useState([]);
-    const [rows, setRows] = useState([]);
-    const [rowCount, setRowCount] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [selectedId, setSelectedId] = useState();
-    const [selectedIds, setSelectedIds] = useState([]);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [types, setTypes] = useState(props.types);
-    const [keyword, setKeyword] = useState(props.keyword);
-    const [reload, setReload] = useState(props.reload);
-    const [reloadColumns, setReloadColumns] = useState(false);
+    const [user, setUser] = useState()
+    const [page, setPage] = useState(0)
+    const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)
+    const [columns, setColumns] = useState([])
+    const [rows, setRows] = useState([])
+    const [rowCount, setRowCount] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [selectedId, setSelectedId] = useState()
+    const [selectedIds, setSelectedIds] = useState([])
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const [types, setTypes] = useState(props.types)
+    const [keyword, setKeyword] = useState(props.keyword)
+    const [reload, setReload] = useState(props.reload)
+    const [reloadColumns, setReloadColumns] = useState(false)
 
     const _fetch = (page, user) => {
-        setLoading(true);
+        setLoading(true)
 
-        const payload = { user: user._id, types };
+        const payload = { user: user._id, types }
 
         UserService.getUsers(payload, keyword, page + 1, pageSize)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = _data.resultData;
-                setRows(_rows);
-                setRowCount(totalRecords);
+                const _data = data.length > 0 ? data[0] : {}
+                if (_data.length === 0) _data.resultData = []
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const _rows = _data.resultData
+                setRows(_rows)
+                setRowCount(totalRecords)
                 if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                 }
-                setLoading(false);
+                setLoading(false)
             })
             .catch((err) => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     useEffect(() => {
-        setTypes(props.types || []);
-    }, [props.types]);
+        setTypes(props.types || [])
+    }, [props.types])
 
     useEffect(() => {
-        setKeyword(props.keyword || '');
-    }, [props.keyword]);
+        setKeyword(props.keyword || '')
+    }, [props.keyword])
 
 
     useEffect(() => {
         setReload(props.reload || false)
-    }, [props.reload]);
+    }, [props.reload])
 
     useEffect(() => {
         if (props.user) {
-            const columns = getColumns(props.user);
-            setColumns(columns);
-            setUser(props.user);
-            _fetch(page, props.user);
+            const columns = getColumns(props.user)
+            setColumns(columns)
+            setUser(props.user)
+            _fetch(page, props.user)
         }
-    }, [props.user, page, pageSize, types, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.user, page, pageSize, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (reload) {
-            setPage(0);
-            _fetch(0, user);
+            setPage(0)
+            _fetch(0, user)
         }
-    }, [reload]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (user && reloadColumns) {
-            const columns = getColumns(user);
-            setColumns(columns);
-            setReloadColumns(false);
+            const columns = getColumns(user)
+            setColumns(columns)
+            setReloadColumns(false)
         }
-    }, [user, selectedIds, reloadColumns]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [user, selectedIds, reloadColumns]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const getColumns = (user) => {
         const columns = [
@@ -115,8 +115,8 @@ const UserList = (props) => {
                 headerName: commonStrings.USER,
                 flex: 1,
                 renderCell: (params) => {
-                    const user = params.row;
-                    let userAvatar;
+                    const user = params.row
+                    let userAvatar
 
                     if (user.avatar) {
                         if (user.type === Env.RECORD_TYPE.COMPANY) {
@@ -125,14 +125,14 @@ const UserList = (props) => {
                                     alt={params.row.fullName}
                                     style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                 />
-                            );
+                            )
 
                         } else {
                             const avatar = <Avatar
                                 src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
                                 className='avatar-small'
 
-                            />;
+                            />
                             if (user.verified) {
                                 userAvatar = <Badge
                                     overlap="circular"
@@ -149,13 +149,13 @@ const UserList = (props) => {
                                     }
                                 >
                                     {avatar}
-                                </Badge>;
+                                </Badge>
                             } else {
-                                userAvatar = avatar;
+                                userAvatar = avatar
                             }
                         }
                     } else {
-                        const avatar = <AccountCircle className='avatar-small' color='disabled' />;
+                        const avatar = <AccountCircle className='avatar-small' color='disabled' />
 
                         if (user.verified) {
                             userAvatar = <Badge
@@ -173,9 +173,9 @@ const UserList = (props) => {
                                 }
                             >
                                 {avatar}
-                            </Badge>;
+                            </Badge>
                         } else {
-                            userAvatar = avatar;
+                            userAvatar = avatar
                         }
                     }
 
@@ -183,7 +183,7 @@ const UserList = (props) => {
                         <Link href={`/user?u=${params.row._id}`} className='us-user'>
                             <span className='us-avatar'>{userAvatar}</span>
                             <span>{params.value}</span>
-                        </Link>);
+                        </Link>)
 
                 }
             },
@@ -212,12 +212,12 @@ const UserList = (props) => {
                 disableColumnMenu: true,
                 renderCell: (params) => {
                     const handleDelete = (e) => {
-                        e.stopPropagation(); // don't select this row after clicking
-                        setSelectedId(params.row._id);
-                        setOpenDeleteDialog(true);
-                    };
+                        e.stopPropagation() // don't select this row after clicking
+                        setSelectedId(params.row._id)
+                        setOpenDeleteDialog(true)
+                    }
 
-                    const _user = params.row;
+                    const _user = params.row
                     return (
                         user.type === Env.RECORD_TYPE.ADMIN || _user.company === user._id ?
                             <div>
@@ -235,7 +235,7 @@ const UserList = (props) => {
                             </div>
                             : <></>
 
-                    );
+                    )
                 },
                 renderHeader: () => {
                     return (
@@ -245,7 +245,7 @@ const UserList = (props) => {
                                 <Tooltip title={strings.DELETE_SELECTION}>
                                     <IconButton
                                         onClick={() => {
-                                            setOpenDeleteDialog(true);
+                                            setOpenDeleteDialog(true)
                                         }}
                                     >
                                         <DeleteIcon />
@@ -253,48 +253,48 @@ const UserList = (props) => {
                                 </Tooltip>
                             </div>
                             : <></>
-                    );
+                    )
                 }
             }
-        ];
+        ]
 
         if (props.hideDesktopColumns) {
-            columns.splice(1, 3);
+            columns.splice(1, 3)
         }
 
 
-        return columns;
+        return columns
     }
 
     const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-        setSelectedId('');
-    };
+        setOpenDeleteDialog(false)
+        setSelectedId('')
+    }
 
     const handleConfirmDelete = () => {
-        const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
+        const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
 
-        setOpenDeleteDialog(false);
-        setLoading(true);
+        setOpenDeleteDialog(false)
+        setLoading(true)
 
         UserService.deleteUsers(ids)
             .then(status => {
                 if (status === 200) {
                     if (selectedIds.length > 0) {
-                        setRows(rows.filter((row) => !selectedIds.includes(row._id)));
+                        setRows(rows.filter((row) => !selectedIds.includes(row._id)))
                     } else {
-                        setRows(rows.filter((row) => row._id !== selectedId));
+                        setRows(rows.filter((row) => row._id !== selectedId))
                     }
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
 
-                setLoading(false);
+                setLoading(false)
             })
             .catch(() => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     return (
         <div className='us-list' >
@@ -312,19 +312,19 @@ const UserList = (props) => {
                     pageSize={pageSize}
                     paginationMode='server'
                     onPageChange={(page) => {
-                        setPage(page);
+                        setPage(page)
                     }}
                     onPageSizeChange={(pageSize) => {
-                        setPage(0);
-                        setPageSize(pageSize);
+                        setPage(0)
+                        setPageSize(pageSize)
                     }}
                     localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
                     components={{
                         NoRowsOverlay: () => ''
                     }}
                     onSelectionModelChange={(selectedIds) => {
-                        setSelectedIds(selectedIds);
-                        setReloadColumns(true);
+                        setSelectedIds(selectedIds)
+                        setReloadColumns(true)
                     }}
                     getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
                     disableSelectionOnClick
@@ -346,7 +346,7 @@ const UserList = (props) => {
 
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </div>
-    );
+    )
 }
 
-export default UserList;
+export default UserList

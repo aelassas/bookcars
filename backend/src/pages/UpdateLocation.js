@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import { strings as commonStrings } from '../lang/common';
-import { strings as clStrings } from '../lang/create-location';
-import { strings } from '../lang/update-location';
-import * as LocationService from '../services/LocationService';
-import NoMatch from './NoMatch';
-import Error from './Error';
-import Backdrop from '../components/SimpleBackdrop';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings as clStrings } from '../lang/create-location'
+import { strings } from '../lang/update-location'
+import * as LocationService from '../services/LocationService'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import Backdrop from '../components/SimpleBackdrop'
 import {
     Input,
     InputLabel,
@@ -14,129 +14,129 @@ import {
     FormHelperText,
     Button,
     Paper
-} from '@mui/material';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
+} from '@mui/material'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/update-location.css';
-import Env from '../config/env.config';
+import '../assets/css/update-location.css'
+import Env from '../config/env.config'
 
 const UpdateLocation = () => {
-    const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [names, setNames] = useState([]);
-    const [nameErrors, setNameErrors] = useState([]);
-    const [noMatch, setNoMatch] = useState(false);
-    const [error, setError] = useState(false);
-    const [location, setLocation] = useState();
-    const [nameChanged, setNameChanged] = useState(false);
+    const [visible, setVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [names, setNames] = useState([])
+    const [nameErrors, setNameErrors] = useState([])
+    const [noMatch, setNoMatch] = useState(false)
+    const [error, setError] = useState(false)
+    const [location, setLocation] = useState()
+    const [nameChanged, setNameChanged] = useState(false)
 
     const err = () => {
-        setLoading(false);
-        Helper.error();
+        setLoading(false)
+        Helper.error()
     }
 
     const checkName = () => {
-        let nameChanged = false;
+        let nameChanged = false
 
         for (let i = 0; i < names.length; i++) {
-            const name = names[i];
+            const name = names[i]
             if (name.name !== location.values[i].value) {
-                nameChanged = true;
-                break;
+                nameChanged = true
+                break
             }
         }
 
-        setNameChanged(nameChanged);
-        return nameChanged;
+        setNameChanged(nameChanged)
+        return nameChanged
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         try {
-            let nameChanged = checkName();
+            let nameChanged = checkName()
 
             if (!nameChanged) {
-                return;
+                return
             }
 
-            let isValid = true;
+            let isValid = true
 
-            for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false;
+            for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false
 
             for (let i = 0; i < names.length; i++) {
-                const name = names[i];
+                const name = names[i]
                 if (name.name !== location.values[i].value) {
-                    const _isValid = await LocationService.validate(name) === 200;
-                    isValid = isValid && _isValid;
-                    if (!_isValid) nameErrors[i] = true;
+                    const _isValid = await LocationService.validate(name) === 200
+                    isValid = isValid && _isValid
+                    if (!_isValid) nameErrors[i] = true
                 }
             }
 
-            setNameErrors(Helper.cloneArray(nameErrors));
+            setNameErrors(Helper.cloneArray(nameErrors))
 
             if (isValid) {
-                const status = await LocationService.update(location._id, names);
+                const status = await LocationService.update(location._id, names)
 
                 if (status === 200) {
                     for (let i = 0; i < names.length; i++) {
-                        const name = names[i];
-                        location.values[i].value = name.name;
+                        const name = names[i]
+                        location.values[i].value = name.name
                     }
 
-                    setLocation(Helper.clone(location));
-                    Helper.info(strings.LOCATION_UPDATED);
+                    setLocation(Helper.clone(location))
+                    Helper.info(strings.LOCATION_UPDATED)
                 } else {
-                    err();
+                    err()
                 }
             }
         }
         catch (err) {
-            UserService.signout();
+            UserService.signout()
         }
-    };
+    }
 
     const onLoad = (user) => {
         if (user && user.verified) {
-            setLoading(true);
+            setLoading(true)
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search)
             if (params.has('l')) {
-                const id = params.get('l');
+                const id = params.get('l')
                 if (id && id !== '') {
                     LocationService.getLocation(id)
                         .then(location => {
                             if (location) {
                                 Env._LANGUAGES.forEach(lang => {
                                     if (!location.values.some(value => value.language === lang.code)) {
-                                        location.values.push({ language: lang.code, name: '' });
+                                        location.values.push({ language: lang.code, name: '' })
                                     }
-                                });
+                                })
 
-                                const names = location.values.map(value => ({ language: value.language, name: value.value }));
+                                const names = location.values.map(value => ({ language: value.language, name: value.value }))
 
-                                setLocation(location);
-                                setNames(names);
-                                setVisible(true);
-                                setLoading(false);
+                                setLocation(location)
+                                setNames(names)
+                                setVisible(true)
+                                setLoading(false)
                             } else {
-                                setLoading(false);
-                                setNoMatch(true);
+                                setLoading(false)
+                                setNoMatch(true)
                             }
                         })
                         .catch(() => {
-                            setLoading(false);
-                            setError(true);
-                            setVisible(false);
-                        });
+                            setLoading(false)
+                            setError(true)
+                            setVisible(false)
+                        })
                 } else {
-                    setLoading(false);
-                    setNoMatch(true);
+                    setLoading(false)
+                    setNoMatch(true)
                 }
             } else {
-                setLoading(false);
-                setNoMatch(true);
+                setLoading(false)
+                setNoMatch(true)
             }
         }
     }
@@ -158,10 +158,10 @@ const UpdateLocation = () => {
                                             error={nameErrors[index]}
                                             required
                                             onChange={(e) => {
-                                                nameErrors[index] = false;
-                                                names[index].name = e.target.value;
-                                                checkName();
-                                                setNames(Helper.cloneArray(names));
+                                                nameErrors[index] = false
+                                                names[index].name = e.target.value
+                                                checkName()
+                                                setNames(Helper.cloneArray(names))
                                             }}
                                             autoComplete="off"
                                         />
@@ -199,7 +199,7 @@ const UpdateLocation = () => {
             {error && <Error />}
             {noMatch && <NoMatch hideHeader />}
         </Master>
-    );
-};
+    )
+}
 
-export default UpdateLocation;
+export default UpdateLocation

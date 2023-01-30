@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import Env from '../config/env.config';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, View, Text } from 'react-native'
+import Env from '../config/env.config'
 import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
-import { MaterialIcons } from '@expo/vector-icons';
-import * as LocationService from '../services/LocationService';
-import * as Helper from '../common/Helper';
+import { MaterialIcons } from '@expo/vector-icons'
+import * as LocationService from '../services/LocationService'
+import * as Helper from '../common/Helper'
 
 const LocationSelectList = (props) => {
-    const [loading, setLoading] = useState(false);
-    const [rows, setRows] = useState([]);
-    const [selectedItem, setSelectedItem] = useState([]);
+    const [loading, setLoading] = useState(false)
+    const [rows, setRows] = useState([])
+    const [selectedItem, setSelectedItem] = useState([])
 
     useEffect(() => {
-        setSelectedItem(props.selectedItem);
-    }, [props.selectedItem]);
+        setSelectedItem(props.selectedItem)
+    }, [props.selectedItem])
 
     const _setSelectedItem = (selectedItem) => {
-        setSelectedItem(selectedItem);
+        setSelectedItem(selectedItem)
 
         if (props.onSelectItem) {
-            props.onSelectItem(selectedItem);
+            props.onSelectItem(selectedItem)
         }
-    };
+    }
 
     const onChangeText = (text) => {
-        _fetch(text);
-    };
+        _fetch(text)
+    }
 
     const _fetch = (text) => {
-        setLoading(true);
+        setLoading(true)
 
         LocationService.getLocations(text, 1, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
+                const _data = data.length > 0 ? data[0] : {}
+                if (_data.length === 0) _data.resultData = []
                 const _rows = _data.resultData.map(location => ({
                     id: location._id,
                     title: location.name
-                }));
-                setRows(_rows);
+                }))
+                setRows(_rows)
                 if (props.onFetch) {
-                    props.onFetch();
+                    props.onFetch()
                 }
-                setLoading(false);
+                setLoading(false)
             })
             .catch((err) => {
-                Helper.error(err);
-            });
-    };
+                Helper.error(err)
+            })
+    }
 
-    const small = props.size === 'small';
+    const small = props.size === 'small'
 
     return (
         <View style={{ ...props.style, ...styles.container }}>
@@ -76,14 +76,14 @@ const LocationSelectList = (props) => {
                     item && _setSelectedItem(item.id)
                 }}
                 onChangeText={(text) => {
-                    onChangeText(text);
-                    if (props.onChangeText) props.onChangeText(text);
+                    onChangeText(text)
+                    if (props.onChangeText) props.onChangeText(text)
                 }}
                 onClear={() => {
-                    _setSelectedItem(null);
+                    _setSelectedItem(null)
                 }}
                 onFocus={() => {
-                    if (props.onFocus) props.onFocus();
+                    if (props.onFocus) props.onFocus()
                 }}
                 textInputProps={{
                     placeholder: props.label || '',
@@ -126,13 +126,13 @@ const LocationSelectList = (props) => {
                 EmptyResultComponent={<></>}
             />
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
         maxWidth: 480
     }
-});
+})
 
-export default LocationSelectList;
+export default LocationSelectList

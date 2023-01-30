@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
     InputLabel,
     Select,
     MenuItem
-} from '@mui/material';
+} from '@mui/material'
 
 const SeatsList = (props) => {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('')
 
     useEffect(() => {
-        setValue(props.value || '');
-    }, [props.value]);
+        setValue(props.value || '')
+    }, [props.value])
 
     const handleChange = (e) => {
-        const value = e.target.value || '';
-        setValue(value);
+        const value = e.target.value || ''
+        setValue(value)
 
         if (props.onChange) {
-            props.onChange(value);
+            props.onChange(value)
         }
-    };
+    }
 
     return (
         <div>
@@ -42,7 +42,7 @@ const SeatsList = (props) => {
                 <MenuItem value={9}>9</MenuItem>
             </Select>
         </div>
-    );
-};
+    )
+}
 
-export default SeatsList;
+export default SeatsList

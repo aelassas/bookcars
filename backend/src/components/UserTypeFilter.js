@@ -1,77 +1,77 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { strings as commonStrings } from '../lang/common';
-import * as Helper from '../common/Helper';
+import React, { useEffect, useRef, useState } from 'react'
+import { strings as commonStrings } from '../lang/common'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/user-type-filter.css';
+import '../assets/css/user-type-filter.css'
 
 const UserTypeFilter = (props) => {
-    const userTypes = Helper.getUserTypes();
-    const [checkedUserTypes, setCheckedUserTypes] = useState(userTypes.map(user => user.value));
-    const [allChecked, setAllChecked] = useState(true);
-    const refs = useRef([]);
+    const userTypes = Helper.getUserTypes()
+    const [checkedUserTypes, setCheckedUserTypes] = useState(userTypes.map(user => user.value))
+    const [allChecked, setAllChecked] = useState(true)
+    const refs = useRef([])
 
     useEffect(() => {
         refs.current.forEach(checkbox => {
-            checkbox.checked = true;
+            checkbox.checked = true
         })
-    }, []);
+    }, [])
 
     const handleUserTypeClick = (e) => {
-        const checkbox = e.currentTarget.previousSibling;
-        checkbox.checked = !checkbox.checked;
-        const event = e;
-        event.currentTarget = checkbox;
-        handleUserTypeChange(event);
-    };
+        const checkbox = e.currentTarget.previousSibling
+        checkbox.checked = !checkbox.checked
+        const event = e
+        event.currentTarget = checkbox
+        handleUserTypeChange(event)
+    }
 
     const handleUserTypeChange = (e) => {
-        const user = e.currentTarget.getAttribute('data-value');
+        const user = e.currentTarget.getAttribute('data-value')
 
         if (e.currentTarget.checked) {
-            checkedUserTypes.push(user);
+            checkedUserTypes.push(user)
 
             if (checkedUserTypes.length === userTypes.length) {
-                setAllChecked(true);
+                setAllChecked(true)
             }
         } else {
-            const index = checkedUserTypes.findIndex(s => s === user);
-            checkedUserTypes.splice(index, 1);
+            const index = checkedUserTypes.findIndex(s => s === user)
+            checkedUserTypes.splice(index, 1)
 
             if (checkedUserTypes.length === 0) {
-                setAllChecked(false);
+                setAllChecked(false)
             }
         }
 
-        setCheckedUserTypes(checkedUserTypes);
+        setCheckedUserTypes(checkedUserTypes)
 
         if (props.onChange) {
-            props.onChange(checkedUserTypes);
+            props.onChange(checkedUserTypes)
         }
-    };
+    }
 
     const handleUncheckAllChange = (e) => {
 
         if (allChecked) { // uncheck all
             refs.current.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+                checkbox.checked = false
+            })
 
-            setAllChecked(false);
-            setCheckedUserTypes([]);
+            setAllChecked(false)
+            setCheckedUserTypes([])
         } else { // check all
             refs.current.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+                checkbox.checked = true
+            })
 
-            const _userTypes = userTypes.map(user => user.value);
-            setAllChecked(true);
-            setCheckedUserTypes(_userTypes);
+            const _userTypes = userTypes.map(user => user.value)
+            setAllChecked(true)
+            setCheckedUserTypes(_userTypes)
 
             if (props.onChange) {
-                props.onChange(_userTypes);
+                props.onChange(_userTypes)
             }
         }
-    };
+    }
 
     return (
         <div className={`${props.className ? `${props.className} ` : ''}user-type-filter`}>
@@ -91,7 +91,7 @@ const UserTypeFilter = (props) => {
                 </span>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default UserTypeFilter;
+export default UserTypeFilter
