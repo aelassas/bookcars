@@ -5,7 +5,7 @@ import { strings as csStrings } from '../lang/cars';
 import { strings } from '../lang/booking-list';
 import * as Helper from '../common/Helper';
 import * as BookingService from '../services/BookingService';
-import Backdrop from '../elements/SimpleBackdrop';
+import Backdrop from '../components/SimpleBackdrop';
 import {
     DataGrid,
     frFR,

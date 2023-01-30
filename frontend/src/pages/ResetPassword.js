@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as UserService from '../services/UserService';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings as cpStrings } from '../lang/change-password';
 import { strings as rpStrings } from '../lang/reset-password';

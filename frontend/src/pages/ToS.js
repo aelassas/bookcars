@@ -1,18 +1,18 @@
 import React from 'react';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 
-import '../assets/css/contact.css';
+import '../assets/css/tos.css';
 
-const Contact = () => {
+const ToS = () => {
 
     const onLoad = (user) => {
     };
 
     return (
         <Master onLoad={onLoad} strict={false}>
-            Contact!
+            ToS!
         </Master>
     );
 };
 
-export default Contact;
+export default ToS;

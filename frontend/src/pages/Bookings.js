@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
-import BookingList from '../elements/BookingList';
-import CompanyFilter from '../elements/CompanyFilter';
-import StatusFilter from '../elements/StatusFilter';
-import BookingFilter from '../elements/BookingFilter';
+import BookingList from '../components/BookingList';
+import CompanyFilter from '../components/CompanyFilter';
+import StatusFilter from '../components/StatusFilter';
+import BookingFilter from '../components/BookingFilter';
 import * as CompanyService from '../services/CompanyService';
 
 import '../assets/css/bookings.css';

@@ -3,11 +3,11 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-up';
 import * as UserService from '../services/UserService';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import ReCAPTCHA from 'react-google-recaptcha';
-import Error from '../elements/Error';
-import Backdrop from '../elements/SimpleBackdrop';
-import DatePicker from '../elements/DatePicker';
+import Error from '../components/Error';
+import Backdrop from '../components/SimpleBackdrop';
+import DatePicker from '../components/DatePicker';
 import {
     OutlinedInput,
     InputLabel,

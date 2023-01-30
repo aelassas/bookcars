@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/home';
 import * as UserService from '../services/UserService';
-import Master from '../elements/Master';
-import LocationSelectList from '../elements/LocationSelectList';
-import DateTimePicker from '../elements/DateTimePicker'
+import Master from '../components/Master';
+import LocationSelectList from '../components/LocationSelectList';
+import DateTimePicker from '../components/DateTimePicker'
 import { FormControl, Button } from '@mui/material';
 
 import SecurePayment from '../assets/img/secure-payment.png';

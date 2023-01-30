@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@mui/material';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/no-match';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 
 const NoMatch = (props) => {
 

@@ -3,15 +3,15 @@ import Env from '../config/env.config';
 import * as Helper from '../common/Helper';
 import * as LocationService from '../services/LocationService';
 import * as CompanyService from '../services/CompanyService';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import NoMatch from './NoMatch';
-import CarFilter from '../elements/CarFilter';
-import CompanyFilter from '../elements/CompanyFilter';
-import FuelFilter from '../elements/FuelFilter';
-import GearboxFilter from '../elements/GearboxFilter';
-import MileageFilter from '../elements/MileageFilter';
-import DepositFilter from '../elements/DepositFilter';
-import CarList from '../elements/CarList';
+import CarFilter from '../components/CarFilter';
+import CompanyFilter from '../components/CompanyFilter';
+import FuelFilter from '../components/FuelFilter';
+import GearboxFilter from '../components/GearboxFilter';
+import MileageFilter from '../components/MileageFilter';
+import DepositFilter from '../components/DepositFilter';
+import CarList from '../components/CarList';
 
 import '../assets/css/cars.css';
 

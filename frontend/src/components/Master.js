@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { strings } from '../lang/master';
-import Header from '../elements/Header';
+import Header from '../components/Header';
 import * as UserService from '../services/UserService';
 import { Button } from '@mui/material';
 import * as Helper from '../common/Helper';

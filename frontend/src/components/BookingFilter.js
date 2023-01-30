@@ -5,7 +5,7 @@ import LocationSelectList from './LocationSelectList';
 import DatePicker from './DatePicker';
 import { FormControl, TextField, Button, IconButton } from '@mui/material';
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
-import Accordion from '../elements/Accordion';
+import Accordion from '../components/Accordion';
 
 import '../assets/css/booking-filter.css';
 

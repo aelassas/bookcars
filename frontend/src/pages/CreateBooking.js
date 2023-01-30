@@ -8,10 +8,10 @@ import * as Helper from '../common/Helper';
 import * as UserService from '../services/UserService';
 import * as CarService from '../services/CarService';
 import * as LocationService from '../services/LocationService';
-import Master from '../elements/Master';
-import Error from '../elements/Error';
-import DatePicker from '../elements/DatePicker';
-import Backdrop from '../elements/SimpleBackdrop';
+import Master from '../components/Master';
+import Error from '../components/Error';
+import DatePicker from '../components/DatePicker';
+import Backdrop from '../components/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Info from './Info';
 import {

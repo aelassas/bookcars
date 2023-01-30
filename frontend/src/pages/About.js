@@ -1,18 +1,18 @@
 import React from 'react';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 
-import '../assets/css/tos.css';
+import '../assets/css/about.css';
 
-const ToS = () => {
+const About = () => {
 
     const onLoad = (user) => {
     };
 
     return (
         <Master onLoad={onLoad} strict={false}>
-            ToS!
+            About!
         </Master>
     );
 };
 
-export default ToS;
+export default About;

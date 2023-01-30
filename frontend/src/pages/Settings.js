@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Env from '../config/env.config';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/settings';
 import * as UserService from '../services/UserService';
-import Backdrop from '../elements/SimpleBackdrop';
-import DatePicker from '../elements/DatePicker';
-import Avatar from '../elements/Avatar';
+import Backdrop from '../components/SimpleBackdrop';
+import DatePicker from '../components/DatePicker';
+import Avatar from '../components/Avatar';
 import {
     Input,
     InputLabel,
