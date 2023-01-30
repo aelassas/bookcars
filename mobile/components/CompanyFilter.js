@@ -1,35 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, Pressable, StyleSheet, View } from 'react-native'
 
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import * as CompanyService from '../services/CompanyService';
-import Link from './Link';
-import Switch from './Switch';
-import Accordion from './Accordion';
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import * as CompanyService from '../services/CompanyService'
+import Link from './Link'
+import Switch from './Switch'
+import Accordion from './Accordion'
 
 const CompanyFilter = (props) => {
-    const [companies, setCompanies] = useState([]);
-    const [checkedCompanies, setCheckedCompanies] = useState([]);
-    const [allChecked, setAllChecked] = useState(true);
+    const [companies, setCompanies] = useState([])
+    const [checkedCompanies, setCheckedCompanies] = useState([])
+    const [allChecked, setAllChecked] = useState(true)
 
     const init = async () => {
         try {
-            const allCompanies = await CompanyService.getAllCompanies();
-            const companies = allCompanies.map((company) => ({ ...company, checked: true }));
-            const checkedCompanies = Helper.flattenCompanies(companies);
-            setCompanies(companies);
-            setCheckedCompanies(checkedCompanies);
-            if (props.onLoad) props.onLoad(checkedCompanies);
+            const allCompanies = await CompanyService.getAllCompanies()
+            const companies = allCompanies.map((company) => ({ ...company, checked: true }))
+            const checkedCompanies = Helper.flattenCompanies(companies)
+            setCompanies(companies)
+            setCheckedCompanies(checkedCompanies)
+            if (props.onLoad) props.onLoad(checkedCompanies)
         } catch (err) {
-            Helper.error(err);
+            Helper.error(err)
         }
-    };
+    }
 
     useEffect(() => {
-        init();
-    }, []);
+        init()
+    }, [])
 
     return (
         companies.length > 0 && props.visible &&
@@ -42,26 +42,26 @@ const CompanyFilter = (props) => {
                                 value={company.checked}
                                 onValueChange={(checked) => {
                                     if (checked) {
-                                        company.checked = true;
-                                        setCompanies(Helper.clone(companies));
-                                        checkedCompanies.push(company._id);
+                                        company.checked = true
+                                        setCompanies(Helper.clone(companies))
+                                        checkedCompanies.push(company._id)
 
                                         if (checkedCompanies.length === companies.length) {
-                                            setAllChecked(true);
+                                            setAllChecked(true)
                                         }
                                     } else {
-                                        company.checked = false;
-                                        setCompanies(Helper.clone(companies));
-                                        const index = checkedCompanies.indexOf(company._id);
-                                        checkedCompanies.splice(index, 1);
+                                        company.checked = false
+                                        setCompanies(Helper.clone(companies))
+                                        const index = checkedCompanies.indexOf(company._id)
+                                        checkedCompanies.splice(index, 1)
 
                                         if (checkedCompanies.length === 0) {
-                                            setAllChecked(false);
+                                            setAllChecked(false)
                                         }
                                     }
 
                                     if (props.onChange) {
-                                        props.onChange(Helper.clone(checkedCompanies));
+                                        props.onChange(Helper.clone(checkedCompanies))
                                     }
                                 }}
                             >
@@ -75,33 +75,33 @@ const CompanyFilter = (props) => {
                     )}
                     <Link style={styles.link} textStyle={styles.linkText} label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')} onPress={() => {
 
-                        let _checkedCompanies = [];
+                        let _checkedCompanies = []
                         if (allChecked) {
                             companies.forEach((company) => {
-                                company.checked = false;
-                            });
-                            setAllChecked(false);
-                            setCompanies(Helper.clone(companies));
-                            setCheckedCompanies(_checkedCompanies);
+                                company.checked = false
+                            })
+                            setAllChecked(false)
+                            setCompanies(Helper.clone(companies))
+                            setCheckedCompanies(_checkedCompanies)
                         } else {
                             companies.forEach((company) => {
-                                company.checked = true;
-                            });
-                            setAllChecked(true);
-                            setCompanies(Helper.clone(companies));
-                            _checkedCompanies = Helper.clone(Helper.flattenCompanies(companies));
-                            setCheckedCompanies(_checkedCompanies);
+                                company.checked = true
+                            })
+                            setAllChecked(true)
+                            setCompanies(Helper.clone(companies))
+                            _checkedCompanies = Helper.clone(Helper.flattenCompanies(companies))
+                            setCheckedCompanies(_checkedCompanies)
 
                             if (props.onChange) {
-                                props.onChange(_checkedCompanies);
+                                props.onChange(_checkedCompanies)
                             }
                         }
                     }} />
                 </View>
             </Accordion>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -134,6 +134,6 @@ const styles = StyleSheet.create({
     linkText: {
         fontSize: 12
     }
-});
+})
 
-export default CompanyFilter;
+export default CompanyFilter

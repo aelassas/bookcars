@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
     StyleSheet,
     View
-} from 'react-native';
+} from 'react-native'
 import {
     createDrawerNavigator
-} from '@react-navigation/drawer';
+} from '@react-navigation/drawer'
 import {
     useLinkBuilder,
     useNavigation,
     useNavigationState
-} from '@react-navigation/native';
-import { getHeaderTitle } from '@react-navigation/elements';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from '@react-navigation/native'
+import { getHeaderTitle } from '@react-navigation/elements'
+import { MaterialIcons } from '@expo/vector-icons'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import HomeScreen from '../screens/HomeScreen';
-import BookingsScreen from '../screens/BookingsScreen';
-import BookingScreen from '../screens/BookingScreen';
-import AboutScreen from '../screens/AboutScreen';
-import ToSScreen from '../screens/ToSScreen';
-import ContactScreen from '../screens/ContactScreen';
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
-import CarsScreen from '../screens/CarsScreen';
-import * as UserService from '../services/UserService';
-import i18n from '../lang/i18n';
-import Env from '../config/env.config';
-import SettingsScreen from '../screens/SettingsScreen';
-import ChangePasswordScreen from '../screens/ChangePasswordScreen';
-import DrawerContent from './DrawerContent';
-import CreateBookingScreen from '../screens/CreateBooking';
-import NotificationsScreen from '../screens/NotificationsScreen';
+import HomeScreen from '../screens/HomeScreen'
+import BookingsScreen from '../screens/BookingsScreen'
+import BookingScreen from '../screens/BookingScreen'
+import AboutScreen from '../screens/AboutScreen'
+import ToSScreen from '../screens/ToSScreen'
+import ContactScreen from '../screens/ContactScreen'
+import SignInScreen from '../screens/SignInScreen'
+import SignUpScreen from '../screens/SignUpScreen'
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen'
+import CarsScreen from '../screens/CarsScreen'
+import * as UserService from '../services/UserService'
+import i18n from '../lang/i18n'
+import Env from '../config/env.config'
+import SettingsScreen from '../screens/SettingsScreen'
+import ChangePasswordScreen from '../screens/ChangePasswordScreen'
+import DrawerContent from './DrawerContent'
+import CreateBookingScreen from '../screens/CreateBooking'
+import NotificationsScreen from '../screens/NotificationsScreen'
 
 const DrawerNavigator = (props) => {
-    const buildLink = useLinkBuilder();
-    const navigation = useNavigation();
-    const routes = useNavigationState(state => state && state.routes);
-    const index = useNavigationState(state => state && state.index);
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+    const buildLink = useLinkBuilder()
+    const navigation = useNavigation()
+    const routes = useNavigationState(state => state && state.routes)
+    const index = useNavigationState(state => state && state.index)
+    const [loggedIn, setLoggedIn] = useState(false)
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
 
-    const Drawer = createDrawerNavigator();
-    const insets = useSafeAreaInsets();
+    const Drawer = createDrawerNavigator()
+    const insets = useSafeAreaInsets()
 
     const drawerItems =
         [
@@ -131,25 +131,25 @@ const DrawerNavigator = (props) => {
                 hidden: true,
                 hideTitle: true
             },
-        ];
+        ]
 
     useEffect(() => {
         const init = async () => {
-            const loggedIn = await UserService.loggedIn();
-            setLoggedIn(loggedIn);
-            const language = await UserService.getLanguage();
-            setLanguage(language);
-        };
+            const loggedIn = await UserService.loggedIn()
+            setLoggedIn(loggedIn)
+            const language = await UserService.getLanguage()
+            setLanguage(language)
+        }
 
-        init();
-    }, [routes]);
+        init()
+    }, [routes])
 
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             marginTop: insets.top
         }
-    });
+    })
 
     return (
         <View style={styles.container}>
@@ -216,11 +216,11 @@ const DrawerNavigator = (props) => {
                                 ,
                                 headerShown: false,
                                 // header: ({ navigation, route, options }) => {
-                                //     const title = getHeaderTitle(options, route.name);
+                                //     const title = getHeaderTitle(options, route.name)
 
                                 //     return (
                                 //         <Header title={title} hideTitle={drawer.hideTitle} loggedIn={loggedIn} />
-                                //     );
+                                //     )
                                 // }
                             }}
                         />
@@ -229,7 +229,7 @@ const DrawerNavigator = (props) => {
                 }
             </Drawer.Navigator>
         </View>
-    );
-};
+    )
+}
 
-export default DrawerNavigator;
+export default DrawerNavigator

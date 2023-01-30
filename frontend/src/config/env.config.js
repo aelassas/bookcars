@@ -53,6 +53,6 @@ const Env = {
         LIMITED: 'limited',
         UNLIMITED: 'unlimited'
     }
-};
+}
 
-export default Env;
+export default Env

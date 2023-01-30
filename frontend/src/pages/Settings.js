@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import Env from '../config/env.config';
-import Master from '../components/Master';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/settings';
-import * as UserService from '../services/UserService';
-import Backdrop from '../components/SimpleBackdrop';
-import DatePicker from '../components/DatePicker';
-import Avatar from '../components/Avatar';
+import React, { useState } from 'react'
+import Env from '../config/env.config'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/settings'
+import * as UserService from '../services/UserService'
+import Backdrop from '../components/SimpleBackdrop'
+import DatePicker from '../components/DatePicker'
+import Avatar from '../components/Avatar'
 import {
     Input,
     InputLabel,
@@ -16,114 +16,114 @@ import {
     Switch,
     Button,
     Paper
-} from '@mui/material';
-import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
-import * as Helper from '../common/Helper';
+} from '@mui/material'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/settings.css';
+import '../assets/css/settings.css'
 
 const Settings = () => {
-    const [user, setUser] = useState();
-    const [fullName, setFullName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [location, setLocation] = useState('');
-    const [bio, setBio] = useState('');
-    const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [birthDate, setBirthDate] = useState();
-    const [birthDateValid, setBirthDateValid] = useState(true);
-    const [phoneValid, setPhoneValid] = useState(true);
-    const [enableEmailNotifications, setEnableEmailNotifications] = useState(false);
+    const [user, setUser] = useState()
+    const [fullName, setFullName] = useState('')
+    const [phone, setPhone] = useState('')
+    const [location, setLocation] = useState('')
+    const [bio, setBio] = useState('')
+    const [visible, setVisible] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [birthDate, setBirthDate] = useState()
+    const [birthDateValid, setBirthDateValid] = useState(true)
+    const [phoneValid, setPhoneValid] = useState(true)
+    const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
     const handleOnChangeFullName = e => {
-        setFullName(e.target.value);
-    };
+        setFullName(e.target.value)
+    }
 
     const validatePhone = (phone) => {
         if (phone) {
-            const phoneValid = validator.isMobilePhone(phone);
-            setPhoneValid(phoneValid);
+            const phoneValid = validator.isMobilePhone(phone)
+            setPhoneValid(phoneValid)
 
-            return phoneValid;
+            return phoneValid
         } else {
-            setPhoneValid(true);
+            setPhoneValid(true)
 
-            return true;
+            return true
         }
-    };
+    }
 
     const handlePhoneChange = e => {
-        setPhone(e.target.value);
+        setPhone(e.target.value)
 
         if (!e.target.value) {
-            setPhoneValid(true);
+            setPhoneValid(true)
         }
-    };
+    }
 
     const validateBirthDate = (date) => {
         if (Helper.isDate(date)) {
-            const now = new Date();
-            const sub = intervalToDuration({ start: date, end: now }).years;
-            const birthDateValid = sub >= Env.MINIMUM_AGE;
+            const now = new Date()
+            const sub = intervalToDuration({ start: date, end: now }).years
+            const birthDateValid = sub >= Env.MINIMUM_AGE
 
-            setBirthDateValid(birthDateValid);
-            return birthDateValid;
+            setBirthDateValid(birthDateValid)
+            return birthDateValid
         } else {
-            setBirthDateValid(true);
-            return true;
+            setBirthDateValid(true)
+            return true
         }
-    };
+    }
 
     const handleOnChangeLocation = e => {
-        setLocation(e.target.value);
-    };
+        setLocation(e.target.value)
+    }
 
     const handleOnChangeBio = e => {
-        setBio(e.target.value);
-    };
+        setBio(e.target.value)
+    }
 
     const handleEmailNotificationsChange = (e) => {
-        setEnableEmailNotifications(e.target.checked);
+        setEnableEmailNotifications(e.target.checked)
 
-        user.enableEmailNotifications = e.target.checked;
+        user.enableEmailNotifications = e.target.checked
 
         UserService.updateEmailNotifications(user)
             .then(status => {
                 if (status === 200) {
-                    setUser(user);
-                    Helper.info(strings.SETTINGS_UPDATED);
+                    setUser(user)
+                    Helper.info(strings.SETTINGS_UPDATED)
                 }
             })
             .catch(err => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const onBeforeUpload = () => {
-        setLoading(true);
-    };
+        setLoading(true)
+    }
 
     const onAvatarChange = (user) => {
-        setUser(user);
-        setLoading(false);
-    };
+        setUser(user)
+        setLoading(false)
+    }
 
     const onError = () => {
-        setLoading(false);
-    };
+        setLoading(false)
+    }
 
     const handleSubmit = e => {
-        e.preventDefault();
+        e.preventDefault()
 
-        const phoneValid = validatePhone(phone);
+        const phoneValid = validatePhone(phone)
         if (!phoneValid) {
-            return;
+            return
         }
 
-        const birthDateValid = validateBirthDate(birthDate);
+        const birthDateValid = validateBirthDate(birthDate)
         if (!birthDateValid) {
-            return;
+            return
         }
 
         const data = {
@@ -133,32 +133,32 @@ const Settings = () => {
             phone,
             location,
             bio
-        };
+        }
 
         UserService.updateUser(data)
             .then(status => {
                 if (status === 200) {
-                    Helper.info(strings.SETTINGS_UPDATED);
+                    Helper.info(strings.SETTINGS_UPDATED)
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             })
             .catch(() => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const onLoad = (user) => {
-        setUser(user);
-        setFullName(user.fullName);
-        setPhone(user.phone);
-        setBirthDate(new Date(user.birthDate));
-        setLocation(user.location);
-        setBio(user.bio);
-        setEnableEmailNotifications(user.enableEmailNotifications);
-        setVisible(true);
-        setLoading(false);
-    };
+        setUser(user)
+        setFullName(user.fullName)
+        setPhone(user.phone)
+        setBirthDate(new Date(user.birthDate))
+        setLocation(user.location)
+        setBio(user.bio)
+        setEnableEmailNotifications(user.enableEmailNotifications)
+        setVisible(true)
+        setLoading(false)
+    }
 
     return (
         <Master onLoad={onLoad} onError={onError} strict={true} user={user}>
@@ -219,10 +219,10 @@ const Settings = () => {
                                     error={!birthDateValid}
                                     required
                                     onChange={(birthDate) => {
-                                        const birthDateValid = validateBirthDate(birthDate);
+                                        const birthDateValid = validateBirthDate(birthDate)
 
-                                        setBirthDate(birthDate);
-                                        setBirthDateValid(birthDateValid);
+                                        setBirthDate(birthDate)
+                                        setBirthDateValid(birthDateValid)
                                     }}
                                     language={user.language}
                                 />
@@ -291,7 +291,7 @@ const Settings = () => {
                 </div>}
             {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
         </Master>
-    );
-};
+    )
+}
 
-export default Settings;
+export default Settings

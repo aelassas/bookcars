@@ -1,105 +1,105 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import validator from 'validator';
-import TextInput from '../components/TextInput';
-import Button from '../components/Button';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Link from '../components/Link';
-import Header from '../components/Header';
+import React, { useEffect, useRef, useState } from 'react'
+import { StyleSheet, ScrollView, View, Text } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import validator from 'validator'
+import TextInput from '../components/TextInput'
+import Button from '../components/Button'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Link from '../components/Link'
+import Header from '../components/Header'
 
 const ForgotPasswordScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused();
-    const [email, setEmail] = useState('');
-    const [emailRequired, setEmailRequired] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [emailValid, setEmailValid] = useState(true);
-    const [sent, setSent] = useState(false);
-    const ref = useRef(null);
+    const isFocused = useIsFocused()
+    const [email, setEmail] = useState('')
+    const [emailRequired, setEmailRequired] = useState(false)
+    const [emailError, setEmailError] = useState(false)
+    const [emailValid, setEmailValid] = useState(true)
+    const [sent, setSent] = useState(false)
+    const ref = useRef(null)
 
     const _init = async () => {
-        const language = await UserService.getLanguage();
-        i18n.locale = language;
-        setEmail('');
-        setEmailRequired(false);
-        setEmailValid(true);
-        setEmailError(false);
-        setSent(false);
-        if (ref.current) ref.current.clear();
-    };
+        const language = await UserService.getLanguage()
+        i18n.locale = language
+        setEmail('')
+        setEmailRequired(false)
+        setEmailValid(true)
+        setEmailError(false)
+        setSent(false)
+        if (ref.current) ref.current.clear()
+    }
 
     useEffect(() => {
         if (isFocused) {
-            _init();
+            _init()
         }
-    }, [route.params, isFocused]);
+    }, [route.params, isFocused])
 
     const validateEmail = async () => {
         if (email) {
-            setEmailRequired(false);
+            setEmailRequired(false)
 
             if (validator.isEmail(email)) {
                 try {
-                    const status = await UserService.validateEmail({ email });
+                    const status = await UserService.validateEmail({ email })
                     if (status === 200) {
-                        setEmailError(true);
-                        setEmailValid(true);
-                        return false;
+                        setEmailError(true)
+                        setEmailValid(true)
+                        return false
                     } else {
-                        setEmailError(false);
-                        setEmailValid(true);
-                        return true;
+                        setEmailError(false)
+                        setEmailValid(true)
+                        return true
 
                     }
                 } catch (err) {
-                    Helper.toast(i18n.t('GENERIC_ERROR'));
-                    setEmailError(false);
-                    setEmailValid(true);
-                    return false;
+                    Helper.toast(i18n.t('GENERIC_ERROR'))
+                    setEmailError(false)
+                    setEmailValid(true)
+                    return false
                 }
             } else {
-                setEmailError(false);
-                setEmailValid(false);
-                return false;
+                setEmailError(false)
+                setEmailValid(false)
+                return false
             }
         } else {
-            setEmailError(false);
-            setEmailValid(true);
-            setEmailRequired(true);
-            return false;
+            setEmailError(false)
+            setEmailValid(true)
+            setEmailRequired(true)
+            return false
         }
-    };
+    }
 
     const onChangeEmail = (text) => {
-        setEmail(text);
-        setEmailRequired(false);
-        setEmailValid(true);
-        setEmailError(false);
+        setEmail(text)
+        setEmailRequired(false)
+        setEmailValid(true)
+        setEmailError(false)
     }
 
     const onPressReset = async () => {
-        const emailValid = await validateEmail();
+        const emailValid = await validateEmail()
         if (!emailValid) {
-            return;
+            return
         }
 
         UserService.resend(email, true)
             .then(status => {
                 if (status === 200) {
-                    setEmailRequired(false);
-                    setEmailValid(true);
-                    setEmailError(false);
-                    setSent(true);
+                    setEmailRequired(false)
+                    setEmailValid(true)
+                    setEmailError(false)
+                    setSent(true)
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             })
             .catch((err) => {
-                Helper.error(err);
-            });
-    };
+                Helper.error(err)
+            })
+    }
 
     return (
         <View style={styles.master}>
@@ -138,8 +138,8 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
                 }
             </ScrollView>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     master: {
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         margin: 10,
     },
-});
+})
 
-export default ForgotPasswordScreen;
+export default ForgotPasswordScreen

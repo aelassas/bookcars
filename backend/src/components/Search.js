@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import { strings as commonStrings } from '../lang/common';
-import { IconButton, TextField } from '@mui/material';
+import React, { useState } from 'react'
+import { strings as commonStrings } from '../lang/common'
+import { IconButton, TextField } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 
 import '../assets/css/search.css'
 
 const Search = (props) => {
-    const [keyword, setKeyword] = useState('');
+    const [keyword, setKeyword] = useState('')
 
     const handleSearchChange = (e) => {
-        setKeyword(e.target.value);
-    };
+        setKeyword(e.target.value)
+    }
 
     const handleSearchKeyDown = (e) => {
         if (e.key === 'Enter') {
-            handleSearch();
+            handleSearch()
         }
     }
 
     const handleSearch = (e) => {
-        if (props.onSubmit) props.onSubmit(keyword);
-    };
+        if (props.onSubmit) props.onSubmit(keyword)
+    }
 
     return (
         <div className={props.className}>
@@ -33,7 +33,7 @@ const Search = (props) => {
                 InputProps={{
                     endAdornment: keyword ? (
                         <IconButton size='small' onClick={() => {
-                            setKeyword('');
+                            setKeyword('')
                         }}>
                             <ClearIcon style={{ width: 20, height: 20 }} />
                         </IconButton>
@@ -46,7 +46,7 @@ const Search = (props) => {
                 <SearchIcon />
             </IconButton>
         </div>
-    );
+    )
 }
 
-export default Search;
+export default Search

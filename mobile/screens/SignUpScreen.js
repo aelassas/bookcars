@@ -1,277 +1,277 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import { intervalToDuration } from 'date-fns';
-import i18n from '../lang/i18n';
-import TextInput from '../components/TextInput';
-import Button from '../components/Button';
-import Switch from '../components/Switch';
-import validator from 'validator';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import DateTimePicker from '../components/DateTimePicker';
-import Env from '../config/env.config';
-import Error from '../components/Error';
-import Backdrop from '../components/Backdrop';
-import Header from '../components/Header';
+import React, { useState, useEffect, useRef } from 'react'
+import { StyleSheet, ScrollView, View } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import { intervalToDuration } from 'date-fns'
+import i18n from '../lang/i18n'
+import TextInput from '../components/TextInput'
+import Button from '../components/Button'
+import Switch from '../components/Switch'
+import validator from 'validator'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import DateTimePicker from '../components/DateTimePicker'
+import Env from '../config/env.config'
+import Error from '../components/Error'
+import Backdrop from '../components/Backdrop'
+import Header from '../components/Header'
 
 const SignUpScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused();
-    const [language, setLanguage] = useState(null);
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [birthDate, setBirthDate] = useState(null);
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [tosChecked, setTosChecked] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [fullNameRequired, setFullNameRequired] = useState(false);
-    const [emailRequired, setEmailRequired] = useState(false);
-    const [emailValid, setEmailValid] = useState(true);
-    const [emailError, setEmailError] = useState(false);
-    const [phoneValid, setPhoneValid] = useState(true);
-    const [phoneRequired, setPhoneRequired] = useState(false);
-    const [birthDateRequired, setBirthDateRequired] = useState(false);
-    const [birthDateValid, setBirthDateValid] = useState(true);
-    const [passwordRequired, setPasswordRequired] = useState(false);
-    const [confirmPasswordRequired, setConfirmPasswordRequired] = useState(false);
-    const [passwordLengthError, setPasswordLengthError] = useState(false);
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-    const [tosError, setTosError] = useState(false);
+    const isFocused = useIsFocused()
+    const [language, setLanguage] = useState(null)
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [birthDate, setBirthDate] = useState(null)
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [tosChecked, setTosChecked] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [fullNameRequired, setFullNameRequired] = useState(false)
+    const [emailRequired, setEmailRequired] = useState(false)
+    const [emailValid, setEmailValid] = useState(true)
+    const [emailError, setEmailError] = useState(false)
+    const [phoneValid, setPhoneValid] = useState(true)
+    const [phoneRequired, setPhoneRequired] = useState(false)
+    const [birthDateRequired, setBirthDateRequired] = useState(false)
+    const [birthDateValid, setBirthDateValid] = useState(true)
+    const [passwordRequired, setPasswordRequired] = useState(false)
+    const [confirmPasswordRequired, setConfirmPasswordRequired] = useState(false)
+    const [passwordLengthError, setPasswordLengthError] = useState(false)
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
+    const [tosError, setTosError] = useState(false)
 
-    const fullNameRef = useRef(null);
-    const emailRef = useRef(null);
-    const phoneRef = useRef(null);
-    const passwordRef = useRef(null);
-    const confirmPasswordRef = useRef(null);
+    const fullNameRef = useRef(null)
+    const emailRef = useRef(null)
+    const phoneRef = useRef(null)
+    const passwordRef = useRef(null)
+    const confirmPasswordRef = useRef(null)
 
     const _init = async () => {
-        const language = await UserService.getLanguage();
-        i18n.locale = language;
-        setLanguage(language);
+        const language = await UserService.getLanguage()
+        i18n.locale = language
+        setLanguage(language)
 
-        setFullName('');
-        setEmail('');
-        setPhone('');
-        setBirthDate(null);
-        setPassword('');
-        setConfirmPassword('');
-        setTosChecked(false);
+        setFullName('')
+        setEmail('')
+        setPhone('')
+        setBirthDate(null)
+        setPassword('')
+        setConfirmPassword('')
+        setTosChecked(false)
 
-        setFullNameRequired(false);
-        setEmailRequired(false);
-        setEmailValid(true);
-        setEmailError(false);
-        setPhoneRequired(false);
-        setPhoneValid(true);
-        setBirthDateRequired(false);
-        setBirthDateValid(true);
-        setBirthDateRequired(false);
-        setPasswordRequired(false);
-        setPasswordLengthError(false);
-        setConfirmPasswordRequired(false);
-        setConfirmPasswordError(false);
-        setTosError(false);
+        setFullNameRequired(false)
+        setEmailRequired(false)
+        setEmailValid(true)
+        setEmailError(false)
+        setPhoneRequired(false)
+        setPhoneValid(true)
+        setBirthDateRequired(false)
+        setBirthDateValid(true)
+        setBirthDateRequired(false)
+        setPasswordRequired(false)
+        setPasswordLengthError(false)
+        setConfirmPasswordRequired(false)
+        setConfirmPasswordError(false)
+        setTosError(false)
 
-        if (fullNameRef.current) fullNameRef.current.clear();
-        if (emailRef.current) emailRef.current.clear();
-        if (phoneRef.current) phoneRef.current.clear();
-        if (passwordRef.current) passwordRef.current.clear();
-        if (confirmPasswordRef.current) confirmPasswordRef.current.clear();
-    };
+        if (fullNameRef.current) fullNameRef.current.clear()
+        if (emailRef.current) emailRef.current.clear()
+        if (phoneRef.current) phoneRef.current.clear()
+        if (passwordRef.current) passwordRef.current.clear()
+        if (confirmPasswordRef.current) confirmPasswordRef.current.clear()
+    }
 
     useEffect(() => {
         if (isFocused) {
-            _init();
+            _init()
         }
-    }, [route.params, isFocused]);
+    }, [route.params, isFocused])
 
     const validateFullName = () => {
-        const valid = fullName !== '';
-        setFullNameRequired(!valid);
-        return valid;
-    };
+        const valid = fullName !== ''
+        setFullNameRequired(!valid)
+        return valid
+    }
 
     const onChangeFullName = (text) => {
-        setFullName(text);
-        setFullNameRequired(false);
-    };
+        setFullName(text)
+        setFullNameRequired(false)
+    }
 
     const validateEmail = async () => {
         if (email) {
-            setEmailRequired(false);
+            setEmailRequired(false)
 
             if (validator.isEmail(email)) {
                 try {
-                    const status = await UserService.validateEmail({ email });
+                    const status = await UserService.validateEmail({ email })
                     if (status === 200) {
-                        setEmailError(false);
-                        setEmailValid(true);
-                        return true;
+                        setEmailError(false)
+                        setEmailValid(true)
+                        return true
                     } else {
-                        setEmailError(true);
-                        setEmailValid(true);
-                        return false;
+                        setEmailError(true)
+                        setEmailValid(true)
+                        return false
                     }
                 } catch (err) {
-                    Helper.error(err);
-                    setEmailError(false);
-                    setEmailValid(true);
-                    return false;
+                    Helper.error(err)
+                    setEmailError(false)
+                    setEmailValid(true)
+                    return false
                 }
             } else {
-                setEmailError(false);
-                setEmailValid(false);
-                return false;
+                setEmailError(false)
+                setEmailValid(false)
+                return false
             }
         } else {
-            setEmailError(false);
-            setEmailValid(true);
-            setEmailRequired(true);
-            return false;
+            setEmailError(false)
+            setEmailValid(true)
+            setEmailRequired(true)
+            return false
         }
-    };
+    }
 
     const onChangeEmail = (text) => {
-        setEmail(text);
-        setEmailRequired(false);
-        setEmailValid(true);
-        setEmailError(false);
-    };
+        setEmail(text)
+        setEmailRequired(false)
+        setEmailValid(true)
+        setEmailError(false)
+    }
 
     const validatePhone = () => {
         if (phone) {
-            const phoneValid = validator.isMobilePhone(phone);
-            setPhoneRequired(false);
-            setPhoneValid(phoneValid);
+            const phoneValid = validator.isMobilePhone(phone)
+            setPhoneRequired(false)
+            setPhoneValid(phoneValid)
 
-            return phoneValid;
+            return phoneValid
         } else {
-            setPhoneRequired(true);
-            setPhoneValid(true);
+            setPhoneRequired(true)
+            setPhoneValid(true)
 
-            return false;
+            return false
         }
-    };
+    }
 
     const onChangePhone = (text) => {
-        setPhone(text);
-        setPhoneRequired(false);
-        setPhoneValid(true);
-    };
+        setPhone(text)
+        setPhoneRequired(false)
+        setPhoneValid(true)
+    }
 
     const validateBirthDate = () => {
         if (birthDate) {
-            setBirthDateRequired(false);
+            setBirthDateRequired(false)
 
-            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
-            const birthDateValid = sub >= Env.MINIMUM_AGE;
+            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years
+            const birthDateValid = sub >= Env.MINIMUM_AGE
 
-            setBirthDateValid(birthDateValid);
-            return birthDateValid;
+            setBirthDateValid(birthDateValid)
+            return birthDateValid
         } else {
-            setBirthDateRequired(true);
-            setBirthDateValid(true);
+            setBirthDateRequired(true)
+            setBirthDateValid(true)
 
-            return false;
+            return false
         }
-    };
+    }
 
     const onChangeBirthDate = (date) => {
-        setBirthDate(date);
-        setBirthDateRequired(false);
-        setBirthDateValid(true);
-    };
+        setBirthDate(date)
+        setBirthDateRequired(false)
+        setBirthDateValid(true)
+    }
 
     const validatePassword = () => {
         if (!password) {
-            setPasswordRequired(true);
-            setPasswordLengthError(false);
-            return false;
+            setPasswordRequired(true)
+            setPasswordLengthError(false)
+            return false
         }
 
         if (password.length < 6) {
-            setPasswordLengthError(true);
-            setPasswordRequired(false);
-            return false;
+            setPasswordLengthError(true)
+            setPasswordRequired(false)
+            return false
         }
 
         if (!confirmPassword) {
-            setConfirmPasswordRequired(true);
-            setConfirmPasswordError(false);
-            return false;
+            setConfirmPasswordRequired(true)
+            setConfirmPasswordError(false)
+            return false
         }
 
         if (password !== confirmPassword) {
-            setConfirmPasswordError(true);
-            setConfirmPasswordRequired(false);
-            return false;
+            setConfirmPasswordError(true)
+            setConfirmPasswordRequired(false)
+            return false
         }
 
-        return true;
-    };
+        return true
+    }
 
     const onChangePassword = (text) => {
-        setPassword(text);
-        setPasswordRequired(false);
-        setPasswordLengthError(false);
-    };
+        setPassword(text)
+        setPasswordRequired(false)
+        setPasswordLengthError(false)
+    }
 
     const onChangeConfirmPassword = (text) => {
-        setConfirmPassword(text);
-        setConfirmPasswordRequired(false);
-        setConfirmPasswordError(false);
-    };
+        setConfirmPassword(text)
+        setConfirmPasswordRequired(false)
+        setConfirmPasswordError(false)
+    }
 
     const onChangeToS = (checked) => {
-        setTosChecked(checked);
-        if (checked) setTosError(false);
-    };
+        setTosChecked(checked)
+        if (checked) setTosError(false)
+    }
 
     const error = (err) => {
-        Helper.error(err);
-        setLoading(false);
-    };
+        Helper.error(err)
+        setLoading(false)
+    }
 
     const onPressSignUp = async () => {
 
-        fullNameRef.current.blur();
-        emailRef.current.blur();
-        phoneRef.current.blur();
-        passwordRef.current.blur();
-        confirmPasswordRef.current.blur();
+        fullNameRef.current.blur()
+        emailRef.current.blur()
+        phoneRef.current.blur()
+        passwordRef.current.blur()
+        confirmPasswordRef.current.blur()
 
-        const fullNameValid = validateFullName();
+        const fullNameValid = validateFullName()
         if (!fullNameValid) {
-            return;
+            return
         }
 
-        const emailValid = await validateEmail();
+        const emailValid = await validateEmail()
         if (!emailValid) {
-            return;
+            return
         }
 
-        const phoneValid = validatePhone();
+        const phoneValid = validatePhone()
         if (!phoneValid) {
-            return;
+            return
         }
 
-        const birthDateValid = validateBirthDate();
+        const birthDateValid = validateBirthDate()
         if (!birthDateValid) {
-            return;
+            return
         }
 
-        const passwordValid = validatePassword();
+        const passwordValid = validatePassword()
         if (!passwordValid) {
-            return;
+            return
         }
 
         if (!tosChecked) {
-            return setTosError(true);
+            return setTosError(true)
         }
 
-        setLoading(true);
+        setLoading(true)
 
         const data = {
             email,
@@ -280,7 +280,7 @@ const SignUpScreen = ({ navigation, route }) => {
             fullName,
             birthDate,
             language
-        };
+        }
 
         UserService.signup(data)
             .then(status => {
@@ -288,21 +288,21 @@ const SignUpScreen = ({ navigation, route }) => {
                     UserService.signin({ email, password })
                         .then(res => {
                             if (res.status === 200) {
-                                navigation.navigate('Home', { d: new Date().getTime() });
+                                navigation.navigate('Home', { d: new Date().getTime() })
                             } else {
-                                error();
+                                error()
                             }
                         }).catch(err => {
-                            error(err);
-                        });
+                            error(err)
+                        })
                 } else {
-                    error();
+                    error()
                 }
             })
             .catch(err => {
-                error(err);
-            });
-    };
+                error(err)
+            })
+    }
 
     return (
         <View style={styles.master}>
@@ -405,8 +405,8 @@ const SignUpScreen = ({ navigation, route }) => {
 
             {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     master: {
@@ -437,6 +437,6 @@ const styles = StyleSheet.create({
     tosText: {
         fontSize: 12
     }
-});
+})
 
-export default SignUpScreen;
+export default SignUpScreen

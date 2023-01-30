@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as ulStrings } from '../lang/user-list';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Master from '../components/Master';
-import Backdrop from '../components/SimpleBackdrop';
-import Avatar from '../components/Avatar';
-import BookingList from '../components/BookingList';
-import NoMatch from './NoMatch';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as ulStrings } from '../lang/user-list'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Master from '../components/Master'
+import Backdrop from '../components/SimpleBackdrop'
+import Avatar from '../components/Avatar'
+import BookingList from '../components/BookingList'
+import NoMatch from './NoMatch'
 import {
     Typography,
     IconButton,
@@ -18,123 +18,123 @@ import {
     DialogContent,
     DialogActions,
     Tooltip
-} from '@mui/material';
+} from '@mui/material'
 import {
     Edit as EditIcon,
     Delete as DeleteIcon
-} from '@mui/icons-material';
-import * as CompanyService from '../services/CompanyService';
+} from '@mui/icons-material'
+import * as CompanyService from '../services/CompanyService'
 
-import '../assets/css/user.css';
+import '../assets/css/user.css'
 
 const User = () => {
-    const statuses = Helper.getBookingStatuses().map(status => status.value);
+    const statuses = Helper.getBookingStatuses().map(status => status.value)
 
-    const [loggedUser, setLoggedUser] = useState();
-    const [user, setUser] = useState();
-    const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [noMatch, setNoMatch] = useState(false);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [companies, setCompanies] = useState([]);
-    const [offset, setOffset] = useState(0);
+    const [loggedUser, setLoggedUser] = useState()
+    const [user, setUser] = useState()
+    const [visible, setVisible] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [noMatch, setNoMatch] = useState(false)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const [companies, setCompanies] = useState([])
+    const [offset, setOffset] = useState(0)
 
     useEffect(() => {
         if (visible) {
-            setOffset(document.querySelector('.col-1').clientHeight);
+            setOffset(document.querySelector('.col-1').clientHeight)
         }
-    }, [visible]);
+    }, [visible])
 
     const onBeforeUpload = () => {
-        setLoading(true);
-    };
+        setLoading(true)
+    }
 
     const onAvatarChange = () => {
-        setLoading(false);
-    };
+        setLoading(false)
+    }
 
     const handleDelete = () => {
-        setOpenDeleteDialog(true);
-    };
+        setOpenDeleteDialog(true)
+    }
 
     const handleConfirmDelete = () => {
-        setLoading(true);
-        setOpenDeleteDialog(false);
+        setLoading(true)
+        setOpenDeleteDialog(false)
 
         UserService.deleteUsers([user._id]).then(status => {
             if (status === 200) {
-                window.location.href = '/users';
+                window.location.href = '/users'
             } else {
-                Helper.error();
-                setLoading(false);
+                Helper.error()
+                setLoading(false)
             }
         }).catch((err) => {
-            Helper.error(err);
-            setLoading(false);
-        });
-    };
+            Helper.error(err)
+            setLoading(false)
+        })
+    }
 
     const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-    };
+        setOpenDeleteDialog(false)
+    }
 
     const onLoad = (loggedUser) => {
         if (loggedUser && loggedUser.verified) {
-            setLoading(true);
+            setLoading(true)
 
-            const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search)
             if (params.has('u')) {
-                const id = params.get('u');
+                const id = params.get('u')
                 if (id && id !== '') {
                     UserService.getUser(id)
                         .then(user => {
                             if (user) {
 
                                 const setState = (companies) => {
-                                    setCompanies(companies);
-                                    setLoggedUser(loggedUser);
-                                    setUser(user);
-                                    setVisible(true);
-                                    setLoading(false);
-                                };
+                                    setCompanies(companies)
+                                    setLoggedUser(loggedUser)
+                                    setUser(user)
+                                    setVisible(true)
+                                    setLoading(false)
+                                }
 
-                                const admin = Helper.admin(loggedUser);
+                                const admin = Helper.admin(loggedUser)
                                 if (admin) {
                                     CompanyService.getAllCompanies()
                                         .then(companies => {
-                                            const companyIds = Helper.flattenCompanies(companies);
-                                            setState(companyIds);
+                                            const companyIds = Helper.flattenCompanies(companies)
+                                            setState(companyIds)
                                         })
-                                        .catch((err) => Helper.error(err));
+                                        .catch((err) => Helper.error(err))
                                 } else {
-                                    setState([loggedUser._id]);
+                                    setState([loggedUser._id])
                                 }
                             } else {
-                                setLoading(false);
-                                setNoMatch(true);
+                                setLoading(false)
+                                setNoMatch(true)
                             }
                         })
                         .catch((err) => {
-                            setLoading(false);
-                            setVisible(false);
-                            Helper.error(err);
-                        });
+                            setLoading(false)
+                            setVisible(false)
+                            Helper.error(err)
+                        })
                 } else {
-                    setLoading(false);
-                    setNoMatch(true);
+                    setLoading(false)
+                    setNoMatch(true)
                 }
             } else {
-                setLoading(false);
-                setNoMatch(true);
+                setLoading(false)
+                setNoMatch(true)
             }
         }
-    };
+    }
 
     const edit = (loggedUser && user) &&
         (loggedUser.type === Env.RECORD_TYPE.ADMIN
             || loggedUser._id === user._id
-            || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company));
-    const company = user && user.type === Env.RECORD_TYPE.COMPANY;
+            || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company))
+    const company = user && user.type === Env.RECORD_TYPE.COMPANY
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -207,7 +207,7 @@ const User = () => {
             {loading && <Backdrop text={commonStrings.LOADING} />}
             {noMatch && <NoMatch hideHeader />}
         </Master>
-    );
-};
+    )
+}
 
-export default User;
+export default User

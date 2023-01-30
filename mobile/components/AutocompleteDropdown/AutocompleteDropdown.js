@@ -20,7 +20,7 @@ import { ScrollViewListItem } from './ScrollViewListItem'
 
 export const AutocompleteDropdown = memo(
   forwardRef((props, ref) => {
-    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
     const inputRef = useRef(null)
     const containerRef = useRef(null)
     const [selectedItem, setSelectedItem] = useState(null)
@@ -41,21 +41,21 @@ export const AutocompleteDropdown = memo(
       const keyboardDidShowListener = Keyboard.addListener(
         'keyboardDidShow',
         () => {
-          setIsKeyboardVisible(true);
+          setIsKeyboardVisible(true)
         }
-      );
+      )
       const keyboardDidHideListener = Keyboard.addListener(
         'keyboardDidHide',
         () => {
-          setIsKeyboardVisible(false);
+          setIsKeyboardVisible(false)
         }
-      );
+      )
 
       return () => {
-        keyboardDidHideListener.remove();
-        keyboardDidShowListener.remove();
-      };
-    }, []);
+        keyboardDidHideListener.remove()
+        keyboardDidShowListener.remove()
+      }
+    }, [])
 
     useLayoutEffect(() => {
       if (ref) {

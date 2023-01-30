@@ -69,6 +69,6 @@ const Env = {
         AVAILABLE: 'available',
         UNAVAILABLE: 'unavailable'
     }
-};
+}
 
-export default Env;
+export default Env

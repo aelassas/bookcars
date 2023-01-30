@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/cars';
-import * as CarService from '../services/CarService';
-import * as CompanyService from '../services/CompanyService';
-import Backdrop from '../components/SimpleBackdrop';
-import NoMatch from './NoMatch';
-import Error from './Error';
-import Avatar from '../components/Avatar';
-import BookingList from '../components/BookingList';
-import * as Helper from '../common/Helper';
+import React, { useState, useEffect } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as CarService from '../services/CarService'
+import * as CompanyService from '../services/CompanyService'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import Avatar from '../components/Avatar'
+import BookingList from '../components/BookingList'
+import * as Helper from '../common/Helper'
 import {
     Button,
     Dialog,
@@ -18,7 +18,7 @@ import {
     DialogContent,
     DialogActions,
     Tooltip,
-} from '@mui/material';
+} from '@mui/material'
 import {
     LocalGasStation as FuelIcon,
     AccountTree as GearboxIcon,
@@ -28,68 +28,68 @@ import {
     Check as CheckIcon,
     Clear as UncheckIcon,
     LocationOn as LocationIcon
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
-import DoorsIcon from '../assets/img/car-door.png';
-import '../assets/css/car.css';
+import DoorsIcon from '../assets/img/car-door.png'
+import '../assets/css/car.css'
 
 const Car = () => {
-    const [user, setUser] = useState();
-    const [car, setCar] = useState();
-    const [error, setError] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [noMatch, setNoMatch] = useState(false);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [companies, setCompanies] = useState([]);
-    const [offset, setOffset] = useState(0);
+    const [user, setUser] = useState()
+    const [car, setCar] = useState()
+    const [error, setError] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [noMatch, setNoMatch] = useState(false)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const [companies, setCompanies] = useState([])
+    const [offset, setOffset] = useState(0)
 
     useEffect(() => {
         if (visible) {
-            setOffset(document.querySelector('.col-1').clientHeight);
+            setOffset(document.querySelector('.col-1').clientHeight)
         }
-    }, [visible]);
+    }, [visible])
     const handleBeforeUpload = () => {
-        setLoading(true);
-    };
+        setLoading(true)
+    }
 
     const handleImageChange = () => {
-        setLoading(false);
-    };
+        setLoading(false)
+    }
 
     const handleDelete = () => {
-        setOpenDeleteDialog(true);
-    };
+        setOpenDeleteDialog(true)
+    }
 
     const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-    };
+        setOpenDeleteDialog(false)
+    }
 
     const handleConfirmDelete = () => {
-        setLoading(true);
-        setOpenDeleteDialog(false);
+        setLoading(true)
+        setOpenDeleteDialog(false)
 
         CarService.deleteCar(car._id)
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/cars';
+                    window.location.href = '/cars'
                 } else {
-                    Helper.error();
-                    setLoading(false);
+                    Helper.error()
+                    setLoading(false)
                 }
             }).catch((err) => {
-                Helper.error(err);
-                setLoading(false);
-            });
-    };
+                Helper.error(err)
+                setLoading(false)
+            })
+    }
 
     const onLoad = (user) => {
-        setLoading(true);
-        setUser(user);
+        setLoading(true)
+        setUser(user)
 
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search)
         if (user && user.verified && params.has('cr')) {
-            const id = params.get('cr');
+            const id = params.get('cr')
             if (id && id !== '') {
                 CarService.getCar(id)
                     .then(car => {
@@ -97,45 +97,45 @@ const Car = () => {
                             if (user.type === Env.RECORD_TYPE.ADMIN) {
                                 CompanyService.getAllCompanies()
                                     .then(companies => {
-                                        const companyIds = Helper.flattenCompanies(companies);
-                                        setCompanies(companyIds);
-                                        setCar(car);
-                                        setVisible(true);
-                                        setLoading(false);
+                                        const companyIds = Helper.flattenCompanies(companies)
+                                        setCompanies(companyIds)
+                                        setCar(car)
+                                        setVisible(true)
+                                        setLoading(false)
                                     })
-                                    .catch((err) => Helper.error(err));
+                                    .catch((err) => Helper.error(err))
                             } else if (car.company._id === user._id) {
-                                setCompanies([user._id]);
-                                setCar(car);
-                                setVisible(true);
-                                setLoading(false);
+                                setCompanies([user._id])
+                                setCar(car)
+                                setVisible(true)
+                                setLoading(false)
                             } else {
-                                setLoading(false);
-                                setNoMatch(true);
+                                setLoading(false)
+                                setNoMatch(true)
                             }
                         } else {
-                            setLoading(false);
-                            setNoMatch(true);
+                            setLoading(false)
+                            setNoMatch(true)
                         }
                     })
                     .catch(() => {
-                        setLoading(false);
-                        setError(true);
-                        setVisible(false);
-                    });
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    })
             } else {
-                setLoading(false);
-                setNoMatch(true);
+                setLoading(false)
+                setNoMatch(true)
             }
         } else {
-            setLoading(false);
-            setNoMatch(true);
+            setLoading(false)
+            setNoMatch(true)
         }
-    };
+    }
 
-    const edit = (user && car && car.company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id);
-    const statuses = Helper.getBookingStatuses().map(status => status.value);
-    const fr = user && user.language === 'fr';
+    const edit = (user && car && car.company) && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id)
+    const statuses = Helper.getBookingStatuses().map(status => status.value)
+    const fr = user && user.language === 'fr'
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -360,7 +360,7 @@ const Car = () => {
             {error && <Error />}
             {noMatch && <NoMatch hideHeader />}
         </Master>
-    );
-};
+    )
+}
 
-export default Car;
+export default Car

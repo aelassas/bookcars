@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   Text,
@@ -6,133 +6,133 @@ import {
   TouchableOpacity,
   ScrollView,
   Keyboard
-} from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Master from './Master';
-import Switch from '../components/Switch';
-import Button from '../components/Button';
-import LocationSelectList from '../components/LocationSelectList';
-import DateTimePicker from '../components/DateTimePicker';
+} from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Master from './Master'
+import Switch from '../components/Switch'
+import Button from '../components/Button'
+import LocationSelectList from '../components/LocationSelectList'
+import DateTimePicker from '../components/DateTimePicker'
 
 const HomeScreen = ({ navigation, route }) => {
-  const isFocused = useIsFocused();
+  const isFocused = useIsFocused()
 
-  const _fromDate = new Date();
-  _fromDate.setDate(_fromDate.getDate() + 1);
-  _fromDate.setHours(0);
-  _fromDate.setMinutes(0);
-  _fromDate.setSeconds(0);
-  _fromDate.setMilliseconds(0);
+  const _fromDate = new Date()
+  _fromDate.setDate(_fromDate.getDate() + 1)
+  _fromDate.setHours(0)
+  _fromDate.setMinutes(0)
+  _fromDate.setSeconds(0)
+  _fromDate.setMilliseconds(0)
 
-  const _fromTime = new Date(_fromDate);
-  _fromTime.setHours(10);
+  const _fromTime = new Date(_fromDate)
+  _fromTime.setHours(10)
 
-  const _toDate = new Date(_fromDate);
-  _toDate.setDate(_toDate.getDate() + 3);
+  const _toDate = new Date(_fromDate)
+  _toDate.setDate(_toDate.getDate() + 3)
 
-  const _toTime = new Date(_toDate);
-  _toTime.setHours(10);
+  const _toTime = new Date(_toDate)
+  _toTime.setHours(10)
 
-  const [init, setInit] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState(null);
-  const [dropOffLocation, setDropOffLocation] = useState(null);
-  const [closePickupLocation, setClosePickupLocation] = useState(false);
-  const [closeDropOffLocation, setCloseDropOffLocation] = useState(false);
-  const [sameLocation, setSameLocation] = useState(true);
-  const [fromDate, setFromDate] = useState(_fromDate);
-  const [fromTime, setFromTime] = useState(_fromTime);
-  const [toTime, setToTime] = useState(_toTime);
-  const [toDate, setToDate] = useState(_toDate);
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
-  const [blur, setBlur] = useState(false);
-  const [reload, setReload] = useState(false);
+  const [init, setInit] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [pickupLocation, setPickupLocation] = useState(null)
+  const [dropOffLocation, setDropOffLocation] = useState(null)
+  const [closePickupLocation, setClosePickupLocation] = useState(false)
+  const [closeDropOffLocation, setCloseDropOffLocation] = useState(false)
+  const [sameLocation, setSameLocation] = useState(true)
+  const [fromDate, setFromDate] = useState(_fromDate)
+  const [fromTime, setFromTime] = useState(_fromTime)
+  const [toTime, setToTime] = useState(_toTime)
+  const [toDate, setToDate] = useState(_toDate)
+  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [blur, setBlur] = useState(false)
+  const [reload, setReload] = useState(false)
 
   const _init = async () => {
-    const language = await UserService.getLanguage();
-    i18n.locale = language;
-    setLanguage(language);
+    const language = await UserService.getLanguage()
+    i18n.locale = language
+    setLanguage(language)
 
-    setPickupLocation(null);
-    setDropOffLocation(null);
-    setSameLocation(true);
-    setFromDate(_fromDate);
-    setFromTime(_fromTime);
-    setToDate(_toDate);
-    setToTime(_toTime);
+    setPickupLocation(null)
+    setDropOffLocation(null)
+    setSameLocation(true)
+    setFromDate(_fromDate)
+    setFromTime(_fromTime)
+    setToDate(_toDate)
+    setToTime(_toTime)
 
     Keyboard.addListener('keyboardDidHide', () => {
-      setBlur(true);
-    });
+      setBlur(true)
+    })
 
-    setInit(true);
-    setVisible(true);
-  };
+    setInit(true)
+    setVisible(true)
+  }
 
   useEffect(() => {
     if (isFocused) {
-      _init();
-      setReload(true);
+      _init()
+      setReload(true)
     } else {
-      setVisible(false);
+      setVisible(false)
     }
 
-  }, [route.params, isFocused]);
+  }, [route.params, isFocused])
 
   const onLoad = (user) => {
-    setReload(false);
-  };
+    setReload(false)
+  }
 
   const handlePickupLocationSelect = (pickupLocation) => {
-    setPickupLocation(pickupLocation);
-    if (sameLocation) setDropOffLocation(pickupLocation);
-  };
+    setPickupLocation(pickupLocation)
+    if (sameLocation) setDropOffLocation(pickupLocation)
+  }
 
   const handleDropOffLocationSelect = (dropOffLocation) => {
     setDropOffLocation(dropOffLocation)
-  };
+  }
 
   const blurLocations = () => {
-    setBlur(true);
-    setClosePickupLocation(true);
-    setCloseDropOffLocation(true);
-  };
+    setBlur(true)
+    setClosePickupLocation(true)
+    setCloseDropOffLocation(true)
+  }
 
   const handleTouchableOpacityClick = () => {
-    blurLocations();
-  };
+    blurLocations()
+  }
 
   const handleSameLocationChange = (checked) => {
-    setSameLocation(checked);
-    blurLocations();
+    setSameLocation(checked)
+    blurLocations()
     if (checked) {
-      setDropOffLocation(pickupLocation);
+      setDropOffLocation(pickupLocation)
     } else {
-      setDropOffLocation(null);
+      setDropOffLocation(null)
     }
-  };
+  }
 
   const handleSearch = () => {
-    blurLocations();
+    blurLocations()
 
-    const from = Helper.dateTime(fromDate, fromTime);
-    const to = Helper.dateTime(toDate, toTime);
+    const from = Helper.dateTime(fromDate, fromTime)
+    const to = Helper.dateTime(toDate, toTime)
 
     if (!pickupLocation) {
-      return Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'));
+      return Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
     }
 
     if (!dropOffLocation) {
-      return Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'));
+      return Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
     }
 
-    const params = { pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() };
-    navigation.navigate('Cars', params);
-  };
+    const params = { pickupLocation, dropOffLocation, from: from.getTime(), to: to.getTime() }
+    navigation.navigate('Cars', params)
+  }
 
   return (
     <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
@@ -167,11 +167,11 @@ const HomeScreen = ({ navigation, route }) => {
               onSelectItem={handlePickupLocationSelect}
               selectedItem={pickupLocation}
               onFetch={() => {
-                setClosePickupLocation(false);
+                setClosePickupLocation(false)
               }}
               onFocus={() => {
-                setBlur(false);
-                setCloseDropOffLocation(true);
+                setBlur(false)
+                setCloseDropOffLocation(true)
               }}
               close={closePickupLocation}
               blur={blur}
@@ -228,11 +228,11 @@ const HomeScreen = ({ navigation, route }) => {
                 onSelectItem={handleDropOffLocationSelect}
                 selectedItem={dropOffLocation}
                 onFetch={() => {
-                  setCloseDropOffLocation(false);
+                  setCloseDropOffLocation(false)
                 }}
                 onFocus={() => {
-                  setBlur(false);
-                  setClosePickupLocation(true);
+                  setBlur(false)
+                  setClosePickupLocation(true)
                 }}
                 close={closeDropOffLocation}
                 blur={blur}
@@ -244,8 +244,8 @@ const HomeScreen = ({ navigation, route }) => {
         </ScrollView>
       }
     </Master>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   master: {
@@ -310,6 +310,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: -5
   }
-});
+})
 
-export default HomeScreen;
+export default HomeScreen

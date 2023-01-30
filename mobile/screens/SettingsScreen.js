@@ -1,186 +1,186 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ScrollView, Pressable } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
-import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
-import Master from './Master';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import TextInput from '../components/TextInput';
-import DateTimePicker from '../components/DateTimePicker';
-import Switch from '../components/Switch';
-import Button from '../components/Button';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, View, ScrollView, Pressable } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper'
+import * as ImagePicker from 'expo-image-picker'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
+import Master from './Master'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import TextInput from '../components/TextInput'
+import DateTimePicker from '../components/DateTimePicker'
+import Switch from '../components/Switch'
+import Button from '../components/Button'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
 const SettingsScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused();
-    const [reload, setReload] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [language, setLanguage] = useState(null);
-    const [user, setUser] = useState(null);
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [birthDate, setBirthDate] = useState(null);
-    const [location, setLocation] = useState('');
-    const [bio, setBio] = useState('');
-    const [enableEmailNotifications, setEnableEmailNotifications] = useState(false);
-    const [avatar, setAvatar] = useState(null);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [fullNameRequired, setFullNameRequired] = useState(false);
-    const [phoneRequired, setPhoneRequired] = useState(false);
-    const [phoneValid, setPhoneValid] = useState(true);
-    const [birthDateRequired, setBirthDateRequired] = useState(false);
-    const [birthDateValid, setBirthDateValid] = useState(true);
+    const isFocused = useIsFocused()
+    const [reload, setReload] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [language, setLanguage] = useState(null)
+    const [user, setUser] = useState(null)
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [birthDate, setBirthDate] = useState(null)
+    const [location, setLocation] = useState('')
+    const [bio, setBio] = useState('')
+    const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
+    const [avatar, setAvatar] = useState(null)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const [fullNameRequired, setFullNameRequired] = useState(false)
+    const [phoneRequired, setPhoneRequired] = useState(false)
+    const [phoneValid, setPhoneValid] = useState(true)
+    const [birthDateRequired, setBirthDateRequired] = useState(false)
+    const [birthDateValid, setBirthDateValid] = useState(true)
 
     const _init = async () => {
         try {
-            const language = await UserService.getLanguage();
-            i18n.locale = language;
-            setLanguage(language);
+            const language = await UserService.getLanguage()
+            i18n.locale = language
+            setLanguage(language)
 
-            const currentUser = await UserService.getCurrentUser();
+            const currentUser = await UserService.getCurrentUser()
 
             if (!currentUser) {
-                await UserService.signout(navigation, false, true);
-                return;
+                await UserService.signout(navigation, false, true)
+                return
             }
 
-            const user = await UserService.getUser(currentUser.id);
+            const user = await UserService.getUser(currentUser.id)
 
             if (!user) {
-                await UserService.signout(navigation, false, true);
-                return;
+                await UserService.signout(navigation, false, true)
+                return
             }
 
-            setUser(user);
+            setUser(user)
             if (user.avatar) {
-                setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar));
+                setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar))
             } else {
-                setAvatar(null);
+                setAvatar(null)
             }
-            setFullName(user.fullName);
-            setEmail(user.email);
-            setPhone(user.phone);
+            setFullName(user.fullName)
+            setEmail(user.email)
+            setPhone(user.phone)
             setBirthDate(new Date(user.birthDate))
-            setLocation(user.location);
-            setBio(user.bio);
-            setEnableEmailNotifications(user.enableEmailNotifications);
+            setLocation(user.location)
+            setBio(user.bio)
+            setEnableEmailNotifications(user.enableEmailNotifications)
 
-            setFullNameRequired(false);
-            setPhoneRequired(false);
-            setPhoneValid(true);
-            setBirthDateRequired(false);
-            setBirthDateValid(true);
+            setFullNameRequired(false)
+            setPhoneRequired(false)
+            setPhoneValid(true)
+            setBirthDateRequired(false)
+            setBirthDateValid(true)
 
-            setVisible(true);
+            setVisible(true)
         } catch (err) {
-            await UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true)
         }
-    };
+    }
 
     useEffect(() => {
         if (isFocused) {
-            _init();
-            setReload(true);
+            _init()
+            setReload(true)
         } else {
-            setVisible(false);
+            setVisible(false)
         }
-    }, [route.params, isFocused]);
+    }, [route.params, isFocused])
 
     const onLoad = (user) => {
-        setReload(false);
-    };
+        setReload(false)
+    }
 
     const validateFullName = () => {
-        const valid = fullName !== '';
-        setFullNameRequired(!valid);
-        return valid;
-    };
+        const valid = fullName !== ''
+        setFullNameRequired(!valid)
+        return valid
+    }
 
     const onChangeFullName = (text) => {
-        setFullName(text);
+        setFullName(text)
 
         if (text) {
-            setFullNameRequired(false);
+            setFullNameRequired(false)
         }
-    };
+    }
 
     const validatePhone = () => {
         if (phone) {
-            const phoneValid = validator.isMobilePhone(phone);
-            setPhoneRequired(false);
-            setPhoneValid(phoneValid);
+            const phoneValid = validator.isMobilePhone(phone)
+            setPhoneRequired(false)
+            setPhoneValid(phoneValid)
 
-            return phoneValid;
+            return phoneValid
         } else {
-            setPhoneRequired(true);
-            setPhoneValid(true);
+            setPhoneRequired(true)
+            setPhoneValid(true)
 
-            return false;
+            return false
         }
-    };
+    }
 
     const onChangePhone = (text) => {
-        setPhone(text);
-        setPhoneRequired(false);
-        setPhoneValid(true);
-    };
+        setPhone(text)
+        setPhoneRequired(false)
+        setPhoneValid(true)
+    }
 
     const validateBirthDate = () => {
         if (birthDate) {
-            setBirthDateRequired(false);
+            setBirthDateRequired(false)
 
-            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years;
-            const birthDateValid = sub >= Env.MINIMUM_AGE;
+            const sub = intervalToDuration({ start: birthDate, end: new Date() }).years
+            const birthDateValid = sub >= Env.MINIMUM_AGE
 
-            setBirthDateValid(birthDateValid);
-            return birthDateValid;
+            setBirthDateValid(birthDateValid)
+            return birthDateValid
         } else {
-            setBirthDateRequired(true);
-            setBirthDateValid(true);
+            setBirthDateRequired(true)
+            setBirthDateValid(true)
 
-            return false;
+            return false
         }
-    };
+    }
 
     const onChangeBirthDate = (date) => {
-        setBirthDate(date);
-        setBirthDateRequired(false);
-        setBirthDateValid(true);
-    };
+        setBirthDate(date)
+        setBirthDateRequired(false)
+        setBirthDateValid(true)
+    }
 
     const onChangeLocation = (text) => {
-        setLocation(text);
-    };
+        setLocation(text)
+    }
 
     const onChangeBio = (text) => {
-        setBio(text);
-    };
+        setBio(text)
+    }
 
     const onChangeEnableEmailNotificationsChecked = (checked) => {
-        setEnableEmailNotifications(checked);
-    };
+        setEnableEmailNotifications(checked)
+    }
 
     const onPressSave = () => {
 
-        const fullNameValid = validateFullName();
+        const fullNameValid = validateFullName()
         if (!fullNameValid) {
-            return;
+            return
         }
 
-        const phoneValid = validatePhone();
+        const phoneValid = validatePhone()
         if (!phoneValid) {
-            return;
+            return
         }
 
-        const birthDateValid = validateBirthDate();
+        const birthDateValid = validateBirthDate()
         if (!birthDateValid) {
-            return;
+            return
         }
 
         const data = {
@@ -191,25 +191,25 @@ const SettingsScreen = ({ navigation, route }) => {
             location,
             bio,
             enableEmailNotifications
-        };
+        }
 
         UserService.updateUser(data)
             .then(status => {
                 if (status === 200) {
-                    Helper.toast(i18n.t('SETTINGS_UPDATED'));
+                    Helper.toast(i18n.t('SETTINGS_UPDATED'))
                 } else {
-                    Helper.error();
+                    Helper.error()
                 }
             })
             .catch(() => {
-                UserService.signout(navigation, false, true);
-            });
+                UserService.signout(navigation, false, true)
+            })
 
-    };
+    }
 
     const onPressChangePassword = () => {
-        navigation.navigate('ChangePassword');
-    };
+        navigation.navigate('ChangePassword')
+    }
 
     return (
         <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
@@ -236,7 +236,7 @@ const SettingsScreen = ({ navigation, route }) => {
                                             style={styles.deleteAvatar}
                                             hitSlop={15}
                                             onPress={() => {
-                                                setOpenDeleteDialog(true);
+                                                setOpenDeleteDialog(true)
                                             }}>
                                             <Badge style={styles.badge} size={36}>
                                                 <MaterialIcons name='broken-image' size={22} color='#373737' />
@@ -248,35 +248,35 @@ const SettingsScreen = ({ navigation, route }) => {
                                         hitSlop={15}
                                         onPress={async () => {
                                             try {
-                                                let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                                                let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
                                                 if (permissionResult.granted === false) {
-                                                    alert(i18n.t('CAMERA_PERMISSION'));
-                                                    return;
+                                                    alert(i18n.t('CAMERA_PERMISSION'))
+                                                    return
                                                 }
 
-                                                let pickerResult = await ImagePicker.launchImageLibraryAsync();
+                                                let pickerResult = await ImagePicker.launchImageLibraryAsync()
 
                                                 if (pickerResult.cancelled === true) {
-                                                    return;
+                                                    return
                                                 }
 
-                                                const uri = pickerResult.uri;
-                                                const name = Helper.getFileName(uri);
-                                                const type = Helper.getMimeType(name);
-                                                const image = { uri, name, type };
-                                                const status = await UserService.updateAvatar(user._id, image);
+                                                const uri = pickerResult.uri
+                                                const name = Helper.getFileName(uri)
+                                                const type = Helper.getMimeType(name)
+                                                const image = { uri, name, type }
+                                                const status = await UserService.updateAvatar(user._id, image)
 
                                                 if (status == 200) {
-                                                    const _user = await UserService.getUser(user._id);
-                                                    setUser(_user);
-                                                    setAvatar(Helper.joinURL(Env.CDN_USERS, _user.avatar));
+                                                    const _user = await UserService.getUser(user._id)
+                                                    setUser(_user)
+                                                    setAvatar(Helper.joinURL(Env.CDN_USERS, _user.avatar))
                                                 } else {
-                                                    Helper.error();
+                                                    Helper.error()
                                                 }
                                             }
                                             catch (err) {
-                                                await UserService.signout(navigation);
+                                                await UserService.signout(navigation)
                                             }
 
                                         }}>
@@ -371,7 +371,7 @@ const SettingsScreen = ({ navigation, route }) => {
                                 <NativeButton
                                     color='#f37022'
                                     onPress={() => {
-                                        setOpenDeleteDialog(false);
+                                        setOpenDeleteDialog(false)
                                     }}
                                 >
                                     {i18n.t('CANCEL')}
@@ -380,17 +380,17 @@ const SettingsScreen = ({ navigation, route }) => {
                                     color='#f37022'
                                     onPress={async () => {
                                         try {
-                                            const status = await UserService.deleteAvatar(user._id);
+                                            const status = await UserService.deleteAvatar(user._id)
 
                                             if (status === 200) {
-                                                setAvatar(null);
-                                                setOpenDeleteDialog(false);
+                                                setAvatar(null)
+                                                setOpenDeleteDialog(false)
                                             } else {
-                                                Helper.error();
+                                                Helper.error()
                                             }
                                         }
                                         catch (err) {
-                                            await UserService.signout(navigation);
+                                            await UserService.signout(navigation)
                                         }
                                     }}
                                 >
@@ -402,8 +402,8 @@ const SettingsScreen = ({ navigation, route }) => {
                 </>
             }
         </Master>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     master: {
@@ -465,6 +465,6 @@ const styles = StyleSheet.create({
     dialogActions: {
         height: 75
     },
-});
+})
 
-export default SettingsScreen;
+export default SettingsScreen

@@ -1,95 +1,95 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import * as CarService from '../services/CarService';
-import { MaterialIcons } from '@expo/vector-icons';
-import Button from './Button';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import * as CarService from '../services/CarService'
+import { MaterialIcons } from '@expo/vector-icons'
+import Button from './Button'
 
 const CarList = (props) => {
-    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
-    const [loading, setLoading] = useState(true);
-    const [fetch, setFetch] = useState(false);
-    const [rows, setRows] = useState([]);
-    const [page, setPage] = useState(1);
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+    const [loading, setLoading] = useState(true)
+    const [fetch, setFetch] = useState(false)
+    const [rows, setRows] = useState([])
+    const [page, setPage] = useState(1)
 
     _init = async () => {
         try {
-            const language = await UserService.getLanguage();
-            i18n.locale = language;
-            setLanguage(language);
+            const language = await UserService.getLanguage()
+            i18n.locale = language
+            setLanguage(language)
         } catch (err) {
-            Helper.error(err);
+            Helper.error(err)
         }
-    };
+    }
 
     useEffect(() => {
         (async function () {
-            await _init();
-        })();
-    }, []);
+            await _init()
+        })()
+    }, [])
 
     const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
         if (companies.length > 0) {
-            setLoading(true);
-            setFetch(true);
+            setLoading(true)
+            setFetch(true)
 
-            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit };
+            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit }
 
             CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
                 .then(data => {
-                    const _data = data.length > 0 ? data[0] : {};
-                    if (_data.length === 0) _data.resultData = [];
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-                    setRows(_rows);
-                    setFetch(_data.resultData.length > 0);
+                    const _data = data.length > 0 ? data[0] : {}
+                    if (_data.length === 0) _data.resultData = []
+                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+                    setRows(_rows)
+                    setFetch(_data.resultData.length > 0)
                     if (props.onLoad) {
-                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                     }
-                    setLoading(false);
+                    setLoading(false)
                 })
                 .catch((err) => {
-                    Helper.error(err);
-                });
+                    Helper.error(err)
+                })
         } else {
-            setRows([]);
-            setFetch(false);
-            setLoading(false);
+            setRows([])
+            setFetch(false)
+            setLoading(false)
         }
-    };
+    }
 
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit);
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
             } else {
-                setRows([]);
-                setFetch(false);
+                setRows([])
+                setFetch(false)
                 if (props.onLoad) {
-                    props.onLoad({ rows: [], rowCount: 0 });
+                    props.onLoad({ rows: [], rowCount: 0 })
                 }
             }
         }
-    }, [page, props.companies, props.pickupLocatio, props.fuel, props.gearbox, props.mileage, props.deposit]);
+    }, [page, props.companies, props.pickupLocatio, props.fuel, props.gearbox, props.mileage, props.deposit])
 
     useEffect(() => {
-        setPage(1);
-    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]);
+        setPage(1)
+    }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit])
 
     const getExtraIcon = (extra) => (
         extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
-    );
+    )
 
     const getExtraColor = (extra) => (
         extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
-    );
+    )
 
-    const fr = language === Env.LANGUAGE.FR;
-    const iconSize = 24;
-    const iconColor = '#000';
+    const fr = language === Env.LANGUAGE.FR
+    const iconSize = 24
+    const iconColor = '#000'
 
     return (
         <View style={styles.container}>
@@ -219,8 +219,8 @@ const CarList = (props) => {
 
                                 <View style={styles.buttonContainer}>
                                     <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
-                                        const params = { car: car._id, pickupLocation: props.pickupLocation, dropOffLocation: props.dropOffLocation, from: props.from.getTime(), to: props.to.getTime() };
-                                        props.navigation.navigate('CreateBooking', params);
+                                        const params = { car: car._id, pickupLocation: props.pickupLocation, dropOffLocation: props.dropOffLocation, from: props.from.getTime(), to: props.to.getTime() }
+                                        props.navigation.navigate('CreateBooking', params)
                                     }} />
                                 </View>
                             </View>
@@ -230,7 +230,7 @@ const CarList = (props) => {
                     onEndReachedThreshold={0.5}
                     onEndReached={({ distanceFromEnd }) => {
                         if (distanceFromEnd >= 0 && fetch) {
-                            setPage(page + 1);
+                            setPage(page + 1)
                         }
                     }}
                     ListHeaderComponent={props.header}
@@ -245,8 +245,8 @@ const CarList = (props) => {
                 />
             }
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -376,6 +376,6 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 10,
     },
-});
+})
 
-export default CarList;
+export default CarList

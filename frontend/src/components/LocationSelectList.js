@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import * as LocationService from '../services/LocationService';
-import * as Helper from '../common/Helper';
-import MultipleSelect from './MultipleSelect';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import * as LocationService from '../services/LocationService'
+import * as Helper from '../common/Helper'
+import MultipleSelect from './MultipleSelect'
 
 const LocationSelectList = (props) => {
-    const [init, setInit] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [rows, setRows] = useState([]);
-    const [fetch, setFetch] = useState(true);
-    const [page, setPage] = useState(1);
-    const [keyword, setKeyword] = useState('');
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [init, setInit] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [rows, setRows] = useState([])
+    const [fetch, setFetch] = useState(true)
+    const [page, setPage] = useState(1)
+    const [keyword, setKeyword] = useState('')
+    const [selectedOptions, setSelectedOptions] = useState([])
 
     useEffect(() => {
-        const _value = props.multiple ? props.value : [props.value];
+        const _value = props.multiple ? props.value : [props.value]
         if (props.value && !Helper.arrayEqual(selectedOptions, _value)) {
-            setSelectedOptions(_value);
+            setSelectedOptions(_value)
         }
-    }, [props.value, props.multiple, selectedOptions]);
+    }, [props.value, props.multiple, selectedOptions])
 
     const _fetch = (page, keyword, onFetch) => {
-        setLoading(true);
+        setLoading(true)
 
         LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                const _data = data.length > 0 ? data[0] : {}
+                if (_data.length === 0) _data.resultData = []
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-                setRows(_rows);
+                setRows(_rows)
                 setFetch(_data.resultData.length > 0)
-                setLoading(false);
+                setLoading(false)
 
                 if (onFetch) {
-                    onFetch({ rows: _data.resultData, rowCount: totalRecords });
+                    onFetch({ rows: _data.resultData, rowCount: totalRecords })
                 }
             })
             .catch((err) => {
                 Helper.error(err)
-            });
-    };
+            })
+    }
 
     const handleChange = (values, key, reference) => {
         if (props.onChange) {
-            props.onChange(values);
+            props.onChange(values)
         }
-    };
+    }
 
     return (
         <MultipleSelect
@@ -66,11 +66,11 @@ const LocationSelectList = (props) => {
             variant={props.variant || 'standard'}
             ListboxProps={{
                 onScroll: (event) => {
-                    const listboxNode = event.currentTarget;
+                    const listboxNode = event.currentTarget
                     if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
-                        const p = page + 1;
-                        setPage(p);
-                        _fetch(p, keyword);
+                        const p = page + 1
+                        setPage(p)
+                        _fetch(p, keyword)
                     }
                 },
                 style: { overflow: props.overflowHidden ? 'hidden' : 'auto' }
@@ -78,39 +78,39 @@ const LocationSelectList = (props) => {
             onFocus={
                 (event) => {
                     if (!init && props.init) {
-                        const p = 1;
-                        setRows([]);
-                        setPage(p);
+                        const p = 1
+                        setRows([])
+                        setPage(p)
                         _fetch(p, keyword, () => {
-                            setInit(true);
-                        });
+                            setInit(true)
+                        })
                     }
                 }
             }
             onInputChange={
                 (event) => {
-                    const value = (event && event.target ? event.target.value : null) || '';
+                    const value = (event && event.target ? event.target.value : null) || ''
 
                     //if (event.target.type === 'text' && value !== keyword) {
                     if (value !== keyword) {
-                        setRows([]);
-                        setPage(1);
-                        setKeyword(value);
-                        _fetch(1, value);
+                        setRows([])
+                        setPage(1)
+                        setKeyword(value)
+                        _fetch(1, value)
                     }
                 }
             }
             onClear={
                 (event) => {
-                    setRows([]);
-                    setPage(1);
-                    setKeyword('');
-                    setFetch(true);
-                    _fetch(1, '');
+                    setRows([])
+                    setPage(1)
+                    setKeyword('')
+                    setFetch(true)
+                    _fetch(1, '')
                 }
             }
         />
-    );
+    )
 }
 
-export default LocationSelectList;
+export default LocationSelectList

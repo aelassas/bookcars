@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/sign-in';
-import * as UserService from '../services/UserService';
-import Header from '../components/Header';
-import Error from '../components/Error';
+import React, { useEffect, useState } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/sign-in'
+import * as UserService from '../services/UserService'
+import Header from '../components/Header'
+import Error from '../components/Error'
 import {
     Paper,
     FormControl,
@@ -12,111 +12,111 @@ import {
     Input,
     Button,
     Link
-} from '@mui/material';
+} from '@mui/material'
 
-import '../assets/css/signin.css';
+import '../assets/css/signin.css'
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [blacklisted, setBlacklisted] = useState(false);
-    const [stayConnected, setStayConnected] = useState(false);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [blacklisted, setBlacklisted] = useState(false)
+    const [stayConnected, setStayConnected] = useState(false)
 
     const handleOnChangeEmail = (e) => {
-        setEmail(e.target.value);
-    };
+        setEmail(e.target.value)
+    }
 
     const handleOnChangePassword = (e) => {
-        setPassword(e.target.value);
-    };
+        setPassword(e.target.value)
+    }
 
     const handleOnPasswordKeyDown = (e) => {
         if (e.key === 'Enter') {
-            handleSubmit(e);
+            handleSubmit(e)
         }
-    };
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        const data = { email, password, stayConnected };
+        const data = { email, password, stayConnected }
 
         UserService.signin(data)
             .then(res => {
                 if (res.status === 200) {
                     if (res.data.blacklisted) {
-                        UserService.signout(false);
-                        setError(false);
-                        setBlacklisted(true);
+                        UserService.signout(false)
+                        setError(false)
+                        setBlacklisted(true)
                     } else {
-                        setError(false);
+                        setError(false)
 
-                        const params = new URLSearchParams(window.location.search);
+                        const params = new URLSearchParams(window.location.search)
                         if (params.has('from')) {
-                            const from = params.get('from');
+                            const from = params.get('from')
                             if (from === 'create-booking') {
-                                window.location.href = '/create-booking' + window.location.search;
+                                window.location.href = '/create-booking' + window.location.search
                             } else {
-                                window.location.href = '/';
+                                window.location.href = '/'
                             }
                         } else {
-                            window.location.href = '/';
+                            window.location.href = '/'
                         }
                     }
                 } else {
-                    setError(true);
-                    setBlacklisted(false);
+                    setError(true)
+                    setBlacklisted(false)
                 }
             }).catch(() => {
-                setError(true);
-                setBlacklisted(false);
-            });
-    };
+                setError(true)
+                setBlacklisted(false)
+            })
+    }
 
     useEffect(() => {
-        const queryLanguage = UserService.getQueryLanguage();
+        const queryLanguage = UserService.getQueryLanguage()
 
         if (Env.LANGUAGES.includes(queryLanguage)) {
-            strings.setLanguage(queryLanguage);
+            strings.setLanguage(queryLanguage)
         } else {
-            const language = UserService.getLanguage();
-            strings.setLanguage(language);
+            const language = UserService.getLanguage()
+            strings.setLanguage(language)
         }
 
-        const currentUser = UserService.getCurrentUser();
+        const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
             UserService.validateAccessToken().then(status => {
                 if (status === 200) {
                     UserService.getUser(currentUser.id).then(user => {
                         if (user) {
-                            const params = new URLSearchParams(window.location.search);
+                            const params = new URLSearchParams(window.location.search)
                             if (params.has('from')) {
-                                const from = params.get('from');
+                                const from = params.get('from')
                                 if (from === 'create-booking') {
-                                    window.location.href = '/create-booking' + window.location.search;
+                                    window.location.href = '/create-booking' + window.location.search
                                 } else {
-                                    window.location.href = '/' + window.location.search;
+                                    window.location.href = '/' + window.location.search
                                 }
                             } else {
-                                window.location.href = '/' + window.location.search;
+                                window.location.href = '/' + window.location.search
                             }
                         } else {
-                            UserService.signout();
+                            UserService.signout()
                         }
                     }).catch(err => {
-                        UserService.signout();
-                    });
+                        UserService.signout()
+                    })
                 }
             }).catch(err => {
-                UserService.signout();
-            });
+                UserService.signout()
+            })
         } else {
-            setVisible(true);
+            setVisible(true)
         }
-    }, []);
+    }, [])
 
     return (
         <div>
@@ -148,13 +148,13 @@ const SignIn = () => {
 
                             <div className='stay-connected'>
                                 <input type='checkbox' onChange={(e) => {
-                                    setStayConnected(e.currentTarget.checked);
+                                    setStayConnected(e.currentTarget.checked)
                                 }} />
                                 <label onClick={(e) => {
-                                    const checkbox = e.currentTarget.previousSibling;
-                                    const checked = !checkbox.checked;
-                                    checkbox.checked = checked;
-                                    setStayConnected(checked);
+                                    const checkbox = e.currentTarget.previousSibling
+                                    const checked = !checkbox.checked
+                                    checkbox.checked = checked
+                                    setStayConnected(checked)
                                 }}>{strings.STAY_CONNECTED}</label>
                             </div>
 
@@ -188,7 +188,7 @@ const SignIn = () => {
                     </Paper>
                 </div>}
         </div>
-    );
-};
+    )
+}
 
-export default SignIn;
+export default SignIn

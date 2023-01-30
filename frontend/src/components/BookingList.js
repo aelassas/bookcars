@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as csStrings } from '../lang/cars';
-import { strings } from '../lang/booking-list';
-import * as Helper from '../common/Helper';
-import * as BookingService from '../services/BookingService';
-import Backdrop from '../components/SimpleBackdrop';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/booking-list'
+import * as Helper from '../common/Helper'
+import * as BookingService from '../services/BookingService'
+import Backdrop from '../components/SimpleBackdrop'
 import {
     DataGrid,
     frFR,
     enUS
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid'
 import {
     Tooltip,
     IconButton,
@@ -24,122 +24,122 @@ import {
     Button,
     CircularProgress,
     Stack
-} from '@mui/material';
+} from '@mui/material'
 import {
     Visibility as ViewIcon,
     Check as CheckIcon,
     Cancel as CancelIcon
-} from '@mui/icons-material';
-import * as UserService from '../services/UserService';
-import { format } from 'date-fns';
-import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale";
+} from '@mui/icons-material'
+import * as UserService from '../services/UserService'
+import { format } from 'date-fns'
+import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
 
-import '../assets/css/booking-list.css';
+import '../assets/css/booking-list.css'
 
 const BookingList = (props) => {
-    const [user, setUser] = useState();
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE);
-    const [columns, setColumns] = useState([]);
-    const [rows, setRows] = useState([]);
-    const [rowCount, setRowCount] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [fetch, setFetch] = useState(false);
-    const [selectedId, setSelectedId] = useState();
-    const [companies, setCompanies] = useState(props.companies);
-    const [statuses, setStatuses] = useState(props.statuses);
-    const [filter, setFilter] = useState(props.filter);
-    const [reload, setReload] = useState(props.reload);
-    const [car, setCar] = useState(props.car);
-    const [openCancelDialog, setOpenCancelDialog] = useState(false);
-    const [cancelRequestSent, setCancelRequestSent] = useState(false);
-    const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false);
-    const [offset, setOffset] = useState(0);
+    const [user, setUser] = useState()
+    const [page, setPage] = useState(0)
+    const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE)
+    const [columns, setColumns] = useState([])
+    const [rows, setRows] = useState([])
+    const [rowCount, setRowCount] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [fetch, setFetch] = useState(false)
+    const [selectedId, setSelectedId] = useState()
+    const [companies, setCompanies] = useState(props.companies)
+    const [statuses, setStatuses] = useState(props.statuses)
+    const [filter, setFilter] = useState(props.filter)
+    const [reload, setReload] = useState(props.reload)
+    const [car, setCar] = useState(props.car)
+    const [openCancelDialog, setOpenCancelDialog] = useState(false)
+    const [cancelRequestSent, setCancelRequestSent] = useState(false)
+    const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
+    const [offset, setOffset] = useState(0)
 
     const _fetch = (page, user) => {
-        const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize;
+        const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
         if (companies.length > 0) {
-            setLoading(true);
+            setLoading(true)
 
             BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
                 .then(data => {
-                    const _data = data.length > 0 ? data[0] : {};
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+                    const _data = data.length > 0 ? data[0] : {}
+                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                     if (Env.isMobile()) {
-                        const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
-                        setRows(_rows);
-                        setRowCount(totalRecords);
-                        setFetch(_data.resultData.length > 0);
+                        const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+                        setRows(_rows)
+                        setRowCount(totalRecords)
+                        setFetch(_data.resultData.length > 0)
                         if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                         }
-                        setLoading(false);
+                        setLoading(false)
                     } else {
-                        setRows(_data.resultData);
-                        setRowCount(totalRecords);
+                        setRows(_data.resultData)
+                        setRowCount(totalRecords)
                         if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                         }
-                        setLoading(false);
+                        setLoading(false)
                     }
                 })
                 .catch((err) => {
-                    UserService.signout();
-                });
+                    UserService.signout()
+                })
         } else {
-            setRows([]);
-            setRowCount(0);
+            setRows([])
+            setRowCount(0)
             if (props.onLoad) {
-                props.onLoad({ rows: [], rowCount: 0 });
+                props.onLoad({ rows: [], rowCount: 0 })
             }
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     useEffect(() => {
-        setCompanies(props.companies || []);
-    }, [props.companies]);
+        setCompanies(props.companies || [])
+    }, [props.companies])
 
     useEffect(() => {
-        setStatuses(props.statuses || []);
-    }, [props.statuses]);
+        setStatuses(props.statuses || [])
+    }, [props.statuses])
 
     useEffect(() => {
-        setFilter(props.filter || null);
-    }, [props.filter]);
+        setFilter(props.filter || null)
+    }, [props.filter])
 
     useEffect(() => {
-        setCar(props.car || null);
-    }, [props.car]);
+        setCar(props.car || null)
+    }, [props.car])
 
     useEffect(() => {
-        setOffset(props.offset || 0);
-    }, [props.offset]);
+        setOffset(props.offset || 0)
+    }, [props.offset])
 
     useEffect(() => {
-        setReload(props.reload || false);
-    }, [props.reload]);
+        setReload(props.reload || false)
+    }, [props.reload])
 
     useEffect(() => {
         if (reload) {
-            setPage(0);
-            _fetch(0, user);
+            setPage(0)
+            _fetch(0, user)
         }
-    }, [reload]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (props.user && companies.length > 0 && statuses.length > 0) {
-            const columns = getColumns();
-            setUser(props.user);
-            setColumns(columns);
-            _fetch(page, props.user);
+            const columns = getColumns()
+            setUser(props.user)
+            setColumns(columns)
+            _fetch(page, props.user)
         }
-    }, [props.user, page, pageSize, companies, statuses, filter]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.user, page, pageSize, companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (Env.isMobile()) {
-            const element = document.querySelector(`.${props.containerClassName}`);
+            const element = document.querySelector(`.${props.containerClassName}`)
 
             if (element) {
                 element.onscroll = (event) => {
@@ -147,18 +147,18 @@ const BookingList = (props) => {
                         && !loading
                         && event.target.scrollTop > 0
                         && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
-                        const p = page + 1;
-                        setPage(p);
+                        const p = page + 1
+                        setPage(p)
                     }
-                };
+                }
             }
         }
-    }, [props.containerClassName, page, fetch, loading, offset]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.containerClassName, page, fetch, loading, offset]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const getDate = (date) => {
-        const d = new Date(date);
-        return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`;
-    };
+        const d = new Date(date)
+        return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`
+    }
 
     const getColumns = () => {
         const columns = [
@@ -204,10 +204,10 @@ const BookingList = (props) => {
                 disableColumnMenu: true,
                 renderCell: (params) => {
                     const cancelBooking = (e) => {
-                        e.stopPropagation(); // don't select this row after clicking
-                        setSelectedId(params.row._id);
-                        setOpenCancelDialog(true);
-                    };
+                        e.stopPropagation() // don't select this row after clicking
+                        setSelectedId(params.row._id)
+                        setOpenCancelDialog(true)
+                    }
 
                     return (
                         <>
@@ -227,12 +227,12 @@ const BookingList = (props) => {
                                 </Tooltip>
                             }
                         </>
-                    );
+                    )
                 },
             }
-        ];
+        ]
 
-        if (props.hideDates) columns.splice(0, 2);
+        if (props.hideDates) columns.splice(0, 2)
 
         if (!props.hideCarColumn) {
             columns.unshift({
@@ -242,7 +242,7 @@ const BookingList = (props) => {
                 renderCell: (params) => (
                     params.value.name
                 ),
-            });
+            })
         }
 
         if (!props.hideCompanyColumn) {
@@ -255,50 +255,50 @@ const BookingList = (props) => {
                         alt={params.value.fullName}
                         style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                 ),
-            });
+            })
         }
 
-        return columns;
+        return columns
     }
 
     const handleCloseCancelBooking = () => {
 
-        setOpenCancelDialog(false);
+        setOpenCancelDialog(false)
         if (cancelRequestSent) {
             setTimeout(() => {
                 setCancelRequestSent(false)
-            }, 500);
+            }, 500)
         }
-    };
+    }
 
     const handleConfirmCancelBooking = async () => {
         try {
-            setCancelRequestProcessing(true);
-            const status = await BookingService.cancel(selectedId);
+            setCancelRequestProcessing(true)
+            const status = await BookingService.cancel(selectedId)
             if (status === 200) {
-                const row = rows.find(r => r._id === selectedId);
-                row.cancelRequest = true;
+                const row = rows.find(r => r._id === selectedId)
+                row.cancelRequest = true
 
-                setCancelRequestSent(true);
-                setRows(rows);
-                setSelectedId('');
-                setCancelRequestProcessing(false);
+                setCancelRequestSent(true)
+                setRows(rows)
+                setSelectedId('')
+                setCancelRequestProcessing(false)
             } else {
-                Helper.error();
-                setOpenCancelDialog(false);
-                setCancelRequestProcessing(false);
+                Helper.error()
+                setOpenCancelDialog(false)
+                setCancelRequestProcessing(false)
             }
         } catch (err) {
-            Helper.error(err);
-            setOpenCancelDialog(false);
-            setCancelRequestProcessing(false);
+            Helper.error(err)
+            setOpenCancelDialog(false)
+            setCancelRequestProcessing(false)
         }
-    };
+    }
 
-    const _fr = props.language === 'fr';
-    const _locale = _fr ? dfnsFR : dfnsENUS;
-    const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
-    const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
+    const _fr = props.language === 'fr'
+    const _locale = _fr ? dfnsFR : dfnsENUS
+    const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
+    const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
 
     return (
         <div className='bs-list'>
@@ -315,9 +315,9 @@ const BookingList = (props) => {
                     Env.isMobile() ?
                         <>
                             {rows.map((booking, index) => {
-                                const from = new Date(booking.from);
-                                const to = new Date(booking.to);
-                                const days = Helper.days(from, to);
+                                const from = new Date(booking.from)
+                                const to = new Date(booking.to)
+                                const days = Helper.days(from, to)
 
                                 return (
                                     <div key={booking._id} className='booking-details'>
@@ -431,8 +431,8 @@ const BookingList = (props) => {
                                                     variant="contained"
                                                     className='btn-secondary'
                                                     onClick={() => {
-                                                        setSelectedId(booking._id);
-                                                        setOpenCancelDialog(true);
+                                                        setSelectedId(booking._id)
+                                                        setOpenCancelDialog(true)
                                                     }}
                                                 >
                                                     {strings.CANCEL}
@@ -441,7 +441,7 @@ const BookingList = (props) => {
 
                                         </div>
                                     </div>
-                                );
+                                )
                             })}
                         </>
                         :
@@ -459,11 +459,11 @@ const BookingList = (props) => {
                             pageSize={pageSize}
                             paginationMode='server'
                             onPageChange={(page) => {
-                                setPage(page);
+                                setPage(page)
                             }}
                             onPageSizeChange={(pageSize) => {
-                                setPage(0);
-                                setPageSize(pageSize);
+                                setPage(0)
+                                setPageSize(pageSize)
                             }}
                             localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
                             components={{
@@ -504,7 +504,7 @@ const BookingList = (props) => {
 
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </div>
-    );
-};
+    )
+}
 
-export default BookingList;
+export default BookingList

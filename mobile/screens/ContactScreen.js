@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import Master from './Master';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, ScrollView } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import Master from './Master'
 
 const ContactScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused();
-    const [reload, setReload] = useState(false);
-    const [visible, setVisible] = useState(false);
+    const isFocused = useIsFocused()
+    const [reload, setReload] = useState(false)
+    const [visible, setVisible] = useState(false)
 
     const _init = async () => {
-        setVisible(false);
-        const language = await UserService.getLanguage();
-        i18n.locale = language;
-        setVisible(true);
-    };
+        setVisible(false)
+        const language = await UserService.getLanguage()
+        i18n.locale = language
+        setVisible(true)
+    }
 
     useEffect(() => {
         if (isFocused) {
-            _init();
-            setReload(true);
+            _init()
+            setReload(true)
         } else {
-            setVisible(false);
+            setVisible(false)
         }
-    }, [route.params, isFocused]);
+    }, [route.params, isFocused])
 
     const onLoad = (user) => {
-        setReload(false);
-    };
+        setReload(false)
+    }
 
     return (
         <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
@@ -42,8 +42,8 @@ const ContactScreen = ({ navigation, route }) => {
                 </ScrollView>
             }
         </Master>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     master: {
@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center'
     }
-});
+})
 
-export default ContactScreen;
+export default ContactScreen

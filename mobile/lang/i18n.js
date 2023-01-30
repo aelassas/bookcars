@@ -1,7 +1,7 @@
-import i18n from 'i18n-js';
-import Env from '../config/env.config';
+import i18n from 'i18n-js'
+import Env from '../config/env.config'
 
-const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars`;
+const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars`
 
 i18n.translations = {
     fr: {
@@ -421,7 +421,7 @@ i18n.translations = {
         PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
         PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
     }
-};
+}
 
-i18n.fallbacks = true;
-export default i18n;
+i18n.fallbacks = true
+export default i18n

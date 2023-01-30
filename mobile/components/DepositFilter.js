@@ -1,62 +1,62 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import i18n from '../lang/i18n';
-import Accordion from './Accordion';
-import RadioButton from './RadioButton';
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import i18n from '../lang/i18n'
+import Accordion from './Accordion'
+import RadioButton from './RadioButton'
 
 const DepositFilter = (props) => {
-    const [deposit_2500, setDeposit_2500] = useState(false);
-    const [deposit_5000, setDeposit_5000] = useState(false);
-    const [deposit_7500, setDeposit_7500] = useState(false);
-    const [deposit_all, setDeposit_all] = useState(true);
+    const [deposit_2500, setDeposit_2500] = useState(false)
+    const [deposit_5000, setDeposit_5000] = useState(false)
+    const [deposit_7500, setDeposit_7500] = useState(false)
+    const [deposit_all, setDeposit_all] = useState(true)
 
     const onValueChangeDeposit_2500 = (checked) => {
         if (checked) {
-            const value = 2500;
-            setDeposit_2500(true);
-            setDeposit_5000(false);
-            setDeposit_7500(false);
-            setDeposit_all(false);
+            const value = 2500
+            setDeposit_2500(true)
+            setDeposit_5000(false)
+            setDeposit_7500(false)
+            setDeposit_all(false)
 
-            if (props.onChange) props.onChange(value);
+            if (props.onChange) props.onChange(value)
         }
-    };
+    }
 
     const onValueChangeDeposit_5000 = (checked) => {
         if (checked) {
-            const value = 5000;
-            setDeposit_2500(false);
-            setDeposit_5000(true);
-            setDeposit_7500(false);
-            setDeposit_all(false);
+            const value = 5000
+            setDeposit_2500(false)
+            setDeposit_5000(true)
+            setDeposit_7500(false)
+            setDeposit_all(false)
 
-            if (props.onChange) props.onChange(value);
+            if (props.onChange) props.onChange(value)
         }
-    };
+    }
 
     const onValueChangeDeposit_7500 = (checked) => {
         if (checked) {
-            const value = 7500;
-            setDeposit_2500(false);
-            setDeposit_5000(false);
-            setDeposit_7500(true);
-            setDeposit_all(false);
+            const value = 7500
+            setDeposit_2500(false)
+            setDeposit_5000(false)
+            setDeposit_7500(true)
+            setDeposit_all(false)
 
-            if (props.onChange) props.onChange(value);
+            if (props.onChange) props.onChange(value)
         }
-    };
+    }
 
     const onValueChangeDeposit_all = (checked) => {
         if (checked) {
-            const value = -1;
-            setDeposit_2500(false);
-            setDeposit_5000(false);
-            setDeposit_7500(false);
-            setDeposit_all(true);
+            const value = -1
+            setDeposit_2500(false)
+            setDeposit_5000(false)
+            setDeposit_7500(false)
+            setDeposit_all(true)
 
-            if (props.onChange) props.onChange(value);
+            if (props.onChange) props.onChange(value)
         }
-    };
+    }
 
     return (
         props.visible &&
@@ -70,8 +70,8 @@ const DepositFilter = (props) => {
                 </View>
             </Accordion>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
     linkText: {
         fontSize: 12
     }
-});
+})
 
-export default DepositFilter;
+export default DepositFilter

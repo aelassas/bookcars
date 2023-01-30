@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
-const EXPIRE_AT = parseInt(process.env.BC_TOKEN_EXPIRE_AT);
+const Schema = mongoose.Schema
+const EXPIRE_AT = parseInt(process.env.BC_TOKEN_EXPIRE_AT)
 
 const tokenSchema = new Schema({
     user: {
@@ -21,16 +21,16 @@ const tokenSchema = new Schema({
 }, {
     strict: true,
     collection: 'Token'
-});
+})
 
-const tokenModel = mongoose.model('Token', tokenSchema);
+const tokenModel = mongoose.model('Token', tokenSchema)
 
 tokenModel.on('index', (err) => {
     if (err) {
-        console.error('Token index error: %s', err);
+        console.error('Token index error: %s', err)
     } else {
-        console.info('Token indexing complete');
+        console.info('Token indexing complete')
     }
-});
+})
 
-export default tokenModel;
+export default tokenModel

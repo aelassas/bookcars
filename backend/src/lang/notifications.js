@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import Env from '../config/env.config';
-import * as UserService from '../services/UserService';
+import LocalizedStrings from 'react-localization'
+import Env from '../config/env.config'
+import * as UserService from '../services/UserService'
 
 export const strings = new LocalizedStrings({
     fr: {
@@ -25,12 +25,12 @@ export const strings = new LocalizedStrings({
         DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
         DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?'
     }
-});
+})
 
-let language = UserService.getQueryLanguage();
+let language = UserService.getQueryLanguage()
 
 if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage();
+    language = UserService.getLanguage()
 }
 
-strings.setLanguage(language);
+strings.setLanguage(language)

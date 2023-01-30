@@ -1,21 +1,21 @@
-import React, { useState, useCallback } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as blStrings } from '../lang/booking-list';
-import { strings as bfStrings } from '../lang/booking-filter';
-import { strings as csStrings } from '../lang/cars';
-import { strings } from '../lang/create-booking';
-import * as UserService from '../services/UserService';
-import * as BookingService from '../services/BookingService';
-import * as Helper from '../common/Helper';
-import CompanySelectList from '../components/CompanySelectList';
-import UserSelectList from '../components/UserSelectList';
-import LocationSelectList from '../components/LocationSelectList';
-import CarSelectList from '../components/CarSelectList';
-import StatusList from '../components/StatusList';
-import DateTimePicker from '../components/DateTimePicker';
-import DatePicker from '../components/DatePicker';
+import React, { useState, useCallback } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as blStrings } from '../lang/booking-list'
+import { strings as bfStrings } from '../lang/booking-filter'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/create-booking'
+import * as UserService from '../services/UserService'
+import * as BookingService from '../services/BookingService'
+import * as Helper from '../common/Helper'
+import CompanySelectList from '../components/CompanySelectList'
+import UserSelectList from '../components/UserSelectList'
+import LocationSelectList from '../components/LocationSelectList'
+import CarSelectList from '../components/CarSelectList'
+import StatusList from '../components/StatusList'
+import DateTimePicker from '../components/DateTimePicker'
+import DatePicker from '../components/DatePicker'
 import {
     FormControl,
     Button,
@@ -25,150 +25,150 @@ import {
     FormHelperText,
     InputLabel,
     Input,
-} from '@mui/material';
+} from '@mui/material'
 import {
     Info as InfoIcon,
     Person as DriverIcon,
-} from '@mui/icons-material';
-import validator from 'validator';
-import { intervalToDuration } from 'date-fns';
+} from '@mui/icons-material'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
 
-import '../assets/css/create-booking.css';
+import '../assets/css/create-booking.css'
 
 const CreateBooking = () => {
-    const [user, setUser] = useState();
-    const [isCompany, setIsCompany] = useState();
-    const [visible, setVisible] = useState(false);
-    const [company, setCompany] = useState();
-    const [car, setCar] = useState();
-    const [driver, setDriver] = useState();
-    const [pickupLocation, setPickupLocation] = useState();
-    const [dropOffLocation, setDropOffLocation] = useState();
-    const [from, setFrom] = useState();
-    const [to, setTo] = useState();
-    const [status, setStatus] = useState();
-    const [cancellation, setCancellation] = useState(false);
-    const [amendments, setAmendments] = useState(false);
-    const [theftProtection, setTheftProtection] = useState(false);
-    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
-    const [fullInsurance, setFullInsurance] = useState(false);
-    const [additionalDriver, setAdditionalDriver] = useState(false);
-    const [minDate, setMinDate] = useState(new Date());
-    const [_fullName, set_FullName] = useState('');
-    const [_email, set_Email] = useState('');
-    const [_phone, set_Phone] = useState('');
-    const [_birthDate, set_BirthDate] = useState();
-    const [_emailValid, set_EmailValid] = useState(true);
-    const [_phoneValid, set_PhoneValid] = useState(true);
-    const [_birthDateValid, set_BirthDateValid] = useState(true);
+    const [user, setUser] = useState()
+    const [isCompany, setIsCompany] = useState()
+    const [visible, setVisible] = useState(false)
+    const [company, setCompany] = useState()
+    const [car, setCar] = useState()
+    const [driver, setDriver] = useState()
+    const [pickupLocation, setPickupLocation] = useState()
+    const [dropOffLocation, setDropOffLocation] = useState()
+    const [from, setFrom] = useState()
+    const [to, setTo] = useState()
+    const [status, setStatus] = useState()
+    const [cancellation, setCancellation] = useState(false)
+    const [amendments, setAmendments] = useState(false)
+    const [theftProtection, setTheftProtection] = useState(false)
+    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
+    const [fullInsurance, setFullInsurance] = useState(false)
+    const [additionalDriver, setAdditionalDriver] = useState(false)
+    const [minDate, setMinDate] = useState(new Date())
+    const [_fullName, set_FullName] = useState('')
+    const [_email, set_Email] = useState('')
+    const [_phone, set_Phone] = useState('')
+    const [_birthDate, set_BirthDate] = useState()
+    const [_emailValid, set_EmailValid] = useState(true)
+    const [_phoneValid, set_PhoneValid] = useState(true)
+    const [_birthDateValid, set_BirthDateValid] = useState(true)
 
     const handleCompanyChange = (values) => {
-        setCompany(values.length > 0 ? values[0]._id : '-1');
-    };
+        setCompany(values.length > 0 ? values[0]._id : '-1')
+    }
 
     const handleDriverChange = (values) => {
-        setDriver(values.length > 0 ? values[0]._id : null);
-    };
+        setDriver(values.length > 0 ? values[0]._id : null)
+    }
 
     const handlePickupLocationChange = (values) => {
-        setPickupLocation(values.length > 0 ? values[0]._id : '-1');
-    };
+        setPickupLocation(values.length > 0 ? values[0]._id : '-1')
+    }
 
     const handleDropOffLocationChange = (values) => {
-        setDropOffLocation(values.length > 0 ? values[0]._id : null);
-    };
+        setDropOffLocation(values.length > 0 ? values[0]._id : null)
+    }
 
     const handleCarSelectListChange = useCallback((values) => {
-        setCar(values.length > 0 ? values[0]._id : null);
-    }, []);
+        setCar(values.length > 0 ? values[0]._id : null)
+    }, [])
 
     const handleStatusChange = (value) => {
-        setStatus(value);
-    };
+        setStatus(value)
+    }
 
     const handleCancellationChange = (e) => {
-        setCancellation(e.target.checked);
-    };
+        setCancellation(e.target.checked)
+    }
 
     const handleAmendmentsChange = (e) => {
-        setAmendments(e.target.checked);
-    };
+        setAmendments(e.target.checked)
+    }
 
     const handleTheftProtectionChange = (e) => {
-        setTheftProtection(e.target.checked);
-    };
+        setTheftProtection(e.target.checked)
+    }
 
     const handleCollisionDamageWaiverChange = (e) => {
-        setCollisionDamageWaiver(e.target.checked);
-    };
+        setCollisionDamageWaiver(e.target.checked)
+    }
 
     const handleFullInsuranceChange = (e) => {
-        setFullInsurance(e.target.checked);
-    };
+        setFullInsurance(e.target.checked)
+    }
 
     const handleAdditionalDriverChange = (e) => {
-        setAdditionalDriver(e.target.checked);
-    };
+        setAdditionalDriver(e.target.checked)
+    }
 
     const _validateEmail = (email) => {
         if (email) {
             if (validator.isEmail(email)) {
-                set_EmailValid(true);
-                return true;
+                set_EmailValid(true)
+                return true
             } else {
-                set_EmailValid(false);
-                return false;
+                set_EmailValid(false)
+                return false
             }
         } else {
-            set_EmailValid(true);
-            return false;
+            set_EmailValid(true)
+            return false
         }
-    };
+    }
 
     const _validatePhone = (phone) => {
         if (phone) {
-            const _phoneValid = validator.isMobilePhone(phone);
-            set_PhoneValid(_phoneValid);
+            const _phoneValid = validator.isMobilePhone(phone)
+            set_PhoneValid(_phoneValid)
 
-            return _phoneValid;
+            return _phoneValid
         } else {
-            set_PhoneValid(true);
+            set_PhoneValid(true)
 
-            return true;
+            return true
         }
-    };
+    }
 
     const _validateBirthDate = (date) => {
         if (Helper.isDate(date)) {
-            const now = new Date();
-            const sub = intervalToDuration({ start: date, end: now }).years;
-            const _birthDateValid = sub >= Env.MINIMUM_AGE;
+            const now = new Date()
+            const sub = intervalToDuration({ start: date, end: now }).years
+            const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-            set_BirthDateValid(_birthDateValid);
-            return _birthDateValid;
+            set_BirthDateValid(_birthDateValid)
+            return _birthDateValid
         } else {
-            set_BirthDateValid(true);
-            return true;
+            set_BirthDateValid(true)
+            return true
         }
-    };
+    }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (additionalDriver) {
-            const emailValid = _validateEmail(_email);
+            const emailValid = _validateEmail(_email)
             if (!emailValid) {
-                return;
+                return
             }
 
-            const phoneValid = _validatePhone(_phone);
+            const phoneValid = _validatePhone(_phone)
             if (!phoneValid) {
-                return;
+                return
             }
 
-            const birthDateValid = _validateBirthDate(_birthDate);
+            const birthDateValid = _validateBirthDate(_birthDate)
             if (!birthDateValid) {
-                return;
+                return
             }
         }
 
@@ -187,50 +187,50 @@ const CreateBooking = () => {
             collisionDamageWaiver,
             fullInsurance,
             additionalDriver,
-        };
+        }
 
-        let _additionalDriver;
+        let _additionalDriver
         if (additionalDriver) {
             _additionalDriver = {
                 fullName: _fullName,
                 email: _email,
                 phone: _phone,
                 birthDate: _birthDate
-            };
+            }
         }
 
         Helper.price(
             booking,
             null,
             (price) => {
-                booking.price = price;
+                booking.price = price
 
                 BookingService.create({ booking, additionalDriver: _additionalDriver })
                     .then(booking => {
                         if (booking && booking._id) {
-                            window.location = '/';
+                            window.location = '/'
                         } else {
-                            Helper.error();
+                            Helper.error()
                         }
                     })
                     .catch(() => {
-                        UserService.signout();
-                    });
+                        UserService.signout()
+                    })
             },
             () => {
-                UserService.signout();
-            });
-    };
+                UserService.signout()
+            })
+    }
 
     const onLoad = (user) => {
-        setUser(user);
-        setVisible(true);
+        setUser(user)
+        setVisible(true)
 
         if (user.type === Env.RECORD_TYPE.COMPANY) {
-            setCompany(user._id);
-            setIsCompany(true);
+            setCompany(user._id)
+            setIsCompany(true)
         }
-    };
+    }
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -291,11 +291,11 @@ const CreateBooking = () => {
                                 minDate={new Date()}
                                 required
                                 onChange={(from) => {
-                                    setFrom(from);
+                                    setFrom(from)
 
-                                    const minDate = new Date(from);
-                                    minDate.setDate(minDate.getDate() + 1);
-                                    setMinDate(minDate);
+                                    const minDate = new Date(from)
+                                    minDate.setDate(minDate.getDate() + 1)
+                                    setMinDate(minDate)
                                 }}
                                 language={UserService.getLanguage()}
                             />
@@ -308,7 +308,7 @@ const CreateBooking = () => {
                                 minDate={minDate}
                                 required
                                 onChange={(to) => {
-                                    setTo(to);
+                                    setTo(to)
                                 }}
                                 language={UserService.getLanguage()}
                             />
@@ -413,7 +413,7 @@ const CreateBooking = () => {
                                         label={commonStrings.FULL_NAME}
                                         required
                                         onChange={(e) => {
-                                            set_FullName(e.target.value);
+                                            set_FullName(e.target.value)
                                         }}
                                         autoComplete="off"
                                     />
@@ -425,13 +425,13 @@ const CreateBooking = () => {
                                         label={commonStrings.EMAIL}
                                         error={!_emailValid}
                                         onBlur={(e) => {
-                                            _validateEmail(e.target.value);
+                                            _validateEmail(e.target.value)
                                         }}
                                         onChange={(e) => {
-                                            set_Email(e.target.value);
+                                            set_Email(e.target.value)
 
                                             if (!e.target.value) {
-                                                set_EmailValid(true);
+                                                set_EmailValid(true)
                                             }
                                         }}
                                         required
@@ -448,13 +448,13 @@ const CreateBooking = () => {
                                         label={commonStrings.PHONE}
                                         error={!_phoneValid}
                                         onBlur={(e) => {
-                                            _validatePhone(e.target.value);
+                                            _validatePhone(e.target.value)
                                         }}
                                         onChange={(e) => {
-                                            set_Phone(e.target.value);
+                                            set_Phone(e.target.value)
 
                                             if (!e.target.value) {
-                                                set_PhoneValid(true);
+                                                set_PhoneValid(true)
                                             }
                                         }}
                                         required
@@ -470,10 +470,10 @@ const CreateBooking = () => {
                                         error={!_birthDateValid}
                                         required
                                         onChange={(_birthDate) => {
-                                            const _birthDateValid = _validateBirthDate(_birthDate);
+                                            const _birthDateValid = _validateBirthDate(_birthDate)
 
-                                            set_BirthDate(_birthDate);
-                                            set_BirthDateValid(_birthDateValid);
+                                            set_BirthDate(_birthDate)
+                                            set_BirthDateValid(_birthDateValid)
                                         }}
                                         language={UserService.getLanguage()}
                                     />
@@ -509,7 +509,7 @@ const CreateBooking = () => {
                 </Paper>
             </div>
         </Master>
-    );
-};
+    )
+}
 
-export default CreateBooking;
+export default CreateBooking

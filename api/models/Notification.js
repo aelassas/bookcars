@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const notificationSchema = new Schema({
     user: {
@@ -25,16 +25,16 @@ const notificationSchema = new Schema({
     timestamps: true,
     strict: true,
     collection: 'Notification'
-});
+})
 
-const notificationModel = mongoose.model('Notification', notificationSchema);
+const notificationModel = mongoose.model('Notification', notificationSchema)
 
 notificationModel.on('index', (err) => {
     if (err) {
-        console.error('Notification index error: %s', err);
+        console.error('Notification index error: %s', err)
     } else {
-        console.info('Notification indexing complete');
+        console.info('Notification indexing complete')
     }
-});
+})
 
-export default notificationModel;
+export default notificationModel

@@ -1,87 +1,87 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import * as Helper from '../common/Helper';
-import Accordion from './Accordion';
+import React, { useEffect, useRef, useState } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import * as Helper from '../common/Helper'
+import Accordion from './Accordion'
 
-import '../assets/css/company-filter.css';
+import '../assets/css/company-filter.css'
 
 const CompanyFilter = (props) => {
-    const [companies, setCompanies] = useState([]);
-    const [checkedCompanies, setCheckedCompanies] = useState([]);
-    const [allChecked, setAllChecked] = useState(true);
-    const refs = useRef([]);
+    const [companies, setCompanies] = useState([])
+    const [checkedCompanies, setCheckedCompanies] = useState([])
+    const [allChecked, setAllChecked] = useState(true)
+    const refs = useRef([])
 
     useEffect(() => {
-        setCompanies(props.companies);
-        setCheckedCompanies(Helper.flattenCompanies(props.companies));
-    }, [props.companies]);
+        setCompanies(props.companies)
+        setCheckedCompanies(Helper.flattenCompanies(props.companies))
+    }, [props.companies])
 
     useEffect(() => {
         if (companies.length > 0) {
             refs.current.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+                checkbox.checked = true
+            })
 
         }
-    }, [companies]);
+    }, [companies])
 
     const handleCompanyClick = (e) => {
-        const checkbox = e.currentTarget.previousSibling;
-        checkbox.checked = !checkbox.checked;
-        const event = e;
-        event.currentTarget = checkbox;
-        handleCheckCompanyChange(event);
-    };
+        const checkbox = e.currentTarget.previousSibling
+        checkbox.checked = !checkbox.checked
+        const event = e
+        event.currentTarget = checkbox
+        handleCheckCompanyChange(event)
+    }
 
     const handleCheckCompanyChange = (e) => {
-        const companyId = e.currentTarget.getAttribute('data-id');
+        const companyId = e.currentTarget.getAttribute('data-id')
 
         if (e.currentTarget.checked) {
-            checkedCompanies.push(companyId);
+            checkedCompanies.push(companyId)
 
             if (checkedCompanies.length === companies.length) {
-                setAllChecked(true);
+                setAllChecked(true)
             }
         } else {
-            const index = checkedCompanies.indexOf(companyId);
-            checkedCompanies.splice(index, 1);
+            const index = checkedCompanies.indexOf(companyId)
+            checkedCompanies.splice(index, 1)
 
             if (checkedCompanies.length === 0) {
-                setAllChecked(false);
+                setAllChecked(false)
             }
         }
 
-        setCheckedCompanies(checkedCompanies);
+        setCheckedCompanies(checkedCompanies)
 
         if (props.onChange) {
-            props.onChange(checkedCompanies);
+            props.onChange(checkedCompanies)
         }
-    };
+    }
 
     const handleUncheckAllChange = (e) => {
 
         if (allChecked) { // uncheck all
             refs.current.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+                checkbox.checked = false
+            })
 
-            setAllChecked(false);
-            setCheckedCompanies([]);
+            setAllChecked(false)
+            setCheckedCompanies([])
         } else { // check all
             refs.current.forEach(checkbox => {
-                checkbox.checked = true;
-            });
+                checkbox.checked = true
+            })
 
-            const companyIds = Helper.flattenCompanies(companies);
-            setAllChecked(true);
-            setCheckedCompanies(companyIds);
+            const companyIds = Helper.flattenCompanies(companies)
+            setAllChecked(true)
+            setCheckedCompanies(companyIds)
 
             if (props.onChange) {
-                props.onChange(companyIds);
+                props.onChange(companyIds)
             }
         }
-    };
+    }
 
     return (
         companies.length > 0 &&
@@ -112,7 +112,7 @@ const CompanyFilter = (props) => {
                 </span>
             </div>
         </Accordion>
-    );
-};
+    )
+}
 
-export default CompanyFilter;
+export default CompanyFilter

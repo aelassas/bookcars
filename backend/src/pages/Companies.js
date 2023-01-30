@@ -1,48 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import Master from '../components/Master';
-import { strings } from '../lang/companies';
-import Search from '../components/Search';
-import CompanyList from '../components/CompanyList';
-import InfoBox from '../components/InfoBox';
+import React, { useState, useEffect } from 'react'
+import Master from '../components/Master'
+import { strings } from '../lang/companies'
+import Search from '../components/Search'
+import CompanyList from '../components/CompanyList'
+import InfoBox from '../components/InfoBox'
 import {
     Button,
-} from '@mui/material';
-import * as Helper from '../common/Helper';
+} from '@mui/material'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/companies.css';
+import '../assets/css/companies.css'
 
 const Companies = () => {
-    const [user, setUser] = useState();
-    const [keyword, setKeyword] = useState('');
-    const [reload, setReload] = useState(false);
-    const [rowCount, setRowCount] = useState(-1);
-    const [offset, setOffset] = useState(0);
+    const [user, setUser] = useState()
+    const [keyword, setKeyword] = useState('')
+    const [reload, setReload] = useState(false)
+    const [rowCount, setRowCount] = useState(-1)
+    const [offset, setOffset] = useState(0)
 
     useEffect(() => {
         if (user && user.verified) {
-            setOffset(document.querySelector('.col-1').clientHeight);
+            setOffset(document.querySelector('.col-1').clientHeight)
         }
-    }, [user]);
+    }, [user])
 
     const handleSearch = (newKeyword) => {
-        setKeyword(newKeyword);
-        setReload(newKeyword === keyword);
-    };
+        setKeyword(newKeyword)
+        setReload(newKeyword === keyword)
+    }
 
     const handleCompanyListLoad = (data) => {
-        setReload(false);
-        setRowCount(data.rowCount);
-    };
+        setReload(false)
+        setRowCount(data.rowCount)
+    }
 
     const handleCompanyDelete = (rowCount) => {
-        setRowCount(rowCount);
-    };
+        setRowCount(rowCount)
+    }
 
     const onLoad = (user) => {
-        setUser(user);
-    };
+        setUser(user)
+    }
 
-    const admin = Helper.admin(user);
+    const admin = Helper.admin(user)
 
     return (
         <Master onLoad={onLoad} strict={true}>
@@ -83,7 +83,7 @@ const Companies = () => {
                 </div>}
 
         </Master>
-    );
-};
+    )
+}
 
-export default Companies;
+export default Companies

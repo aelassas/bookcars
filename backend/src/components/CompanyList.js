@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/company-list';
-import * as CompanyService from '../services/CompanyService';
-import * as Helper from '../common/Helper';
-import Backdrop from './SimpleBackdrop';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/company-list'
+import * as CompanyService from '../services/CompanyService'
+import * as Helper from '../common/Helper'
+import Backdrop from './SimpleBackdrop'
 import {
     IconButton,
     Button,
@@ -16,150 +16,150 @@ import {
     Card,
     CardContent,
     Typography,
-} from '@mui/material';
+} from '@mui/material'
 import {
     Visibility as ViewIcon,
     Edit as EditIcon,
     Delete as DeleteIcon
-} from '@mui/icons-material';
-import * as UserService from '../services/UserService';
+} from '@mui/icons-material'
+import * as UserService from '../services/UserService'
 
-import '../assets/css/company-list.css';
+import '../assets/css/company-list.css'
 
 const CompanyList = (props) => {
-    const [keyword, setKeyword] = useState(props.keyword);
-    const [reload, setReload] = useState(false);
-    const [offset, setOffset] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [fetch, setFetch] = useState(false);
-    const [rows, setRows] = useState([]);
-    const [rowCount, setRowCount] = useState(0);
-    const [page, setPage] = useState(1);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [companyId, setCompanyId] = useState('');
-    const [companyIndex, setCompanyIndex] = useState(-1);
+    const [keyword, setKeyword] = useState(props.keyword)
+    const [reload, setReload] = useState(false)
+    const [offset, setOffset] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [fetch, setFetch] = useState(false)
+    const [rows, setRows] = useState([])
+    const [rowCount, setRowCount] = useState(0)
+    const [page, setPage] = useState(1)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const [companyId, setCompanyId] = useState('')
+    const [companyIndex, setCompanyIndex] = useState(-1)
 
     useEffect(() => {
-        setOffset(props.offset);
-    }, [props.offset]);
+        setOffset(props.offset)
+    }, [props.offset])
 
     const _fetch = (page, keyword) => {
-        setLoading(true);
+        setLoading(true)
 
         CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {};
-                if (_data.length === 0) _data.resultData = [];
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
+                const _data = data.length > 0 ? data[0] : {}
+                if (_data.length === 0) _data.resultData = []
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-                setRows(_rows);
-                setRowCount(totalRecords);
-                setFetch(_data.resultData.length > 0);
+                setRows(_rows)
+                setRowCount(totalRecords)
+                setFetch(_data.resultData.length > 0)
 
                 if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                 }
 
-                setLoading(false);
+                setLoading(false)
             })
             .catch((err) => {
-                Helper.error(err);
-            });
-    };
+                Helper.error(err)
+            })
+    }
 
     useEffect(() => {
         if (props.keyword !== keyword) {
-            _fetch(1, props.keyword);
+            _fetch(1, props.keyword)
         }
-        setKeyword(props.keyword || '');
-    }, [props.keyword, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
+        setKeyword(props.keyword || '')
+    }, [props.keyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (props.reload && !reload) {
-            _fetch(1, '');
+            _fetch(1, '')
         }
-        setReload(props.reload || false);
-    }, [props.reload, reload]); // eslint-disable-line react-hooks/exhaustive-deps
+        setReload(props.reload || false)
+    }, [props.reload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        const element = document.querySelector(`.${props.containerClassName}`);
+        const element = document.querySelector(`.${props.containerClassName}`)
         if (element) {
             element.onscroll = (event) => {
 
-                let _offset = 0;
-                if (Env.isMobile()) _offset = offset;
+                let _offset = 0
+                if (Env.isMobile()) _offset = offset
 
                 if (fetch
                     && !loading
                     && event.target.scrollTop > 0
                     && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
-                    const p = page + 1;
-                    setPage(p);
-                    _fetch(p, keyword);
+                    const p = page + 1
+                    setPage(p)
+                    _fetch(p, keyword)
                 }
-            };
+            }
         }
-    }, [props.containerClassName, offset, fetch, loading, page, keyword]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.containerClassName, offset, fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        _fetch(1, '');
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        _fetch(1, '')
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleDelete = (e) => {
-        const companyId = e.currentTarget.getAttribute('data-id');
-        const companyIndex = e.currentTarget.getAttribute('data-index');
+        const companyId = e.currentTarget.getAttribute('data-id')
+        const companyIndex = e.currentTarget.getAttribute('data-index')
 
-        setOpenDeleteDialog(true);
-        setCompanyId(companyId);
-        setCompanyIndex(companyIndex);
-    };
+        setOpenDeleteDialog(true)
+        setCompanyId(companyId)
+        setCompanyIndex(companyIndex)
+    }
 
     const handleConfirmDelete = () => {
         if (companyId !== '' && companyIndex > -1) {
-            setLoading(false);
-            setOpenDeleteDialog(false);
+            setLoading(false)
+            setOpenDeleteDialog(false)
             CompanyService.deleteCompany(companyId)
                 .then(status => {
                     if (status === 200) {
-                        const _rowCount = rowCount - 1;
-                        rows.splice(companyIndex, 1);
+                        const _rowCount = rowCount - 1
+                        rows.splice(companyIndex, 1)
 
-                        setRows(rows);
-                        setRowCount(_rowCount);
-                        setCompanyId('');
-                        setCompanyIndex(-1);
-                        setLoading(false);
+                        setRows(rows)
+                        setRowCount(_rowCount)
+                        setCompanyId('')
+                        setCompanyIndex(-1)
+                        setLoading(false)
 
                         if (props.onDelete) {
-                            props.onDelete(_rowCount);
+                            props.onDelete(_rowCount)
                         }
 
                     } else {
-                        Helper.error();
-                        setCompanyId('');
-                        setCompanyIndex(-1);
-                        setLoading(false);
+                        Helper.error()
+                        setCompanyId('')
+                        setCompanyIndex(-1)
+                        setLoading(false)
                     }
                 }).catch(() => {
-                    UserService.signout();
-                });
+                    UserService.signout()
+                })
         } else {
-            Helper.error();
-            setOpenDeleteDialog(false);
-            setCompanyId('');
-            setCompanyIndex(-1);
-            setLoading(false);
+            Helper.error()
+            setOpenDeleteDialog(false)
+            setCompanyId('')
+            setCompanyIndex(-1)
+            setLoading(false)
         }
-    };
+    }
 
     const handleCancelDelete = () => {
-        setOpenDeleteDialog(false);
-        setCompanyId('');
-        setCompanyIndex(-1);
-    };
+        setOpenDeleteDialog(false)
+        setCompanyId('')
+        setCompanyIndex(-1)
+    }
 
-    const admin = Helper.admin(props.user);
+    const admin = Helper.admin(props.user)
 
     return (
         <section className='company-list'>
@@ -172,8 +172,8 @@ const CompanyList = (props) => {
                 </Card>
                 :
                 rows.map((company, index) => {
-                    const edit = admin || (props.user && props.user._id === company._id);
-                    const canDelete = admin;
+                    const edit = admin || (props.user && props.user._id === company._id)
+                    const canDelete = admin
 
                     return (
                         <article key={company._id}>
@@ -209,7 +209,7 @@ const CompanyList = (props) => {
                                 </Tooltip>
                             </div>
                         </article>
-                    );
+                    )
                 }
                 )
             }
@@ -228,7 +228,7 @@ const CompanyList = (props) => {
 
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </section>
-    );
+    )
 }
 
-export default CompanyList;
+export default CompanyList

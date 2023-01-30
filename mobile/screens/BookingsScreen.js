@@ -1,96 +1,96 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import Master from './Master';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import BookingList from '../components/BookingList';
-import CompanyFilter from '../components/CompanyFilter';
-import Env from '../config/env.config';
-import StatusFilter from '../components/StatusFilter';
-import * as BookingService from '../services/BookingService';
-import BookingFilter from '../components/BookingFilter';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import Master from './Master'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import BookingList from '../components/BookingList'
+import CompanyFilter from '../components/CompanyFilter'
+import Env from '../config/env.config'
+import StatusFilter from '../components/StatusFilter'
+import * as BookingService from '../services/BookingService'
+import BookingFilter from '../components/BookingFilter'
 
 const BookingsScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused();
-    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
-    const [reload, setReload] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [user, setUser] = useState(null);
-    const [hasBookings, setHasBookings] = useState(false);
-    const [companies, setCompanies] = useState([]);
-    const [statuses, setStatuses] = useState([]);
-    const [filter, setFilter] = useState(null);
+    const isFocused = useIsFocused()
+    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+    const [reload, setReload] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [user, setUser] = useState(null)
+    const [hasBookings, setHasBookings] = useState(false)
+    const [companies, setCompanies] = useState([])
+    const [statuses, setStatuses] = useState([])
+    const [filter, setFilter] = useState(null)
 
     const _init = async () => {
         try {
-            setVisible(false);
-            setUser(null);
-            setCompanies([]);
-            setFilter(null);
+            setVisible(false)
+            setUser(null)
+            setCompanies([])
+            setFilter(null)
 
-            const language = await UserService.getLanguage();
-            i18n.locale = language;
-            setLanguage(language);
+            const language = await UserService.getLanguage()
+            i18n.locale = language
+            setLanguage(language)
 
-            const currentUser = await UserService.getCurrentUser();
+            const currentUser = await UserService.getCurrentUser()
 
             if (!currentUser) {
-                await UserService.signout(navigation, false, true);
-                return;
+                await UserService.signout(navigation, false, true)
+                return
             }
 
-            const user = await UserService.getUser(currentUser.id);
+            const user = await UserService.getUser(currentUser.id)
 
             if (!user) {
-                await UserService.signout(navigation, false, true);
-                return;
+                await UserService.signout(navigation, false, true)
+                return
             }
 
-            setUser(user);
+            setUser(user)
 
-            const hasBookingsStatus = await BookingService.hasBookings(user._id);
-            const hasBookings = hasBookingsStatus === 200;
-            setHasBookings(hasBookings);
+            const hasBookingsStatus = await BookingService.hasBookings(user._id)
+            const hasBookings = hasBookingsStatus === 200
+            setHasBookings(hasBookings)
 
-            setVisible(true);
+            setVisible(true)
         } catch (err) {
-            await UserService.signout(navigation, false, true);
+            await UserService.signout(navigation, false, true)
         }
-    };
+    }
 
     useEffect(() => {
         if (isFocused) {
-            _init();
-            setReload(true);
+            _init()
+            setReload(true)
         } else {
-            setVisible(false);
+            setVisible(false)
         }
-    }, [route.params, isFocused]);
+    }, [route.params, isFocused])
 
     const onLoad = (user) => {
-        setReload(false);
-    };
+        setReload(false)
+    }
 
     const onLoadCompanies = (companies) => {
-        setCompanies(companies);
-    };
+        setCompanies(companies)
+    }
 
     const onChangeCompanies = (companies) => {
-        setCompanies(companies);
+        setCompanies(companies)
     }
 
     const onLoadStatuses = (statuses) => {
-        setStatuses(statuses);
-    };
+        setStatuses(statuses)
+    }
 
     const onChangeStatuses = (statuses) => {
-        setStatuses(statuses);
-    };
+        setStatuses(statuses)
+    }
 
     const onSubmitBookingFilter = (filter) => {
-        setFilter(filter);
-    };
+        setFilter(filter)
+    }
 
     return (
         <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
@@ -111,8 +111,8 @@ const BookingsScreen = ({ navigation, route }) => {
                 />
             }
         </Master>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     master: {
@@ -123,6 +123,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 7
     }
-});
+})
 
-export default BookingsScreen;
+export default BookingsScreen

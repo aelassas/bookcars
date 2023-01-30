@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { strings } from '../lang/header';
-import * as UserService from '../services/UserService';
-import * as NotificationService from '../services/NotificationService';
-import { toast } from 'react-toastify';
-import Avatar from './Avatar';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { strings } from '../lang/header'
+import * as UserService from '../services/UserService'
+import * as NotificationService from '../services/NotificationService'
+import { toast } from 'react-toastify'
+import Avatar from './Avatar'
 import {
     AppBar,
     Toolbar,
@@ -20,7 +20,7 @@ import {
     ListItemIcon,
     ListItemText,
 
-} from '@mui/material';
+} from '@mui/material'
 import {
     Menu as MenuIcon,
     Mail as MailIcon,
@@ -36,28 +36,28 @@ import {
     InfoTwoTone as AboutIcon,
     DescriptionTwoTone as TosIcon,
     ExitToApp as SignoutIcon
-} from '@mui/icons-material';
-import '../assets/css/header.css';
+} from '@mui/icons-material'
+import '../assets/css/header.css'
 
 const ListItemLink = (props) => (
     <ListItem button component="a" {...props} />
-);
+)
 
 const Header = (props) => {
-    const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [langAnchorEl, setLangAnchorEl] = useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-    const [sideAnchorEl, setSideAnchorEl] = useState(null);
-    const [isSignedIn, setIsSignedIn] = useState(false);
-    const [notificationCount, setNotificationCount] = useState(0);
-    const [loading, setIsLoading] = useState(true);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [langAnchorEl, setLangAnchorEl] = useState(null)
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null)
+    const [sideAnchorEl, setSideAnchorEl] = useState(null)
+    const [isSignedIn, setIsSignedIn] = useState(false)
+    const [notificationCount, setNotificationCount] = useState(0)
+    const [loading, setIsLoading] = useState(true)
+    const [isLoaded, setIsLoaded] = useState(false)
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const isLangMenuOpen = Boolean(langAnchorEl);
-    const isSideMenuOpen = Boolean(sideAnchorEl);
+    const isMenuOpen = Boolean(anchorEl)
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+    const isLangMenuOpen = Boolean(langAnchorEl)
+    const isSideMenuOpen = Boolean(sideAnchorEl)
 
     const classes = {
         list: {
@@ -79,142 +79,142 @@ const Header = (props) => {
     }
 
     const handleAccountMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
+        setMobileMoreAnchorEl(null)
+    }
 
     const handleLangMenuOpen = (event) => {
-        setLangAnchorEl(event.currentTarget);
-    };
+        setLangAnchorEl(event.currentTarget)
+    }
 
     const refreshPage = () => {
-        let params = new URLSearchParams(window.location.search);
+        let params = new URLSearchParams(window.location.search)
 
         if (params.has('l')) {
-            params.delete('l');
-            window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '');
+            params.delete('l')
+            window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '')
         } else {
-            window.location.reload();
+            window.location.reload()
         }
-    };
+    }
 
     const handleLangMenuClose = async (event) => {
-        setLangAnchorEl(null);
+        setLangAnchorEl(null)
 
-        const { code } = event.currentTarget.dataset;
+        const { code } = event.currentTarget.dataset
         if (code) {
-            setLang(code);
-            const currentLang = UserService.getLanguage();
+            setLang(code)
+            const currentLang = UserService.getLanguage()
             if (isSignedIn) {
                 // Update user language
                 const data = {
                     id: props.user._id,
                     language: code
-                };
-                const status = await UserService.updateLanguage(data);
+                }
+                const status = await UserService.updateLanguage(data)
                 if (status === 200) {
-                    UserService.setLanguage(code);
+                    UserService.setLanguage(code)
                     if (code && code !== currentLang) {
                         // Refresh page
-                        refreshPage();
+                        refreshPage()
                     }
                 } else {
-                    toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' });
+                    toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
                 }
             } else {
-                UserService.setLanguage(code);
+                UserService.setLanguage(code)
                 if (code && code !== currentLang) {
                     // Refresh page
-                    refreshPage();
+                    refreshPage()
                 }
             }
         }
-    };
+    }
 
     const getLang = (lang) => {
         switch (lang) {
             case 'fr':
-                return strings.LANGUAGE_FR;
+                return strings.LANGUAGE_FR
             case 'en':
-                return strings.LANGUAGE_EN;
+                return strings.LANGUAGE_EN
             default:
-                return Env.DEFAULT_LANGUAGE;
+                return Env.DEFAULT_LANGUAGE
         }
     }
 
     const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
+        setAnchorEl(null)
+        handleMobileMenuClose()
+    }
 
     const handleOnSettingsClick = () => {
-        window.location.href = '/settings';
-    };
+        window.location.href = '/settings'
+    }
 
     const handleSignout = () => {
-        UserService.signout();
-    };
+        UserService.signout()
+    }
 
     const handleMobileMenuOpen = (event) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
+        setMobileMoreAnchorEl(event.currentTarget)
+    }
 
     const handleSideMenuOpen = (event) => {
-        setSideAnchorEl(event.currentTarget);
-    };
+        setSideAnchorEl(event.currentTarget)
+    }
 
     const handleSideMenuClose = () => {
-        setSideAnchorEl(null);
-    };
+        setSideAnchorEl(null)
+    }
 
     const handleNotificationsClick = (e) => {
-        window.location.href = '/notifications';
-    };
+        window.location.href = '/notifications'
+    }
 
     useEffect(() => {
-        const queryLanguage = UserService.getQueryLanguage();
+        const queryLanguage = UserService.getQueryLanguage()
 
         if (Env.LANGUAGES.includes(queryLanguage)) {
-            setLang(queryLanguage);
-            strings.setLanguage(queryLanguage);
+            setLang(queryLanguage)
+            strings.setLanguage(queryLanguage)
         } else {
-            const language = UserService.getLanguage();
-            setLang(language);
-            strings.setLanguage(language);
+            const language = UserService.getLanguage()
+            setLang(language)
+            strings.setLanguage(language)
         }
-    }, []);
+    }, [])
 
     useEffect(() => {
         if (!props.hidden) {
             if (props.user) {
                 NotificationService.getNotificationCounter(props.user._id)
                     .then(notificationCounter => {
-                        setIsSignedIn(true);
-                        setNotificationCount(notificationCounter.count);
-                        setIsLoading(false);
-                        setIsLoaded(true);
-                    });
+                        setIsSignedIn(true)
+                        setNotificationCount(notificationCounter.count)
+                        setIsLoading(false)
+                        setIsLoaded(true)
+                    })
             } else {
-                setIsLoading(false);
-                setIsLoaded(true);
+                setIsLoading(false)
+                setIsLoaded(true)
             }
         }
-    }, [props.hidden, props.user]);
+    }, [props.hidden, props.user])
 
     useEffect(() => {
         if (!props.hidden) {
             if (props.notificationCount) {
-                setNotificationCount(props.notificationCount);
+                setNotificationCount(props.notificationCount)
             } else {
-                setNotificationCount(0);
+                setNotificationCount(0)
             }
         }
-    }, [props.hidden, props.notificationCount]);
+    }, [props.hidden, props.notificationCount])
 
-    const menuId = 'primary-account-menu';
+    const menuId = 'primary-account-menu'
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -234,9 +234,9 @@ const Header = (props) => {
                 <Typography>{strings.SIGN_OUT}</Typography>
             </MenuItem>
         </Menu>
-    );
+    )
 
-    const mobileMenuId = 'mobile-menu';
+    const mobileMenuId = 'mobile-menu'
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -260,9 +260,9 @@ const Header = (props) => {
                 <p>{strings.SIGN_OUT}</p>
             </MenuItem>
         </Menu>
-    );
+    )
 
-    const languageMenuId = 'language-menu';
+    const languageMenuId = 'language-menu'
     const renderLanguageMenu = (
         <Menu
             anchorEl={langAnchorEl}
@@ -276,7 +276,7 @@ const Header = (props) => {
             <MenuItem onClick={handleLangMenuClose} data-code="fr">{strings.LANGUAGE_FR}</MenuItem>
             <MenuItem onClick={handleLangMenuClose} data-code="en">{strings.LANGUAGE_EN}</MenuItem>
         </Menu>
-    );
+    )
 
     return (
         <div style={props.hidden ? { display: 'none' } : classes.grow} >
@@ -396,7 +396,7 @@ const Header = (props) => {
             {renderMenu}
             {renderLanguageMenu}
         </div >
-    );
-};
+    )
+}
 
-export default Header;
+export default Header
