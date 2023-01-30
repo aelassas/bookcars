@@ -3,17 +3,17 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { intervalToDuration } from 'date-fns';
 import i18n from '../lang/i18n';
-import TextInput from '../elements/TextInput';
-import Button from '../elements/Button';
-import Switch from '../elements/Switch';
+import TextInput from '../components/TextInput';
+import Button from '../components/Button';
+import Switch from '../components/Switch';
 import validator from 'validator';
 import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
-import DateTimePicker from '../elements/DateTimePicker';
+import DateTimePicker from '../components/DateTimePicker';
 import Env from '../config/env.config';
-import Error from '../elements/Error';
-import Backdrop from '../elements/Backdrop';
-import Header from '../elements/Header';
+import Error from '../components/Error';
+import Backdrop from '../components/Backdrop';
+import Header from '../components/Header';
 
 const SignUpScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();

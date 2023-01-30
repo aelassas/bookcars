@@ -4,13 +4,13 @@ import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
-import CarList from '../elements/CarList';
-import CompanyFilter from '../elements/CompanyFilter';
-import FuelFilter from '../elements/FuelFilter';
+import CarList from '../components/CarList';
+import CompanyFilter from '../components/CompanyFilter';
+import FuelFilter from '../components/FuelFilter';
 import Env from '../config/env.config';
-import GearboxFilter from '../elements/GearboxFilter';
-import MileageFilter from '../elements/MileageFilter';
-import DepositFilter from '../elements/DepositFilter';
+import GearboxFilter from '../components/GearboxFilter';
+import MileageFilter from '../components/MileageFilter';
+import DepositFilter from '../components/DepositFilter';
 
 export default function CarsScreen({ navigation, route }) {
     const isFocused = useIsFocused();

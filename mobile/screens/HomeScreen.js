@@ -13,10 +13,10 @@ import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
 import * as Helper from '../common/Helper';
 import Master from './Master';
-import Switch from '../elements/Switch';
-import Button from '../elements/Button';
-import LocationSelectList from '../elements/LocationSelectList';
-import DateTimePicker from '../elements/DateTimePicker';
+import Switch from '../components/Switch';
+import Button from '../components/Button';
+import LocationSelectList from '../components/LocationSelectList';
+import DateTimePicker from '../components/DateTimePicker';
 
 const HomeScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();

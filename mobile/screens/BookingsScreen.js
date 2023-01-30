@@ -4,12 +4,12 @@ import { useIsFocused } from '@react-navigation/native';
 import Master from './Master';
 import i18n from '../lang/i18n';
 import * as UserService from '../services/UserService';
-import BookingList from '../elements/BookingList';
-import CompanyFilter from '../elements/CompanyFilter';
+import BookingList from '../components/BookingList';
+import CompanyFilter from '../components/CompanyFilter';
 import Env from '../config/env.config';
-import StatusFilter from '../elements/StatusFilter';
+import StatusFilter from '../components/StatusFilter';
 import * as BookingService from '../services/BookingService';
-import BookingFilter from '../elements/BookingFilter';
+import BookingFilter from '../components/BookingFilter';
 
 const BookingsScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused();
