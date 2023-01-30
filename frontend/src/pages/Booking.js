@@ -4,19 +4,19 @@ import { strings as blStrings } from '../lang/booking-list';
 import { strings as bfStrings } from '../lang/booking-filter';
 import { strings as csStrings } from '../lang/cars';
 import * as Helper from '../common/Helper';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import * as UserService from '../services/UserService';
 import * as BookingService from '../services/BookingService';
 import * as CarService from '../services/CarService';
-import Backdrop from '../elements/SimpleBackdrop';
+import Backdrop from '../components/SimpleBackdrop';
 import NoMatch from './NoMatch';
 import Error from './Error';
-import CarList from '../elements/CarList';
-import CompanySelectList from '../elements/CompanySelectList';
-import LocationSelectList from '../elements/LocationSelectList';
-import CarSelectList from '../elements/CarSelectList';
-import StatusList from '../elements/StatusList';
-import DateTimePicker from '../elements/DateTimePicker';
+import CarList from '../components/CarList';
+import CompanySelectList from '../components/CompanySelectList';
+import LocationSelectList from '../components/LocationSelectList';
+import CarSelectList from '../components/CarSelectList';
+import StatusList from '../components/StatusList';
+import DateTimePicker from '../components/DateTimePicker';
 import {
     FormControl,
     FormControlLabel,

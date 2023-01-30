@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/notifications';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import * as UserService from '../services/UserService';
 import * as NotificationService from '../services/NotificationService';
 import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
@@ -15,7 +15,7 @@ import {
 } from '@mui/icons-material';
 import * as Helper from '../common/Helper';
 import Env from '../config/env.config';
-import Backdrop from '../elements/SimpleBackdrop';
+import Backdrop from '../components/SimpleBackdrop';
 import { format } from 'date-fns';
 import { fr, enUS } from "date-fns/locale";
 

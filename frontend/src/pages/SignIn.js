@@ -3,8 +3,8 @@ import Env from '../config/env.config';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/sign-in';
 import * as UserService from '../services/UserService';
-import Header from '../elements/Header';
-import Error from '../elements/Error';
+import Header from '../components/Header';
+import Error from '../components/Error';
 import {
     Paper,
     FormControl,

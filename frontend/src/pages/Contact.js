@@ -1,18 +1,18 @@
 import React from 'react';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 
-import '../assets/css/about.css';
+import '../assets/css/contact.css';
 
-const About = () => {
+const Contact = () => {
 
     const onLoad = (user) => {
     };
 
     return (
         <Master onLoad={onLoad} strict={false}>
-            About!
+            Contact!
         </Master>
     );
 };
 
-export default About;
+export default Contact;

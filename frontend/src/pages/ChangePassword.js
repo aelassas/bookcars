@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Master from '../elements/Master';
+import Master from '../components/Master';
 import { strings as commonStrings } from '../lang/common';
 import { strings } from '../lang/change-password';
 import * as UserService from '../services/UserService';
-import Backdrop from '../elements/SimpleBackdrop';
+import Backdrop from '../components/SimpleBackdrop';
 import {
     Paper,
     Input,
