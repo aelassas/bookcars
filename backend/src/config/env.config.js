@@ -32,7 +32,6 @@ const Env = {
     CAR_IMAGE_HEIGHT: parseInt(process.env.REACT_APP_BC_CAR_IMAGE_HEIGHT || 200),
     CAR_OPTION_IMAGE_HEIGHT: 85,
     SELECTED_CAR_OPTION_IMAGE_HEIGHT: 30,
-    RECAPTCHA_SITE_KEY: process.env.REACT_APP_BC_RECAPTCHA_SITE_KEY,
     RECORD_TYPE: {
         ADMIN: 'admin',
         COMPANY: 'company',
