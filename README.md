@@ -195,8 +195,8 @@ BookCars API exposes all BookCars functions needed for the backend, the frontend
 The frontend is a web application built with Node.js, ReactJS and MUI. From the frontend the user can search for available cars depending on pickup and drop-off locations, dates and time booking. He can then select his booking options and finally checkout.
 
 * *./frontend/assets/* folder contains CSS and images.
-* *./frontend/components/* folder contains ReactJS pages.
-* *./frontend/elements/* folder contains ReactJS components.
+* *./frontend/pages/* folder contains ReactJS pages.
+* *./frontend/components/* folder contains ReactJS components.
 * *./frontend/services/* contains BookCars API client services.
 * *./frontend/App.js* is the main ReactJS App that contains routes.
 * *./frontend/index.js* is the main entry point of the frontend.
@@ -209,7 +209,7 @@ The user receives push notifications when his bookings are updated. Push notific
 
 * *./mobile/assets/* folder contains images.
 * *./mobile/screens/* folder contains main pages.
-* *./mobile/elements/* folder contains React Native components.
+* *./mobile/components/* folder contains React Native components.
 * *./mobile/services/* contains BookCars API client services.
 * *./mobile/App.js* is the main React Native App.
 * *./mobile/index.js* is the main entry point of the mobile app.
@@ -219,8 +219,8 @@ The user receives push notifications when his bookings are updated. Push notific
 The backend is a web application built with Node.js, ReactJS and MUI. From the backend, the admin user can create and manage suppliers, cars, locations, users and bookings. When the admin user creates a new supplier, the supplier will receive an automatic email for creating his account to access the backend so he can manage his car fleet and bookings.
 
 * *./backend/assets/* folder contains CSS and images.
-* *./backend/components/* folder contains ReactJS pages.
-* *./backend/elements/* folder contains ReactJS components.
+* *./backend/pages/* folder contains ReactJS pages.
+* *./backend/components/* folder contains ReactJS components.
 * *./backend/services/* contains BookCars API client services.
 * *./backend/App.js* is the main ReactJS App that contains routes.
 * *./backend/index.js* is the main entry point of the backend.
