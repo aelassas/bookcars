@@ -124,7 +124,7 @@ export const notify = async (req, res) => {
 
 export const getNotifications = async (req, res) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.params.userId)
+        const userId = new mongoose.Types.ObjectId(req.params.userId)
         const page = parseInt(req.params.page)
         const size = parseInt(req.params.size)
 
@@ -156,8 +156,8 @@ export const getNotifications = async (req, res) => {
 export const markAsRead = async (req, res) => {
 
     try {
-        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id))
-        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId)
+        const { ids: _ids } = req.body, ids = _ids.map(id => new mongoose.Types.ObjectId(id))
+        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
         const bulk = Notification.collection.initializeOrderedBulkOp()
         const notifications = await Notification.find({ _id: { $in: ids } })
@@ -185,8 +185,8 @@ export const markAsRead = async (req, res) => {
 export const markAsUnRead = async (req, res) => {
 
     try {
-        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id))
-        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId)
+        const { ids: _ids } = req.body, ids = _ids.map(id => new mongoose.Types.ObjectId(id))
+        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
         const bulk = Notification.collection.initializeOrderedBulkOp()
         const notifications = await Notification.find({ _id: { $in: ids } })
@@ -213,8 +213,8 @@ export const markAsUnRead = async (req, res) => {
 
 export const deleteNotifications = async (req, res) => {
     try {
-        const { ids: _ids } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id))
-        const { userId: _userId } = req.params, userId = mongoose.Types.ObjectId(_userId)
+        const { ids: _ids } = req.body, ids = _ids.map(id => new mongoose.Types.ObjectId(id))
+        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
         const count = await Notification.find({ _id: { $in: ids }, isRead: false }).count()
         await Notification.deleteMany({ _id: { $in: ids } })

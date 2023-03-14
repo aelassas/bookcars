@@ -168,7 +168,7 @@ export const getLocations = async (req, res) => {
 }
 
 export const checkLocation = (req, res) => {
-    const id = mongoose.Types.ObjectId(req.params.id)
+    const id = new mongoose.Types.ObjectId(req.params.id)
 
     Car.find({ locations: id })
         .limit(1)
