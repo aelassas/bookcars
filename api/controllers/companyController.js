@@ -65,7 +65,7 @@ export const deleteCompany = async (req, res) => {
                 }
                 await Notification.deleteMany({ user: id })
                 const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
-                const additionalDrivers = _additionalDrivers.map(b => new mongoose.Types.ObjectId(b._additionalDriver))
+                const additionalDrivers = _additionalDrivers.map(b => new new mongoose.Types.ObjectId(b._additionalDriver))
                 await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
                 await Booking.deleteMany({ company: id })
                 const cars = await Car.find({ company: id })

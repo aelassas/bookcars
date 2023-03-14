@@ -295,7 +295,7 @@ export const create = (req, res) => {
 }
 
 export const checkToken = (req, res) => {
-    User.findOne({ _id: mongoose.Types.ObjectId(req.params.userId), email: req.params.email })
+    User.findOne({ _id: new mongoose.Types.ObjectId(req.params.userId), email: req.params.email })
         .then(user => {
             if (user) {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
@@ -305,7 +305,7 @@ export const checkToken = (req, res) => {
                 ) {
                     return res.sendStatus(403)
                 } else {
-                    Token.findOne({ user: mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
+                    Token.findOne({ user: new mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
                         .then(token => {
                             if (token) {
                                 return res.sendStatus(200)
@@ -329,7 +329,7 @@ export const checkToken = (req, res) => {
 }
 
 export const deleteTokens = (req, res) => {
-    Token.deleteMany({ user: mongoose.Types.ObjectId(req.params.userId) })
+    Token.deleteMany({ user: new mongoose.Types.ObjectId(req.params.userId) })
         .then((result) => {
             if (result.deletedCount > 0) {
                 return res.sendStatus(200)
@@ -591,7 +591,7 @@ export const confirmEmail = (req, res) => {
                     // change verified to true
                     user.verified = true
                     user.verifiedAt = Date.now()
-                    user.save((err) => {
+                    user.save().catch((err) => {
                         // error occur
                         if (err) {
                             console.error('[user.confirmEmail] ' + strings.DB_ERROR + ' ' + req.params, err)
@@ -626,7 +626,7 @@ export const resendLink = (req, res, next) => {
             // generate token and save
             const token = new Token({ user: user._id, token: uuid() })
 
-            token.save((err) => {
+            token.save().catch((err) => {
                 if (err) {
                     console.error('[user.resendLink] ' + strings.DB_ERROR, req.params)
                     return res.status(500).send(getStatusMessage(user.language, err.message))
@@ -964,7 +964,7 @@ export const getUsers = async (req, res) => {
         }
 
         if (userId) {
-            $match.$and.push({ _id: { $ne: mongoose.Types.ObjectId(userId) } })
+            $match.$and.push({ _id: { $ne: new mongoose.Types.ObjectId(userId) } })
         }
 
         const users = await User.aggregate([
@@ -1013,7 +1013,7 @@ export const getUsers = async (req, res) => {
 
 export const deleteUsers = async (req, res) => {
     try {
-        const ids = req.body.map(id => mongoose.Types.ObjectId(id))
+        const ids = req.body.map(id => new mongoose.Types.ObjectId(id))
 
         for (const id of ids) {
             const user = await User.findByIdAndDelete(id)

@@ -378,7 +378,7 @@ export const update = async (req, res) => {
 
 export const updateStatus = async (req, res) => {
     try {
-        const { ids: _ids, status } = req.body, ids = _ids.map(id => mongoose.Types.ObjectId(id))
+        const { ids: _ids, status } = req.body, ids = _ids.map(id => new mongoose.Types.ObjectId(id))
         const bulk = Booking.collection.initializeOrderedBulkOp()
         const bookings = await Booking.find({ _id: { $in: ids } })
 
@@ -405,7 +405,7 @@ export const updateStatus = async (req, res) => {
 
 export const deleteBookings = async (req, res) => {
     try {
-        const ids = req.body.map(id => mongoose.Types.ObjectId(id))
+        const ids = req.body.map(id => new mongoose.Types.ObjectId(id))
 
         const bookings = await Booking.find({ _id: { $in: ids }, additionalDriver: true, _additionalDriver: { $ne: null } })
 
@@ -415,7 +415,7 @@ export const deleteBookings = async (req, res) => {
                 return res.status(400).send(strings.DB_ERROR + err)
             }
 
-            const additionalDivers = bookings.map(booking => mongoose.Types.ObjectId(booking._additionalDriver))
+            const additionalDivers = bookings.map(booking => new mongoose.Types.ObjectId(booking._additionalDriver))
             await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
 
             return res.sendStatus(200)
@@ -486,7 +486,7 @@ export const getBookings = async (req, res) => {
     try {
         const page = parseInt(req.params.page) + 1
         const size = parseInt(req.params.size)
-        const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id))
+        const companies = req.body.companies.map(id => new mongoose.Types.ObjectId(id))
         const statuses = req.body.statuses
         const user = req.body.user
         const car = req.body.car
@@ -503,16 +503,16 @@ export const getBookings = async (req, res) => {
                 { 'status': { $in: statuses } }
             ]
         }
-        if (user) $match.$and.push({ 'driver._id': { $eq: mongoose.Types.ObjectId(user) } })
-        if (car) $match.$and.push({ 'car._id': { $eq: mongoose.Types.ObjectId(car) } })
+        if (user) $match.$and.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
+        if (car) $match.$and.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
         if (from) $match.$and.push({ 'from': { $gte: from } }) // $from > from
         if (to) $match.$and.push({ 'to': { $lte: to } }) // $to < to
-        if (pickupLocation) $match.$and.push({ 'pickupLocation._id': { $eq: mongoose.Types.ObjectId(pickupLocation) } })
-        if (dropOffLocation) $match.$and.push({ 'dropOffLocation._id': { $eq: mongoose.Types.ObjectId(dropOffLocation) } })
+        if (pickupLocation) $match.$and.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
+        if (dropOffLocation) $match.$and.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
         if (keyword) {
             const isObjectId = mongoose.isValidObjectId(keyword)
             if (isObjectId) {
-                $match.$and.push({ '_id': { $eq: mongoose.Types.ObjectId(keyword) } })
+                $match.$and.push({ '_id': { $eq: new mongoose.Types.ObjectId(keyword) } })
             } else {
                 keyword = escapeStringRegexp(keyword)
                 $match.$and.push({
@@ -680,7 +680,7 @@ export const getBookings = async (req, res) => {
 }
 
 export const hasBookings = (req, res) => {
-    Booking.find({ driver: mongoose.Types.ObjectId(req.params.driver) })
+    Booking.find({ driver: new mongoose.Types.ObjectId(req.params.driver) })
         .limit(1)
         .count()
         .then(count => {
@@ -696,7 +696,7 @@ export const hasBookings = (req, res) => {
 }
 
 export const bookingsMinDate = (req, res) => {
-    Booking.findOne({ driver: mongoose.Types.ObjectId(req.params.driver) }, { from: 1 })
+    Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { from: 1 })
         .sort({ from: 1 })
         .then(booking => {
             if (booking) {
@@ -711,7 +711,7 @@ export const bookingsMinDate = (req, res) => {
 }
 
 export const bookingsMaxDate = (req, res) => {
-    Booking.findOne({ driver: mongoose.Types.ObjectId(req.params.driver) }, { to: 1 })
+    Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { to: 1 })
         .sort({ to: -1 })
         .then(booking => {
             if (booking) {
@@ -726,7 +726,7 @@ export const bookingsMaxDate = (req, res) => {
 }
 
 export const cancelBooking = (req, res) => {
-    Booking.findOne({ _id: mongoose.Types.ObjectId(req.params.id) })
+    Booking.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) })
         .populate('company')
         .populate('driver')
         .then(async booking => {

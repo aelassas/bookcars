@@ -135,7 +135,7 @@ export const update = (req, res) => {
 }
 
 export const checkCar = (req, res) => {
-    const id = mongoose.Types.ObjectId(req.params.id)
+    const id = new mongoose.Types.ObjectId(req.params.id)
 
     Booking.find({ car: id })
         .limit(1)
@@ -317,7 +317,7 @@ export const getCars = async (req, res) => {
 
         const page = parseInt(req.params.page)
         const size = parseInt(req.params.size)
-        const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id))
+        const companies = req.body.companies.map(id => new mongoose.Types.ObjectId(id))
         const fuel = req.body.fuel
         const gearbox = req.body.gearbox
         const mileage = req.body.mileage
@@ -428,8 +428,8 @@ export const getCars = async (req, res) => {
 
 export const getBookingCars = async (req, res) => {
     try {
-        const company = mongoose.Types.ObjectId(req.body.company)
-        const pickupLocation = mongoose.Types.ObjectId(req.body.pickupLocation)
+        const company = new mongoose.Types.ObjectId(req.body.company)
+        const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
         const keyword = escapeStringRegexp(req.query.s || '')
         const options = 'i'
         const page = parseInt(req.params.page)
@@ -462,8 +462,8 @@ export const getFrontendCars = async (req, res) => {
     try {
         const page = parseInt(req.params.page)
         const size = parseInt(req.params.size)
-        const companies = req.body.companies.map(id => mongoose.Types.ObjectId(id))
-        const pickupLocation = mongoose.Types.ObjectId(req.body.pickupLocation)
+        const companies = req.body.companies.map(id => new mongoose.Types.ObjectId(id))
+        const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
         const fuel = req.body.fuel
         const gearbox = req.body.gearbox
         const mileage = req.body.mileage
