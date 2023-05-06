@@ -14,6 +14,12 @@ export const strings = new LocalizedStrings({
         DELETE_USERS: 'Are you sure you want to delete the selected users and all their data?',
         DELETE_SELECTION: 'Delete selectied users',
         BLACKLIST: 'Add to the blacklist'
+    },
+    pl: {
+        DELETE_USER: 'Are you sure you want to delete this user and all his data?',
+        DELETE_USERS: 'Are you sure you want to delete the selected users and all their data?',
+        DELETE_SELECTION: 'Delete selectied users',
+        BLACKLIST: 'Add to the blacklist'
     }
 })
 

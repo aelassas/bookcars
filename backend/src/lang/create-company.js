@@ -14,6 +14,12 @@ export const strings = new LocalizedStrings({
         INVALID_COMPANY_NAME: 'This supplier already exists.',
         COMPANY_IMAGE_SIZE_ERROR: `The image must be in the format ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
         RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`
+    },
+    pl: {
+        CREATE_COMPANY_HEADING: 'New supplier',
+        INVALID_COMPANY_NAME: 'This supplier already exists.',
+        COMPANY_IMAGE_SIZE_ERROR: `The image must be in the format ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
+        RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`
     }
 })
 

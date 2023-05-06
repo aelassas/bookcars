@@ -10,6 +10,10 @@ export const strings = new LocalizedStrings({
     en: {
         UPDATE_LOCATION: 'Location update',
         LOCATION_UPDATED: 'Location updated successfully.'
+    },
+    pl: {
+        UPDATE_LOCATION: 'Location update',
+        LOCATION_UPDATED: 'Location updated successfully.'
     }
 })
 

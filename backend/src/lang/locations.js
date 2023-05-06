@@ -18,6 +18,14 @@ export const strings = new LocalizedStrings({
         EMPTY_LIST: 'No locations.',
         LOCATION: 'location',
         LOCATIONS: 'locations',
+    },
+    pl: {
+        NEW_LOCATION: 'New location',
+        DELETE_LOCATION: 'Are you sure you want to delete this location?',
+        CANNOT_DELETE_LOCATION: 'This location cannot be deleted because it is related to cars.',
+        EMPTY_LIST: 'No locations.',
+        LOCATION: 'location',
+        LOCATIONS: 'locations',
     }
 })
 

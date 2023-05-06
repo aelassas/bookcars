@@ -12,6 +12,11 @@ export const strings = new LocalizedStrings({
         EMPTY_LIST: 'No suppliers.',
         VIEW_COMPANY: 'View supplier profile',
         DELETE_COMPANY: 'Are you sure you want to delete this supplier and all its data?'
+    },
+    pl: {
+        EMPTY_LIST: 'No suppliers.',
+        VIEW_COMPANY: 'View supplier profile',
+        DELETE_COMPANY: 'Are you sure you want to delete this supplier and all its data?'
     }
 })
 

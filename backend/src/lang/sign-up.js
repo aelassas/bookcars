@@ -16,6 +16,13 @@ export const strings = new LocalizedStrings({
         SIGN_UP: 'Sign up',
         RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
         SIGN_UP_ERROR: 'An error occurred during sign up.'
+    },
+    pl: {
+        SIGN_UP_HEADING: 'Sign up',
+        TOS_SIGN_UP: 'I read and agree with the Terms of Use.',
+        SIGN_UP: 'Sign up',
+        RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
+        SIGN_UP_ERROR: 'An error occurred during sign up.'
     }
 })
 

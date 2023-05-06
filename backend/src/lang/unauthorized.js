@@ -8,6 +8,9 @@ export const strings = new LocalizedStrings({
     },
     en: {
         UNAUTHORIZED: 'Unauthorized access'
+    },
+    pl: {
+        UNAUTHORIZED: 'Unauthorized access'
     }
 })
 

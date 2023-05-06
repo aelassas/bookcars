@@ -10,6 +10,10 @@ export const strings = new LocalizedStrings({
     en: {
         TOTAL: 'Total:',
         DELETE_BOOKING: 'Are you sure you want to delete this booking?',
+    },
+    pl: {
+        TOTAL: 'Total:',
+        DELETE_BOOKING: 'Are you sure you want to delete this booking?',
     }
 })
 

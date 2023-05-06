@@ -10,6 +10,10 @@ export const strings = new LocalizedStrings({
     en: {
         CREATE_USER_HEADING: 'New user',
         BIRTH_DATE: 'Birth date'
+    },
+    pl: {
+        CREATE_USER_HEADING: 'New user',
+        BIRTH_DATE: 'Birth date'
     }
 })
 

@@ -36,6 +36,23 @@ export const strings = new LocalizedStrings({
         AIRCON: 'Aircon',
         MINIMUM_AGE: 'Minimum age',
         MINIMUM_AGE_NOT_VALID: "Minimum age must be greater than or equal to " + Env.MINIMUM_AGE + ' years old.'
+    },
+    pl: {
+        NEW_CAR_HEADING: 'New car',
+        NAME: 'Name',
+        CAR_IMAGE_SIZE_ERROR: `The image must be in the format ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
+        RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
+        COMPANY: 'Supplier',
+        LOCATIONS: 'Pickup locations',
+        AVAILABLE: 'Available for rental',
+        CAR_TYPE: 'Engine',
+        PRICE: 'Price',
+        SEATS: 'Seats',
+        DOORS: 'Doors',
+        GEARBOX: 'Gearbox',
+        AIRCON: 'Aircon',
+        MINIMUM_AGE: 'Minimum age',
+        MINIMUM_AGE_NOT_VALID: "Minimum age must be greater than or equal to " + Env.MINIMUM_AGE + ' years old.'
     }
 })
 

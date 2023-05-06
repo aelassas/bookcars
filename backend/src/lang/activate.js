@@ -12,6 +12,11 @@ export const strings = new LocalizedStrings({
         ACTIVATE_HEADING: 'Account Activation',
         TOKEN_EXPIRED: 'Your account activation link expired.',
         ACTIVATE: 'Activate'
+    },
+    pl: {
+        ACTIVATE_HEADING: 'Account Activation',
+        TOKEN_EXPIRED: 'Your account activation link expired.',
+        ACTIVATE: 'Activate'
     }
 })
 
