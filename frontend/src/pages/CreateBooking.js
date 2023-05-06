@@ -37,7 +37,7 @@ import {
 } from '@mui/icons-material'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
-import { fr, enUS } from "date-fns/locale"
+import { fr as dfnsFR, pl as dfnsPLPL, enUS as dfnsENUS} from "date-fns/locale"
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/create-booking.css'
@@ -640,7 +640,7 @@ const CreateBooking = () => {
     }
 
     const _fr = language === 'fr'
-    const _locale = _fr ? fr : enUS
+    const _locale = _fr ? dfnsFR : language === 'pl' ? dfnsPLPL : dfnsENUS
     const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
     const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
     const days = Helper.days(from, to)

@@ -9,7 +9,8 @@ import Backdrop from '../components/SimpleBackdrop'
 import {
     DataGrid,
     frFR,
-    enUS
+    enUS,
+    pl
 } from '@mui/x-data-grid'
 import {
     Tooltip,
@@ -32,7 +33,7 @@ import {
 } from '@mui/icons-material'
 import * as UserService from '../services/UserService'
 import { format } from 'date-fns'
-import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
+import { fr as dfnsFR, enUS as dfnsENUS, pl as dfnsPLPL } from "date-fns/locale"
 
 import '../assets/css/booking-list.css'
 
@@ -296,7 +297,7 @@ const BookingList = (props) => {
     }
 
     const _fr = props.language === 'fr'
-    const _locale = _fr ? dfnsFR : dfnsENUS
+    const _locale = _fr ? dfnsFR : props.language === 'pl' ? dfnsPLPL : dfnsENUS
     const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
     const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
 
@@ -465,7 +466,7 @@ const BookingList = (props) => {
                                 setPage(0)
                                 setPageSize(pageSize)
                             }}
-                            localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
+                            localeText={(user.language === 'fr' ? frFR : user.language === 'pl' ? plPL : enUS).components.MuiDataGrid.defaultProps.localeText}
                             components={{
                                 NoRowsOverlay: () => ''
                             }}

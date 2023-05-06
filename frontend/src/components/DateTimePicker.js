@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { MobileDateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker'
 // import { TextField } from '@mui/material'
 // import { format } from 'date-fns'
-import { fr, enUS } from "date-fns/locale"
+import { fr, enUS, pl } from "date-fns/locale"
 // import * as Helper from '../common/Helper'
 
 const DateTimePicker = (props) => {
@@ -15,7 +15,7 @@ const DateTimePicker = (props) => {
     const _format = props.language === 'fr' ? 'eee d LLL HH:mm' : 'eee, d LLL, HH:mm'
 
     return (
-        <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
+        <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : props.language === 'pl' ? pl : enUS} dateAdapter={AdapterDateFns}>
             <MuiDateTimePicker
                 label={props.label}
                 showToolbar

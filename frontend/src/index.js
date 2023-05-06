@@ -7,7 +7,7 @@ import * as UserService from './services/UserService'
 import { ToastContainer, toast } from 'react-toastify'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import { frFR, enUS } from '@mui/material/locale'
+import { frFR, enUS, plPL} from '@mui/material/locale'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -134,7 +134,7 @@ const theme = createTheme({
             },
         },
     },
-}, language === 'fr' ? frFR : enUS)
+}, language === 'fr' ? frFR : language === 'pl' ? plPL : enUS)
 
 root.render(
     <ThemeProvider theme={theme}>

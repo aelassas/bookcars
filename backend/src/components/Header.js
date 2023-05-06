@@ -140,6 +140,8 @@ const Header = (props) => {
                 return strings.LANGUAGE_FR
             case 'en':
                 return strings.LANGUAGE_EN
+            case 'pl':
+                return strings.LANGUAGE_PL
             default:
                 return Env.DEFAULT_LANGUAGE
         }
@@ -275,6 +277,7 @@ const Header = (props) => {
         >
             <MenuItem onClick={handleLangMenuClose} data-code="fr">{strings.LANGUAGE_FR}</MenuItem>
             <MenuItem onClick={handleLangMenuClose} data-code="en">{strings.LANGUAGE_EN}</MenuItem>
+            <MenuItem onClick={handleLangMenuClose} data-code="pl">{strings.LANGUAGE_PL}</MenuItem>
         </Menu>
     )
 
