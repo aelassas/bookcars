@@ -29,7 +29,7 @@ export const strings = new LocalizedStrings({
         AIRCON_TOOLTIP: 'Ten samochód posiada klimatyzację',
         FUEL_POLICY_LIKE_FOR_LIKE_TOOLTIP: 'Samochód jest zatankowany do pełna i musi być zwrócony z taką samą ilością paliwa.',
         FUEL_POLICY_FREE_TANK_TOOLTIP: 'Cena obejmuje pełny zbiornik paliwa.',
-        MILEAGE: 'Kilometrówka',
+        MILEAGE: 'Zasięg',
         MILEAGE_UNIT: 'KM/dziennie',
         UNLIMITED: 'Bez limitu',
         LIMITED: 'Limitowany',
