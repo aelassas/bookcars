@@ -42,7 +42,7 @@ export const strings = new LocalizedStrings({
         COLLISION_DAMAGE_WAVER: 'Ubezpieczenie od uszkodzeń',
         COLLISION_DAMAGE_WAVER_TOOLTIP: 'Wynajem może obejmować ubezpieczenie od uszkodzeń.',
         FULL_INSURANCE: 'Pełne ubezpieczenie',
-        FULL_INSURANCE_TOOLTIP: '~Wynajem może obejmować ochronę przed kradzieżą i ubezpieczenie od uszkodzeń. .',
+        FULL_INSURANCE_TOOLTIP: 'Wynajem może obejmować ochronę przed kradzieżą i ubezpieczenie od uszkodzeń.',
         ADDITIONAL_DRIVER: 'Dodatkowy kierowca',
         INCLUDED: 'Włączony',
         AVAILABLE: 'Dostępny',
