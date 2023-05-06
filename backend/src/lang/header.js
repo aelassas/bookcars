@@ -46,7 +46,7 @@ export const strings = new LocalizedStrings({
         USERS: 'Użytkownicy',
         ABOUT: 'O nas',
         TOS: 'Regulamin',
-        CONTACT: 'Konkakt',
+        CONTACT: 'Kontakt',
         LANGUAGE: 'Język',
         LANGUAGE_FR: 'Francuski',
         LANGUAGE_EN: 'Angielski',
