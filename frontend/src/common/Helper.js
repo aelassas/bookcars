@@ -365,11 +365,11 @@ export const price = (car, from, to, options) => {
 }
 
 export const getDays = (days) => {
-    return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? '' : ''}`
 }
 
 export const getDaysShort = (days) => {
-    return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? '' : ''}`
 }
 
 export const flattenCompanies = (companies) => {

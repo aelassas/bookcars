@@ -17,11 +17,12 @@ import {
 const Env = {
     APP_TYPE: BC_APP_TYPE || 'frontend',
     API_HOST: BC_API_HOST,
-    LANGUAGES: ['fr', 'en'],
-    DEFAULT_LANGUAGE: BC_DEFAULT_LANGUAGE || 'fr',
+    LANGUAGES: ['fr', 'en', 'pl'],
+    DEFAULT_LANGUAGE: BC_DEFAULT_LANGUAGE || 'en',
     LANGUAGE: {
         FR: 'fr',
-        EN: 'en'
+        EN: 'en',
+        PL: 'pl'
     },
     AXIOS_TIMEOUT: 5000, // ms
     PAGE_SIZE: parseInt(BC_PAGE_SIZE || 20),

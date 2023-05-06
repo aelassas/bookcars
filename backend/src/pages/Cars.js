@@ -114,7 +114,8 @@ const Cars = () => {
                             </Button>
 
                             {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
+                                //add checking if supports language
+                                <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 'ów' : ''}`} className='car-count' />
                             }
 
                             <CompanyFilter

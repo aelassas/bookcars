@@ -398,11 +398,15 @@ export const days = (from, to) => (
 )
 
 export const getDays = (days) => (
-    `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    //add checking if supports language
+
+    `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 'ów' : ''}`
 )
 
 export const getDaysShort = (days) => (
-    `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    //add checking if supports language
+
+    `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 'ów' : ''}`
 )
 
 export const getCancellationOption = (cancellation, fr, hidePlus) => {
