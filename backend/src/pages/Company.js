@@ -188,7 +188,7 @@ const Company = () => {
                             }
                         </div>
                         {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 'ów' : ''}`} className='car-count' />
+                            <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className='car-count' />
                         }
                     </div>
                     <div className='col-2'>

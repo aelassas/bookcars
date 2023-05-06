@@ -32,7 +32,7 @@ export const strings = new LocalizedStrings({
         SIGN_OUT: 'Sign out',
     },
     pl: {
-        SIGN_IN: 'Sign in',
+        SIGN_IN: 'Zaloguj się',
         HOME: 'Home',
         BOOKINGS: 'Rezerwacje',
         USERS: 'Użytkownicy',

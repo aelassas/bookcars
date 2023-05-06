@@ -24,11 +24,11 @@ export const strings = new LocalizedStrings({
     pl: {
         SIGN_IN_HEADING: 'Zaloguj się',
         SIGN_IN: 'Zaloguj się',
-        SIGN_UP: 'Zapisz się',
+        SIGN_UP: 'Utwórz konto',
         ERROR_IN_SIGN_IN: 'Nieprawidłowy e-mail lub hasło.',
         IS_BLACKLISTED: 'Twoje konto jest zawieszone.',
         RESET_PASSWORD: 'Zapomniałeś hasła?',
-        STAY_CONNECTED: 'Pozostań w kontakcie'
+        STAY_CONNECTED: 'Zapamiętaj hasło'
     }
 })
 
