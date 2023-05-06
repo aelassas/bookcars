@@ -16,10 +16,10 @@ export const strings = new LocalizedStrings({
         VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
     },
     pl: {
-        VALIDATE_EMAIL: "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
-        RESEND: 'Resend',
-        VALIDATION_EMAIL_SENT: 'Validation email sent.',
-        VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
+        VALIDATE_EMAIL: "E-mail weryfikacyjny został wysłany na Twój adres. Sprawdź skrzynkę pocztową i potwierdź swoje konto, klikając w link w wiadomości e-mail. Link aktywacyjny wygaśnie po jednym dniu. Jeśli nie otrzymałeś e-maila potwierdzającego, kliknij wyślij ponownie.",
+        RESEND: 'Wyślij ponownie',
+        VALIDATION_EMAIL_SENT: 'E-mail weryfikacyjny został wysłany.',
+        VALIDATION_EMAIL_ERROR: 'Wystąpił błąd podczas wysyłania wiadomości weryfikacyjnej.',
     }
 })
 

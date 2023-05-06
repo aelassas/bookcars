@@ -16,7 +16,7 @@ export const strings = new LocalizedStrings({
     pl: {
         SIGN_UP_HEADING: 'Utwórz konto',
         SIGN_UP: 'Zarejestruj się',
-        SIGN_UP_ERROR: 'An error occurred during sign up.'
+        SIGN_UP_ERROR: 'Podczas rejestracji wystąpił błąd.'
     }
 })
 

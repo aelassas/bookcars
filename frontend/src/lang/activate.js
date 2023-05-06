@@ -15,7 +15,7 @@ export const strings = new LocalizedStrings({
     },
     pl: {
         ACTIVATE_HEADING: 'Aktywacja konta',
-        TOKEN_EXPIRED: 'Twój link aktywcyjny wygasł.',
+        TOKEN_EXPIRED: 'Twój link aktywacyjny wygasł.',
         ACTIVATE: 'Aktywuj'
     }
 })

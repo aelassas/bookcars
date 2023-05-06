@@ -14,9 +14,9 @@ export const strings = new LocalizedStrings({
         SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications'
     },
     pl: {
-        SETTINGS_UPDATED: 'Settings updated successfully.',
-        NETWORK_SETTINGS: 'Network settings',
-        SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications'
+        SETTINGS_UPDATED: 'Ustawienia zostały pomyślnie zaktualizowane.',
+        NETWORK_SETTINGS: 'Ustawienia sieci',
+        SETTINGS_EMAIL_NOTIFICATIONS: 'Włącz powiadomienia e-mail'
     }
 })
 

@@ -12,8 +12,8 @@ export const strings = new LocalizedStrings({
         REQUIRED_FIELDS: 'Please fill in the fields: ',
     },
     pl: {
-        REQUIRED_FIELD: 'Please fill in the field: ',
-        REQUIRED_FIELDS: 'Please fill in the fields: ',
+        REQUIRED_FIELD: 'Proszę wypełnić pole: ',
+        REQUIRED_FIELDS: 'Proszę wypełnić pole: ',
     }
 })
 

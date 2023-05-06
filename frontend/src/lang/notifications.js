@@ -26,15 +26,15 @@ export const strings = new LocalizedStrings({
         DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?'
     },
     pl: {
-        EMPTY_LIST: 'No notifications',
-        VIEW: 'View',
-        MARK_AS_READ: 'Mark as read',
-        MARK_AS_UNREAD: 'Mark as unread',
-        MARK_ALL_AS_READ: 'Mark all as read',
-        MARK_ALL_AS_UNREAD: 'Mark all as unread',
-        DELETE_ALL: 'Delete all',
-        DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
-        DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?'
+        EMPTY_LIST: 'Brak powiadomień',
+        VIEW: 'Podgląd',
+        MARK_AS_READ: 'Oznacz jako przeczytane',
+        MARK_AS_UNREAD: 'Oznacz jako nieprzeczytane',
+        MARK_ALL_AS_READ: 'Oznacz wszystko jako przeczytane',
+        MARK_ALL_AS_UNREAD: 'Oznacz wszystko jako nieprzeczytane',
+        DELETE_ALL: 'Usuń wszystko',
+        DELETE_NOTIFICATION: 'Czy na pewno chcesz usunąć to powiadomienie?',
+        DELETE_NOTIFICATIONS: 'Czy na pewno chcesz usunąć te powiadomienia?'
     }
 })
 

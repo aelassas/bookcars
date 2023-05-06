@@ -10,7 +10,7 @@ export const strings = new LocalizedStrings({
         NO_MATCH: 'Nothing to see here!'
     },
     pl: {
-        NO_MATCH: 'Nothing to see here!'
+        NO_MATCH: 'Nic tu nie ma!'
     }
 })
 
