@@ -16,7 +16,7 @@ export const strings = new LocalizedStrings({
         GEARBOX_AUTOMATIC: 'Automatyczna',
         GEARBOX_MANUAL_SHORT: 'M',
         GEARBOX_AUTOMATIC_SHORT: 'A',
-        FUEL_POLICY_LIKE_FOR_LIKE: '1:1 oddajesz z pełnym zbiornikiem',
+        FUEL_POLICY_LIKE_FOR_LIKE: 'dostajesz=zostawiasz auto z pełnym bakiem*',
         FUEL_POLICY_FREE_TANK: 'Bezpłatny zbiornik paliwa',
         DIESEL_TOOLTIP: 'Ten samochód jest z silnikiem Diesla',
         GASOLINE_TOOLTIP: 'Ten samochód jest z silnikiem benzynowym',
