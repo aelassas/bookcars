@@ -14,6 +14,12 @@ export const strings = new LocalizedStrings({
         RESEND: 'Resend',
         VALIDATION_EMAIL_SENT: 'Validation email sent.',
         VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
+    },
+    pl: {
+        VALIDATE_EMAIL: "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
+        RESEND: 'Resend',
+        VALIDATION_EMAIL_SENT: 'Validation email sent.',
+        VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
     }
 })
 

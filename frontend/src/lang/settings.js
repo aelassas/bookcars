@@ -12,6 +12,11 @@ export const strings = new LocalizedStrings({
         SETTINGS_UPDATED: 'Settings updated successfully.',
         NETWORK_SETTINGS: 'Network settings',
         SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications'
+    },
+    pl: {
+        SETTINGS_UPDATED: 'Settings updated successfully.',
+        NETWORK_SETTINGS: 'Network settings',
+        SETTINGS_EMAIL_NOTIFICATIONS: 'Enable email notifications'
     }
 })
 

@@ -13,6 +13,7 @@ export const strings = new LocalizedStrings({
         LANGUAGE: 'Langue',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
+        LANGUAGE_PL: 'Polski',
         SETTINGS: 'Paramètres',
         SIGN_OUT: 'Déconnexion'
     },
@@ -26,8 +27,24 @@ export const strings = new LocalizedStrings({
         LANGUAGE: 'Language',
         LANGUAGE_FR: 'Français',
         LANGUAGE_EN: 'English',
+        LANGUAGE_PL: 'Polski',
         SETTINGS: 'Settings',
-        SIGN_OUT: 'Sign out'
+        SIGN_OUT: 'Sign out',
+    },
+    pl: {
+        DASHBOARD: 'Dashboard',
+        HOME: 'Home',
+        BOOKINGS: 'Rezerwacje',
+        USERS: 'Użytkownicy',
+        ABOUT: 'O nas',
+        TOS: 'Regulamin',
+        CONTACT: 'Kontakt',
+        LANGUAGE: 'Język',
+        LANGUAGE_FR: 'Francuski',
+        LANGUAGE_EN: 'Angielski',
+        LANGUAGE_PL: 'Polski',
+        SETTINGS: 'Ustawienia',
+        SIGN_OUT: 'Wyloguj się'
     }
 })
 

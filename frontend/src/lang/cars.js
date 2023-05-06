@@ -4,7 +4,7 @@ import * as UserService from '../services/UserService'
 
 export const strings = new LocalizedStrings({
     pl: {
-    NEW_CAR: 'Nowe auto',
+        NEW_CAR: 'Nowe auto',
         DELETE_CAR: 'Jesteś pewien,że chcesz zrezygnować z tego auta?',
         CAR_CURRENCY: ' PlN/za dzień',
         FUEL_POLICY: 'Polityka paliwowa',

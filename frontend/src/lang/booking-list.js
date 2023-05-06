@@ -48,6 +48,29 @@ export const strings = new LocalizedStrings({
         CANCEL: 'Cancel this booking',
         CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
         CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.'
+    },
+    pl: {
+        CAR: 'Car',
+        COMPANY: 'Supplier',
+        DRIVER: 'Driver',
+        PRICE: 'Price',
+        CURRENCY: 'DH',
+        STATUS: 'Status',
+        UPDATE_SELECTION: 'Edit selection',
+        DELETE_SELECTION: 'Delete selection',
+        UPDATE_STATUS: 'Status modification',
+        NEW_STATUS: 'New status',
+        DELETE_BOOKING: 'Are you sure you want to delete this booking?',
+        DELETE_BOOKINGS: 'Are you sure you want to delete the selected bookings?',
+        EMPTY_LIST: 'No bookings.',
+        VIEW: 'View this booking',
+        UPDATE: 'Edit this booking',
+        DAYS: 'Days',
+        COST: 'COST',
+
+        CANCEL: 'Cancel this booking',
+        CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
+        CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.'
     }
 })
 

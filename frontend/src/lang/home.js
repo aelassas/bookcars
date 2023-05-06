@@ -16,6 +16,12 @@ export const strings = new LocalizedStrings({
         COPYRIGHT_PART1: COPYRIGHT_PART1,
         COPYRIGHT_PART2: '®',
         COPYRIGHT_PART3: '. All rights reserved.',
+    },
+    pl: {
+        DROP_OFF: 'Return to same location',
+        COPYRIGHT_PART1: COPYRIGHT_PART1,
+        COPYRIGHT_PART2: '®',
+        COPYRIGHT_PART3: '. All rights reserved.',
     }
 })
 
