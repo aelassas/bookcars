@@ -14,9 +14,9 @@ export const strings = new LocalizedStrings({
         DELETE_COMPANY: 'Are you sure you want to delete this supplier and all its data?'
     },
     pl: {
-        EMPTY_LIST: 'No suppliers.',
-        VIEW_COMPANY: 'View supplier profile',
-        DELETE_COMPANY: 'Are you sure you want to delete this supplier and all its data?'
+        EMPTY_LIST: 'Brak dostawców.',
+        VIEW_COMPANY: 'Zobacz profil dostawcy',
+        DELETE_COMPANY: 'Czy na pewno chcesz usunąć tego dostawcę i wszystkie jego dane?'
     }
 })
 

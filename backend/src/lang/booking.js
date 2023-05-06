@@ -12,8 +12,8 @@ export const strings = new LocalizedStrings({
         DELETE_BOOKING: 'Are you sure you want to delete this booking?',
     },
     pl: {
-        TOTAL: 'Total:',
-        DELETE_BOOKING: 'Are you sure you want to delete this booking?',
+        TOTAL: 'Suma:',
+        DELETE_BOOKING: 'Czy na pewno chcesz usunąć tę rezerwację?',
     }
 })
 

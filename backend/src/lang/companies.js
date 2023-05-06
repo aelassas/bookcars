@@ -14,9 +14,9 @@ export const strings = new LocalizedStrings({
         COMPANIES: 'suppliers'
     },
     pl: {
-        NEW_COMPANY: 'New supplier',
-        COMPANY: 'supplier',
-        COMPANIES: 'suppliers'
+        NEW_COMPANY: 'Nowy dostawca',
+        COMPANY: 'dostawca',
+        COMPANIES: 'dostawcy'
     }
 })
 

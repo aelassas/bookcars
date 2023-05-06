@@ -63,7 +63,7 @@ export const strings = new LocalizedStrings({
         ACTIVATION_EMAIL_SENT: 'E-mail aktywacyjny wysłany.',
         EMAIL_NOT_VALID: 'Niepoprawny adres email',
         PICKUP_LOCATION: 'Punkt odbioru',
-        DROP_OFF_LOCATION: 'Punkt odbioru',
+        DROP_OFF_LOCATION: 'Punkt zwrotu',
         PHONE_NOT_VALID: 'Niepoprawny numer telefonu',
         ALL: 'Wszystko',
         TOS: 'Przeczytałem i zgadzam się z Warunkami użytkowania.',

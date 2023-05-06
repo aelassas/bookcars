@@ -69,7 +69,7 @@ export const strings = new LocalizedStrings({
         SUPPLIER: 'Dostawca',
         STATUS: 'Status',
         PICKUP_LOCATION: 'Punkt odbioru',
-        DROP_OFF_LOCATION: 'Punkt odbioru',
+        DROP_OFF_LOCATION: 'Punkt zwrotu',
         OPTIONS: 'Opcje',
         OF: 'z',
         BIRTH_DATE: 'Data urodzenia',

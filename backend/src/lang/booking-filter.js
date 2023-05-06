@@ -12,8 +12,8 @@ export const strings = new LocalizedStrings({
         DROP_OFF_LOCATION: 'Drop-off location',
     },
     pl: {
-        PICKUP_LOCATION: 'Pickup location',
-        DROP_OFF_LOCATION: 'Drop-off location',
+        PICKUP_LOCATION: 'Punkt odbioru',
+        DROP_OFF_LOCATION: 'Punkt zwrotu',
     }
 })
 

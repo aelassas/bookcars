@@ -61,7 +61,7 @@ export const strings = new LocalizedStrings({
         UPDATE_STATUS: 'Modyfikacja statusu',
         NEW_STATUS: 'Nowy status',
         DELETE_BOOKING: 'Czy na pewno chcesz usunąć tę rezerwację?',
-        DELETE_BOOKINGS: 'Czy na pewno chcesz usunąć wybrane rezerwacje??',
+        DELETE_BOOKINGS: 'Czy na pewno chcesz usunąć tę rezerwację?',
         EMPTY_LIST: 'Brak rezerwacji.',
         VIEW: 'Zobacz rezerwację',
         UPDATE: 'Edytuj rezerwację',

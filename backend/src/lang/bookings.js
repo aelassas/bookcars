@@ -10,7 +10,7 @@ export const strings = new LocalizedStrings({
         NEW_BOOKING: 'New Booking',
     },
     pl: {
-        NEW_BOOKING: 'New Booking',
+        NEW_BOOKING: 'Nowa rezerwacja',
     }
 })
 

@@ -16,10 +16,10 @@ export const strings = new LocalizedStrings({
         RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`
     },
     pl: {
-        CREATE_COMPANY_HEADING: 'New supplier',
-        INVALID_COMPANY_NAME: 'This supplier already exists.',
-        COMPANY_IMAGE_SIZE_ERROR: `The image must be in the format ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
-        RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`
+        CREATE_COMPANY_HEADING: 'Nowy dostawca',
+        INVALID_COMPANY_NAME: 'Ten dostawca już istnieje.',
+        COMPANY_IMAGE_SIZE_ERROR: `Zdjęcie musi być w formacie ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
+        RECOMMENDED_IMAGE_SIZE: `Rekomendowany rozmiar: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`
     }
 })
 

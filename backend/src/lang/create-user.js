@@ -12,8 +12,8 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE: 'Birth date'
     },
     pl: {
-        CREATE_USER_HEADING: 'New user',
-        BIRTH_DATE: 'Birth date'
+        CREATE_USER_HEADING: 'Nowy użytkownik',
+        BIRTH_DATE: 'Data urodzenia'
     }
 })
 
