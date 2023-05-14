@@ -25,41 +25,41 @@ export const create = (req, res) => {
     car.save()
         .then(async car => {
 
-            if (car.image) {
-                const image = path.join(CDN_TEMP, body.image)
-                if (fs.existsSync(image)) {
-                    const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
-                    const newPath = path.join(CDN, filename)
-
-                    try {
-                        fs.renameSync(image, newPath)
-                        car.image = filename
-                        try {
-                            await car.save()
-                        } catch (err) {
-                            console.error(strings.DB_ERROR, err)
-                            res.status(400).send(strings.DB_ERROR + err)
-                        }
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                } else {
-                    console.error(strings.CAR_IMAGE_NOT_FOUND, body)
-
-                    try {
-                        await Car.deleteOne({ _id: car._id })
-                    } catch (err) {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    }
-                    finally {
-                        res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + body)
-                    }
-
-                    return
-                }
-            }
+            // if (car.image) {
+            //     const image = path.join(CDN_TEMP, body.image)
+            //     if (fs.existsSync(image)) {
+            //         const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
+            //         const newPath = path.join(CDN, filename)
+            //
+            //         try {
+            //             fs.renameSync(image, newPath)
+            //             car.image = filename
+            //             try {
+            //                 await car.save()
+            //             } catch (err) {
+            //                 console.error(strings.DB_ERROR, err)
+            //                 res.status(400).send(strings.DB_ERROR + err)
+            //             }
+            //         } catch (err) {
+            //             console.error(strings.ERROR, err)
+            //             res.status(400).send(strings.ERROR + err)
+            //         }
+            //     } else {
+            //         console.error(strings.CAR_IMAGE_NOT_FOUND, body)
+            //
+            //         try {
+            //             await Car.deleteOne({ _id: car._id })
+            //         } catch (err) {
+            //             console.error(strings.DB_ERROR, err)
+            //             res.status(400).send(strings.DB_ERROR + err)
+            //         }
+            //         finally {
+            //             res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + body)
+            //         }
+            //
+            //         return
+            //     }
+            // }
 
             res.json(car)
         })
@@ -176,60 +176,61 @@ export const deleteCar = async (req, res) => {
 }
 
 export const createImage = (req, res) => {
-    try {
-        if (!fs.existsSync(CDN_TEMP)) {
-            fs.mkdirSync(CDN_TEMP, { recursive: true })
-        }
-
-        const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
-        const filepath = path.join(CDN_TEMP, filename)
-
-        fs.writeFileSync(filepath, req.file.buffer)
-        res.json(filename)
-    } catch (err) {
-        console.error(strings.ERROR, err)
-        res.status(400).send(strings.ERROR + err)
-    }
+    // try {
+    //     if (!fs.existsSync(CDN_TEMP)) {
+    //         fs.mkdirSync(CDN_TEMP, { recursive: true })
+    //     }
+    //
+    //     const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    //     const filepath = path.join(CDN_TEMP, filename)
+    //
+    //     fs.writeFileSync(filepath, req.file.buffer)
+    //     res.json(filename)
+    // } catch (err) {
+    //     console.error(strings.ERROR, err)
+    //     res.status(400).send(strings.ERROR + err)
+    // }
+        res.json('logo-temp.png')
 }
 
 export const updateImage = (req, res) => {
 
-    Car.findById(req.params.id)
-        .then(car => {
-            if (car) {
-                if (!fs.existsSync(CDN)) {
-                    fs.mkdirSync(CDN, { recursive: true })
-                }
-
-                if (car.image) {
-                    const image = path.join(CDN, car.image)
-                    if (fs.existsSync(image)) {
-                        fs.unlinkSync(image)
-                    }
-                }
-
-                const filename = `${car._id}_${Date.now()}${path.extname(req.file.originalname)}`
-                const filepath = path.join(CDN, filename)
-
-                fs.writeFileSync(filepath, req.file.buffer)
-                car.image = filename
-                car.save()
-                    .then(usr => {
+    // Car.findById(req.params.id)
+    //     .then(car => {
+    //         if (car) {
+    //             if (!fs.existsSync(CDN)) {
+    //                 fs.mkdirSync(CDN, { recursive: true })
+    //             }
+    //
+    //             if (car.image) {
+    //                 const image = path.join(CDN, car.image)
+    //                 if (fs.existsSync(image)) {
+    //                     fs.unlinkSync(image)
+    //                 }
+    //             }
+    //
+    //             const filename = `${car._id}_${Date.now()}${path.extname(req.file.originalname)}`
+    //             const filepath = path.join(CDN, filename)
+    //
+    //             fs.writeFileSync(filepath, req.file.buffer)
+    //             car.image = filename
+    //             car.save()
+    //                 .then(usr => {
                         res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[car.updateImage] Car not found:', req.params.id)
-                res.sendStatus(204)
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+    //                 })
+    //                 .catch(err => {
+    //                     console.error(strings.DB_ERROR, err)
+    //                     res.status(400).send(strings.DB_ERROR + err)
+    //                 })
+    //         } else {
+    //             console.error('[car.updateImage] Car not found:', req.params.id)
+    //             res.sendStatus(204)
+    //         }
+    //     })
+    //     .catch(err => {
+    //         console.error(strings.DB_ERROR, err)
+    //         res.status(400).send(strings.DB_ERROR + err)
+    //     })
 }
 
 export const deleteImage = (req, res) => {
