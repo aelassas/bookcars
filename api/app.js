@@ -15,7 +15,7 @@ if (HTTPS) {
     const credentials = { key: privateKey, cert: certificate }
     const httpsServer = https.createServer(credentials, app)
 
-    httpsServer.listen(PORT, (HOST) => {
+    httpsServer.listen(PORT, () => {
         console.log('HTTPS server is running on Port:', PORT)
         console.log('HTTPS server is running on Host:', HOST)
     })
