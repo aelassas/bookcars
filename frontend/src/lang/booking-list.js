@@ -51,7 +51,7 @@ export const strings = new LocalizedStrings({
     },
     pl: {
         CAR: 'Samochód',
-        COMPANY: 'Dostawca',
+        COMPANY: 'Wynajmu',
         DRIVER: 'Kierowca',
         PRICE: 'Cena',
         CURRENCY: 'PLN',

@@ -42,7 +42,7 @@ export const strings = new LocalizedStrings({
         NAME: 'Nazwa',
         CAR_IMAGE_SIZE_ERROR: `Obraz musi być w formacie ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
         RECOMMENDED_IMAGE_SIZE: `Rekomendowany format: ${Env.CAR_IMAGE_WIDTH}x${Env.CAR_IMAGE_HEIGHT}`,
-        COMPANY: 'Dosrawca',
+        COMPANY: 'Wynajmujący',
         LOCATIONS: 'Miejsce odbioru',
         AVAILABLE: 'Dostępne do wynajęcia',
         CAR_TYPE: 'Silnik',

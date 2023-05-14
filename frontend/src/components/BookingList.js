@@ -10,7 +10,7 @@ import {
     DataGrid,
     frFR,
     enUS,
-    pl
+    plPL
 } from '@mui/x-data-grid'
 import {
     Tooltip,
