@@ -224,3 +224,75 @@ The backend is a web application built with Node.js, ReactJS and MUI. From the b
 * *./backend/services/* contains BookCars API client services.
 * *./backend/App.js* is the main ReactJS App that contains routes.
 * *./backend/index.js* is the main entry point of the backend.
+
+---
+
+Problems:
+- no .env.example
+- no scripts to auto-setup
+- no env validation on startup
+- overcomplicated .env eg.:
+
+```typescript
+const DB_USERNAME = process.env.BC_DB_USERNAME
+const DB_PASSWORD = process.env.BC_DB_PASSWORD
+const DB_APP_NAME = process.env.BC_DB_APP_NAME
+const DB_NAME = process.env.BC_DB_NAME
+const DB_URI = `mongodb://${encodeURIComponent(DB_USERNAME)}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=${DB_AUTH_SOURCE}&appName=${DB_APP_NAME}`
+```
+
+instead of simple
+
+```typescript
+const DB_URI = process.env.DB_URI;
+```
+
+- JS instead of Typescript
+- mongoose instead of prisma
+- no contract guards like ts-rest (require typescript)
+- reCaptha enabled on localhost
+- no seeds
+- duplications that could be removed thanks to monorepo
+- not handled Failed to load resource: net::ERR_TIMED_OUT in sign up form
+- big duplications both in projects like signup and adminSignup in userController.js and cross projects like Helper.js
+- awful code next to `fs.existsSync(avatar)`, mixing paths and urls, logic with moving files between cdn and temp cd in controller, duplications
+- exotic ports instead of subdomains eg: `https://bookcars.com:81` instead of `https://backend.bookcars.com`
+- Errors that could be avoided using silent happy path design, eg.:
+
+```
+POST /api/admin-sign-up/ with all correct data for login for existing user
+```
+
+gives `E11000 duplicate key error collection: bookcars.User` but it could return correct token to login
+
+- many duplications in translations, eg repetitions in the same lang.:
+
+```
+ACCEPT_TOS: 'I read and agree with the Terms of Use.',
+TOS: 'I read and agree with the Terms of Use.',
+TOS: 'Terms of Service',
+```
+
+- infinite loading depending from number of elements on list, not request state
+i mean (`if (companies.length > 0) {`) instead of `promise.state`, it will show "Loading..." forever if collection is empty
+
+---
+
+Changes in .env
+
+Removed:
+BC_DB_APP_NAME, BC_DB_USERNAME, BC_DB_PASSWORD, BC_DB_NAME, BC_DB_PORT, BC_DB_HOST, BC_DB_NAME
+
+Docs about impact on mongo address (appName and authSource) https://www.mongodb.com/docs/manual/reference/connection-string/
+
+Added:
+
+BC_DB_URI
+
+Recommendations:
+-> move to monorepo - to remove cross projects duplications and simplify project setup process
+-> remove scripts and move to docker -> to simplify deployment process
+-> remove all ssl connected config from repo - it should be responsibility of nginx-proxy-automation
+-> replace javascript by typescript - to improve contract and static analysis, error detection and autocompletion
+-> replace mongose by prisma -> to improved db contract
+-> add ts-rest -> to improve http contract

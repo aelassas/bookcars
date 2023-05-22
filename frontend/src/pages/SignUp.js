@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-up'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/sign-up'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -19,7 +19,7 @@ import {
     Link
 } from '@mui/material'
 import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
+import {intervalToDuration} from 'date-fns'
 import * as Helper from '../common/Helper'
 
 import '../assets/css/signup.css'
@@ -63,7 +63,7 @@ const SignUp = () => {
         if (email) {
             if (validator.isEmail(email)) {
                 try {
-                    const status = await UserService.validateEmail({ email })
+                    const status = await UserService.validateEmail({email})
                     if (status === 200) {
                         setEmailError(false)
                         setEmailValid(true)
@@ -124,7 +124,7 @@ const SignUp = () => {
     const validateBirthDate = (date) => {
         if (Helper.isDate(date)) {
             const now = new Date()
-            const sub = intervalToDuration({ start: date, end: now }).years
+            const sub = intervalToDuration({start: date, end: now}).years
             const birthDateValid = sub >= Env.MINIMUM_AGE
 
             setBirthDateValid(birthDateValid)
@@ -224,7 +224,7 @@ const SignUp = () => {
         UserService.signup(data)
             .then(status => {
                 if (status === 200) {
-                    UserService.signin({ email: email, password: password })
+                    UserService.signin({email: email, password: password})
                         .then(signInResult => {
                             if (signInResult.status === 200) {
                                 window.location.href = '/' + window.location.search
@@ -236,12 +236,12 @@ const SignUp = () => {
                                 setTosError(false)
                             }
                         }).catch(err => {
-                            setPasswordError(false)
-                            setRecaptchaError(false)
-                            setPasswordsDontMatch(false)
-                            setError(true)
-                            setTosError(false)
-                        })
+                        setPasswordError(false)
+                        setRecaptchaError(false)
+                        setPasswordsDontMatch(false)
+                        setError(true)
+                        setTosError(false)
+                    })
                 } else
                     setPasswordError(false)
                 setRecaptchaError(false)
@@ -370,28 +370,32 @@ const SignUp = () => {
                                         }}
                                     />
                                 </FormControl>
-                                <div className="recaptcha">
+                                {Env.RECAPTCHA_SITE_KEY && <div className="recaptcha">
+                                    <pre>{JSON.stringify(Env)}</pre>
+                                    <pre>{JSON.stringify(Env.RECAPTCHA_SITE_KEY)}</pre>
+
                                     <ReCAPTCHA
                                         sitekey={Env.RECAPTCHA_SITE_KEY}
                                         hl={language}
                                         onChange={handleOnRecaptchaVerify}
                                     />
-                                </div>
+                                </div>}
                                 <div className="signup-tos">
                                     <table>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <Checkbox
-                                                        checked={tosChecked}
-                                                        onChange={handleTosChange}
-                                                        color="primary"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Link href="/tos" target="_blank" rel="noreferrer">{commonStrings.TOS}</Link>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td>
+                                                <Checkbox
+                                                    checked={tosChecked}
+                                                    onChange={handleTosChange}
+                                                    color="primary"
+                                                />
+                                            </td>
+                                            <td>
+                                                <Link href="/tos" target="_blank"
+                                                      rel="noreferrer">{commonStrings.TOS}</Link>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -413,16 +417,16 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <div className="form-error">
-                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
-                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
-                                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
-                                {tosError && <Error message={commonStrings.TOS_ERROR} />}
-                                {error && <Error message={strings.SIGN_UP_ERROR} />}
+                                {passwordError && <Error message={commonStrings.PASSWORD_ERROR}/>}
+                                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH}/>}
+                                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR}/>}
+                                {tosError && <Error message={commonStrings.TOS_ERROR}/>}
+                                {error && <Error message={strings.SIGN_UP_ERROR}/>}
                             </div>
                         </form>
                     </Paper>
                 </div>}
-            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT}/>}
         </Master>
     )
 }

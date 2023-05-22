@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node -r dotenv/config app.js",
-    "dev": "nodemon -r dotenv/config app.js",
+    "dev": "npx nodemon -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Akram El Assas",
