@@ -1,10 +1,10 @@
-FROM node:16
+FROM --platform=linux/amd64 node:18
 
 WORKDIR /app
-COPY package.json package-lock.json /app/
-#RUN yarn install --frozen-lockfile
-#COPY . .
+COPY package.json package-lock.json ./
 
 RUN npm install
+
+COPY . .
+
 EXPOSE 4002
-CMD ["npm", "start -V"]

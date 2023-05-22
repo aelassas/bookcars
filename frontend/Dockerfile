@@ -1,10 +1,12 @@
-FROM node:16
+FROM --platform=linux/amd64 node:18
 
 WORKDIR /frontend
-COPY package.json package-lock.json /frontend/
-#RUN yarn install --frozen-lockfile
-#COPY . .
+
+COPY package.json package-lock.json ./
 
 RUN npm install
+
+COPY . .
+
 EXPOSE 3001
-CMD ["npm", "start -V"]
+

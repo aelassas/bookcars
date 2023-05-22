@@ -1,3 +1,5 @@
 web/
 _db-backup-demo/
 .idea/
+.env.prod
+.env

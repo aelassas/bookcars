@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  api:
+    image: registry.digitalocean.com/main/bookcar-api
+    build: ./api
+    env_file:
+      - .env
+    environment:
+      - VIRTUAL_HOST=api.minimalka.pl
+      - LETSENCRYPT_HOST=api.minimalka.pl
+      - VIRTUAL_PORT=4002
+      - BC_PORT=4002
+    ports:
+      - "4002:4002"
+    command: npm start -V
+    working_dir: /api
+
+  backend:
+    image: registry.digitalocean.com/main/bookcar-backend
+    build: ./backend
+    env_file:
+      - .env
+    environment:
+      - VIRTUAL_HOST=admin.minimalka.pl
+      - LETSENCRYPT_HOST=admin.minimalka.pl
+      - VIRTUAL_PORT=3000
+      - PORT=3000
+      - REACT_APP_BC_APP_TYPE=backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    command: npm start -V
+    working_dir: /backend
+    links:
+      - api:api
+
+  frontend:
+    image: registry.digitalocean.com/main/bookcar-frontend
+    build: ./frontend
+    env_file:
+      - .env
+    environment:
+      - VIRTUAL_HOST=minimalka.pl
+      - LETSENCRYPT_HOST=minimalka.pl
+      - VIRTUAL_PORT=3001
+      - PORT=3001
+      - REACT_APP_BC_APP_TYPE=frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+    command: npm start -V
+    working_dir: /frontend
+    links:
+      - api:api
+
+networks:
+  default:
+    external:
+      name: ${NETWORK:-proxy}
+
+# missing static hosting for images
+
+#  database:
+#    image: mongo:latest
+#    expose:
+#      - "27017"
+#    restart: always

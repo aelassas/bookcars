@@ -296,3 +296,129 @@ Recommendations:
 -> replace javascript by typescript - to improve contract and static analysis, error detection and autocompletion
 -> replace mongose by prisma -> to improved db contract
 -> add ts-rest -> to improve http contract
+
+---
+
+## Deployment docs
+
+Prepared for Debian 10
+
+### Install git
+
+```
+sudo apt-get update
+apt install git -y
+```
+
+### Install docker
+
+Allow apt work on https
+
+```
+sudo apt-get install ca-certificates curl gnupg
+```
+
+Add Docker’s official GPG key:
+
+```
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+```
+
+Setup repository
+
+```
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+Reload package index
+
+```
+sudo apt-get update
+```
+
+Install docker
+
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+
+Check
+
+```
+$ docker --version
+Docker version 24.0.1, build 6802122
+$ docker compose version
+Docker Compose version v2.18.1
+```
+
+### Setup ngnix-proxy-automation
+
+```
+git clone --recurse-submodules https://github.com/evertramos/nginx-proxy-automation.git ~/proxy && cd ~/proxy/bin && ./fresh-start.sh --yes -e napisz@michalgrochowski.pl --use-nginx-conf-files
+```
+
+result should be
+
+```
+ ✔ success Your proxy was started successfully!
+```
+
+### Prepare place for app
+
+```
+cd ~ && mkdir -p bookcar
+```
+
+Create `.env` in this dir
+
+```
+touch bookcar/.env
+```
+
+Send `docker-compose.yml` to server
+
+```
+scp docker-compose.yml root@Run.mg0.pl:~/bookcar
+```
+
+### Images vs building on server
+
+To build on server you have to send all your codebase on server.
+It is better to build on CI and send ready images.
+
+To problem with images storage I will set my keys now:
+
+```
+cat <<EOT >> ~/.bashrc
+export DOCKER_REGISTRY_DOMAIN={{:DOCKER_REGISTRY_DOMAIN}}
+export DOCKER_TOKEN={{:DOCKER_TOKEN}}
+EOT
+```
+
+Then on server reload bash by `bash`, and login to register.
+
+```
+echo "${DOCKER_TOKEN}" | docker login -u "${DOCKER_TOKEN}" "${DOCKER_REGISTRY_DOMAIN}" --password-stdin;
+```
+
+
+To build and push images on your own machine prepare `.env`
+file that contains all prod variables in root of repo.
+
+and run
+
+```
+docker compose build
+docker compose push
+```
+
+you can sync `.env` with server by
+
+```
+scp .env root@Run.mg0.pl:~/bookcar
+```
