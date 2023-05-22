@@ -8,6 +8,9 @@ export const strings = new LocalizedStrings({
     },
     en: {
         TOTAL: 'Total:'
+    },
+    pl: {
+        TOTAL: 'Suma:'
     }
 })
 

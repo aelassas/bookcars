@@ -10,6 +10,10 @@ export const strings = new LocalizedStrings({
     en: {
         REQUIRED_FIELD: 'Please fill in the field: ',
         REQUIRED_FIELDS: 'Please fill in the fields: ',
+    },
+    pl: {
+        REQUIRED_FIELD: 'Proszę wypełnić pole: ',
+        REQUIRED_FIELDS: 'Proszę wypełnić pole: ',
     }
 })
 

@@ -48,6 +48,29 @@ export const strings = new LocalizedStrings({
         CANCEL: 'Cancel this booking',
         CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
         CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.'
+    },
+    pl: {
+        CAR: 'Samochód',
+        COMPANY: 'Wynajmu',
+        DRIVER: 'Kierowca',
+        PRICE: 'Cena',
+        CURRENCY: 'PLN',
+        STATUS: 'Status',
+        UPDATE_SELECTION: 'Edytuj wybór',
+        DELETE_SELECTION: 'Usuń wybór',
+        UPDATE_STATUS: 'Modyfikacja statusu',
+        NEW_STATUS: 'Nowy status',
+        DELETE_BOOKING: 'Czy na pewno chcesz usunąć tę rezerwację?',
+        DELETE_BOOKINGS: 'Czy na pewno chcesz usunąć tę rezerwację?',
+        EMPTY_LIST: 'Brak rezerwacji.',
+        VIEW: 'Zobacz rezerwację',
+        UPDATE: 'Edytuj rezerwację',
+        DAYS: 'Dni',
+        COST: 'CENA',
+
+        CANCEL: 'Odwołaj rezerwację',
+        CANCEL_BOOKING: 'Czy na pewno chcesz usunąć tę rezerwację?',
+        CANCEL_BOOKING_REQUEST_SENT: 'Twoja prośba o anulowanie została przesłana. Skontaktujemy się z Tobą w celu sfinalizowania procedury anulowania.'
     }
 })
 

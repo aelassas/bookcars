@@ -328,9 +328,7 @@ export const filterEqual = (a, b) => {
     if (a.to !== b.to) return false
     if (a.pickupLocation !== b.pickupLocation) return false
     if (a.dropOffLocation !== b.dropOffLocation) return false
-    if (a.keyword !== b.keyword) return false
-
-    return true
+    return a.keyword === b.keyword;
 }
 
 export const getBookingStatuses = () => {
@@ -365,11 +363,11 @@ export const price = (car, from, to, options) => {
 }
 
 export const getDays = (days) => {
-    return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    return `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? '' : ''}`
 }
 
 export const getDaysShort = (days) => {
-    return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
+    return `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? '' : ''}`
 }
 
 export const flattenCompanies = (companies) => {
@@ -455,7 +453,7 @@ export const getFullInsuranceOption = (fullInsurance, days, fr) => {
     }
 }
 
-export const getAdditionalDriverOption = (additionalDriver, days, fr) => {
+export const getAdditionalDriverOption = (additionalDriver, days) => {
     if (additionalDriver === -1) {
         return strings.UNAVAILABLE
     }

@@ -19,7 +19,7 @@ const DrawerContent = (props) => {
         setLanguage(props.language)
     }, [props.language])
 
-    updateLanguage = async (language) => {
+    const updateLanguage = async (language) => {
         try {
             const setLang = async (language) => {
                 i18n.locale = language
@@ -131,12 +131,20 @@ const DrawerContent = (props) => {
                             <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
                         </Pressable>
                         <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
-                            if (language === Env.LANGUAGE.FR) {
+                            if (language !== Env.LANGUAGE.EN) {
                                 await updateLanguage(Env.LANGUAGE.EN)
                                 setopenLanguageMenu(false)
                             }
                         }}>
                             <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
+                        </Pressable>
+                        <Pressable style={language === Env.LANGUAGE.PL ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
+                            if (language !== Env.LANGUAGE.PL) {
+                                await updateLanguage(Env.LANGUAGE.PL)
+                                setopenLanguageMenu(false)
+                            }
+                        }}>
+                            <Text style={language === Env.LANGUAGE.PL ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_PL')}</Text>
                         </Pressable>
                     </View>
                 }

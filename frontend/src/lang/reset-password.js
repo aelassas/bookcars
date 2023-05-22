@@ -16,6 +16,13 @@ export const strings = new LocalizedStrings({
         EMAIL_ERROR: 'Email address not registered',
         RESET: 'Reset',
         EMAIL_SENT: 'Password reset email sent.'
+    },
+    pl: {
+        RESET_PASSWORD_HEADING: 'Reset hasła',
+        RESET_PASSWORD: 'Podaj swój adres e-mail, abyśmy mogli wysłać Ci wiadomość umożliwiającą zresetowanie hasła.',
+        EMAIL_ERROR: 'Adres e-mail jest niezarejestrowany',
+        RESET: 'Reset',
+        EMAIL_SENT: 'Wiadomość e-mail dotycząca resetowania hasła została wysłana.'
     }
 })
 

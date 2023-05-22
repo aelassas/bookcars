@@ -17,7 +17,7 @@ import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import Backdrop from '../components/SimpleBackdrop'
 import { format } from 'date-fns'
-import { fr, enUS } from "date-fns/locale"
+import { fr, enUS, pl} from "date-fns/locale"
 
 import '../assets/css/notifications.css'
 
@@ -34,7 +34,7 @@ const Notifications = () => {
     const notificationsListRef = useRef(null)
 
     const _fr = user && user.language === 'fr'
-    const _locale = _fr ? fr : enUS
+    const _locale = _fr ? fr : user.language === 'pl' ? pl : enUS
     const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
 
     const fetch = useCallback(async () => {
@@ -189,7 +189,7 @@ const Notifications = () => {
                         </div>
                         <div ref={notificationsListRef} className='notifications-list'>
                             {
-                                rows.map((row, index) => (
+                                rows.map((row) => (
                                     <div key={row._id} className='notification-container'>
                                         <div className='notification-checkbox'>
                                             <Checkbox checked={row.checked} onChange={(event) => {

@@ -52,6 +52,18 @@ app.use(helmet.referrerPolicy())
 app.use(helmet.xssFilter())
 app.use(helmet.originAgentCluster())
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }))
+// app.use(
+//     helmet({
+//         xPermittedCrossDomainPolicies: false,
+//     })
+// );
+// app.use(
+//     helmet({
+//         crossOriginResourcePolicy: false,
+//     })
+// );
+// // Sets "Cross-Origin-Embedder-Policy: credentialless"
+// app.use(helmet({ crossOriginEmbedderPolicy: { policy: "credentialless" } }));
 app.use(helmet.crossOriginOpenerPolicy())
 app.use(nocache())
 app.use(compression({ threshold: 0 }))

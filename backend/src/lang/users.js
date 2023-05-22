@@ -8,6 +8,9 @@ export const strings = new LocalizedStrings({
     },
     en: {
         NEW_USER: 'New user'
+    },
+    pl: {
+        NEW_USER: 'Nowy użytkownik'
     }
 })
 

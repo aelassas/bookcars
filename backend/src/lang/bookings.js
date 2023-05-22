@@ -8,6 +8,9 @@ export const strings = new LocalizedStrings({
     },
     en: {
         NEW_BOOKING: 'New Booking',
+    },
+    pl: {
+        NEW_BOOKING: 'Nowa rezerwacja',
     }
 })
 

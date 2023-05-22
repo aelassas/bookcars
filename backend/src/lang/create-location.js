@@ -14,6 +14,12 @@ export const strings = new LocalizedStrings({
         LOCATION_NAME: 'Location',
         INVALID_LOCATION: 'This location already exists.',
         LOCATION_CREATED: 'Location created successfully.'
+    },
+    pl: {
+        NEW_LOCATION_HEADING: 'Nowa lokalizacja',
+        LOCATION_NAME: 'Lokalizacja',
+        INVALID_LOCATION: 'Wybrana lokalizacja już istnieje.',
+        LOCATION_CREATED: 'Lokalizacja została pomyślnie utworzona.'
     }
 })
 

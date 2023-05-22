@@ -36,6 +36,23 @@ export const strings = new LocalizedStrings({
         EMPTY_LIST: 'No bookings.',
         DAYS: 'Days',
         COST: 'COST',
+    },
+    pl: {
+        CAR: 'Samochód',
+        COMPANY: 'Dostawca',
+        DRIVER: 'Kierowca',
+        PRICE: 'Cena',
+        CURRENCY: 'PLN',
+        STATUS: 'Status',
+        UPDATE_SELECTION: 'Edytuj wybór',
+        DELETE_SELECTION: 'Usuń wybór',
+        UPDATE_STATUS: 'Modyfikacja statusu',
+        NEW_STATUS: 'Nowy status',
+        DELETE_BOOKING: 'Czy na pewno chcesz usunąć tę rezerwację?',
+        DELETE_BOOKINGS: 'Czy na pewno chcesz usunąć tę rezerwację?',
+        EMPTY_LIST: 'Brak rezerwacji.',
+        DAYS: 'Dni',
+        COST: 'Koszt',
     }
 })
 

@@ -20,6 +20,15 @@ export const strings = new LocalizedStrings({
         IS_BLACKLISTED: 'Your account is suspended.',
         RESET_PASSWORD: 'Forgot password?',
         STAY_CONNECTED: 'Stay connected'
+    },
+    pl: {
+        SIGN_IN_HEADING: 'Zaloguj się',
+        SIGN_IN: 'Zaloguj się',
+        SIGN_UP: 'Utwórz konto',
+        ERROR_IN_SIGN_IN: 'Nieprawidłowy e-mail lub hasło.',
+        IS_BLACKLISTED: 'Twoje konto jest zawieszone.',
+        RESET_PASSWORD: 'Zapomniałeś hasła?',
+        STAY_CONNECTED: 'Zapamiętaj hasło'
     }
 })
 

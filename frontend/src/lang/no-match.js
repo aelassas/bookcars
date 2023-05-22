@@ -8,6 +8,9 @@ export const strings = new LocalizedStrings({
     },
     en: {
         NO_MATCH: 'Nothing to see here!'
+    },
+    pl: {
+        NO_MATCH: 'Nic tu nie ma!'
     }
 })
 

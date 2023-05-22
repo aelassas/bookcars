@@ -4,13 +4,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker'
 // import { TextField, IconButton, InputAdornment } from '@mui/material'
 // import { Clear as ClearIcon } from '@mui/icons-material'
-import { fr, enUS } from "date-fns/locale"
+import { fr, enUS, pl} from "date-fns/locale"
 
 const DatePicker = (props) => {
     const [value, setValue] = useState(props.value || null)
 
     return (
-        <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
+        <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : props.language === 'pl' ? pl : enUS} dateAdapter={AdapterDateFns}>
             <MuiDatePicker
                 label={props.label}
                 views={['year', 'month', 'day']}

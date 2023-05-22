@@ -2,6 +2,7 @@ import app from './server.js'
 import fs from 'fs'
 import https from 'https'
 
+const HOST = parseInt(process.env.BC_HOST) || 'localhost'
 const PORT = parseInt(process.env.BC_PORT) || 4000
 const HTTPS = process.env.BC_HTTPS.toLocaleLowerCase() === 'true'
 const PRIVATE_KEY = process.env.BC_PRIVATE_KEY
@@ -16,9 +17,11 @@ if (HTTPS) {
 
     httpsServer.listen(PORT, () => {
         console.log('HTTPS server is running on Port:', PORT)
+        console.log('HTTPS server is running on Host:', HOST)
     })
 } else {
-    app.listen(PORT, () => {
+    app.listen(PORT, (HOST) => {
         console.log('HTTP server is running on Port:', PORT)
+        console.log('HTTPS server is running on Host:', HOST)
     })
 }

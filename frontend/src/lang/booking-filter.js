@@ -10,6 +10,10 @@ export const strings = new LocalizedStrings({
     en: {
         PICKUP_LOCATION: 'Pickup location',
         DROP_OFF_LOCATION: 'Drop-off location',
+    },
+    pl: {
+        PICKUP_LOCATION: 'Punkt odbioru',
+        DROP_OFF_LOCATION: 'Punkt zdania',
     }
 })
 
