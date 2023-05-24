@@ -2,7 +2,7 @@ import LocalizedStrings from 'react-localization'
 import Env from '../config/env.config'
 import * as UserService from '../services/UserService'
 
-const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`
+const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} Minimalka.pl`
 
 export const strings = new LocalizedStrings({
     fr: {

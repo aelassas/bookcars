@@ -1,7 +1,7 @@
 import i18n from 'i18n-js'
 import Env from '../config/env.config'
 
-const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars`
+const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} Minimalka`
 
 i18n.translations = {
     fr: {
