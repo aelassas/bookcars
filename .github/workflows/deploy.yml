@@ -2,7 +2,7 @@ name: Nuxt
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "deployment"]
 
 env:
   DOCKER_REGISTRY_DOMAIN: registry.digitalocean.com
