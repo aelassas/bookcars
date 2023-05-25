@@ -25,6 +25,8 @@ import * as Helper from '../common/Helper'
 import '../assets/css/signup.css'
 
 const SignUp = () => {
+    console.log("Env", Env);
+
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -192,7 +194,8 @@ const SignUp = () => {
             return
         }
 
-        if (!reCaptchaToken) {
+        // check token only if RECAPTCHA is enabled
+        if (Boolean(Env.RECAPTCHA_SITE_KEY) && !reCaptchaToken) {
             setPasswordError(false)
             setRecaptchaError(true)
             setPasswordsDontMatch(false)

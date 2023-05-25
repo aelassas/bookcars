@@ -296,6 +296,15 @@ Recommendations:
 -> replace javascript by typescript - to improve contract and static analysis, error detection and autocompletion
 -> replace mongose by prisma -> to improved db contract
 -> add ts-rest -> to improve http contract
+-> inject .env to all services on runtime instead of build time (env.config.js files)
+
+Issue with .env on `serve` - recommended tool for react https://create-react-app.dev/docs/deployment#static-server
+https://github.com/vercel/serve/issues/748
+
+Options:
+- find whitelist for .env for `serve` package
+- use express setup described here https://create-react-app.dev/docs/deployment#other-solutions
+
 
 ---
 
@@ -422,3 +431,102 @@ you can sync `.env` with server by
 ```
 scp .env root@Run.mg0.pl:~/bookcar
 ```
+
+In main directory you're defining .env for production, in subdirectories for local run
+
+---
+
+Test scenario
+
+https://admin.minimalka.pl/sign-up
+
+Created account:
+
+gustaw.daniel@gmail.com
+3mUE!yuH
+
+Received email on 
+
+https://mailtrap.io/inboxes/2234022/messages/3478356516
+
+For link:
+
+http://api.minimalka.pl/api/confirm-email/gustaw.daniel@gmail.com/ce544680-faa9-11ed-8548-59a1ac756cb0
+
+displayed
+
+> Your account was successfully verified.
+
+go to 
+
+https://admin.minimalka.pl/sign-in
+
+Then infinite loading described in previous chapter.
+
+Go to:
+
+https://minimalka.pl
+
+Click sign in -> sign up and add account
+
+gustaw.daniel+user@gmail.com
+F4kvB%iP
+
+There is info: Fill out the captcha to continue.
+
+then fix was applied
+
+Then I was able to sign up, again received email with url
+
+http://api.minimalka.pl/api/confirm-email/gustaw.daniel+user@gmail.com/5d963f40-faac-11ed-87b0-1dc740ce384e
+
+go to 
+
+https://minimalka.pl/sign-in
+
+it should be redirected automatically btw or replaced by:
+- social media login
+- otp login
+- apple id login
+
+Then:
+- pickup location not return any results
+
+On bookings page https://minimalka.pl/bookings you can see infinite loading (the same reason)
+
+On admin I removed this loading by browser dev tools
+
+https://admin.minimalka.pl/create-booking
+
+I was not able to create booking because of lacking supplier.
+
+https://admin.minimalka.pl/suppliers
+
+I was not able to create supplier because image was required but after putting image i seen white page with error
+
+> Cannot read properties of undefined (reading 'charAt')
+
+what is connected with:
+a) broken .env setting process described before
+b) unclear situation with files upload and cdn
+
+Final result:
+
+Deployment is finished. But few things have to be done:
+- emails - replace catcher by production smtp setting
+- passing env from runtime to fronted and backend apps
+- images upload (now blocking process)
+- potentially seed
+- fix infinite loading when there is no resources
+- fix redirections after sign up token from email
+
+Page is now unusable. Blocking elements are .env and uploads, but they are blocking
+because of design of validation is weak. Validation is too aggressive and focussed on
+unimportant elements of system. In fact necessity of upload image for supplier to create
+booking is bad design decision because of crucial business process is connected with 
+booking, not with possessing images by suppliers. In result these validation rules should
+be considered as technical debt and I recommend to rethink them.
+
+Ideal UX should assume that I can create new supplier during booking creation and not
+care about his image, because during booking creation probably time of client waiting
+for this booking is most important resource.
