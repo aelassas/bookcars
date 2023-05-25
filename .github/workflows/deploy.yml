@@ -1,0 +1,41 @@
+name: Nuxt
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOCKER_REGISTRY_DOMAIN: registry.digitalocean.com
+  USERNAME: root
+  HOST: do.mg0.pl
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare .env to build
+        run: cp .env.example .env
+      - name: Build the Docker image
+        run: docker compose build
+      - name: Login to registry
+        run: docker login -u ${{ secrets.DOCKER_TOKEN }} -p ${{ secrets.DOCKER_TOKEN }} ${{ env.DOCKER_REGISTRY_DOMAIN }}
+      - name: Build the Docker image
+        run: docker compose push
+
+  reload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: deploy.yml
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [local]
+            127.0.0.1 env=prod
+            
+            [api]
+            do.mg0.pl ansible_user=root dir=bookcar
+    needs: image

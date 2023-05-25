@@ -1,6 +1,6 @@
-FROM --platform=linux/amd64 node:18
+FROM  node:18
 
-WORKDIR /app
+WORKDIR /api
 COPY package.json package-lock.json ./
 
 RUN npm install

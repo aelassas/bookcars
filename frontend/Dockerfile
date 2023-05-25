@@ -1,12 +1,15 @@
-FROM --platform=linux/amd64 node:18
+FROM  node:18
 
 WORKDIR /frontend
+RUN npm install -g serve
 
 COPY package.json package-lock.json ./
 
 RUN npm install
 
 COPY . .
+
+RUN npm run build
 
 EXPOSE 3001
 
