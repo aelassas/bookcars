@@ -9,6 +9,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import path from 'path'
 import fs from 'fs'
 import mongoose from 'mongoose'
+import * as Helper from '../common/Helper.js'
 
 const CDN = process.env.BC_CDN_USERS
 const CDN_CARS = process.env.BC_CDN_CARS
@@ -60,8 +61,8 @@ export const deleteCompany = async (req, res) => {
         if (company) {
             if (company.avatar) {
                 const avatar = path.join(CDN, company.avatar)
-                if (fs.existsSync(avatar)) {
-                    fs.unlinkSync(avatar)
+                if (await Helper.fileExists(avatar)) {
+                    await fs.promises.unlink(avatar)
                 }
                 await Notification.deleteMany({ user: id })
                 const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
@@ -70,10 +71,10 @@ export const deleteCompany = async (req, res) => {
                 await Booking.deleteMany({ company: id })
                 const cars = await Car.find({ company: id })
                 await Car.deleteMany({ company: id })
-                cars.forEach(car => {
+                cars.forEach(async car => {
                     const image = path.join(CDN_CARS, car.image)
-                    if (fs.existsSync(image)) {
-                        fs.unlinkSync(image)
+                    if (await Helper.fileExists(image)) {
+                        await fs.promises.unlink(image)
                     }
                 })
             }
@@ -82,7 +83,7 @@ export const deleteCompany = async (req, res) => {
         }
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[company.delete]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[company.delete] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }

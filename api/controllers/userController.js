@@ -35,30 +35,30 @@ const getStatusMessage = (lang, msg) => {
     return '<!DOCTYPE html><html lang="' + lang + '"><head></head><body><p>' + msg + '</p></body></html>'
 }
 
-export const signup = (req, res) => {
+export const signup = async (req, res) => {
     const { body } = req
     body.active = true
     body.verified = false
     body.blacklisted = false
     body.type = Env.USER_TYPE.USER
 
-    const salt = bcrypt.genSaltSync(10)
+    const salt = await bcrypt.genSalt(10)
     const password = body.password
-    const passwordHash = bcrypt.hashSync(password, salt)
+    const passwordHash = await bcrypt.hash(password, salt)
     body.password = passwordHash
 
     const user = new User(body)
     user.save()
-        .then(user => {
+        .then(async user => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
+                if (Helper.fileExists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        fs.renameSync(avatar, newPath)
+                        await fs.promises.rename(avatar, newPath)
                         user.avatar = filename
                         user.save()
                             .catch(err => {
@@ -118,30 +118,30 @@ export const signup = (req, res) => {
         })
 }
 
-export const adminSignup = (req, res) => {
+export const adminSignup = async (req, res) => {
     const { body } = req
     body.active = true
     body.verified = false
     body.blacklisted = false
     body.type = Env.USER_TYPE.ADMIN
 
-    const salt = bcrypt.genSaltSync(10)
+    const salt = await bcrypt.genSalt(10)
     const password = body.password
-    const passwordHash = bcrypt.hashSync(password, salt)
+    const passwordHash = await bcrypt.hash(password, salt)
     body.password = passwordHash
 
     const user = new User(body)
     user.save()
-        .then(user => {
+        .then(async user => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
+                if (await Helper.fileExists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        fs.renameSync(avatar, newPath)
+                        await fs.prompises.rename(avatar, newPath)
                         user.avatar = filename
                         user.save()
                             .catch(err => {
@@ -201,30 +201,30 @@ export const adminSignup = (req, res) => {
         })
 }
 
-export const create = (req, res) => {
+export const create = async (req, res) => {
     const { body } = req
     body.verified = false
     body.blacklisted = false
 
     if (body.password) {
-        const salt = bcrypt.genSaltSync(10)
+        const salt = await bcrypt.genSalt(10)
         const password = body.password
-        const passwordHash = bcrypt.hashSync(password, salt)
+        const passwordHash = await bcrypt.hash(password, salt)
         body.password = passwordHash
     }
 
     const user = new User(body)
     user.save()
-        .then(user => {
+        .then(async user => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
+                if (await Helper.fileExists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        fs.renameSync(avatar, newPath)
+                        await fs.promises.rename(avatar, newPath)
                         user.avatar = filename
                         user.save()
                             .catch(err => {
@@ -425,11 +425,11 @@ export const activate = (req, res) => {
         .then(user => {
             if (user) {
                 Token.find({ token: req.body.token })
-                    .then(token => {
+                    .then(async token => {
                         if (token) {
-                            const salt = bcrypt.genSaltSync(10)
+                            const salt = await bcrypt.genSalt(10)
                             const password = req.body.password
-                            const passwordHash = bcrypt.hashSync(password, salt)
+                            const passwordHash = await bcrypt.hash(password, salt)
                             user.password = passwordHash
 
                             user.active = true
@@ -782,16 +782,16 @@ export const getUser = (req, res) => {
         })
 }
 
-export const createAvatar = (req, res) => {
+export const createAvatar = async (req, res) => {
     try {
-        if (!fs.existsSync(CDN_TEMP)) {
-            fs.mkdirSync(CDN_TEMP, { recursive: true })
+        if (!await Helper.fileExists(CDN_TEMP)) {
+            await fs.promises.mkdir(CDN_TEMP, { recursive: true })
         }
 
         const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
         const filepath = path.join(CDN_TEMP, filename)
 
-        fs.writeFileSync(filepath, req.file.buffer)
+        await fs.promises.writeFile(filepath, req.file.buffer)
         res.json(filename)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -803,23 +803,23 @@ export const updateAvatar = (req, res) => {
     const userId = req.params.userId
 
     User.findById(userId)
-        .then(user => {
+        .then(async user => {
             if (user) {
-                if (!fs.existsSync(CDN)) {
-                    fs.mkdirSync(CDN, { recursive: true })
+                if (!await Helper.fileExists(CDN)) {
+                    await fs.promises.mkdir(CDN, { recursive: true })
                 }
 
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
-                    if (fs.existsSync(avatar)) {
-                        fs.unlinkSync(avatar)
+                    if (await Helper.fileExists(avatar)) {
+                        await fs.promises.unlink(avatar)
                     }
                 }
 
                 const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
                 const filepath = path.join(CDN, filename)
 
-                fs.writeFileSync(filepath, req.file.buffer)
+                await fs.promises.writeFile(filepath, req.file.buffer)
                 user.avatar = filename
                 user.save()
                     .then(usr => {
@@ -844,12 +844,12 @@ export const deleteAvatar = (req, res) => {
     const userId = req.params.userId
 
     User.findById(userId)
-        .then(user => {
+        .then(async user => {
             if (user) {
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
-                    if (fs.existsSync(avatar)) {
-                        fs.unlinkSync(avatar)
+                    if (await Helper.fileExists(avatar)) {
+                        await fs.promises.unlink(avatar)
                     }
                 }
                 user.avatar = null
@@ -873,11 +873,11 @@ export const deleteAvatar = (req, res) => {
         })
 }
 
-export const deleteTempAvatar = (req, res) => {
+export const deleteTempAvatar = async (req, res) => {
     try {
         const avatar = path.join(CDN_TEMP, req.params.avatar)
-        if (fs.existsSync(avatar)) {
-            fs.unlinkSync(avatar)
+        if (await Helper.fileExists(avatar)) {
+            await fs.promises.unlink(avatar)
         }
         res.sendStatus(200)
     } catch (err) {
@@ -895,10 +895,10 @@ export const changePassword = (req, res) => {
                 return res.sendStatus(204)
             }
 
-            const changePassword = () => {
-                const salt = bcrypt.genSaltSync(10)
+            const changePassword = async () => {
+                const salt = await bcrypt.genSalt(10)
                 const password = req.body.newPassword
-                const passwordHash = bcrypt.hashSync(password, salt)
+                const passwordHash = await bcrypt.hash(password, salt)
                 user.password = passwordHash
 
                 user.save()
@@ -1032,8 +1032,8 @@ export const deleteUsers = async (req, res) => {
             const user = await User.findByIdAndDelete(id)
             if (user.avatar) {
                 const avatar = path.join(CDN, user.avatar)
-                if (fs.existsSync(avatar)) {
-                    fs.unlinkSync(avatar)
+                if (await Helper.fileExists(avatar)) {
+                    await fs.promises.unlink(avatar)
                 }
             }
             await Booking.deleteMany({ driver: id })
