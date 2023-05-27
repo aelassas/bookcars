@@ -58,8 +58,8 @@ services:
 
 networks:
   default:
-    external:
-      name: ${NETWORK:-proxy}
+    name: ${NETWORK:-proxy}
+    external: true
 
 # missing static hosting for images
 

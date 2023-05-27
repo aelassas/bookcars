@@ -6,6 +6,8 @@
   vars:
     path: "/root/{{ dir }}"
   tasks:
+    - name: Remove old containers
+      ansible.builtin.shell: docker system prune -af
     - name: Creates directory
       file:
         path: "{{ path }}"

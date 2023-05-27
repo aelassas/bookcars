@@ -1,6 +1,5 @@
 {
   "name": "api",
-  "type": "module",
   "version": "1.0.0",
   "description": "BookCars API",
   "main": "app.js",
