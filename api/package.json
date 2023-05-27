@@ -5,21 +5,21 @@
   "description": "BookCars API",
   "main": "app.js",
   "scripts": {
-    "start": "node -r dotenv/config app.js",
-    "dev": "npx nodemon -r dotenv/config app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node -r dotenv/config src/index.js",
+    "dev": "npx tsx watch src/index.ts",
+    "test": "jest --forceExit"
   },
   "author": "Akram El Assas",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.341.0",
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "escape-string-regexp": "^5.0.0",
+    "escape-string-regexp": "^4.0.0",
     "expo-server-sdk": "^3.7.0",
     "express": "^4.18.2",
-    "fs": "^0.0.2",
     "helmet": "^6.1.5",
     "https": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
@@ -29,6 +29,28 @@
     "nocache": "^3.0.4",
     "nodemailer": "^6.9.1",
     "uuid": "^9.0.0",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.1",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^20.2.5",
+    "@types/nodemailer": "^6.4.8",
+    "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.1",
+    "@types/validator": "^13.7.17",
+    "jest": "^29.5.0",
+    "jest-esbuild": "^0.2.9",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
   }
 }

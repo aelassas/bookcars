@@ -255,7 +255,7 @@ const DB_URI = process.env.DB_URI;
 - duplications that could be removed thanks to monorepo
 - not handled Failed to load resource: net::ERR_TIMED_OUT in sign up form
 - big duplications both in projects like signup and adminSignup in userController.js and cross projects like Helper.js
-- awful code next to `fs.existsSync(avatar)`, mixing paths and urls, logic with moving files between cdn and temp cd in controller, duplications
+- weak code next to `fs.existsSync(avatar)`, mixing paths and urls, logic with moving files between cdn and temp cd in controller, duplications
 - exotic ports instead of subdomains eg: `https://bookcars.com:81` instead of `https://backend.bookcars.com`
 - Errors that could be avoided using silent happy path design, eg.:
 
