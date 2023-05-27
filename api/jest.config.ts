@@ -26,14 +26,13 @@ process.env = {
     BC_JWT_EXPIRE_AT: '',
     BC_DEFAULT_LANGUAGE: '',
 
-    SPACES_ENDPOINT: '',
-    SPACES_REGION: '',
+    SPACES_ENDPOINT: 'https://fra1.digitaloceanspaces.com',
+    SPACES_REGION: 'fra1',
     SPACES_KEY: '',
     SPACES_SECRET: '',
     SPACES_BUCKET: '',
-    SPACES_FOLDER: '',
+    SPACES_FOLDER: 'bookcar',
 }
-
 
 export default {
     // All imported modules in your tests should be mocked automatically

@@ -4,12 +4,13 @@ import Car from '../models/Car'
 import Booking from '../models/Booking'
 import path from 'path'
 import escapeStringRegexp from 'escape-string-regexp'
-import mongoose from 'mongoose'
+import mongoose, {PipelineStage} from 'mongoose'
 
 import {Request, Response} from "express";
 import {uid} from "uid";
 import assert from "node:assert";
 import {put} from "../storage/s3";
+import dayjs from "dayjs";
 
 export const create = async (req: Request, res: Response) => {
     try {
@@ -400,6 +401,63 @@ export const getBookingCars = async (req: Request, res: Response) => {
     }
 }
 
+function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, PipelineStage.AddFields, PipelineStage.Match] {
+    return [{
+        $lookup: {
+            from: 'Booking',
+            localField: '_id',
+            foreignField: 'car',
+            as: 'bookings',
+            let: {id: "$_id", from, to},
+            pipeline: [
+                {
+                    $match:
+                        {
+                            $expr:
+                                {
+                                    $and:
+                                        [
+                                            {$eq: ["$car", "$$id"]},
+                                            {
+                                                $or: [
+                                                    {
+                                                        $and: [
+                                                            {$gte: ["$from", "$$from"]},
+                                                            {$lt: ["$from", "$$to"]}
+                                                        ]
+                                                    },
+                                                    {
+                                                        $and: [
+                                                            {$gte: ["$to", "$$from"]},
+                                                            {$lt: ["$to", "$$to"]}
+                                                        ]
+                                                    },
+                                                    // {
+                                                    //     $and: [
+                                                    //         {$gte: ["$to", "$$from"]},
+                                                    //         {$lt: ["$to", "$$to"]}
+                                                    //     ]
+                                                    // }
+                                                ]
+                                            },
+                                            {status: ["deposit", "paid", "reserved"]}
+                                        ]
+                                }
+                        }
+                },
+            ]
+        }
+    }, {
+        $addFields: {
+            bookingsLength: {$size: "$bookings"}
+        }
+    }, {
+        $match: {
+            bookingsLength: 0
+        }
+    }]
+}
+
 export const getFrontendCars = async (req: Request, res: Response) => {
     try {
         const page = parseInt(req.params.page)
@@ -410,36 +468,42 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         const gearbox = req.body.gearbox
         const mileage = req.body.mileage
         const deposit = req.body.deposit
+        const from: Date = dayjs(req.body.deposit).toDate()
+        const to: Date = dayjs(req.body.deposit).toDate()
 
-        const $match = {
-            $and: [
-                {company: {$in: companies}},
-                {locations: pickupLocation},
-                {available: true},
-                {type: {$in: fuel}},
-                {gearbox: {$in: gearbox}}
-            ]
+
+        const match: PipelineStage.Match = {
+            $match: {
+                $and: [
+                    {company: {$in: companies}},
+                    {locations: pickupLocation},
+                    {available: true},
+                    {type: {$in: fuel}},
+                    {gearbox: {$in: gearbox}}
+                ]
+            }
         }
+
+        assert(Array.isArray(match.$match.$and));
 
         if (mileage) {
             if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
-                //@ts-ignore
-                $match.$and.push({mileage: {$gt: -1}})
+                match.$match.$and.push({mileage: {$gt: -1}})
             } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
-                //@ts-ignore
-                $match.$and.push({mileage: -1})
+                match.$match.$and.push({mileage: -1})
             } else if (mileage.length === 0) {
                 return res.json([{resultData: [], pageInfo: []}])
             }
         }
 
         if (deposit > -1) {
-            //@ts-ignore
-            $match.$and.push({deposit: {$lte: deposit}})
+            match.$match.$and.push({deposit: {$lte: deposit}})
         }
 
+
+
         const cars = await Car.aggregate([
-            {$match},
+            match,
             {
                 $lookup: {
                     from: 'User',
@@ -454,6 +518,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                     as: 'company'
                 }
             },
+            ...filterBookedAlready(from, to),
             {$unwind: {path: '$company', preserveNullAndEmptyArrays: false}},
             {
                 $lookup: {

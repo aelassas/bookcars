@@ -70,10 +70,10 @@ const CarList = (props) => {
         }
     }, [props.containerClassName, fetch, loading, page, offset])
 
-    const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
+    const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to) => {
         try {
             setLoading(true)
-            const payload = {companies, pickupLocation, fuel, gearbox, mileage, deposit}
+            const payload = {companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to}
 
             const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
             assert(Array.isArray(data), 'Cars list is not array');
@@ -103,7 +103,7 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to)
             } else {
                 setRows([])
                 setFetch(false)
