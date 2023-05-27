@@ -83,7 +83,7 @@ const Booking = () => {
                     }
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error()
                 })
         } else if (!newCar) {
             setPrice(0)
@@ -182,7 +182,7 @@ const Booking = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

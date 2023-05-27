@@ -19,7 +19,7 @@ const NotificationsScreen = ({ navigation, route }) => {
     const [visible, setVisible] = useState(false)
     const [user, setUser] = useState(null)
     const [notificationCount, setNotificationCount] = useState(0)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [rows, setRows] = useState([])
     const [totalRecords, setTotalRecords] = useState(-1)

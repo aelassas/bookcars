@@ -864,7 +864,7 @@ const CreateBookingScreen = ({ navigation, route }) => {
 
                                     <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                                     <View style={styles.company}>
-                                        <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
+                                        <Image style={styles.companyImg} source={{ uri: car.company.avatar }} />
                                         <Text style={styles.companyText}>{car.company.fullName}</Text>
                                     </View>
 

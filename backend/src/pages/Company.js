@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as clStrings } from '../lang/company-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings as clStrings} from '../lang/company-list'
 import * as CompanyService from '../services/CompanyService'
 import * as Helper from '../common/Helper'
 import Master from '../components/Master'
@@ -34,7 +34,7 @@ const Company = () => {
     const [companies, setCompanies] = useState([])
     const [error, setError] = useState(false)
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [noMatch, setNoMatch] = useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const [rowCount, setRowCount] = useState(-1)
@@ -67,22 +67,23 @@ const Company = () => {
         setOpenDeleteDialog(true)
     }
 
-    const handleConfirmDelete = () => {
-        setLoading(true)
-        setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            setLoading(true)
+            setOpenDeleteDialog(false)
 
-        CompanyService.deleteCompany(company._id)
-            .then(status => {
-                if (status === 200) {
-                    window.location.href = '/suppliers'
-                } else {
-                    Helper.error()
-                    setLoading(false)
-                }
-            }).catch((err) => {
-                Helper.error(err)
-                setLoading(false)
-            })
+            const status =await CompanyService.deleteCompany(company._id)
+            if (status === 200) {
+                window.location.href = '/suppliers'
+            } else {
+                Helper.error()
+            }
+
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleCancelDelete = () => {
@@ -97,39 +98,35 @@ const Company = () => {
         setRowCount(rowCount)
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         setUser(user)
 
-        if (user && user.verified) {
-            const params = new URLSearchParams(window.location.search)
-            if (params.has('c')) {
-                const id = params.get('c')
-                if (id && id !== '') {
-                    CompanyService.getCompany(id)
-                        .then(company => {
-                            if (company) {
-                                setCompany(company)
-                                setCompanies([company._id])
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch(() => {
-                            setLoading(false)
-                            setError(true)
-                            setVisible(false)
-                        })
+        try {
+            if (user && user.verified) {
+                const params = new URLSearchParams(window.location.search)
+                if (params.has('c')) {
+                    const id = params.get('c')
+                    if (id && id !== '') {
+                        const company = await CompanyService.getCompany(id)
+                        if (company) {
+                            setCompany(company)
+                            setCompanies([company._id])
+                            setVisible(true)
+                        } else {
+                            setNoMatch(true)
+                        }
+                    } else {
+                        setNoMatch(true)
+                    }
                 } else {
-                    setLoading(false)
                     setNoMatch(true)
                 }
-            } else {
-                setLoading(false)
-                setNoMatch(true)
             }
+        } catch {
+            setError(true)
+            setVisible(false)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -142,22 +139,22 @@ const Company = () => {
                     <div className='col-1'>
                         <section className='company-avatar-sec'>
                             {edit ? (<Avatar
-                                record={company}
-                                type={Env.RECORD_TYPE.COMPANY}
-                                mode='update'
-                                size='large'
-                                hideDelete
-                                onBeforeUpload={onBeforeUpload}
-                                onChange={onAvatarChange}
-                                readonly={!edit}
-                                color='disabled'
-                                className='company-avatar' />)
+                                    record={company}
+                                    type={Env.RECORD_TYPE.COMPANY}
+                                    mode='update'
+                                    size='large'
+                                    hideDelete
+                                    onBeforeUpload={onBeforeUpload}
+                                    onChange={onAvatarChange}
+                                    readonly={!edit}
+                                    color='disabled'
+                                    className='company-avatar'/>)
                                 :
                                 <div className='car-company'>
                                     <span className='car-company-logo'>
-                                        <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                            alt={company.fullName}
-                                            style={{ width: Env.COMPANY_IMAGE_WIDTH }}
+                                        <img src={company.avatar}
+                                             alt={company.fullName}
+                                             style={{width: Env.COMPANY_IMAGE_WIDTH}}
                                         />
                                     </span>
                                     <span className='car-company-info'>
@@ -167,28 +164,32 @@ const Company = () => {
                             }
                         </section>
                         {edit && <Typography variant="h4" className="company-name">{company.fullName}</Typography>}
-                        {company.bio && company.bio !== '' && <Typography variant="h6" className="company-info">{company.bio}</Typography>}
-                        {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}
-                        {company.phone && company.phone !== '' && <Typography variant="h6" className="company-info">{company.phone}</Typography>}
+                        {company.bio && company.bio !== '' &&
+                            <Typography variant="h6" className="company-info">{company.bio}</Typography>}
+                        {company.location && company.location !== '' &&
+                            <Typography variant="h6" className="company-info">{company.location}</Typography>}
+                        {company.phone && company.phone !== '' &&
+                            <Typography variant="h6" className="company-info">{company.phone}</Typography>}
                         <div className="company-actions">
 
                             {edit &&
                                 <Tooltip title={commonStrings.UPDATE}>
-                                    <IconButton href={`/update-company?c=${company._id}`}>
-                                        <EditIcon />
+                                    <IconButton href={`/update-supplier?c=${company._id}`}>
+                                        <EditIcon/>
                                     </IconButton>
                                 </Tooltip>
                             }
                             {edit &&
                                 <Tooltip title={commonStrings.DELETE}>
                                     <IconButton data-id={company._id} onClick={handleDelete}>
-                                        <DeleteIcon />
+                                        <DeleteIcon/>
                                     </IconButton>
                                 </Tooltip>
                             }
                         </div>
                         {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`} className='car-count' />
+                            <InfoBox value={`${rowCount} ${rowCount > 1 ? commonStrings.CARS : commonStrings.CAR}`}
+                                     className='car-count'/>
                         }
                     </div>
                     <div className='col-2'>
@@ -214,13 +215,15 @@ const Company = () => {
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                 <DialogContent>{clStrings.DELETE_COMPANY}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-            {loading && <Backdrop text={commonStrings.LOADING} />}
-            {error && <Error />}
-            {noMatch && <NoMatch hideHeader />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
+            {error && <Error/>}
+            {noMatch && <NoMatch hideHeader/>}
         </Master>
     )
 }

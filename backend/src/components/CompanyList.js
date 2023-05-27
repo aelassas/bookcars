@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/company-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/company-list'
 import * as CompanyService from '../services/CompanyService'
 import * as Helper from '../common/Helper'
 import Backdrop from './SimpleBackdrop'
@@ -30,7 +30,7 @@ const CompanyList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(false)
     const [offset, setOffset] = useState(0)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
@@ -43,29 +43,31 @@ const CompanyList = (props) => {
         setOffset(props.offset)
     }, [props.offset])
 
-    const _fetch = (page, keyword) => {
-        setLoading(true)
+    const _fetch = async (page, keyword) => {
+        try {
+            setLoading(true)
 
-        CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {}
-                if (_data.length === 0) _data.resultData = []
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+            const data = await CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
+            const _data = data.length > 0 ? data[0] : {}
+            if (_data.length === 0) _data.resultData = []
+            const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-                setRows(_rows)
-                setRowCount(totalRecords)
-                setFetch(_data.resultData.length > 0)
+            setRows(_rows)
+            setRowCount(totalRecords)
+            setFetch(_data.resultData.length > 0)
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
+            if (props.onLoad) {
+                props.onLoad({rows: _data.resultData, rowCount: totalRecords})
+            }
 
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+        } catch (err) {
+            Helper.error(err)
+
+        } finally {
+            setLoading(false)
+
+        }
     }
 
     useEffect(() => {
@@ -115,40 +117,42 @@ const CompanyList = (props) => {
         setCompanyIndex(companyIndex)
     }
 
-    const handleConfirmDelete = () => {
-        if (companyId !== '' && companyIndex > -1) {
-            setLoading(false)
-            setOpenDeleteDialog(false)
-            CompanyService.deleteCompany(companyId)
-                .then(status => {
-                    if (status === 200) {
-                        const _rowCount = rowCount - 1
-                        rows.splice(companyIndex, 1)
+    const handleConfirmDelete = async () => {
+        try {
+            if (companyId !== '' && companyIndex > -1) {
+                setLoading(false)
+                setOpenDeleteDialog(false)
+                const status = await CompanyService.deleteCompany(companyId)
+                if (status === 200) {
+                    const _rowCount = rowCount - 1
+                    rows.splice(companyIndex, 1)
 
-                        setRows(rows)
-                        setRowCount(_rowCount)
-                        setCompanyId('')
-                        setCompanyIndex(-1)
-                        setLoading(false)
+                    setRows(rows)
+                    setRowCount(_rowCount)
+                    setCompanyId('')
+                    setCompanyIndex(-1)
+                    setLoading(false)
 
-                        if (props.onDelete) {
-                            props.onDelete(_rowCount)
-                        }
-
-                    } else {
-                        Helper.error()
-                        setCompanyId('')
-                        setCompanyIndex(-1)
-                        setLoading(false)
+                    if (props.onDelete) {
+                        props.onDelete(_rowCount)
                     }
-                }).catch(() => {
-                    UserService.signout()
-                })
-        } else {
-            Helper.error()
-            setOpenDeleteDialog(false)
-            setCompanyId('')
-            setCompanyIndex(-1)
+
+                } else {
+                    Helper.error()
+                    setCompanyId('')
+                    setCompanyIndex(-1)
+                    setLoading(false)
+                }
+
+            } else {
+                Helper.error()
+                setOpenDeleteDialog(false)
+                setCompanyId('')
+                setCompanyIndex(-1)
+            }
+        } catch(err) {
+            Helper.error(err)
+        } finally {
             setLoading(false)
         }
     }
@@ -172,45 +176,45 @@ const CompanyList = (props) => {
                 </Card>
                 :
                 rows.map((company, index) => {
-                    const edit = admin || (props.user && props.user._id === company._id)
-                    const canDelete = admin
+                        const edit = admin || (props.user && props.user._id === company._id)
+                        const canDelete = admin
 
-                    return (
-                        <article key={company._id}>
-                            <div className='company-item'>
-                                <div className='company-item-avatar'>
-                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                        alt={company.fullName}
-                                        style={{
-                                            width: Env.COMPANY_IMAGE_WIDTH,
-                                        }} />
+                        return (
+                            <article key={company._id}>
+                                <div className='company-item'>
+                                    <div className='company-item-avatar'>
+                                        <img src={company.avatar}
+                                             alt={company.fullName}
+                                             style={{
+                                                 width: Env.COMPANY_IMAGE_WIDTH,
+                                             }}/>
+                                    </div>
+                                    <span className='company-item-title'>{company.fullName}</span>
                                 </div>
-                                <span className='company-item-title'>{company.fullName}</span>
-                            </div>
-                            <div className='company-actions'>
-                                {canDelete &&
-                                    <Tooltip title={commonStrings.DELETE}>
-                                        <IconButton data-id={company._id} data-index={index} onClick={handleDelete}>
-                                            <DeleteIcon />
+                                <div className='company-actions'>
+                                    {canDelete &&
+                                        <Tooltip title={commonStrings.DELETE}>
+                                            <IconButton data-id={company._id} data-index={index} onClick={handleDelete}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                    {edit &&
+                                        <Tooltip title={commonStrings.UPDATE}>
+                                            <IconButton href={`/update-supplier?c=${company._id}`}>
+                                                <EditIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                    <Tooltip title={strings.VIEW_COMPANY}>
+                                        <IconButton href={`/supplier?c=${company._id}`}>
+                                            <ViewIcon/>
                                         </IconButton>
                                     </Tooltip>
-                                }
-                                {edit &&
-                                    <Tooltip title={commonStrings.UPDATE}>
-                                        <IconButton href={`/update-supplier?c=${company._id}`}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                <Tooltip title={strings.VIEW_COMPANY}>
-                                    <IconButton href={`/supplier?c=${company._id}`}>
-                                        <ViewIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                        </article>
-                    )
-                }
+                                </div>
+                            </article>
+                        )
+                    }
                 )
             }
             <Dialog
@@ -221,12 +225,14 @@ const CompanyList = (props) => {
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                 <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
 
-            {loading && <Backdrop text={commonStrings.LOADING} />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
         </section>
     )
 }

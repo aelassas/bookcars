@@ -22,6 +22,7 @@ import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 
 import '../assets/css/create-company.css'
+import * as Helper from "../common/Helper";
 
 const CreateCompany = () => {
     const [fullName, setFullName] = useState('')
@@ -62,7 +63,7 @@ const CreateCompany = () => {
                 }
             }
             catch (err) {
-                UserService.signout()
+                Helper.error()
             }
         } else {
             setFullNameError(false)
@@ -100,7 +101,7 @@ const CreateCompany = () => {
                     }
                 }
                 catch (err) {
-                    UserService.signout()
+                    Helper.error(err)
                 }
             } else {
                 setEmailError(false)
@@ -232,8 +233,8 @@ const CreateCompany = () => {
                     setError(true)
                     setLoading(false)
                 }
-            }).catch(() => {
-                UserService.signout()
+            }).catch((err) => {
+                Helper.error(err)
             })
     }
 

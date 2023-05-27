@@ -17,7 +17,7 @@ const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar
             if (currentUser) {
                 const user = await UserService.getUser(currentUser.id)
                 if (user.avatar) {
-                    setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar))
+                    setAvatar(user.avatar)
                 } else {
                     setAvatar(null)
                 }

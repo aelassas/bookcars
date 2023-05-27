@@ -8,7 +8,7 @@ import Header from '../components/Header'
 import * as NotificationService from '../services/NotificationService'
 
 const Master = (props) => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [user, setUser] = useState(null)
     const [loggedIn, setLoggedIn] = useState(false)
     const [notificationCount, setNotificationCount] = useState(0)
@@ -105,7 +105,6 @@ const Master = (props) => {
                 }
             }).catch(async (err) => {
                 Helper.error(err)
-                await UserService.signout()
             })
     }
 

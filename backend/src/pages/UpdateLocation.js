@@ -93,7 +93,7 @@ const UpdateLocation = () => {
             }
         }
         catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 

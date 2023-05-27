@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as ulStrings } from '../lang/user-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings as ulStrings} from '../lang/user-list'
 import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import Master from '../components/Master'
@@ -33,7 +33,7 @@ const User = () => {
     const [loggedUser, setLoggedUser] = useState()
     const [user, setUser] = useState()
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [noMatch, setNoMatch] = useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const [companies, setCompanies] = useState([])
@@ -78,55 +78,49 @@ const User = () => {
         setOpenDeleteDialog(false)
     }
 
-    const onLoad = (loggedUser) => {
-        if (loggedUser && loggedUser.verified) {
-            setLoading(true)
+    const onLoad = async (loggedUser) => {
+        try {
+            if (loggedUser && loggedUser.verified) {
+                setLoading(true)
 
-            const params = new URLSearchParams(window.location.search)
-            if (params.has('u')) {
-                const id = params.get('u')
-                if (id && id !== '') {
-                    UserService.getUser(id)
-                        .then(user => {
-                            if (user) {
+                const params = new URLSearchParams(window.location.search)
+                if (params.has('u')) {
+                    const id = params.get('u')
+                    if (id && id !== '') {
+                        const user = UserService.getUser(id)
+                        if (user) {
 
-                                const setState = (companies) => {
-                                    setCompanies(companies)
-                                    setLoggedUser(loggedUser)
-                                    setUser(user)
-                                    setVisible(true)
-                                    setLoading(false)
-                                }
-
-                                const admin = Helper.admin(loggedUser)
-                                if (admin) {
-                                    CompanyService.getAllCompanies()
-                                        .then(companies => {
-                                            const companyIds = Helper.flattenCompanies(companies)
-                                            setState(companyIds)
-                                        })
-                                        .catch((err) => Helper.error(err))
-                                } else {
-                                    setState([loggedUser._id])
-                                }
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
+                            const setState = (companies) => {
+                                setCompanies(companies)
+                                setLoggedUser(loggedUser)
+                                setUser(user)
+                                setVisible(true)
                             }
-                        })
-                        .catch((err) => {
-                            setLoading(false)
-                            setVisible(false)
-                            Helper.error(err)
-                        })
+
+                            const admin = Helper.admin(loggedUser)
+                            if (admin) {
+                                const companies = await CompanyService.getAllCompanies()
+                                const companyIds = Helper.flattenCompanies(companies)
+                                setState(companyIds)
+                            } else {
+                                setState([loggedUser._id])
+                            }
+                        } else {
+                            setNoMatch(true)
+                        }
+
+                    } else {
+                        setNoMatch(true)
+                    }
                 } else {
-                    setLoading(false)
                     setNoMatch(true)
                 }
-            } else {
-                setLoading(false)
-                setNoMatch(true)
             }
+        } catch (err) {
+            setVisible(false)
+            Helper.error(err)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -164,14 +158,14 @@ const User = () => {
                             {edit &&
                                 <Tooltip title={commonStrings.UPDATE}>
                                     <IconButton href={`/update-user?u=${user._id}`}>
-                                        <EditIcon />
+                                        <EditIcon/>
                                     </IconButton>
                                 </Tooltip>
                             }
                             {edit &&
                                 <Tooltip title={commonStrings.DELETE}>
                                     <IconButton data-id={user._id} onClick={handleDelete}>
-                                        <DeleteIcon />
+                                        <DeleteIcon/>
                                     </IconButton>
                                 </Tooltip>
                             }
@@ -200,12 +194,14 @@ const User = () => {
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                 <DialogContent>{ulStrings.DELETE_USER}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-            {loading && <Backdrop text={commonStrings.LOADING} />}
-            {noMatch && <NoMatch hideHeader />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
+            {noMatch && <NoMatch hideHeader/>}
         </Master>
     )
 }

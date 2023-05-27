@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/settings'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/settings'
 import * as UserService from '../services/UserService'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
@@ -28,7 +28,7 @@ const Settings = () => {
     const [location, setLocation] = useState('')
     const [bio, setBio] = useState('')
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [phoneValid, setPhoneValid] = useState(true)
     const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
@@ -65,21 +65,20 @@ const Settings = () => {
         setBio(e.target.value)
     }
 
-    const handleEmailNotificationsChange = (e) => {
-        setEnableEmailNotifications(e.target.checked)
+    const handleEmailNotificationsChange = async (e) => {
+        try {
+            setEnableEmailNotifications(e.target.checked)
 
-        user.enableEmailNotifications = e.target.checked
+            user.enableEmailNotifications = e.target.checked
 
-        UserService.updateEmailNotifications(user)
-            .then(status => {
-                if (status === 200) {
-                    setUser(user)
-                    Helper.info(strings.SETTINGS_UPDATED)
-                }
-            })
-            .catch(err => {
-                UserService.signout()
-            })
+            const status = await UserService.updateEmailNotifications(user)
+            if (status === 200) {
+                setUser(user)
+                Helper.info(strings.SETTINGS_UPDATED)
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const onBeforeUpload = () => {
@@ -121,8 +120,8 @@ const Settings = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 
@@ -154,7 +153,7 @@ const Settings = () => {
                                 onChange={onAvatarChange}
                                 hideDelete={!admin}
                                 color='disabled'
-                                className='avatar-ctn' />
+                                className='avatar-ctn'/>
                             <FormControl fullWidth margin="dense">
                                 <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
                                 <Input
@@ -242,13 +241,14 @@ const Settings = () => {
                         <h1 className="settings-form-title"> {strings.NETWORK_SETTINGS} </h1>
                         <FormControl component="fieldset">
                             <FormControlLabel
-                                control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />}
+                                control={<Switch checked={enableEmailNotifications}
+                                                 onChange={handleEmailNotificationsChange}/>}
                                 label={strings.SETTINGS_EMAIL_NOTIFICATIONS}
                             />
                         </FormControl>
                     </Paper>
                 </div>}
-            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT}/>}
         </Master>
     )
 }

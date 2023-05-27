@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/booking-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings as csStrings} from '../lang/cars'
+import {strings} from '../lang/booking-list'
 import * as Helper from '../common/Helper'
 import * as BookingService from '../services/BookingService'
 import StatusList from './StatusList'
@@ -31,10 +31,11 @@ import {
     Check as CheckIcon,
 } from '@mui/icons-material'
 import * as UserService from '../services/UserService'
-import { format } from 'date-fns'
-import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
+import {format} from 'date-fns'
+import {fr as dfnsFR, enUS as dfnsENUS} from "date-fns/locale"
 
 import '../assets/css/booking-list.css'
+import assert from "browser-assert";
 
 const BookingList = (props) => {
     const [loggedUser, setLoggedUser] = useState()
@@ -44,7 +45,7 @@ const BookingList = (props) => {
     const [columns, setColumns] = useState([])
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [selectedId, setSelectedId] = useState()
     const [selectedIds, setSelectedIds] = useState([])
@@ -59,45 +60,48 @@ const BookingList = (props) => {
     const [openDeleteDialog, setopenDeleteDialog] = useState(false)
     const [offset, setOffset] = useState(0)
 
-    const _fetch = (page, user) => {
-        const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+    const _fetch = async (page, user) => {
+        try {
+            const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-        if (companies.length > 0) {
-            setLoading(true)
-
-            BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
-                .then(data => {
-                    const _data = data.length > 0 ? data[0] : {}
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                    if (Env.isMobile()) {
-                        const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
-                        setRows(_rows)
-                        setRowCount(totalRecords)
-                        setFetch(_data.resultData.length > 0)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
-                    } else {
-                        setRows(_data.resultData)
-                        setRowCount(totalRecords)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
+            if (companies.length > 0) {
+                const data = await BookingService.getBookings({
+                    companies,
+                    statuses,
+                    filter,
+                    car,
+                    user: ((user && user._id) || undefined)
+                }, page, _pageSize)
+                const _data = data.length > 0 ? data[0] : {}
+                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                if (Env.isMobile()) {
+                    const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+                    setRows(_rows)
+                    setRowCount(totalRecords)
+                    setFetch(_data.resultData.length > 0)
+                    if (props.onLoad) {
+                        props.onLoad({rows: _data.resultData, rowCount: totalRecords})
                     }
-                })
-                .catch((err) => {
-                    UserService.signout()
-                })
-        } else {
-            setRows([])
-            setRowCount(0)
-            if (props.onLoad) {
-                props.onLoad({ rows: [], rowCount: 0 })
+                } else {
+                    setRows(_data.resultData)
+                    setRowCount(totalRecords)
+                    if (props.onLoad) {
+                        props.onLoad({rows: _data.resultData, rowCount: totalRecords})
+                    }
+                }
+            } else {
+                setRows([])
+                setRowCount(0)
+                if (props.onLoad) {
+                    props.onLoad({rows: [], rowCount: 0})
+                }
             }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
             setLoading(false)
         }
+
     }
 
     useEffect(() => {
@@ -235,13 +239,13 @@ const BookingList = (props) => {
                                 <IconButton
                                     href={`booking?b=${params.row._id}`}
                                 >
-                                    <EditIcon />
+                                    <EditIcon/>
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title={commonStrings.DELETE}>
                                 <IconButton
                                     onClick={handleDelete}>
-                                    <DeleteIcon />
+                                    <DeleteIcon/>
                                 </IconButton>
                             </Tooltip>
 
@@ -256,7 +260,7 @@ const BookingList = (props) => {
                                     <IconButton onClick={() => {
                                         setOpenUpdateDialog(true)
                                     }}>
-                                        <EditIcon />
+                                        <EditIcon/>
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title={strings.DELETE_SELECTION}>
@@ -265,7 +269,7 @@ const BookingList = (props) => {
                                             setopenDeleteDialog(true)
                                         }}
                                     >
-                                        <DeleteIcon />
+                                        <DeleteIcon/>
                                     </IconButton>
                                 </Tooltip>
                             </div>
@@ -295,9 +299,9 @@ const BookingList = (props) => {
                 flex: 1,
                 renderCell: (params) => (
                     <Link href={`/supplier?c=${params.value._id}`} className='cell-company'>
-                        <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                            alt={params.value.fullName}
-                            style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                        <img src={params.value.avatar}
+                             alt={params.value.fullName}
+                             style={{width: Env.COMPANY_IMAGE_WIDTH}}/>
                     </Link>
                 ),
             })
@@ -314,27 +318,23 @@ const BookingList = (props) => {
         setStatus(status)
     }
 
-    const handleConfirmUpdate = () => {
-        const data = { ids: selectedIds, status }
+    const handleConfirmUpdate = async () => {
+        try {
+            const data = {ids: selectedIds, status}
 
-        BookingService.updateStatus(data)
-            .then(s => {
-                if (s === 200) {
-                    rows.forEach(row => {
-                        if (selectedIds.includes(row._id)) {
-                            row.status = status
-                        }
-                    })
-                    setRows(rows)
-                } else {
-                    Helper.error()
+            const s = await BookingService.updateStatus(data)
+            assert(s === 200, "BookingService could not update status");
+            rows.forEach(row => {
+                if (selectedIds.includes(row._id)) {
+                    row.status = status
                 }
+            })
+            setRows(rows)
 
-                setOpenUpdateDialog(false)
-            })
-            .catch(() => {
-                UserService.signout()
-            })
+            setOpenUpdateDialog(false)
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const handleDelete = (e) => {
@@ -353,46 +353,37 @@ const BookingList = (props) => {
         setSelectedId('')
     }
 
-    const handleConfirmDelete = () => {
-        if (Env.isMobile()) {
-            const ids = [selectedId]
+    const handleConfirmDelete = async () => {
+        try {
+            if (Env.isMobile()) {
+                const ids = [selectedId]
 
-            BookingService.deleteBookings(ids)
-                .then(status => {
-                    if (status === 200) {
-                        rows.splice(selectedIndex, 1)
-                        setRows(rows)
-                        setSelectedId('')
-                        setSelectedIndex(-1)
-                    } else {
-                        Helper.error()
-                    }
+                const status = await BookingService.deleteBookings(ids)
+                assert(status === 200, "BookingService could not delete booking");
 
-                    setopenDeleteDialog(false)
-                })
-                .catch(() => {
-                    UserService.signout()
-                })
-        } else {
-            const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
+                rows.splice(selectedIndex, 1)
+                setRows(rows)
+                setSelectedId('')
+                setSelectedIndex(-1)
 
-            BookingService.deleteBookings(ids)
-                .then(status => {
-                    if (status === 200) {
-                        if (selectedIds.length > 0) {
-                            setRows(rows.filter((row) => !selectedIds.includes(row._id)))
-                        } else {
-                            setRows(rows.filter((row) => row._id !== selectedId))
-                        }
-                    } else {
-                        Helper.error()
-                    }
+            } else {
+                // todo: this line looks like a bug
+                const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
 
-                    setopenDeleteDialog(false)
-                })
-                .catch(() => {
-                    UserService.signout()
-                })
+                const status = await BookingService.deleteBookings(ids)
+                assert(status === 200, "BookingService could not delete booking");
+
+                if (selectedIds.length > 0) {
+                    setRows(rows.filter((row) => !selectedIds.includes(row._id)))
+                } else {
+                    setRows(rows.filter((row) => row._id !== selectedId))
+                }
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setopenDeleteDialog(false)
+
         }
     }
 
@@ -403,7 +394,7 @@ const BookingList = (props) => {
     const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
 
     return (
-        <div className='bs-list' >
+        <div className='bs-list'>
 
             {loggedUser && (
                 rows.length === 0 ?
@@ -426,108 +417,125 @@ const BookingList = (props) => {
                                         <div className={`bs bs-${booking.status}`}>
                                             <label>{Helper.getBookingStatus(booking.status)}</label>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
                                             <label className='booking-detail-title'>{strings.CAR}</label>
                                             <div className='booking-detail-value'>
                                                 <Link href={`car/?cr=${booking.car._id}`}>{booking.car.name}</Link>
                                             </div>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
                                             <label className='booking-detail-title'>{strings.DRIVER}</label>
                                             <div className='booking-detail-value'>
-                                                <Link href={`user/?u=${booking.driver._id}`}>{booking.driver.fullName}</Link>
+                                                <Link
+                                                    href={`user/?u=${booking.driver._id}`}>{booking.driver.fullName}</Link>
                                             </div>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
                                             <label className='booking-detail-title'>{strings.DAYS}</label>
                                             <div className='booking-detail-value'>
-                                                {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}
+                                                {`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, {locale: _locale}))} - ${Helper.capitalize(format(to, _format, {locale: _locale}))})`}
                                             </div>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                            <label className='booking-detail-title'>{commonStrings.PICKUP_LOCATION}</label>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
+                                            <label
+                                                className='booking-detail-title'>{commonStrings.PICKUP_LOCATION}</label>
                                             <div className='booking-detail-value'>{booking.pickupLocation.name}</div>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
-                                            <label className='booking-detail-title'>{commonStrings.DROP_OFF_LOCATION}</label>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
+                                            <label
+                                                className='booking-detail-title'>{commonStrings.DROP_OFF_LOCATION}</label>
                                             <div className='booking-detail-value'>{booking.dropOffLocation.name}</div>
                                         </div>
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
                                             <label className='booking-detail-title'>{commonStrings.SUPPLIER}</label>
                                             <div className='booking-detail-value'>
                                                 <div className='car-company'>
-                                                    <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
-                                                        alt={booking.company.fullName}
-                                                        style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
+                                                    <img src={booking.company.avatar}
+                                                         alt={booking.company.fullName}
+                                                         style={{height: Env.COMPANY_IMAGE_HEIGHT}}
                                                     />
-                                                    <label className='car-company-name'>{booking.company.fullName}</label>
+                                                    <label
+                                                        className='car-company-name'>{booking.company.fullName}</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {(booking.cancellation
-                                            || booking.amendments
-                                            || booking.collisionDamageWaiver
-                                            || booking.theftProtection
-                                            || booking.fullInsurance
-                                            || booking.additionalDriver) &&
+                                                || booking.amendments
+                                                || booking.collisionDamageWaiver
+                                                || booking.theftProtection
+                                                || booking.fullInsurance
+                                                || booking.additionalDriver) &&
                                             <>
                                                 <div className='extras'>
                                                     <label className='extras-title'>{commonStrings.OPTIONS}</label>
                                                     {booking.cancellation &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.CANCELLATION}</label>
-                                                            <label className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.CANCELLATION}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</label>
                                                         </div>
                                                     }
 
                                                     {booking.amendments &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.AMENDMENTS}</label>
-                                                            <label className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.AMENDMENTS}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</label>
                                                         </div>
                                                     }
 
                                                     {booking.collisionDamageWaiver &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.COLLISION_DAMAGE_WAVER}</label>
-                                                            <label className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.COLLISION_DAMAGE_WAVER}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</label>
                                                         </div>
                                                     }
 
                                                     {booking.theftProtection &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.THEFT_PROTECTION}</label>
-                                                            <label className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.THEFT_PROTECTION}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</label>
                                                         </div>
                                                     }
 
                                                     {booking.fullInsurance &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.FULL_INSURANCE}</label>
-                                                            <label className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.FULL_INSURANCE}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</label>
                                                         </div>
                                                     }
 
                                                     {booking.additionalDriver &&
                                                         <div className='extra'>
-                                                            <CheckIcon className='extra-icon' />
-                                                            <label className='extra-title'>{csStrings.ADDITIONAL_DRIVER}</label>
-                                                            <label className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</label>
+                                                            <CheckIcon className='extra-icon'/>
+                                                            <label
+                                                                className='extra-title'>{csStrings.ADDITIONAL_DRIVER}</label>
+                                                            <label
+                                                                className='extra-text'>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</label>
                                                         </div>
                                                     }
                                                 </div>
                                             </>
                                         }
 
-                                        <div className='booking-detail' style={{ height: bookingDetailHeight }}>
+                                        <div className='booking-detail' style={{height: bookingDetailHeight}}>
                                             <label className='booking-detail-title'>{strings.COST}</label>
-                                            <div className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
+                                            <div
+                                                className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
                                         </div>
 
                                         <div className='bs-buttons'>
@@ -599,8 +607,10 @@ const BookingList = (props) => {
                     />
                 </DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelUpdate} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmUpdate} variant='contained' className='btn-primary'>{commonStrings.UPDATE}</Button>
+                    <Button onClick={handleCancelUpdate} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmUpdate} variant='contained'
+                            className='btn-primary'>{commonStrings.UPDATE}</Button>
                 </DialogActions>
             </Dialog>
 
@@ -610,14 +620,17 @@ const BookingList = (props) => {
                 open={openDeleteDialog}
             >
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
+                <DialogContent
+                    className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
 
-            {loading && <Backdrop text={commonStrings.LOADING} />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
         </div>
     )
 }

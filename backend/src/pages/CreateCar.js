@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import Master from '../components/Master'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/create-car'
+import {strings as commonStrings} from '../lang/common'
+import {strings as csStrings} from '../lang/cars'
+import {strings} from '../lang/create-car'
 import * as CarService from '../services/CarService'
 import * as Helper from '../common/Helper'
 import Error from '../components/Error'
@@ -27,10 +27,11 @@ import {
     TextField,
     FormHelperText
 } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
+import {Info as InfoIcon} from '@mui/icons-material'
 import * as UserService from '../services/UserService'
 
 import '../assets/css/create-car.css'
+import assert from "browser-assert";
 
 const CreateCar = () => {
     const [isCompany, setIsCompany] = useState(false)
@@ -192,57 +193,53 @@ const CreateCar = () => {
         extra === '' ? -1 : extra
     )
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const minimumAgeValid = validateMinimumAge(minimumAge)
-        if (!minimumAgeValid) {
-            setFormError(true)
-            setImageError(false)
-            return
+            const minimumAgeValid = validateMinimumAge(minimumAge)
+            if (!minimumAgeValid) {
+                setFormError(true)
+                setImageError(false)
+                return
+            }
+
+            if (!image) {
+                setImageError(true)
+                setImageSizeError(false)
+                return
+            }
+
+            const data = {
+                name,
+                company,
+                minimumAge,
+                locations: locations.map(l => l._id),
+                price,
+                deposit,
+                available,
+                type,
+                gearbox,
+                aircon,
+                image,
+                seats,
+                doors,
+                fuelPolicy,
+                mileage: getExtra(mileage),
+                cancellation: getExtra(cancellation),
+                amendments: getExtra(amendments),
+                theftProtection: getExtra(theftProtection),
+                collisionDamageWaiver: getExtra(collisionDamageWaiver),
+                fullInsurance: getExtra(fullInsurance),
+                additionalDriver: getExtra(additionalDriver)
+            }
+
+            const car = await CarService.create(data);
+            assert(car && car._id, 'Car was not created')
+            window.location = '/cars'
+        } catch (err) {
+            Helper.error(err)
         }
-
-        if (!image) {
-            setImageError(true)
-            setImageSizeError(false)
-            return
-        }
-
-        const data = {
-            name,
-            company,
-            minimumAge,
-            locations: locations.map(l => l._id),
-            price,
-            deposit,
-            available,
-            type,
-            gearbox,
-            aircon,
-            image,
-            seats,
-            doors,
-            fuelPolicy,
-            mileage: getExtra(mileage),
-            cancellation: getExtra(cancellation),
-            amendments: getExtra(amendments),
-            theftProtection: getExtra(theftProtection),
-            collisionDamageWaiver: getExtra(collisionDamageWaiver),
-            fullInsurance: getExtra(fullInsurance),
-            additionalDriver: getExtra(additionalDriver)
-        }
-
-        CarService.create(data)
-            .then(car => {
-                if (car && car._id) {
-                    window.location = '/cars'
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch(() => {
-                UserService.signout()
-            })
     }
 
     const onLoad = (user) => {
@@ -259,7 +256,7 @@ const CreateCar = () => {
     return (
         <Master onLoad={onLoad} strict={true}>
             <div className='create-car'>
-                <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+                <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : {display: 'none'}}>
                     <h1 className="car-form-title"> {strings.NEW_CAR_HEADING} </h1>
                     <form onSubmit={handleSubmit}>
                         <Avatar
@@ -276,7 +273,7 @@ const CreateCar = () => {
                         />
 
                         <div className='info'>
-                            <InfoIcon />
+                            <InfoIcon/>
                             <label>
                                 {strings.RECOMMENDED_IMAGE_SIZE}
                             </label>
@@ -314,7 +311,7 @@ const CreateCar = () => {
                                 value={minimumAge}
                                 autoComplete="off"
                                 onChange={handleMinimumAgeChange}
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d{2}$'}}
                             />
                             <FormHelperText error={!minimumAgeValid}>
                                 {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
@@ -335,7 +332,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handlePriceChange}
                                 required
                                 variant='standard'
@@ -348,7 +345,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleDepositChange}
                                 required
                                 variant='standard'
@@ -361,8 +358,8 @@ const CreateCar = () => {
                             <FormControlLabel
                                 control={
                                     <Switch checked={available}
-                                        onChange={handleAvailableChange}
-                                        color="primary" />
+                                            onChange={handleAvailableChange}
+                                            color="primary"/>
                                 }
                                 label={strings.AVAILABLE}
                                 className='checkbox-fcl'
@@ -415,7 +412,7 @@ const CreateCar = () => {
                         </FormControl>
 
                         <div className='info'>
-                            <InfoIcon />
+                            <InfoIcon/>
                             <label>{commonStrings.OPTIONAL}</label>
                         </div>
 
@@ -423,8 +420,8 @@ const CreateCar = () => {
                             <FormControlLabel
                                 control={
                                     <Switch checked={aircon}
-                                        onChange={handleAirconChange}
-                                        color="primary" />
+                                            onChange={handleAirconChange}
+                                            color="primary"/>
                                 }
                                 label={strings.AIRCON}
                                 className='checkbox-fcl'
@@ -435,7 +432,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleMileageChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -447,7 +444,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleCancellationChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -459,7 +456,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleAmendmentsChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -471,7 +468,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleTheftProtectionChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -483,7 +480,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleCollisionDamageWaiverChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -495,7 +492,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleFullinsuranceChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -507,7 +504,7 @@ const CreateCar = () => {
                             <TextField
                                 label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
                                 // eslint-disable-next-line
-                                inputProps={{ inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$' }}
+                                inputProps={{inputMode: 'numeric', pattern: '^\\d+(\.\\d+)?$'}}
                                 onChange={handleAdditionalDriverChange}
                                 variant='standard'
                                 autoComplete='off'
@@ -535,15 +532,15 @@ const CreateCar = () => {
                         </div>
 
                         <div className="form-error">
-                            {imageError && <Error message={commonStrings.IMAGE_REQUIRED} />}
-                            {imageSizeError && <Error message={strings.CAR_IMAGE_SIZE_ERROR} />}
-                            {formError && <Error message={commonStrings.FORM_ERROR} />}
+                            {imageError && <Error message={commonStrings.IMAGE_REQUIRED}/>}
+                            {imageSizeError && <Error message={strings.CAR_IMAGE_SIZE_ERROR}/>}
+                            {formError && <Error message={commonStrings.FORM_ERROR}/>}
                         </div>
                     </form>
 
                 </Paper>
             </div>
-            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT}/>}
         </Master>
     )
 }

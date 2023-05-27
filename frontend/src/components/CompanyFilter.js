@@ -97,7 +97,7 @@ const CompanyFilter = (props) => {
                         <li key={company._id}>
                             <input ref={ref => refs.current[index] = ref} type='checkbox' data-id={company._id} className='company-checkbox' onChange={handleCheckCompanyChange} />
                             <label onClick={handleCompanyClick}>
-                                <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                <img src={company.avatar}
                                     alt={company.fullName}
                                     style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                 />

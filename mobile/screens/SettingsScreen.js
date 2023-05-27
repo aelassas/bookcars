@@ -59,7 +59,7 @@ const SettingsScreen = ({ navigation, route }) => {
 
             setUser(user)
             if (user.avatar) {
-                setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar))
+                setAvatar(user.avatar)
             } else {
                 setAvatar(null)
             }
@@ -267,10 +267,10 @@ const SettingsScreen = ({ navigation, route }) => {
                                                 const image = { uri, name, type }
                                                 const status = await UserService.updateAvatar(user._id, image)
 
-                                                if (status == 200) {
+                                                if (status === 200) {
                                                     const _user = await UserService.getUser(user._id)
                                                     setUser(_user)
-                                                    setAvatar(Helper.joinURL(Env.CDN_USERS, _user.avatar))
+                                                    setAvatar(_user.avatar)
                                                 } else {
                                                     Helper.error()
                                                 }

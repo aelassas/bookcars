@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/locations'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/locations'
 import * as LocationService from '../services/LocationService'
 import Backdrop from './SimpleBackdrop'
 import {
@@ -35,7 +35,7 @@ const LocationList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(false)
     const [offset, setOffset] = useState(0)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
@@ -49,29 +49,30 @@ const LocationList = (props) => {
         setOffset(props.offset)
     }, [props.offset])
 
-    const _fetch = (page, keyword) => {
+    const _fetch = async (page, keyword) => {
         setLoading(true)
 
-        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {}
-                if (_data.length === 0) _data.resultData = []
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        try {
+            const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
 
-                setRows(_rows)
-                setRowCount(totalRecords)
-                setFetch(_data.resultData.length > 0)
+            const _data = data.length > 0 ? data[0] : {}
+            if (_data.length === 0) _data.resultData = []
+            const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
+            setRows(_rows)
+            setRowCount(totalRecords)
+            setFetch(_data.resultData.length > 0)
 
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (props.onLoad) {
+                props.onLoad({rows: _data.resultData, rowCount: totalRecords})
+            }
+
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -127,8 +128,8 @@ const LocationList = (props) => {
                     Helper.error()
                 }
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 
@@ -136,41 +137,43 @@ const LocationList = (props) => {
         setOpenInfoDialog(false)
     }
 
-    const handleConfirmDelete = () => {
-        if (locationId !== '' && locationIndex > -1) {
-            setLoading(true)
-            setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            if (locationId !== '' && locationIndex > -1) {
+                setLoading(true)
+                setOpenDeleteDialog(false)
 
-            LocationService.deleteLocation(locationId)
-                .then(status => {
-                    if (status === 200) {
-                        const _rowCount = rowCount - 1
+                const status = await LocationService.deleteLocation(locationId)
+                if (status === 200) {
+                    const _rowCount = rowCount - 1
 
-                        rows.splice(locationIndex, 1)
+                    rows.splice(locationIndex, 1)
 
-                        setRows(rows)
-                        setRowCount(_rowCount)
-                        setLocationId('')
-                        setLocationIndex(-1)
-                        setLoading(false)
+                    setRows(rows)
+                    setRowCount(_rowCount)
+                    setLocationId('')
+                    setLocationIndex(-1)
 
-                        if (props.onDelete) {
-                            props.onDelete(_rowCount)
-                        }
-                    } else {
-                        Helper.error()
-                        setLocationId('')
-                        setLocationIndex(-1)
-                        setLoading(false)
+                    if (props.onDelete) {
+                        props.onDelete(_rowCount)
                     }
-                }).catch(() => {
-                    UserService.signout()
-                })
-        } else {
-            Helper.error()
-            setOpenDeleteDialog(false)
-            setLocationId('')
-            setLocationIndex(-1)
+                } else {
+                    Helper.error()
+                    setLocationId('')
+                    setLocationIndex(-1)
+                }
+            } else {
+                Helper.error()
+                setOpenDeleteDialog(false)
+                setLocationId('')
+                setLocationIndex(-1)
+            }
+        } catch(err) {
+            Helper.error(err)
+
+        } finally {
+            setLoading(false)
+
         }
     }
 
@@ -191,37 +194,38 @@ const LocationList = (props) => {
                 </Card>
                 : <List>
                     {rows.map((location, index) =>
-                    (
-                        <ListItem
-                            className='location-list-item'
-                            key={location._id}
-                            secondaryAction={
-                                <div>
-                                    <Tooltip title={commonStrings.UPDATE}>
-                                        <IconButton edge="end" href={`/update-location?l=${location._id}`}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={commonStrings.DELETE}>
-                                        <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </div>
-                            }
-                        >
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <LocationIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={
-                                    <Typography className='location-title'>{location.name}</Typography>
+                        (
+                            <ListItem
+                                className='location-list-item'
+                                key={location._id}
+                                secondaryAction={
+                                    <div>
+                                        <Tooltip title={commonStrings.UPDATE}>
+                                            <IconButton edge="end" href={`/update-location?l=${location._id}`}>
+                                                <EditIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={commonStrings.DELETE}>
+                                            <IconButton edge="end" data-id={location._id} data-index={index}
+                                                        onClick={handleDelete}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
                                 }
-                            />
-                        </ListItem>
-                    ))}
+                            >
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <LocationIcon/>
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={
+                                        <Typography className='location-title'>{location.name}</Typography>
+                                    }
+                                />
+                            </ListItem>
+                        ))}
                 </List>}
             <Dialog
                 disableEscapeKeyDown
@@ -231,7 +235,8 @@ const LocationList = (props) => {
                 <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
                 <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    <Button onClick={handleCloseInfo} variant='contained'
+                            className='btn-secondary'>{commonStrings.CLOSE}</Button>
                 </DialogActions>
             </Dialog>
 
@@ -243,12 +248,14 @@ const LocationList = (props) => {
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                 <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
 
-            {loading && <Backdrop text={commonStrings.LOADING} />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
         </section>
     )
 }

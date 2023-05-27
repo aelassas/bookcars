@@ -7,12 +7,8 @@ import Booking from '../models/Booking'
 import Car from '../models/Car'
 import escapeStringRegexp from 'escape-string-regexp'
 import path from 'path'
-import fs from 'fs'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express';
-
-const CDN = process.env.BC_CDN_USERS
-const CDN_CARS = process.env.BC_CDN_CARS
 
 export const validate = (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(req.body.fullName)
@@ -60,25 +56,12 @@ export const deleteCompany = async (req: Request, res: Response) => {
         const company = await User.findByIdAndDelete(id)
         if (company) {
             if (company.avatar) {
-                const avatar = path.join(CDN, company.avatar)
-                if (fs.existsSync(avatar)) {
-                    fs.unlinkSync(avatar)
-                }
                 await Notification.deleteMany({ user: id })
                 const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
-                //@ts-ignore
-                const additionalDrivers = _additionalDrivers.map(b => new new mongoose.Types.ObjectId(b._additionalDriver))
+                const additionalDrivers = _additionalDrivers.map(b => new mongoose.Types.ObjectId(b._additionalDriver))
                 await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
                 await Booking.deleteMany({ company: id })
-                const cars = await Car.find({ company: id })
                 await Car.deleteMany({ company: id })
-                cars.forEach(car => {
-                    //@ts-ignore
-                    const image = path.join(CDN_CARS, car.image)
-                    if (fs.existsSync(image)) {
-                        fs.unlinkSync(image)
-                    }
-                })
             }
         } else {
             return res.sendStatus(404)

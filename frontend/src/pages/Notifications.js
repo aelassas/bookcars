@@ -23,7 +23,7 @@ import '../assets/css/notifications.css'
 
 const Notifications = () => {
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [rows, setRows] = useState([])
     const [totalRecords, setTotalRecords] = useState(-1)
@@ -49,10 +49,10 @@ const Notifications = () => {
                 setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
                 setRows(_rows)
                 if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0)
+            } catch (err) {
+                Helper.error(err)
+            } finally {
                 setLoading(false)
-            }
-            catch (err) {
-                UserService.signout()
             }
         }
     }, [user, page])
@@ -141,7 +141,7 @@ const Notifications = () => {
                                                         }
                                                     }
                                                     catch (err) {
-                                                        UserService.signout()
+                                                        Helper.error(err)
                                                     }
                                                 }}>
                                                     <MarkReadIcon />
@@ -168,7 +168,7 @@ const Notifications = () => {
                                                         }
                                                     }
                                                     catch (err) {
-                                                        UserService.signout()
+                                                        Helper.error(err)
                                                     }
                                                 }}>
                                                     <MarkUnreadIcon />
@@ -231,7 +231,7 @@ const Notifications = () => {
                                                                     }
                                                                 }
                                                                 catch (err) {
-                                                                    UserService.signout()
+                                                                    Helper.error(err)
                                                                 }
                                                             }}>
                                                                 <ViewIcon />
@@ -254,7 +254,7 @@ const Notifications = () => {
                                                                         }
                                                                     }
                                                                     catch (err) {
-                                                                        UserService.signout()
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
                                                                     <MarkReadIcon />
@@ -275,7 +275,7 @@ const Notifications = () => {
                                                                         }
                                                                     }
                                                                     catch (err) {
-                                                                        UserService.signout()
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
                                                                     <MarkUnreadIcon />
@@ -373,7 +373,7 @@ const Notifications = () => {
                                         }
                                     }
                                     catch (err) {
-                                        UserService.signout()
+                                        Helper.error(err)
                                     }
                                 }} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                             </DialogActions>
@@ -381,6 +381,7 @@ const Notifications = () => {
                     </>
                 }
             </div>
+
             {loading && <Backdrop text={commonStrings.LOADING} />}
         </Master >
     )

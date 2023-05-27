@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-in'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/sign-in'
 import * as UserService from '../services/UserService'
 import Header from '../components/Header'
 import Error from '../components/Error'
@@ -15,6 +15,8 @@ import {
 } from '@mui/material'
 
 import '../assets/css/signin.css'
+import * as Helper from "../common/Helper";
+import assert from "browser-assert";
 
 const SignIn = () => {
 
@@ -42,7 +44,7 @@ const SignIn = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const data = { email, password, stayConnected }
+        const data = {email, password, stayConnected}
 
         UserService.signin(data)
             .then(res => {
@@ -73,9 +75,9 @@ const SignIn = () => {
                     setBlacklisted(false)
                 }
             }).catch(() => {
-                setError(true)
-                setBlacklisted(false)
-            })
+            setError(true)
+            setBlacklisted(false)
+        })
     }
 
     useEffect(() => {
@@ -91,20 +93,17 @@ const SignIn = () => {
         const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                if (status === 200) {
-                    UserService.getUser(currentUser.id).then(user => {
-                        if (user) {
-                            window.location.href = '/' + window.location.search
-                        } else {
-                            UserService.signout()
-                        }
-                    }).catch(err => {
-                        UserService.signout()
-                    })
+            UserService.validateAccessToken().then(async status => {
+                try {
+                    assert(status === 200, 'User token was invalid');
+                    const user = await UserService.getUser(currentUser.id);
+                    assert(user, 'user not found')
+                    window.location.href = '/' + window.location.search
+                } catch (err) {
+                    Helper.error(err);
                 }
-            }).catch(err => {
-                UserService.signout()
+            }).catch((err) => {
+                Helper.error(err)
             })
         } else {
             setVisible(true)
@@ -113,7 +112,7 @@ const SignIn = () => {
 
     return (
         <div>
-            <Header />
+            <Header/>
             {visible &&
                 <div className='signin'>
                     <Paper className='signin-form' elevation={10}>
@@ -146,7 +145,7 @@ const SignIn = () => {
                             <div className='stay-connected'>
                                 <input type='checkbox' onChange={(e) => {
                                     setStayConnected(e.currentTarget.checked)
-                                }} />
+                                }}/>
                                 <label onClick={(e) => {
                                     const checkbox = e.currentTarget.previousSibling
                                     const checked = !checkbox.checked
@@ -170,8 +169,8 @@ const SignIn = () => {
                                 </Button>
                             </div>
                             <div className="form-error">
-                                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
+                                {error && <Error message={strings.ERROR_IN_SIGN_IN}/>}
+                                {blacklisted && <Error message={strings.IS_BLACKLISTED}/>}
                             </div>
                         </form>
                     </Paper>

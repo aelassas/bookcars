@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
+import {strings as commonStrings} from '../lang/common'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
@@ -23,6 +23,7 @@ import {
     DirectionsCar as CarIcon,
     Check as VerifiedIcon
 } from '@mui/icons-material'
+import assert from "browser-assert";
 
 const Avatar = (props) => {
     const [error, setError] = useState(false)
@@ -61,7 +62,7 @@ const Avatar = (props) => {
         }
     }
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
 
         if (props.onBeforeUpload) {
             props.onBeforeUpload()
@@ -70,56 +71,46 @@ const Avatar = (props) => {
         const reader = new FileReader()
         const file = e.target.files[0]
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             if (props.type === Env.RECORD_TYPE.ADMIN
                 || props.type === Env.RECORD_TYPE.COMPANY
                 || props.type === Env.RECORD_TYPE.USER) {
                 if (props.mode === 'create') {
-                    const createAvatar = () => {
-                        UserService.createAvatar(file)
-                            .then(data => {
-                                setAvatar(data)
+                    const createAvatar = async () => {
+                        try {
+                            const data = await UserService.createAvatar(file)
+                            setAvatar(data)
 
-                                if (props.onChange) {
-                                    props.onChange(data)
-                                }
-                            })
-                            .catch(err => {
-                                UserService.signout()
-                            })
+                            if (props.onChange) {
+                                props.onChange(data)
+                            }
+                        } catch (err) {
+                            console.log("err", err);
+                            Helper.error(err);
+                        }
                     }
 
                     validate(file, createAvatar)
                 } else if (record && props.mode === 'update') {
 
-                    const updateAvatar = () => {
-                        const { _id } = record
+                    const updateAvatar = async () => {
+                        const {_id} = record
 
-                        UserService.updateAvatar(_id, file)
-                            .then(status => {
-                                if (status === 200) {
-                                    UserService.getUser(_id)
-                                        .then(user => {
-                                            if (user) {
-                                                setRecord(user)
-                                                setAvatar(user.avatar)
+                        try {
+                            const status = await UserService.updateAvatar(_id, file)
+                            assert(status === 200, "Invalid response from upload service")
+                            const user = await UserService.getUser(_id);
+                            assert(user, `User with id ${_id} not fount by UserService`)
 
-                                                if (props.onChange) {
-                                                    props.onChange(user.avatar)
-                                                }
-                                            } else {
-                                                Helper.error()
-                                            }
-                                        }).catch(err => {
-                                            UserService.signout()
-                                        })
-                                } else {
-                                    Helper.error()
-                                }
-                            })
-                            .catch(err => {
-                                UserService.signout()
-                            })
+                            setRecord(user)
+                            setAvatar(user.avatar)
+
+                            if (props.onChange) {
+                                props.onChange(user.avatar)
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
                     validate(file, updateAvatar)
@@ -127,51 +118,41 @@ const Avatar = (props) => {
                 }
             } else if (props.type === Env.RECORD_TYPE.CAR) {
                 if (props.mode === 'create') {
-                    const createAvatar = () => {
-                        CarService.createImage(file)
-                            .then(data => {
-                                setAvatar(data)
+                    const createAvatar = async () => {
+                        try {
+                            const data = await CarService.createImage(file)
+                            setAvatar(data)
 
-                                if (props.onChange) {
-                                    props.onChange(data)
-                                }
-                            })
-                            .catch(err => {
-                                UserService.signout()
-                            })
+                            if (props.onChange) {
+                                props.onChange(data)
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+
+                        }
                     }
 
                     validate(file, createAvatar)
                 } else if (props.mode === 'update') {
 
-                    const updateAvatar = () => {
-                        const { _id } = record
+                    const updateAvatar = async () => {
+                        const {_id} = record
 
-                        CarService.updateImage(_id, file)
-                            .then(status => {
-                                if (status === 200) {
-                                    CarService.getCar(_id)
-                                        .then(car => {
-                                            if (car) {
-                                                setRecord(car)
-                                                setAvatar(car.image)
+                        try {
+                            const status = await CarService.updateImage(_id, file)
+                            assert(status === 200, "Invalid response from upload service");
+                            const car = await CarService.getCar(_id);
+                            assert(car, `Car with id ${_id} not found`);
 
-                                                if (props.onChange) {
-                                                    props.onChange(car)
-                                                }
-                                            } else {
-                                                Helper.error()
-                                            }
-                                        }).catch(err => {
-                                            UserService.signout()
-                                        })
-                                } else {
-                                    Helper.error()
-                                }
-                            })
-                            .catch(err => {
-                                UserService.signout()
-                            })
+                            setRecord(car)
+                            setAvatar(car.image)
+
+                            if (props.onChange) {
+                                props.onChange(car)
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
                     validate(file, updateAvatar)
@@ -213,40 +194,62 @@ const Avatar = (props) => {
         closeDialog()
     }
 
-    const handleDelete = (e) => {
-        if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
-            if (record && props.mode === 'update') {
-                const { _id } = record
-                UserService.deleteAvatar(_id)
-                    .then(status => {
-                        if (status === 200) {
-                            UserService.getUser(_id)
-                                .then(user => {
-                                    if (user) {
-                                        setRecord(user)
-                                        setAvatar(null)
+    const handleDelete = async (e) => {
+        try {
+            if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
+                if (record && props.mode === 'update') {
+                    const {_id} = record
+                    const status = await UserService.deleteAvatar(_id)
+                    if (status === 200) {
+                        const user = await UserService.getUser(_id)
+                        if (user) {
+                            setRecord(user)
+                            setAvatar(null)
 
-                                        if (props.onChange) {
-                                            props.onChange(null)
-                                        }
-                                        closeDialog()
-                                    } else {
-                                        Helper.error()
-                                    }
-                                }).catch(err => {
-                                    UserService.signout()
-                                })
+                            if (props.onChange) {
+                                props.onChange(null)
+                            }
+                            closeDialog()
                         } else {
                             Helper.error()
                         }
-                    })
-                    .catch(err => {
-                        UserService.signout()
-                    })
-            } else if (!record && props.mode === 'create') {
-                UserService.deleteTempAvatar(avatar)
-                    .then(status => {
-                        if (status === 200) {
+
+                    } else {
+                        Helper.error()
+                    }
+
+                } else if (!record && props.mode === 'create') {
+                    const status = await UserService.deleteTempAvatar(avatar)
+                    if (status === 200) {
+                        setAvatar(null)
+                        if (props.onChange) {
+                            props.onChange(null)
+                        }
+                        closeDialog()
+                    } else {
+                        Helper.error()
+                    }
+                }
+            } else if (props.type === Env.RECORD_TYPE.CAR) {
+                if (!record && props.mode === 'create') {
+                    const status = await CarService.deleteTempImage(avatar)
+                    if (status === 200) {
+                        setAvatar(null)
+                        if (props.onChange) {
+                            props.onChange(null)
+                        }
+                        closeDialog()
+                    } else {
+                        Helper.error()
+                    }
+
+                } else if (record && props.mode === 'update') {
+                    const {_id} = record
+                    const status = await CarService.deleteImage(_id)
+                    if (status === 200) {
+                        const car = await UserService.getUser(_id)
+                        if (car) {
+                            setRecord(car)
                             setAvatar(null)
                             if (props.onChange) {
                                 props.onChange(null)
@@ -255,64 +258,14 @@ const Avatar = (props) => {
                         } else {
                             Helper.error()
                         }
-                    })
-                    .catch(err => {
-                        Helper.error(err)
-                    })
+                    } else {
+                        Helper.error()
+                    }
+                }
             }
-        } else if (props.type === Env.RECORD_TYPE.CAR) {
-            if (!record && props.mode === 'create') {
-                CarService.deleteTempImage(avatar)
-                    .then(status => {
-                        if (status === 200) {
-                            setAvatar(null)
-                            if (props.onChange) {
-                                props.onChange(null)
-                            }
-                            closeDialog()
-                        } else {
-                            Helper.error()
-                        }
-                    })
-                    .catch(err => {
-                        Helper.error(err)
-                    })
-            } else if (record && props.mode === 'update') {
-                const { _id } = record
-                CarService.deleteImage(_id)
-                    .then(status => {
-                        if (status === 200) {
-                            UserService.getUser(_id)
-                                .then(car => {
-                                    if (car) {
-                                        setRecord(car)
-                                        setAvatar(null)
-                                        if (props.onChange) {
-                                            props.onChange(null)
-                                        }
-                                        closeDialog()
-                                    } else {
-                                        Helper.error()
-                                    }
-                                }).catch(err => {
-                                    UserService.signout()
-                                })
-                        } else {
-                            Helper.error()
-                        }
-                    })
-                    .catch(err => {
-                        UserService.signout()
-                    })
-            }
+        } catch (err) {
+            Helper.error(err)
         }
-    }
-
-    const cdn = () => {
-        if (props.type === Env.RECORD_TYPE.CAR) {
-            return props.mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS
-        }
-        return props.mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS
     }
 
     useEffect(() => {
@@ -338,23 +291,23 @@ const Avatar = (props) => {
         }
     }, [props.record, props.type, props.mode])
 
-    const { size, readonly, className } = props
+    const {size, readonly, className} = props
 
-    const companyImageStyle = { width: Env.COMPANY_IMAGE_WIDTH }
+    const companyImageStyle = {width: Env.COMPANY_IMAGE_WIDTH}
 
-    const carImageStyle = { width: Env.CAR_IMAGE_WIDTH }
+    const carImageStyle = {width: Env.CAR_IMAGE_WIDTH}
 
     const userAvatar = (
         avatar ?
             <MaterialAvatar
-                src={Helper.joinURL(cdn(), avatar)}
+                src={avatar}
                 className={size ? 'avatar-' + size : 'avatar'}
             />
             : <></>
     )
 
     const emptyAvatar = (
-        <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+        <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'}/>
     )
 
     return (
@@ -363,30 +316,33 @@ const Avatar = (props) => {
                 {avatar ?
                     readonly ?
                         props.type === Env.RECORD_TYPE.CAR ?
-                            <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                            <img style={carImageStyle} src={avatar} alt={record && record.name}/>
                             :
                             (props.type === Env.RECORD_TYPE.COMPANY ?
-                                <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
-                                :
-                                props.verified && record.verified ?
-                                    <Badge
-                                        overlap="circular"
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'right',
-                                        }}
-                                        badgeContent={
-                                            <Tooltip title={commonStrings.VERIFIED}>
-                                                <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
-                                                    <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
-                                                </Box>
-                                            </Tooltip>
-                                        }
-                                    >
-                                        {userAvatar}
-                                    </Badge>
+                                    <img style={companyImageStyle} src={avatar}
+                                         alt={record && record.fullName}/>
                                     :
-                                    userAvatar
+                                    props.verified && record.verified ?
+                                        <Badge
+                                            overlap="circular"
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'right',
+                                            }}
+                                            badgeContent={
+                                                <Tooltip title={commonStrings.VERIFIED}>
+                                                    <Box borderRadius="50%"
+                                                         className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                                                        <VerifiedIcon
+                                                            className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'}/>
+                                                    </Box>
+                                                </Tooltip>
+                                            }
+                                        >
+                                            {userAvatar}
+                                        </Badge>
+                                        :
+                                        userAvatar
                             )
                         : //!readonly
                         <Badge
@@ -399,7 +355,7 @@ const Avatar = (props) => {
                                 props.hideDelete ? <></>
                                     : <Tooltip title={commonStrings.DELETE_IMAGE}>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
-                                            <DeleteIcon className='avatar-action-icon' />
+                                            <DeleteIcon className='avatar-action-icon'/>
                                         </Box>
                                     </Tooltip>
                             }
@@ -414,21 +370,19 @@ const Avatar = (props) => {
                                 badgeContent={
                                     <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                            <PhotoCameraIcon className='avatar-action-icon' />
+                                            <PhotoCameraIcon className='avatar-action-icon'/>
                                         </Box>
                                     </Tooltip>
                                 }
                             >
                                 {
                                     props.type === Env.RECORD_TYPE.CAR ?
-                                        <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                                        <img style={carImageStyle} src={avatar}
+                                             alt={record && record.name}/>
                                         :
                                         (props.type === Env.RECORD_TYPE.COMPANY ?
-                                            <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
-                                            :
-                                            <MaterialAvatar
-                                                src={Helper.joinURL(cdn(), avatar)}
-                                                className={size ? 'avatar-' + size : 'avatar'} />
+                                                <img style={companyImageStyle} src={avatar} alt={record && record.fullName}/> :
+                                                <MaterialAvatar src={avatar} className={size ? 'avatar-' + size : 'avatar'}/>
                                         )
                                 }
                             </Badge>
@@ -436,32 +390,34 @@ const Avatar = (props) => {
                     : // !avatar
                     readonly ?
                         (props.type === Env.RECORD_TYPE.CAR ?
-                            <CarIcon style={carImageStyle} color={props.color || 'inherit'} />
-                            :
-                            (
-                                props.type === Env.RECORD_TYPE.COMPANY ?
-                                    <CompanyIcon style={companyImageStyle} color={props.color || 'inherit'} />
-                                    :
-                                    props.verified && record.verified ?
-                                        <Badge
-                                            overlap="circular"
-                                            anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'right',
-                                            }}
-                                            badgeContent={
-                                                <Tooltip title={commonStrings.VERIFIED}>
-                                                    <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
-                                                        <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
-                                                    </Box>
-                                                </Tooltip>
-                                            }
-                                        >
-                                            {emptyAvatar}
-                                        </Badge>
+                                <CarIcon style={carImageStyle} color={props.color || 'inherit'}/>
+                                :
+                                (
+                                    props.type === Env.RECORD_TYPE.COMPANY ?
+                                        <CompanyIcon style={companyImageStyle} color={props.color || 'inherit'}/>
                                         :
-                                        emptyAvatar
-                            )
+                                        props.verified && record.verified ?
+                                            <Badge
+                                                overlap="circular"
+                                                anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 'right',
+                                                }}
+                                                badgeContent={
+                                                    <Tooltip title={commonStrings.VERIFIED}>
+                                                        <Box borderRadius="50%"
+                                                             className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                                                            <VerifiedIcon
+                                                                className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'}/>
+                                                        </Box>
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                {emptyAvatar}
+                                            </Badge>
+                                            :
+                                            emptyAvatar
+                                )
                         )
                         ://!readonly
                         <Badge
@@ -480,19 +436,22 @@ const Avatar = (props) => {
                                 badgeContent={
                                     <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                            <PhotoCameraIcon className='avatar-action-icon' />
+                                            <PhotoCameraIcon className='avatar-action-icon'/>
                                         </Box>
                                     </Tooltip>
                                 }
                             >
                                 {
                                     props.type === Env.RECORD_TYPE.CAR ?
-                                        <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                        <CarIcon className={size ? 'avatar-' + size : 'avatar'}
+                                                 color={props.color || 'inherit'}/>
                                         :
                                         (
                                             props.type === Env.RECORD_TYPE.COMPANY ?
-                                                <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
-                                                : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+                                                <CompanyIcon className={size ? 'avatar-' + size : 'avatar'}
+                                                             color={props.color || 'inherit'}/>
+                                                : <AccountCircle className={size ? 'avatar-' + size : 'avatar'}
+                                                                 color={props.color || 'inherit'}/>
                                         )
                                 }
                             </Badge>
@@ -506,7 +465,8 @@ const Avatar = (props) => {
                     <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
                     <DialogContent>{commonStrings.USER_TYPE_REQUIRED}</DialogContent>
                     <DialogActions className='dialog-actions'>
-                        <Button onClick={handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                        <Button onClick={handleCloseDialog} variant='contained'
+                                className='btn-secondary'>{commonStrings.CLOSE}</Button>
                     </DialogActions>
                 </Dialog>
                 <Dialog
@@ -521,7 +481,7 @@ const Avatar = (props) => {
                         <Button onClick={handleDelete} color="error" variant='contained'>{commonStrings.DELETE}</Button>
                     </DialogActions>
                 </Dialog>
-                {!readonly && <input id="upload" type="file" hidden onChange={handleChange} />}
+                {!readonly && <input id="upload" type="file" hidden onChange={handleChange}/>}
             </div>
             :
             null

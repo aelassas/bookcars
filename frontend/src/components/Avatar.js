@@ -176,7 +176,7 @@ const Avatar = (props) => {
                                     }
                                 >
                                     <MaterialAvatar
-                                        src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
+                                        src={user.avatar}
                                         className="avatar"
                                     />
                                 </Badge>
@@ -206,7 +206,7 @@ const Avatar = (props) => {
                         user.avatar
                             ?
                             <MaterialAvatar
-                                src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
+                                src={user.avatar}
                                 className={size ? 'avatar-' + size : 'avatar'} />
                             :
                             <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />

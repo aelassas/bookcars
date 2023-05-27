@@ -159,7 +159,7 @@ const Car = () => {
                                 />
                                 <div className='car-company'>
                                     <span className='car-company-logo'>
-                                        <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                        <img src={car.company.avatar}
                                             alt={car.company.fullName}
                                             style={{
                                                 width: Env.COMPANY_IMAGE_WIDTH,

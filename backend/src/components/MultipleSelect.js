@@ -1,6 +1,5 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import Env from '../config/env.config'
-import * as Helper from '../common/Helper'
 import {
     Autocomplete,
     TextField,
@@ -120,7 +119,7 @@ const MultipleSelect = ({
                                             <InputAdornment position='start'>
                                                 {option.image ?
                                                     <Avatar
-                                                        src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                        src={option.image}
                                                         className='avatar-small suo'
                                                     />
                                                     :
@@ -149,7 +148,7 @@ const MultipleSelect = ({
                                     startAdornment: (
                                         <>
                                             <InputAdornment position='start'>
-                                                <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                <img src={option.image}
                                                     alt={option.name}
                                                     style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                                 />
@@ -199,7 +198,7 @@ const MultipleSelect = ({
                                     startAdornment: (
                                         <>
                                             <InputAdornment position='start'>
-                                                <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                                <img src={option.image}
                                                     alt={option.name}
                                                     style={{
                                                         height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT
@@ -234,7 +233,7 @@ const MultipleSelect = ({
                                 <span className='option-image'>
                                     {option.image ?
                                         <Avatar
-                                            src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                            src={option.image}
                                             className='avatar-medium'
                                         />
                                         :
@@ -248,7 +247,7 @@ const MultipleSelect = ({
                         return (
                             <li {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>
-                                    <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                    <img src={option.image}
                                         alt={option.name}
                                         style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                     />
@@ -269,7 +268,7 @@ const MultipleSelect = ({
                         return (
                             <li  {...props} className={`${props.className} ms-option`}>
                                 <span className='option-image'>
-                                    <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
+                                    <img src={option.image}
                                         alt={option.name}
                                         style={{
                                             height: Env.CAR_OPTION_IMAGE_HEIGHT

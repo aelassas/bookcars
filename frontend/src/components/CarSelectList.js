@@ -13,7 +13,7 @@ import {
     DialogActions,
     Button
 } from '@mui/material'
-import * as UserService from '../services/UserService'
+import * as Helper from "../common/Helper";
 
 const CarSelectList = ({ label, readOnly, required, multiple, variant, value, company, pickupLocation, onChange }) => {
     const [init, setInit] = useState(false)
@@ -113,8 +113,8 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                 setInit(true)
                 setLoading(false)
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 

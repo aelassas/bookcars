@@ -23,7 +23,7 @@ const ChangePassword = () => {
     const [newPasswordError, setNewPasswordError] = useState(false)
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
     const [passwordLengthError, setPasswordLengthError] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(false)
     const [currentPassword, setCurrentPassword] = useState('')
     const [currentPasswordError, setCurrentPasswordError] = useState(false)
@@ -97,15 +97,15 @@ const ChangePassword = () => {
                                     err()
                                 }
                             })
-                            .catch(() => {
-                                UserService.signout()
+                            .catch((err) => {
+                                Helper.error(err)
                             })
                     } else {
                         err()
                     }
                 })
-                .catch(() => {
-                    UserService.signout()
+                .catch((err) => {
+                    Helper.error(err)
                 })
         }
 
@@ -120,7 +120,7 @@ const ChangePassword = () => {
                     submit()
                 }
             })
-            .catch(() => UserService.signout())
+            .catch((err) => Helper.error(err))
     }
 
     const onLoad = (user) => {

@@ -13,7 +13,7 @@ import BookingStatus from './BookingStatus'
 import Button from './Button'
 
 const BookingList = (props) => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [page, setPage] = useState(0)
     const [rows, setRows] = useState([])
@@ -134,7 +134,7 @@ const BookingList = (props) => {
 
                                 <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                                 <View style={styles.company}>
-                                    <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, booking.company.avatar) }} />
+                                    <Image style={styles.companyImg} source={{ uri: booking.company.avatar }} />
                                     <Text style={styles.companyText}>{booking.company.fullName}</Text>
                                 </View>
 

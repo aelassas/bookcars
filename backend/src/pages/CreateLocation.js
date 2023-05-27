@@ -52,7 +52,7 @@ const CreateLocation = () => {
             }
         }
         catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 

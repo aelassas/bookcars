@@ -70,7 +70,7 @@ const UpdateCompany = () => {
                     }
                 }
                 catch (err) {
-                    UserService.signout()
+                    Helper.error(err)
                 }
             } else {
                 setFullNameError(false)
@@ -240,8 +240,8 @@ const UpdateCompany = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 

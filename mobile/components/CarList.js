@@ -10,7 +10,7 @@ import Button from './Button'
 
 const CarList = (props) => {
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [page, setPage] = useState(1)
@@ -106,7 +106,7 @@ const CarList = (props) => {
                                 <Text style={styles.name}>{car.name}</Text>
 
                                 <View style={styles.imgView}>
-                                    <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
+                                    <Image style={styles.img} source={{ uri: car.image }} />
                                 </View>
 
                                 <View style={styles.infos}>
@@ -206,7 +206,7 @@ const CarList = (props) => {
 
                                 <View style={styles.footer}>
                                     <View style={styles.company}>
-                                        <Image style={styles.companyImg} source={{ uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar) }} />
+                                        <Image style={styles.companyImg} source={{ uri: car.company.avatar }} />
                                         <Text style={styles.companyText}>{car.company.fullName}</Text>
                                     </View>
 

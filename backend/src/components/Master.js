@@ -10,7 +10,7 @@ import { useInit } from '../common/customHooks'
 
 const Master = (props) => {
     const [user, setUser] = useState()
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [unauthorized, setUnauthorized] = useState(false)
 
     useEffect(() => {

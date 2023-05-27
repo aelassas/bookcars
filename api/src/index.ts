@@ -16,8 +16,6 @@ export const envVariables = z.object({
     BC_MINIMUM_AGE: z.string(),
     BC_TOKEN_EXPIRE_AT: z.string(),
     BC_JWT_SECRET: z.string(),
-    BC_CDN_CARS: z.string(),
-    BC_CDN_TEMP_CARS: z.string(),
     BC_SMTP_HOST: z.string(),
     BC_SMTP_PORT: z.string(),
     BC_SMTP_USER: z.string(),
@@ -27,14 +25,14 @@ export const envVariables = z.object({
     BC_FRONTEND_HOST: z.string(),
     BC_EXPO_ACCESS_TOKEN: z.string(),
     BC_JWT_EXPIRE_AT: z.string(),
-    BC_CDN_TEMP_USERS: z.string(),
-    BC_CDN_USERS: z.string(),
     BC_DEFAULT_LANGUAGE: z.string(),
 
     SPACES_ENDPOINT: z.string(),
     SPACES_REGION: z.string(),
     SPACES_KEY: z.string(),
     SPACES_SECRET: z.string(),
+    SPACES_BUCKET: z.string(),
+    SPACES_FOLDER: z.string().optional(),
 });
 
 envVariables.parse(process.env);

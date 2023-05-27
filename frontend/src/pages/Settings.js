@@ -30,7 +30,7 @@ const Settings = () => {
     const [location, setLocation] = useState('')
     const [bio, setBio] = useState('')
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [birthDate, setBirthDate] = useState()
     const [birthDateValid, setBirthDateValid] = useState(true)
     const [phoneValid, setPhoneValid] = useState(true)
@@ -94,9 +94,8 @@ const Settings = () => {
                     setUser(user)
                     Helper.info(strings.SETTINGS_UPDATED)
                 }
-            })
-            .catch(err => {
-                UserService.signout()
+            }).catch((err) => {
+                Helper.error(err)
             })
     }
 
@@ -143,8 +142,8 @@ const Settings = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 

@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import path from 'path'
-import fs from 'fs'
 import nodemailer from 'nodemailer'
 import {v1 as uuid} from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -16,6 +15,8 @@ import * as Helper from '../common/Helper'
 import {getUserLang} from '../common/Helper'
 import {Request, Response} from 'express';
 import {Lang} from "../interfaces/Lang";
+import {put} from "../storage/s3";
+import assert from "node:assert";
 
 const DEFAULT_LANGUAGE = getUserLang({language: process.env.BC_DEFAULT_LANGUAGE})
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
@@ -26,8 +27,6 @@ const SMTP_PORT = process.env.BC_SMTP_PORT
 const SMTP_USER = process.env.BC_SMTP_USER
 const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
-const CDN = process.env.BC_CDN_USERS
-const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
 const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 
@@ -39,267 +38,204 @@ const getStatusMessage = (lang: Lang, msg: string): string => {
     return '<!DOCTYPE html><html lang="' + lang + '"><head></head><body><p>' + msg + '</p></body></html>'
 }
 
-export const signup = (req: Request, res: Response) => {
-    const { body } = req
-    body.active = true
-    body.verified = false
-    body.blacklisted = false
-    body.type = Env.USER_TYPE.USER
+export const signup = async (req: Request, res: Response) => {
+    try {
+        const {body} = req
+        body.active = true
+        body.verified = false
+        body.blacklisted = false
+        body.type = Env.USER_TYPE.USER
 
-    const salt = bcrypt.genSaltSync(10)
-    const password = body.password
-    body.password = bcrypt.hashSync(password, salt)
-
-    const user = new User(body)
-    user.save()
-        .then(user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
-
-                    try {
-                        fs.renameSync(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                }
-            }
-
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
-
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
-
-                    const transporter = nodemailer.createTransport({
-                        //@ts-ignore
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK
-                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(getStatusMessage(getUserLang(user), strings.DB_ERROR + err))
-                })
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const adminSignup = (req: Request, res: Response) => {
-    const { body } = req
-    body.active = true
-    body.verified = false
-    body.blacklisted = false
-    body.type = Env.USER_TYPE.ADMIN
-
-    const salt = bcrypt.genSaltSync(10)
-    const password = body.password
-    body.password = bcrypt.hashSync(password, salt)
-
-    const user = new User(body)
-    user.save()
-        .then(user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
-
-                    try {
-                        fs.renameSync(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                }
-            }
-
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
-
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
-
-                    const transporter = nodemailer.createTransport({
-                        //@ts-ignore
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK
-                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(getStatusMessage(getUserLang(user), strings.DB_ERROR + err))
-                })
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const create = (req: Request, res: Response) => {
-    const { body } = req
-    body.verified = false
-    body.blacklisted = false
-
-    if (body.password) {
         const salt = bcrypt.genSaltSync(10)
         const password = body.password
         body.password = bcrypt.hashSync(password, salt)
-    }
 
-    const user = new User(body)
-    user.save()
-        .then(user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (fs.existsSync(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
+        const userModel = new User(body)
+        const user = await userModel.save()
+        // avatar
+        if (body.avatar) {
+            user.avatar = body.avatar
+            await user.save()
+        }
 
-                    try {
-                        fs.renameSync(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                }
+        // generate token and save
+        const tokenModel = new Token({user: user._id, token: uuid()})
+
+        const token = await tokenModel.save();
+        // Send email
+        strings.setLanguage(user.language)
+
+        const transporter = nodemailer.createTransport({
+            //@ts-ignore
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
             }
-
-            if (body.password) {
+        })
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK
+                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
                 return res.sendStatus(200)
             }
-
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
-
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
-
-                    const transporter = nodemailer.createTransport({
-                        //@ts-ignore
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
-
-                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
-                            + '/?u=' + encodeURIComponent(String(user._id))
-                            + '&e=' + encodeURIComponent(user.email)
-                            + '&t=' + encodeURIComponent(token.token)
-                            + '<br><br>'
-
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    return res.status(400).send(strings.DB_ERROR + err)
-                })
         })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
+
+
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const adminSignup = async (req: Request, res: Response) => {
+    try {
+        const {body} = req
+        body.active = true
+        body.verified = false
+        body.blacklisted = false
+        body.type = Env.USER_TYPE.ADMIN
+
+        const salt = bcrypt.genSaltSync(10)
+        const password = body.password
+        body.password = bcrypt.hashSync(password, salt)
+
+        const userModel = new User(body)
+        const user = await userModel.save()
+        // avatar
+        if (body.avatar) {
+
+            user.avatar = body.avatar
+            await user.save()
+
+        }
+
+        // generate token and save
+        const tokenModel = new Token({user: user._id, token: uuid()})
+
+        const token = await tokenModel.save()
+        // Send email
+        strings.setLanguage(user.language)
+
+        const transporter = nodemailer.createTransport({
+            //@ts-ignore
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
+            }
         })
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK
+                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
+                return res.sendStatus(200)
+            }
+        })
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const create = async (req: Request, res: Response) => {
+    try {
+        const {body} = req
+        body.verified = false
+        body.blacklisted = false
+
+        if (body.password) {
+            const salt = bcrypt.genSaltSync(10)
+            const password = body.password
+            body.password = bcrypt.hashSync(password, salt)
+        }
+
+        const userModel = new User(body)
+        const user = await userModel.save()
+        // avatar
+        if (body.avatar) {
+            user.avatar = body.avatar
+            await user.save()
+        }
+
+        if (body.password) {
+            return res.sendStatus(200)
+        }
+
+        // generate token and save
+        const tokenModel = new Token({user: user._id, token: uuid()})
+
+        const token = await tokenModel.save()
+        // Send email
+        strings.setLanguage(user.language)
+
+        const transporter = nodemailer.createTransport({
+            //@ts-ignore
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
+            }
+        })
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
+
+                + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                + '/?u=' + encodeURIComponent(String(user._id))
+                + '&e=' + encodeURIComponent(user.email)
+                + '&t=' + encodeURIComponent(token.token)
+                + '<br><br>'
+
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
+                return res.sendStatus(200)
+            }
+        })
+
+
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const checkToken = (req: Request, res: Response) => {
-    User.findOne({ _id: new mongoose.Types.ObjectId(req.params.userId), email: req.params.email })
+    User.findOne({_id: new mongoose.Types.ObjectId(req.params.userId), email: req.params.email})
         .then(user => {
             if (user) {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
@@ -309,7 +245,7 @@ export const checkToken = (req: Request, res: Response) => {
                 ) {
                     return res.sendStatus(403)
                 } else {
-                    Token.findOne({ user: new mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
+                    Token.findOne({user: new mongoose.Types.ObjectId(req.params.userId), token: req.params.token})
                         .then(token => {
                             if (token) {
                                 return res.sendStatus(200)
@@ -333,7 +269,7 @@ export const checkToken = (req: Request, res: Response) => {
 }
 
 export const deleteTokens = (req: Request, res: Response) => {
-    Token.deleteMany({ user: new mongoose.Types.ObjectId(req.params.userId) })
+    Token.deleteMany({user: new mongoose.Types.ObjectId(req.params.userId)})
         .then((result) => {
             if (result.deletedCount > 0) {
                 return res.sendStatus(200)
@@ -348,7 +284,7 @@ export const deleteTokens = (req: Request, res: Response) => {
 }
 
 export const resend = (req: Request, res: Response) => {
-    User.findOne({ email: req.params.email })
+    User.findOne({email: req.params.email})
         .then(user => {
             if (user) {
                 if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
@@ -362,7 +298,7 @@ export const resend = (req: Request, res: Response) => {
                     user.save()
                         .then(() => {
                             // generate token and save
-                            const token = new Token({ user: user._id, token: uuid() })
+                            const token = new Token({user: user._id, token: uuid()})
 
                             token.save()
                                 .then(token => {
@@ -429,7 +365,7 @@ export const activate = (req: Request, res: Response) => {
     User.findById(req.body.userId)
         .then(user => {
             if (user) {
-                Token.find({ token: req.body.token })
+                Token.find({token: req.body.token})
                     .then(token => {
                         if (token) {
                             const salt = bcrypt.genSaltSync(10)
@@ -463,7 +399,7 @@ export const activate = (req: Request, res: Response) => {
 }
 
 export const signin = (req: Request, res: Response) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({email: req.body.email})
         .then(user => {
             if (!req.body.password
                 || !user
@@ -477,9 +413,9 @@ export const signin = (req: Request, res: Response) => {
                 bcrypt.compare(req.body.password, user.password)
                     .then(async (passwordMatch: unknown) => {
                         if (passwordMatch) {
-                            const payload = { id: user._id }
+                            const payload = {id: user._id}
 
-                            let options:{expiresIn?: number} = { expiresIn: JWT_EXPIRE_AT }
+                            let options: { expiresIn?: number } = {expiresIn: JWT_EXPIRE_AT}
                             if (req.body.stayConnected) options = {}
 
                             const token = jwt.sign(payload, JWT_SECRET, options)
@@ -512,7 +448,7 @@ export const signin = (req: Request, res: Response) => {
 
 export const pushToken = async (req: Request, res: Response) => {
     try {
-        const pushNotification = await PushNotification.findOne({ user: req.params.userId })
+        const pushNotification = await PushNotification.findOne({user: req.params.userId})
         if (pushNotification) {
             return res.status(200).json(pushNotification.token)
         }
@@ -526,10 +462,10 @@ export const pushToken = async (req: Request, res: Response) => {
 
 export const createPushToken = async (req: Request, res: Response) => {
     try {
-        const exist = await PushNotification.exists({ user: req.params.userId })
+        const exist = await PushNotification.exists({user: req.params.userId})
 
         if (!exist) {
-            const pushNotification = new PushNotification({ user: req.params.userId, token: req.params.token })
+            const pushNotification = new PushNotification({user: req.params.userId, token: req.params.token})
             await pushNotification.save()
             return res.sendStatus(200)
         }
@@ -543,7 +479,7 @@ export const createPushToken = async (req: Request, res: Response) => {
 
 export const deletePushToken = async (req: Request, res: Response) => {
     try {
-        await PushNotification.deleteMany({ user: req.params.userId })
+        await PushNotification.deleteMany({user: req.params.userId})
         return res.sendStatus(200)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -553,7 +489,7 @@ export const deletePushToken = async (req: Request, res: Response) => {
 
 export const validateEmail = async (req: Request, res: Response) => {
     try {
-        const exists = await User.exists({ email: req.body.email })
+        const exists = await User.exists({email: req.body.email})
 
         if (exists) {
             return res.sendStatus(204)
@@ -571,11 +507,11 @@ export const validateAccessToken = (req: Request, res: Response) => {
 }
 
 export const confirmEmail = (req: Request, res: Response) => {
-    Token.findOne({ token: req.params.token })
+    Token.findOne({token: req.params.token})
         .then(token => {
-            User.findOne({ email: req.params.email })
+            User.findOne({email: req.params.email})
                 .then((user) => {
-                    if(user) {
+                    if (user) {
                         strings.setLanguage(user.language)
                     }
                     // token is not found into database i.e. token may have expired
@@ -624,7 +560,7 @@ export const confirmEmail = (req: Request, res: Response) => {
 }
 
 export const resendLink = (req: Request, res: Response) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({email: req.body.email})
         .then(user => {
 
             // user is not found into database
@@ -639,7 +575,7 @@ export const resendLink = (req: Request, res: Response) => {
             // send verification link
             else {
                 // generate token and save
-                const token = new Token({ user: user._id, token: uuid() })
+                const token = new Token({user: user._id, token: uuid()})
 
                 token.save()
                     .then(() => {
@@ -656,7 +592,12 @@ export const resendLink = (req: Request, res: Response) => {
                         })
 
                         strings.setLanguage(user.language)
-                        const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_ACTIVATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' }
+                        const mailOptions = {
+                            from: SMTP_FROM,
+                            to: user.email,
+                            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                            html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>'
+                        }
                         transporter.sendMail(mailOptions, (err) => {
                             if (err) {
                                 console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params)
@@ -685,7 +626,7 @@ export const update = (req: Request, res: Response) => {
                 console.error('[user.update] User not found:', req.body.email)
                 res.sendStatus(204)
             } else {
-                const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body
+                const {fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater} = req.body
                 if (fullName) user.fullName = fullName
                 user.phone = phone
                 user.location = location
@@ -731,9 +672,9 @@ export const updateEmailNotifications = (req: Request, res: Response) => {
 
             }
         }).catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        console.error(strings.DB_ERROR, err)
+        res.status(400).send(strings.DB_ERROR + err)
+    })
 }
 
 export const updateLanguage = (req: Request, res: Response) => {
@@ -755,9 +696,9 @@ export const updateLanguage = (req: Request, res: Response) => {
 
             }
         }).catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        console.error(strings.DB_ERROR, err)
+        res.status(400).send(strings.DB_ERROR + err)
+    })
 }
 
 export const getUser = (req: Request, res: Response) => {
@@ -792,82 +733,60 @@ export const getUser = (req: Request, res: Response) => {
         })
 }
 
-export const createAvatar = (req: Request, res: Response) => {
+export const createAvatar = async (req: Request, res: Response) => {
     try {
-        if (!fs.existsSync(CDN_TEMP)) {
-            fs.mkdirSync(CDN_TEMP, { recursive: true })
-        }
+        assert(req.file, 'No file in request');
+        const url = await put({
+            Key: `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`,
+            Body: req.file?.buffer
+        })
+        assert(url, 'Problem with uploading');
 
-        //@ts-ignore
-        const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
-        const filepath = path.join(CDN_TEMP, filename)
-
-        //@ts-ignore
-        fs.writeFileSync(filepath, req.file.buffer)
-        res.json(filename)
+        return res.json(url)
     } catch (err) {
         console.error(strings.ERROR, err)
         res.status(400).send(strings.ERROR + err)
     }
 }
 
-export const updateAvatar = (req: Request, res: Response) => {
-    const userId = req.params.userId
+import {uid} from 'uid';
 
-    User.findById(userId)
-        .then(user => {
-            if (user) {
-                if (!fs.existsSync(CDN)) {
-                    fs.mkdirSync(CDN, { recursive: true })
-                }
+export const updateAvatar = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.userId
+        const user = await User.findById(userId);
+        assert(user, 'User not found');
+        assert(req.file, 'No file in request');
 
-                if (user.avatar && !user.avatar.startsWith('http')) {
-                    const avatar = path.join(CDN, user.avatar)
-                    if (fs.existsSync(avatar)) {
-                        fs.unlinkSync(avatar)
-                    }
-                }
+        const ext = path.extname(req.file.originalname);
+        assert(ext, 'File name without extension');
 
-                //@ts-ignore
-                const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
-                const filepath = path.join(CDN, filename)
+        const filename = `${user._id}_${Date.now()}_${uid()}${ext}`
 
-                //@ts-ignore
-                fs.writeFileSync(filepath, req.file.buffer)
-                user.avatar = filename
-                user.save()
-                    .then(() => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[user.updateAvatar] User not found:', req.params.userId)
-                res.sendStatus(204)
-            }
+        const url = await put({
+            Key: filename,
+            Body: req.file?.buffer
         })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        assert(url, 'Problem with uploading');
+        user.avatar = url
+
+        await user.save()
+        return res.sendStatus(200)
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteAvatar = (req: Request, res: Response) => {
+    console.log("deleteAvatar", req.body);
+
     const userId = req.params.userId
 
     User.findById(userId)
         .then(user => {
             if (user) {
-                if (user.avatar && !user.avatar.startsWith('http')) {
-                    const avatar = path.join(CDN, user.avatar)
-                    if (fs.existsSync(avatar)) {
-                        fs.unlinkSync(avatar)
-                    }
-                }
-                //@ts-ignore
-                user.avatar = null
+                user.avatar = undefined
 
                 user.save()
                     .then(() => {
@@ -890,10 +809,8 @@ export const deleteAvatar = (req: Request, res: Response) => {
 
 export const deleteTempAvatar = (req: Request, res: Response) => {
     try {
-        const avatar = path.join(CDN_TEMP, req.params.avatar)
-        if (fs.existsSync(avatar)) {
-            fs.unlinkSync(avatar)
-        }
+        const avatar = req.params.avatar
+
         res.sendStatus(200)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -902,7 +819,7 @@ export const deleteTempAvatar = (req: Request, res: Response) => {
 }
 
 export const changePassword = (req: Request, res: Response) => {
-    User.findOne({ _id: req.body._id })
+    User.findOne({_id: req.body._id})
         .then(user => {
 
             if (!user) {
@@ -931,13 +848,11 @@ export const changePassword = (req: Request, res: Response) => {
                     .then(async passwordMatch => {
                         if (passwordMatch) {
                             changePassword()
-                        }
-                        else {
+                        } else {
                             return res.sendStatus(204)
                         }
                     })
-            }
-            else {
+            } else {
                 changePassword()
             }
         })
@@ -955,8 +870,7 @@ export const checkPassword = (req: Request, res: Response) => {
                 bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
                     if (passwordMatch) {
                         return res.sendStatus(200)
-                    }
-                    else {
+                    } else {
                         return res.sendStatus(204)
                     }
                 })
@@ -984,17 +898,17 @@ export const getUsers = async (req: Request, res: Response) => {
         const $match = {
             $and: [
                 {
-                    type: { $in: types }
+                    type: {$in: types}
                 },
                 {
-                    fullName: { $regex: keyword, $options: options }
+                    fullName: {$regex: keyword, $options: options}
                 }
             ]
         }
 
         if (userId) {
             //@ts-ignore
-            $match.$and.push({ _id: { $ne: new mongoose.Types.ObjectId(userId) } })
+            $match.$and.push({_id: {$ne: new mongoose.Types.ObjectId(userId)}})
         }
 
         const users = await User.aggregate([
@@ -1021,9 +935,9 @@ export const getUsers = async (req: Request, res: Response) => {
             {
                 $facet: {
                     resultData: [
-                        { $sort: { fullName: 1 } },
-                        { $skip: ((page - 1) * size) },
-                        { $limit: size },
+                        {$sort: {fullName: 1}},
+                        {$skip: ((page - 1) * size)},
+                        {$limit: size},
                     ],
                     pageInfo: [
                         {
@@ -1032,7 +946,7 @@ export const getUsers = async (req: Request, res: Response) => {
                     ]
                 }
             }
-        ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
+        ], {collation: {locale: Env.DEFAULT_LANGUAGE, strength: 2}})
 
         res.json(users)
     } catch (err) {
@@ -1046,16 +960,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
         const ids = req.body.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
 
         for (const id of ids) {
-            const user = await User.findByIdAndDelete(id)
-            //@ts-ignore
-            if (user.avatar) {
-                //@ts-ignore
-                const avatar = path.join(CDN, user.avatar)
-                if (fs.existsSync(avatar)) {
-                    fs.unlinkSync(avatar)
-                }
-            }
-            await Booking.deleteMany({ driver: id })
+            await Booking.deleteMany({driver: id})
         }
 
         return res.sendStatus(200)

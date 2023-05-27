@@ -15,8 +15,6 @@ process.env = {
     BC_MINIMUM_AGE: '',
     BC_TOKEN_EXPIRE_AT: '',
     BC_JWT_SECRET: '',
-    BC_CDN_CARS: '',
-    BC_CDN_TEMP_CARS: '',
     BC_SMTP_HOST: '',
     BC_SMTP_PORT: '',
     BC_SMTP_USER: '',
@@ -26,14 +24,14 @@ process.env = {
     BC_FRONTEND_HOST: '',
     BC_EXPO_ACCESS_TOKEN: '',
     BC_JWT_EXPIRE_AT: '',
-    BC_CDN_TEMP_USERS: '',
-    BC_CDN_USERS: '',
     BC_DEFAULT_LANGUAGE: '',
 
     SPACES_ENDPOINT: '',
     SPACES_REGION: '',
     SPACES_KEY: '',
     SPACES_SECRET: '',
+    SPACES_BUCKET: '',
+    SPACES_FOLDER: '',
 }
 
 

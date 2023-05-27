@@ -67,7 +67,7 @@ const CompanyFilter = (props) => {
                             >
                                 <Image
                                     style={styles.image}
-                                    source={{ uri: Helper.joinURL(Env.CDN_USERS, company.avatar) }}
+                                    source={{ uri: company.avatar }}
                                 />
                             </Switch>
                         </View>

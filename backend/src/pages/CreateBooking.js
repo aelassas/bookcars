@@ -213,12 +213,12 @@ const CreateBooking = () => {
                             Helper.error()
                         }
                     })
-                    .catch(() => {
-                        UserService.signout()
+                    .catch((err) => {
+                        Helper.error(err)
                     })
             },
-            () => {
-                UserService.signout()
+            (err) => {
+                Helper.error(err)
             })
     }
 

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/cars'
 import * as Helper from '../common/Helper'
 import * as CarService from '../services/CarService'
 import Backdrop from './SimpleBackdrop'
@@ -38,7 +38,7 @@ import '../assets/css/car-list.css'
 
 const CarList = (props) => {
     const [user, setUser] = useState()
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
@@ -71,32 +71,33 @@ const CarList = (props) => {
         }
     }, [props.containerClassName, fetch, loading, page, offset])
 
-    const _fetch = (page, companies, keyword, fuel, gearbox, mileage, deposit, availability) => {
-        setLoading(true)
-        const payload = { companies, fuel, gearbox, mileage, deposit, availability }
+    const _fetch = async (page, companies, keyword, fuel, gearbox, mileage, deposit, availability) => {
+        try {
+            setLoading(true)
+            const payload = {companies, fuel, gearbox, mileage, deposit, availability}
 
-        CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
-            .then(data => {
-                const _data = data.length > 0 ? data[0] : {}
-                if (_data.length === 0) _data.resultData = []
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
-                setRows(_rows)
-                setRowCount(totalRecords)
-                setFetch(_data.resultData.length > 0)
-                if (page === 1) {
-                    const className = props.containerClassName ? props.containerClassName : 'car-list'
-                    document.querySelector(`.${className}`).scrollTo(0, 0)
-                }
+            const data = await CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
+            const _data = data.length > 0 ? data[0] : {}
+            if (_data.length === 0) _data.resultData = []
+            const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+            setRows(_rows)
+            setRowCount(totalRecords)
+            setFetch(_data.resultData.length > 0)
+            if (page === 1) {
+                const className = props.containerClassName ? props.containerClassName : 'car-list'
+                document.querySelector(`.${className}`).scrollTo(0, 0)
+            }
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
-                setLoading(false)
-            })
-            .catch(() => {
-                UserService.signout()
-            })
+            if (props.onLoad) {
+                props.onLoad({rows: _data.resultData, rowCount: totalRecords})
+            }
+
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -108,7 +109,7 @@ const CarList = (props) => {
                 setRowCount(0)
                 setFetch(false)
                 if (props.onLoad) {
-                    props.onLoad({ rows: [], rowCount: 0 })
+                    props.onLoad({rows: [], rowCount: 0})
                 }
                 setLoading(false)
             }
@@ -121,7 +122,7 @@ const CarList = (props) => {
             setRowCount(props.cars.length)
             setFetch(false)
             if (props.onLoad) {
-                props.onLoad({ rows: props.cars, rowCount: props.cars.length })
+                props.onLoad({rows: props.cars, rowCount: props.cars.length})
             }
             setLoading(false)
         }
@@ -159,7 +160,7 @@ const CarList = (props) => {
                 Helper.error()
             }
         } catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 
@@ -167,37 +168,40 @@ const CarList = (props) => {
         setOpenInfoDialog(false)
     }
 
-    const handleConfirmDelete = () => {
-        if (carId !== '' && carIndex > -1) {
-            setLoading(true)
-            setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            if (carId !== '' && carIndex > -1) {
+                setLoading(true)
+                setOpenDeleteDialog(false)
 
-            CarService.deleteCar(carId)
-                .then(status => {
-                    if (status === 200) {
-                        rows.splice(carIndex, 1)
-                        setRows(rows)
-                        setRowCount(rowCount - 1)
-                        setCarId('')
-                        setCarIndex(-1)
-                        if (props.onDelete) {
-                            props.onDelete(rowCount)
-                        }
-                        setLoading(false)
-                    } else {
-                        Helper.error()
-                        setCarId('')
-                        setCarIndex(-1)
-                        setLoading(false)
+                const status = await CarService.deleteCar(carId)
+                if (status === 200) {
+                    rows.splice(carIndex, 1)
+                    setRows(rows)
+                    setRowCount(rowCount - 1)
+                    setCarId('')
+                    setCarIndex(-1)
+                    if (props.onDelete) {
+                        props.onDelete(rowCount)
                     }
-                }).catch((err) => {
-                    UserService.signout()
-                })
-        } else {
-            Helper.error()
-            setCarId('')
-            setCarIndex(-1)
-            setOpenDeleteDialog(false)
+                } else {
+                    Helper.error()
+                    setCarId('')
+                    setCarIndex(-1)
+                }
+
+            } else {
+                Helper.error()
+                setCarId('')
+                setCarIndex(-1)
+                setOpenDeleteDialog(false)
+            }
+        } catch (err) {
+            Helper.error(err)
+
+        } finally {
+            setLoading(false)
+
         }
     }
 
@@ -217,9 +221,9 @@ const CarList = (props) => {
             if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true
         }
 
-        return extra === -1 ? <UncheckIcon className='unavailable' />
-            : extra === 0 || available ? <CheckIcon className='available' />
-                : <InfoIcon className='extra-info' />
+        return extra === -1 ? <UncheckIcon className='unavailable'/>
+            : extra === 0 || available ? <CheckIcon className='available'/>
+                : <InfoIcon className='extra-info'/>
     }
 
     const admin = Helper.admin(user)
@@ -241,18 +245,18 @@ const CarList = (props) => {
                         <article key={car._id}>
                             <div className='name'><h2>{car.name}</h2></div>
                             <div className='car'>
-                                <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
-                                    alt={car.name} className='car-img'
-                                    style={{
-                                        maxWidth: Env.CAR_IMAGE_WIDTH,
-                                    }} />
+                                <img src={car.image}
+                                     alt={car.name} className='car-img'
+                                     style={{
+                                         maxWidth: Env.CAR_IMAGE_WIDTH,
+                                     }}/>
                                 {!props.hideCompany && <div className='car-company'>
                                     <span className='car-company-logo'>
-                                        <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                                            alt={car.company.fullName}
-                                            style={{
-                                                width: Env.COMPANY_IMAGE_WIDTH,
-                                            }}
+                                        <img src={car.company.avatar}
+                                             alt={car.company.fullName}
+                                             style={{
+                                                 width: Env.COMPANY_IMAGE_WIDTH,
+                                             }}
                                         />
                                     </span>
                                     <a href={`/supplier?c=${car.company._id}`} className='car-company-info'>
@@ -265,23 +269,25 @@ const CarList = (props) => {
                                     <li className='car-type'>
                                         <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement='top'>
                                             <div className='car-info-list-item'>
-                                                <FuelIcon />
-                                                <span className='car-info-list-text'>{Helper.getCarTypeShort(car.type)}</span>
+                                                <FuelIcon/>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getCarTypeShort(car.type)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li className='gearbox'>
                                         <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement='top'>
                                             <div className='car-info-list-item'>
-                                                <GearboxIcon />
-                                                <span className='car-info-list-text'>{Helper.getGearboxTypeShort(car.gearbox)}</span>
+                                                <GearboxIcon/>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getGearboxTypeShort(car.gearbox)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li className='seats'>
                                         <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement='top'>
                                             <div className='car-info-list-item'>
-                                                <SeatsIcon />
+                                                <SeatsIcon/>
                                                 <span className='car-info-list-text'>{car.seats}</span>
                                             </div>
                                         </Tooltip>
@@ -289,7 +295,7 @@ const CarList = (props) => {
                                     <li className='doors'>
                                         <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement='top'>
                                             <div className='car-info-list-item'>
-                                                <img src={DoorsIcon} alt='' className='car-doors' />
+                                                <img src={DoorsIcon} alt='' className='car-doors'/>
                                                 <span className='car-info-list-text'>{car.doors}</span>
                                             </div>
                                         </Tooltip>
@@ -298,7 +304,7 @@ const CarList = (props) => {
                                         <li className='aircon'>
                                             <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
                                                 <div className='car-info-list-item'>
-                                                    <AirconIcon />
+                                                    <AirconIcon/>
                                                 </div>
                                             </Tooltip>
                                         </li>
@@ -306,16 +312,18 @@ const CarList = (props) => {
                                     <li className='mileage'>
                                         <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement='left'>
                                             <div className='car-info-list-item'>
-                                                <MileageIcon />
-                                                <span className='car-info-list-text'>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
+                                                <MileageIcon/>
+                                                <span
+                                                    className='car-info-list-text'>{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li className='fuel-policy'>
                                         <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement='left'>
                                             <div className='car-info-list-item'>
-                                                <FuelIcon />
-                                                <span className='car-info-list-text'>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
+                                                <FuelIcon/>
+                                                <span
+                                                    className='car-info-list-text'>{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
@@ -324,63 +332,84 @@ const CarList = (props) => {
                                     {
                                         edit &&
                                         <li className={car.available ? 'car-available' : 'car-unavailable'}>
-                                            <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
+                                            <Tooltip
+                                                title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
                                                 <div className='car-info-list-item'>
-                                                    {car.available ? <CheckIcon /> : <UncheckIcon />}
+                                                    {car.available ? <CheckIcon/> : <UncheckIcon/>}
                                                     {car.available ?
-                                                        <span className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
+                                                        <span
+                                                            className='car-info-list-text'>{strings.CAR_AVAILABLE}</span>
                                                         :
-                                                        <span className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
+                                                        <span
+                                                            className='car-info-list-text'>{strings.CAR_UNAVAILABLE}</span>
                                                     }
                                                 </div>
                                             </Tooltip>
                                         </li>
                                     }
                                     <li>
-                                        <Tooltip title={props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('cancellation', car.cancellation)}
-                                                <span className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getCancellation(car.cancellation, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li>
-                                        <Tooltip title={props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('amendments', car.amendments)}
-                                                <span className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getAmendments(car.amendments, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li>
-                                        <Tooltip title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
-                                                <span className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li>
-                                        <Tooltip title={props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('theftProtection', car.theftProtection)}
-                                                <span className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getTheftProtection(car.theftProtection, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li>
-                                        <Tooltip title={props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('fullInsurance', car.fullInsurance)}
-                                                <span className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
                                     <li>
-                                        <Tooltip title={props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)} placement='left'>
+                                        <Tooltip
+                                            title={props.booking ? '' : Helper.getAdditionalDriver(car.additionalDriver, fr)}
+                                            placement='left'>
                                             <div className='car-info-list-item'>
                                                 {getExtraIcon('additionalDriver', car.additionalDriver)}
-                                                <span className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                                                <span
+                                                    className='car-info-list-text'>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                                             </div>
                                         </Tooltip>
                                     </li>
@@ -392,12 +421,12 @@ const CarList = (props) => {
                                     <>
                                         <Tooltip title={strings.VIEW_CAR}>
                                             <IconButton href={`/car?cr=${car._id}`}>
-                                                <ViewIcon />
+                                                <ViewIcon/>
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title={commonStrings.UPDATE}>
                                             <IconButton href={`/update-car?cr=${car._id}`}>
-                                                <EditIcon />
+                                                <EditIcon/>
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title={commonStrings.DELETE}>
@@ -405,7 +434,7 @@ const CarList = (props) => {
                                                 data-id={car._id}
                                                 data-index={index}
                                                 onClick={handleDelete}>
-                                                <DeleteIcon />
+                                                <DeleteIcon/>
                                             </IconButton>
                                         </Tooltip>
                                     </>
@@ -423,7 +452,8 @@ const CarList = (props) => {
                 <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
                 <DialogContent>{strings.CANNOT_DELETE_CAR}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    <Button onClick={handleCloseInfo} variant='contained'
+                            className='btn-secondary'>{commonStrings.CLOSE}</Button>
                 </DialogActions>
             </Dialog>
 
@@ -435,11 +465,13 @@ const CarList = (props) => {
                 <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
                 <DialogContent>{strings.DELETE_CAR}</DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    <Button onClick={handleCancelDelete} variant='contained'
+                            className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                    <Button onClick={handleConfirmDelete} variant='contained'
+                            color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-            {loading && <Backdrop text={commonStrings.LOADING} />}
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
         </section>
     )
 }

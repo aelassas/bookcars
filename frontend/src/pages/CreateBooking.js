@@ -790,7 +790,7 @@ const CreateBooking = () => {
                                             <label className='booking-detail-title'>{commonStrings.SUPPLIER}</label>
                                             <div className='booking-detail-value'>
                                                 <div className='car-company'>
-                                                    <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
+                                                    <img src={car.company.avatar}
                                                         alt={car.company.fullName}
                                                         style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
                                                     />

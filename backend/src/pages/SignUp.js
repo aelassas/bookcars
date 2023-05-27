@@ -182,7 +182,7 @@ const SignUp = () => {
                                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
                                 <Input
                                     id="email"
-                                    type="text"
+                                    type="email"
                                     error={!emailValid || emailError}
                                     name="Email"
                                     onBlur={handleOnBlur}

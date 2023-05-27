@@ -1,10 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/notifications'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
+import {strings as commonStrings} from '../lang/common'
+import {strings} from '../lang/notifications'
 import Master from '../components/Master'
 import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
-import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material'
+import {
+    Button,
+    Card,
+    CardContent,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Tooltip,
+    Typography
+} from '@mui/material'
 import {
     Visibility as ViewIcon,
     Drafts as MarkReadIcon,
@@ -16,14 +28,14 @@ import {
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import Backdrop from '../components/SimpleBackdrop'
-import { format } from 'date-fns'
-import { fr, enUS, pl} from "date-fns/locale"
+import {format} from 'date-fns'
+import {fr, enUS, pl} from "date-fns/locale"
 
 import '../assets/css/notifications.css'
 
 const Notifications = () => {
     const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(1)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(-1)
@@ -43,16 +55,16 @@ const Notifications = () => {
                 setLoading(true)
                 const data = await NotificationService.getNotifications(user._id, page)
                 const _data = data[0]
-                const _rows = _data.resultData.map(row => ({ checked: false, ...row }))
+                const _rows = _data.resultData.map(row => ({checked: false, ...row}))
                 const _totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                 setTotalRecords(_totalRecords)
                 setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
                 setRows(_rows)
                 if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0)
+            } catch (err) {
+                Helper.error(err)
+            } finally {
                 setLoading(false)
-            }
-            catch (err) {
-                UserService.signout()
             }
         }
     }, [user, page])
@@ -116,7 +128,7 @@ const Notifications = () => {
                                                 })
                                             }
                                             setRows(Helper.clone(rows))
-                                        }} />
+                                        }}/>
                                 </div>
                                 {
                                     checkedRows.length > 0 &&
@@ -139,12 +151,11 @@ const Notifications = () => {
                                                         } else {
                                                             Helper.error()
                                                         }
-                                                    }
-                                                    catch (err) {
-                                                        UserService.signout()
+                                                    } catch (err) {
+                                                        Helper.error(err)
                                                     }
                                                 }}>
-                                                    <MarkReadIcon />
+                                                    <MarkReadIcon/>
                                                 </IconButton>
                                             </Tooltip>
                                         }
@@ -166,12 +177,11 @@ const Notifications = () => {
                                                         } else {
                                                             Helper.error()
                                                         }
-                                                    }
-                                                    catch (err) {
-                                                        UserService.signout()
+                                                    } catch (err) {
+                                                        Helper.error(err)
                                                     }
                                                 }}>
-                                                    <MarkUnreadIcon />
+                                                    <MarkUnreadIcon/>
                                                 </IconButton>
                                             </Tooltip>
                                         }
@@ -180,7 +190,7 @@ const Notifications = () => {
                                                 setSelectedRows(checkedRows)
                                                 setOpenDeleteDialog(true)
                                             }}>
-                                                <DeleteIcon />
+                                                <DeleteIcon/>
                                             </IconButton>
                                         </Tooltip>
                                     </div>
@@ -195,11 +205,11 @@ const Notifications = () => {
                                             <Checkbox checked={row.checked} onChange={(event) => {
                                                 row.checked = event.target.checked
                                                 setRows(Helper.clone(rows))
-                                            }} />
+                                            }}/>
                                         </div>
                                         <div className={`notification${!row.isRead ? ' unread' : ''}`}>
                                             <div className='date'>
-                                                {Helper.capitalize(format(new Date(row.createdAt), _format, { locale: _locale }))}
+                                                {Helper.capitalize(format(new Date(row.createdAt), _format, {locale: _locale}))}
                                             </div>
                                             <div className='message-container'>
                                                 <div className='message'>
@@ -229,12 +239,11 @@ const Notifications = () => {
                                                                     } else {
                                                                         navigate()
                                                                     }
-                                                                }
-                                                                catch (err) {
-                                                                    UserService.signout()
+                                                                } catch (err) {
+                                                                    Helper.error(err)
                                                                 }
                                                             }}>
-                                                                <ViewIcon />
+                                                                <ViewIcon/>
                                                             </IconButton>
                                                         </Tooltip>
                                                     }
@@ -252,12 +261,11 @@ const Notifications = () => {
                                                                         } else {
                                                                             Helper.error()
                                                                         }
-                                                                    }
-                                                                    catch (err) {
-                                                                        UserService.signout()
+                                                                    } catch (err) {
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
-                                                                    <MarkReadIcon />
+                                                                    <MarkReadIcon/>
                                                                 </IconButton>
                                                             </Tooltip>
                                                             :
@@ -273,12 +281,11 @@ const Notifications = () => {
                                                                         } else {
                                                                             Helper.error()
                                                                         }
-                                                                    }
-                                                                    catch (err) {
-                                                                        UserService.signout()
+                                                                    } catch (err) {
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
-                                                                    <MarkUnreadIcon />
+                                                                    <MarkUnreadIcon/>
                                                                 </IconButton>
                                                             </Tooltip>
                                                     }
@@ -287,7 +294,7 @@ const Notifications = () => {
                                                             setSelectedRows([row])
                                                             setOpenDeleteDialog(true)
                                                         }}>
-                                                            <DeleteIcon />
+                                                            <DeleteIcon/>
                                                         </IconButton>
                                                     </Tooltip>
                                                 </div>
@@ -315,7 +322,7 @@ const Notifications = () => {
                                         setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? ((_page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : totalRecords)
                                         setPage(_page)
                                     }}>
-                                    <PreviousPageIcon className='icon' />
+                                    <PreviousPageIcon className='icon'/>
                                 </IconButton>
                                 <IconButton
                                     disabled={(((page - 1) * Env.PAGE_SIZE) + rows.length) === totalRecords}
@@ -325,7 +332,7 @@ const Notifications = () => {
                                         setPage(_page)
                                     }}
                                 >
-                                    <NextPageIcon className='icon' />
+                                    <NextPageIcon className='icon'/>
                                 </IconButton>
                             </div>
 
@@ -371,9 +378,8 @@ const Notifications = () => {
                                         } else {
                                             Helper.error()
                                         }
-                                    }
-                                    catch (err) {
-                                        UserService.signout()
+                                    } catch (err) {
+                                        Helper.error(err)
                                     }
                                 }} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                             </DialogActions>
@@ -381,8 +387,8 @@ const Notifications = () => {
                     </>
                 }
             </div>
-            {loading && <Backdrop text={commonStrings.LOADING} />}
-        </Master >
+            {loading && <Backdrop text={commonStrings.LOADING}/>}
+        </Master>
     )
 }
 
