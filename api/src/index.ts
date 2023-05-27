@@ -30,6 +30,11 @@ export const envVariables = z.object({
     BC_CDN_TEMP_USERS: z.string(),
     BC_CDN_USERS: z.string(),
     BC_DEFAULT_LANGUAGE: z.string(),
+
+    SPACES_ENDPOINT: z.string(),
+    SPACES_REGION: z.string(),
+    SPACES_KEY: z.string(),
+    SPACES_SECRET: z.string(),
 });
 
 envVariables.parse(process.env);

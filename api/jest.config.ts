@@ -3,6 +3,8 @@
  * https://jestjs.io/docs/configuration
  */
 
+import {z} from "zod";
+
 process.env = {
     BC_HOST: '',
     BC_PORT: '',
@@ -27,6 +29,11 @@ process.env = {
     BC_CDN_TEMP_USERS: '',
     BC_CDN_USERS: '',
     BC_DEFAULT_LANGUAGE: '',
+
+    SPACES_ENDPOINT: '',
+    SPACES_REGION: '',
+    SPACES_KEY: '',
+    SPACES_SECRET: '',
 }
 
 

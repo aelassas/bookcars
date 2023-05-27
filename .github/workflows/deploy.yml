@@ -10,6 +10,35 @@ env:
   HOST: do.mg0.pl
 
 jobs:
+  api-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 18.x, 20.x ]
+        mongodb-version: [ '5.0', '6.0' ]
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - run: npm install
+        working-directory: api
+
+      - run: npm test
+        working-directory: api
+        env:
+          CI: true
+
   image:
     runs-on: ubuntu-latest
     steps:
@@ -38,4 +67,6 @@ jobs:
             
             [api]
             do.mg0.pl ansible_user=root dir=bookcar
-    needs: image
+    needs:
+      - api-test
+      - image
