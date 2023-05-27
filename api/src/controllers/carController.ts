@@ -422,22 +422,16 @@ function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, Pipel
                                                 $or: [
                                                     {
                                                         $and: [
-                                                            {$gte: ["$from", "$$from"]},
+                                                            {$gt: ["$from", "$$from"]},
                                                             {$lt: ["$from", "$$to"]}
                                                         ]
                                                     },
                                                     {
                                                         $and: [
-                                                            {$gte: ["$to", "$$from"]},
+                                                            {$gt: ["$to", "$$from"]},
                                                             {$lt: ["$to", "$$to"]}
                                                         ]
                                                     },
-                                                    // {
-                                                    //     $and: [
-                                                    //         {$gte: ["$to", "$$from"]},
-                                                    //         {$lt: ["$to", "$$to"]}
-                                                    //     ]
-                                                    // }
                                                 ]
                                             },
                                             {status: ["deposit", "paid", "reserved"]}
@@ -468,8 +462,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         const gearbox = req.body.gearbox
         const mileage = req.body.mileage
         const deposit = req.body.deposit
-        const from: Date = dayjs(req.body.deposit).toDate()
-        const to: Date = dayjs(req.body.deposit).toDate()
+        const from: Date = dayjs(req.body.from).toDate()
+        const to: Date = dayjs(req.body.to).toDate()
 
 
         const match: PipelineStage.Match = {
@@ -500,7 +494,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
             match.$match.$and.push({deposit: {$lte: deposit}})
         }
 
-
+        console.log(1);
+        console.log("from, to", from, to);
+        console.log("...filterBookedAlready(from, to)", ...filterBookedAlready(from, to));
 
         const cars = await Car.aggregate([
             match,
