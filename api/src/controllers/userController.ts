@@ -779,8 +779,6 @@ export const updateAvatar = async (req: Request, res: Response) => {
 }
 
 export const deleteAvatar = (req: Request, res: Response) => {
-    console.log("deleteAvatar", req.body);
-
     const userId = req.params.userId
 
     User.findById(userId)

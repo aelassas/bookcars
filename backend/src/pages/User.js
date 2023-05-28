@@ -80,41 +80,40 @@ const User = () => {
 
     const onLoad = async (loggedUser) => {
         try {
-            if (loggedUser && loggedUser.verified) {
-                setLoading(true)
+            if (!loggedUser || !loggedUser.verified) return
 
-                const params = new URLSearchParams(window.location.search)
-                if (params.has('u')) {
-                    const id = params.get('u')
-                    if (id && id !== '') {
-                        const user = UserService.getUser(id)
-                        if (user) {
+            setLoading(true)
 
-                            const setState = (companies) => {
-                                setCompanies(companies)
-                                setLoggedUser(loggedUser)
-                                setUser(user)
-                                setVisible(true)
-                            }
-
-                            const admin = Helper.admin(loggedUser)
-                            if (admin) {
-                                const companies = await CompanyService.getAllCompanies()
-                                const companyIds = Helper.flattenCompanies(companies)
-                                setState(companyIds)
-                            } else {
-                                setState([loggedUser._id])
-                            }
-                        } else {
-                            setNoMatch(true)
+            const params = new URLSearchParams(window.location.search)
+            if (params.has('u')) {
+                const id = params.get('u')
+                if (id && id !== '') {
+                    const user = await UserService.getUser(id)
+                    if (user) {
+                        const setState = (companies) => {
+                            setCompanies(companies)
+                            setLoggedUser(loggedUser)
+                            setUser(user)
+                            setVisible(true)
                         }
 
+                        const admin = Helper.admin(loggedUser)
+                        if (admin) {
+                            const companies = await CompanyService.getAllCompanies()
+                            const companyIds = Helper.flattenCompanies(companies)
+                            setState(companyIds)
+                        } else {
+                            setState([loggedUser._id])
+                        }
                     } else {
                         setNoMatch(true)
                     }
+
                 } else {
                     setNoMatch(true)
                 }
+            } else {
+                setNoMatch(true)
             }
         } catch (err) {
             setVisible(false)

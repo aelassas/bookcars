@@ -6,9 +6,8 @@ import Env from "../config/env.config";
 
 const About = () => {
 
-    const onLoad = (user) => {
+    const onLoad = (_user) => {
         console.log("Env", Env);
-        console.log("user", user);
     }
 
     return (

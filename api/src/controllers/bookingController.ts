@@ -179,7 +179,7 @@ export const book = async (req: Request, res: Response) => {
         const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
         //@ts-ignore
         dropOffLocation.name = dropOffLocation.values.filter(value => value.language === getUserLang(user))[0].value
-        console.log('req.body.payLater', req.body.payLater)
+
         const mailOptions = {
             from: SMTP_FROM,
             //@ts-ignore
@@ -309,7 +309,7 @@ const notifyDriver = async (booking) => {
             for (let chunk of chunks) {
                 try {
                     let ticketChunk = await expo.sendPushNotificationsAsync(chunk)
-                    console.log(ticketChunk)
+
                     tickets.push(...ticketChunk)
                     // NOTE: If a ticket contains an error code in ticket.details.error, you
                     // must handle it appropriately. The error codes are listed in the Expo

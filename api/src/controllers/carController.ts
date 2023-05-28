@@ -133,18 +133,14 @@ export const deleteCar = async (req: Request, res: Response) => {
 }
 
 export const createImage = async (req: Request, res: Response) => {
-    console.log(1);
     try {
         assert(req.file, 'No file in request');
-
-        console.log(2);
 
         const url = await put({
             Key: `${uid()}_${Date.now()}${path.extname(req.file.originalname)}`,
             Body: req.file?.buffer
         })
 
-        console.log("url", url);
         assert(url, 'Problem with uploading');
 
         return res.json(url)
@@ -484,9 +480,6 @@ export const getFrontendCars = async (req: Request, res: Response) => {
             match.$match.$and.push({deposit: {$lte: deposit}})
         }
 
-        console.log(1);
-        console.log("req.body.to, req.body.from", req.body.to, req.body.from);
-
         const pipeline: PipelineStage[] = [
             match,
             {
@@ -509,7 +502,6 @@ export const getFrontendCars = async (req: Request, res: Response) => {
             const from: Date = dayjs(req.body.from).toDate();
 
             console.log("from, to", from, to);
-            console.log("...filterBookedAlready(from, to)", ...filterBookedAlready(from, to));
 
             pipeline.push(...filterBookedAlready(from, to));
         }

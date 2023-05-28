@@ -78,7 +78,7 @@ const CarSelectList = ({label, required, multiple, variant, value, company, pick
         }
     }, [_pickupLocation, pickupLocation])
 
-    const handleChange = (values, key, reference) => {
+    const handleChange = (values) => {
         if (onChange) {
             onChange(values)
         }
@@ -99,7 +99,6 @@ const CarSelectList = ({label, required, multiple, variant, value, company, pick
 
             setLoading(true)
 
-            console.log("getBookingCars, CarSelectLists.js", payload);
             const cars = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE);
             assert(Array.isArray(cars), "Cars from get booking cars should be array");
             const _data = cars.map(car => ({_id: car._id, name: car.name, image: car.image}));
@@ -144,7 +143,7 @@ const CarSelectList = ({label, required, multiple, variant, value, company, pick
                     }
                 }}
                 onOpen={
-                    (event) => {
+                    () => {
                         if (!init || reload) {
                             const p = 1
                             setCars([])
@@ -166,7 +165,7 @@ const CarSelectList = ({label, required, multiple, variant, value, company, pick
                     }
                 }
                 onClear={
-                    (event) => {
+                    () => {
                         setCars([])
                         setPage(1)
                         setKeyword('')

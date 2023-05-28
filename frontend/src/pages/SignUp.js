@@ -25,8 +25,6 @@ import * as Helper from '../common/Helper'
 import '../assets/css/signup.css'
 
 const SignUp = () => {
-    console.log("Env", Env);
-
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -238,7 +236,7 @@ const SignUp = () => {
                                 setError(true)
                                 setTosError(false)
                             }
-                        }).catch(err => {
+                        }).catch(() => {
                         setPasswordError(false)
                         setRecaptchaError(false)
                         setPasswordsDontMatch(false)
@@ -252,7 +250,7 @@ const SignUp = () => {
                 setError(true)
                 setTosError(false)
             })
-            .catch(err => {
+            .catch(() => {
                 setPasswordError(false)
                 setRecaptchaError(false)
                 setPasswordsDontMatch(false)
@@ -392,7 +390,7 @@ const SignUp = () => {
                                                 />
                                             </td>
                                             <td>
-                                                <Link href="/tos" target="_blank"
+                                                <Link href={`/tos`} target="_blank"
                                                       rel="noreferrer">{commonStrings.TOS}</Link>
                                             </td>
                                         </tr>

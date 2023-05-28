@@ -30,7 +30,6 @@ import '../assets/css/car-list.css'
 import assert from "browser-assert";
 
 const CarList = (props) => {
-    console.log("CarList props", props);
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
     const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
@@ -75,7 +74,6 @@ const CarList = (props) => {
             setLoading(true)
             const payload = {companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to}
 
-            console.log("CarList.js", payload);
             const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
             assert(Array.isArray(data), 'Cars list is not array');
             const _data = data.length > 0 ? data[0] : {}

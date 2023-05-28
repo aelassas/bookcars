@@ -40,9 +40,6 @@ export const validateEmail = (data) => (
 )
 
 export const signin = (data) => {
-    console.log("Env", Env)
-    console.log("Env.API_HOST", Env.API_HOST)
-    console.log("data", data)
     return axios.post(`${Env.API_HOST}/api/sign-in/${Env.APP_TYPE}`, data).then(res => {
         if (res.data.accessToken) {
             localStorage.setItem('bc-user', JSON.stringify(res.data))

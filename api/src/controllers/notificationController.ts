@@ -73,7 +73,7 @@ export const notify = async (req: Request, res: Response) => {
                                             + '</p>'
                                     }
 
-                                    await transporter.sendMail(mailOptions, (err, info) => {
+                                    await transporter.sendMail(mailOptions, (err) => {
                                         if (err) {
                                             console.error(strings.SMTP_ERROR, err)
                                             res.status(400).send(strings.SMTP_ERROR + err)
@@ -84,7 +84,7 @@ export const notify = async (req: Request, res: Response) => {
                                 if (counter) {
                                     counter.count = counter.count + 1
                                     counter.save()
-                                        .then(ct => {
+                                        .then(() => {
                                             res.sendStatus(200)
                                         })
                                         .catch(err => {
@@ -94,7 +94,7 @@ export const notify = async (req: Request, res: Response) => {
                                 } else {
                                     const cnt = new NotificationCounter({user: notification.user, count: 1})
                                     cnt.save()
-                                        .then(n => {
+                                        .then(() => {
                                             res.sendStatus(200)
                                         })
                                         .catch(err => {
@@ -200,21 +200,19 @@ export const markAsUnRead = async (req: Request, res: Response) => {
 
         bulk.find({_id: {$in: ids}, isRead: true}).update({$set: {isRead: false}})
         // @ts-ignore
-        bulk.execute(async (err, response) => {
-            if (err) {
-                console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err)
-                return res.status(400).send(strings.DB_ERROR + err)
-            }
+        const bulkResponse = await bulk.execute();
+        if (!bulkResponse.isOk()) {
+            console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, bulkResponse.getWriteErrorAt(0))
+            return res.status(400).send(strings.DB_ERROR + bulkResponse.getWriteErrorAt(0))
+        }
 
-            const counter = await NotificationCounter.findOne({user: userId})
-            // @ts-ignore
-            counter.count += notifications.filter(notification => notification.isRead).length
-            // @ts-ignore
-            await counter.save()
+        const counter = await NotificationCounter.findOne({user: userId})
+        // @ts-ignore
+        counter.count += notifications.filter(notification => notification.isRead).length
+        // @ts-ignore
+        await counter.save()
 
-            return res.sendStatus(200)
-        })
-
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)

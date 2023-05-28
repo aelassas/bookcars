@@ -3,7 +3,6 @@ import Env from '../config/env.config'
 import * as UserService from './UserService'
 
 export const getCars = (data, page, size) => {
-    console.log("api/frontend-cars", data);
     return axios.post(`${Env.API_HOST}/api/frontend-cars/${page}/${size}}`, data).then(res => res.data)
 }
 
