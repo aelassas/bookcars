@@ -40,6 +40,7 @@ const App = () => (
 					<Route exact path="/about" element={<About />} />
 					<Route exact path="/tos" element={<ToS />} />
 					<Route exact path="/contact" element={<Contact />} />
+					<Route exact path="/x" element={<Cars />} />
 
 					<Route path="*" element={<NoMatch />} />
 				</Routes>

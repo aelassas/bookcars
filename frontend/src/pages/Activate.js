@@ -118,44 +118,48 @@ const Activate = () => {
             })
     }
 
-    const onLoad = (user) => {
-        if (user) {
-            setNoMatch(true)
-        } else {
-            const params = new URLSearchParams(window.location.search)
-            if (params.has('u') && params.has('e') && params.has('t')) {
-                const userId = params.get('u')
-                const email = params.get('e')
-                const token = params.get('t')
-                if (userId && email && token) {
-                    UserService.checkToken(userId, email, token)
-                        .then(status => {
-                            if (status === 200) {
-                                setUserId(userId)
-                                setEmail(email)
-                                setToken(token)
-                                setVisible(true)
+    const onLoad = async (user) => {
+        try {
+            if (user) {
+                setNoMatch(true)
+            } else {
+                const params = new URLSearchParams(window.location.search)
+                if (params.has('u') && params.has('e') && params.has('t')) {
+                    const userId = params.get('u')
+                    const email = params.get('e')
+                    const token = params.get('t')
+                    if (userId && email && token) {
+                        UserService.checkToken(userId, email, token)
+                            .then(status => {
+                                if (status === 200) {
+                                    setUserId(userId)
+                                    setEmail(email)
+                                    setToken(token)
+                                    setVisible(true)
 
-                                if (params.has('r')) {
-                                    const reset = params.get('r') === 'true'
-                                    setReset(reset)
+                                    if (params.has('r')) {
+                                        const reset = params.get('r') === 'true'
+                                        setReset(reset)
+                                    }
+                                } else if (status === 204) {
+                                    setEmail(email)
+                                    setResend(true)
+                                } else {
+                                    setNoMatch(true)
                                 }
-                            } else if (status === 204) {
-                                setEmail(email)
-                                setResend(true)
-                            } else {
+                            })
+                            .catch((err) => {
                                 setNoMatch(true)
-                            }
-                        })
-                        .catch((err) => {
-                            setNoMatch(true)
-                        })
+                            })
+                    } else {
+                        setNoMatch(true)
+                    }
                 } else {
                     setNoMatch(true)
                 }
-            } else {
-                setNoMatch(true)
             }
+        } catch (err) {
+
         }
     }
 

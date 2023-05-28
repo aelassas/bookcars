@@ -384,7 +384,7 @@ function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, Pipel
                         $and: [
                             {$eq: ["$car", "$$id"]},
                             {$and: [{$lt: ["$from", "$$to"]}, {$lt: ["$$from", "$to"]}]},
-                            {status: ["deposit", "paid", "reserved"]}
+                            { $in: ["$status", ["deposit", "paid", "reserved"]] }
                         ]
                     }
                 }

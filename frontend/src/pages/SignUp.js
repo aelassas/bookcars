@@ -374,9 +374,6 @@ const SignUp = () => {
                                     />
                                 </FormControl>
                                 {Env.RECAPTCHA_SITE_KEY && <div className="recaptcha">
-                                    <pre>{JSON.stringify(Env)}</pre>
-                                    <pre>{JSON.stringify(Env.RECAPTCHA_SITE_KEY)}</pre>
-
                                     <ReCAPTCHA
                                         sitekey={Env.RECAPTCHA_SITE_KEY}
                                         hl={language}
