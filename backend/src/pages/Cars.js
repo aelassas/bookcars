@@ -149,8 +149,6 @@ const Cars = () => {
                             mileage={mileage}
                             deposit={deposit}
                             availability={availability}
-                            from={from}
-                            to={to}
                             keyword={keyword}
                             reload={reload}
                             loading={loading}

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node -r dotenv/config src/index.js",
     "dev": "npx tsx watch src/index.ts",
+    "build": "npx tsc",
     "test": "jest --forceExit"
   },
   "author": "Akram El Assas",

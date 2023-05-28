@@ -31,6 +31,7 @@ import {format} from 'date-fns'
 import {fr, enUS, pl} from "date-fns/locale"
 
 import '../assets/css/notifications.css'
+import {getUserLang} from "../common/Helper";
 
 const Notifications = () => {
     const [user, setUser] = useState(null)

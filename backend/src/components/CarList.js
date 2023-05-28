@@ -30,7 +30,6 @@ import {
     Delete as DeleteIcon,
     Info as InfoIcon
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
@@ -71,10 +70,10 @@ const CarList = (props) => {
         }
     }, [props.containerClassName, fetch, loading, page, offset])
 
-    const _fetch = async (page, companies, keyword, fuel, gearbox, mileage, deposit, availability, from, to) => {
+    const _fetch = async (page, companies, keyword, fuel, gearbox, mileage, deposit, availability) => {
         try {
             setLoading(true)
-            const payload = {companies, fuel, gearbox, mileage, deposit, availability, from, to}
+            const payload = {companies, fuel, gearbox, mileage, deposit, availability}
 
             const data = await CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
             const _data = data.length > 0 ? data[0] : {}
@@ -103,7 +102,7 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability, props.from, props.to)
+                _fetch(page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
             } else {
                 setRows([])
                 setRowCount(0)
@@ -114,7 +113,7 @@ const CarList = (props) => {
                 setLoading(false)
             }
         }
-    }, [page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability, props.from, props.to]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (props.cars) {
@@ -135,9 +134,9 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.reload) {
             setPage(1)
-            _fetch(1, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability, props.from, props.to)
+            _fetch(1, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
         }
-    }, [props.reload, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability, props.from, props.to]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.reload, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         setUser(props.user)
