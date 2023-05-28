@@ -554,8 +554,8 @@ for this booking is most important resource.
       { $and:
         [
           { $eq: [ "$car",  "$$id" ] },
-          { $and: [ { $lt: ["$from", "$$to"] }, { $lt: ["$$from", "$to"] } ] },
-          { status:  [ "deposit", "paid", "reserved" ]  }
+          { $and: [ { $lt: ["$from", "$$to"] }, { $lt: ["$$from", "$to"] } ] }, 
+          { $in: ["$status", ["deposit", "paid", "reserved"]] }
         ]
       }
     }
