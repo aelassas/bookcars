@@ -564,3 +564,14 @@ for this booking is most important resource.
 }
 ]
 ```
+
+---
+
+Env Configuration.
+
+1. To set .env locally change values in .env files located in `./api`, `./frontend` or `./backend`.
+2. To set .env on production: 
+   1. for backend change `.env` in `/root/bookcar` on server and run `docker compose down api` and `docker compose up api`
+   2. for fronted change `.env.example` in main directory and send commit to `CI`
+
+I tried to configure runtime env for react but it is overcomplicated. Probably `next` has better runtime env support.

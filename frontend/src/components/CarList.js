@@ -70,7 +70,6 @@ const CarList = (props) => {
             }
         }
     }, [props.containerClassName, fetch, loading, page, offset])
-
     const _fetch = async ({page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to}) => {
         try {
             setLoading(true)
@@ -153,7 +152,6 @@ const CarList = (props) => {
                 gearbox: props.gearbox,
                 mileage: props.mileage,
                 deposit: props.deposit,
-                availability: props.availability,
                 to: props.to,
                 from: props.from
             })
@@ -188,7 +186,7 @@ const CarList = (props) => {
                 </Card>
                 :
                 ((props.from && props.to) || props.hidePrice) && (props.pickupLocation && props.dropOffLocation) &&
-                rows.map((car, index) => (
+                rows.map((car) => (
                     <article key={car._id}>
                         <div className='name'><h2>{car.name}</h2></div>
                         <div className='car'>

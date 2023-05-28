@@ -366,6 +366,10 @@ export const getCars = async (req: Request, res: Response) => {
     }
 }
 
+// Corralated subqueries in aggregation
+// https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#correlated-subqueries-using-concise-syntax
+// intersections
+// https://stackoverflow.com/a/3269471/6398044
 function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, PipelineStage.AddFields, PipelineStage.Match] {
     return [{
         $lookup: {
