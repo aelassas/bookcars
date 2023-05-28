@@ -12,6 +12,7 @@ import { frFR, enUS, plPL} from '@mui/material/locale'
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
 import './assets/css/index.css'
+import {getUserLang} from "./common/Helper";
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
@@ -34,8 +35,8 @@ if (lang !== '') {
         }
     }
     if (user) {
-        language = user.language
-        if (lang && lang.length === 2 && user.language !== lang) {
+        language = getUserLang(user)
+        if (lang && lang.length === 2 && getUserLang(user) !== lang) {
             const data = {
                 id: user.id,
                 language: lang

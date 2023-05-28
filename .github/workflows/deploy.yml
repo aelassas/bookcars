@@ -49,7 +49,7 @@ jobs:
         run: docker compose build
       - name: Login to registry
         run: docker login -u ${{ secrets.DOCKER_TOKEN }} -p ${{ secrets.DOCKER_TOKEN }} ${{ env.DOCKER_REGISTRY_DOMAIN }}
-      - name: Build the Docker image
+      - name: Push images to Registry
         run: docker compose push
 
   reload:

@@ -18,6 +18,7 @@ import {
     PhotoCamera as PhotoCameraIcon,
     BrokenImageTwoTone as DeleteIcon
 } from '@mui/icons-material'
+import {getUserLang} from "../common/Helper";
 
 const Avatar = (props) => {
     const [error, setError] = useState(false)
@@ -191,7 +192,7 @@ const Avatar = (props) => {
                                 badgeContent={
                                     <div>
                                         <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
-                                            <PhotoCameraIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
+                                            <PhotoCameraIcon className={getUserLang(user) === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
                                         </Box>
                                     </div>}
                             >

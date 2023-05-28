@@ -10,7 +10,7 @@ import User from '../models/User'
 import Booking from '../models/Booking'
 import Token from '../models/Token'
 import PushNotification from '../models/PushNotification'
-import mongoose from 'mongoose'
+import mongoose, {PipelineStage} from 'mongoose'
 import * as Helper from '../common/Helper'
 import {getUserLang} from '../common/Helper'
 import {Request, Response} from 'express';
@@ -809,8 +809,6 @@ export const deleteAvatar = (req: Request, res: Response) => {
 
 export const deleteTempAvatar = (req: Request, res: Response) => {
     try {
-        const avatar = req.params.avatar
-
         res.sendStatus(200)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -843,8 +841,7 @@ export const changePassword = (req: Request, res: Response) => {
             }
 
             if (req.body.strict) {
-                //@ts-ignore
-                bcrypt.compare(req.body.password, user.password)
+                bcrypt.compare(req.body.password, user.password ?? '')
                     .then(async passwordMatch => {
                         if (passwordMatch) {
                             changePassword()
@@ -866,8 +863,7 @@ export const checkPassword = (req: Request, res: Response) => {
     User.findById(req.params.id)
         .then(user => {
             if (user) {
-                //@ts-ignore
-                bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
+                bcrypt.compare(req.params.password, user.password ?? '').then(passwordMatch => {
                     if (passwordMatch) {
                         return res.sendStatus(200)
                     } else {
@@ -895,7 +891,7 @@ export const getUsers = async (req: Request, res: Response) => {
         const types = req.body.types
         const userId = req.body.user
 
-        const $match = {
+        const match: PipelineStage.Match = {$match:{
             $and: [
                 {
                     type: {$in: types}
@@ -904,17 +900,16 @@ export const getUsers = async (req: Request, res: Response) => {
                     fullName: {$regex: keyword, $options: options}
                 }
             ]
-        }
+        }};
+
+        assert(Array.isArray(match.$match.$and));
 
         if (userId) {
-            //@ts-ignore
-            $match.$and.push({_id: {$ne: new mongoose.Types.ObjectId(userId)}})
+            match.$match.$and.push({_id: {$ne: new mongoose.Types.ObjectId(userId)}})
         }
 
         const users = await User.aggregate([
-            {
-                $match
-            },
+            match,
             {
                 $project: {
                     company: 1,

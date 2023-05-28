@@ -12,29 +12,23 @@ const SMTP_PORT = process.env.BC_SMTP_PORT
 const SMTP_USER = process.env.BC_SMTP_USER
 const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 
-export const notificationCounter = (req: Request, res: Response) => {
-    NotificationCounter.findOne({ user: req.params.userId })
-        .then(counter => {
-            if (counter) {
-                res.json(counter)
-            } else {
-                const cnt = new NotificationCounter({ user: req.params.userId })
-                cnt.save()
-                    .then(n => {
-                        res.json(cnt)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const notificationCounter = async (req: Request, res: Response) => {
+    try {
+        const counter = await NotificationCounter.findOne({user: req.params.userId})
+        if (counter) {
+            return res.json(counter)
+        } else {
+            const cnt = new NotificationCounter({user: req.params.userId})
+            await cnt.save()
+            return res.json(cnt)
+        }
+
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const notify = async (req: Request, res: Response) => {
@@ -44,7 +38,7 @@ export const notify = async (req: Request, res: Response) => {
             User.findById(notification.user)
                 .then(user => {
                     if (user) {
-                        NotificationCounter.findOne({ user: notification.user })
+                        NotificationCounter.findOne({user: notification.user})
                             .then(async counter => {
                                 if (user.enableEmailNotifications) {
                                     strings.setLanguage(user.language)
@@ -98,7 +92,7 @@ export const notify = async (req: Request, res: Response) => {
                                             res.status(400).send(strings.DB_ERROR + err)
                                         })
                                 } else {
-                                    const cnt = new NotificationCounter({ user: notification.user, count: 1 })
+                                    const cnt = new NotificationCounter({user: notification.user, count: 1})
                                     cnt.save()
                                         .then(n => {
                                             res.sendStatus(200)
@@ -135,13 +129,13 @@ export const getNotifications = async (req: Request, res: Response) => {
         const size = parseInt(req.params.size)
 
         const notifications = await Notification.aggregate([
-            { $match: { user: userId } },
+            {$match: {user: userId}},
             {
                 $facet: {
                     resultData: [
-                        { $sort: { createdAt: -1 } },
-                        { $skip: ((page - 1) * size) },
-                        { $limit: size },
+                        {$sort: {createdAt: -1}},
+                        {$skip: ((page - 1) * size)},
+                        {$limit: size},
                     ],
                     pageInfo: [
                         {
@@ -162,28 +156,32 @@ export const getNotifications = async (req: Request, res: Response) => {
 export const markAsRead = async (req: Request, res: Response) => {
 
     try {
-        const { ids: _ids } = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
-        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
+        const {ids: _ids} = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
+        const {userId: _userId} = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
         const bulk = Notification.collection.initializeOrderedBulkOp()
-        const notifications = await Notification.find({ _id: { $in: ids } })
+        const notifications = await Notification.find({_id: {$in: ids}})
 
-        bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } })
-        // @ts-ignore
-        bulk.execute(async (err) => {
-            if (err) {
-                console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err)
-                return res.status(400).send(strings.DB_ERROR + err)
+        bulk.find({_id: {$in: ids}, isRead: false}).update({$set: {isRead: true}})
+        const bulkResult = await bulk.execute();
+
+        if (!bulkResult.isOk()) {
+            const errors = bulkResult.getWriteErrors();
+            if (errors.length) {
+                console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, errors[0])
+                return res.status(400).send(strings.DB_ERROR + errors[0])
             }
+        }
 
-            const counter = await NotificationCounter.findOne({ user: userId })
-            // @ts-ignore
+        const counter = await NotificationCounter.findOne({user: userId});
+        if (counter) {
             counter.count -= notifications.filter(notification => !notification.isRead).length
-            // @ts-ignore
             await counter.save()
-
-            return res.sendStatus(200)
-        })
+        } else {
+            const cnt = new NotificationCounter({user: req.params.userId})
+            await cnt.save()
+        }
+        return res.sendStatus(200)
 
     } catch (err) {
         console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err)
@@ -194,13 +192,13 @@ export const markAsRead = async (req: Request, res: Response) => {
 export const markAsUnRead = async (req: Request, res: Response) => {
 
     try {
-        const { ids: _ids } = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
-        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
+        const {ids: _ids} = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
+        const {userId: _userId} = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
         const bulk = Notification.collection.initializeOrderedBulkOp()
-        const notifications = await Notification.find({ _id: { $in: ids } })
+        const notifications = await Notification.find({_id: {$in: ids}})
 
-        bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } })
+        bulk.find({_id: {$in: ids}, isRead: true}).update({$set: {isRead: false}})
         // @ts-ignore
         bulk.execute(async (err, response) => {
             if (err) {
@@ -208,7 +206,7 @@ export const markAsUnRead = async (req: Request, res: Response) => {
                 return res.status(400).send(strings.DB_ERROR + err)
             }
 
-            const counter = await NotificationCounter.findOne({ user: userId })
+            const counter = await NotificationCounter.findOne({user: userId})
             // @ts-ignore
             counter.count += notifications.filter(notification => notification.isRead).length
             // @ts-ignore
@@ -225,13 +223,13 @@ export const markAsUnRead = async (req: Request, res: Response) => {
 
 export const deleteNotifications = async (req: Request, res: Response) => {
     try {
-        const { ids: _ids } = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
-        const { userId: _userId } = req.params, userId = new mongoose.Types.ObjectId(_userId)
+        const {ids: _ids} = req.body, ids = _ids.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
+        const {userId: _userId} = req.params, userId = new mongoose.Types.ObjectId(_userId)
 
-        const count = await Notification.find({ _id: { $in: ids }, isRead: false }).count()
-        await Notification.deleteMany({ _id: { $in: ids } })
+        const count = await Notification.find({_id: {$in: ids}, isRead: false}).count()
+        await Notification.deleteMany({_id: {$in: ids}})
 
-        const counter = await NotificationCounter.findOne({ user: userId })
+        const counter = await NotificationCounter.findOne({user: userId})
         // @ts-ignore
         counter.count -= count
         // @ts-ignore

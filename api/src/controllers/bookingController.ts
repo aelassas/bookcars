@@ -8,7 +8,7 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import PushNotification from '../models/PushNotification'
 import AdditionalDriver from '../models/AdditionalDriver'
-import mongoose from 'mongoose'
+import mongoose, {PipelineStage} from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import nodemailer from 'nodemailer'
 import {v1 as uuid} from 'uuid'
@@ -25,6 +25,7 @@ const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN
 import {Request, Response} from 'express';
 import {getUserLang} from "../common/Helper";
+import assert from "node:assert";
 
 export const create = async (req: Request, res: Response) => {
 
@@ -426,21 +427,20 @@ export const updateStatus = async (req: Request, res: Response) => {
         const bookings = await Booking.find({_id: {$in: ids}})
 
         bulk.find({_id: {$in: ids}}).update({$set: {status: status}})
-        //@ts-ignore
-        bulk.execute((err: unknown) => {
-            if (err) {
-                console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
-                return res.status(400).send(strings.DB_ERROR + err)
+        const bulkResult = await bulk.execute()
+        if (!bulkResult.isOk()) {
+            const errors = bulkResult.getWriteErrors();
+            console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, errors[0])
+            return res.status(400).send(strings.DB_ERROR + errors[0])
+        }
+
+        bookings.forEach((booking) => {
+            if (booking.status !== status) {
+                notifyDriver(booking)
             }
-
-            bookings.forEach(async (booking) => {
-                if (booking.status !== status) {
-                    await notifyDriver(booking)
-                }
-            })
-
-            return res.sendStatus(200)
         })
+
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -537,8 +537,7 @@ export const getBookings = async (req: Request, res: Response) => {
     try {
         const page = parseInt(req.params.page) + 1
         const size = parseInt(req.params.size)
-        //@ts-ignore
-        const companies = req.body.companies.map(id => new mongoose.Types.ObjectId(id))
+        const companies = req.body.companies.map((id: unknown) => new mongoose.Types.ObjectId(String(id)))
         const statuses = req.body.statuses
         const user = req.body.user
         const car = req.body.car
@@ -549,33 +548,30 @@ export const getBookings = async (req: Request, res: Response) => {
         let keyword = (req.body.filter && req.body.filter.keyword) || ''
         const options = 'i'
 
-        const $match = {
-            $and: [
-                {'company._id': {$in: companies}},
-                {'status': {$in: statuses}}
-            ]
+        const match: PipelineStage.Match = {
+            $match: {
+                $and: [
+                    {'company._id': {$in: companies}},
+                    {'status': {$in: statuses}}
+                ]
+            }
         }
-        //@ts-ignore
-        if (user) $match.$and.push({'driver._id': {$eq: new mongoose.Types.ObjectId(user)}})
-        //@ts-ignore
-        if (car) $match.$and.push({'car._id': {$eq: new mongoose.Types.ObjectId(car)}})
-        //@ts-ignore
-        if (from) $match.$and.push({'from': {$gte: from}}) // $from > from
-        //@ts-ignore
-        if (to) $match.$and.push({'to': {$lte: to}}) // $to < to
-        //@ts-ignore
-        if (pickupLocation) $match.$and.push({'pickupLocation._id': {$eq: new mongoose.Types.ObjectId(pickupLocation)}})
-        //@ts-ignore
-        if (dropOffLocation) $match.$and.push({'dropOffLocation._id': {$eq: new mongoose.Types.ObjectId(dropOffLocation)}})
+
+        assert(Array.isArray(match.$match.$and));
+
+        if (user) match.$match.$and.push({'driver._id': {$eq: new mongoose.Types.ObjectId(user)}})
+        if (car) match.$match.$and.push({'car._id': {$eq: new mongoose.Types.ObjectId(car)}})
+        if (from) match.$match.$and.push({'from': {$gte: from}}) // $from > from
+        if (to) match.$match.$and.push({'to': {$lte: to}}) // $to < to
+        if (pickupLocation) match.$match.$and.push({'pickupLocation._id': {$eq: new mongoose.Types.ObjectId(pickupLocation)}})
+        if (dropOffLocation) match.$match.$and.push({'dropOffLocation._id': {$eq: new mongoose.Types.ObjectId(dropOffLocation)}})
         if (keyword) {
             const isObjectId = mongoose.isValidObjectId(keyword)
             if (isObjectId) {
-                //@ts-ignore
-                $match.$and.push({'_id': {$eq: new mongoose.Types.ObjectId(keyword)}})
+                match.$match.$and.push({'_id': {$eq: new mongoose.Types.ObjectId(keyword)}})
             } else {
                 keyword = escapeStringRegexp(keyword)
-                $match.$and.push({
-                    //@ts-ignore
+                match.$match.$and.push({
                     $or: [
                         {'company.fullName': {$regex: keyword, $options: options}},
                         {'driver.fullName': {$regex: keyword, $options: options}},
@@ -703,9 +699,7 @@ export const getBookings = async (req: Request, res: Response) => {
                 }
             },
             {$unwind: {path: '$dropOffLocation', preserveNullAndEmptyArrays: false}},
-            {
-                $match
-            },
+            match,
             {
                 $facet: {
                     resultData: [

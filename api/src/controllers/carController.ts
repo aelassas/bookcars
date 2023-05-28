@@ -262,54 +262,51 @@ export const getCars = async (req: Request, res: Response) => {
         const keyword = escapeStringRegexp(String(req.query.s) || '')
         const options = 'i'
 
-        const $match = {
-            $and: [
-                {name: {$regex: keyword, $options: options}},
-                {company: {$in: companies}}
-            ]
+        const match: PipelineStage.Match = {
+            $match: {
+                $and: [
+                    {name: {$regex: keyword, $options: options}},
+                    {company: {$in: companies}}
+                ]
+            }
         }
 
+        assert(Array.isArray(match.$match.$and))
+
         if (fuel) {
-            //@ts-ignore
-            $match.$and.push({type: {$in: fuel}})
+            match.$match.$and.push({type: {$in: fuel}})
         }
 
         if (gearbox) {
-            //@ts-ignore
-            $match.$and.push({gearbox: {$in: gearbox}})
+            match.$match.$and.push({gearbox: {$in: gearbox}})
         }
 
         if (mileage) {
             if (mileage.length === 1 && mileage[0] === Env.MILEAGE.LIMITED) {
-                //@ts-ignore
-                $match.$and.push({mileage: {$gt: -1}})
+                match.$match.$and.push({mileage: {$gt: -1}})
             } else if (mileage.length === 1 && mileage[0] === Env.MILEAGE.UNLIMITED) {
-//@ts-ignore
-                $match.$and.push({mileage: -1})
+                match.$match.$and.push({mileage: -1})
             } else if (mileage.length === 0) {
                 return res.json([{resultData: [], pageInfo: []}])
             }
         }
 
         if (deposit && deposit > -1) {
-            //@ts-ignore
-            $match.$and.push({deposit: {$lte: deposit}})
+            match.$match.$and.push({deposit: {$lte: deposit}})
         }
 
         if (availability) {
             if (availability.length === 1 && availability[0] === Env.AVAILABILITY.AVAILABLE) {
-                //@ts-ignore
-                $match.$and.push({available: true})
+                match.$match.$and.push({available: true})
             } else if (availability.length === 1 && availability[0] === Env.AVAILABILITY.UNAVAILABLE) {
-//@ts-ignore
-                $match.$and.push({available: false})
+                match.$match.$and.push({available: false})
             } else if (availability.length === 0) {
                 return res.json([{resultData: [], pageInfo: []}])
             }
         }
 
         const cars = await Car.aggregate([
-            {$match},
+            match,
             {
                 $lookup: {
                     from: 'User',
