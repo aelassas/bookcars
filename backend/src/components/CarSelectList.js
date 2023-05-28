@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings } from '../lang/booking-car-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings as bfStrings} from '../lang/booking-filter'
+import {strings as blStrings} from '../lang/booking-list'
+import {strings} from '../lang/booking-car-list'
 import * as CarService from '../services/CarService'
 import MultipleSelect from './MultipleSelect'
 import {
@@ -14,8 +14,9 @@ import {
     Button
 } from '@mui/material'
 import * as Helper from "../common/Helper";
+import assert from "browser-assert";
 
-const CarSelectList = ({ label, required, multiple, variant, value, company, pickupLocation, onChange }) => {
+const CarSelectList = ({label, required, multiple, variant, value, company, pickupLocation, onChange, from, to}) => {
     const [init, setInit] = useState(false)
     const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(true)
@@ -83,39 +84,36 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
         }
     }
 
-    const getCars = (cars) => cars.map(car => {
-        const { _id, name, image } = car
-        return { _id, name, image }
-    })
+    const _fetch = async (page, keyword, company, pickupLocation) => {
+        try {
+            const payload = {company, pickupLocation, from, to}
 
-    const _fetch = (page, keyword, company, pickupLocation) => {
-        const data = { company, pickupLocation }
+            if (closeDialog) {
+                setCloseDialog(false)
+            }
 
-        if (closeDialog) {
-            setCloseDialog(false)
+            if (company === '-1' || pickupLocation === '-1') {
+                setOpenDialog(true)
+                return
+            }
+
+            setLoading(true)
+
+            console.log("getBookingCars, CarSelectLists.js", payload);
+            const cars = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE);
+            assert(Array.isArray(cars), "Cars from get booking cars should be array");
+            const _data = cars.map(car => ({_id: car._id, name: car.name, image: car.image}));
+            const _cars = page === 1 ? _data : [...cars, ..._data]
+
+            setCars(_cars)
+            setFetch(cars.length > 0)
+            setReload(false)
+            setInit(true)
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
         }
-
-        if (company === '-1' || pickupLocation === '-1') {
-            setOpenDialog(true)
-            return
-        }
-
-        setLoading(true)
-
-        CarService.getBookingCars(keyword, data, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = getCars(data)
-                const _cars = page === 1 ? _data : [...cars, ..._data]
-
-                setCars(_cars)
-                setFetch(data.length > 0)
-                setReload(false)
-                setInit(true)
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const handleCloseDialog = () => {
@@ -195,7 +193,8 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
                     }
                 </DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    <Button onClick={handleCloseDialog} variant='contained'
+                            className='btn-secondary'>{commonStrings.CLOSE}</Button>
                 </DialogActions>
             </Dialog>
 

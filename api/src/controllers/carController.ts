@@ -366,38 +366,6 @@ export const getCars = async (req: Request, res: Response) => {
     }
 }
 
-export const getBookingCars = async (req: Request, res: Response) => {
-    try {
-        const company = new mongoose.Types.ObjectId(req.body.company)
-        const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
-        const keyword = escapeStringRegexp(String(req.query.s) || '')
-        const options = 'i'
-        const page = parseInt(req.params.page)
-        const size = parseInt(req.params.size)
-
-        const cars = await Car.aggregate([
-            {
-                $match: {
-                    $and: [
-                        {company: {$eq: company}},
-                        {locations: pickupLocation},
-                        {available: true},
-                        {name: {$regex: keyword, $options: options}}
-                    ]
-                }
-            },
-            {$sort: {name: 1}},
-            {$skip: ((page - 1) * size)},
-            {$limit: size}
-        ], {collation: {locale: Env.DEFAULT_LANGUAGE, strength: 2}})
-
-        return res.json(cars)
-    } catch (err) {
-        console.error(`[car.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err)
-        return res.status(400).send(strings.DB_ERROR + err)
-    }
-}
-
 function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, PipelineStage.AddFields, PipelineStage.Match] {
     return [{
         $lookup: {
@@ -406,36 +374,17 @@ function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, Pipel
             foreignField: 'car',
             as: 'bookings',
             let: {id: "$_id", from, to},
-            pipeline: [
-                {
-                    $match:
-                        {
-                            $expr:
-                                {
-                                    $and:
-                                        [
-                                            {$eq: ["$car", "$$id"]},
-                                            {
-                                                $or: [
-                                                    {
-                                                        $and: [
-                                                            {$gt: ["$from", "$$from"]},
-                                                            {$lt: ["$from", "$$to"]}
-                                                        ]
-                                                    },
-                                                    {
-                                                        $and: [
-                                                            {$gt: ["$to", "$$from"]},
-                                                            {$lt: ["$to", "$$to"]}
-                                                        ]
-                                                    },
-                                                ]
-                                            },
-                                            {status: ["deposit", "paid", "reserved"]}
-                                        ]
-                                }
-                        }
-                },
+            pipeline: [{
+                $match: {
+                    $expr: {
+                        $and: [
+                            {$eq: ["$car", "$$id"]},
+                            {$and: [{$lt: ["$from", "$$to"]}, {$lt: ["$$from", "$to"]}]},
+                            {status: ["deposit", "paid", "reserved"]}
+                        ]
+                    }
+                }
+            },
             ]
         }
     }, {
@@ -449,6 +398,49 @@ function filterBookedAlready(from: Date, to: Date): [PipelineStage.Lookup, Pipel
     }]
 }
 
+export const getBookingCars = async (req: Request, res: Response) => {
+    try {
+        const company = new mongoose.Types.ObjectId(req.body.company)
+        const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
+        const keyword = escapeStringRegexp(String(req.query.s) || '')
+        const options = 'i'
+        const page = parseInt(req.params.page)
+        const size = parseInt(req.params.size)
+
+        const pipeline: PipelineStage[] = [
+            {
+                $match: {
+                    $and: [
+                        {company: {$eq: company}},
+                        {locations: pickupLocation},
+                        {available: true},
+                        {name: {$regex: keyword, $options: options}}
+                    ]
+                }
+            },
+        ]
+
+        if (req.body.to && req.body.from) {
+            const to: Date = dayjs(req.body.to).toDate()
+            const from: Date = dayjs(req.body.from).toDate();
+            pipeline.push(...filterBookedAlready(from, to));
+        }
+
+        pipeline.push(
+            {$sort: {name: 1}},
+            {$skip: ((page - 1) * size)},
+            {$limit: size}
+        );
+
+        const cars = await Car.aggregate(pipeline, {collation: {locale: Env.DEFAULT_LANGUAGE, strength: 2}})
+
+        return res.json(cars)
+    } catch (err) {
+        console.error(`[car.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
 export const getFrontendCars = async (req: Request, res: Response) => {
     try {
         const page = parseInt(req.params.page)
@@ -459,9 +451,6 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         const gearbox = req.body.gearbox
         const mileage = req.body.mileage
         const deposit = req.body.deposit
-        const from: Date = dayjs(req.body.from).toDate()
-        const to: Date = dayjs(req.body.to).toDate()
-
 
         const match: PipelineStage.Match = {
             $match: {
@@ -492,10 +481,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         }
 
         console.log(1);
-        console.log("from, to", from, to);
-        console.log("...filterBookedAlready(from, to)", ...filterBookedAlready(from, to));
+        console.log("req.body.to, req.body.from", req.body.to, req.body.from);
 
-        const cars = await Car.aggregate([
+        const pipeline: PipelineStage[] = [
             match,
             {
                 $lookup: {
@@ -510,8 +498,19 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                     ],
                     as: 'company'
                 }
-            },
-            ...filterBookedAlready(from, to),
+            }];
+
+        if (req.body.to && req.body.from) {
+            const to: Date = dayjs(req.body.to).toDate()
+            const from: Date = dayjs(req.body.from).toDate();
+
+            console.log("from, to", from, to);
+            console.log("...filterBookedAlready(from, to)", ...filterBookedAlready(from, to));
+
+            pipeline.push(...filterBookedAlready(from, to));
+        }
+
+        pipeline.push(
             {$unwind: {path: '$company', preserveNullAndEmptyArrays: false}},
             {
                 $lookup: {
@@ -541,7 +540,9 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                     ]
                 }
             }
-        ], {collation: {locale: Env.DEFAULT_LANGUAGE, strength: 2}})
+        )
+
+        const cars = await Car.aggregate(pipeline, {collation: {locale: Env.DEFAULT_LANGUAGE, strength: 2}})
 
         cars.forEach(car => {
             if (car.company) {

@@ -2,6 +2,7 @@
 const Env = {
     isMobile: () => window.innerWidth <= 960,
 
+    DEBUG: process.env.DEBUG,
     APP_TYPE: process.env.REACT_APP_BC_APP_TYPE || 'frontend',
     API_HOST: process.env.REACT_APP_BC_API_HOST ?? 'https://api.minimalka.pl',
     LANGUAGES: ['fr', 'en', 'pl'],

@@ -147,6 +147,9 @@ const Cars = () => {
                                     to={to}
                                     onSubmit={handleCarFilterSubmit}
                                 />
+
+                                <pre>FROM {JSON.stringify(from)} TO {JSON.stringify(to)}</pre>
+
                                 <CompanyFilter
                                     className='filter'
                                     companies={allCompanies}

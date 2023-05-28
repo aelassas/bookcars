@@ -282,6 +282,8 @@ const CreateBooking = () => {
                             pickupLocation={pickupLocation}
                             onChange={handleCarSelectListChange}
                             required
+                            from={from}
+                            to={to}
                         />
 
                         <FormControl fullWidth margin="dense">

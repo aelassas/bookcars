@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect} from 'react'
 import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings } from '../lang/booking-car-list'
+import {strings as commonStrings} from '../lang/common'
+import {strings as bfStrings} from '../lang/booking-filter'
+import {strings as blStrings} from '../lang/booking-list'
+import {strings} from '../lang/booking-car-list'
 import * as CarService from '../services/CarService'
 import MultipleSelect from './MultipleSelect'
 import {
@@ -14,8 +14,21 @@ import {
     Button
 } from '@mui/material'
 import * as Helper from "../common/Helper";
+import assert from "browser-assert";
 
-const CarSelectList = ({ label, readOnly, required, multiple, variant, value, company, pickupLocation, onChange }) => {
+const CarSelectList = ({
+                           label,
+                           readOnly,
+                           required,
+                           multiple,
+                           variant,
+                           value,
+                           company,
+                           pickupLocation,
+                           onChange,
+                           from,
+                           to
+                       }) => {
     const [init, setInit] = useState(false)
     const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(true)
@@ -83,39 +96,37 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
         }
     }
 
-    const getCars = (cars) => cars.map(car => {
-        const { _id, name, image } = car
-        return { _id, name, image }
-    })
+    const _fetch = async (page, keyword, company, pickupLocation, from, to) => {
+        try {
+            const payload = {company, pickupLocation, from, to}
 
-    const _fetch = (page, keyword, company, pickupLocation) => {
-        const data = { company, pickupLocation }
+            if (closeDialog) {
+                setCloseDialog(false)
+            }
 
-        if (closeDialog) {
-            setCloseDialog(false)
+            if (company === '-1' || pickupLocation === '-1') {
+                setOpenDialog(true)
+                return
+            }
+
+            setLoading(true)
+
+            console.log("CarService.getBookingCars pl in CarSelectList.js", payload);
+            const data = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE)
+            console.log("data", data);
+            assert(Array.isArray(data), "get booking cars should return array");
+            const _data = data.map(car => ({_id: car._id, name: car.name, image: car.image}))
+            const _cars = page === 1 ? _data : [...cars, ..._data]
+
+            setCars(_cars)
+            setFetch(data.length > 0)
+            setReload(false)
+            setInit(true)
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
         }
-
-        if (company === '-1' || pickupLocation === '-1') {
-            setOpenDialog(true)
-            return
-        }
-
-        setLoading(true)
-
-        CarService.getBookingCars(keyword, data, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = getCars(data)
-                const _cars = page === 1 ? _data : [...cars, ..._data]
-
-                setCars(_cars)
-                setFetch(data.length > 0)
-                setReload(false)
-                setInit(true)
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const handleCloseDialog = () => {
@@ -142,7 +153,7 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                         if (fetch && !loading && (listboxNode.scrollTop + listboxNode.clientHeight >= (listboxNode.scrollHeight - Env.PAGE_OFFSET))) {
                             const p = page + 1
                             setPage(p)
-                            _fetch(p, keyword, _company, _pickupLocation)
+                            _fetch(p, keyword, _company, _pickupLocation, from, to)
                         }
                     }
                 }}
@@ -152,7 +163,7 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                             const p = 1
                             setCars([])
                             setPage(p)
-                            _fetch(p, keyword, _company, _pickupLocation)
+                            _fetch(p, keyword, _company, _pickupLocation, from, to)
                         }
                     }
                 }
@@ -164,7 +175,7 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                             setCars([])
                             setPage(1)
                             setKeyword(value)
-                            _fetch(1, value, _company, _pickupLocation)
+                            _fetch(1, value, _company, _pickupLocation, from, to)
                         }
                     }
                 }
@@ -174,7 +185,7 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                         setPage(1)
                         setKeyword('')
                         setFetch(true)
-                        _fetch(1, '', _company, _pickupLocation)
+                        _fetch(1, '', _company, _pickupLocation, from, to)
                     }
                 }
             />
@@ -196,7 +207,8 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
                     }
                 </DialogContent>
                 <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCloseDialog} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    <Button onClick={handleCloseDialog} variant='contained'
+                            className='btn-secondary'>{commonStrings.CLOSE}</Button>
                 </DialogActions>
             </Dialog>
 

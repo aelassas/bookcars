@@ -30,6 +30,7 @@ import '../assets/css/car-list.css'
 import assert from "browser-assert";
 
 const CarList = (props) => {
+    console.log("CarList props", props);
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
     const [loading, setLoading] = useState(false)
     const [fetch, setFetch] = useState(false)
@@ -70,11 +71,12 @@ const CarList = (props) => {
         }
     }, [props.containerClassName, fetch, loading, page, offset])
 
-    const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to) => {
+    const _fetch = async ({page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to}) => {
         try {
             setLoading(true)
             const payload = {companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to}
 
+            console.log("CarList.js", payload);
             const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
             assert(Array.isArray(data), 'Cars list is not array');
             const _data = data.length > 0 ? data[0] : {}
@@ -103,7 +105,17 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to)
+                _fetch({
+                    page,
+                    companies: props.companies,
+                    pickupLocation: props.pickupLocation,
+                    fuel: props.fuel,
+                    gearbox: props.gearbox,
+                    mileage: props.mileage,
+                    deposit: props.deposit,
+                    from: props.from,
+                    to: props.to
+                })
             } else {
                 setRows([])
                 setFetch(false)
@@ -133,9 +145,20 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.reload) {
             setPage(1)
-            _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
+            _fetch({
+                page: 1,
+                companies: props.companies,
+                pickupLocation: props.pickupLocation,
+                fuel: props.fuel,
+                gearbox: props.gearbox,
+                mileage: props.mileage,
+                deposit: props.deposit,
+                availability: props.availability,
+                to: props.to,
+                from: props.from
+            })
         }
-    }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to])
 
     const getExtraIcon = (option, extra) => {
         let available = false

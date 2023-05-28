@@ -474,3 +474,17 @@ export const getAdditionalDriverOption = (additionalDriver, days, fr, hidePlus) 
 export const getBirthDateError = (minimumAge) => (
     `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`
 )
+
+// TODO: create monorepo to remove duplication like this
+/**
+ * @param user
+ * @return {string}
+ */
+export function getUserLang(user) {
+    if(user && typeof user === 'object' && 'language' in user && typeof user.language === 'string') {
+        if(['ar','pl','fr','en'].includes(user.language)) {
+            return user.language
+        }
+    }
+    return 'en';
+}

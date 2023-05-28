@@ -494,6 +494,8 @@ const Booking = () => {
                                 onChange={handleCarSelectListChange}
                                 required
                                 value={car}
+                                from={from}
+                                to={to}
                             />
 
                             <FormControl fullWidth margin="dense">

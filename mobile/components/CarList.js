@@ -31,12 +31,12 @@ const CarList = (props) => {
         })()
     }, [])
 
-    const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
+    const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to) => {
         if (companies.length > 0) {
             setLoading(true)
             setFetch(true)
 
-            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit }
+            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to }
 
             CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
                 .then(data => {
@@ -64,7 +64,7 @@ const CarList = (props) => {
     useEffect(() => {
         if (props.companies) {
             if (props.companies.length > 0) {
-                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
+                _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to)
             } else {
                 setRows([])
                 setFetch(false)

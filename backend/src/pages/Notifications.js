@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {strings as commonStrings} from '../lang/common'
 import {strings} from '../lang/notifications'
 import Master from '../components/Master'
-import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import {
     Button,
@@ -45,8 +44,8 @@ const Notifications = () => {
     const [selectedRows, setSelectedRows] = useState([])
     const notificationsListRef = useRef(null)
 
-    const _fr = user && user.language === 'fr'
-    const _locale = _fr ? fr : user.language === 'pl' ? pl : enUS
+    const _fr = user && getUserLang(user) === 'fr';
+    const _locale = _fr ? fr : getUserLang(user) === 'pl' ? pl : enUS
     const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
 
     const fetch = useCallback(async () => {

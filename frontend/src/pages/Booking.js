@@ -289,6 +289,8 @@ const Booking = () => {
                                 required
                                 value={car}
                                 readOnly={!edit}
+                                from={from}
+                                to={to}
                             />
 
                             <FormControl fullWidth margin="dense">

@@ -531,4 +531,36 @@ Ideal UX should assume that I can create new supplier during booking creation an
 care about his image, because during booking creation probably time of client waiting
 for this booking is most important resource.
 
+```typescript
 
+/**
+ * from: The target collection.
+ * localField: The local join field.
+ * foreignField: The target join field.
+ * as: The name for the results.
+ * pipeline: Optional pipeline to run on the foreign collection.
+ * let: Optional variables to use in the pipeline field stages.
+ */
+[
+{
+  from: 'Booking',
+  localField: '_id',
+  foreignField: 'car',
+  as: 'bookings',
+  let: { id: "$_id", from: Date("2023-05-27T09:23:05.935+00:00"), to: Date("2023-05-29T16:00:00.000+00:00") },
+  pipeline: [
+  { $match: 
+    { $expr:
+      { $and:
+        [
+          { $eq: [ "$car",  "$$id" ] },
+          { $and: [ { $lt: ["$from", "$$to"] }, { $lt: ["$$from", "$to"] } ] },
+          { status:  [ "deposit", "paid", "reserved" ]  }
+        ]
+      }
+    }
+  },
+ ]
+}
+]
+```

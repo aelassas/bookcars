@@ -20,6 +20,7 @@ import { format } from 'date-fns'
 import { fr, enUS, pl} from "date-fns/locale"
 
 import '../assets/css/notifications.css'
+import {getUserLang} from "../common/Helper";
 
 const Notifications = () => {
     const [user, setUser] = useState(null)
@@ -33,8 +34,8 @@ const Notifications = () => {
     const [rowCount, setRowCount] = useState(-1)
     const notificationsListRef = useRef(null)
 
-    const _fr = user && user.language === 'fr'
-    const _locale = _fr ? fr : user.language === 'pl' ? pl : enUS
+    const _fr = user && getUserLang(user) === 'fr'
+    const _locale = _fr ? fr : getUserLang(user) === 'pl' ? pl : enUS
     const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
 
     const fetch = useCallback(async () => {
