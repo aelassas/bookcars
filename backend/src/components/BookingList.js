@@ -564,7 +564,10 @@ const BookingList = (props) => {
                             rows={rows}
                             rowCount={rowCount}
                             // loading={loading}
-                            rowsPerPageOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
+                            initialState={{
+                                pagination: { paginationModel: { pageSize: Env.BOOKINGS_PAGE_SIZE } },
+                              }}
+                            pageSizeOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
                             pagination
                             page={page}
                             pageSize={pageSize}
