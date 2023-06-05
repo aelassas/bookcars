@@ -306,7 +306,10 @@ const UserList = (props) => {
                     rows={rows}
                     rowCount={rowCount}
                     // loading={loading}
-                    rowsPerPageOptions={[Env.PAGE_SIZE, 50, 100]}
+                    initialState={{
+                        pagination: { paginationModel: { pageSize: Env.PAGE_SIZE } },
+                      }}
+                    pageSizeOptions={[Env.PAGE_SIZE, 50, 100]}
                     pagination
                     page={page}
                     pageSize={pageSize}
