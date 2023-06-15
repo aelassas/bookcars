@@ -20,8 +20,7 @@ BookCars is an open source car rental platform, supplier oriented, with a backen
 
 # Links
 
-* [Download](https://github.com/aelassas/bookcars/releases/latest)
-* [Installing](https://github.com/aelassas/bookcars/wiki/Installation)
+* [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 * [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
 * [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
 * [Documentation](https://github.com/aelassas/bookcars/wiki)
