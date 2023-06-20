@@ -58,6 +58,12 @@ const BookingList = (props) => {
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
     const [openDeleteDialog, setopenDeleteDialog] = useState(false)
     const [offset, setOffset] = useState(0)
+    const [paginationModel, setPaginationModel] = useState({ pageSize: Env.BOOKINGS_PAGE_SIZE, page: 0 })
+
+    useEffect(() => {
+        setPage(paginationModel.page)
+        setPageSize(paginationModel.pageSize)
+    }, [paginationModel])
 
     const _fetch = (page, user) => {
         const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
@@ -179,8 +185,11 @@ const BookingList = (props) => {
                 headerName: strings.DRIVER,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/user?u=${params.value._id}`}>{params.value.fullName}</Link>
+                    <Link href={`/user?u=${params.row.driver._id}`}>{params.value}</Link>
                 ),
+                valueGetter: (params) => (
+                    params.value.fullName
+                )
             },
             {
                 field: 'from',
@@ -216,6 +225,9 @@ const BookingList = (props) => {
                 renderCell: (params) => (
                     <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>
                 ),
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'action',
@@ -283,8 +295,11 @@ const BookingList = (props) => {
                 headerName: strings.CAR,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/car?cr=${params.value._id}`}>{params.value.name}</Link>
+                    <Link href={`/car?cr=${params.row.car._id}`}>{params.value}</Link>
                 ),
+                valueGetter: (params) => (
+                    params.value.name
+                )
             })
         }
 
@@ -294,12 +309,15 @@ const BookingList = (props) => {
                 headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
-                    <Link href={`/supplier?c=${params.value._id}`} className='cell-company'>
-                        <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                            alt={params.value.fullName}
+                    <Link href={`/supplier?c=${params.row.company._id}`} className='cell-company'>
+                        <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
+                            alt={params.value}
                             style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                     </Link>
                 ),
+                valueGetter: (params) => (
+                    params.value.fullName
+                )
             })
         }
 
@@ -566,27 +584,21 @@ const BookingList = (props) => {
                             // loading={loading}
                             initialState={{
                                 pagination: { paginationModel: { pageSize: Env.BOOKINGS_PAGE_SIZE } },
-                              }}
+                            }}
                             pageSizeOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
                             pagination
-                            page={page}
-                            pageSize={pageSize}
                             paginationMode='server'
-                            onPageChange={(page) => {
-                                setPage(page)
-                            }}
-                            onPageSizeChange={(pageSize) => {
-                                setPage(0)
-                                setPageSize(pageSize)
-                            }}
+                            paginationModel={paginationModel}
+                            onPaginationModelChange={setPaginationModel}
                             localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                            components={{
-                                NoRowsOverlay: () => ''
+                            slots={{
+                                noRowsOverlay: () => ''
                             }}
-                            onSelectionModelChange={(selectedIds) => {
+                            onRowSelectionModelChange={(selectedIds) => {
                                 setSelectedIds(selectedIds)
+                                console.log(selectedIds)
                             }}
-                            disableSelectionOnClick
+                            disableRowSelectionOnClick
                         />)
             }
             <Dialog

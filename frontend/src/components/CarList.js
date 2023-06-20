@@ -160,7 +160,7 @@ const CarList = (props) => {
                     </CardContent>
                 </Card>
                 :
-                ((props.from && props.to) || props.hidePrice) && (props.pickupLocation && props.dropOffLocation) &&
+                ((props.from && props.to) && (props.pickupLocation && props.dropOffLocation) || props.hidePrice) &&
                 rows.map((car, index) => (
                     <article key={car._id}>
                         <div className='name'><h2>{car.name}</h2></div>

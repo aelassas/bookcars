@@ -55,6 +55,12 @@ const BookingList = (props) => {
     const [cancelRequestSent, setCancelRequestSent] = useState(false)
     const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
     const [offset, setOffset] = useState(0)
+    const [paginationModel, setPaginationModel] = useState({ pageSize: Env.BOOKINGS_PAGE_SIZE, page: 0 })
+
+    useEffect(() => {
+        setPage(paginationModel.page)
+        setPageSize(paginationModel.pageSize)
+    }, [paginationModel])
 
     const _fetch = (page, user) => {
         const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
@@ -196,6 +202,9 @@ const BookingList = (props) => {
                 renderCell: (params) => (
                     <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>
                 ),
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'action',
@@ -239,9 +248,9 @@ const BookingList = (props) => {
                 field: 'car',
                 headerName: strings.CAR,
                 flex: 1,
-                renderCell: (params) => (
+                valueGetter: (params) => (
                     params.value.name
-                ),
+                )
             })
         }
 
@@ -251,10 +260,13 @@ const BookingList = (props) => {
                 headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
-                    <img src={Helper.joinURL(Env.CDN_USERS, params.value.avatar)}
-                        alt={params.value.fullName}
+                    <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
+                        alt={params.value}
                         style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                 ),
+                valueGetter: (params) => (
+                    params.value.fullName
+                )
             })
         }
 
@@ -455,22 +467,14 @@ const BookingList = (props) => {
                             // loading={loading}
                             initialState={{
                                 pagination: { paginationModel: { pageSize: Env.BOOKINGS_PAGE_SIZE } },
-                              }}
+                            }}
                             pageSizeOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
-                            pagination
-                            page={page}
-                            pageSize={pageSize}
                             paginationMode='server'
-                            onPageChange={(page) => {
-                                setPage(page)
-                            }}
-                            onPageSizeChange={(pageSize) => {
-                                setPage(0)
-                                setPageSize(pageSize)
-                            }}
+                            paginationModel={paginationModel}
+                            onPaginationModelChange={setPaginationModel}
                             localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                            components={{
-                                NoRowsOverlay: () => ''
+                            slots={{
+                                noRowsOverlay: () => ''
                             }}
                             disableSelectionOnClick
                         />)
