@@ -15,7 +15,7 @@
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.3.1",
     "escape-string-regexp": "^5.0.0",
     "expo-server-sdk": "^3.7.0",
     "express": "^4.18.2",
@@ -24,11 +24,14 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
     "localized-strings": "^0.2.4",
-    "mongoose": "^7.2.3",
+    "mongoose": "^7.3.0",
     "multer": "^1.4.4",
     "nocache": "^4.0.0",
     "nodemailer": "^6.9.3",
     "uuid": "^9.0.0",
     "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

@@ -47,6 +47,12 @@ const UserList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(props.reload)
     const [reloadColumns, setReloadColumns] = useState(false)
+    const [paginationModel, setPaginationModel] = useState({ pageSize: Env.PAGE_SIZE, page: 0 })
+
+    useEffect(() => {
+        setPage(paginationModel.page)
+        setPageSize(paginationModel.pageSize)
+    }, [paginationModel])
 
     const _fetch = (page, user) => {
         setLoading(true)
@@ -185,17 +191,26 @@ const UserList = (props) => {
                             <span>{params.value}</span>
                         </Link>)
 
-                }
+                },
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'email',
                 headerName: commonStrings.EMAIL,
-                flex: 1
+                flex: 1,
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'phone',
                 headerName: commonStrings.PHONE,
-                flex: 1
+                flex: 1,
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'type',
@@ -204,6 +219,9 @@ const UserList = (props) => {
                 renderCell: (params) => (
                     <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>
                 ),
+                valueGetter: (params) => (
+                    params.value
+                )
             },
             {
                 field: 'action',
@@ -308,29 +326,24 @@ const UserList = (props) => {
                     // loading={loading}
                     initialState={{
                         pagination: { paginationModel: { pageSize: Env.PAGE_SIZE } },
-                      }}
+                    }}
                     pageSizeOptions={[Env.PAGE_SIZE, 50, 100]}
                     pagination
                     page={page}
                     pageSize={pageSize}
                     paginationMode='server'
-                    onPageChange={(page) => {
-                        setPage(page)
-                    }}
-                    onPageSizeChange={(pageSize) => {
-                        setPage(0)
-                        setPageSize(pageSize)
-                    }}
+                    paginationModel={paginationModel}
+                    onPaginationModelChange={setPaginationModel}
                     localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                    components={{
-                        NoRowsOverlay: () => ''
+                    slots={{
+                        noRowsOverlay: () => ''
                     }}
-                    onSelectionModelChange={(selectedIds) => {
+                    onRowSelectionModelChange={(selectedIds) => {
                         setSelectedIds(selectedIds)
                         setReloadColumns(true)
                     }}
                     getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
-                    disableSelectionOnClick
+                    disableRowSelectionOnClick
                 />
             }
 
