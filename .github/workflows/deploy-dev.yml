@@ -1,0 +1,72 @@
+name: Nuxt
+
+on:
+  workflow_dispatch:
+
+env:
+  DOCKER_REGISTRY_DOMAIN: registry.digitalocean.com
+  USERNAME: root
+  HOST: do.mg0.pl
+
+jobs:
+  api-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 20.x ]
+        mongodb-version: [ '6.0' ]
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - run: npm install
+        working-directory: api
+
+      - run: npm test
+        working-directory: api
+        env:
+          CI: true
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare .env to build
+        run: cp .env.example .env
+      - name: Build the Docker image
+        run: docker compose build
+      - name: Login to registry
+        run: docker login -u ${{ secrets.DOCKER_TOKEN }} -p ${{ secrets.DOCKER_TOKEN }} ${{ env.DOCKER_REGISTRY_DOMAIN }}
+      - name: Push images to Registry
+        run: docker compose push
+
+  reload:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.env }} == 'dev'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: deploy.yml
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          inventory: |
+            [local]
+            127.0.0.1 env=prod
+            
+            [api]
+            do.mg0.pl ansible_user=root dir=bookcar
+    needs:
+      - api-test
+      - image

@@ -2,18 +2,7 @@ name: Nuxt
 
 on:
   push:
-    branches: [ "main" , "deployment"]
-
-  workflow_dispatch:
-    inputs:
-      env:
-        description: 'Environment'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - prod
+    branches: ["main"]
 
 env:
   DOCKER_REGISTRY_DOMAIN: registry.digitalocean.com
@@ -63,26 +52,8 @@ jobs:
       - name: Push images to Registry
         run: docker compose push
 
-  reload-prod:
+  reload:
     runs-on: ubuntu-latest
-    if: ${{ inputs.env }} == 'prod' or !${{ inputs.env }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run playbook
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: deploy.yml
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          inventory: |
-            [local]
-            127.0.0.1 env=prod
-            
-            [api]
-            do.mg0.pl ansible_user=root dir=bookcar
-
-  reload-dev:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.env }} == 'dev'
     steps:
       - uses: actions/checkout@v3
       - name: Run playbook
