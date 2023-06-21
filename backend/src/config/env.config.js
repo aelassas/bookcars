@@ -24,7 +24,7 @@ const Env = {
             label: 'Polish'
         }
     ],
-    DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'en',
+    DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'pl',
     PAGE_SIZE: parseInt(process.env.REACT_APP_BC_PAGE_SIZE || 30),
     CARS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_CARS_PAGE_SIZE || 15),
     BOOKINGS_PAGE_SIZE: parseInt(process.env.REACT_APP_BC_BOOKINGS_PAGE_SIZE || 20),
