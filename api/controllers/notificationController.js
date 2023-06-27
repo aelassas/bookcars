@@ -170,8 +170,8 @@ export const markAsRead = async (req, res) => {
             return res.status(400).send(strings.DB_ERROR + err)
         }
         const counter = await NotificationCounter.findOne({ user: userId })
-        counter.count -=
-            await counter.save()
+        counter.count -= length
+        await counter.save()
 
         return res.sendStatus(200)
 
@@ -198,11 +198,11 @@ export const markAsUnRead = async (req, res) => {
             return res.status(400).send(strings.DB_ERROR + err)
         }
         const counter = await NotificationCounter.findOne({ user: userId })
-        counter.count += notifications.filter(notification => notification.isRead).length
+        counter.count += length
         await counter.save()
 
         return res.sendStatus(200)
-        
+
     } catch (err) {
         console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
