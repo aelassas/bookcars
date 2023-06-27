@@ -157,7 +157,7 @@ export const book = async (req, res) => {
         pickupLocation.name = pickupLocation.values.filter(value => value.language === user.language)[0].value
         const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
         dropOffLocation.name = dropOffLocation.values.filter(value => value.language === user.language)[0].value
-        console.log('req.body.payLater', req.body.payLater)
+        
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -263,7 +263,7 @@ const notifyDriver = async (booking) => {
         // compressed).
         let chunks = expo.chunkPushNotifications(messages)
         let tickets = [];
-        
+
         (async () => {
             // Send the chunks to the Expo push notification service. There are
             // different strategies you could use. A simple one is to send one chunk at a
@@ -271,7 +271,7 @@ const notifyDriver = async (booking) => {
             for (let chunk of chunks) {
                 try {
                     let ticketChunk = await expo.sendPushNotificationsAsync(chunk)
-                    console.log(ticketChunk)
+                    
                     tickets.push(...ticketChunk)
                     // NOTE: If a ticket contains an error code in ticket.details.error, you
                     // must handle it appropriately. The error codes are listed in the Expo
