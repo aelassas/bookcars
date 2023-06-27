@@ -193,6 +193,7 @@ export const markAsUnRead = async (req, res) => {
 
         bulk.find({ _id: { $in: ids } }).update({ $set: { isRead: false } })
         const result = await bulk.execute()
+        
         if (result.modifiedCount !== length) {
             console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err)
             return res.status(400).send(strings.DB_ERROR + err)
