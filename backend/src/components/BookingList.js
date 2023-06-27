@@ -343,7 +343,7 @@ const BookingList = (props) => {
                             row.status = status
                         }
                     })
-                    setRows(rows)
+                    setRows(Helper.clone(rows))
                 } else {
                     Helper.error()
                 }
@@ -596,7 +596,6 @@ const BookingList = (props) => {
                             }}
                             onRowSelectionModelChange={(selectedIds) => {
                                 setSelectedIds(selectedIds)
-                                console.log(selectedIds)
                             }}
                             disableRowSelectionOnClick
                         />)

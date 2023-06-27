@@ -262,7 +262,8 @@ const notifyDriver = async (booking) => {
         // and to compress them (notifications with similar content will get
         // compressed).
         let chunks = expo.chunkPushNotifications(messages)
-        let tickets = []
+        let tickets = [];
+        
         (async () => {
             // Send the chunks to the Expo push notification service. There are
             // different strategies you could use. A simple one is to send one chunk at a
@@ -383,20 +384,15 @@ export const updateStatus = async (req, res) => {
         const bookings = await Booking.find({ _id: { $in: ids } })
 
         bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } })
-        bulk.execute((err, response) => {
-            if (err) {
-                console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
-                return res.status(400).send(strings.DB_ERROR + err)
+        await bulk.execute()
+        bookings.forEach(async (booking) => {
+            if (booking.status !== status) {
+                await notifyDriver(booking)
             }
-
-            bookings.forEach(async (booking) => {
-                if (booking.status !== status) {
-                    await notifyDriver(booking)
-                }
-            })
-
-            return res.sendStatus(200)
         })
+
+        return res.sendStatus(200)
+
     } catch (err) {
         console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
