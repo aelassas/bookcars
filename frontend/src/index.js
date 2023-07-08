@@ -7,7 +7,10 @@ import * as UserService from './services/UserService'
 import { ToastContainer, toast } from 'react-toastify'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import { frFR, enUS } from '@mui/material/locale'
+
+import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
+import { frFR, enUS } from '@mui/x-date-pickers/locales'
+import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -62,8 +65,10 @@ if (lang !== '') {
 }
 
 language = UserService.getLanguage()
+const isFr = language === 'fr'
 
-const theme = createTheme({
+const theme = createTheme(
+    {
     typography: {
         fontFamily: [
             '-apple-system',
@@ -134,7 +139,11 @@ const theme = createTheme({
             },
         },
     },
-}, language === 'fr' ? frFR : enUS)
+}
+, isFr ? frFR : enUS
+, isFr ? dataGridfrFR : dataGridenUS
+, isFr ? corefrFR : coreenUS
+)
 
 root.render(
     <ThemeProvider theme={theme}>
