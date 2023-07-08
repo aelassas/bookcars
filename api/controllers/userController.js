@@ -328,19 +328,19 @@ export const checkToken = (req, res) => {
         })
 }
 
-export const deleteTokens = (req, res) => {
-    Token.deleteMany({ user: new mongoose.Types.ObjectId(req.params.userId) })
-        .then((result) => {
-            if (result.deletedCount > 0) {
-                return res.sendStatus(200)
-            } else {
-                return res.sendStatus(400)
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+export const deleteTokens = async (req, res) => {
+    try {
+        const result = await Token.deleteMany({ user: new mongoose.Types.ObjectId(req.params.userId) })
+
+        if (result.deletedCount > 0) {
+            return res.sendStatus(200)
+        } else {
+            return res.sendStatus(400)
+        }
+    } catch (err) {
+        console.error(strings.DB_ERROR, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const resend = (req, res) => {

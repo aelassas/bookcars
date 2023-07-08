@@ -405,18 +405,11 @@ export const deleteBookings = async (req, res) => {
 
         const bookings = await Booking.find({ _id: { $in: ids }, additionalDriver: true, _additionalDriver: { $ne: null } })
 
-        Booking.deleteMany({ _id: { $in: ids } }, async (err, response) => {
-            if (err) {
-                console.error(strings.DB_ERROR + err)
-                return res.status(400).send(strings.DB_ERROR + err)
-            }
+        await Booking.deleteMany({ _id: { $in: ids } })
+        const additionalDivers = bookings.map(booking => new mongoose.Types.ObjectId(booking._additionalDriver))
+        await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
 
-            const additionalDivers = bookings.map(booking => new mongoose.Types.ObjectId(booking._additionalDriver))
-            await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
-
-            return res.sendStatus(200)
-        })
-
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[booking.delete]  ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
