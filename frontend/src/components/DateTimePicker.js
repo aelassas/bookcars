@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { MobileDateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker'
+import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 // import { TextField } from '@mui/material'
 // import { format } from 'date-fns'
 import { fr, enUS } from "date-fns/locale"
@@ -32,6 +32,9 @@ const DateTimePicker = (props) => {
                     textField: {
                         variant: props.variant || 'standard',
                         readOnly: true
+                    },
+                    actionBar: {
+                        actions: ['accept', 'cancel', 'today', 'clear']
                     }
                 }}
                 format={_format}
