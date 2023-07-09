@@ -109,7 +109,6 @@ export const dateTime = (date, time) => {
 export const error = (err, __toast__ = true) => {
     if (err) console.log(err)
     if (err?.request?._response) console.log(err?.request?._response)
-    // if (err.response) console.log(err.response)
     if (__toast__) toast(i18n.t('GENERIC_ERROR'))
 }
 
