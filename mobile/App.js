@@ -25,6 +25,8 @@ const App = () => {
   const responseListener = useRef()
   const navigationRef = useRef()
 
+
+
   useEffect(() => {
     async function register() {
       const loggedIn = await UserService.loggedIn()

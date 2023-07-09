@@ -11,7 +11,7 @@ import {
     useNavigation,
     useNavigationState
 } from '@react-navigation/native'
-import { getHeaderTitle } from '@react-navigation/elements'
+// import { getHeaderTitle } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -172,7 +172,7 @@ const DrawerNavigator = (props) => {
                         activeTintColor="#f37022"
                         buildLink={buildLink}
                         {...props} />}
-                useLegacyImplementation
+                // useLegacyImplementation
             >
                 {
                     drawerItems.map(drawer => (

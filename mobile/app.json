@@ -22,7 +22,8 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png"
       },
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.bookcars"
     },
     "ios": {
       "buildNumber": "1.0.0",
@@ -32,6 +33,14 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png",
         "tabletImage": "./assets/splash-tablet.png"
+      }
+    },
+    "plugins": [
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fe1ab335-41ae-4a35-960b-0052b493db49"
       }
     }
   }

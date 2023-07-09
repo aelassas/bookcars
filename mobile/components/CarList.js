@@ -10,6 +10,7 @@ import Button from './Button'
 
 const CarList = (props) => {
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+    const [onScrollEnd, setOnScrollEnd] = useState(false)
     const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
@@ -40,16 +41,20 @@ const CarList = (props) => {
 
             CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
                 .then(data => {
-                    const _data = data.length > 0 ? data[0] : {}
-                    if (_data.length === 0) _data.resultData = []
-                    const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                    const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
-                    setRows(_rows)
-                    setFetch(_data.resultData.length > 0)
-                    if (props.onLoad) {
-                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+                    if (data) {
+                        const _data = data.length > 0 ? data[0] : {}
+                        if (_data.length === 0) _data.resultData = []
+                        const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                        const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+                        setRows(_rows)
+                        setFetch(_data.resultData.length > 0)
+                        if (props.onLoad) {
+                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+                        }
+                        setLoading(false)
+                    } else {
+                        Helper.error()
                     }
-                    setLoading(false)
                 })
                 .catch((err) => {
                     Helper.error(err)
@@ -227,11 +232,12 @@ const CarList = (props) => {
                         </View>
                     )}
                     keyExtractor={(item, index) => item._id}
-                    onEndReachedThreshold={0.5}
-                    onEndReached={({ distanceFromEnd }) => {
-                        if (distanceFromEnd >= 0 && fetch) {
+                    onEndReached={() => setOnScrollEnd(true)}
+                    onMomentumScrollEnd={() => {
+                        if (onScrollEnd && fetch) {
                             setPage(page + 1)
                         }
+                        setOnScrollEnd(false)
                     }}
                     ListHeaderComponent={props.header}
                     ListFooterComponent={fetch && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}

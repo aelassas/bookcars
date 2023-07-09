@@ -32,17 +32,21 @@ const LocationSelectList = (props) => {
 
         LocationService.getLocations(text, 1, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {}
-                if (_data.length === 0) _data.resultData = []
-                const _rows = _data.resultData.map(location => ({
-                    id: location._id,
-                    title: location.name
-                }))
-                setRows(_rows)
-                if (props.onFetch) {
-                    props.onFetch()
+                if (data) {
+                    const _data = data.length > 0 ? data[0] : {}
+                    if (_data.length === 0) _data.resultData = []
+                    const _rows = _data.resultData.map(location => ({
+                        id: location._id,
+                        title: location.name
+                    }))
+                    setRows(_rows)
+                    if (props.onFetch) {
+                        props.onFetch()
+                    }
+                    setLoading(false)
+                } else {
+                    Helper.error()
                 }
-                setLoading(false)
             })
             .catch((err) => {
                 Helper.error(err)
