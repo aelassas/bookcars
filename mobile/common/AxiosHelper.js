@@ -6,7 +6,7 @@ export const init = (axios) => {
         retries: Env.AXIOS_RETRIES, // number of retries
         retryDelay: (retryCount) => {
             console.log(`retry attempt: ${retryCount}`)
-            return retryCount * Env.AXIOS_RETRIES_INTERVAL// time interval between retries
+            return retryCount * Env.AXIOS_RETRIES_INTERVAL // time interval between retries
         },
         retryCondition: (err) => {
             // if retry condition is not specified, by default idempotent requests are retried
