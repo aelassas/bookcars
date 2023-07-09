@@ -1,6 +1,9 @@
 import axios from 'axios'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
+import * as AxiosHelper from '../common/AxiosHelper'
+
+AxiosHelper.init(axios)
 
 export const getNotificationCounter = async (userId) => {
     const headers = await UserService.authHeader()

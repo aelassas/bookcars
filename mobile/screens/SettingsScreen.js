@@ -257,11 +257,11 @@ const SettingsScreen = ({ navigation, route }) => {
 
                                                 let pickerResult = await ImagePicker.launchImageLibraryAsync()
 
-                                                if (pickerResult.cancelled === true) {
+                                                if (pickerResult.canceled === true) {
                                                     return
                                                 }
 
-                                                const uri = pickerResult.uri
+                                                const uri = pickerResult.assets[0].uri
                                                 const name = Helper.getFileName(uri)
                                                 const type = Helper.getMimeType(name)
                                                 const image = { uri, name, type }

@@ -128,3 +128,7 @@ dist/
 google-services.json
 
 # @end expo-cli
+# Expo
+.expo
+dist/
+web-build/

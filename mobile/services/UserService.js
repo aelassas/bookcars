@@ -1,6 +1,9 @@
 import axios from 'axios'
 import Env from '../config/env.config'
 import * as AsyncStorage from '../common/AsyncStorage'
+import * as AxiosHelper from '../common/AxiosHelper'
+
+AxiosHelper.init(axios)
 
 export const authHeader = async () => {
     const user = await getCurrentUser()

@@ -13,6 +13,8 @@ import BookingStatus from './BookingStatus'
 import Button from './Button'
 
 const BookingList = (props) => {
+    const [firstLoad, setFirstLoad] = useState(true)
+    const [onScrollEnd, setOnScrollEnd] = useState(false)
     const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [page, setPage] = useState(0)
@@ -61,11 +63,20 @@ const BookingList = (props) => {
     }, [page])
 
     useEffect(() => {
-        if (props.companies) {
-            if (page > 0) {
-                _fetch(true)
-            } else {
-                _fetch()
+        if (firstLoad && props.companies && props.companies.length > 0 && props.statuses && props.statuses.length > 0) {
+            _fetch()
+            setFirstLoad(false)
+        }
+    }, [firstLoad, props.companies, props.statuses])
+
+    useEffect(() => {
+        if (!firstLoad) {
+            if (props.companies && props.statuses) {
+                if (page > 0) {
+                    _fetch(true)
+                } else {
+                    _fetch()
+                }
             }
         }
     }, [props.companies, props.statuses, props.filter])
@@ -240,7 +251,7 @@ const BookingList = (props) => {
                                             {
                                                 !cancelRequestProcessing &&
                                                 <NativeButton
-                                                    color='#f37022'
+                                                    // color='#f37022'
                                                     onPress={() => {
                                                         setOpenCancelDialog(false)
                                                         if (cancelRequestSent) {
@@ -256,7 +267,7 @@ const BookingList = (props) => {
                                             {
                                                 !cancelRequestSent && !cancelRequestProcessing &&
                                                 <NativeButton
-                                                    color='#f37022'
+                                                    // color='#f37022'
                                                     onPress={async () => {
                                                         try {
                                                             setCancelRequestProcessing(true)
@@ -293,10 +304,12 @@ const BookingList = (props) => {
                     )
                 }}
                 keyExtractor={(item, index) => item._id}
-                onEndReached={() => {
-                    if (fetch && props.companies) {
+                onEndReached={() => setOnScrollEnd(true)}
+                onMomentumScrollEnd={() => {
+                    if (onScrollEnd && fetch && props.companies) {
                         setPage(page + 1)
                     }
+                    setOnScrollEnd(false)
                 }}
                 ListHeaderComponent={props.header}
                 ListFooterComponent={fetch && !openCancelDialog && <ActivityIndicator size='large' color='#f37022' style={styles.indicator} />}
