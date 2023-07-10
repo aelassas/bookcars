@@ -20,6 +20,11 @@ Notifications.setNotificationHandler({
   }),
 })
 
+// Prevent native splash screen from autohiding before App component declaration
+SplashScreen.preventAutoHideAsync()
+  .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
+  .catch(console.warn) // it's good to explicitly catch and inspect any error
+
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
   const responseListener = useRef()
@@ -62,22 +67,10 @@ const App = () => {
     }
   }, [])
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // Keep the splash screen visible while we fetch resources
-        await SplashScreen.preventAutoHideAsync()
-        await new Promise(resolve => setTimeout(resolve, 500))
-      } catch (err) {
-        Helper.error(err)
-      } finally {
-        // Tell the application to render
-        setAppIsReady(true)
-      }
-    }
 
-    prepare()
-  }, [])
+  setTimeout(() => {
+    setAppIsReady(true)
+  }, 500)
 
   const onReady = useCallback(async () => {
     if (appIsReady) {
