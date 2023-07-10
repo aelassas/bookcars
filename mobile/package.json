@@ -5,8 +5,8 @@
   "scripts": {
     "start": "npx expo start",
     "start-clean": "npx expo start -c",
-    "android": "npx expo run:android",
-    "ios": "npx expo run:ios",
+    "android": "npx expo run:android --no-build-cache",
+    "ios": "npx expo run:ios --no-build-cache",
     "prebuild": "npx expo prebuild",
     "prebuild-android": "npx expo prebuild --platform android",
     "prebuild-ios": "npx expo prebuild --platform ios",
