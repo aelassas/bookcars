@@ -33,7 +33,8 @@
         "backgroundColor": "#f37022",
         "image": "./assets/splash.png",
         "tabletImage": "./assets/splash-tablet.png"
-      }
+      },
+      "bundleIdentifier": "com.bookcars"
     },
     "plugins": [
       "expo-localization"
