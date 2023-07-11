@@ -63,10 +63,12 @@ const BookingList = (props) => {
     }, [page])
 
     useEffect(() => {
-        if (firstLoad && props.companies && props.companies.length > 0 && props.statuses && props.statuses.length > 0) {
-            _fetch()
-            setFirstLoad(false)
-        }
+        (async function () {
+            if (firstLoad && props.companies && props.companies.length > 0 && props.statuses && props.statuses.length > 0) {
+                await _fetch()
+                setFirstLoad(false)
+            }
+        })()
     }, [firstLoad, props.companies, props.statuses])
 
     useEffect(() => {
