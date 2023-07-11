@@ -12,6 +12,7 @@
     "prebuild-ios": "npx expo prebuild --platform ios",
     "build-android": "eas build --profile production --platform android",
     "build-ios": "eas build --profile production --platform ios",
+    "eas-config": "eas build:configure",
     "build-android-local": "eas build --profile production --platform android --local",
     "optimize": "npx expo-optimize --save"
   },
