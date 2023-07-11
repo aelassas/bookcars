@@ -126,5 +126,6 @@ web-build/
 dist/
 
 google-services.json
+**/google-services.json
 
 # @end expo-cli
