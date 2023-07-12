@@ -130,3 +130,6 @@ google-services.json
 **/google-services.json
 
 # @end expo-cli
+
+# yarn
+.yarn/
