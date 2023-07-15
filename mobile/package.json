@@ -4,16 +4,16 @@
   "main": "index.js",
   "scripts": {
     "start": "npx expo start",
-    "start-clean": "npx expo start -c",
+    "start:clean": "npx expo start -c",
     "android": "npx expo run:android --no-build-cache",
     "ios": "npx expo run:ios --no-build-cache",
     "prebuild": "npx expo prebuild",
-    "prebuild-android": "npx expo prebuild --platform android",
-    "prebuild-ios": "npx expo prebuild --platform ios",
-    "build-android": "eas build --profile production --platform android",
-    "build-android-local": "eas build --profile production --platform android --local",
-    "build-ios": "eas build --profile production --platform ios",
-    "eas-config": "eas build:configure",
+    "prebuild:android": "npx expo prebuild --platform android",
+    "prebuild:ios": "npx expo prebuild --platform ios",
+    "build:android": "eas build --profile production --platform android",
+    "build:android:local": "eas build --profile production --platform android --local",
+    "build:ios": "eas build --profile production --platform ios",
+    "eas:config": "eas build:configure",
     "optimize": "npx expo-optimize --save"
   },
   "dependencies": {
