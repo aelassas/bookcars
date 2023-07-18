@@ -180,5 +180,3 @@ apply from: new File(["node", "--print", "require.resolve('@react-native-communi
 applyNativeModulesAppBuildGradle(project)
 
 apply plugin: 'com.google.gms.google-services'
-
-apply from: "../../node_modules/expo-updates/scripts/create-manifest-android.gradle"
