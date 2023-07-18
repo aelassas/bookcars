@@ -270,7 +270,8 @@ const SettingsScreen = ({ navigation, route }) => {
                                                 if (status == 200) {
                                                     const _user = await UserService.getUser(user._id)
                                                     setUser(_user)
-                                                    setAvatar(Helper.joinURL(Env.CDN_USERS, _user.avatar))
+                                                    const _avatar = Helper.joinURL(Env.CDN_USERS, _user.avatar)
+                                                    setAvatar(_avatar)
                                                 } else {
                                                     Helper.error()
                                                 }
@@ -369,7 +370,7 @@ const SettingsScreen = ({ navigation, route }) => {
                             </Dialog.Content>
                             <Dialog.Actions style={styles.dialogActions}>
                                 <NativeButton
-                                    color='#f37022'
+                                    // color='#f37022'
                                     onPress={() => {
                                         setOpenDeleteDialog(false)
                                     }}
@@ -377,7 +378,7 @@ const SettingsScreen = ({ navigation, route }) => {
                                     {i18n.t('CANCEL')}
                                 </NativeButton>
                                 <NativeButton
-                                    color='#f37022'
+                                    // color='#f37022'
                                     onPress={async () => {
                                         try {
                                             const status = await UserService.deleteAvatar(user._id)
