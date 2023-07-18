@@ -133,3 +133,8 @@ google-services.json
 
 # yarn
 .yarn/
+
+# build
+*.apk
+**/*.apk
+
