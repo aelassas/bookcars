@@ -12,4 +12,4 @@ export const joinURL = (part1, part2) => {
 
 export const clone = (obj) => JSON.parse(JSON.stringify(obj))
 
-export const fileExists = (s) => new Promise(resolve => fs.access(s, fs.constants.F_OK, e => resolve(!e)))
+export const fileExists = (path) => new Promise((resolve) => fs.access(path, fs.constants.F_OK, (err) => resolve(!err)))
