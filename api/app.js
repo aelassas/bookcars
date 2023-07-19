@@ -1,5 +1,5 @@
 import app from './server.js'
-import fs from 'fs'
+import fs from 'fs/promises'
 import https from 'https'
 
 const PORT = parseInt(process.env.BC_PORT) || 4000
@@ -9,8 +9,8 @@ const CERTIFICATE = process.env.BC_CERTIFICATE
 
 if (HTTPS) {
     https.globalAgent.maxSockets = Infinity
-    const privateKey = fs.readFileSync(PRIVATE_KEY, 'utf8')
-    const certificate = fs.readFileSync(CERTIFICATE, 'utf8')
+    const privateKey = await fs.readFile(PRIVATE_KEY, 'utf8')
+    const certificate = await fs.readFile(CERTIFICATE, 'utf8')
     const credentials = { key: privateKey, cert: certificate }
     const httpsServer = https.createServer(credentials, app)
 
