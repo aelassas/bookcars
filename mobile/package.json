@@ -25,7 +25,7 @@
     "axios": "^1.4.0",
     "axios-retry": "^3.5.1",
     "date-fns": "^2.30.0",
-    "expo": "^49.0.0",
+    "expo": "49.0.3",
     "expo-asset": "~8.10.1",
     "expo-constants": "~14.4.2",
     "expo-device": "~5.4.0",
