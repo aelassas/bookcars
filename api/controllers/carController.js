@@ -2,7 +2,7 @@ import Env from '../config/env.config.js'
 import strings from '../config/app.config.js'
 import Car from '../models/Car.js'
 import Booking from '../models/Booking.js'
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -34,7 +34,7 @@ export const create = (req, res) => {
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        await fs.promises.rename(image, newPath)
+                        await fs.rename(image, newPath)
                         car.image = filename
                         try {
                             await car.save()
@@ -163,7 +163,7 @@ export const deleteCar = async (req, res) => {
             if (car.image) {
                 const image = path.join(CDN, car.image)
                 if (await Helper.fileExists(image)) {
-                    await fs.promises.unlink(image)
+                    await fs.unlink(image)
                 }
             }
             await Booking.deleteMany({ car: car._id })
@@ -180,13 +180,13 @@ export const deleteCar = async (req, res) => {
 export const createImage = async (req, res) => {
     try {
         if (!await Helper.fileExists(CDN_TEMP)) {
-            await fs.promises.mkdir(CDN_TEMP, { recursive: true })
+            await fs.mkdir(CDN_TEMP, { recursive: true })
         }
 
         const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
         const filepath = path.join(CDN_TEMP, filename)
 
-        await fs.promises.writeFile(filepath, req.file.buffer)
+        await fs.writeFile(filepath, req.file.buffer)
         res.json(filename)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -200,20 +200,20 @@ export const updateImage = (req, res) => {
         .then(async car => {
             if (car) {
                 if (await Helper.fileExists(CDN)) {
-                    await fs.promises.mkdir(CDN, { recursive: true })
+                    await fs.mkdir(CDN, { recursive: true })
                 }
 
                 if (car.image) {
                     const image = path.join(CDN, car.image)
                     if (await Helper.fileExists(image)) {
-                        await fs.promises.unlink(image)
+                        await fs.unlink(image)
                     }
                 }
 
                 const filename = `${car._id}_${Date.now()}${path.extname(req.file.originalname)}`
                 const filepath = path.join(CDN, filename)
 
-                await fs.promises.writeFile(filepath, req.file.buffer)
+                await fs.writeFile(filepath, req.file.buffer)
                 car.image = filename
                 car.save()
                     .then(usr => {
@@ -242,7 +242,7 @@ export const deleteImage = (req, res) => {
                 if (car.image) {
                     const image = path.join(CDN, car.image)
                     if (await Helper.fileExists(image)) {
-                        await fs.promises.unlink(image)
+                        await fs.unlink(image)
                     }
                 }
                 car.image = null
@@ -270,7 +270,7 @@ export const deleteTempImage = async (req, res) => {
     try {
         const image = path.join(CDN_TEMP, req.params.image)
         if (await Helper.fileExists(image)) {
-            await fs.promises.unlink(image)
+            await fs.unlink(image)
         }
         res.sendStatus(200)
     } catch (err) {
