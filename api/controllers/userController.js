@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs/promises'
 import nodemailer from 'nodemailer'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
@@ -58,7 +58,7 @@ export const signup = async (req, res) => {
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        await fs.promises.rename(avatar, newPath)
+                        await fs.rename(avatar, newPath)
                         user.avatar = filename
                         user.save()
                             .catch(err => {
@@ -224,7 +224,7 @@ export const create = async (req, res) => {
                     const newPath = path.join(CDN, filename)
 
                     try {
-                        await fs.promises.rename(avatar, newPath)
+                        await fs.rename(avatar, newPath)
                         user.avatar = filename
                         user.save()
                             .catch(err => {
@@ -785,13 +785,13 @@ export const getUser = (req, res) => {
 export const createAvatar = async (req, res) => {
     try {
         if (!await Helper.fileExists(CDN_TEMP)) {
-            await fs.promises.mkdir(CDN_TEMP, { recursive: true })
+            await fs.mkdir(CDN_TEMP, { recursive: true })
         }
 
         const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
         const filepath = path.join(CDN_TEMP, filename)
 
-        await fs.promises.writeFile(filepath, req.file.buffer)
+        await fs.writeFile(filepath, req.file.buffer)
         res.json(filename)
     } catch (err) {
         console.error(strings.ERROR, err)
@@ -806,21 +806,21 @@ export const updateAvatar = (req, res) => {
         .then(async user => {
             if (user) {
                 if (!await Helper.fileExists(CDN)) {
-                    await fs.promises.mkdir(CDN, { recursive: true })
+                    await fs.mkdir(CDN, { recursive: true })
                 }
 
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
                     
                     if (await Helper.fileExists(avatar)) {
-                        await fs.promises.unlink(avatar)
+                        await fs.unlink(avatar)
                     }
                 }
 
                 const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
                 const filepath = path.join(CDN, filename)
 
-                await fs.promises.writeFile(filepath, req.file.buffer)
+                await fs.writeFile(filepath, req.file.buffer)
                 user.avatar = filename
                 user.save()
                     .then(usr => {
@@ -850,7 +850,7 @@ export const deleteAvatar = (req, res) => {
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
                     if (await Helper.fileExists(avatar)) {
-                        await fs.promises.unlink(avatar)
+                        await fs.unlink(avatar)
                     }
                 }
                 user.avatar = null
@@ -878,7 +878,7 @@ export const deleteTempAvatar = async (req, res) => {
     try {
         const avatar = path.join(CDN_TEMP, req.params.avatar)
         if (await Helper.fileExists(avatar)) {
-            await fs.promises.unlink(avatar)
+            await fs.unlink(avatar)
         }
         res.sendStatus(200)
     } catch (err) {
@@ -1034,7 +1034,7 @@ export const deleteUsers = async (req, res) => {
             if (user.avatar) {
                 const avatar = path.join(CDN, user.avatar)
                 if (await Helper.fileExists(avatar)) {
-                    await fs.promises.unlink(avatar)
+                    await fs.unlink(avatar)
                 }
             }
             await Booking.deleteMany({ driver: id })

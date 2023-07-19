@@ -7,7 +7,7 @@ import Booking from '../models/Booking.js'
 import Car from '../models/Car.js'
 import escapeStringRegexp from 'escape-string-regexp'
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs/promises'
 import mongoose from 'mongoose'
 import * as Helper from '../common/Helper.js'
 
@@ -62,7 +62,7 @@ export const deleteCompany = async (req, res) => {
             if (company.avatar) {
                 const avatar = path.join(CDN, company.avatar)
                 if (await Helper.fileExists(avatar)) {
-                    await fs.promises.unlink(avatar)
+                    await fs.unlink(avatar)
                 }
                 await Notification.deleteMany({ user: id })
                 const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
@@ -74,7 +74,7 @@ export const deleteCompany = async (req, res) => {
                 cars.forEach(async car => {
                     const image = path.join(CDN_CARS, car.image)
                     if (await Helper.fileExists(image)) {
-                        await fs.promises.unlink(image)
+                        await fs.unlink(image)
                     }
                 })
             }
