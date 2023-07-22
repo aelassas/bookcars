@@ -162,7 +162,7 @@ export const markAsRead = async (req, res) => {
         const notifications = await Notification.find({ _id: { $in: ids }, isRead: false })
         const length = notifications.length
 
-        bulk.find({ _id: { $in: ids } }).update({ $set: { isRead: true } })
+        bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } })
         const result = await bulk.execute()
 
         if (result.modifiedCount !== length) {
@@ -174,7 +174,7 @@ export const markAsRead = async (req, res) => {
         await counter.save()
 
         return res.sendStatus(200)
-
+        
     } catch (err) {
         console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -191,7 +191,7 @@ export const markAsUnRead = async (req, res) => {
         const notifications = await Notification.find({ _id: { $in: ids }, isRead: true })
         const length = notifications.length
 
-        bulk.find({ _id: { $in: ids } }).update({ $set: { isRead: false } })
+        bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } })
         const result = await bulk.execute()
 
         if (result.modifiedCount !== length) {
