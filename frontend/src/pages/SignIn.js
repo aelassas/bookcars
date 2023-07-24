@@ -98,12 +98,12 @@ const SignIn = () => {
                             if (params.has('from')) {
                                 const from = params.get('from')
                                 if (from === 'create-booking') {
-                                    window.location.href = '/create-booking' + window.location.search
+                                    navigate(`/create-booking${window.location.search}`)
                                 } else {
-                                    window.location.href = '/' + window.location.search
+                                    navigate(`/${window.location.search}`)
                                 }
                             } else {
-                                window.location.href = '/' + window.location.search
+                                navigate(`/${window.location.search}`)
                             }
                         } else {
                             UserService.signout()
@@ -118,8 +118,8 @@ const SignIn = () => {
         } else {
             setVisible(true)
         }
-    }, [])
-
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    
     return (
         <div>
             <Header />
