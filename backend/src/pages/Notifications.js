@@ -18,10 +18,12 @@ import Env from '../config/env.config'
 import Backdrop from '../components/SimpleBackdrop'
 import { format } from 'date-fns'
 import { fr, enUS } from "date-fns/locale"
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/notifications.css'
 
 const Notifications = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -211,8 +213,8 @@ const Notifications = () => {
                                                         <Tooltip title={strings.VIEW}>
                                                             <IconButton onClick={async () => {
                                                                 try {
-                                                                    const navigate = () => {
-                                                                        window.location.href = `/booking?b=${row.booking}`
+                                                                    const __navigate__ = () => {
+                                                                        navigate(`/booking?b=${row.booking}`, { replace: true })
                                                                     }
 
                                                                     if (!row.isRead) {
@@ -222,12 +224,12 @@ const Notifications = () => {
                                                                             row.isRead = true
                                                                             setRows(Helper.clone(rows))
                                                                             setNotificationCount(notificationCount - 1)
-                                                                            navigate()
+                                                                            __navigate__()
                                                                         } else {
                                                                             Helper.error()
                                                                         }
                                                                     } else {
-                                                                        navigate()
+                                                                        __navigate__()
                                                                     }
                                                                 }
                                                                 catch (err) {

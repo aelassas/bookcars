@@ -42,8 +42,8 @@ export const deleteImage = (id) => (
     axios.post(`${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`, null, { headers: UserService.authHeader() }).then(res => res.status)
 )
 
-export const deleteTempImage = (avatar) => (
-    axios.post(`${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(avatar)}`, null, { headers: UserService.authHeader() }).then(res => res.status)
+export const deleteTempImage = (image) => (
+    axios.post(`${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(image)}`, null, { headers: UserService.authHeader() }).then(res => res.status)
 )
 
 export const getCar = (id) => (

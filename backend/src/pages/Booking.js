@@ -40,10 +40,12 @@ import {
 } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/booking.css'
 
 const Booking = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState()
     const [loading, setLoading] = useState(false)
     const [noMatch, setNoMatch] = useState(false)
@@ -251,7 +253,7 @@ const Booking = () => {
         BookingService.deleteBookings([booking._id])
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/'
+                    navigate('/', { replace: true })
                 } else {
                     err(true)
                 }

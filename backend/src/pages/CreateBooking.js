@@ -32,10 +32,12 @@ import {
 } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/create-booking.css'
 
 const CreateBooking = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState()
     const [isCompany, setIsCompany] = useState()
     const [visible, setVisible] = useState(false)
@@ -208,7 +210,7 @@ const CreateBooking = () => {
                 BookingService.create({ booking, additionalDriver: _additionalDriver })
                     .then(booking => {
                         if (booking && booking._id) {
-                            window.location = '/'
+                            navigate('/', { replace: true })
                         } else {
                             Helper.error()
                         }

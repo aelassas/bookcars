@@ -20,10 +20,12 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/create-company.css'
 
 const CreateCompany = () => {
+    const navigate = useNavigate()
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
@@ -170,13 +172,13 @@ const CreateCompany = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    window.location.href = '/suppliers'
+                    navigate('/suppliers', { replace: true })
                 })
                 .catch(() => {
-                    window.location.href = '/suppliers'
+                    navigate('/suppliers', { replace: true })
                 })
         } else {
-            window.location.href = '/suppliers'
+            navigate('/suppliers', { replace: true })
         }
     }
 
@@ -227,7 +229,7 @@ const CreateCompany = () => {
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/suppliers'
+                    navigate('/suppliers', { replace: true })
                 } else {
                     setError(true)
                     setLoading(false)

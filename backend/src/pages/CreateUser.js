@@ -26,10 +26,12 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/create-user.css'
 
 const CreateUser = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState()
     const [admin, setAdmin] = useState(false)
     const [fullName, setFullName] = useState('')
@@ -213,13 +215,13 @@ const CreateUser = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    window.location.href = '/users'
+                    navigate('/users', { replace: true })
                 })
                 .catch(() => {
-                    window.location.href = '/users'
+                    navigate('/users', { replace: true })
                 })
         } else {
-            window.location.href = '/users'
+            navigate('/users', { replace: true })
         }
     }
 
@@ -279,7 +281,7 @@ const CreateUser = () => {
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    window.location = '/users'
+                    navigate('/users', { replace: true })
                 } else {
                     setError(true)
                     setLoading(false)

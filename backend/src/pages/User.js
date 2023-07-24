@@ -24,10 +24,12 @@ import {
     Delete as DeleteIcon
 } from '@mui/icons-material'
 import * as CompanyService from '../services/CompanyService'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/user.css'
 
 const User = () => {
+    const navigate = useNavigate()
     const statuses = Helper.getBookingStatuses().map(status => status.value)
 
     const [loggedUser, setLoggedUser] = useState()
@@ -63,7 +65,7 @@ const User = () => {
 
         UserService.deleteUsers([user._id]).then(status => {
             if (status === 200) {
-                window.location.href = '/users'
+                navigate('/users', { replace: true })
             } else {
                 Helper.error()
                 setLoading(false)

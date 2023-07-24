@@ -13,11 +13,12 @@ import {
     Button,
     Link
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/signin.css'
 
 const SignIn = () => {
-
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(false)
@@ -57,15 +58,15 @@ const SignIn = () => {
                         const params = new URLSearchParams(window.location.search)
 
                         if (params.has('u')) {
-                            window.location.href = '/user' + window.location.search
+                            navigate(`/user${window.location.search}`, { replace: true })
                         } else if (params.has('c')) {
-                            window.location.href = '/supplier' + window.location.search
+                            navigate(`/supplier${window.location.search}`, { replace: true })
                         } else if (params.has('cr')) {
-                            window.location.href = '/car' + window.location.search
+                            navigate(`/car${window.location.search}`, { replace: true })
                         } else if (params.has('b')) {
-                            window.location = '/booking' + window.location.search
+                            navigate(`/booking${window.location.search}`, { replace: true })
                         } else {
-                            window.location.href = '/'
+                            navigate('/', { replace: true })
                         }
                     }
                 } else {

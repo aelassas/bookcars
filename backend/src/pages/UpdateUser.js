@@ -28,10 +28,12 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/update-user.css'
 
 const UpdateUser = () => {
+    const navigate = useNavigate()
     const [loggedUser, setLoggedUser] = useState()
     const [user, setUser] = useState()
     const [visible, setVisible] = useState(false)
@@ -186,13 +188,13 @@ const UpdateUser = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then((status) => {
-                    window.location.href = '/users'
+                    navigate('/users', { replace: true })
                 })
                 .catch(() => {
-                    window.location.href = '/users'
+                    navigate('/users', { replace: true })
                 })
         } else {
-            window.location.href = '/users'
+            navigate('/users', { replace: true })
         }
     }
 

@@ -25,10 +25,12 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/company.css'
 
 const Company = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState()
     const [company, setCompany] = useState()
     const [companies, setCompanies] = useState([])
@@ -74,7 +76,7 @@ const Company = () => {
         CompanyService.deleteCompany(company._id)
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/suppliers'
+                    navigate('/suppliers', { replace: true })
                 } else {
                     Helper.error()
                     setLoading(false)
