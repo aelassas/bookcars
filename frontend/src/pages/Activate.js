@@ -17,10 +17,12 @@ import {
     Link
 } from '@mui/material'
 import * as Helper from '../common/Helper'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/activate.css'
 
 const Activate = () => {
+    const navigate = useNavigate()
     const [userId, setUserId] = useState()
     const [email, setEmail] = useState()
     const [token, setToken] = useState()
@@ -79,7 +81,7 @@ const Activate = () => {
                                 UserService.deleteTokens(userId)
                                     .then(status => {
                                         if (status === 200) {
-                                            window.location.href = '/'
+                                            navigate('/', { replace: true })
                                         } else {
                                             Helper.error()
                                         }
