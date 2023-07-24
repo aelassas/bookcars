@@ -76,7 +76,7 @@ const Company = () => {
         CompanyService.deleteCompany(company._id)
             .then(status => {
                 if (status === 200) {
-                    navigate('/suppliers', { replace: true })
+                    navigate('/suppliers')
                 } else {
                     Helper.error()
                     setLoading(false)

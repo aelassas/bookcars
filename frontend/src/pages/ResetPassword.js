@@ -80,7 +80,7 @@ const ResetPassword = () => {
                                 UserService.deleteTokens(userId)
                                     .then(status => {
                                         if (status === 200) {
-                                            navigate('/', { replace: true })
+                                            navigate('/')
                                         } else {
                                             Helper.error()
                                         }

@@ -210,7 +210,7 @@ const CreateBooking = () => {
                 BookingService.create({ booking, additionalDriver: _additionalDriver })
                     .then(booking => {
                         if (booking && booking._id) {
-                            navigate('/', { replace: true })
+                            navigate('/')
                         } else {
                             Helper.error()
                         }

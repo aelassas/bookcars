@@ -58,15 +58,15 @@ const SignIn = () => {
                         const params = new URLSearchParams(window.location.search)
 
                         if (params.has('u')) {
-                            navigate(`/user${window.location.search}`, { replace: true })
+                            navigate(`/user${window.location.search}`)
                         } else if (params.has('c')) {
-                            navigate(`/supplier${window.location.search}`, { replace: true })
+                            navigate(`/supplier${window.location.search}`)
                         } else if (params.has('cr')) {
-                            navigate(`/car${window.location.search}`, { replace: true })
+                            navigate(`/car${window.location.search}`)
                         } else if (params.has('b')) {
-                            navigate(`/booking${window.location.search}`, { replace: true })
+                            navigate(`/booking${window.location.search}`)
                         } else {
-                            navigate('/', { replace: true })
+                            navigate('/')
                         }
                     }
                 } else {
@@ -94,15 +94,16 @@ const SignIn = () => {
         if (currentUser) {
             UserService.validateAccessToken().then(status => {
                 if (status === 200) {
-                    UserService.getUser(currentUser.id).then(user => {
-                        if (user) {
-                            navigate(`/${window.location.search}`)
-                        } else {
+                    UserService.getUser(currentUser.id)
+                        .then(user => {
+                            if (user) {
+                                navigate(`/${window.location.search}`)
+                            } else {
+                                UserService.signout()
+                            }
+                        }).catch(() => {
                             UserService.signout()
-                        }
-                    }).catch(err => {
-                        UserService.signout()
-                    })
+                        })
                 }
             }).catch(err => {
                 UserService.signout()

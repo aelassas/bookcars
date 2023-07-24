@@ -215,13 +215,13 @@ const CreateUser = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    navigate('/users', { replace: true })
+                    navigate('/users')
                 })
                 .catch(() => {
-                    navigate('/users', { replace: true })
+                    navigate('/users')
                 })
         } else {
-            navigate('/users', { replace: true })
+            navigate('/users')
         }
     }
 
@@ -281,7 +281,7 @@ const CreateUser = () => {
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    navigate('/users', { replace: true })
+                    navigate('/users')
                 } else {
                     setError(true)
                     setLoading(false)

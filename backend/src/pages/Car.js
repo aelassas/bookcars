@@ -74,7 +74,7 @@ const Car = () => {
         CarService.deleteCar(car._id)
             .then(status => {
                 if (status === 200) {
-                    navigate('/cars', { replace: true })
+                    navigate('/cars')
                 } else {
                     Helper.error()
                     setLoading(false)

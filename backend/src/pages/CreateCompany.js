@@ -172,13 +172,13 @@ const CreateCompany = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then(() => {
-                    navigate('/suppliers', { replace: true })
+                    navigate('/suppliers')
                 })
                 .catch(() => {
-                    navigate('/suppliers', { replace: true })
+                    navigate('/suppliers')
                 })
         } else {
-            navigate('/suppliers', { replace: true })
+            navigate('/suppliers')
         }
     }
 
@@ -229,7 +229,7 @@ const CreateCompany = () => {
         UserService.create(data)
             .then(status => {
                 if (status === 200) {
-                    navigate('/suppliers', { replace: true })
+                    navigate('/suppliers')
                 } else {
                     setError(true)
                     setLoading(false)
