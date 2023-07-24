@@ -6,11 +6,13 @@ import Master from '../components/Master'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
 import { FormControl, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/home.css'
 
 const Home = () => {
+    const navigate = useNavigate()
     const [pickupLocation, setPickupLocation] = useState()
     const [dropOffLocation, setDropOffLocation] = useState()
     const [minDate, setMinDate] = useState()
@@ -85,7 +87,7 @@ const Home = () => {
             return
         }
 
-        window.location.href = `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`
+        navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`, { replace: true })
     }
 
     const onLoad = (user) => {

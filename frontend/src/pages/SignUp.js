@@ -21,10 +21,12 @@ import {
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import * as Helper from '../common/Helper'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/signup.css'
 
 const SignUp = () => {
+    const navigate = useNavigate()
     const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -227,7 +229,7 @@ const SignUp = () => {
                     UserService.signin({ email: email, password: password })
                         .then(signInResult => {
                             if (signInResult.status === 200) {
-                                window.location.href = '/' + window.location.search
+                                navigate(`/${window.location.search}`, { replace: true })
                             } else {
                                 setPasswordError(false)
                                 setRecaptchaError(false)
@@ -260,7 +262,7 @@ const SignUp = () => {
 
     const onLoad = (user) => {
         if (user) {
-            window.location.href = '/'
+            navigate('/', { replace: true })
         } else {
             setLanguage(UserService.getLanguage())
             setVisible(true)

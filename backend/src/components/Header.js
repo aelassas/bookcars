@@ -16,7 +16,7 @@ import {
     Button,
     Drawer,
     List,
-    ListItem,
+    ListItemButton,
     ListItemIcon,
     ListItemText,
 
@@ -42,7 +42,7 @@ import { useNavigate } from 'react-router-dom'
 import '../assets/css/header.css'
 
 const ListItemLink = (props) => (
-    <ListItem button component="a" {...props} />
+    <ListItemButton component="a" {...props} />
 )
 
 const Header = (props) => {
