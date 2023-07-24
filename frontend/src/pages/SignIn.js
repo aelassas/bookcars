@@ -90,36 +90,37 @@ const SignIn = () => {
         const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                if (status === 200) {
-                    UserService.getUser(currentUser.id).then(user => {
-                        if (user) {
-                            const params = new URLSearchParams(window.location.search)
-                            if (params.has('from')) {
-                                const from = params.get('from')
-                                if (from === 'create-booking') {
-                                    navigate(`/create-booking${window.location.search}`)
+            UserService.validateAccessToken()
+                .then(status => {
+                    if (status === 200) {
+                        UserService.getUser(currentUser.id).then(user => {
+                            if (user) {
+                                const params = new URLSearchParams(window.location.search)
+                                if (params.has('from')) {
+                                    const from = params.get('from')
+                                    if (from === 'create-booking') {
+                                        navigate(`/create-booking${window.location.search}`)
+                                    } else {
+                                        navigate(`/${window.location.search}`)
+                                    }
                                 } else {
                                     navigate(`/${window.location.search}`)
                                 }
                             } else {
-                                navigate(`/${window.location.search}`)
+                                UserService.signout()
                             }
-                        } else {
+                        }).catch(err => {
                             UserService.signout()
-                        }
-                    }).catch(err => {
-                        UserService.signout()
-                    })
-                }
-            }).catch(err => {
-                UserService.signout()
-            })
+                        })
+                    }
+                }).catch(err => {
+                    UserService.signout()
+                })
         } else {
             setVisible(true)
         }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
-    
+    }, [navigate])
+
     return (
         <div>
             <Header />

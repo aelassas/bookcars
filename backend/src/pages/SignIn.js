@@ -92,26 +92,27 @@ const SignIn = () => {
         const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-            UserService.validateAccessToken().then(status => {
-                if (status === 200) {
-                    UserService.getUser(currentUser.id)
-                        .then(user => {
-                            if (user) {
-                                navigate(`/${window.location.search}`)
-                            } else {
+            UserService.validateAccessToken()
+                .then(status => {
+                    if (status === 200) {
+                        UserService.getUser(currentUser.id)
+                            .then(user => {
+                                if (user) {
+                                    navigate(`/${window.location.search}`)
+                                } else {
+                                    UserService.signout()
+                                }
+                            }).catch(() => {
                                 UserService.signout()
-                            }
-                        }).catch(() => {
-                            UserService.signout()
-                        })
-                }
-            }).catch(err => {
-                UserService.signout()
-            })
+                            })
+                    }
+                }).catch(() => {
+                    UserService.signout()
+                })
         } else {
             setVisible(true)
         }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [navigate])
 
     return (
         <div>
