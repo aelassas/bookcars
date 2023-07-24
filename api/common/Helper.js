@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'fs/promises'
 
 export const joinURL = (part1, part2) => {
     if (part1.charAt(part1.length - 1) === '/') {
@@ -12,4 +12,11 @@ export const joinURL = (part1, part2) => {
 
 export const clone = (obj) => JSON.parse(JSON.stringify(obj))
 
-export const fileExists = (path) => new Promise((resolve) => fs.access(path, fs.constants.F_OK, (err) => resolve(!err)))
+export const exists = async (path) => {
+    try {
+        await fs.access(path)
+        return true
+    } catch {
+        return false
+    }
+}

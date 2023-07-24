@@ -15,10 +15,12 @@ import {
     Paper
 } from '@mui/material'
 import * as Helper from '../common/Helper'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/reset-password.css'
 
 const ResetPassword = () => {
+    const navigate = useNavigate()
     const [userId, setUserId] = useState()
     const [email, setEmail] = useState()
     const [token, setToken] = useState()
@@ -78,7 +80,7 @@ const ResetPassword = () => {
                                 UserService.deleteTokens(userId)
                                     .then(status => {
                                         if (status === 200) {
-                                            window.location.href = '/'
+                                            navigate('/', { replace: true })
                                         } else {
                                             Helper.error()
                                         }

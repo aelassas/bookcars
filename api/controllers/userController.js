@@ -53,7 +53,7 @@ export const signup = async (req, res) => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (Helper.fileExists(avatar)) {
+                if (Helper.exists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
@@ -136,7 +136,7 @@ export const adminSignup = async (req, res) => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (await Helper.fileExists(avatar)) {
+                if (await Helper.exists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
@@ -219,7 +219,7 @@ export const create = async (req, res) => {
             // avatar
             if (body.avatar) {
                 const avatar = path.join(CDN_TEMP, body.avatar)
-                if (await Helper.fileExists(avatar)) {
+                if (await Helper.exists(avatar)) {
                     const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
                     const newPath = path.join(CDN, filename)
 
@@ -784,7 +784,7 @@ export const getUser = (req, res) => {
 
 export const createAvatar = async (req, res) => {
     try {
-        if (!await Helper.fileExists(CDN_TEMP)) {
+        if (!await Helper.exists(CDN_TEMP)) {
             await fs.mkdir(CDN_TEMP, { recursive: true })
         }
 
@@ -805,14 +805,14 @@ export const updateAvatar = (req, res) => {
     User.findById(userId)
         .then(async user => {
             if (user) {
-                if (!await Helper.fileExists(CDN)) {
+                if (!await Helper.exists(CDN)) {
                     await fs.mkdir(CDN, { recursive: true })
                 }
 
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
                     
-                    if (await Helper.fileExists(avatar)) {
+                    if (await Helper.exists(avatar)) {
                         await fs.unlink(avatar)
                     }
                 }
@@ -849,7 +849,7 @@ export const deleteAvatar = (req, res) => {
             if (user) {
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
-                    if (await Helper.fileExists(avatar)) {
+                    if (await Helper.exists(avatar)) {
                         await fs.unlink(avatar)
                     }
                 }
@@ -877,7 +877,7 @@ export const deleteAvatar = (req, res) => {
 export const deleteTempAvatar = async (req, res) => {
     try {
         const avatar = path.join(CDN_TEMP, req.params.avatar)
-        if (await Helper.fileExists(avatar)) {
+        if (await Helper.exists(avatar)) {
             await fs.unlink(avatar)
         }
         res.sendStatus(200)
@@ -1033,7 +1033,7 @@ export const deleteUsers = async (req, res) => {
             const user = await User.findByIdAndDelete(id)
             if (user.avatar) {
                 const avatar = path.join(CDN, user.avatar)
-                if (await Helper.fileExists(avatar)) {
+                if (await Helper.exists(avatar)) {
                     await fs.unlink(avatar)
                 }
             }

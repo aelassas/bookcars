@@ -29,7 +29,7 @@ export const create = (req, res) => {
             if (car.image) {
                 const image = path.join(CDN_TEMP, body.image)
 
-                if (await Helper.fileExists(image)) {
+                if (await Helper.exists(image)) {
                     const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
                     const newPath = path.join(CDN, filename)
 
@@ -162,7 +162,7 @@ export const deleteCar = async (req, res) => {
         if (car) {
             if (car.image) {
                 const image = path.join(CDN, car.image)
-                if (await Helper.fileExists(image)) {
+                if (await Helper.exists(image)) {
                     await fs.unlink(image)
                 }
             }
@@ -179,7 +179,7 @@ export const deleteCar = async (req, res) => {
 
 export const createImage = async (req, res) => {
     try {
-        if (!await Helper.fileExists(CDN_TEMP)) {
+        if (!await Helper.exists(CDN_TEMP)) {
             await fs.mkdir(CDN_TEMP, { recursive: true })
         }
 
@@ -199,13 +199,13 @@ export const updateImage = (req, res) => {
     Car.findById(req.params.id)
         .then(async car => {
             if (car) {
-                if (await Helper.fileExists(CDN)) {
+                if (await Helper.exists(CDN)) {
                     await fs.mkdir(CDN, { recursive: true })
                 }
 
                 if (car.image) {
                     const image = path.join(CDN, car.image)
-                    if (await Helper.fileExists(image)) {
+                    if (await Helper.exists(image)) {
                         await fs.unlink(image)
                     }
                 }
@@ -241,7 +241,7 @@ export const deleteImage = (req, res) => {
             if (car) {
                 if (car.image) {
                     const image = path.join(CDN, car.image)
-                    if (await Helper.fileExists(image)) {
+                    if (await Helper.exists(image)) {
                         await fs.unlink(image)
                     }
                 }
@@ -269,7 +269,7 @@ export const deleteImage = (req, res) => {
 export const deleteTempImage = async (req, res) => {
     try {
         const image = path.join(CDN_TEMP, req.params.image)
-        if (await Helper.fileExists(image)) {
+        if (await Helper.exists(image)) {
             await fs.unlink(image)
         }
         res.sendStatus(200)

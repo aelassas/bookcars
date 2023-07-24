@@ -29,10 +29,12 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as UserService from '../services/UserService'
+import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/create-car.css'
 
 const CreateCar = () => {
+    const navigate = useNavigate()
     const [isCompany, setIsCompany] = useState(false)
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(false)
@@ -235,7 +237,7 @@ const CreateCar = () => {
         CarService.create(data)
             .then(car => {
                 if (car && car._id) {
-                    window.location = '/cars'
+                    navigate('/cars', { replace: true })
                 } else {
                     Helper.error()
                 }
@@ -528,7 +530,12 @@ const CreateCar = () => {
                                 variant="contained"
                                 className='btn-secondary btn-margin-bottom'
                                 size="small"
-                                href='/cars'
+                                onClick={async () => {
+                                    if (image) {
+                                        await CarService.deleteTempImage(image)
+                                        navigate('/cars', { replace: true })
+                                    }
+                                }}
                             >
                                 {commonStrings.CANCEL}
                             </Button>

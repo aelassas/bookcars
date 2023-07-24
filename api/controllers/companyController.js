@@ -61,7 +61,7 @@ export const deleteCompany = async (req, res) => {
         if (company) {
             if (company.avatar) {
                 const avatar = path.join(CDN, company.avatar)
-                if (await Helper.fileExists(avatar)) {
+                if (await Helper.exists(avatar)) {
                     await fs.unlink(avatar)
                 }
                 await Notification.deleteMany({ user: id })
@@ -73,7 +73,7 @@ export const deleteCompany = async (req, res) => {
                 await Car.deleteMany({ company: id })
                 cars.forEach(async car => {
                     const image = path.join(CDN_CARS, car.image)
-                    if (await Helper.fileExists(image)) {
+                    if (await Helper.exists(image)) {
                         await fs.unlink(image)
                     }
                 })

@@ -29,11 +29,13 @@ import {
     Clear as UncheckIcon,
     LocationOn as LocationIcon
 } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car.css'
 
 const Car = () => {
+    const navigate = useNavigate()
     const [user, setUser] = useState()
     const [car, setCar] = useState()
     const [error, setError] = useState(false)
@@ -72,7 +74,7 @@ const Car = () => {
         CarService.deleteCar(car._id)
             .then(status => {
                 if (status === 200) {
-                    window.location.href = '/cars'
+                    navigate('/cars', { replace: true })
                 } else {
                     Helper.error()
                     setLoading(false)
