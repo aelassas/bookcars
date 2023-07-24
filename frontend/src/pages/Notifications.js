@@ -214,7 +214,7 @@ const Notifications = () => {
                                                             <IconButton onClick={async () => {
                                                                 try {
                                                                     const __navigate__ = () => {
-                                                                        navigate( `/booking?b=${row.booking}`, { replace: true })
+                                                                        navigate( `/booking?b=${row.booking}`)
                                                                     }
 
                                                                     if (!row.isRead) {

@@ -87,7 +87,7 @@ const Home = () => {
             return
         }
 
-        navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`, { replace: true })
+        navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`)
     }
 
     const onLoad = (user) => {

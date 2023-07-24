@@ -98,7 +98,7 @@ const Header = (props) => {
 
         if (params.has('l')) {
             params.delete('l')
-            navigate(window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : ''), { replace: true })
+            navigate(window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : ''))
 
         } else {
             window.location.reload()
@@ -155,7 +155,7 @@ const Header = (props) => {
     }
 
     const handleOnSettingsClick = () => {
-        navigate('/settings', { replace: true })
+        navigate('/settings')
     }
 
     const handleSignout = () => {
@@ -175,7 +175,7 @@ const Header = (props) => {
     }
 
     const handleNotificationsClick = (e) => {
-        navigate('/notifications', { replace: true })
+        navigate('/notifications')
     }
 
     useEffect(() => {

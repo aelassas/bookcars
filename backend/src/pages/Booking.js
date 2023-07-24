@@ -253,7 +253,7 @@ const Booking = () => {
         BookingService.deleteBookings([booking._id])
             .then(status => {
                 if (status === 200) {
-                    navigate('/', { replace: true })
+                    navigate('/')
                 } else {
                     err(true)
                 }

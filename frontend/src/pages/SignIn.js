@@ -59,12 +59,12 @@ const SignIn = () => {
                         if (params.has('from')) {
                             const from = params.get('from')
                             if (from === 'create-booking') {
-                                navigate(`/create-booking${window.location.search}`, { replace: true })
+                                navigate(`/create-booking${window.location.search}`)
                             } else {
-                                navigate('/', { replace: true })
+                                navigate('/')
                             }
                         } else {
-                            navigate('/', { replace: true })
+                            navigate('/')
                         }
                     }
                 } else {

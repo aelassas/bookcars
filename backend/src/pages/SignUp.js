@@ -128,7 +128,7 @@ const SignUp = () => {
                     UserService.signin({ email: email, password: password })
                         .then(signInResult => {
                             if (signInResult.status === 200) {
-                                navigate(`/${window.location.search}`, { replace: true })
+                                navigate(`/${window.location.search}`)
                             } else {
                                 setPasswordError(false)
                                 setPasswordsDontMatch(false)
@@ -156,7 +156,7 @@ const SignUp = () => {
 
     const onLoad = (user) => {
         if (user) {
-            navigate('/', { replace: true })
+            navigate('/')
         } else {
             setVisible(true)
         }

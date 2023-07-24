@@ -65,7 +65,7 @@ const User = () => {
 
         UserService.deleteUsers([user._id]).then(status => {
             if (status === 200) {
-                navigate('/users', { replace: true })
+                navigate('/users')
             } else {
                 Helper.error()
                 setLoading(false)

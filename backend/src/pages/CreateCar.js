@@ -237,7 +237,7 @@ const CreateCar = () => {
         CarService.create(data)
             .then(car => {
                 if (car && car._id) {
-                    navigate('/cars', { replace: true })
+                    navigate('/cars')
                 } else {
                     Helper.error()
                 }
@@ -533,7 +533,7 @@ const CreateCar = () => {
                                 onClick={async () => {
                                     if (image) {
                                         await CarService.deleteTempImage(image)
-                                        navigate('/cars', { replace: true })
+                                        navigate('/cars')
                                     }
                                 }}
                             >

@@ -188,13 +188,13 @@ const UpdateUser = () => {
 
             UserService.deleteTempAvatar(avatar)
                 .then((status) => {
-                    navigate('/users', { replace: true })
+                    navigate('/users')
                 })
                 .catch(() => {
-                    navigate('/users', { replace: true })
+                    navigate('/users')
                 })
         } else {
-            navigate('/users', { replace: true })
+            navigate('/users')
         }
     }
 
