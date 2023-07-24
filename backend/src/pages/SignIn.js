@@ -96,7 +96,7 @@ const SignIn = () => {
                 if (status === 200) {
                     UserService.getUser(currentUser.id).then(user => {
                         if (user) {
-                            window.location.href = '/' + window.location.search
+                            navigate(`/${window.location.search}`)
                         } else {
                             UserService.signout()
                         }
@@ -110,7 +110,7 @@ const SignIn = () => {
         } else {
             setVisible(true)
         }
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div>
