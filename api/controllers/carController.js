@@ -12,63 +12,40 @@ import * as Helper from '../common/Helper.js'
 const CDN = process.env.BC_CDN_CARS
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS
 
-export const create = (req, res) => {
-    const { body } = req
+export const create = async (req, res) => {
+    try {
+        const { body } = req
 
-    if (!body.image) {
-        console.error(`[car.create]  ${strings.CAR_IMAGE_REQUIRED} ${req.body}`)
-        res.status(400).send(strings.CAR_IMAGE_REQUIRED + err)
-        return
-    }
+        if (!body.image) {
+            console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${req.body}`)
+            return res.status(400).send(strings.CAR_IMAGE_REQUIRED + err)
+        }
 
-    const car = new Car(req.body)
+        const car = new Car(req.body)
+        await car.save()
 
-    car.save()
-        .then(async car => {
+        if (car.image) {
+            const image = path.join(CDN_TEMP, body.image)
 
-            if (car.image) {
-                const image = path.join(CDN_TEMP, body.image)
+            if (await Helper.exists(image)) {
+                const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
+                const newPath = path.join(CDN, filename)
 
-                if (await Helper.exists(image)) {
-                    const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
-                    const newPath = path.join(CDN, filename)
-
-                    try {
-                        await fs.rename(image, newPath)
-                        car.image = filename
-                        try {
-                            await car.save()
-                        } catch (err) {
-                            console.error(strings.DB_ERROR, err)
-                            res.status(400).send(strings.DB_ERROR + err)
-                        }
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                } else {
-                    console.error(strings.CAR_IMAGE_NOT_FOUND, body)
-
-                    try {
-                        await Car.deleteOne({ _id: car._id })
-                    } catch (err) {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    }
-                    finally {
-                        res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + body)
-                    }
-
-                    return
-                }
+                await fs.rename(image, newPath)
+                car.image = filename
+                await car.save()
+            } else {
+                await Car.deleteOne({ _id: car._id })
+                console.error(strings.CAR_IMAGE_NOT_FOUND, body)
+                return res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + err)
             }
+        }
 
-            res.json(car)
-        })
-        .catch(err => {
-            console.error(`[car.create]  ${strings.DB_ERROR} ${req.body}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        return res.json(car)
+    } catch (err) {
+        console.error(strings.ERROR, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const update = (req, res) => {
