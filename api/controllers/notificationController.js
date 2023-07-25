@@ -97,10 +97,12 @@ export const notify = async (req, res) => {
 }
 
 export const getNotifications = async (req, res) => {
+    const { userId: _userId, page: _page, size: _size } = req.params
+
     try {
-        const userId = new mongoose.Types.ObjectId(req.params.userId)
-        const page = parseInt(req.params.page)
-        const size = parseInt(req.params.size)
+        const userId = new mongoose.Types.ObjectId(_userId)
+        const page = parseInt(_page)
+        const size = parseInt(_size)
 
         const notifications = await Notification.aggregate([
             { $match: { user: userId } },
@@ -120,10 +122,10 @@ export const getNotifications = async (req, res) => {
             }
         ])
 
-        res.json(notifications)
+        return res.json(notifications)
     } catch (err) {
-        console.error(strings.DB_ERROR, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        console.error(`[notification.getNotifications] ${strings.DB_ERROR} ${_userId}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
