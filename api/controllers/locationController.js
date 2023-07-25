@@ -95,22 +95,24 @@ export const deleteLocation = async (req, res) => {
 }
 
 export const getLocation = async (req, res) => {
-    Location.findById(req.params.id)
-        .populate('values')
-        .lean()
-        .then(location => {
-            if (location) {
-                location.name = location.values.filter(value => value.language === req.params.language)[0].value
-                res.json(location)
-            } else {
-                console.error('[location.getLocation] Location not found:', req.params.id)
-                res.sendStatus(204)
-            }
-        })
-        .catch(err => {
-            console.error(`[location.getLocation]  ${strings.DB_ERROR} ${req.params.id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+    const { id } = req.params
+
+    try {
+        const location = await Location.findById(id)
+            .populate('values')
+            .lean()
+
+        if (location) {
+            location.name = location.values.filter(value => value.language === req.params.language)[0].value
+            return res.json(location)
+        } else {
+            console.error('[location.getLocation] Location not found:', id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[location.delete] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const getLocations = async (req, res) => {
