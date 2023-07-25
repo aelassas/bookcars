@@ -8,7 +8,7 @@ import strings from './config/app.config.js'
 import userRoutes from './routes/userRoutes.js'
 import carRoutes from './routes/carRoutes.js'
 import notificationRoutes from './routes/notificationRoutes.js'
-import companyRoutes from './routes/companyRoutes.js'
+import supplierRoutes from './routes/supplierRoutes.js'
 import locationRoutes from './routes/locationRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
 
@@ -66,7 +66,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(express.json({ limit: '50mb' }))
 app.use(cors())
 app.use('/', userRoutes)
-app.use('/', companyRoutes)
+app.use('/', supplierRoutes)
 app.use('/', locationRoutes)
 app.use('/', carRoutes)
 app.use('/', bookingRoutes)
