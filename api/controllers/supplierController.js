@@ -23,37 +23,35 @@ export const validate = async (req, res) => {
         const user = await User.findOne({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
         return user ? res.sendStatus(204) : res.sendStatus(200)
     } catch (err) {
-        console.error('[supplier.validate] ' + strings.DB_ERROR + ' ' + fullName, err)
+        console.error(`[supplier.validate] ${strings.DB_ERROR} ${fullName}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const update = (req, res) => {
-    User.findById(req.body._id)
-        .then(supplier => {
-            if (supplier) {
-                const { fullName, phone, location, bio, payLater } = req.body
-                supplier.fullName = fullName
-                supplier.phone = phone
-                supplier.location = location
-                supplier.bio = bio
-                supplier.payLater = payLater
+export const update = async (req, res) => {
+    const { _id } = req.body
 
-                supplier.save()
-                    .then(() => res.sendStatus(200))
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[supplier.update] Location not found:', req.body)
-                res.sendStatus(204)
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+    try {
+        const supplier = await User.findById(_id)
+
+        if (supplier) {
+            const { fullName, phone, location, bio, payLater } = req.body
+            supplier.fullName = fullName
+            supplier.phone = phone
+            supplier.location = location
+            supplier.bio = bio
+            supplier.payLater = payLater
+
+            await supplier.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[supplier.update] Supplier not found:', _id)
+            res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[supplier.update] ${strings.DB_ERROR} ${_id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteSupplier = async (req, res) => {

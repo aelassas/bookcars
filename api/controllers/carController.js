@@ -391,7 +391,7 @@ export const getCars = async (req, res) => {
 
         return res.json(cars)
     } catch (err) {
-        console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[car.getCars] ${strings.DB_ERROR} ${req.query.s}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -423,7 +423,7 @@ export const getBookingCars = async (req, res) => {
 
         return res.json(cars)
     } catch (err) {
-        console.error(`[car.getBookingCars]  ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[car.getBookingCars] ${strings.DB_ERROR} ${req.query.s}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -519,7 +519,7 @@ export const getFrontendCars = async (req, res) => {
 
         return res.json(cars)
     } catch (err) {
-        console.error(`[car.getCars]  ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[car.getCars] ${strings.DB_ERROR} ${req.query.s}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
