@@ -9,7 +9,7 @@ import { strings } from '../lang/create-booking'
 import * as UserService from '../services/UserService'
 import * as BookingService from '../services/BookingService'
 import * as Helper from '../common/Helper'
-import CompanySelectList from '../components/CompanySelectList'
+import SupplierSelectList from '../components/SupplierSelectList'
 import UserSelectList from '../components/UserSelectList'
 import LocationSelectList from '../components/LocationSelectList'
 import CarSelectList from '../components/CarSelectList'
@@ -243,7 +243,7 @@ const CreateBooking = () => {
 
                         {!isCompany &&
                             <FormControl fullWidth margin="dense">
-                                <CompanySelectList
+                                <SupplierSelectList
                                     label={blStrings.COMPANY}
                                     required
 

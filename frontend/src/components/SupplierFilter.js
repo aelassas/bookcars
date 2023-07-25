@@ -6,7 +6,7 @@ import Accordion from './Accordion'
 
 import '../assets/css/company-filter.css'
 
-const CompanyFilter = (props) => {
+const SupplierFilter = (props) => {
     const [companies, setCompanies] = useState([])
     const [checkedCompanies, setCheckedCompanies] = useState([])
     const [allChecked, setAllChecked] = useState(true)
@@ -115,4 +115,4 @@ const CompanyFilter = (props) => {
     )
 }
 
-export default CompanyFilter
+export default SupplierFilter

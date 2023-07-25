@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Master from '../components/Master'
 import { strings } from '../lang/companies'
 import Search from '../components/Search'
-import CompanyList from '../components/CompanyList'
+import SupplierList from '../components/SupplierList'
 import InfoBox from '../components/InfoBox'
 import {
     Button,
@@ -29,7 +29,7 @@ const Companies = () => {
         setReload(newKeyword === keyword)
     }
 
-    const handleCompanyListLoad = (data) => {
+    const handleSupplierListLoad = (data) => {
         setReload(false)
         setRowCount(data.rowCount)
     }
@@ -70,13 +70,13 @@ const Companies = () => {
                         </div>
                     </div>
                     <div className='col-2'>
-                        <CompanyList
+                        <SupplierList
                             containerClassName='companies'
                             offset={offset}
                             user={user}
                             keyword={keyword}
                             reload={reload}
-                            onLoad={handleCompanyListLoad}
+                            onLoad={handleSupplierListLoad}
                             onDelete={handleCompanyDelete}
                         />
                     </div>
