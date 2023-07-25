@@ -146,7 +146,7 @@ export const deleteCar = async (req, res) => {
         }
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[car.delete]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[car.delete] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -163,7 +163,7 @@ export const createImage = async (req, res) => {
         await fs.writeFile(filepath, req.file.buffer)
         return res.json(filename)
     } catch (err) {
-        console.error(`[car.createImage]  ${strings.DB_ERROR}`, err)
+        console.error(`[car.createImage] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
@@ -199,7 +199,7 @@ export const updateImage = async (req, res) => {
             return res.sendStatus(204)
         }
     } catch (err) {
-        console.error(`[car.updateImage]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[car.updateImage] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -226,20 +226,21 @@ export const deleteImage = async (req, res) => {
             res.sendStatus(204)
         }
     } catch (err) {
-        console.error(`[car.deleteImage]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[car.deleteImage] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
 export const deleteTempImage = async (req, res) => {
+    const { image } = req.params
     try {
-        const image = path.join(CDN_TEMP, req.params.image)
-        if (await Helper.exists(image)) {
-            await fs.unlink(image)
+        const imageFile = path.join(CDN_TEMP, image)
+        if (await Helper.exists(imageFile)) {
+            await fs.unlink(imageFile)
         }
         res.sendStatus(200)
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[car.deleteTempImage] ${strings.DB_ERROR} ${image}`, err)
         res.status(400).send(strings.ERROR + err)
     }
 }
