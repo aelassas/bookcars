@@ -13,15 +13,15 @@ const CDN = process.env.BC_CDN_CARS
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS
 
 export const create = async (req, res) => {
+    const { body } = req
+    
     try {
-        const { body } = req
-
         if (!body.image) {
-            console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${req.body}`)
+            console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${body}`)
             return res.status(400).send(strings.CAR_IMAGE_REQUIRED + err)
         }
 
-        const car = new Car(req.body)
+        const car = new Car(body)
         await car.save()
 
         if (car.image) {
@@ -43,7 +43,7 @@ export const create = async (req, res) => {
 
         return res.json(car)
     } catch (err) {
-        console.error(`[car.create] ${strings.DB_ERROR}`, err)
+        console.error(`[car.create] ${strings.DB_ERROR} ${body}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
