@@ -195,7 +195,7 @@ export const updateImage = async (req, res) => {
             return res.sendStatus(204)
         }
     } catch (err) {
-        console.error(`[car.delete]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[car.updateImage]  ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
