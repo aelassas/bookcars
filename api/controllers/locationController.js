@@ -167,20 +167,23 @@ export const getLocations = async (req, res) => {
     }
 }
 
-export const checkLocation = (req, res) => {
-    const id = new mongoose.Types.ObjectId(req.params.id)
+export const checkLocation = async (req, res) => {
+    const { id } = req.params
 
-    Car.find({ locations: id })
-        .limit(1)
-        .count()
-        .then(count => {
-            if (count === 1) {
-                return res.sendStatus(200)
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[location.checkLocation]  ${strings.DB_ERROR} ${id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+    try {
+        const _id = new mongoose.Types.ObjectId(id)
+
+        const count = await Car.find({ locations: _id })
+            .limit(1)
+            .count()
+
+        if (count === 1) {
+            return res.sendStatus(200)
+        }
+        return res.sendStatus(204)
+
+    } catch (err) {
+        console.error(`[location.checkLocation] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
