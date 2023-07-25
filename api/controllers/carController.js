@@ -48,69 +48,65 @@ export const create = async (req, res) => {
     }
 }
 
-export const update = (req, res) => {
-    Car.findById(req.body._id)
-        .then(car => {
-            if (car) {
-                const {
-                    company,
-                    name,
-                    minimumAge,
-                    available,
-                    type,
-                    locations,
-                    price,
-                    deposit,
-                    seats,
-                    doors,
-                    aircon,
-                    gearbox,
-                    fuelPolicy,
-                    mileage,
-                    cancellation,
-                    amendments,
-                    theftProtection,
-                    collisionDamageWaiver,
-                    fullInsurance,
-                    additionalDriver
-                } = req.body
+export const update = async (req, res) => {
+    try {
+        const car = await Car.findById(req.body._id)
 
-                car.company = company._id
-                car.minimumAge = minimumAge
-                car.locations = locations
-                car.name = name
-                car.available = available
-                car.type = type
-                car.price = price
-                car.deposit = deposit
-                car.seats = seats
-                car.doors = doors
-                car.aircon = aircon
-                car.gearbox = gearbox
-                car.fuelPolicy = fuelPolicy
-                car.mileage = mileage
-                car.cancellation = cancellation
-                car.amendments = amendments
-                car.theftProtection = theftProtection
-                car.collisionDamageWaiver = collisionDamageWaiver
-                car.fullInsurance = fullInsurance
-                car.additionalDriver = additionalDriver
+        if (car) {
+            const {
+                company,
+                name,
+                minimumAge,
+                available,
+                type,
+                locations,
+                price,
+                deposit,
+                seats,
+                doors,
+                aircon,
+                gearbox,
+                fuelPolicy,
+                mileage,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver
+            } = req.body
 
-                car.save()
-                    .then(() => res.sendStatus(200))
-                    .catch(err => {
-                        console.error(`[car.update]  ${strings.DB_ERROR} ${req.body}`, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[car.update] Car not found:', req.body._id)
-                res.sendStatus(204)
-            }
-        })
-        .catch(err => {
-            console.error(`[car.update]  ${strings.DB_ERROR} ${req.body}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            car.company = company._id
+            car.minimumAge = minimumAge
+            car.locations = locations
+            car.name = name
+            car.available = available
+            car.type = type
+            car.price = price
+            car.deposit = deposit
+            car.seats = seats
+            car.doors = doors
+            car.aircon = aircon
+            car.gearbox = gearbox
+            car.fuelPolicy = fuelPolicy
+            car.mileage = mileage
+            car.cancellation = cancellation
+            car.amendments = amendments
+            car.theftProtection = theftProtection
+            car.collisionDamageWaiver = collisionDamageWaiver
+            car.fullInsurance = fullInsurance
+            car.additionalDriver = additionalDriver
+
+            await car.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[car.update] Car not found:', req.body._id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(strings.ERROR, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const checkCar = (req, res) => {
