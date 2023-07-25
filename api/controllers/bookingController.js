@@ -204,6 +204,7 @@ const notifyDriver = async (booking) => {
     const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`
     const notification = new Notification({ user: driver._id, message, booking: booking._id })
     await notification.save()
+
     let counter = await NotificationCounter.findOne({ user: driver._id })
     if (counter) {
         counter.count++
@@ -282,7 +283,6 @@ const notifyDriver = async (booking) => {
                 }
             }
         })()
-
     }
 }
 
