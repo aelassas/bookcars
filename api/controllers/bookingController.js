@@ -44,7 +44,6 @@ export const create = async (req, res) => {
 }
 
 const notifySupplier = async (user, booking, company, notificationMessage) => {
-
     // notification
     const message = `${user.fullName} ${notificationMessage} ${booking._id}.`
     const notification = new Notification({ user: company._id, message, booking: booking._id })
@@ -401,7 +400,6 @@ export const updateStatus = async (req, res) => {
 export const deleteBookings = async (req, res) => {
     try {
         const ids = req.body.map(id => new mongoose.Types.ObjectId(id))
-
         const bookings = await Booking.find({ _id: { $in: ids }, additionalDriver: true, _additionalDriver: { $ne: null } })
 
         await Booking.deleteMany({ _id: { $in: ids } })
@@ -417,6 +415,7 @@ export const deleteBookings = async (req, res) => {
 
 export const getBooking = async (req, res) => {
     const { id } = req.params
+    
     try {
         const booking = await Booking.findById(id)
             .populate('company')
