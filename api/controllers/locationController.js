@@ -41,7 +41,7 @@ export const create = async (req, res) => {
         return res.sendStatus(200)
     } catch (err) {
         console.error(`[location.create]  ${strings.DB_ERROR} ${req.body}`, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
