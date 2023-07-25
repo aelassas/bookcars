@@ -461,64 +461,71 @@ export const signin = async (req, res) => {
 }
 
 export const pushToken = async (req, res) => {
+    const { userId } = req.params
+
     try {
-        const pushNotification = await PushNotification.findOne({ user: req.params.userId })
+        const pushNotification = await PushNotification.findOne({ user: userId })
         if (pushNotification) {
             return res.status(200).json(pushNotification.token)
         }
 
         return res.sendStatus(204)
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[user.pushToken] ${strings.DB_ERROR} ${userId}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const createPushToken = async (req, res) => {
+    const { userId, token } = req.params
+
     try {
-        const exist = await PushNotification.exists({ user: req.params.userId })
+        const exist = await PushNotification.exists({ user: userId })
 
         if (!exist) {
-            const pushNotification = new PushNotification({ user: req.params.userId, token: req.params.token })
+            const pushNotification = new PushNotification({ user: userId, token: token })
             await pushNotification.save()
             return res.sendStatus(200)
         }
 
         return res.status(400).send('Push Token already exists.')
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[user.createPushToken] ${strings.DB_ERROR} ${userId}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const deletePushToken = async (req, res) => {
+    const { userId } = req.params
+
     try {
-        await PushNotification.deleteMany({ user: req.params.userId })
+        await PushNotification.deleteMany({ user: userId })
         return res.sendStatus(200)
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[user.deletePushToken] ${strings.DB_ERROR} ${userId}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const validateEmail = async (req, res) => {
+    const { email } = req.body
+
     try {
-        const exists = await User.exists({ email: req.body.email })
+        const exists = await User.exists({ email: email })
 
         if (exists) {
             return res.sendStatus(204)
-        } else { // email does not exist in db (can be added)
+        } else {
+            // email does not exist in db (can be added)
             return res.sendStatus(200)
         }
     } catch (err) {
-        console.error('[user.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.email, err)
+        console.error(`[user.validateEmail] ${strings.DB_ERROR} ${email}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const validateAccessToken = (req, res) => {
-    res.sendStatus(200)
-}
+export const validateAccessToken = (req, res) => res.sendStatus(200)
 
 export const confirmEmail = (req, res) => {
     Token.findOne({ token: req.params.token })
