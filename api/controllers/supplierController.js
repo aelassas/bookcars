@@ -89,22 +89,23 @@ export const deleteSupplier = async (req, res) => {
     }
 }
 
-export const getSupplier = (req, res) => {
-    User.findById(req.params.id)
-        .lean()
-        .then(user => {
-            if (!user) {
-                console.error('[supplier.getSupplier] Supplier not found:', req.params)
-                res.sendStatus(204)
-            } else {
-                const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
-                res.json({ _id, email, fullName, avatar, phone, location, bio, payLater })
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const getSupplier = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const user = await User.findById(id).lean()
+
+        if (!user) {
+            console.error('[supplier.getSupplier] Supplier not found:', id)
+            return res.sendStatus(204)
+        } else {
+            const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
+            return res.json({ _id, email, fullName, avatar, phone, location, bio, payLater })
+        }
+    } catch (err) {
+        console.error(`[supplier.getSupplier] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const getSuppliers = async (req, res) => {
