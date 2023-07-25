@@ -150,7 +150,6 @@ export const markAsRead = async (req, res) => {
         await counter.save()
 
         return res.sendStatus(200)
-
     } catch (err) {
         console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -179,7 +178,6 @@ export const markAsUnRead = async (req, res) => {
         await counter.save()
 
         return res.sendStatus(200)
-
     } catch (err) {
         console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -199,7 +197,6 @@ export const deleteNotifications = async (req, res) => {
         await counter.save()
 
         return res.sendStatus(200)
-
     } catch (err) {
         console.error(`[notification.delete] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
