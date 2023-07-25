@@ -527,106 +527,88 @@ export const validateEmail = async (req, res) => {
 
 export const validateAccessToken = (req, res) => res.sendStatus(200)
 
-export const confirmEmail = (req, res) => {
-    Token.findOne({ token: req.params.token })
-        .then(token => {
-            User.findOne({ email: req.params.email })
-                .then(user => {
-                    strings.setLanguage(user.language)
-                    // token is not found into database i.e. token may have expired 
-                    if (!token) {
-                        console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
-                        return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
-                    }
-                    // if token is found then check valid user 
-                    else {
-                        // not valid user
-                        if (!user) {
-                            console.error('[user.confirmEmail] User not found', req.params)
-                            return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_ERROR))
-                        }
-                        // user is already verified
-                        else if (user.verified) {
-                            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
-                        }
-                        // verify user
-                        else {
-                            // change verified to true
-                            user.verified = true
-                            user.verifiedAt = Date.now()
-                            user.save()
-                                .then(() => res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS)))
-                                .catch((err) => {
-                                    // error occur
-                                    console.error('[user.confirmEmail] ' + strings.DB_ERROR + ' ' + req.params, err)
-                                    return res.status(500).send(getStatusMessage(user.language, err.message))
-                                })
-
-                        }
-                    }
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(strings.DB_ERROR + err)
-                })
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const resendLink = (req, res, next) => {
-    User.findOne({ email: req.body.email })
-        .then(user => {
-
-            // user is not found into database
+export const confirmEmail = async (req, res) => {
+    try {
+        const { token: _token, email: _email } = req.params
+        const token = await Token.findOne({ token: _token })
+        const user = await User.findOne({ email: _email })
+        strings.setLanguage(user.language)
+        // token is not found into database i.e. token may have expired 
+        if (!token) {
+            console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
+            return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
+        }
+        // if token is found then check valid user 
+        else {
+            // not valid user
             if (!user) {
-                console.error('[user.resendLink] User not found:', req.params)
-                return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
+                console.error('[user.confirmEmail] User not found', req.params)
+                return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_ERROR))
             }
-            // user has been already verified
+            // user is already verified
             else if (user.verified) {
                 return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
             }
-            // send verification link
+            // verify user
             else {
-                // generate token and save
-                const token = new Token({ user: user._id, token: uuid() })
-
-                token.save()
-                    .then(() => {
-
-                        // Send email
-                        const transporter = nodemailer.createTransport({
-                            host: SMTP_HOST,
-                            port: SMTP_PORT,
-                            auth: {
-                                user: SMTP_USER,
-                                pass: SMTP_PASS
-                            }
-                        })
-
-                        strings.setLanguage(user.language)
-                        const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_ACTIVATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' }
-                        transporter.sendMail(mailOptions, (err, info) => {
-                            if (err) {
-                                console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params)
-                                return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_TECHNICAL_ISSUE + ' ' + err.response))
-                            }
-                            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
-                        })
-                    })
-                    .catch(err => {
-                        console.error('[user.resendLink] ' + strings.DB_ERROR, req.params)
-                        return res.status(500).send(getStatusMessage(user.language, err.message))
-                    })
+                // change verified to true
+                user.verified = true
+                user.verifiedAt = Date.now()
+                await user.save()
+                return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS))
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        }
+    } catch (err) {
+        console.error(`[user.confirmEmail] ${strings.DB_ERROR} ${req.params}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const resendLink = async (req, res) => {
+    const { email } = req.body
+    
+    try {
+        const user = await User.findOne({ email: email })
+
+        // user is not found into database
+        if (!user) {
+            console.error('[user.resendLink] User not found:', req.params)
+            return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
+        }
+        // user has been already verified
+        else if (user.verified) {
+            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
+        }
+        // send verification link
+        else {
+            // generate token and save
+            const token = new Token({ user: user._id, token: uuid() })
+            await token.save()
+
+            // Send email
+            const transporter = nodemailer.createTransport({
+                host: SMTP_HOST,
+                port: SMTP_PORT,
+                auth: {
+                    user: SMTP_USER,
+                    pass: SMTP_PASS
+                }
+            })
+
+            strings.setLanguage(user.language)
+            const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_ACTIVATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' }
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params)
+                    return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_TECHNICAL_ISSUE + ' ' + err.response))
+                }
+                return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
+            })
+        }
+    } catch (err) {
+        console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const update = (req, res) => {
