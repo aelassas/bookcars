@@ -32,89 +32,68 @@ export const notificationCounter = async (req, res) => {
 }
 
 export const notify = async (req, res) => {
-    const notification = new Notification(req.body)
-    notification.save()
-        .then(notification => {
-            User.findById(notification.user)
-                .then(user => {
-                    if (user) {
-                        NotificationCounter.findOne({ user: notification.user })
-                            .then(async counter => {
-                                if (user.enableEmailNotifications) {
-                                    strings.setLanguage(user.language)
+    try {
+        const notification = new Notification(req.body)
+        await notification.save()
 
-                                    const transporter = nodemailer.createTransport({
-                                        host: SMTP_HOST,
-                                        port: SMTP_PORT,
-                                        auth: {
-                                            user: SMTP_USER,
-                                            pass: SMTP_PASS
-                                        }
-                                    })
+        const user = await User.findById(notification.user)
 
-                                    const mailOptions = {
-                                        from: SMTP_FROM,
-                                        to: user.email,
-                                        subject: strings.NOTIFICATION_SUBJECT,
-                                        html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>'
-                                            + strings.HELLO + user.fullName + ',<br><br>'
-                                            + strings.NOTIFICATION_BODY + '<br><br>'
-                                            + '---<br>'
-                                            + notification.message + '<br><br>'
-                                            + (notification.isLink ? ('<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>') : '')
-                                            + '<a href="' + 'http' + (HTTPS ? 's' : '') + ':\/\/' + APP_HOST + '\/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>'
-                                            + '<br>---'
-                                            + '<br><br>' + strings.REGARDS + '<br>'
-                                            + '</p>'
-                                    }
+        if (user) {
+            const counter = await NotificationCounter.findOne({ user: notification.user })
 
-                                    await transporter.sendMail(mailOptions, (err, info) => {
-                                        if (err) {
-                                            console.error(strings.SMTP_ERROR, err)
-                                            res.status(400).send(strings.SMTP_ERROR + err)
-                                        }
-                                    })
-                                }
+            if (user.enableEmailNotifications) {
+                strings.setLanguage(user.language)
 
-                                if (counter) {
-                                    counter.count = counter.count + 1
-                                    counter.save()
-                                        .then(ct => {
-                                            res.sendStatus(200)
-                                        })
-                                        .catch(err => {
-                                            console.error(strings.DB_ERROR, err)
-                                            res.status(400).send(strings.DB_ERROR + err)
-                                        })
-                                } else {
-                                    const cnt = new NotificationCounter({ user: notification.user, count: 1 })
-                                    cnt.save()
-                                        .then(n => {
-                                            res.sendStatus(200)
-                                        })
-                                        .catch(err => {
-                                            console.error(strings.DB_ERROR, err)
-                                            res.status(400).send(strings.DB_ERROR + err)
-                                        })
-                                }
-                            })
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } else {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
+                const transporter = nodemailer.createTransport({
+                    host: SMTP_HOST,
+                    port: SMTP_PORT,
+                    auth: {
+                        user: SMTP_USER,
+                        pass: SMTP_PASS
                     }
                 })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(strings.DB_ERROR + err)
+
+                const mailOptions = {
+                    from: SMTP_FROM,
+                    to: user.email,
+                    subject: strings.NOTIFICATION_SUBJECT,
+                    html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>'
+                        + strings.HELLO + user.fullName + ',<br><br>'
+                        + strings.NOTIFICATION_BODY + '<br><br>'
+                        + '---<br>'
+                        + notification.message + '<br><br>'
+                        + (notification.isLink ? ('<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>') : '')
+                        + '<a href="' + 'http' + (HTTPS ? 's' : '') + ':\/\/' + APP_HOST + '\/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>'
+                        + '<br>---'
+                        + '<br><br>' + strings.REGARDS + '<br>'
+                        + '</p>'
+                }
+
+                await transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        console.error(strings.SMTP_ERROR, err)
+                        res.status(400).send(strings.SMTP_ERROR + err)
+                    }
                 })
-        })
-        .catch(err => {
+            }
+
+            if (counter) {
+                counter.count = counter.count + 1
+                await counter.save()
+                return res.sendStatus(200)
+            } else {
+                const cnt = new NotificationCounter({ user: notification.user, count: 1 })
+                await cnt.save()
+                return res.sendStatus(200)
+            }
+        } else {
+            console.error(strings.DB_ERROR, err)
             res.status(400).send(strings.DB_ERROR + err)
-        })
+        }
+    } catch (err) {
+        console.error(`[notification.notify] ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const getNotifications = async (req, res) => {
