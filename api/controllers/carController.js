@@ -37,7 +37,7 @@ export const create = async (req, res) => {
             } else {
                 await Car.deleteOne({ _id: car._id })
                 console.error(strings.CAR_IMAGE_NOT_FOUND, body)
-                return res.status(400).send(strings.CAR_IMAGE_NOT_FOUND + err)
+                return res.status(400).send(strings.CAR_IMAGE_NOT_FOUND)
             }
         }
 
@@ -109,22 +109,20 @@ export const update = async (req, res) => {
     }
 }
 
-export const checkCar = (req, res) => {
-    const id = new mongoose.Types.ObjectId(req.params.id)
+export const checkCar = async (req, res) => {
+    try {
+        const id = new mongoose.Types.ObjectId(req.params.id)
 
-    Booking.find({ car: id })
-        .limit(1)
-        .count()
-        .then(count => {
-            if (count === 1) {
-                return res.sendStatus(200)
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[car.checkCar]  ${strings.DB_ERROR} ${id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+        const count = await Booking.find({ car: id }).limit(1).count()
+
+        if (count === 1) {
+            return res.sendStatus(200)
+        }
+        return res.sendStatus(204)
+    } catch (err) {
+        console.error(strings.ERROR, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const deleteCar = async (req, res) => {
