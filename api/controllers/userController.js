@@ -674,36 +674,36 @@ export const updateLanguage = async (req, res) => {
     }
 }
 
-export const getUser = (req, res) => {
-    User.findById(req.params.id, {
-        company: 1,
-        email: 1,
-        phone: 1,
-        fullName: 1,
-        verified: 1,
-        language: 1,
-        enableEmailNotifications: 1,
-        avatar: 1,
-        bio: 1,
-        location: 1,
-        type: 1,
-        blacklisted: 1,
-        birthDate: 1,
-        payLater: 1
-    })
-        .lean()
-        .then(user => {
-            if (!user) {
-                console.error('[user.getUser] User not found:', req.params)
-                res.sendStatus(204)
-            } else {
-                res.json(user)
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const getUser = async (req, res) => {
+    const { id } = req.params
+    try {
+        const user = await User.findById(id, {
+            company: 1,
+            email: 1,
+            phone: 1,
+            fullName: 1,
+            verified: 1,
+            language: 1,
+            enableEmailNotifications: 1,
+            avatar: 1,
+            bio: 1,
+            location: 1,
+            type: 1,
+            blacklisted: 1,
+            birthDate: 1,
+            payLater: 1
+        }).lean()
+
+        if (!user) {
+            console.error('[user.getUser] User not found:', req.params)
+            return res.sendStatus(204)
+        } else {
+            return res.json(user)
+        }
+    } catch (err) {
+        console.error(`[user.updateLanguage] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const createAvatar = async (req, res) => {
