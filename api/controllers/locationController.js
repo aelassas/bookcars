@@ -40,43 +40,45 @@ export const create = async (req, res) => {
         await location.save()
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[location.create]  ${strings.DB_ERROR} ${req.body}`, err)
+        console.error(`[location.create] ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const update = (req, res) => {
-    Location.findById(req.params.id)
-        .populate('values')
-        .then(async location => {
-            if (location) {
-                const names = req.body
-                for (let i = 0; i < names.length; i++) {
-                    const name = names[i]
-                    const locationValue = location.values.filter(value => value.language === name.language)[0]
-                    if (locationValue) {
-                        locationValue.value = name.name
-                        await locationValue.save()
-                    } else {
-                        const locationValue = new LocationValue({
-                            language: name.language,
-                            value: name.name
-                        })
-                        await locationValue.save()
-                        location.values.push(locationValue._id)
-                        await location.save()
-                    }
+export const update = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const location = await Location.findById(id).populate('values')
+
+        if (location) {
+            const names = req.body
+            for (let i = 0; i < names.length; i++) {
+                const name = names[i]
+                const locationValue = location.values.filter(value => value.language === name.language)[0]
+                if (locationValue) {
+                    locationValue.value = name.name
+                    await locationValue.save()
+                } else {
+                    const locationValue = new LocationValue({
+                        language: name.language,
+                        value: name.name
+                    })
+                    await locationValue.save()
+                    location.values.push(locationValue._id)
+                    await location.save()
                 }
-                return res.sendStatus(200)
-            } else {
-                console.error('[location.update] Location not found:', req.body)
-                res.sendStatus(204)
             }
-        })
-        .catch(err => {
-            console.error(`[location.update]  ${strings.DB_ERROR} ${req.body}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            return res.sendStatus(200)
+        } else {
+            console.error('[location.update] Location not found:', id)
+            return res.sendStatus(204)
+        }
+
+    } catch (err) {
+        console.error(`[location.update] ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteLocation = (req, res) => {
