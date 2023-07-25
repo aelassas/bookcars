@@ -43,14 +43,16 @@ export const create = async (req, res) => {
 
         return res.json(car)
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[car.create] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const update = async (req, res) => {
+    const { _id } = req.body
+
     try {
-        const car = await Car.findById(req.body._id)
+        const car = await Car.findById(_id)
 
         if (car) {
             const {
@@ -100,11 +102,11 @@ export const update = async (req, res) => {
             await car.save()
             return res.sendStatus(200)
         } else {
-            console.error('[car.update] Car not found:', req.body._id)
+            console.error('[car.update] Car not found:', _id)
             return res.sendStatus(204)
         }
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[car.update] ${strings.DB_ERROR} ${_id}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
@@ -120,13 +122,13 @@ export const checkCar = async (req, res) => {
         }
         return res.sendStatus(204)
     } catch (err) {
-        console.error(strings.ERROR, err)
+        console.error(`[car.check] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const deleteCar = async (req, res) => {
-    const id = req.params.id
+    const { id } = req.params
 
     try {
         const car = await Car.findByIdAndDelete(id)
