@@ -165,44 +165,39 @@ export const createImage = async (req, res) => {
     }
 }
 
-export const updateImage = (req, res) => {
+export const updateImage = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { file } = req
+        const car = await Car.findById(id)
 
-    Car.findById(req.params.id)
-        .then(async car => {
-            if (car) {
-                if (!await Helper.exists(CDN)) {
-                    await fs.mkdir(CDN, { recursive: true })
-                }
-
-                if (car.image) {
-                    const image = path.join(CDN, car.image)
-                    if (await Helper.exists(image)) {
-                        await fs.unlink(image)
-                    }
-                }
-
-                const filename = `${car._id}_${Date.now()}${path.extname(req.file.originalname)}`
-                const filepath = path.join(CDN, filename)
-
-                await fs.writeFile(filepath, req.file.buffer)
-                car.image = filename
-                car.save()
-                    .then(usr => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[car.updateImage] Car not found:', req.params.id)
-                res.sendStatus(204)
+        if (car) {
+            if (!await Helper.exists(CDN)) {
+                await fs.mkdir(CDN, { recursive: true })
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+
+            if (car.image) {
+                const image = path.join(CDN, car.image)
+                if (await Helper.exists(image)) {
+                    await fs.unlink(image)
+                }
+            }
+
+            const filename = `${car._id}_${Date.now()}${path.extname(file.originalname)}`
+            const filepath = path.join(CDN, filename)
+
+            await fs.writeFile(filepath, file.buffer)
+            car.image = filename
+            await car.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[car.updateImage] Car not found:', id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[car.delete]  ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteImage = (req, res) => {
