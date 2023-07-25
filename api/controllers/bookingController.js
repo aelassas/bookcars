@@ -26,24 +26,24 @@ const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN
 
 export const create = async (req, res) => {
+    try {
+        if (req.body.booking.additionalDriver) {
+            const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
+            await additionalDriver.save()
+            req.body.booking._additionalDriver = additionalDriver._id
+        }
 
-    if (req.body.booking.additionalDriver) {
-        const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
-        await additionalDriver.save()
-        req.body.booking._additionalDriver = additionalDriver._id
+        const booking = new Booking(req.body.booking)
+
+        await booking.save()
+        return res.json(booking)
+    } catch (err) {
+        console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
-
-    const booking = new Booking(req.body.booking)
-
-    booking.save()
-        .then((booking) => res.json(booking))
-        .catch(err => {
-            console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
 }
 
-const notifyCompany = async (user, booking, company, notificationMessage) => {
+const notifySupplier = async (user, booking, company, notificationMessage) => {
 
     // notification
     const message = `${user.fullName} ${notificationMessage} ${booking._id}.`
@@ -157,7 +157,7 @@ export const book = async (req, res) => {
         pickupLocation.name = pickupLocation.values.filter(value => value.language === user.language)[0].value
         const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
         dropOffLocation.name = dropOffLocation.values.filter(value => value.language === user.language)[0].value
-        
+
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -187,7 +187,7 @@ export const book = async (req, res) => {
         // Notify company
         const company = await User.findById(booking.company)
         strings.setLanguage(company.language)
-        await notifyCompany(user, booking, company, strings.BOOKING_NOTIFICATION)
+        await notifySupplier(user, booking, company, strings.BOOKING_NOTIFICATION)
 
         return res.sendStatus(200)
     }
@@ -271,7 +271,7 @@ const notifyDriver = async (booking) => {
             for (let chunk of chunks) {
                 try {
                     let ticketChunk = await expo.sendPushNotificationsAsync(chunk)
-                    
+
                     tickets.push(...ticketChunk)
                     // NOTE: If a ticket contains an error code in ticket.details.error, you
                     // must handle it appropriately. The error codes are listed in the Expo
@@ -725,7 +725,7 @@ export const cancelBooking = (req, res) => {
                 await booking.save()
 
                 // Notify company
-                await notifyCompany(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
+                await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
 
                 return res.sendStatus(200)
             }
