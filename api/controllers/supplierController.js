@@ -14,15 +14,18 @@ import * as Helper from '../common/Helper.js'
 const CDN = process.env.BC_CDN_USERS
 const CDN_CARS = process.env.BC_CDN_CARS
 
-export const validate = (req, res) => {
-    const keyword = escapeStringRegexp(req.body.fullName)
-    const options = 'i'
-    User.findOne({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
-        .then(user => user ? res.sendStatus(204) : res.sendStatus(200))
-        .catch(err => {
-            console.error('[supplier.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.fullName, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const validate = async (req, res) => {
+    const { fullName } = req.body
+    
+    try {
+        const keyword = escapeStringRegexp(fullName)
+        const options = 'i'
+        const user = await User.findOne({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
+        return user ? res.sendStatus(204) : res.sendStatus(200)
+    } catch (err) {
+        console.error('[supplier.validate] ' + strings.DB_ERROR + ' ' + fullName, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const update = (req, res) => {
