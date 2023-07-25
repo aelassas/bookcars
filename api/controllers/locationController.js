@@ -160,10 +160,10 @@ export const getLocations = async (req, res) => {
             }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
-        res.json(locations)
+        return res.json(locations)
     } catch (err) {
-        console.error(`[location.getLocations]  ${strings.DB_ERROR} ${req.query.s}`, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        console.error(`[location.getLocations] ${strings.DB_ERROR} ${req.query.s}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
