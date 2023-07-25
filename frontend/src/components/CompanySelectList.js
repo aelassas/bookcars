@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 
@@ -28,7 +28,7 @@ const CompanySelectList = (props) => {
     const _fetch = (page, keyword, onFetch) => {
         setLoading(true)
 
-        CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
+        SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {}
                 if (_data.length === 0) _data.resultData = []

@@ -23,7 +23,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/user.css'
@@ -102,7 +102,7 @@ const User = () => {
 
                                 const admin = Helper.admin(loggedUser)
                                 if (admin) {
-                                    CompanyService.getAllCompanies()
+                                    SupplierService.getAllCompanies()
                                         .then(companies => {
                                             const companyIds = Helper.flattenCompanies(companies)
                                             setState(companyIds)

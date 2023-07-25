@@ -4,7 +4,7 @@ import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import * as CarService from '../services/CarService'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
@@ -97,7 +97,7 @@ const Car = () => {
                     .then(car => {
                         if (car) {
                             if (user.type === Env.RECORD_TYPE.ADMIN) {
-                                CompanyService.getAllCompanies()
+                                SupplierService.getAllCompanies()
                                     .then(companies => {
                                         const companyIds = Helper.flattenCompanies(companies)
                                         setCompanies(companyIds)

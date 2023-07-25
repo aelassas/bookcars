@@ -8,7 +8,7 @@ import CompanyFilter from '../components/CompanyFilter'
 import StatusFilter from '../components/StatusFilter'
 import BookingFilter from '../components/BookingFilter'
 import { Button } from '@mui/material'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 
 import '../assets/css/bookings.css'
 
@@ -56,7 +56,7 @@ const Bookings = () => {
         setLeftPanel(!admin)
         setLoadingCompanies(admin)
 
-        const allCompanies = admin ? await CompanyService.getAllCompanies() : []
+        const allCompanies = admin ? await SupplierService.getAllCompanies() : []
         const companies = admin ? Helper.flattenCompanies(allCompanies) : [user._id]
         setAllCompanies(allCompanies)
         setCompanies(companies)

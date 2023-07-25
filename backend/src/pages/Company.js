@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/company-list'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
 import Master from '../components/Master'
 import Backdrop from '../components/SimpleBackdrop'
@@ -73,7 +73,7 @@ const Company = () => {
         setLoading(true)
         setOpenDeleteDialog(false)
 
-        CompanyService.deleteCompany(company._id)
+        SupplierService.deleteCompany(company._id)
             .then(status => {
                 if (status === 200) {
                     navigate('/suppliers')
@@ -107,7 +107,7 @@ const Company = () => {
             if (params.has('c')) {
                 const id = params.get('c')
                 if (id && id !== '') {
-                    CompanyService.getCompany(id)
+                    SupplierService.getCompany(id)
                         .then(company => {
                             if (company) {
                                 setCompany(company)

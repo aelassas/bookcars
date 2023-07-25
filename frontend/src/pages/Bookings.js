@@ -6,7 +6,7 @@ import BookingList from '../components/BookingList'
 import CompanyFilter from '../components/CompanyFilter'
 import StatusFilter from '../components/StatusFilter'
 import BookingFilter from '../components/BookingFilter'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 
 import '../assets/css/bookings.css'
 
@@ -49,7 +49,7 @@ const Bookings = () => {
         setUser(user)
         setLoadingCompanies(true)
 
-        const allCompanies = await CompanyService.getAllCompanies()
+        const allCompanies = await SupplierService.getAllCompanies()
         const companies = Helper.flattenCompanies(allCompanies)
         setAllCompanies(allCompanies)
         setCompanies(companies)

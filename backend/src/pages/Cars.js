@@ -13,7 +13,7 @@ import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
 import AvailabilityFilter from '../components/AvailabilityFilter'
 import CarList from '../components/CarList'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import { Button } from '@mui/material'
 
 import '../assets/css/cars.css'
@@ -88,7 +88,7 @@ const Cars = () => {
     const onLoad = async (user) => {
         setUser(user)
         setAdmin(Helper.admin(user))
-        const allCompanies = await CompanyService.getAllCompanies()
+        const allCompanies = await SupplierService.getAllCompanies()
         const companies = Helper.flattenCompanies(allCompanies)
         setAllCompanies(allCompanies)
         setCompanies(companies)

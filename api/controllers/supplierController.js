@@ -20,30 +20,30 @@ export const validate = (req, res) => {
     User.findOne({ type: Env.USER_TYPE.COMPANY, fullName: { $regex: new RegExp(`^${keyword}$`), $options: options } })
         .then(user => user ? res.sendStatus(204) : res.sendStatus(200))
         .catch(err => {
-            console.error('[company.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.fullName, err)
+            console.error('[supplier.validateEmail] ' + strings.DB_ERROR + ' ' + req.body.fullName, err)
             res.status(400).send(strings.DB_ERROR + err)
         })
 }
 
 export const update = (req, res) => {
     User.findById(req.body._id)
-        .then(company => {
-            if (company) {
+        .then(supplier => {
+            if (supplier) {
                 const { fullName, phone, location, bio, payLater } = req.body
-                company.fullName = fullName
-                company.phone = phone
-                company.location = location
-                company.bio = bio
-                company.payLater = payLater
+                supplier.fullName = fullName
+                supplier.phone = phone
+                supplier.location = location
+                supplier.bio = bio
+                supplier.payLater = payLater
 
-                company.save()
+                supplier.save()
                     .then(() => res.sendStatus(200))
                     .catch(err => {
                         console.error(strings.DB_ERROR, err)
                         res.status(400).send(strings.DB_ERROR + err)
                     })
             } else {
-                console.error('[company.update] Location not found:', req.body)
+                console.error('[supplier.update] Location not found:', req.body)
                 res.sendStatus(204)
             }
         })
@@ -57,20 +57,20 @@ export const deleteCompany = async (req, res) => {
     const id = req.params.id
 
     try {
-        const company = await User.findByIdAndDelete(id)
-        if (company) {
-            if (company.avatar) {
-                const avatar = path.join(CDN, company.avatar)
+        const supplier = await User.findByIdAndDelete(id)
+        if (supplier) {
+            if (supplier.avatar) {
+                const avatar = path.join(CDN, supplier.avatar)
                 if (await Helper.exists(avatar)) {
                     await fs.unlink(avatar)
                 }
                 await Notification.deleteMany({ user: id })
-                const _additionalDrivers = await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
+                const _additionalDrivers = await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
                 const additionalDrivers = _additionalDrivers.map(b => new new mongoose.Types.ObjectId(b._additionalDriver))
                 await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
-                await Booking.deleteMany({ company: id })
-                const cars = await Car.find({ company: id })
-                await Car.deleteMany({ company: id })
+                await Booking.deleteMany({ supplier: id })
+                const cars = await Car.find({ supplier: id })
+                await Car.deleteMany({ supplier: id })
                 cars.forEach(async car => {
                     const image = path.join(CDN_CARS, car.image)
                     if (await Helper.exists(image)) {
@@ -83,7 +83,7 @@ export const deleteCompany = async (req, res) => {
         }
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[company.delete] ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[supplier.delete] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -93,7 +93,7 @@ export const getCompany = (req, res) => {
         .lean()
         .then(user => {
             if (!user) {
-                console.error('[company.getCompany] Company not found:', req.params)
+                console.error('[supplier.getCompany] Company not found:', req.params)
                 res.sendStatus(204)
             } else {
                 const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
@@ -132,15 +132,15 @@ export const getCompanies = async (req, res) => {
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
         if (data.length > 0) {
-            data[0].resultData = data[0].resultData.map(company => {
-                const { _id, fullName, avatar } = company
+            data[0].resultData = data[0].resultData.map(supplier => {
+                const { _id, fullName, avatar } = supplier
                 return { _id, fullName, avatar }
             })
         }
 
         res.json(data)
     } catch (err) {
-        console.error(`[company.getCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[supplier.getCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
         res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -153,15 +153,15 @@ export const getAllCompanies = async (req, res) => {
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
         if (data.length > 0) {
-            data = data.map(company => {
-                const { _id, fullName, avatar } = company
+            data = data.map(supplier => {
+                const { _id, fullName, avatar } = supplier
                 return { _id, fullName, avatar }
             })
         }
 
         res.json(data)
     } catch (err) {
-        console.error(`[company.getAllCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[supplier.getAllCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
         res.status(400).send(strings.DB_ERROR + err)
     }
 }
