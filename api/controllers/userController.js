@@ -152,7 +152,7 @@ export const adminSignup = async (req, res) => {
                 pass: SMTP_PASS
             }
         })
-        
+
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -180,134 +180,130 @@ export const adminSignup = async (req, res) => {
 
 export const create = async (req, res) => {
     const { body } = req
-    body.verified = false
-    body.blacklisted = false
 
-    if (body.password) {
-        const salt = await bcrypt.genSalt(10)
-        const password = body.password
-        const passwordHash = await bcrypt.hash(password, salt)
-        body.password = passwordHash
-    }
+    try {
+        body.verified = false
+        body.blacklisted = false
 
-    const user = new User(body)
-    user.save()
-        .then(async user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (await Helper.exists(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
+        if (body.password) {
+            const salt = await bcrypt.genSalt(10)
+            const password = body.password
+            const passwordHash = await bcrypt.hash(password, salt)
+            body.password = passwordHash
+        }
 
-                    try {
-                        await fs.rename(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                }
-            }
+        const user = new User(body)
+        await user.save()
 
-            if (body.password) {
-                return res.sendStatus(200)
-            }
+        // avatar
+        if (body.avatar) {
+            const avatar = path.join(CDN_TEMP, body.avatar)
+            if (await Helper.exists(avatar)) {
+                const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
+                const newPath = path.join(CDN, filename)
 
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
-
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
-
-                    const transporter = nodemailer.createTransport({
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
-
-                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
-                            + '/?u=' + encodeURIComponent(user._id)
-                            + '&e=' + encodeURIComponent(user.email)
-                            + '&t=' + encodeURIComponent(token.token)
-                            + '<br><br>'
-
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err, info) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    return res.status(400).send(strings.DB_ERROR + err)
-                })
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const checkToken = (req, res) => {
-    User.findOne({ _id: new mongoose.Types.ObjectId(req.params.userId), email: req.params.email })
-        .then(user => {
-            if (user) {
-                if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
-                    || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
-                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
-                    || user.active
-                ) {
-                    return res.sendStatus(403)
-                } else {
-                    Token.findOne({ user: new mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
-                        .then(token => {
-                            if (token) {
-                                return res.sendStatus(200)
-                            } else {
-                                return res.sendStatus(204)
-                            }
-                        })
+                try {
+                    await fs.rename(avatar, newPath)
+                    user.avatar = filename
+                    user.save()
                         .catch(err => {
                             console.error(strings.DB_ERROR, err)
-                            return res.status(400).send(strings.DB_ERROR + err)
+                            res.status(400).send(strings.DB_ERROR + err)
                         })
+                } catch (err) {
+                    console.error(strings.ERROR, err)
+                    res.status(400).send(strings.ERROR + err)
                 }
-            } else {
-                return res.sendStatus(403)
+            }
+        }
+
+        if (body.password) {
+            return res.sendStatus(200)
+        }
+
+        // generate token and save
+        const token = new Token({ user: user._id, token: uuid() })
+        await token.save()
+
+        // Send email
+        strings.setLanguage(user.language)
+
+        const transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
             }
         })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
+
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>'
+
+                + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate')
+                + '/?u=' + encodeURIComponent(user._id)
+                + '&e=' + encodeURIComponent(user.email)
+                + '&t=' + encodeURIComponent(token.token)
+                + '<br><br>'
+
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
+                return res.sendStatus(200)
+            }
         })
+    } catch (err) {
+        console.error(`[user.create] ${strings.DB_ERROR} ${body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const checkToken = async (req, res) => {
+    const { userId, email } = req.params
+
+    try {
+        const user = await User.findOne({ _id: new mongoose.Types.ObjectId(userId), email: email })
+
+        if (user) {
+            if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
+                || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
+                || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
+                || user.active
+            ) {
+                return res.sendStatus(403)
+            } else {
+                const token = await Token.findOne({ user: new mongoose.Types.ObjectId(req.params.userId), token: req.params.token })
+
+                if (token) {
+                    return res.sendStatus(200)
+                } else {
+                    return res.sendStatus(204)
+                }
+            }
+        } else {
+            return res.sendStatus(403)
+        }
+    } catch (err) {
+        console.error(`[user.checkToken] ${strings.DB_ERROR} ${req.params}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteTokens = async (req, res) => {
+    const { userId } = req.params
+
     try {
-        const result = await Token.deleteMany({ user: new mongoose.Types.ObjectId(req.params.userId) })
+        const result = await Token.deleteMany({ user: new mongoose.Types.ObjectId(userId) })
 
         if (result.deletedCount > 0) {
             return res.sendStatus(200)
@@ -315,172 +311,153 @@ export const deleteTokens = async (req, res) => {
             return res.sendStatus(400)
         }
     } catch (err) {
-        console.error(strings.DB_ERROR, err)
+        console.error(`[user.deleteTokens] ${strings.DB_ERROR} ${userId}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const resend = (req, res) => {
-    User.findOne({ email: req.params.email })
-        .then(user => {
-            if (user) {
-                if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
-                    || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
-                    || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
-                ) {
-                    return res.sendStatus(403)
-                } else {
-                    user.active = false
+export const resend = async (req, res) => {
+    const { email } = req.params
 
-                    user.save()
-                        .then(() => {
-                            // generate token and save
-                            const token = new Token({ user: user._id, token: uuid() })
+    try {
+        const user = await User.findOne({ email: email })
 
-                            token.save()
-                                .then(token => {
-                                    // Send email
-                                    strings.setLanguage(user.language)
-
-                                    const reset = req.params.reset === 'true'
-
-                                    const transporter = nodemailer.createTransport({
-                                        host: SMTP_HOST,
-                                        port: SMTP_PORT,
-                                        auth: {
-                                            user: SMTP_USER,
-                                            pass: SMTP_PASS
-                                        }
-                                    })
-                                    const mailOptions = {
-                                        from: SMTP_FROM,
-                                        to: user.email,
-                                        subject: (reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT),
-                                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                                            + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>'
-
-                                            + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, (reset ? 'reset-password' : 'activate'))
-                                            + '/?u=' + encodeURIComponent(user._id)
-                                            + '&e=' + encodeURIComponent(user.email)
-                                            + '&t=' + encodeURIComponent(token.token)
-                                            + '<br><br>'
-
-                                            + strings.REGARDS + '<br>'
-                                            + '</p>'
-                                    }
-                                    transporter.sendMail(mailOptions, (err, info) => {
-                                        if (err) {
-                                            console.error(strings.SMTP_ERROR, err)
-                                            return res.status(400).send(strings.SMTP_ERROR + err)
-                                        } else {
-                                            return res.sendStatus(200)
-                                        }
-                                    })
-                                })
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err)
-                                    return res.status(400).send(strings.DB_ERROR + err)
-                                })
-                        })
-                        .catch(err => {
-                            console.error(strings.DB_ERROR, err)
-                            return res.status(400).send(strings.DB_ERROR + err)
-                        })
-                }
-            } else {
-                return res.sendStatus(204)
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const activate = (req, res) => {
-    User.findById(req.body.userId)
-        .then(user => {
-            if (user) {
-                Token.find({ token: req.body.token })
-                    .then(async token => {
-                        if (token) {
-                            const salt = await bcrypt.genSalt(10)
-                            const password = req.body.password
-                            const passwordHash = await bcrypt.hash(password, salt)
-                            user.password = passwordHash
-
-                            user.active = true
-                            user.verified = true
-                            user.save()
-                                .then(() => {
-                                    return res.sendStatus(200)
-                                })
-                                .catch(err => {
-                                    console.error(strings.DB_ERROR, err)
-                                    return res.status(400).send(strings.DB_ERROR + err)
-                                })
-                        } else {
-                            return res.sendStatus(204)
-                        }
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        return res.status(400).send(strings.DB_ERROR + err)
-                    })
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const signin = (req, res) => {
-    User.findOne({ email: req.body.email })
-        .then(user => {
-            if (!req.body.password
-                || !user
-                || !user.password
-                || (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type))
+        if (user) {
+            if (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type)
                 || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
                 || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
             ) {
-                res.sendStatus(204)
+                return res.sendStatus(403)
             } else {
-                bcrypt.compare(req.body.password, user.password)
-                    .then(async passwordMatch => {
-                        if (passwordMatch) {
-                            const payload = { id: user._id }
+                user.active = false
+                await user.save()
 
-                            let options = { expiresIn: JWT_EXPIRE_AT }
-                            if (req.body.stayConnected) options = {}
+                // generate token and save
+                const token = new Token({ user: user._id, token: uuid() })
+                await token.save()
 
-                            const token = jwt.sign(payload, JWT_SECRET, options)
+                // Send email
+                strings.setLanguage(user.language)
 
-                            res.status(200).send({
-                                id: user._id,
-                                email: user.email,
-                                fullName: user.fullName,
-                                language: user.language,
-                                enableEmailNotifications: user.enableEmailNotifications,
-                                accessToken: token,
-                                blacklisted: user.blacklisted,
-                                avatar: user.avatar
-                            })
-                        } else {
-                            res.sendStatus(204)
-                        }
-                    })
-                    .catch(err => {
-                        console.error(strings.ERROR, err)
-                        return res.status(400).send(strings.ERROR + err)
-                    })
+                const reset = req.params.reset === 'true'
+
+                const transporter = nodemailer.createTransport({
+                    host: SMTP_HOST,
+                    port: SMTP_PORT,
+                    auth: {
+                        user: SMTP_USER,
+                        pass: SMTP_PASS
+                    }
+                })
+
+                const mailOptions = {
+                    from: SMTP_FROM,
+                    to: user.email,
+                    subject: (reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT),
+                    html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                        + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>'
+
+                        + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, (reset ? 'reset-password' : 'activate'))
+                        + '/?u=' + encodeURIComponent(user._id)
+                        + '&e=' + encodeURIComponent(user.email)
+                        + '&t=' + encodeURIComponent(token.token)
+                        + '<br><br>'
+
+                        + strings.REGARDS + '<br>'
+                        + '</p>'
+                }
+
+                transporter.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        console.error(strings.SMTP_ERROR, err)
+                        return res.status(400).send(strings.SMTP_ERROR + err)
+                    } else {
+                        return res.sendStatus(200)
+                    }
+                })
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+        } else {
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[user.deleteTokens] ${strings.DB_ERROR} ${email}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const activate = async (req, res) => {
+    const { userId } = req.body
+
+    try {
+        const user = await User.findById(userId)
+
+        if (user) {
+            const token = await Token.find({ token: req.body.token })
+
+            if (token) {
+                const salt = await bcrypt.genSalt(10)
+                const password = req.body.password
+                const passwordHash = await bcrypt.hash(password, salt)
+                user.password = passwordHash
+
+                user.active = true
+                user.verified = true
+                await user.save()
+
+                return res.sendStatus(200)
+            } else {
+                return res.sendStatus(204)
+            }
+        }
+    } catch (err) {
+        console.error(`[user.activate] ${strings.DB_ERROR} ${userId}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
+}
+
+export const signin = async (req, res) => {
+    const { email } = req.body
+
+    try {
+        const user = await User.findOne({ email: email })
+
+        if (!req.body.password
+            || !user
+            || !user.password
+            || (![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type))
+            || (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER)
+            || (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
+        ) {
+            res.sendStatus(204)
+        } else {
+            const passwordMatch = await bcrypt.compare(req.body.password, user.password)
+
+            if (passwordMatch) {
+                const payload = { id: user._id }
+
+                let options = { expiresIn: JWT_EXPIRE_AT }
+                if (req.body.stayConnected) options = {}
+
+                const token = jwt.sign(payload, JWT_SECRET, options)
+
+                return res.status(200).send({
+                    id: user._id,
+                    email: user.email,
+                    fullName: user.fullName,
+                    language: user.language,
+                    enableEmailNotifications: user.enableEmailNotifications,
+                    accessToken: token,
+                    blacklisted: user.blacklisted,
+                    avatar: user.avatar
+                })
+            } else {
+                return res.sendStatus(204)
+            }
+        }
+    } catch (err) {
+        console.error(`[user.signin] ${strings.DB_ERROR} ${email}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const pushToken = async (req, res) => {
