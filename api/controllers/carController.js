@@ -112,17 +112,18 @@ export const update = async (req, res) => {
 }
 
 export const checkCar = async (req, res) => {
-    try {
-        const id = new mongoose.Types.ObjectId(req.params.id)
+    const { id } = req.params
 
-        const count = await Booking.find({ car: id }).limit(1).count()
+    try {
+        const _id = new mongoose.Types.ObjectId(id)
+        const count = await Booking.find({ car: _id }).limit(1).count()
 
         if (count === 1) {
             return res.sendStatus(200)
         }
         return res.sendStatus(204)
     } catch (err) {
-        console.error(`[car.check] ${strings.DB_ERROR}`, err)
+        console.error(`[car.check] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.ERROR + err)
     }
 }
@@ -160,17 +161,18 @@ export const createImage = async (req, res) => {
         const filepath = path.join(CDN_TEMP, filename)
 
         await fs.writeFile(filepath, req.file.buffer)
-        res.json(filename)
+        return res.json(filename)
     } catch (err) {
-        console.error(strings.ERROR, err)
-        res.status(400).send(strings.ERROR + err)
+        console.error(`[car.createImage]  ${strings.DB_ERROR}`, err)
+        return res.status(400).send(strings.ERROR + err)
     }
 }
 
 export const updateImage = async (req, res) => {
+    const { id } = req.params
+    const { file } = req
+
     try {
-        const { id } = req.params
-        const { file } = req
         const car = await Car.findById(id)
 
         if (car) {
@@ -202,36 +204,31 @@ export const updateImage = async (req, res) => {
     }
 }
 
-export const deleteImage = (req, res) => {
+export const deleteImage = async (req, res) => {
+    const { id } = req.params
 
-    Car.findById(req.params.id)
-        .then(async car => {
-            if (car) {
-                if (car.image) {
-                    const image = path.join(CDN, car.image)
-                    if (await Helper.exists(image)) {
-                        await fs.unlink(image)
-                    }
+    try {
+        const car = await Car.findById(id)
+
+        if (car) {
+            if (car.image) {
+                const image = path.join(CDN, car.image)
+                if (await Helper.exists(image)) {
+                    await fs.unlink(image)
                 }
-                car.image = null
-
-                car.save()
-                    .then(() => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[car.deleteImage] Car not found:', req.params.id)
-                res.sendStatus(204)
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            car.image = null
+
+            await car.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[car.deleteImage] Car not found:', id)
+            res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[car.deleteImage]  ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const deleteTempImage = async (req, res) => {
