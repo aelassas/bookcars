@@ -862,7 +862,6 @@ export const checkPassword = async (req, res) => {
 }
 
 export const getUsers = async (req, res) => {
-
     try {
         const keyword = escapeStringRegexp(req.query.s || '')
         const options = 'i'
@@ -923,10 +922,10 @@ export const getUsers = async (req, res) => {
             }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
-        res.json(users)
+        return res.json(users)
     } catch (err) {
-        console.error(strings.DB_ERROR, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        console.error(`[user.getUsers] ${strings.DB_ERROR}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
