@@ -225,11 +225,13 @@ const BookingList = (props) => {
                                     <ViewIcon />
                                 </IconButton>
                             </Tooltip>
-                            {params.row.cancellation
+                            {
+                                params.row.cancellation
                                 && !params.row.cancelRequest
                                 && params.row.status !== Env.BOOKING_STATUS.CANCELLED
                                 && new Date(params.row.from) > new Date()
-                                && <Tooltip title={strings.CANCEL}>
+                                &&
+                                <Tooltip title={strings.CANCEL}>
                                     <IconButton onClick={cancelBooking}>
                                         <CancelIcon />
                                     </IconButton>
