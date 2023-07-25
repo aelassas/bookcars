@@ -801,73 +801,64 @@ export const deleteTempAvatar = async (req, res) => {
     }
 }
 
-export const changePassword = (req, res) => {
-    User.findOne({ _id: req.body._id })
-        .then(user => {
+export const changePassword = async (req, res) => {
+    const { _id, password: currentPassword, newPassword, strict } = req.body
 
-            if (!user) {
-                console.error('[user.changePassword] User not found:', req.body._id)
-                return res.sendStatus(204)
-            }
+    try {
+        const user = await User.findOne({ _id: _id })
+        if (!user) {
+            console.error('[user.changePassword] User not found:', _id)
+            return res.sendStatus(204)
+        }
 
-            const changePassword = async () => {
-                const salt = await bcrypt.genSalt(10)
-                const password = req.body.newPassword
-                const passwordHash = await bcrypt.hash(password, salt)
-                user.password = passwordHash
+        const _changePassword = async () => {
+            const salt = await bcrypt.genSalt(10)
+            const password = newPassword
+            const passwordHash = await bcrypt.hash(password, salt)
+            user.password = passwordHash
+            await user.save()
+            return res.sendStatus(200)
+        }
 
-                user.save()
-                    .then(() => {
-                        return res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        return res.status(400).send(strings.DB_ERROR + err)
-                    })
-            }
-
-            if (req.body.strict) {
-                bcrypt.compare(req.body.password, user.password)
-                    .then(async passwordMatch => {
-                        if (passwordMatch) {
-                            changePassword()
-                        }
-                        else {
-                            return res.sendStatus(204)
-                        }
-                    })
+        if (strict) {
+            const passwordMatch = await bcrypt.compare(currentPassword, user.password)
+            if (passwordMatch) {
+                return _changePassword()
             }
             else {
-                changePassword()
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
-}
-
-export const checkPassword = (req, res) => {
-    User.findById(req.params.id)
-        .then(user => {
-            if (user) {
-                bcrypt.compare(req.params.password, user.password).then(passwordMatch => {
-                    if (passwordMatch) {
-                        return res.sendStatus(200)
-                    }
-                    else {
-                        return res.sendStatus(204)
-                    }
-                })
-            } else {
-                console.error('[user.checkPassword] User not found:', req.params.id)
                 return res.sendStatus(204)
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+        }
+        else {
+            return _changePassword()
+        }
+    } catch (err) {
+        console.error(`[user.changePassword] ${strings.DB_ERROR} ${_id}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
+}
+
+export const checkPassword = async (req, res) => {
+    const { id, password } = req.params
+
+    try {
+        const user = await User.findById(id)
+        if (user) {
+            const passwordMatch = await bcrypt.compare(password, user.password)
+            if (passwordMatch) {
+                return res.sendStatus(200)
+            }
+            else {
+                return res.sendStatus(204)
+            }
+        } else {
+            console.error('[user.checkPassword] User not found:', id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[user.checkPassword] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const getUsers = async (req, res) => {
