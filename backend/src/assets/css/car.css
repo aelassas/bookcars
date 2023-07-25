@@ -1,6 +1,5 @@
 div.car {
     position: absolute;
-    top: 0;
     bottom: 0;
     right: 0;
     left: 0;
@@ -26,6 +25,10 @@ div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.car {
+        top: 56px
+    }
+
     div.car div.col-1 {
         width: 100%;
         padding-top: 5px;
@@ -163,6 +166,10 @@ div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    div.car {
+        top: 64px
+    }
+
     div.car div.col-1 {
         position: absolute;
         top: 0;

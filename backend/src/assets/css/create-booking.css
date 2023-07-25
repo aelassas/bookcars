@@ -1,14 +1,5 @@
 /* Create Location */
 
-.create-booking {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow: auto;
-}
-
 .booking-form-wrapper {
     margin: 32px 0;
 }

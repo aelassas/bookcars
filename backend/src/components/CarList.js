@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import * as Helper from '../common/Helper'
 import * as CarService from '../services/CarService'
-import Backdrop from './SimpleBackdrop'
 import {
     IconButton,
     Button,
@@ -47,29 +46,21 @@ const CarList = (props) => {
     const [carId, setCarId] = useState('')
     const [carIndex, setCarIndex] = useState(-1)
     const [openInfoDialog, setOpenInfoDialog] = useState(false)
-    const [offset, setOffset] = useState(0)
 
     useEffect(() => {
-        setOffset(props.offset)
-    }, [props.offset])
-
-    useEffect(() => {
-        const element = props.containerClassName ? document.querySelector(`.${props.containerClassName}`) : document.querySelector('section.car-list')
+        const element = document.querySelector('body')
 
         if (element) {
             element.onscroll = (event) => {
-                let _offset = 0
-                if (Env.isMobile()) _offset = offset
-
                 if (fetch
                     && !loading
-                    && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                    && window.scrollY > 0
+                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
                     setPage(page + 1)
                 }
             }
         }
-    }, [props.containerClassName, fetch, loading, page, offset])
+    }, [fetch, loading, page])
 
     const _fetch = (page, companies, keyword, fuel, gearbox, mileage, deposit, availability) => {
         setLoading(true)
@@ -85,8 +76,7 @@ const CarList = (props) => {
                 setRowCount(totalRecords)
                 setFetch(_data.resultData.length > 0)
                 if (page === 1) {
-                    const className = props.containerClassName ? props.containerClassName : 'car-list'
-                    document.querySelector(`.${className}`).scrollTo(0, 0)
+                    document.querySelector('body').scrollTo(0, 0)
                 }
 
                 if (props.onLoad) {
@@ -110,7 +100,7 @@ const CarList = (props) => {
                 if (props.onLoad) {
                     props.onLoad({ rows: [], rowCount: 0 })
                 }
-                setLoading(false)
+                // setLoading(false)
             }
         }
     }, [page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -123,7 +113,7 @@ const CarList = (props) => {
             if (props.onLoad) {
                 props.onLoad({ rows: props.cars, rowCount: props.cars.length })
             }
-            setLoading(false)
+            // setLoading(false)
         }
     }, [props.cars]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -439,7 +429,6 @@ const CarList = (props) => {
                     <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-            {loading && <Backdrop text={commonStrings.LOADING} />}
         </section>
     )
 }
