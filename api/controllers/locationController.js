@@ -81,23 +81,17 @@ export const update = async (req, res) => {
     }
 }
 
-export const deleteLocation = (req, res) => {
-    const id = req.params.id
+export const deleteLocation = async (req, res) => {
+    const { id } = req.params
 
-    Location.findByIdAndDelete(id, async (err, location) => {
-        if (err) {
-            console.error(`[location.delete]  ${strings.DB_ERROR} ${req.params.id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        } else {
-            try {
-                await LocationValue.deleteMany({ _id: { $in: location.values } })
-                res.sendStatus(200)
-            } catch (err) {
-                console.error(`[location.delete]  ${strings.DB_ERROR} ${req.params.id}`, err)
-                res.status(400).send(strings.DB_ERROR + err)
-            }
-        }
-    })
+    try {
+        const location = await Location.findByIdAndDelete(id)
+        await LocationValue.deleteMany({ _id: { $in: location.values } })
+        return res.sendStatus(200)
+    } catch (err) {
+        console.error(`[location.delete] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const getLocation = async (req, res) => {
