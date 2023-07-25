@@ -365,15 +365,15 @@ export const update = async (req, res) => {
                 await notifyDriver(booking)
             }
 
-            res.sendStatus(200)
+            return res.sendStatus(200)
         } else {
             console.error('[booking.update] Booking not found:', req.body._id)
-            res.sendStatus(204)
+            return res.sendStatus(204)
         }
     }
     catch (err) {
         console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
@@ -392,7 +392,6 @@ export const updateStatus = async (req, res) => {
         })
 
         return res.sendStatus(200)
-
     } catch (err) {
         console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -416,59 +415,60 @@ export const deleteBookings = async (req, res) => {
     }
 }
 
-export const getBooking = (req, res) => {
-    Booking.findById(req.params.id)
-        .populate('company')
-        .populate({
-            path: 'car',
-            populate: {
-                path: 'company',
-                model: 'User'
-            }
-        })
-        .populate('driver')
-        .populate({
-            path: 'pickupLocation',
-            populate: {
-                path: 'values',
-                model: 'LocationValue',
-            }
-        })
-        .populate({
-            path: 'dropOffLocation',
-            populate: {
-                path: 'values',
-                model: 'LocationValue',
-            }
-        })
-        .populate('_additionalDriver')
-        .lean()
-        .then(booking => {
-            if (booking) {
-                const language = req.params.language
-
-                if (booking.company) {
-                    const { _id, fullName, avatar, payLater } = booking.company
-                    booking.company = { _id, fullName, avatar, payLater }
+export const getBooking = async (req, res) => {
+    const { id } = req.params
+    try {
+        const booking = await Booking.findById(id)
+            .populate('company')
+            .populate({
+                path: 'car',
+                populate: {
+                    path: 'company',
+                    model: 'User'
                 }
-                if (booking.car.company) {
-                    const { _id, fullName, avatar, payLater } = booking.car.company
-                    booking.car.company = { _id, fullName, avatar, payLater }
+            })
+            .populate('driver')
+            .populate({
+                path: 'pickupLocation',
+                populate: {
+                    path: 'values',
+                    model: 'LocationValue',
                 }
+            })
+            .populate({
+                path: 'dropOffLocation',
+                populate: {
+                    path: 'values',
+                    model: 'LocationValue',
+                }
+            })
+            .populate('_additionalDriver')
+            .lean()
 
-                booking.pickupLocation.name = booking.pickupLocation.values.filter(value => value.language === language)[0].value
-                booking.dropOffLocation.name = booking.dropOffLocation.values.filter(value => value.language === language)[0].value
+        if (booking) {
+            const language = req.params.language
 
-                res.json(booking)
-            } else {
-                console.error('[booking.getBooking] Car not found:', req.params.id)
-                res.sendStatus(204)
+            if (booking.company) {
+                const { _id, fullName, avatar, payLater } = booking.company
+                booking.company = { _id, fullName, avatar, payLater }
             }
-        })
-        .catch(err => {
-            console.error(`[booking.getBooking] ${strings.DB_ERROR} ${req.params.id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            if (booking.car.company) {
+                const { _id, fullName, avatar, payLater } = booking.car.company
+                booking.car.company = { _id, fullName, avatar, payLater }
+            }
+
+            booking.pickupLocation.name = booking.pickupLocation.values.filter(value => value.language === language)[0].value
+            booking.dropOffLocation.name = booking.dropOffLocation.values.filter(value => value.language === language)[0].value
+
+            return res.json(booking)
+        } else {
+            console.error('[booking.getBooking] Car not found:', id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[booking.delete]  ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const getBookings = async (req, res) => {
