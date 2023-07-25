@@ -566,7 +566,7 @@ export const confirmEmail = async (req, res) => {
 
 export const resendLink = async (req, res) => {
     const { email } = req.body
-    
+
     try {
         const user = await User.findOne({ email: email })
 
@@ -611,86 +611,67 @@ export const resendLink = async (req, res) => {
     }
 }
 
-export const update = (req, res) => {
-    User.findById(req.body._id)
-        .then(user => {
-            if (!user) {
-                console.error('[user.update] User not found:', req.body.email)
-                res.sendStatus(204)
-            } else {
-                const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body
-                if (fullName) user.fullName = fullName
-                user.phone = phone
-                user.location = location
-                user.bio = bio
-                user.birthDate = birthDate
-                if (type) user.type = type
-                if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications
-                if (typeof payLater !== 'undefined') user.payLater = payLater
+export const update = async (req, res) => {
+    try {
+        const { _id } = req.body
+        const user = await User.findById(_id)
+        if (!user) {
+            console.error('[user.update] User not found:', req.body.email)
+            return res.sendStatus(204)
+        } else {
+            const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body
+            if (fullName) user.fullName = fullName
+            user.phone = phone
+            user.location = location
+            user.bio = bio
+            user.birthDate = birthDate
+            if (type) user.type = type
+            if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications
+            if (typeof payLater !== 'undefined') user.payLater = payLater
 
-                user.save()
-                    .then(() => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            await user.save()
+            return res.sendStatus(200)
+        }
+    } catch (err) {
+        console.error(`[user.update] ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
-export const updateEmailNotifications = (req, res) => {
-    User.findById(req.body._id)
-        .then(user => {
-            if (!user) {
-                console.error('[user.updateEmailNotifications] User not found:', req.body.email)
-                res.sendStatus(204)
-            } else {
-                user.enableEmailNotifications = req.body.enableEmailNotifications
-                user.save()
-                    .then(user => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-
-            }
-        }).catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const updateEmailNotifications = async (req, res) => {
+    try {
+        const { _id } = req.body
+        const user = await User.findById(_id)
+        if (!user) {
+            console.error('[user.updateEmailNotifications] User not found:', req.body)
+            return res.sendStatus(204)
+        } else {
+            user.enableEmailNotifications = req.body.enableEmailNotifications
+            await user.save()
+            return res.sendStatus(200)
+        }
+    } catch (err) {
+        console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
-export const updateLanguage = (req, res) => {
-    User.findById(req.body.id)
-        .then(user => {
-            if (!user) {
-                console.error('[user.updateLanguage] User not found:', req.body.id)
-                res.sendStatus(204)
-            } else {
-                user.language = req.body.language
-                user.save()
-                    .then(() => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-
-            }
-        }).catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const updateLanguage = async (req, res) => {
+    try {
+        const { id, language } = req.body
+        const user = await User.findById(id)
+        if (!user) {
+            console.error('[user.updateLanguage] User not found:', id)
+            res.sendStatus(204)
+        } else {
+            user.language = language
+            await user.save()
+            return res.sendStatus(200)
+        }
+    } catch (err) {
+        console.error(`[user.updateLanguage] ${strings.DB_ERROR} ${req.body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const getUser = (req, res) => {
