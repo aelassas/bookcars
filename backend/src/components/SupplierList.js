@@ -55,7 +55,7 @@ const SupplierList = (props) => {
                     props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                 }
 
-                setTimeout(() => setLoading(false), Env.BACKDROP_TIMEOUT)
+                setLoading(false)
             })
             .catch((err) => {
                 Helper.error(err)
