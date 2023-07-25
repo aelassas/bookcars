@@ -13,27 +13,22 @@ const SMTP_USER = process.env.BC_SMTP_USER
 const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
 
-export const notificationCounter = (req, res) => {
-    NotificationCounter.findOne({ user: req.params.userId })
-        .then(counter => {
-            if (counter) {
-                res.json(counter)
-            } else {
-                const cnt = new NotificationCounter({ user: req.params.userId })
-                cnt.save()
-                    .then(n => {
-                        res.json(cnt)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const notificationCounter = async (req, res) => {
+    const { userId } = req.params
+    try {
+        const counter = await NotificationCounter.findOne({ user: userId })
+
+        if (counter) {
+            res.json(counter)
+        } else {
+            const cnt = new NotificationCounter({ user: userId })
+            await cnt.save()
+            return res.json(cnt)
+        }
+    } catch (err) {
+        console.error(`[notification.notificationCounter] ${strings.DB_ERROR} ${userId}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const notify = async (req, res) => {
@@ -174,7 +169,7 @@ export const markAsRead = async (req, res) => {
         await counter.save()
 
         return res.sendStatus(200)
-        
+
     } catch (err) {
         console.error(`[notification.markAsRead] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
