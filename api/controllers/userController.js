@@ -28,177 +28,154 @@ const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
 const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 
-const getStatusMessage = (lang, msg) => {
-    if (lang === 'ar') {
-        return '<!DOCTYPE html><html dir="rtl" lang="ar"><head></head><body><p>' + msg + '</p></body></html>'
-    }
-    return '<!DOCTYPE html><html lang="' + lang + '"><head></head><body><p>' + msg + '</p></body></html>'
-}
+const getStatusMessage = (lang, msg) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
 
 export const signup = async (req, res) => {
     const { body } = req
-    body.active = true
-    body.verified = false
-    body.blacklisted = false
-    body.type = Env.USER_TYPE.USER
 
-    const salt = await bcrypt.genSalt(10)
-    const password = body.password
-    const passwordHash = await bcrypt.hash(password, salt)
-    body.password = passwordHash
+    try {
+        body.active = true
+        body.verified = false
+        body.blacklisted = false
+        body.type = Env.USER_TYPE.USER
 
-    const user = new User(body)
-    user.save()
-        .then(async user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (Helper.exists(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
+        const salt = await bcrypt.genSalt(10)
+        const password = body.password
+        const passwordHash = await bcrypt.hash(password, salt)
+        body.password = passwordHash
 
-                    try {
-                        await fs.rename(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
-                }
+        const user = new User(body)
+        await user.save()
+
+        if (body.avatar) {
+            const avatar = path.join(CDN_TEMP, body.avatar)
+            if (Helper.exists(avatar)) {
+                const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
+                const newPath = path.join(CDN, filename)
+
+                await fs.rename(avatar, newPath)
+                user.avatar = filename
+                await user.save()
             }
+        }
 
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
+        // generate token and save
+        const token = new Token({ user: user._id, token: uuid() })
 
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
+        await token.save()
 
-                    const transporter = nodemailer.createTransport({
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK
-                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err, info) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err))
-                })
+        // Send email
+        strings.setLanguage(user.language)
+
+        const transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
+            }
         })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK
+                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
+                return res.sendStatus(200)
+            }
         })
+    } catch (err) {
+        console.error(`[user.signup] ${strings.DB_ERROR} ${body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const adminSignup = async (req, res) => {
     const { body } = req
-    body.active = true
-    body.verified = false
-    body.blacklisted = false
-    body.type = Env.USER_TYPE.ADMIN
 
-    const salt = await bcrypt.genSalt(10)
-    const password = body.password
-    const passwordHash = await bcrypt.hash(password, salt)
-    body.password = passwordHash
+    try {
+        body.active = true
+        body.verified = false
+        body.blacklisted = false
+        body.type = Env.USER_TYPE.ADMIN
 
-    const user = new User(body)
-    user.save()
-        .then(async user => {
-            // avatar
-            if (body.avatar) {
-                const avatar = path.join(CDN_TEMP, body.avatar)
-                if (await Helper.exists(avatar)) {
-                    const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-                    const newPath = path.join(CDN, filename)
+        const salt = await bcrypt.genSalt(10)
+        const password = body.password
+        const passwordHash = await bcrypt.hash(password, salt)
+        body.password = passwordHash
 
-                    try {
-                        await fs.prompises.rename(avatar, newPath)
-                        user.avatar = filename
-                        user.save()
-                            .catch(err => {
-                                console.error(strings.DB_ERROR, err)
-                                res.status(400).send(strings.DB_ERROR + err)
-                            })
-                    } catch (err) {
-                        console.error(strings.ERROR, err)
-                        res.status(400).send(strings.ERROR + err)
-                    }
+        const user = new User(body)
+        await user.save()
+
+        if (body.avatar) {
+            const avatar = path.join(CDN_TEMP, body.avatar)
+            if (await Helper.exists(avatar)) {
+                const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
+                const newPath = path.join(CDN, filename)
+
+                try {
+                    await fs.prompises.rename(avatar, newPath)
+                    user.avatar = filename
+                    user.save()
+                        .catch(err => {
+                            console.error(strings.DB_ERROR, err)
+                            res.status(400).send(strings.DB_ERROR + err)
+                        })
+                } catch (err) {
+                    console.error(strings.ERROR, err)
+                    res.status(400).send(strings.ERROR + err)
                 }
             }
+        }
 
-            // generate token and save
-            const token = new Token({ user: user._id, token: uuid() })
+        // generate token and save
+        const token = new Token({ user: user._id, token: uuid() })
+        await token.save()
 
-            token.save()
-                .then(token => {
-                    // Send email
-                    strings.setLanguage(user.language)
+        // Send email
+        strings.setLanguage(user.language)
 
-                    const transporter = nodemailer.createTransport({
-                        host: SMTP_HOST,
-                        port: SMTP_PORT,
-                        auth: {
-                            user: SMTP_USER,
-                            pass: SMTP_PASS
-                        }
-                    })
-                    const mailOptions = {
-                        from: SMTP_FROM,
-                        to: user.email,
-                        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-                        html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
-                            + strings.ACCOUNT_ACTIVATION_LINK
-                            + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
-                            + strings.REGARDS + '<br>'
-                            + '</p>'
-                    }
-                    transporter.sendMail(mailOptions, (err, info) => {
-                        if (err) {
-                            console.error(strings.SMTP_ERROR, err)
-                            return res.status(400).send(strings.SMTP_ERROR + err)
-                        } else {
-                            return res.sendStatus(200)
-                        }
-                    })
-                })
-                .catch(err => {
-                    console.error(strings.DB_ERROR, err)
-                    res.status(400).send(getStatusMessage(user.language, strings.DB_ERROR + err))
-                })
+        const transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS
+            }
         })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
+        
+        const mailOptions = {
+            from: SMTP_FROM,
+            to: user.email,
+            subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+            html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
+                + strings.ACCOUNT_ACTIVATION_LINK
+                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + strings.REGARDS + '<br>'
+                + '</p>'
+        }
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.error(strings.SMTP_ERROR, err)
+                return res.status(400).send(strings.SMTP_ERROR + err)
+            } else {
+                return res.sendStatus(200)
+            }
         })
+    } catch (err) {
+        console.error(`[user.adminSignup] ${strings.DB_ERROR} ${body}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const create = async (req, res) => {
@@ -811,7 +788,7 @@ export const updateAvatar = (req, res) => {
 
                 if (user.avatar && !user.avatar.startsWith('http')) {
                     const avatar = path.join(CDN, user.avatar)
-                    
+
                     if (await Helper.exists(avatar)) {
                         await fs.unlink(avatar)
                     }
