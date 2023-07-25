@@ -664,75 +664,86 @@ export const getBookings = async (req, res) => {
     }
     catch (err) {
         console.error(`[booking.getBookings] ${strings.DB_ERROR} ${req.body}`, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const hasBookings = (req, res) => {
-    Booking.find({ driver: new mongoose.Types.ObjectId(req.params.driver) })
-        .limit(1)
-        .count()
-        .then(count => {
-            if (count === 1) {
-                return res.sendStatus(200)
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${req.params.driver}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+export const hasBookings = async (req, res) => {
+    const { driver } = req.params
+
+    try {
+        const count = await Booking.find({ driver: new mongoose.Types.ObjectId(driver) })
+            .limit(1)
+            .count()
+
+        if (count === 1) {
+            return res.sendStatus(200)
+        }
+        return res.sendStatus(204)
+    }
+    catch (err) {
+        console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${driver}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
-export const bookingsMinDate = (req, res) => {
-    Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { from: 1 })
-        .sort({ from: 1 })
-        .then(booking => {
-            if (booking) {
-                return res.json((new Date(booking.from).getTime()))
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${req.params.driver}`, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+export const bookingsMinDate = async (req, res) => {
+    const { driver } = req.params
+
+    try {
+        const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(driver) }, { from: 1 }).sort({ from: 1 })
+
+        if (booking) {
+            return res.json((new Date(booking.from).getTime()))
+        }
+        return res.sendStatus(204)
+    }
+    catch (err) {
+        console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
-export const bookingsMaxDate = (req, res) => {
-    Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { to: 1 })
-        .sort({ to: -1 })
-        .then(booking => {
-            if (booking) {
-                return res.json((new Date(booking.to).getTime()))
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${req.params.driver}`, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+export const bookingsMaxDate = async (req, res) => {
+    const { driver } = req.params
+
+    try {
+        const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { to: 1 }).sort({ to: -1 })
+
+        if (booking) {
+            return res.json((new Date(booking.to).getTime()))
+        }
+        return res.sendStatus(204)
+    }
+    catch (err) {
+        console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
-export const cancelBooking = (req, res) => {
-    Booking.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) })
-        .populate('company')
-        .populate('driver')
-        .then(async booking => {
-            if (booking && booking.cancellation && !booking.cancelRequest) {
+export const cancelBooking = async (req, res) => {
+    const { id } = req.params
 
-                booking.cancelRequest = true
-                await booking.save()
+    try {
+        const booking = await Booking.findOne({ _id: new mongoose.Types.ObjectId(id) })
+            .populate('company')
+            .populate('driver')
 
-                // Notify company
-                await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
+        if (booking && booking.cancellation && !booking.cancelRequest) {
 
-                return res.sendStatus(200)
-            }
-            return res.sendStatus(204)
-        })
-        .catch(err => {
-            console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${req.params.id}`, err)
-            return res.status(400).send(strings.DB_ERROR + err)
-        })
+            booking.cancelRequest = true
+            await booking.save()
+
+            // Notify supplier
+            await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
+
+            return res.sendStatus(200)
+        }
+        
+        return res.sendStatus(204)
+    }
+    catch (err) {
+        console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
