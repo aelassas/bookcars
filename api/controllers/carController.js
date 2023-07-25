@@ -233,6 +233,7 @@ export const deleteImage = async (req, res) => {
 
 export const deleteTempImage = async (req, res) => {
     const { image } = req.params
+    
     try {
         const imageFile = path.join(CDN_TEMP, image)
         if (await Helper.exists(imageFile)) {
