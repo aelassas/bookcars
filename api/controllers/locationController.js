@@ -6,17 +6,19 @@ import Car from '../models/Car.js'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 
-export const validate = (req, res) => {
-    const language = req.body.language
-    const keyword = escapeStringRegexp(req.body.name)
-    const options = 'i'
+export const validate = async (req, res) => {
+    const { language, name } = req.body
 
-    LocationValue.findOne({ language: { $eq: language }, value: { $regex: new RegExp(`^${keyword}$`), $options: options } })
-        .then(locationValue => locationValue ? res.sendStatus(204) : res.sendStatus(200))
-        .catch(err => {
-            console.error(`[location.validate]  ${strings.DB_ERROR} ${req.body.name}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+    try {
+        const keyword = escapeStringRegexp(name)
+        const options = 'i'
+
+        const locationValue = await LocationValue.findOne({ language: { $eq: language }, value: { $regex: new RegExp(`^${keyword}$`), $options: options } })
+        return locationValue ? res.sendStatus(204) : res.sendStatus(200)
+    } catch (err) {
+        console.error(`[location.validate]  ${strings.DB_ERROR} ${name}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
+    }
 }
 
 export const create = async (req, res) => {
