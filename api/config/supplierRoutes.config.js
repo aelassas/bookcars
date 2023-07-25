@@ -1,8 +1,8 @@
 export default {
-    validate:  '/api/validate-company',
-    update: '/api/update-company',
-    delete: '/api/delete-company/:id',
-    getCompany: '/api/company/:id',
-    getCompanies: '/api/companies/:page/:size',
-    getAllCompanies: '/api/all-companies',
+    validate:  '/api/validate-supplier',
+    update: '/api/update-supplier',
+    delete: '/api/delete-supplier/:id',
+    getCompany: '/api/supplier/:id',
+    getCompanies: '/api/suppliers/:page/:size',
+    getAllCompanies: '/api/all-suppliers',
 }

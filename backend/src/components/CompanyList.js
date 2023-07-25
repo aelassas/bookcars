@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/company-list'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
 import Backdrop from './SimpleBackdrop'
 import {
@@ -46,7 +46,7 @@ const CompanyList = (props) => {
     const _fetch = (page, keyword) => {
         setLoading(true)
 
-        CompanyService.getCompanies(keyword, page, Env.PAGE_SIZE)
+        SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {}
                 if (_data.length === 0) _data.resultData = []
@@ -119,7 +119,7 @@ const CompanyList = (props) => {
         if (companyId !== '' && companyIndex > -1) {
             setLoading(false)
             setOpenDeleteDialog(false)
-            CompanyService.deleteCompany(companyId)
+            SupplierService.deleteCompany(companyId)
                 .then(status => {
                     if (status === 200) {
                         const _rowCount = rowCount - 1

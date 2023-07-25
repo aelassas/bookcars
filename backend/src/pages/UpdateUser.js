@@ -6,7 +6,7 @@ import { strings as ccStrings } from '../lang/create-company'
 import { strings } from '../lang/create-user'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import NoMatch from './NoMatch'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
@@ -81,7 +81,7 @@ const UpdateUser = () => {
 
         if (__fullName) {
             try {
-                const status = await CompanyService.validate({ fullName: __fullName })
+                const status = await SupplierService.validate({ fullName: __fullName })
 
                 if (status === 200) {
                     setFullNameError(false)

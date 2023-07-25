@@ -4,7 +4,7 @@ import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-company'
 import * as UserService from '../services/UserService'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
@@ -53,7 +53,7 @@ const CreateCompany = () => {
     const validateFullName = async (fullName) => {
         if (fullName) {
             try {
-                const status = await CompanyService.validate({ fullName })
+                const status = await SupplierService.validate({ fullName })
 
                 if (status === 200) {
                     setFullNameError(false)

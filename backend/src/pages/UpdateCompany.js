@@ -3,7 +3,7 @@ import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-company'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import Error from '../components/Error'
@@ -57,7 +57,7 @@ const UpdateCompany = () => {
         if (fullName) {
             if (company.fullName !== fullName) {
                 try {
-                    const status = await CompanyService.validate({ fullName })
+                    const status = await SupplierService.validate({ fullName })
 
                     if (status === 200) {
                         setFullNameError(false)
@@ -168,7 +168,7 @@ const UpdateCompany = () => {
             if (params.has('c')) {
                 const id = params.get('c')
                 if (id && id !== '') {
-                    CompanyService.getCompany(id)
+                    SupplierService.getCompany(id)
                         .then(company => {
                             if (company) {
                                 setCompany(company)
@@ -230,7 +230,7 @@ const UpdateCompany = () => {
             payLater
         }
 
-        CompanyService.update(data)
+        SupplierService.update(data)
             .then(status => {
                 if (status === 200) {
                     company.fullName = fullName

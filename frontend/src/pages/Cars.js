@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import * as LocationService from '../services/LocationService'
-import * as CompanyService from '../services/CompanyService'
+import * as SupplierService from '../services/SupplierService'
 import Master from '../components/Master'
 import NoMatch from './NoMatch'
 import CarFilter from '../components/CarFilter'
@@ -116,7 +116,7 @@ const Cars = () => {
                 return
             }
 
-            const allCompanies = await CompanyService.getAllCompanies()
+            const allCompanies = await SupplierService.getAllCompanies()
             const companies = Helper.flattenCompanies(allCompanies)
 
             setPickupLocation(pickupLocation)
