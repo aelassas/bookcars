@@ -1,6 +1,5 @@
 div.users {
     position: absolute;
-    top: 0;
     bottom: 0;
     right: 0;
     left: 0;
@@ -9,6 +8,10 @@ div.users {
 /* Device width is lower than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.users {
+        top: 56px;
+    }
+
     div.users div.col-1 {
         position: absolute;
         top: 0;
@@ -45,6 +48,10 @@ div.users {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    div.users {
+        top: 64px;
+    }
+
     div.users div.col-1 {
         position: absolute;
         top: 0;

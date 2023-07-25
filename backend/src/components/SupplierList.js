@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/company-list'
 import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
-import Backdrop from './SimpleBackdrop'
 import {
     IconButton,
     Button,
@@ -29,7 +28,6 @@ import '../assets/css/company-list.css'
 const SupplierList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(false)
-    const [offset, setOffset] = useState(0)
     const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
@@ -38,10 +36,6 @@ const SupplierList = (props) => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const [companyId, setCompanyId] = useState('')
     const [companyIndex, setCompanyIndex] = useState(-1)
-
-    useEffect(() => {
-        setOffset(props.offset)
-    }, [props.offset])
 
     const _fetch = (page, keyword) => {
         setLoading(true)
@@ -61,7 +55,7 @@ const SupplierList = (props) => {
                     props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                 }
 
-                setLoading(false)
+                setTimeout(() => setLoading(false), Env.BACKDROP_TIMEOUT)
             })
             .catch((err) => {
                 Helper.error(err)
@@ -83,24 +77,21 @@ const SupplierList = (props) => {
     }, [props.reload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        const element = document.querySelector(`.${props.containerClassName}`)
+        const element = document.querySelector('body')
+
         if (element) {
             element.onscroll = (event) => {
-
-                let _offset = 0
-                if (Env.isMobile()) _offset = offset
-
                 if (fetch
                     && !loading
-                    && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
+                    && window.scrollY > 0
+                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
                     const p = page + 1
                     setPage(p)
                     _fetch(p, keyword)
                 }
             }
         }
-    }, [props.containerClassName, offset, fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         _fetch(1, '')
@@ -225,8 +216,6 @@ const SupplierList = (props) => {
                     <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-
-            {loading && <Backdrop text={commonStrings.LOADING} />}
         </section>
     )
 }

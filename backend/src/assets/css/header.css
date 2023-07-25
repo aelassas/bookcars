@@ -1,5 +1,11 @@
 /* Header */
 
+.header {
+    position: sticky !important;
+    top: 0;
+    z-index: 101;
+}
+
 .header-action {
     margin-right: 20px;
 }
@@ -16,6 +22,9 @@
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    .header {
+        min-height: 56px;
+    }
 
     .toolbar {
         min-height: 56px !important;
@@ -26,6 +35,10 @@
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    .header {
+        min-height: 64px;
+    }
+
     .header-desktop {
         display: flex;
     }

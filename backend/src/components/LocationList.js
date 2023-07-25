@@ -34,7 +34,6 @@ import '../assets/css/location-list.css'
 const LocationList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(false)
-    const [offset, setOffset] = useState(0)
     const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
@@ -44,10 +43,6 @@ const LocationList = (props) => {
     const [openInfoDialog, setOpenInfoDialog] = useState(false)
     const [locationId, setLocationId] = useState('')
     const [locationIndex, setLocationIndex] = useState(-1)
-
-    useEffect(() => {
-        setOffset(props.offset)
-    }, [props.offset])
 
     const _fetch = (page, keyword) => {
         setLoading(true)
@@ -89,23 +84,21 @@ const LocationList = (props) => {
     }, [props.reload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        const element = document.querySelector(`.${props.containerClassName}`)
+        const element = document.querySelector('body')
+
         if (element) {
             element.onscroll = (event) => {
-                let _offset = 0
-                if (Env.isMobile()) _offset = offset
-
                 if (fetch
                     && !loading
-                    && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.PAGE_OFFSET)) {
+                    && window.scrollY > 0
+                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
                     const p = page + 1
                     setPage(p)
                     _fetch(p, keyword)
                 }
             }
         }
-    }, [props.containerClassName, offset, fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         _fetch(1, '')

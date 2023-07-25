@@ -4,7 +4,6 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/user-list'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
 import {
     DataGrid,
     frFR,
@@ -323,7 +322,7 @@ const UserList = (props) => {
                     columns={columns}
                     rows={rows}
                     rowCount={rowCount}
-                    // loading={loading}
+                    loading={loading}
                     initialState={{
                         pagination: { paginationModel: { pageSize: Env.PAGE_SIZE } },
                     }}
@@ -359,8 +358,6 @@ const UserList = (props) => {
                     <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                 </DialogActions>
             </Dialog>
-
-            {loading && <Backdrop text={commonStrings.LOADING} />}
         </div>
     )
 }

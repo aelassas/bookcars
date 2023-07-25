@@ -24,7 +24,7 @@ const Env = {
     CDN_TEMP_USERS: process.env.REACT_APP_BC_CDN_TEMP_USERS,
     CDN_CARS: process.env.REACT_APP_BC_CDN_CARS,
     CDN_TEMP_CARS: process.env.REACT_APP_BC_CDN_TEMP_CARS,
-    PAGE_OFFSET: 200,
+    PAGE_OFFSET: 200, // 200
     CAR_PAGE_OFFSET: 400,
     COMPANY_IMAGE_WIDTH: parseInt(process.env.REACT_APP_BC_COMAPANY_IMAGE_WIDTH || 60),
     COMPANY_IMAGE_HEIGHT: parseInt(process.env.REACT_APP_BC_COMAPANY_IMAGE_HEIGHT || 30),
@@ -67,7 +67,8 @@ const Env = {
     AVAILABILITY: {
         AVAILABLE: 'available',
         UNAVAILABLE: 'unavailable'
-    }
+    },
+    BACKDROP_TIMEOUT: 300
 }
 
 export default Env

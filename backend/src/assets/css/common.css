@@ -187,12 +187,6 @@
 
 @media only screen and (max-width: 960px) {
     div.content {
-        position: absolute;
-        top: 55px;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        overflow: hidden;
         margin: 0;
         padding: 0;
     }
@@ -219,12 +213,6 @@
 
 @media only screen and (min-width: 960px) {
     div.content {
-        position: absolute;
-        top: 65px;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        overflow: hidden;
         margin: 0;
         padding: 0;
     }
