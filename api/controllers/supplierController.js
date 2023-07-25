@@ -16,7 +16,7 @@ const CDN_CARS = process.env.BC_CDN_CARS
 
 export const validate = async (req, res) => {
     const { fullName } = req.body
-    
+
     try {
         const keyword = escapeStringRegexp(fullName)
         const options = 'i'
@@ -56,7 +56,7 @@ export const update = (req, res) => {
         })
 }
 
-export const deleteCompany = async (req, res) => {
+export const deleteSupplier = async (req, res) => {
     const id = req.params.id
 
     try {
@@ -91,12 +91,12 @@ export const deleteCompany = async (req, res) => {
     }
 }
 
-export const getCompany = (req, res) => {
+export const getSupplier = (req, res) => {
     User.findById(req.params.id)
         .lean()
         .then(user => {
             if (!user) {
-                console.error('[supplier.getCompany] Company not found:', req.params)
+                console.error('[supplier.getSupplier] Supplier not found:', req.params)
                 res.sendStatus(204)
             } else {
                 const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
@@ -109,7 +109,7 @@ export const getCompany = (req, res) => {
         })
 }
 
-export const getCompanies = async (req, res) => {
+export const getSuppliers = async (req, res) => {
     try {
         const page = parseInt(req.params.page)
         const size = parseInt(req.params.size)
@@ -143,12 +143,12 @@ export const getCompanies = async (req, res) => {
 
         res.json(data)
     } catch (err) {
-        console.error(`[supplier.getCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[supplier.getSuppliers] ${strings.DB_ERROR} ${req.query.s}`, err)
         res.status(400).send(strings.DB_ERROR + err)
     }
 }
 
-export const getAllCompanies = async (req, res) => {
+export const getAllSuppliers = async (req, res) => {
     try {
         let data = await User.aggregate([
             { $match: { type: Env.USER_TYPE.COMPANY } },
@@ -164,7 +164,7 @@ export const getAllCompanies = async (req, res) => {
 
         res.json(data)
     } catch (err) {
-        console.error(`[supplier.getAllCompanies] ${strings.DB_ERROR} ${req.query.s}`, err)
+        console.error(`[supplier.getAllSuppliers] ${strings.DB_ERROR} ${req.query.s}`, err)
         res.status(400).send(strings.DB_ERROR + err)
     }
 }
