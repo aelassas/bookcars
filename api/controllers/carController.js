@@ -199,7 +199,7 @@ export const updateImage = (req, res) => {
     Car.findById(req.params.id)
         .then(async car => {
             if (car) {
-                if (await Helper.exists(CDN)) {
+                if (!await Helper.exists(CDN)) {
                     await fs.mkdir(CDN, { recursive: true })
                 }
 
