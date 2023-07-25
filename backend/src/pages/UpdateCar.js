@@ -11,7 +11,7 @@ import ErrorMessage from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '../components/Avatar'
-import CompanySelectList from '../components/CompanySelectList'
+import SupplierSelectList from '../components/SupplierSelectList'
 import LocationSelectList from '../components/LocationSelectList'
 import CarTypeList from '../components/CarTypeList'
 import GearboxList from '../components/GearboxList'
@@ -358,7 +358,7 @@ const UpdateCar = () => {
 
                             {admin &&
                                 <FormControl fullWidth margin="dense">
-                                    <CompanySelectList
+                                    <SupplierSelectList
                                         label={strings.COMPANY}
                                         required
                                         value={company}

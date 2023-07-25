@@ -9,7 +9,7 @@ import * as Helper from '../common/Helper'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import CompanySelectList from '../components/CompanySelectList'
+import SupplierSelectList from '../components/SupplierSelectList'
 import LocationSelectList from '../components/LocationSelectList'
 import CarTypeList from '../components/CarTypeList'
 import GearboxList from '../components/GearboxList'
@@ -297,7 +297,7 @@ const CreateCar = () => {
 
                         {!isCompany &&
                             <FormControl fullWidth margin="dense">
-                                <CompanySelectList
+                                <SupplierSelectList
                                     label={strings.COMPANY}
                                     required
                                     type={Env.RECORD_TYPE.COMPANY}

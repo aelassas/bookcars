@@ -14,7 +14,7 @@ import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Error from './Error'
 import CarList from '../components/CarList'
-import CompanySelectList from '../components/CompanySelectList'
+import SupplierSelectList from '../components/SupplierSelectList'
 import UserSelectList from '../components/UserSelectList'
 import LocationSelectList from '../components/LocationSelectList'
 import CarSelectList from '../components/CarSelectList'
@@ -450,7 +450,7 @@ const Booking = () => {
 
                             {!isCompany &&
                                 <FormControl fullWidth margin="dense">
-                                    <CompanySelectList
+                                    <SupplierSelectList
                                         label={blStrings.COMPANY}
                                         required
 

@@ -26,7 +26,7 @@ import * as UserService from '../services/UserService'
 
 import '../assets/css/company-list.css'
 
-const CompanyList = (props) => {
+const SupplierList = (props) => {
     const [keyword, setKeyword] = useState(props.keyword)
     const [reload, setReload] = useState(false)
     const [offset, setOffset] = useState(0)
@@ -231,4 +231,4 @@ const CompanyList = (props) => {
     )
 }
 
-export default CompanyList
+export default SupplierList

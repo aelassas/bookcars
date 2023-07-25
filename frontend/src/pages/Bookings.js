@@ -3,7 +3,7 @@ import Master from '../components/Master'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import BookingList from '../components/BookingList'
-import CompanyFilter from '../components/CompanyFilter'
+import SupplierFilter from '../components/SupplierFilter'
 import StatusFilter from '../components/StatusFilter'
 import BookingFilter from '../components/BookingFilter'
 import * as SupplierService from '../services/SupplierService'
@@ -26,7 +26,7 @@ const Bookings = () => {
         }
     }, [user])
 
-    const handleCompanyFilterChange = (newCompanies) => {
+    const handleSupplierFilterChange = (newCompanies) => {
         setCompanies(newCompanies)
         setReload(Helper.arrayEqual(companies, newCompanies))
     }
@@ -62,9 +62,9 @@ const Bookings = () => {
                 <div className='bookings'>
                     <div className='col-1'>
                         <div>
-                            <CompanyFilter
+                            <SupplierFilter
                                 companies={allCompanies}
-                                onChange={handleCompanyFilterChange}
+                                onChange={handleSupplierFilterChange}
                                 className='cl-company-filter'
                             />
                             <StatusFilter

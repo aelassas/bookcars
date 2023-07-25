@@ -6,7 +6,7 @@ import * as SupplierService from '../services/SupplierService'
 import Master from '../components/Master'
 import NoMatch from './NoMatch'
 import CarFilter from '../components/CarFilter'
-import CompanyFilter from '../components/CompanyFilter'
+import SupplierFilter from '../components/SupplierFilter'
 import FuelFilter from '../components/FuelFilter'
 import GearboxFilter from '../components/GearboxFilter'
 import MileageFilter from '../components/MileageFilter'
@@ -42,7 +42,7 @@ const Cars = () => {
         setReload(false)
     }
 
-    const handleCompanyFilterChange = (newCompanies) => {
+    const handleSupplierFilterChange = (newCompanies) => {
         setCompanies(newCompanies)
         setReload(Helper.arrayEqual(newCompanies, companies))
     }
@@ -147,10 +147,10 @@ const Cars = () => {
                                     to={to}
                                     onSubmit={handleCarFilterSubmit}
                                 />
-                                <CompanyFilter
+                                <SupplierFilter
                                     className='filter'
                                     companies={allCompanies}
-                                    onChange={handleCompanyFilterChange}
+                                    onChange={handleSupplierFilterChange}
                                     collapse={!Env.isMobile()}
                                 />
                                 <FuelFilter className='filter' onChange={handleFuelFilterChange} />

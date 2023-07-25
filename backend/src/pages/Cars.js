@@ -4,7 +4,7 @@ import * as Helper from '../common/Helper'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
 import Master from '../components/Master'
-import CompanyFilter from '../components/CompanyFilter'
+import SupplierFilter from '../components/SupplierFilter'
 import Search from '../components/Search'
 import InfoBox from '../components/InfoBox'
 import FuelFilter from '../components/FuelFilter'
@@ -45,7 +45,7 @@ const Cars = () => {
         setReload(newKeyword === keyword)
     }
 
-    const handleCompanyFilterChange = (newCompanies) => {
+    const handleSupplierFilterChange = (newCompanies) => {
         setCompanies(newCompanies)
         setReload(Helper.arrayEqual(newCompanies, companies))
     }
@@ -117,9 +117,9 @@ const Cars = () => {
                                 <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className='car-count' />
                             }
 
-                            <CompanyFilter
+                            <SupplierFilter
                                 companies={allCompanies}
-                                onChange={handleCompanyFilterChange}
+                                onChange={handleSupplierFilterChange}
                                 className='filter'
                             />
 

@@ -4,7 +4,7 @@ import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 
-const CompanySelectList = (props) => {
+const SupplierSelectList = (props) => {
     const [init, setInit] = useState(false)
     const [loading, setLoading] = useState(false)
     const [rows, setRows] = useState([])
@@ -114,4 +114,4 @@ const CompanySelectList = (props) => {
     )
 }
 
-export default CompanySelectList
+export default SupplierSelectList
