@@ -161,9 +161,9 @@ export const getAllSuppliers = async (req, res) => {
             })
         }
 
-        res.json(data)
+        return res.json(data)
     } catch (err) {
-        console.error(`[supplier.getAllSuppliers] ${strings.DB_ERROR} ${req.query.s}`, err)
-        res.status(400).send(strings.DB_ERROR + err)
+        console.error(`[supplier.getAllSuppliers] ${strings.DB_ERROR}`, err)
+        return res.status(400).send(strings.DB_ERROR + err)
     }
 }
