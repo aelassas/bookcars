@@ -716,98 +716,88 @@ export const createAvatar = async (req, res) => {
         const filepath = path.join(CDN_TEMP, filename)
 
         await fs.writeFile(filepath, req.file.buffer)
-        res.json(filename)
+        return res.json(filename)
     } catch (err) {
-        console.error(strings.ERROR, err)
-        res.status(400).send(strings.ERROR + err)
+        console.error(`[user.createAvatar] ${strings.DB_ERROR} ${req.file.originalname}`, err)
+        return res.status(400).send(strings.ERROR + err)
     }
 }
 
-export const updateAvatar = (req, res) => {
-    const userId = req.params.userId
+export const updateAvatar = async (req, res) => {
+    const { userId } = req.params
 
-    User.findById(userId)
-        .then(async user => {
-            if (user) {
-                if (!await Helper.exists(CDN)) {
-                    await fs.mkdir(CDN, { recursive: true })
-                }
+    try {
+        const user = await User.findById(userId)
 
-                if (user.avatar && !user.avatar.startsWith('http')) {
-                    const avatar = path.join(CDN, user.avatar)
-
-                    if (await Helper.exists(avatar)) {
-                        await fs.unlink(avatar)
-                    }
-                }
-
-                const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
-                const filepath = path.join(CDN, filename)
-
-                await fs.writeFile(filepath, req.file.buffer)
-                user.avatar = filename
-                user.save()
-                    .then(usr => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[user.updateAvatar] User not found:', req.params.userId)
-                res.sendStatus(204)
+        if (user) {
+            if (!await Helper.exists(CDN)) {
+                await fs.mkdir(CDN, { recursive: true })
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+
+            if (user.avatar && !user.avatar.startsWith('http')) {
+                const avatar = path.join(CDN, user.avatar)
+
+                if (await Helper.exists(avatar)) {
+                    await fs.unlink(avatar)
+                }
+            }
+
+            const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
+            const filepath = path.join(CDN, filename)
+
+            await fs.writeFile(filepath, req.file.buffer)
+            user.avatar = filename
+            await user.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[user.updateAvatar] User not found:', userId)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[user.updateAvatar] ${strings.DB_ERROR} ${userId}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
-export const deleteAvatar = (req, res) => {
-    const userId = req.params.userId
+export const deleteAvatar = async (req, res) => {
+    const { userId } = req.params
 
-    User.findById(userId)
-        .then(async user => {
-            if (user) {
-                if (user.avatar && !user.avatar.startsWith('http')) {
-                    const avatar = path.join(CDN, user.avatar)
-                    if (await Helper.exists(avatar)) {
-                        await fs.unlink(avatar)
-                    }
+    try {
+        const user = await User.findById(userId)
+
+        if (user) {
+            if (user.avatar && !user.avatar.startsWith('http')) {
+                const avatar = path.join(CDN, user.avatar)
+                if (await Helper.exists(avatar)) {
+                    await fs.unlink(avatar)
                 }
-                user.avatar = null
-
-                user.save()
-                    .then(usr => {
-                        res.sendStatus(200)
-                    })
-                    .catch(err => {
-                        console.error(strings.DB_ERROR, err)
-                        res.status(400).send(strings.DB_ERROR + err)
-                    })
-            } else {
-                console.error('[user.deleteAvatar] User not found:', req.params.userId)
-                res.sendStatus(204)
             }
-        })
-        .catch(err => {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+            user.avatar = null
+
+            await user.save()
+            return res.sendStatus(200)
+        } else {
+            console.error('[user.deleteAvatar] User not found:', userId)
+            res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[user.deleteAvatar] ${strings.DB_ERROR} ${userId}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const deleteTempAvatar = async (req, res) => {
+    const { avatar } = req.params
+
     try {
-        const avatar = path.join(CDN_TEMP, req.params.avatar)
-        if (await Helper.exists(avatar)) {
-            await fs.unlink(avatar)
+        const avatarFile = path.join(CDN_TEMP, avatar)
+        if (await Helper.exists(avatarFile)) {
+            await fs.unlink(avatarFile)
         }
-        res.sendStatus(200)
+        return res.sendStatus(200)
     } catch (err) {
-        console.error(strings.ERROR, err)
-        res.status(400).send(strings.ERROR + err)
+        console.error(`[user.deleteTempAvatar] ${strings.DB_ERROR} ${avatar}`, err)
+        return res.status(400).send(strings.ERROR + err)
     }
 }
 
