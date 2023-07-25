@@ -245,39 +245,41 @@ export const deleteTempImage = async (req, res) => {
     }
 }
 
-export const getCar = (req, res) => {
-    Car.findById(req.params.id)
-        .populate('company')
-        .populate({
-            path: 'locations',
-            populate: {
-                path: 'values',
-                model: 'LocationValue',
-            }
-        })
-        .lean()
-        .then(car => {
-            if (car) {
-                if (car.company) {
-                    const { _id, fullName, avatar, payLater } = car.company
-                    car.company = { _id, fullName, avatar, payLater }
-                }
+export const getCar = async (req, res) => {
+    const { id, language } = req.params
 
-                for (let i = 0; i < car.locations.length; i++) {
-                    const location = car.locations[i]
-                    location.name = location.values.filter(value => value.language === req.params.language)[0].value
+    try {
+        const car = await Car.findById(id)
+            .populate('company')
+            .populate({
+                path: 'locations',
+                populate: {
+                    path: 'values',
+                    model: 'LocationValue',
                 }
+            })
+            .lean()
 
-                res.json(car)
-            } else {
-                console.error('[car.getCar] Car not found:', req.params.id)
-                res.sendStatus(204)
+        if (car) {
+            if (car.company) {
+                const { _id, fullName, avatar, payLater } = car.company
+                car.company = { _id, fullName, avatar, payLater }
             }
-        })
-        .catch(err => {
-            console.error(`[car.getCar] ${strings.DB_ERROR} ${req.params.id}`, err)
-            res.status(400).send(strings.DB_ERROR + err)
-        })
+
+            for (let i = 0; i < car.locations.length; i++) {
+                const location = car.locations[i]
+                location.name = location.values.filter(value => value.language === language)[0].value
+            }
+
+            return res.json(car)
+        } else {
+            console.error('[car.getCar] Car not found:', id)
+            return res.sendStatus(204)
+        }
+    } catch (err) {
+        console.error(`[car.getCar] ${strings.DB_ERROR} ${id}`, err)
+        return res.status(400).send(strings.ERROR + err)
+    }
 }
 
 export const getCars = async (req, res) => {
