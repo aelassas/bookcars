@@ -72,7 +72,7 @@ const BookingList = (props) => {
                 .then(data => {
                     const _data = data.length > 0 ? data[0] : {}
                     const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                    
+
                     if (Env.isMobile()) {
                         const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
                         setRows(_rows)
@@ -272,9 +272,11 @@ const BookingList = (props) => {
                 headerName: commonStrings.SUPPLIER,
                 flex: 1,
                 renderCell: (params) => (
-                    <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
-                        alt={params.value}
-                        style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                    <div className='cell-company'>
+                        <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
+                            alt={params.value}
+                        />
+                    </div>
                 ),
                 valueGetter: (params) => (
                     params.value.fullName
@@ -374,7 +376,6 @@ const BookingList = (props) => {
                                                 <div className='car-company'>
                                                     <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
                                                         alt={booking.company.fullName}
-                                                        style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
                                                     />
                                                     <label className='car-company-name'>{booking.company.fullName}</label>
                                                 </div>

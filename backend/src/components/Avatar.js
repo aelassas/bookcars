@@ -421,7 +421,9 @@ const Avatar = (props) => {
                             >
                                 {
                                     props.type === Env.RECORD_TYPE.CAR ?
-                                        <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                                        <div className='car-avatar'>
+                                            <img src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
+                                        </div>
                                         :
                                         (props.type === Env.RECORD_TYPE.COMPANY ?
                                             <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />

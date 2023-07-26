@@ -17,9 +17,16 @@ div.bs-list {
     width: 100%;
 }
 
-div.bs-list a.cell-company {
+div.bs-list div.cell-company {
     display: flex;
     align-items: center;
+    width: 60px;
+    height: 30px;
+}
+
+div.bs-list div.cell-company img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 div.bs-list span.bs {
@@ -98,6 +105,13 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    width: 60px;
+    height: 30px;
+}
+
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value label.car-company-name {

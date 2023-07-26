@@ -99,7 +99,6 @@ const SupplierFilter = (props) => {
                             <label onClick={handleCompanyClick}>
                                 <img src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)}
                                     alt={supplier.fullName}
-                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                 />
                             </label>
                         </li>

@@ -172,9 +172,7 @@ const SupplierList = (props) => {
                                 <div className='company-item-avatar'>
                                     <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                                         alt={company.fullName}
-                                        style={{
-                                            width: Env.COMPANY_IMAGE_WIDTH,
-                                        }} />
+                                    />
                                 </div>
                                 <span className='company-item-title'>{company.fullName}</span>
                             </div>

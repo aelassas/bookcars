@@ -158,17 +158,12 @@ const CarList = (props) => {
                         <div className='car'>
                             <img src={Helper.joinURL(Env.CDN_CARS, car.image)}
                                 alt={car.name} className='car-img'
-                                style={{
-                                    maxWidth: Env.CAR_IMAGE_WIDTH,
-                                }} />
+                            />
                             {!props.hideCompany &&
                                 <div className='car-company'>
                                     <span className='car-company-logo'>
                                         <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
                                             alt={car.company.fullName}
-                                            style={{
-                                                width: Env.COMPANY_IMAGE_WIDTH,
-                                            }}
                                         />
                                     </span>
                                     <label className='car-company-info'>{car.company.fullName}</label>
