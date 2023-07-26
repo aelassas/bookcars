@@ -14,7 +14,7 @@ const CDN_TEMP = process.env.BC_CDN_TEMP_CARS
 
 export const create = async (req, res) => {
     const { body } = req
-    
+
     try {
         if (!body.image) {
             console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${body}`)
@@ -233,7 +233,7 @@ export const deleteImage = async (req, res) => {
 
 export const deleteTempImage = async (req, res) => {
     const { image } = req.params
-    
+
     try {
         const imageFile = path.join(CDN_TEMP, image)
         if (await Helper.exists(imageFile)) {
@@ -336,7 +336,7 @@ export const getCars = async (req, res) => {
             }
         }
 
-        const cars = await Car.aggregate([
+        const data = await Car.aggregate([
             { $match },
             {
                 $lookup: {
@@ -383,14 +383,16 @@ export const getCars = async (req, res) => {
             }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
-        cars.forEach(car => {
-            if (car.company) {
-                const { _id, fullName, avatar } = car.company
-                car.company = { _id, fullName, avatar }
-            }
-        })
+        if (data.length > 0) {
+            data[0].resultData.forEach(car => {
+                if (car.company) {
+                    const { _id, fullName, avatar } = car.company
+                    car.company = { _id, fullName, avatar }
+                }
+            })
+        }
 
-        return res.json(cars)
+        return res.json(data)
     } catch (err) {
         console.error(`[car.getCars] ${strings.DB_ERROR} ${req.query.s}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -464,7 +466,7 @@ export const getFrontendCars = async (req, res) => {
             $match.$and.push({ deposit: { $lte: deposit } })
         }
 
-        const cars = await Car.aggregate([
+        const data = await Car.aggregate([
             { $match },
             {
                 $lookup: {
@@ -511,14 +513,16 @@ export const getFrontendCars = async (req, res) => {
             }
         ], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
-        cars.forEach(car => {
-            if (car.company) {
-                const { _id, fullName, avatar } = car.company
-                car.company = { _id, fullName, avatar }
-            }
-        })
+        if (data.length > 0) {
+            data[0].resultData.forEach(car => {
+                if (car.company) {
+                    const { _id, fullName, avatar } = car.company
+                    car.company = { _id, fullName, avatar }
+                }
+            })
+        }
 
-        return res.json(cars)
+        return res.json(data)
     } catch (err) {
         console.error(`[car.getCars] ${strings.DB_ERROR} ${req.query.s}`, err)
         return res.status(400).send(strings.DB_ERROR + err)

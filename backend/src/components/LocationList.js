@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
+import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/locations'
 import * as LocationService from '../services/LocationService'
-import Backdrop from './SimpleBackdrop'
 import {
     IconButton,
     Button,
@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material'
 import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
+import Pager from './Pager'
 
 import '../assets/css/location-list.css'
 
@@ -38,6 +39,7 @@ const LocationList = (props) => {
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
+    const [totalRecords, setTotalRecords] = useState(0)
     const [page, setPage] = useState(1)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const [openInfoDialog, setOpenInfoDialog] = useState(false)
@@ -52,11 +54,25 @@ const LocationList = (props) => {
                 const _data = data.length > 0 ? data[0] : {}
                 if (_data.length === 0) _data.resultData = []
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+
+                let _rows = []
+                if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+                    _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+                } else {
+                    _rows = _data.resultData
+                }
 
                 setRows(_rows)
-                setRowCount(totalRecords)
+                setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
+                setTotalRecords(totalRecords)
                 setFetch(_data.resultData.length > 0)
+
+                if (
+                    ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+                    || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
+                ) {
+                    window.scrollTo(0, 0)
+                }
 
                 if (props.onLoad) {
                     props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
@@ -84,17 +100,25 @@ const LocationList = (props) => {
     }, [props.reload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        const element = document.querySelector('body')
+        if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile()) {
+            _fetch(page, keyword)
+        }
+    }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
-        if (element) {
-            element.onscroll = (event) => {
-                if (fetch
-                    && !loading
-                    && window.scrollY > 0
-                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
-                    const p = page + 1
-                    setPage(p)
-                    _fetch(p, keyword)
+    useEffect(() => {
+        if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+            const element = document.querySelector('body')
+
+            if (element) {
+                element.onscroll = (event) => {
+                    if (fetch
+                        && !loading
+                        && window.scrollY > 0
+                        && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
+                        const p = page + 1
+                        setPage(p)
+                        _fetch(p, keyword)
+                    }
                 }
             }
         }
@@ -174,75 +198,86 @@ const LocationList = (props) => {
     }
 
     return (
-        <section className='location-list'>
-            {rows.length === 0 ?
-                !loading &&
-                <Card variant="outlined" className="empty-list">
-                    <CardContent>
-                        <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-                    </CardContent>
-                </Card>
-                : <List>
-                    {rows.map((location, index) =>
-                    (
-                        <ListItem
-                            className='location-list-item'
-                            key={location._id}
-                            secondaryAction={
-                                <div>
-                                    <Tooltip title={commonStrings.UPDATE}>
-                                        <IconButton edge="end" href={`/update-location?l=${location._id}`}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={commonStrings.DELETE}>
-                                        <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </div>
-                            }
-                        >
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <LocationIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={
-                                    <Typography className='location-title'>{location.name}</Typography>
+        <>
+            <section className='location-list'>
+                {rows.length === 0 ?
+                    !loading &&
+                    <Card variant="outlined" className="empty-list">
+                        <CardContent>
+                            <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                        </CardContent>
+                    </Card>
+                    : <List>
+                        {rows.map((location, index) =>
+                        (
+                            <ListItem
+                                className='location-list-item'
+                                key={location._id}
+                                secondaryAction={
+                                    <div>
+                                        <Tooltip title={commonStrings.UPDATE}>
+                                            <IconButton edge="end" href={`/update-location?l=${location._id}`}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={commonStrings.DELETE}>
+                                            <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
                                 }
-                            />
-                        </ListItem>
-                    ))}
-                </List>}
-            <Dialog
-                disableEscapeKeyDown
-                maxWidth="xs"
-                open={openInfoDialog}
-            >
-                <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
-                <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
-                <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
-                </DialogActions>
-            </Dialog>
+                            >
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <LocationIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={
+                                        <Typography className='location-title'>{location.name}</Typography>
+                                    }
+                                />
+                            </ListItem>
+                        ))}
+                    </List>}
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openInfoDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.INFO}</DialogTitle>
+                    <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={handleCloseInfo} variant='contained' className='btn-secondary'>{commonStrings.CLOSE}</Button>
+                    </DialogActions>
+                </Dialog>
 
-            <Dialog
-                disableEscapeKeyDown
-                maxWidth="xs"
-                open={openDeleteDialog}
-            >
-                <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
-                <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                </DialogActions>
-            </Dialog>
-
-            {loading && <Backdrop text={commonStrings.LOADING} />}
-        </section>
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openDeleteDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    </DialogActions>
+                </Dialog>
+            </section>
+            {
+                Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() &&
+                <Pager
+                    page={page}
+                    pageSize={Env.PAGE_SIZE}
+                    rowCount={rowCount}
+                    totalRecords={totalRecords}
+                    onNext={() => setPage(page + 1)}
+                    onPrevious={() => setPage(page - 1)}
+                />
+            }
+        </>
     )
 }
 

@@ -75,7 +75,7 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE: 'Date de naissance',
         BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
         BIRTH_DATE_NOT_VALID_PART2: 'ans.',
-        PAY_LATER: 'Autoriser le paiement plus tard'
+        PAY_LATER: 'Autoriser le paiement plus tard',
     },
     en: {
         GENERIC_ERROR: 'An unhandled error occurred.',
@@ -149,7 +149,7 @@ export const strings = new LocalizedStrings({
         BIRTH_DATE: 'Birthdate',
         BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
         BIRTH_DATE_NOT_VALID_PART2: 'years old.',
-        PAY_LATER: 'Authorize payment later'
+        PAY_LATER: 'Authorize payment later',
     }
 })
 

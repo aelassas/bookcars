@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
+import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/company-list'
 import * as SupplierService from '../services/SupplierService'
@@ -22,6 +23,7 @@ import {
     Delete as DeleteIcon
 } from '@mui/icons-material'
 import * as UserService from '../services/UserService'
+import Pager from './Pager'
 
 import '../assets/css/company-list.css'
 
@@ -32,6 +34,7 @@ const SupplierList = (props) => {
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
+    const [totalRecords, setTotalRecords] = useState(0)
     const [page, setPage] = useState(1)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const [companyId, setCompanyId] = useState('')
@@ -45,11 +48,25 @@ const SupplierList = (props) => {
                 const _data = data.length > 0 ? data[0] : {}
                 if (_data.length === 0) _data.resultData = []
                 const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+
+                let _rows = []
+                if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+                    _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+                } else {
+                    _rows = _data.resultData
+                }
 
                 setRows(_rows)
-                setRowCount(totalRecords)
+                setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
+                setTotalRecords(totalRecords)
                 setFetch(_data.resultData.length > 0)
+
+                if (
+                    ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+                    || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
+                ) {
+                    window.scrollTo(0, 0)
+                }
 
                 if (props.onLoad) {
                     props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
@@ -77,17 +94,25 @@ const SupplierList = (props) => {
     }, [props.reload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        const element = document.querySelector('body')
+        if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile()) {
+            _fetch(page, keyword)
+        }
+    }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
-        if (element) {
-            element.onscroll = (event) => {
-                if (fetch
-                    && !loading
-                    && window.scrollY > 0
-                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
-                    const p = page + 1
-                    setPage(p)
-                    _fetch(p, keyword)
+    useEffect(() => {
+        if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+            const element = document.querySelector('body')
+
+            if (element) {
+                element.onscroll = (event) => {
+                    if (fetch
+                        && !loading
+                        && window.scrollY > 0
+                        && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
+                        const p = page + 1
+                        setPage(p)
+                        _fetch(p, keyword)
+                    }
                 }
             }
         }
@@ -153,68 +178,81 @@ const SupplierList = (props) => {
     const admin = Helper.admin(props.user)
 
     return (
-        <section className='company-list'>
-            {rows.length === 0 ?
-                !loading &&
-                <Card variant="outlined" className="empty-list">
-                    <CardContent>
-                        <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-                    </CardContent>
-                </Card>
-                :
-                rows.map((company, index) => {
-                    const edit = admin || (props.user && props.user._id === company._id)
-                    const canDelete = admin
+        <>
+            <section className='company-list'>
+                {rows.length === 0 ?
+                    !loading &&
+                    <Card variant="outlined" className="empty-list">
+                        <CardContent>
+                            <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+                        </CardContent>
+                    </Card>
+                    :
+                    rows.map((company, index) => {
+                        const edit = admin || (props.user && props.user._id === company._id)
+                        const canDelete = admin
 
-                    return (
-                        <article key={company._id}>
-                            <div className='company-item'>
-                                <div className='company-item-avatar'>
-                                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                        alt={company.fullName}
-                                    />
+                        return (
+                            <article key={company._id}>
+                                <div className='company-item'>
+                                    <div className='company-item-avatar'>
+                                        <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
+                                            alt={company.fullName}
+                                        />
+                                    </div>
+                                    <span className='company-item-title'>{company.fullName}</span>
                                 </div>
-                                <span className='company-item-title'>{company.fullName}</span>
-                            </div>
-                            <div className='company-actions'>
-                                {canDelete &&
-                                    <Tooltip title={commonStrings.DELETE}>
-                                        <IconButton data-id={company._id} data-index={index} onClick={handleDelete}>
-                                            <DeleteIcon />
+                                <div className='company-actions'>
+                                    {canDelete &&
+                                        <Tooltip title={commonStrings.DELETE}>
+                                            <IconButton data-id={company._id} data-index={index} onClick={handleDelete}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                    {edit &&
+                                        <Tooltip title={commonStrings.UPDATE}>
+                                            <IconButton href={`/update-supplier?c=${company._id}`}>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
+                                    <Tooltip title={strings.VIEW_COMPANY}>
+                                        <IconButton href={`/supplier?c=${company._id}`}>
+                                            <ViewIcon />
                                         </IconButton>
                                     </Tooltip>
-                                }
-                                {edit &&
-                                    <Tooltip title={commonStrings.UPDATE}>
-                                        <IconButton href={`/update-supplier?c=${company._id}`}>
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                }
-                                <Tooltip title={strings.VIEW_COMPANY}>
-                                    <IconButton href={`/supplier?c=${company._id}`}>
-                                        <ViewIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                        </article>
+                                </div>
+                            </article>
+                        )
+                    }
                     )
                 }
-                )
+                <Dialog
+                    disableEscapeKeyDown
+                    maxWidth="xs"
+                    open={openDeleteDialog}
+                >
+                    <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
+                    <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
+                    <DialogActions className='dialog-actions'>
+                        <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
+                        <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
+                    </DialogActions>
+                </Dialog>
+            </section>
+            {
+                Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() &&
+                <Pager
+                    page={page}
+                    pageSize={Env.PAGE_SIZE}
+                    rowCount={rowCount}
+                    totalRecords={totalRecords}
+                    onNext={() => setPage(page + 1)}
+                    onPrevious={() => setPage(page - 1)}
+                />
             }
-            <Dialog
-                disableEscapeKeyDown
-                maxWidth="xs"
-                open={openDeleteDialog}
-            >
-                <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
-                <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                </DialogActions>
-            </Dialog>
-        </section>
+        </>
     )
 }
 
