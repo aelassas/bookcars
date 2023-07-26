@@ -70,9 +70,11 @@ const Env = {
         UNAVAILABLE: 'unavailable'
     },
     // PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
-    // CLASSIC or INFINITE_SCROLL are available for web
-    // INFINITE_SCROLL is used for mobile
-    // CLASSIC is not available for mobile
+    // Defaults to CLASSIC
+    // CLASSIC or INFINITE_SCROLL are available for desktop
+    // Only INFINITE_SCROLL is available for mobile
+    // If you choose CLASSIC, you will get a classic pager with next and previous buttons on desktop and infinite scroll on mobile.
+    // If you choose INFINITE_SCROLL, you will get infinite scroll on desktop and mobile.
     PAGINATION_MODE: (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL ? Const.PAGINATION_MODE.INFINITE_SCROLL : Const.PAGINATION_MODE.CLASSIC
 }
 
