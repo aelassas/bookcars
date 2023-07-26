@@ -5,7 +5,6 @@ import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/booking-list'
 import * as Helper from '../common/Helper'
 import * as BookingService from '../services/BookingService'
-import Backdrop from '../components/SimpleBackdrop'
 import {
     DataGrid,
     frFR,
@@ -56,6 +55,7 @@ const BookingList = (props) => {
     const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
     const [offset, setOffset] = useState(0)
     const [paginationModel, setPaginationModel] = useState({ pageSize: Env.BOOKINGS_PAGE_SIZE, page: 0 })
+    const [load, setLoad] = useState(false)
 
     useEffect(() => {
         setPage(paginationModel.page)
@@ -72,6 +72,7 @@ const BookingList = (props) => {
                 .then(data => {
                     const _data = data.length > 0 ? data[0] : {}
                     const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                    
                     if (Env.isMobile()) {
                         const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
                         setRows(_rows)
@@ -89,6 +90,8 @@ const BookingList = (props) => {
                         }
                         setLoading(false)
                     }
+
+                    setLoad(false)
                 })
                 .catch((err) => {
                     UserService.signout()
@@ -135,11 +138,18 @@ const BookingList = (props) => {
     }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
+        if (load) {
+            _fetch(page, user)
+            setLoad(false)
+        }
+    }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
         if (props.user && companies.length > 0 && statuses.length > 0) {
             const columns = getColumns()
             setUser(props.user)
             setColumns(columns)
-            _fetch(page, props.user)
+            setLoad(true)
         }
     }, [props.user, page, pageSize, companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -152,7 +162,7 @@ const BookingList = (props) => {
                     if (fetch
                         && !loading
                         && event.target.scrollTop > 0
-                        && (event.target.offsetHeight + event.target.scrollTop + offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                        && (event.target.offsetHeight + event.target.scrollTop) >= event.target.scrollHeight) {
                         const p = page + 1
                         setPage(p)
                     }
@@ -466,7 +476,7 @@ const BookingList = (props) => {
                             columns={columns}
                             rows={rows}
                             rowCount={rowCount}
-                            // loading={loading}
+                            loading={loading}
                             initialState={{
                                 pagination: { paginationModel: { pageSize: Env.BOOKINGS_PAGE_SIZE } },
                             }}
@@ -510,8 +520,6 @@ const BookingList = (props) => {
                     }
                 </DialogActions>
             </Dialog>
-
-            {loading && <Backdrop text={commonStrings.LOADING} />}
         </div>
     )
 }

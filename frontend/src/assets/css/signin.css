@@ -1,13 +1,4 @@
 /* Signin */
-div.signin {
-    position: absolute;
-    top: 55px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow-y: auto;
-}
-
 div.signin .signin-form-title {
     text-align: center;
     text-transform: capitalize;
@@ -49,7 +40,6 @@ div.signin div.forgot-password {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-
     div.signin .signin-form {
         align-items: center;
         justify-content: center;
@@ -79,7 +69,6 @@ div.signin div.forgot-password {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-
     div.signin .signin-form {
         align-items: center;
         justify-content: center;
