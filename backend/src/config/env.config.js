@@ -67,8 +67,7 @@ const Env = {
     AVAILABILITY: {
         AVAILABLE: 'available',
         UNAVAILABLE: 'unavailable'
-    },
-    BACKDROP_TIMEOUT: 300
+    }
 }
 
 export default Env
