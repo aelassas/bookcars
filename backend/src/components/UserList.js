@@ -128,7 +128,6 @@ const UserList = (props) => {
                             userAvatar = (
                                 <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
                                     alt={params.row.fullName}
-                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                 />
                             )
 

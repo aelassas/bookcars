@@ -149,10 +149,11 @@ const MultipleSelect = ({
                                     startAdornment: (
                                         <>
                                             <InputAdornment position='start'>
-                                                <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                                                    alt={option.name}
-                                                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                                                />
+                                                <div className='company-ia'>
+                                                    <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
+                                                        alt={option.name}
+                                                    />
+                                                </div>
                                             </InputAdornment>
                                             {params.InputProps.startAdornment}
                                         </>
@@ -247,10 +248,9 @@ const MultipleSelect = ({
                     } else if (type === Env.RECORD_TYPE.COMPANY) {
                         return (
                             <li {...props} className={`${props.className} ms-option`}>
-                                <span className='option-image'>
+                                <span className='option-image company-ia'>
                                     <img src={Helper.joinURL(Env.CDN_USERS, option.image)}
                                         alt={option.name}
-                                        style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                     />
                                 </span>
                                 <span className='option-name'>{option.name}</span>
@@ -268,7 +268,7 @@ const MultipleSelect = ({
                     } else if (type === Env.RECORD_TYPE.CAR) {
                         return (
                             <li  {...props} className={`${props.className} ms-option`}>
-                                <span className='option-image'>
+                                <span className='option-image car-ia'>
                                     <img src={Helper.joinURL(Env.CDN_CARS, option.image)}
                                         alt={option.name}
                                         style={{

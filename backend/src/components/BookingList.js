@@ -322,7 +322,7 @@ const BookingList = (props) => {
                     <Link href={`/supplier?c=${params.row.company._id}`} className='cell-company'>
                         <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
                             alt={params.value}
-                            style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                        />
                     </Link>
                 ),
                 valueGetter: (params) => (
@@ -486,7 +486,6 @@ const BookingList = (props) => {
                                                 <div className='car-company'>
                                                     <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)}
                                                         alt={booking.company.fullName}
-                                                        style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
                                                     />
                                                     <label className='car-company-name'>{booking.company.fullName}</label>
                                                 </div>

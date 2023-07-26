@@ -59,6 +59,20 @@
 
 /* Avatar */
 
+.car-avatar {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.car-avatar img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .avatar,
 .avatar-large {
     width: 170px !important;
@@ -97,6 +111,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.company-avatar img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .avatar-ctn {
