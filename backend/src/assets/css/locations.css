@@ -1,3 +1,7 @@
+div.locations {
+    display: flex;
+}
+
 div.locations .search {
     width: 100%;
     display: flex;
@@ -11,6 +15,10 @@ div.locations .info-box {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.locations {
+        flex-direction: column;
+    }
+
     div.locations div.col-1 {
         width: 100%;
         padding: 15px;
@@ -47,6 +55,10 @@ div.locations .info-box {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    div.locations {
+        flex-direction: row;
+    }
+
     div.locations div.col-1 {
         float: left;
         width: 300px;
@@ -54,11 +66,11 @@ div.locations .info-box {
     }
 
     div.locations div.col-2 {
-        float: left;
-        width: calc(100% - 320px);
         margin-bottom: 50px;
         display: flex;
-        justify-content: center
+        align-items: center;
+        flex-direction: column;
+        flex: 1;
     }
 
     div.locations .search {

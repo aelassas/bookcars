@@ -1,3 +1,7 @@
+div.cars {
+    display: flex;
+}
+
 div.cars div.search {
     width: 100%;
     display: flex;
@@ -12,6 +16,10 @@ div.cars div.col-1 div.info-box {
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
+    div.cars {
+        flex-direction: column;
+    }
+
     div.cars .sc-search {
         width: 80%;
     }
@@ -53,16 +61,20 @@ div.cars div.col-1 div.info-box {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    div.cars {
+        flex-direction: row;
+    }
+
     div.cars div.col-1 {
-        float: left;
         width: 300px;
         margin-left: 20px;
     }
 
     div.cars div.col-2 {
-        float: left;
-        width: calc(100% - 320px);
-        margin-bottom: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
     }
 
     div.cars div.search {
