@@ -34,7 +34,7 @@
 }
 
 .btn-resend {
-    margin: 0 10px 0 10px !important;
+    margin: 0 10px !important;
 }
 
 .required:after {
@@ -104,7 +104,7 @@
 
 .avatar-ctn {
     position: relative;
-    margin: 20px 0 20px 0;
+    margin: 20px 0;
     height: 170px;
     display: flex;
     align-items: center;
