@@ -366,7 +366,9 @@ const Avatar = (props) => {
                             <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
                             :
                             (props.type === Env.RECORD_TYPE.COMPANY ?
-                                <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                <div className='company-avatar-readonly'>
+                                    <img src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
+                                </div>
                                 :
                                 props.verified && record.verified ?
                                     <Badge
