@@ -56,8 +56,8 @@ const Env = {
     },
     // PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
     // CLASSIC or INFINITE_SCROLL are available for web
-    // INFINITE_SCROLL is used for mobile layout
-    // CLASSIC is not available for mobile layout
+    // INFINITE_SCROLL is used for mobile
+    // CLASSIC is not available for mobile
     PAGINATION_MODE: (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL ? Const.PAGINATION_MODE.INFINITE_SCROLL : Const.PAGINATION_MODE.CLASSIC
 }
 
