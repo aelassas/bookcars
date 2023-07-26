@@ -10,7 +10,7 @@ BookCars is an open source car rental platform, supplier oriented, with a backen
 # Features
 
 * Supplier management
-* Ready for only one supplier
+* Ready for one or multiple suppliers
 * Car fleet management
 * Booking management
 * Client management
