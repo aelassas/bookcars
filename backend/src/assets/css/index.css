@@ -1,4 +1,4 @@
-html, body, .App, #root {
+.App {
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 }

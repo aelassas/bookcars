@@ -290,7 +290,7 @@ const Header = (props) => {
 
     return (
         !props.hidden &&
-        <div style={classes.grow} >
+        <div style={classes.grow} className='header'>
             <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
                 <Toolbar className='toolbar'>
                     {isLoaded && !loading && <IconButton

@@ -5,7 +5,6 @@ import { strings } from '../lang/cars'
 import * as Helper from '../common/Helper'
 import * as CarService from '../services/CarService'
 import * as UserService from '../services/UserService'
-import Backdrop from './SimpleBackdrop'
 import {
     Button,
     Tooltip,
@@ -34,16 +33,11 @@ const CarList = (props) => {
     const [fetch, setFetch] = useState(false)
     const [rows, setRows] = useState([])
     const [page, setPage] = useState(1)
-    const [offset, setOffset] = useState(0)
     const [days, setDays] = useState(0)
 
     useEffect(() => {
         setLanguage(UserService.getLanguage())
     }, [])
-
-    useEffect(() => {
-        setOffset(props.offset)
-    }, [props.offset])
 
     useEffect(() => {
         if (props.from && props.to) {
@@ -52,22 +46,19 @@ const CarList = (props) => {
     }, [props.from, props.to])
 
     useEffect(() => {
-        const element = document.querySelector(`.${props.containerClassName}`)
+        const element = document.querySelector('body')
 
         if (element) {
             element.onscroll = (event) => {
-                let _offset = 0
-                if (Env.isMobile()) _offset = offset
-
                 if (fetch
                     && !loading
-                    && event.target.scrollTop > 0
-                    && (event.target.offsetHeight + event.target.scrollTop + _offset) >= (event.target.scrollHeight - Env.CAR_PAGE_OFFSET)) {
+                    && window.scrollY > 0
+                    && (window.scrollY + window.innerHeight) >= document.body.scrollHeight) {
                     setPage(page + 1)
                 }
             }
         }
-    }, [props.containerClassName, fetch, loading, page, offset])
+    }, [fetch, loading, page])
 
     const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
         setLoading(true)
@@ -323,7 +314,6 @@ const CarList = (props) => {
                     </article>
                 ))
             }
-            {loading && <Backdrop text={commonStrings.LOADING} />}
         </section>
     )
 }
