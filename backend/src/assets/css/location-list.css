@@ -28,10 +28,6 @@ section.location-list .location-title {
     margin-right: 10px;
 }
 
-/* Device width is less than or equal to 960px */
-
-@media only screen and (max-width: 960px) {}
-
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {

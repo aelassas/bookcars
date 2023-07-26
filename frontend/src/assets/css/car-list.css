@@ -292,7 +292,6 @@ section.car-list article .btn-book {
     section.car-list article div.car div.car-company span.car-company-logo {
         border: 1px solid #e6e6e6;
         border-radius: 3px;
-        display: flex;
         width: 62px;
         height: 32px;
         display: flex;

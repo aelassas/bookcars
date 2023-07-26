@@ -12,7 +12,7 @@ div.update-user .user-form-title {
 
 div.update-user .resend-activation-link {
 	cursor: pointer;
-	margin: 20px 0 10px 0;
+	margin: 20px 0 10px;
 }
 
 /* Device width is less than or equal to 960px */
