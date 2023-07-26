@@ -89,7 +89,7 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
 export const book = async (req, res) => {
     try {
         let user
-        const driver = req.body.driver
+        const { driver } = req.body
 
         const transporter = nodemailer.createTransport({
             host: SMTP_HOST,
