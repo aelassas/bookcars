@@ -9,7 +9,7 @@ div.status-filter {
 div.status-filter ul.status-list {
     list-style-type: none;
     font-size: 13px;
-    margin: 15px 0 0 0;
+    margin: 15px 0 0;
     padding: 0;
     display: inline-block;
     width: 250px;

@@ -7,7 +7,7 @@ div.company-filter {
 div.company-filter ul.company-list {
     list-style-type: none;
     font-size: 13px;
-    margin: 15px 0 0 0;
+    margin: 15px 0 0;
     padding: 0;
     display: inline-block;
     width: 250px;
@@ -33,7 +33,6 @@ div.company-filter ul.company-list li label {
     overflow: hidden;
     margin-bottom: 0;
     font-weight: 400;
-    display: flex;
     margin-left: 5px;
     width: 62px;
     height: 32px;
