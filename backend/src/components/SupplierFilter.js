@@ -7,24 +7,24 @@ import Accordion from './Accordion'
 import '../assets/css/company-filter.css'
 
 const CompanyFilter = (props) => {
-    const [companies, setCompanies] = useState([])
-    const [checkedCompanies, setCheckedCompanies] = useState([])
+    const [suppliers, setSuppliers] = useState([])
+    const [checkedSuppliers, setCheckedSuppliers] = useState([])
     const [allChecked, setAllChecked] = useState(true)
     const refs = useRef([])
 
     useEffect(() => {
-        setCompanies(props.companies)
-        setCheckedCompanies(Helper.flattenCompanies(props.companies))
+        setSuppliers(props.companies)
+        setCheckedSuppliers(Helper.flattenCompanies(props.companies))
     }, [props.companies])
 
     useEffect(() => {
-        if (companies.length > 0) {
+        if (suppliers.length > 0) {
             refs.current.forEach(checkbox => {
                 checkbox.checked = true
             })
 
         }
-    }, [companies])
+    }, [suppliers])
 
     const handleCompanyClick = (e) => {
         const checkbox = e.currentTarget.previousSibling
@@ -38,24 +38,24 @@ const CompanyFilter = (props) => {
         const companyId = e.currentTarget.getAttribute('data-id')
 
         if (e.currentTarget.checked) {
-            checkedCompanies.push(companyId)
+            checkedSuppliers.push(companyId)
 
-            if (checkedCompanies.length === companies.length) {
+            if (checkedSuppliers.length === suppliers.length) {
                 setAllChecked(true)
             }
         } else {
-            const index = checkedCompanies.indexOf(companyId)
-            checkedCompanies.splice(index, 1)
+            const index = checkedSuppliers.indexOf(companyId)
+            checkedSuppliers.splice(index, 1)
 
-            if (checkedCompanies.length === 0) {
+            if (checkedSuppliers.length === 0) {
                 setAllChecked(false)
             }
         }
 
-        setCheckedCompanies(checkedCompanies)
+        setCheckedSuppliers(checkedSuppliers)
 
         if (props.onChange) {
-            props.onChange(checkedCompanies)
+            props.onChange(checkedSuppliers)
         }
     }
 
@@ -67,15 +67,15 @@ const CompanyFilter = (props) => {
             })
 
             setAllChecked(false)
-            setCheckedCompanies([])
+            setCheckedSuppliers([])
         } else { // check all
             refs.current.forEach(checkbox => {
                 checkbox.checked = true
             })
 
-            const companyIds = Helper.flattenCompanies(companies)
+            const companyIds = Helper.flattenCompanies(suppliers)
             setAllChecked(true)
-            setCheckedCompanies(companyIds)
+            setCheckedSuppliers(companyIds)
 
             if (props.onChange) {
                 props.onChange(companyIds)
@@ -84,21 +84,21 @@ const CompanyFilter = (props) => {
     }
 
     return (
-        companies.length > 0 &&
+        suppliers.length > 1 &&
         <Accordion
             title={commonStrings.SUPPLIER}
             collapse={props.collapse}
-            offsetHeight={Math.floor((companies.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
+            offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
             className={`${props.className ? `${props.className} ` : ''}company-filter`}
         >
             <ul className='company-list'>
                 {
-                    companies.map((company, index) => (
-                        <li key={company._id}>
-                            <input ref={ref => refs.current[index] = ref} type='checkbox' data-id={company._id} className='company-checkbox' onChange={handleCheckCompanyChange} />
+                    suppliers.map((supplier, index) => (
+                        <li key={supplier._id}>
+                            <input ref={ref => refs.current[index] = ref} type='checkbox' data-id={supplier._id} className='company-checkbox' onChange={handleCheckCompanyChange} />
                             <label onClick={handleCompanyClick}>
-                                <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                                    alt={company.fullName}
+                                <img src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)}
+                                    alt={supplier.fullName}
                                     style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                                 />
                             </label>
