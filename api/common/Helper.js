@@ -29,9 +29,8 @@ export const sendMail = (transporterOptions, mailOptions) => {
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
                 return reject(err)
-            } else {
-                return resolve(info)
             }
+            return resolve(info)
         })
     })
 }
