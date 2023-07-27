@@ -101,7 +101,7 @@ const CarList = (props) => {
                 setLoading(false)
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

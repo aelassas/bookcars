@@ -41,7 +41,7 @@ const UserSelectList = (props) => {
                     onFetch()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }

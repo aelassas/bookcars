@@ -242,7 +242,7 @@ const CreateCar = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }

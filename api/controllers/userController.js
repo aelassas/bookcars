@@ -107,7 +107,7 @@ export const adminSignup = async (req, res) => {
                     await fs.prompises.rename(avatar, newPath)
                     user.avatar = filename
                     user.save()
-                        .catch(err => {
+                        .catch((err) => {
                             console.error(strings.DB_ERROR, err)
                             res.status(400).send(strings.DB_ERROR + err)
                         })
@@ -172,7 +172,7 @@ export const create = async (req, res) => {
                     await fs.rename(avatar, newPath)
                     user.avatar = filename
                     user.save()
-                        .catch(err => {
+                        .catch((err) => {
                             console.error(strings.DB_ERROR, err)
                             res.status(400).send(strings.DB_ERROR + err)
                         })

@@ -29,7 +29,6 @@ import {
     Check as CheckIcon,
     Cancel as CancelIcon
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
 
@@ -94,7 +93,7 @@ const BookingList = (props) => {
                     setLoad(false)
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             setRows([])

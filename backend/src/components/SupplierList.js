@@ -157,7 +157,7 @@ const SupplierList = (props) => {
                         setCompanyIndex(-1)
                         setLoading(false)
                     }
-                }).catch(() => {
+                }).catch((err) => {
                     UserService.signout()
                 })
         } else {

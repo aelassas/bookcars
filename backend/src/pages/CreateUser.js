@@ -217,7 +217,7 @@ const CreateUser = () => {
                 .then(() => {
                     navigate('/users')
                 })
-                .catch(() => {
+                .catch((err) => {
                     navigate('/users')
                 })
         } else {
@@ -286,7 +286,7 @@ const CreateUser = () => {
                     setError(true)
                     setLoading(false)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 UserService.signout()
             })
 

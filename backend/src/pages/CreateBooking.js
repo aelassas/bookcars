@@ -215,7 +215,7 @@ const CreateBooking = () => {
                             Helper.error()
                         }
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         UserService.signout()
                     })
             },

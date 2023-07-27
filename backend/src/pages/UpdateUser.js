@@ -190,7 +190,7 @@ const UpdateUser = () => {
                 .then((status) => {
                     navigate('/users')
                 })
-                .catch(() => {
+                .catch((err) => {
                     navigate('/users')
                 })
         } else {
@@ -314,7 +314,7 @@ const UpdateUser = () => {
 
                     setError(false)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 UserService.signout()
             })
     }

@@ -174,7 +174,7 @@ const CreateCompany = () => {
                 .then(() => {
                     navigate('/suppliers')
                 })
-                .catch(() => {
+                .catch((err) => {
                     navigate('/suppliers')
                 })
         } else {
@@ -234,7 +234,7 @@ const CreateCompany = () => {
                     setError(true)
                     setLoading(false)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 UserService.signout()
             })
     }

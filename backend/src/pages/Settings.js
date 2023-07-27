@@ -77,7 +77,7 @@ const Settings = () => {
                     Helper.info(strings.SETTINGS_UPDATED)
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 UserService.signout()
             })
     }
@@ -121,7 +121,7 @@ const Settings = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }

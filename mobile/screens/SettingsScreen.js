@@ -201,7 +201,7 @@ const SettingsScreen = ({ navigation, route }) => {
                     Helper.error()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout(navigation, false, true)
             })
 

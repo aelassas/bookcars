@@ -84,7 +84,7 @@ const Avatar = (props) => {
                                     props.onChange(data)
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 UserService.signout()
                             })
                     }
@@ -110,14 +110,14 @@ const Avatar = (props) => {
                                             } else {
                                                 Helper.error()
                                             }
-                                        }).catch(err => {
+                                        }).catch((err) => {
                                             UserService.signout()
                                         })
                                 } else {
                                     Helper.error()
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 UserService.signout()
                             })
                     }
@@ -136,7 +136,7 @@ const Avatar = (props) => {
                                     props.onChange(data)
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 UserService.signout()
                             })
                     }
@@ -162,14 +162,14 @@ const Avatar = (props) => {
                                             } else {
                                                 Helper.error()
                                             }
-                                        }).catch(err => {
+                                        }).catch((err) => {
                                             UserService.signout()
                                         })
                                 } else {
                                     Helper.error()
                                 }
                             })
-                            .catch(err => {
+                            .catch((err) => {
                                 UserService.signout()
                             })
                     }
@@ -233,14 +233,14 @@ const Avatar = (props) => {
                                     } else {
                                         Helper.error()
                                     }
-                                }).catch(err => {
+                                }).catch((err) => {
                                     UserService.signout()
                                 })
                         } else {
                             Helper.error()
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         UserService.signout()
                     })
             } else if (!record && props.mode === 'create') {
@@ -256,7 +256,7 @@ const Avatar = (props) => {
                             Helper.error()
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         Helper.error(err)
                     })
             }
@@ -274,7 +274,7 @@ const Avatar = (props) => {
                             Helper.error()
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         Helper.error(err)
                     })
             } else if (record && props.mode === 'update') {
@@ -294,14 +294,14 @@ const Avatar = (props) => {
                                     } else {
                                         Helper.error()
                                     }
-                                }).catch(err => {
+                                }).catch((err) => {
                                     UserService.signout()
                                 })
                         } else {
                             Helper.error()
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         UserService.signout()
                     })
             }

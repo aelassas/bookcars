@@ -42,7 +42,7 @@ mongoose.Promise = global.Promise
 mongoose.connect(DB_URI, options)
     .then(
         () => { console.log('Database is connected') },
-        err => { console.error('Cannot connect to the database:', err) }
+        (err) => { console.error('Cannot connect to the database:', err) }
     )
 
 const app = express()

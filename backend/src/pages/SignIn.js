@@ -73,7 +73,7 @@ const SignIn = () => {
                     setError(true)
                     setBlacklisted(false)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 setError(true)
                 setBlacklisted(false)
             })
@@ -102,11 +102,11 @@ const SignIn = () => {
                                 } else {
                                     UserService.signout()
                                 }
-                            }).catch(() => {
+                            }).catch((err) => {
                                 UserService.signout()
                             })
                     }
-                }).catch(() => {
+                }).catch((err) => {
                     UserService.signout()
                 })
         } else {

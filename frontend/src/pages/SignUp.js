@@ -237,7 +237,7 @@ const SignUp = () => {
                                 setError(true)
                                 setTosError(false)
                             }
-                        }).catch(err => {
+                        }).catch((err) => {
                             setPasswordError(false)
                             setRecaptchaError(false)
                             setPasswordsDontMatch(false)
@@ -251,7 +251,7 @@ const SignUp = () => {
                 setError(true)
                 setTosError(false)
             })
-            .catch(err => {
+            .catch((err) => {
                 setPasswordError(false)
                 setRecaptchaError(false)
                 setPasswordsDontMatch(false)

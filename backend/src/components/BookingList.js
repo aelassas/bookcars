@@ -360,7 +360,7 @@ const BookingList = (props) => {
 
                 setOpenUpdateDialog(false)
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }
@@ -398,7 +398,7 @@ const BookingList = (props) => {
 
                     setopenDeleteDialog(false)
                 })
-                .catch(() => {
+                .catch((err) => {
                     UserService.signout()
                 })
         } else {
@@ -418,7 +418,7 @@ const BookingList = (props) => {
 
                     setopenDeleteDialog(false)
                 })
-                .catch(() => {
+                .catch((err) => {
                     UserService.signout()
                 })
         }
