@@ -1,12 +1,13 @@
 import LocalizedStrings from 'react-localization'
 import Env from '../config/env.config'
 import * as UserService from '../services/UserService'
+import { strings as commonStrings } from '../lang/common'
 
 export const strings = new LocalizedStrings({
     fr: {
         NEW_CAR: 'Nouvelle voiture',
         DELETE_CAR: 'Êtes-vous sûr de vouloir supprimer cette voiture ?',
-        CAR_CURRENCY: ' DH/jour',
+        CAR_CURRENCY: ` ${commonStrings.CURRENCY}/jour`,
         FUEL_POLICY: 'Politique carburant',
         DIESEL: 'Diesel',
         GASOLINE: 'Essence',
@@ -66,7 +67,7 @@ export const strings = new LocalizedStrings({
     en: {
         NEW_CAR: 'New car',
         DELETE_CAR: 'Are you sure you want to delete this car?',
-        CAR_CURRENCY: ' DH/day',
+        CAR_CURRENCY: ` ${commonStrings.CURRENCY}/jour`,
         FUEL_POLICY: 'Fuel policy',
         DIESEL: 'Diesel',
         GASOLINE: 'Gasoline',
