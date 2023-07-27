@@ -22,7 +22,21 @@ export const exists = async (path) => {
     }
 }
 
-export const sendMail = (transporterOptions, mailOptions) => {
+export const sendMail = (mailOptions) => {
+    const SMTP_HOST = process.env.BC_SMTP_HOST
+    const SMTP_PORT = process.env.BC_SMTP_PORT
+    const SMTP_USER = process.env.BC_SMTP_USER
+    const SMTP_PASS = process.env.BC_SMTP_PASS
+
+    const transporterOptions = {
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS
+        }
+    }
+
     const transporter = nodemailer.createTransport(transporterOptions)
 
     return new Promise((resolve, reject) => {

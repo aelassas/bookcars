@@ -15,10 +15,6 @@ import { v1 as uuid } from 'uuid'
 import { Expo } from 'expo-server-sdk'
 import * as Helper from '../common/Helper.js'
 
-const SMTP_HOST = process.env.BC_SMTP_HOST
-const SMTP_PORT = process.env.BC_SMTP_PORT
-const SMTP_USER = process.env.BC_SMTP_USER
-const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
 const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
@@ -58,15 +54,6 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
     }
 
     // mail
-    const transporterOptions = {
-        host: SMTP_HOST,
-        port: SMTP_PORT,
-        auth: {
-            user: SMTP_USER,
-            pass: SMTP_PASS
-        }
-    }
-
     strings.setLanguage(company.language)
 
     const mailOptions = {
@@ -83,22 +70,13 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
             + '</p>'
     }
 
-    await Helper.sendMail(transporterOptions, mailOptions)
+    await Helper.sendMail(mailOptions)
 }
 
 export const book = async (req, res) => {
     try {
         let user
         const { driver } = req.body
-
-        const transporterOptions = {
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASS
-            }
-        }
 
         if (driver) {
             driver.verified = false
@@ -128,7 +106,7 @@ export const book = async (req, res) => {
                     + strings.REGARDS + '<br>'
                     + '</p>'
             }
-            await Helper.sendMail(transporterOptions, mailOptions)
+            await Helper.sendMail(mailOptions)
 
             req.body.booking.driver = user._id
         } else {
@@ -181,7 +159,7 @@ export const book = async (req, res) => {
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
-        await Helper.sendMail(transporterOptions, mailOptions)
+        await Helper.sendMail(mailOptions)
 
         // Notify company
         const company = await User.findById(booking.company)
@@ -214,15 +192,6 @@ const notifyDriver = async (booking) => {
     }
 
     // mail
-    const transporterOptions = {
-        host: SMTP_HOST,
-        port: SMTP_PORT,
-        auth: {
-            user: SMTP_USER,
-            pass: SMTP_PASS
-        }
-    }
-
     const mailOptions = {
         from: SMTP_FROM,
         to: driver.email,
@@ -236,7 +205,7 @@ const notifyDriver = async (booking) => {
             + strings.REGARDS + '<br>'
             + '</p>'
     }
-    await Helper.sendMail(transporterOptions, mailOptions)
+    await Helper.sendMail(mailOptions)
 
     // push notification
     const pushNotification = await PushNotification.findOne({ user: driver._id })
