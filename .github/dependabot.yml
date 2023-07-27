@@ -19,4 +19,4 @@ updates:
     directory: "./frontend"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 25    
+    open-pull-requests-limit: 25
