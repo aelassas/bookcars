@@ -16,9 +16,9 @@ import {
     Paper
 } from '@mui/material'
 import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
 import '../assets/css/update-location.css'
-import Env from '../config/env.config'
 
 const UpdateLocation = () => {
     const [visible, setVisible] = useState(false)

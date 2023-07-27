@@ -111,12 +111,12 @@ const SignIn = () => {
                                     UserService.signout()
                                 }
                             })
-                            .catch((err) => {
+                            .catch(() => {
                                 UserService.signout()
                             })
                     }
                 })
-                .catch((err) => {
+                .catch(() => {
                     UserService.signout()
                 })
         } else {
