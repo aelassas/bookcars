@@ -3,14 +3,6 @@ import Env from '../config/env.config'
 import * as UserService from '../services/UserService'
 import { strings as commonStrings } from '../lang/common'
 
-let language = UserService.getQueryLanguage()
-
-if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage()
-}
-
-commonStrings.setLanguage(language)
-
 export const strings = new LocalizedStrings({
     fr: {
         NEW_CAR: 'Nouvelle voiture',
@@ -137,5 +129,11 @@ export const strings = new LocalizedStrings({
         PRICE_PER_DAY: 'Price per day:',
     }
 })
+
+let language = UserService.getQueryLanguage()
+
+if (language === '' || !Env.LANGUAGES.includes(language)) {
+    language = UserService.getLanguage()
+}
 
 strings.setLanguage(language)
