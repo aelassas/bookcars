@@ -65,13 +65,13 @@ const Master = (props) => {
                             } else {
                                 exit()
                             }
-                        }).catch(() => {
+                        }).catch((err) => {
                             exit()
                         })
                     } else {
                         exit()
                     }
-                }).catch(() => {
+                }).catch((err) => {
                     exit()
                 })
         } else {
@@ -89,7 +89,7 @@ const Master = (props) => {
             } else {
                 Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
             }
-        }).catch(err => {
+        }).catch((err) => {
             Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
         })
     }

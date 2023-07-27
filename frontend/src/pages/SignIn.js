@@ -71,7 +71,7 @@ const SignIn = () => {
                     setError(true)
                     setBlacklisted(false)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 setError(true)
                 setBlacklisted(false)
             })
@@ -93,27 +93,30 @@ const SignIn = () => {
             UserService.validateAccessToken()
                 .then(status => {
                     if (status === 200) {
-                        UserService.getUser(currentUser.id).then(user => {
-                            if (user) {
-                                const params = new URLSearchParams(window.location.search)
-                                if (params.has('from')) {
-                                    const from = params.get('from')
-                                    if (from === 'create-booking') {
-                                        navigate(`/create-booking${window.location.search}`)
+                        UserService.getUser(currentUser.id)
+                            .then(user => {
+                                if (user) {
+                                    const params = new URLSearchParams(window.location.search)
+                                    if (params.has('from')) {
+                                        const from = params.get('from')
+                                        if (from === 'create-booking') {
+                                            navigate(`/create-booking${window.location.search}`)
+                                        } else {
+                                            navigate(`/${window.location.search}`)
+                                        }
                                     } else {
                                         navigate(`/${window.location.search}`)
                                     }
                                 } else {
-                                    navigate(`/${window.location.search}`)
+                                    UserService.signout()
                                 }
-                            } else {
+                            })
+                            .catch((err) => {
                                 UserService.signout()
-                            }
-                        }).catch(err => {
-                            UserService.signout()
-                        })
+                            })
                     }
-                }).catch(err => {
+                })
+                .catch((err) => {
                     UserService.signout()
                 })
         } else {

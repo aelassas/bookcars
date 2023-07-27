@@ -97,7 +97,7 @@ const ForgotPassword = () => {
                     setEmailValid(true)
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 setError(true)
                 setEmailValid(true)
             })

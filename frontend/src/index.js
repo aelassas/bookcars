@@ -52,7 +52,7 @@ if (lang !== '') {
                             toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
                         }
                     }
-                }).catch(() => {
+                }).catch((err) => {
                     toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
                 })
             language = lang

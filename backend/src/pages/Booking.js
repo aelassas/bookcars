@@ -257,7 +257,7 @@ const Booking = () => {
                 } else {
                     err(true)
                 }
-            }).catch(() => {
+            }).catch((err) => {
                 UserService.signout()
             })
     }
@@ -423,7 +423,7 @@ const Booking = () => {
                             setNoMatch(true)
                         }
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         setLoading(false)
                         setError(true)
                         setVisible(false)

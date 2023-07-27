@@ -292,14 +292,14 @@ const SignUpScreen = ({ navigation, route }) => {
                             } else {
                                 error()
                             }
-                        }).catch(err => {
+                        }).catch((err) => {
                             error(err)
                         })
                 } else {
                     error()
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 error(err)
             })
     }

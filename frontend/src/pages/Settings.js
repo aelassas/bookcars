@@ -95,8 +95,8 @@ const Settings = () => {
                     Helper.info(strings.SETTINGS_UPDATED)
                 }
             })
-            .catch(err => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 
@@ -143,8 +143,8 @@ const Settings = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
-                UserService.signout()
+            .catch((err) => {
+                Helper.error(err)
             })
     }
 

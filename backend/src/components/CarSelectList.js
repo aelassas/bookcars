@@ -113,7 +113,7 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
                 setInit(true)
                 setLoading(false)
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }

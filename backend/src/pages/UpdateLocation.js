@@ -125,7 +125,7 @@ const UpdateLocation = () => {
                                 setNoMatch(true)
                             }
                         })
-                        .catch(() => {
+                        .catch((err) => {
                             setLoading(false)
                             setError(true)
                             setVisible(false)

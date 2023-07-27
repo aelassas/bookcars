@@ -144,7 +144,7 @@ const LocationList = (props) => {
                     Helper.error()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }
@@ -180,7 +180,7 @@ const LocationList = (props) => {
                         setLocationIndex(-1)
                         setLoading(false)
                     }
-                }).catch(() => {
+                }).catch((err) => {
                     UserService.signout()
                 })
         } else {

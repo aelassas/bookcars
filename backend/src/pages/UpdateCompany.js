@@ -186,7 +186,7 @@ const UpdateCompany = () => {
                                 setNoMatch(true)
                             }
                         })
-                        .catch(() => {
+                        .catch((err) => {
                             setLoading(false)
                             setError(true)
                             setVisible(false)
@@ -240,7 +240,7 @@ const UpdateCompany = () => {
                     Helper.error()
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 UserService.signout()
             })
     }
