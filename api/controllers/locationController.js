@@ -180,8 +180,8 @@ export const checkLocation = async (req, res) => {
         if (count === 1) {
             return res.sendStatus(200)
         }
+        
         return res.sendStatus(204)
-
     } catch (err) {
         console.error(`[location.checkLocation] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
