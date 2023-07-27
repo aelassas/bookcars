@@ -7,10 +7,6 @@ import * as Helper from '../common/Helper.js'
 
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
 const APP_HOST = process.env.BC_FRONTEND_HOST
-const SMTP_HOST = process.env.BC_SMTP_HOST
-const SMTP_PORT = process.env.BC_SMTP_PORT
-const SMTP_USER = process.env.BC_SMTP_USER
-const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
 
 export const notificationCounter = async (req, res) => {
@@ -44,15 +40,6 @@ export const notify = async (req, res) => {
             if (user.enableEmailNotifications) {
                 strings.setLanguage(user.language)
 
-                const transporterOptions = {
-                    host: SMTP_HOST,
-                    port: SMTP_PORT,
-                    auth: {
-                        user: SMTP_USER,
-                        pass: SMTP_PASS
-                    }
-                }
-
                 const mailOptions = {
                     from: SMTP_FROM,
                     to: user.email,
@@ -69,7 +56,7 @@ export const notify = async (req, res) => {
                         + '</p>'
                 }
 
-                await Helper.sendMail(transporterOptions, mailOptions)
+                await Helper.sendMail(mailOptions)
             }
 
             if (counter) {

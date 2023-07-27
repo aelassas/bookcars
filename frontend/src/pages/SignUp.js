@@ -194,7 +194,7 @@ const SignUp = () => {
             return
         }
 
-        if (!reCaptchaToken) {
+        if (Env.RECAPTCHA_ENABLED && !reCaptchaToken) {
             setPasswordError(false)
             setRecaptchaError(true)
             setPasswordsDontMatch(false)
@@ -372,13 +372,18 @@ const SignUp = () => {
                                         }}
                                     />
                                 </FormControl>
-                                <div className="recaptcha">
-                                    <ReCAPTCHA
-                                        sitekey={Env.RECAPTCHA_SITE_KEY}
-                                        hl={language}
-                                        onChange={handleOnRecaptchaVerify}
-                                    />
-                                </div>
+
+                                {
+                                    Env.RECAPTCHA_ENABLED &&
+                                    <div className="recaptcha">
+                                        <ReCAPTCHA
+                                            sitekey={Env.RECAPTCHA_SITE_KEY}
+                                            hl={language}
+                                            onChange={handleOnRecaptchaVerify}
+                                        />
+                                    </div>
+                                }
+
                                 <div className="signup-tos">
                                     <table>
                                         <tbody>

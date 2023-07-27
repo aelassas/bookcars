@@ -17,10 +17,6 @@ const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
 const JWT_SECRET = process.env.BC_JWT_SECRET
 const JWT_EXPIRE_AT = parseInt(process.env.BC_JWT_EXPIRE_AT)
-const SMTP_HOST = process.env.BC_SMTP_HOST
-const SMTP_PORT = process.env.BC_SMTP_PORT
-const SMTP_USER = process.env.BC_SMTP_USER
-const SMTP_PASS = process.env.BC_SMTP_PASS
 const SMTP_FROM = process.env.BC_SMTP_FROM
 const CDN = process.env.BC_CDN_USERS
 const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
@@ -66,14 +62,6 @@ export const signup = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporterOptions = {
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASS
-            }
-        }
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -84,7 +72,7 @@ export const signup = async (req, res) => {
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
-        await Helper.sendMail(transporterOptions, mailOptions)
+        await Helper.sendMail(mailOptions)
         return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.signup] ${strings.DB_ERROR} ${body}`, err)
@@ -137,15 +125,6 @@ export const adminSignup = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporterOptions = {
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASS
-            }
-        }
-
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -157,7 +136,7 @@ export const adminSignup = async (req, res) => {
                 + '</p>'
         }
 
-        await Helper.sendMail(transporterOptions, mailOptions)
+        await Helper.sendMail(mailOptions)
         return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.adminSignup] ${strings.DB_ERROR} ${body}`, err)
@@ -215,15 +194,6 @@ export const create = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporterOptions = {
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            auth: {
-                user: SMTP_USER,
-                pass: SMTP_PASS
-            }
-        }
-
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -241,7 +211,7 @@ export const create = async (req, res) => {
                 + '</p>'
         }
 
-        await Helper.sendMail(transporterOptions, mailOptions)
+        await Helper.sendMail(mailOptions)
         return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.create] ${strings.DB_ERROR} ${body}`, err)
@@ -322,15 +292,6 @@ export const resend = async (req, res) => {
 
                 const reset = req.params.reset === 'true'
 
-                const transporterOptions = {
-                    host: SMTP_HOST,
-                    port: SMTP_PORT,
-                    auth: {
-                        user: SMTP_USER,
-                        pass: SMTP_PASS
-                    }
-                }
-
                 const mailOptions = {
                     from: SMTP_FROM,
                     to: user.email,
@@ -348,7 +309,7 @@ export const resend = async (req, res) => {
                         + '</p>'
                 }
 
-                await Helper.sendMail(transporterOptions, mailOptions)
+                await Helper.sendMail(mailOptions)
                 return res.sendStatus(200)
             }
         } else {
@@ -561,15 +522,6 @@ export const resendLink = async (req, res) => {
             await token.save()
 
             // Send email
-            const transporterOptions = {
-                host: SMTP_HOST,
-                port: SMTP_PORT,
-                auth: {
-                    user: SMTP_USER,
-                    pass: SMTP_PASS
-                }
-            }
-
             strings.setLanguage(user.language)
             const mailOptions = {
                 from: SMTP_FROM,
@@ -580,7 +532,7 @@ export const resendLink = async (req, res) => {
                     + strings.REGARDS + '<br>' + '</p>'
             }
 
-            await Helper.sendMail(transporterOptions, mailOptions)
+            await Helper.sendMail(mailOptions)
             return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
         }
     } catch (err) {
