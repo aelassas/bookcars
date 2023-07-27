@@ -2,8 +2,8 @@ import strings from '../config/app.config.js'
 import Notification from '../models/Notification.js'
 import NotificationCounter from '../models/NotificationCounter.js'
 import User from '../models/User.js'
-import nodemailer from "nodemailer"
 import mongoose from 'mongoose'
+import * as Helper from '../common/Helper.js'
 
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
 const APP_HOST = process.env.BC_FRONTEND_HOST
@@ -44,20 +44,20 @@ export const notify = async (req, res) => {
             if (user.enableEmailNotifications) {
                 strings.setLanguage(user.language)
 
-                const transporter = nodemailer.createTransport({
+                const transporterOptions = {
                     host: SMTP_HOST,
                     port: SMTP_PORT,
                     auth: {
                         user: SMTP_USER,
                         pass: SMTP_PASS
                     }
-                })
+                }
 
                 const mailOptions = {
                     from: SMTP_FROM,
                     to: user.email,
                     subject: strings.NOTIFICATION_SUBJECT,
-                    html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>'
+                    html: '<p>'
                         + strings.HELLO + user.fullName + ',<br><br>'
                         + strings.NOTIFICATION_BODY + '<br><br>'
                         + '---<br>'
@@ -69,12 +69,7 @@ export const notify = async (req, res) => {
                         + '</p>'
                 }
 
-                await transporter.sendMail(mailOptions, (err, info) => {
-                    if (err) {
-                        console.error(strings.SMTP_ERROR, err)
-                        res.status(400).send(strings.SMTP_ERROR + err)
-                    }
-                })
+                await Helper.sendMail(transporterOptions, mailOptions)
             }
 
             if (counter) {

@@ -1,4 +1,5 @@
 import fs from 'fs/promises'
+import nodemailer from 'nodemailer'
 
 export const joinURL = (part1, part2) => {
     if (part1.charAt(part1.length - 1) === '/') {
@@ -19,4 +20,18 @@ export const exists = async (path) => {
     } catch {
         return false
     }
+}
+
+export const sendMail = (transporterOptions, mailOptions) => {
+    const transporter = nodemailer.createTransport(transporterOptions)
+
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(info)
+            }
+        })
+    })
 }
