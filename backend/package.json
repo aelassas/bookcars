@@ -9,7 +9,7 @@
     "@mui/icons-material": "^5.14.1",
     "@mui/material": "^5.14.2",
     "@mui/x-data-grid": "^6.10.2",
-    "@mui/x-date-pickers": "^6.10.1",
+    "@mui/x-date-pickers": "^6.10.2",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",
