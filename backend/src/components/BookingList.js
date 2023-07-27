@@ -29,7 +29,6 @@ import {
     Delete as DeleteIcon,
     Check as CheckIcon,
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
 
@@ -96,7 +95,7 @@ const BookingList = (props) => {
                     setLoad(false)
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             setRows([])
@@ -361,7 +360,7 @@ const BookingList = (props) => {
                 setOpenUpdateDialog(false)
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -399,7 +398,7 @@ const BookingList = (props) => {
                     setopenDeleteDialog(false)
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
@@ -419,7 +418,7 @@ const BookingList = (props) => {
                     setopenDeleteDialog(false)
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         }
     }

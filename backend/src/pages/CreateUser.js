@@ -89,7 +89,7 @@ const CreateUser = () => {
                     return false
                 }
             } catch (err) {
-                UserService.signout()
+                Helper.error(err)
             }
         } else {
             setFullNameError(false)
@@ -131,7 +131,7 @@ const CreateUser = () => {
                         return false
                     }
                 } catch (err) {
-                    UserService.signout()
+                    Helper.error(err)
                 }
             } else {
                 setEmailError(false)
@@ -287,7 +287,7 @@ const CreateUser = () => {
                     setLoading(false)
                 }
             }).catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
 
     }

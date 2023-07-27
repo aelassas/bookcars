@@ -78,7 +78,7 @@ const Settings = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -122,7 +122,7 @@ const Settings = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

@@ -30,7 +30,6 @@ import {
     FormHelperText
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 
 import '../assets/css/create-car.css'
 import '../assets/css/update-car.css'
@@ -244,7 +243,7 @@ const UpdateCar = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

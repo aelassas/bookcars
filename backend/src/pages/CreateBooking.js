@@ -216,11 +216,11 @@ const CreateBooking = () => {
                         }
                     })
                     .catch((err) => {
-                        UserService.signout()
+                        Helper.error(err)
                     })
             },
-            () => {
-                UserService.signout()
+            (err) => {
+                Helper.error(err)
             })
     }
 

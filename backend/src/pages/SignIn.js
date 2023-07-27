@@ -102,11 +102,11 @@ const SignIn = () => {
                                 } else {
                                     UserService.signout()
                                 }
-                            }).catch((err) => {
+                            }).catch(() => {
                                 UserService.signout()
                             })
                     }
-                }).catch((err) => {
+                }).catch(() => {
                     UserService.signout()
                 })
         } else {

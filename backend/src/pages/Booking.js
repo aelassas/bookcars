@@ -121,7 +121,7 @@ const Booking = () => {
                     }
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else if (!newCar) {
             setPrice(0)
@@ -147,7 +147,7 @@ const Booking = () => {
                 setCancellation(booking.cancellation)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -163,7 +163,7 @@ const Booking = () => {
                 setAmendments(booking.amendments)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -179,7 +179,7 @@ const Booking = () => {
                 setCollisionDamageWaiver(booking.collisionDamageWaiver)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -195,7 +195,7 @@ const Booking = () => {
                 setTheftProtection(booking.theftProtection)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -211,7 +211,7 @@ const Booking = () => {
                 setFullInsurance(booking.fullInsurance)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -227,7 +227,7 @@ const Booking = () => {
                 setAdditionalDriver(booking.additionalDriver)
             },
             (err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -258,7 +258,7 @@ const Booking = () => {
                     err(true)
                 }
             }).catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -368,7 +368,7 @@ const Booking = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

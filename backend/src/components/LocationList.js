@@ -26,7 +26,6 @@ import {
     Delete as DeleteIcon,
     LocationOn as LocationIcon
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import Pager from './Pager'
 
@@ -145,7 +144,7 @@ const LocationList = (props) => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -181,7 +180,7 @@ const LocationList = (props) => {
                         setLoading(false)
                     }
                 }).catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             Helper.error()

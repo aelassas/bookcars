@@ -42,7 +42,7 @@ const UserSelectList = (props) => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

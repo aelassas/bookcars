@@ -11,7 +11,6 @@ import {
     Button,
     Paper
 } from '@mui/material'
-import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 
@@ -52,7 +51,7 @@ const CreateLocation = () => {
             }
         }
         catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 

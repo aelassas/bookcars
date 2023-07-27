@@ -94,7 +94,7 @@ const UpdateUser = () => {
                     return false
                 }
             } catch (err) {
-                UserService.signout()
+                Helper.error(err)
             }
         } else {
             setFullNameError(false)
@@ -315,7 +315,7 @@ const UpdateUser = () => {
                     setError(false)
                 }
             }).catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

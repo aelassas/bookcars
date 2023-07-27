@@ -30,7 +30,6 @@ import {
     Delete as DeleteIcon,
     Info as InfoIcon
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import Pager from './Pager'
 
 import DoorsIcon from '../assets/img/car-door.png'
@@ -104,7 +103,7 @@ const CarList = (props) => {
                 setLoading(false)
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -168,7 +167,7 @@ const CarList = (props) => {
                 Helper.error()
             }
         } catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 
@@ -200,7 +199,7 @@ const CarList = (props) => {
                         setLoading(false)
                     }
                 }).catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             Helper.error()
