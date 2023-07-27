@@ -11,7 +11,6 @@ import PushNotification from '../models/PushNotification.js'
 import AdditionalDriver from '../models/AdditionalDriver.js'
 import mongoose from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
-import nodemailer from 'nodemailer'
 import { v1 as uuid } from 'uuid'
 import { Expo } from 'expo-server-sdk'
 import * as Helper from '../common/Helper.js'
@@ -59,14 +58,14 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
     }
 
     // mail
-    const transporter = nodemailer.createTransport({
+    const transporterOptions = {
         host: SMTP_HOST,
         port: SMTP_PORT,
         auth: {
             user: SMTP_USER,
             pass: SMTP_PASS
         }
-    })
+    }
 
     strings.setLanguage(company.language)
 
@@ -83,7 +82,8 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
             + strings.REGARDS + '<br>'
             + '</p>'
     }
-    await transporter.sendMail(mailOptions)
+
+    await Helper.sendMail(transporterOptions, mailOptions)
 }
 
 export const book = async (req, res) => {
@@ -91,14 +91,14 @@ export const book = async (req, res) => {
         let user
         const driver = req.body.driver
 
-        const transporter = nodemailer.createTransport({
+        const transporterOptions = {
             host: SMTP_HOST,
             port: SMTP_PORT,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS
             }
-        })
+        }
 
         if (driver) {
             driver.verified = false
@@ -128,7 +128,7 @@ export const book = async (req, res) => {
                     + strings.REGARDS + '<br>'
                     + '</p>'
             }
-            await transporter.sendMail(mailOptions)
+            await Helper.sendMail(transporterOptions, mailOptions)
 
             req.body.booking.driver = user._id
         } else {
@@ -181,7 +181,7 @@ export const book = async (req, res) => {
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
-        await transporter.sendMail(mailOptions)
+        await Helper.sendMail(transporterOptions, mailOptions)
 
         // Notify company
         const company = await User.findById(booking.company)
@@ -214,14 +214,14 @@ const notifyDriver = async (booking) => {
     }
 
     // mail
-    const transporter = nodemailer.createTransport({
+    const transporterOptions = {
         host: SMTP_HOST,
         port: SMTP_PORT,
         auth: {
             user: SMTP_USER,
             pass: SMTP_PASS
         }
-    })
+    }
 
     const mailOptions = {
         from: SMTP_FROM,
@@ -236,7 +236,7 @@ const notifyDriver = async (booking) => {
             + strings.REGARDS + '<br>'
             + '</p>'
     }
-    await transporter.sendMail(mailOptions)
+    await Helper.sendMail(transporterOptions, mailOptions)
 
     // push notification
     const pushNotification = await PushNotification.findOne({ user: driver._id })
@@ -415,7 +415,7 @@ export const deleteBookings = async (req, res) => {
 
 export const getBooking = async (req, res) => {
     const { id } = req.params
-    
+
     try {
         const booking = await Booking.findById(id)
             .populate('company')
@@ -738,7 +738,7 @@ export const cancelBooking = async (req, res) => {
 
             return res.sendStatus(200)
         }
-        
+
         return res.sendStatus(204)
     }
     catch (err) {

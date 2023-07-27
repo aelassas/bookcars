@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import path from 'path'
 import fs from 'fs/promises'
-import nodemailer from 'nodemailer'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import strings from '../config/app.config.js'
@@ -67,14 +66,14 @@ export const signup = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporter = nodemailer.createTransport({
+        const transporterOptions = {
             host: SMTP_HOST,
             port: SMTP_PORT,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS
             }
-        })
+        }
         const mailOptions = {
             from: SMTP_FROM,
             to: user.email,
@@ -85,14 +84,8 @@ export const signup = async (req, res) => {
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
-        transporter.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                console.error(strings.SMTP_ERROR, err)
-                return res.status(400).send(strings.SMTP_ERROR + err)
-            } else {
-                return res.sendStatus(200)
-            }
-        })
+        await Helper.sendMail(transporterOptions, mailOptions)
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.signup] ${strings.DB_ERROR} ${body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -144,14 +137,14 @@ export const adminSignup = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporter = nodemailer.createTransport({
+        const transporterOptions = {
             host: SMTP_HOST,
             port: SMTP_PORT,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS
             }
-        })
+        }
 
         const mailOptions = {
             from: SMTP_FROM,
@@ -164,14 +157,8 @@ export const adminSignup = async (req, res) => {
                 + '</p>'
         }
 
-        transporter.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                console.error(strings.SMTP_ERROR, err)
-                return res.status(400).send(strings.SMTP_ERROR + err)
-            } else {
-                return res.sendStatus(200)
-            }
-        })
+        await Helper.sendMail(transporterOptions, mailOptions)
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.adminSignup] ${strings.DB_ERROR} ${body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -228,14 +215,14 @@ export const create = async (req, res) => {
         // Send email
         strings.setLanguage(user.language)
 
-        const transporter = nodemailer.createTransport({
+        const transporterOptions = {
             host: SMTP_HOST,
             port: SMTP_PORT,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS
             }
-        })
+        }
 
         const mailOptions = {
             from: SMTP_FROM,
@@ -254,14 +241,8 @@ export const create = async (req, res) => {
                 + '</p>'
         }
 
-        transporter.sendMail(mailOptions, (err, info) => {
-            if (err) {
-                console.error(strings.SMTP_ERROR, err)
-                return res.status(400).send(strings.SMTP_ERROR + err)
-            } else {
-                return res.sendStatus(200)
-            }
-        })
+        await Helper.sendMail(transporterOptions, mailOptions)
+        return res.sendStatus(200)
     } catch (err) {
         console.error(`[user.create] ${strings.DB_ERROR} ${body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
@@ -341,14 +322,14 @@ export const resend = async (req, res) => {
 
                 const reset = req.params.reset === 'true'
 
-                const transporter = nodemailer.createTransport({
+                const transporterOptions = {
                     host: SMTP_HOST,
                     port: SMTP_PORT,
                     auth: {
                         user: SMTP_USER,
                         pass: SMTP_PASS
                     }
-                })
+                }
 
                 const mailOptions = {
                     from: SMTP_FROM,
@@ -367,14 +348,8 @@ export const resend = async (req, res) => {
                         + '</p>'
                 }
 
-                transporter.sendMail(mailOptions, (err, info) => {
-                    if (err) {
-                        console.error(strings.SMTP_ERROR, err)
-                        return res.status(400).send(strings.SMTP_ERROR + err)
-                    } else {
-                        return res.sendStatus(200)
-                    }
-                })
+                await Helper.sendMail(transporterOptions, mailOptions)
+                return res.sendStatus(200)
             }
         } else {
             return res.sendStatus(204)
@@ -586,24 +561,27 @@ export const resendLink = async (req, res) => {
             await token.save()
 
             // Send email
-            const transporter = nodemailer.createTransport({
+            const transporterOptions = {
                 host: SMTP_HOST,
                 port: SMTP_PORT,
                 auth: {
                     user: SMTP_USER,
                     pass: SMTP_PASS
                 }
-            })
+            }
 
             strings.setLanguage(user.language)
-            const mailOptions = { from: SMTP_FROM, to: user.email, subject: strings.ACCOUNT_ACTIVATION_SUBJECT, html: '<p ' + (user.language === 'ar' ? 'dir="rtl"' : ')') + '>' + strings.HELLO + user.fullName + ',<br> <br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>' + strings.REGARDS + '<br>' + '</p>' }
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error('[user.resendLink] ' + strings.SMTP_ERROR, req.params)
-                    return res.status(500).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_TECHNICAL_ISSUE + ' ' + err.response))
-                }
-                return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
-            })
+            const mailOptions = {
+                from: SMTP_FROM,
+                to: user.email,
+                subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+                html: '<p>' + strings.HELLO + user.fullName + ',<br> <br>'
+                    + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                    + strings.REGARDS + '<br>' + '</p>'
+            }
+
+            await Helper.sendMail(transporterOptions, mailOptions)
+            return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
         }
     } catch (err) {
         console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
