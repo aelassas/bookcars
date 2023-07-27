@@ -28,7 +28,6 @@ import {
     FormHelperText
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/create-car.css'
@@ -243,7 +242,7 @@ const CreateCar = () => {
                 }
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

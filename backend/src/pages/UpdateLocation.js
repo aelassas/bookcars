@@ -15,7 +15,6 @@ import {
     Button,
     Paper
 } from '@mui/material'
-import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 
 import '../assets/css/update-location.css'
@@ -93,7 +92,7 @@ const UpdateLocation = () => {
             }
         }
         catch (err) {
-            UserService.signout()
+            Helper.error(err)
         }
     }
 

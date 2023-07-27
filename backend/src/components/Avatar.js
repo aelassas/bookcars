@@ -85,7 +85,7 @@ const Avatar = (props) => {
                                 }
                             })
                             .catch((err) => {
-                                UserService.signout()
+                                Helper.error(err)
                             })
                     }
 
@@ -111,14 +111,14 @@ const Avatar = (props) => {
                                                 Helper.error()
                                             }
                                         }).catch((err) => {
-                                            UserService.signout()
+                                            Helper.error(err)
                                         })
                                 } else {
                                     Helper.error()
                                 }
                             })
                             .catch((err) => {
-                                UserService.signout()
+                                Helper.error(err)
                             })
                     }
 
@@ -137,7 +137,7 @@ const Avatar = (props) => {
                                 }
                             })
                             .catch((err) => {
-                                UserService.signout()
+                                Helper.error(err)
                             })
                     }
 
@@ -163,14 +163,14 @@ const Avatar = (props) => {
                                                 Helper.error()
                                             }
                                         }).catch((err) => {
-                                            UserService.signout()
+                                            Helper.error(err)
                                         })
                                 } else {
                                     Helper.error()
                                 }
                             })
                             .catch((err) => {
-                                UserService.signout()
+                                Helper.error(err)
                             })
                     }
 
@@ -234,14 +234,14 @@ const Avatar = (props) => {
                                         Helper.error()
                                     }
                                 }).catch((err) => {
-                                    UserService.signout()
+                                    Helper.error(err)
                                 })
                         } else {
                             Helper.error()
                         }
                     })
                     .catch((err) => {
-                        UserService.signout()
+                        Helper.error(err)
                     })
             } else if (!record && props.mode === 'create') {
                 UserService.deleteTempAvatar(avatar)
@@ -295,14 +295,14 @@ const Avatar = (props) => {
                                         Helper.error()
                                     }
                                 }).catch((err) => {
-                                    UserService.signout()
+                                    Helper.error(err)
                                 })
                         } else {
                             Helper.error()
                         }
                     })
                     .catch((err) => {
-                        UserService.signout()
+                        Helper.error(err)
                     })
             }
         }

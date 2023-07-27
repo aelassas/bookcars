@@ -98,14 +98,14 @@ const ChangePassword = () => {
                                 }
                             })
                             .catch((err) => {
-                                UserService.signout()
+                                Helper.error(err)
                             })
                     } else {
                         err()
                     }
                 })
                 .catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         }
 
@@ -120,7 +120,9 @@ const ChangePassword = () => {
                     submit()
                 }
             })
-            .catch((err) => UserService.signout())
+            .catch((err) => {
+                Helper.error(err)
+            })
     }
 
     const onLoad = (user) => {

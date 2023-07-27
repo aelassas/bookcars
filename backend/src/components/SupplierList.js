@@ -22,7 +22,6 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon
 } from '@mui/icons-material'
-import * as UserService from '../services/UserService'
 import Pager from './Pager'
 
 import '../assets/css/company-list.css'
@@ -158,7 +157,7 @@ const SupplierList = (props) => {
                         setLoading(false)
                     }
                 }).catch((err) => {
-                    UserService.signout()
+                    Helper.error(err)
                 })
         } else {
             Helper.error()

@@ -72,7 +72,7 @@ const UserList = (props) => {
                 setLoading(false)
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
@@ -308,7 +308,7 @@ const UserList = (props) => {
                 setLoading(false)
             })
             .catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 

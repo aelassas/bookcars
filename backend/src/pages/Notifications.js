@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/notifications'
 import Master from '../components/Master'
-import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material'
 import {
@@ -54,7 +53,7 @@ const Notifications = () => {
                 setLoading(false)
             }
             catch (err) {
-                UserService.signout()
+                Helper.error(err)
             }
         }
     }, [user, page])
@@ -143,7 +142,7 @@ const Notifications = () => {
                                                         }
                                                     }
                                                     catch (err) {
-                                                        UserService.signout()
+                                                        Helper.error(err)
                                                     }
                                                 }}>
                                                     <MarkReadIcon />
@@ -170,7 +169,7 @@ const Notifications = () => {
                                                         }
                                                     }
                                                     catch (err) {
-                                                        UserService.signout()
+                                                        Helper.error(err)
                                                     }
                                                 }}>
                                                     <MarkUnreadIcon />
@@ -233,7 +232,7 @@ const Notifications = () => {
                                                                     }
                                                                 }
                                                                 catch (err) {
-                                                                    UserService.signout()
+                                                                    Helper.error(err)
                                                                 }
                                                             }}>
                                                                 <ViewIcon />
@@ -256,7 +255,7 @@ const Notifications = () => {
                                                                         }
                                                                     }
                                                                     catch (err) {
-                                                                        UserService.signout()
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
                                                                     <MarkReadIcon />
@@ -277,7 +276,7 @@ const Notifications = () => {
                                                                         }
                                                                     }
                                                                     catch (err) {
-                                                                        UserService.signout()
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}>
                                                                     <MarkUnreadIcon />
@@ -375,7 +374,7 @@ const Notifications = () => {
                                         }
                                     }
                                     catch (err) {
-                                        UserService.signout()
+                                        Helper.error(err)
                                     }
                                 }} variant='contained' color='error'>{commonStrings.DELETE}</Button>
                             </DialogActions>

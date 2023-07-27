@@ -21,6 +21,7 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/create-company.css'
 
@@ -64,7 +65,7 @@ const CreateCompany = () => {
                 }
             }
             catch (err) {
-                UserService.signout()
+                Helper.error(err)
             }
         } else {
             setFullNameError(false)
@@ -102,7 +103,7 @@ const CreateCompany = () => {
                     }
                 }
                 catch (err) {
-                    UserService.signout()
+                    Helper.error(err)
                 }
             } else {
                 setEmailError(false)
@@ -235,7 +236,7 @@ const CreateCompany = () => {
                     setLoading(false)
                 }
             }).catch((err) => {
-                UserService.signout()
+                Helper.error(err)
             })
     }
 
