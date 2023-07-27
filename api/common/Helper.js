@@ -28,9 +28,10 @@ export const sendMail = (transporterOptions, mailOptions) => {
     return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
-                return reject(err)
+                reject(err)
+            } else {
+                resolve(info)
             }
-            return resolve(info)
         })
     })
 }
