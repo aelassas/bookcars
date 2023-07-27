@@ -20,7 +20,7 @@ const Env = {
     AXIOS_RETRIES: 3,
     AXIOS_RETRIES_INTERVAL: 500, // milliseconds
     LANGUAGES: ['fr', 'en'],
-    DEFAULT_LANGUAGE: BC_DEFAULT_LANGUAGE || 'fr',
+    DEFAULT_LANGUAGE: BC_DEFAULT_LANGUAGE || 'en',
     LANGUAGE: {
         FR: 'fr',
         EN: 'en'
