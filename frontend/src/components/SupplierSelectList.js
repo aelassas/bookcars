@@ -32,7 +32,7 @@ const SupplierSelectList = (props) => {
             .then(data => {
                 const _data = data.length > 0 ? data[0] : {}
                 if (_data.length === 0) _data.resultData = []
-                const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                 const _rows = page === 1 ? getCompanies(_data.resultData) : [...rows, ...getCompanies(_data.resultData)]
 
                 setRows(_rows)
