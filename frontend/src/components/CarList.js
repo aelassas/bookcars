@@ -54,7 +54,7 @@ const CarList = (props) => {
             const element = document.querySelector('body')
 
             if (element) {
-                element.onscroll = (event) => {
+                element.onscroll = () => {
                     if (fetch
                         && !loading
                         && window.scrollY > 0
@@ -171,7 +171,7 @@ const CarList = (props) => {
                     </Card>
                     :
                     ((props.from && props.to && props.pickupLocation && props.dropOffLocation) || props.hidePrice) &&
-                    rows.map((car, index) => (
+                    rows.map((car) => (
                         <article key={car._id}>
                             <div className='name'><h2>{car.name}</h2></div>
                             <div className='car'>

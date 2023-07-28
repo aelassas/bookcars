@@ -217,7 +217,7 @@ const CreateUser = () => {
                 .then(() => {
                     navigate('/users')
                 })
-                .catch((err) => {
+                .catch(() => {
                     navigate('/users')
                 })
         } else {

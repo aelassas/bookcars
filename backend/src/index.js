@@ -6,11 +6,12 @@ import { strings as commonStrings } from './lang/common'
 import * as UserService from './services/UserService'
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 
 import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
 import { frFR, enUS } from '@mui/x-date-pickers/locales'
 import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid'
+import * as Helper from './common/Helper'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -49,11 +50,11 @@ if (lang !== '') {
                     if (status === 200) {
                         const status = await UserService.updateLanguage(data)
                         if (status !== 200) {
-                            toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
+                            Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
                         }
                     }
-                }).catch((err) => {
-                    toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
+                }).catch(() => {
+                    Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
                 })
             language = lang
         }

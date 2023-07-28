@@ -171,7 +171,7 @@ const Header = (props) => {
         setSideAnchorEl(null)
     }
 
-    const handleNotificationsClick = (e) => {
+    const handleNotificationsClick = () => {
         navigate('/notifications')
     }
 

@@ -115,7 +115,7 @@ const LocationSelectList = (props) => {
                 suggestionsListContainerStyle={{
                     display: props.close ? 'none' : 'flex'
                 }}
-                renderItem={(item, text) => (
+                renderItem={(item) => (
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <MaterialIcons name="location-on" size={23} style={{ marginLeft: 5 }} />
                         <Text style={{ paddingTop: 15, paddingRight: 5, paddingBottom: 15, paddingLeft: 5 }}>{item.title}</Text>

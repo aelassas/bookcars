@@ -96,11 +96,11 @@ const Avatar = (props) => {
         setOpen(false)
     }
 
-    const handleCancelDelete = (e) => {
+    const handleCancelDelete = () => {
         closeDialog()
     }
 
-    const handleDelete = (e) => {
+    const handleDelete = () => {
         const { _id } = user
         UserService.deleteAvatar(_id)
             .then(status => {

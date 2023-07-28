@@ -71,7 +71,7 @@ const SignIn = () => {
                     setError(true)
                     setBlacklisted(false)
                 }
-            }).catch((err) => {
+            }).catch(() => {
                 setError(true)
                 setBlacklisted(false)
             })

@@ -55,7 +55,7 @@ const CreateLocation = () => {
         }
     }
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setVisible(true)
     }
 

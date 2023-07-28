@@ -86,8 +86,10 @@ const Master = (props) => {
     }
 
     useEffect(() => {
-        if (props.reload) _init()
-    }, [props.reload])
+        if (props.reload) {
+            _init()
+        }
+    }, [props.reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         setNotificationCount(props.notificationCount)

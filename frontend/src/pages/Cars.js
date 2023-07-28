@@ -38,7 +38,7 @@ const Cars = () => {
         }
     }, [visible])
 
-    const handleCarListLoad = (data) => {
+    const handleCarListLoad = () => {
         setReload(false)
     }
 

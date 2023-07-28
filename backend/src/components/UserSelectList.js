@@ -46,7 +46,7 @@ const UserSelectList = (props) => {
             })
     }
 
-    const handleChange = (values, key, reference) => {
+    const handleChange = (values) => {
         if (props.onChange) {
             props.onChange(values)
         }
@@ -74,7 +74,7 @@ const UserSelectList = (props) => {
                 }
             }}
             onFocus={
-                (event) => {
+                () => {
                     if (!init) {
                         const p = 1
                         setPage(p)
@@ -99,7 +99,7 @@ const UserSelectList = (props) => {
                 }
             }
             onClear={
-                (event) => {
+                () => {
                     setDrivers([])
                     setPage(1)
                     setKeyword('')

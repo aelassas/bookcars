@@ -16,7 +16,7 @@ export const android = () => (
 )
 
 export const getFileName = (path) => (
-    path.replace(/^.*[\\\/]/, '')
+    path.replace(/^.*[\\/]/, '')
 )
 
 export const getMimeType = (fileName) => (

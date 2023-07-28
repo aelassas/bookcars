@@ -186,7 +186,7 @@ const UpdateCompany = () => {
                                 setNoMatch(true)
                             }
                         })
-                        .catch((err) => {
+                        .catch(() => {
                             setLoading(false)
                             setError(true)
                             setVisible(false)

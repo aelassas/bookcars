@@ -80,7 +80,7 @@ const MileageFilter = (props) => {
         handleUnlimitedMileageChange(event)
     }
 
-    const handleUncheckAllChange = (e) => {
+    const handleUncheckAllChange = () => {
         if (allChecked) { // uncheck all
             limitedRef.current.checked = false
             unlimitedRef.current.checked = false

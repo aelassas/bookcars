@@ -149,7 +149,7 @@ const Activate = () => {
                                 setNoMatch(true)
                             }
                         })
-                        .catch((err) => {
+                        .catch(() => {
                             setNoMatch(true)
                         })
                 } else {

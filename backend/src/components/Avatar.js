@@ -209,11 +209,11 @@ const Avatar = (props) => {
         setOpen(false)
     }
 
-    const handleCancelDelete = (e) => {
+    const handleCancelDelete = () => {
         closeDialog()
     }
 
-    const handleDelete = (e) => {
+    const handleDelete = () => {
         if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
             if (record && props.mode === 'update') {
                 const { _id } = record

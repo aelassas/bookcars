@@ -60,7 +60,7 @@ const BookingList = (props) => {
         if (page > 0) {
             _fetch()
         }
-    }, [page])
+    }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         (async function () {
@@ -69,7 +69,7 @@ const BookingList = (props) => {
                 setFirstLoad(false)
             }
         })()
-    }, [firstLoad, props.companies, props.statuses])
+    }, [firstLoad, props.companies, props.statuses]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (!firstLoad) {
@@ -81,7 +81,7 @@ const BookingList = (props) => {
                 }
             }
         }
-    }, [props.companies, props.statuses, props.filter])
+    }, [props.companies, props.statuses, props.filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         async function init() {
@@ -116,7 +116,7 @@ const BookingList = (props) => {
                 contentContainerStyle={styles.contentContainer}
                 style={styles.flatList}
                 data={rows}
-                renderItem={({ item: booking, index }) => {
+                renderItem={({ item: booking }) => {
                     const from = new Date(booking.from)
                     const to = new Date(booking.to)
                     const days = Helper.days(from, to)
@@ -305,7 +305,7 @@ const BookingList = (props) => {
                         </View>
                     )
                 }}
-                keyExtractor={(item, index) => item._id}
+                keyExtractor={(item) => item._id}
                 onEndReached={() => setOnScrollEnd(true)}
                 onMomentumScrollEnd={() => {
                     if (onScrollEnd && fetch && props.companies) {

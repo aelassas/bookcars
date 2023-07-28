@@ -5,7 +5,7 @@ import '../assets/css/tos.css'
 
 const ToS = () => {
 
-    const onLoad = (user) => {
+    const onLoad = () => {
     }
 
     return (

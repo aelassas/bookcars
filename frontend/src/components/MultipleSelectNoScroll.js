@@ -227,7 +227,7 @@ const MultipleSelect = ({
                         />
                     )
                 }}
-                renderOption={(props, option, { selected }) => {
+                renderOption={(props, option) => {
                     if (type === Env.RECORD_TYPE.LOCATION) {
                         return (
                             <li {...props} className={`${props.className} ms-option`}>

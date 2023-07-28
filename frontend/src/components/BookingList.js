@@ -339,7 +339,7 @@ const BookingList = (props) => {
                     :
                     Env.isMobile() ?
                         <>
-                            {rows.map((booking, index) => {
+                            {rows.map((booking) => {
                                 const from = new Date(booking.from)
                                 const to = new Date(booking.to)
                                 const days = Helper.days(from, to)

@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const TextInput = forwardRef((props, ref) => {
+const TextInputComponent = (props, ref) => {
     const [value, setValue] = useState('')
     const _ref = useRef(null)
     const small = props.size === 'small'
@@ -96,6 +96,8 @@ const TextInput = forwardRef((props, ref) => {
             <Text style={styles.helperText}>{props.helperText}</Text>
         </View>
     )
-})
+}
+
+const TextInput = forwardRef(TextInputComponent)
 
 export default TextInput

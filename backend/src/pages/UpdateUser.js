@@ -187,10 +187,10 @@ const UpdateUser = () => {
             setLoading(true)
 
             UserService.deleteTempAvatar(avatar)
-                .then((status) => {
+                .then(() => {
                     navigate('/users')
                 })
-                .catch((err) => {
+                .catch(() => {
                     navigate('/users')
                 })
         } else {

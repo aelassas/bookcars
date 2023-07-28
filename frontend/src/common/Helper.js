@@ -455,7 +455,7 @@ export const getFullInsuranceOption = (fullInsurance, days, fr) => {
     }
 }
 
-export const getAdditionalDriverOption = (additionalDriver, days, fr) => {
+export const getAdditionalDriverOption = (additionalDriver, days) => {
     if (additionalDriver === -1) {
         return strings.UNAVAILABLE
     }

@@ -14,8 +14,10 @@ const StatusFilter = (props) => {
     const [allChecked, setAllChecked] = useState(true)
 
     useEffect(() => {
-        if (props.onLoad) props.onLoad(checkedStatuses)
-    }, [])
+        if (props.onLoad) {
+            props.onLoad(checkedStatuses)
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         props.visible &&

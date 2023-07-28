@@ -81,9 +81,9 @@ const HomeScreen = ({ navigation, route }) => {
       setVisible(false)
     }
 
-  }, [route.params, isFocused])
+  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onLoad = (user) => {
+  const onLoad = () => {
     setReload(false)
   }
 

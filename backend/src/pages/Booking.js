@@ -110,7 +110,7 @@ const Booking = () => {
                                 setPrice(price)
                             }
                             , (err) => {
-                                Helper.error()
+                                Helper.error(err)
                             }
                         )
 
@@ -423,7 +423,7 @@ const Booking = () => {
                             setNoMatch(true)
                         }
                     })
-                    .catch((err) => {
+                    .catch(() => {
                         setLoading(false)
                         setError(true)
                         setVisible(false)

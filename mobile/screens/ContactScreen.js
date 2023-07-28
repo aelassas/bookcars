@@ -26,7 +26,7 @@ const ContactScreen = ({ navigation, route }) => {
         }
     }, [route.params, isFocused])
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setReload(false)
     }
 

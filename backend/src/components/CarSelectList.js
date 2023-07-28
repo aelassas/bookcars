@@ -77,7 +77,7 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
         }
     }, [_pickupLocation, pickupLocation])
 
-    const handleChange = (values, key, reference) => {
+    const handleChange = (values) => {
         if (onChange) {
             onChange(values)
         }
@@ -146,7 +146,7 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
                     }
                 }}
                 onOpen={
-                    (event) => {
+                    () => {
                         if (!init || reload) {
                             const p = 1
                             setCars([])
@@ -168,7 +168,7 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
                     }
                 }
                 onClear={
-                    (event) => {
+                    () => {
                         setCars([])
                         setPage(1)
                         setKeyword('')

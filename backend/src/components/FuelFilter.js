@@ -80,7 +80,7 @@ const FuelFilter = (props) => {
         handleCheckGasolineChange(event)
     }
 
-    const handleUncheckAllChange = (e) => {
+    const handleUncheckAllChange = () => {
         if (allChecked) { // uncheck all
             dieselRef.current.checked = false
             gasolineRef.current.checked = false

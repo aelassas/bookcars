@@ -19,7 +19,7 @@ const DrawerContent = (props) => {
         setLanguage(props.language)
     }, [props.language])
 
-    updateLanguage = async (language) => {
+    const updateLanguage = async (language) => {
         try {
             const setLang = async (language) => {
                 i18n.locale = language
