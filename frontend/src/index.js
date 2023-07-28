@@ -53,8 +53,8 @@ if (lang !== '') {
                             Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
                         }
                     }
-                }).catch(() => {
-                    Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
+                }).catch((err) => {
+                    Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
                 })
             language = lang
         }
