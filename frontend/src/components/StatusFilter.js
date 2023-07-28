@@ -49,7 +49,7 @@ const StatusFilter = (props) => {
         }
     }
 
-    const handleUncheckAllChange = (e) => {
+    const handleUncheckAllChange = () => {
 
         if (allChecked) { // uncheck all
             refs.current.forEach(checkbox => {

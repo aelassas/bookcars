@@ -109,7 +109,7 @@ const LocationList = (props) => {
             const element = document.querySelector('body')
 
             if (element) {
-                element.onscroll = (event) => {
+                element.onscroll = () => {
                     if (fetch
                         && !loading
                         && window.scrollY > 0

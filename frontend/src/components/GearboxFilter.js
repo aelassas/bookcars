@@ -80,7 +80,7 @@ const GearboxFilter = (props) => {
         handleCheckManualChange(event)
     }
 
-    const handleUncheckAllChange = (e) => {
+    const handleUncheckAllChange = () => {
         if (allChecked) { // uncheck all
             automaticRef.current.checked = false
             manualRef.current.checked = false

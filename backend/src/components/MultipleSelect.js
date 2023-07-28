@@ -228,7 +228,7 @@ const MultipleSelect = ({
                     setInputValue(newInputValue)
                     if (onInputChange) onInputChange(event)
                 }}
-                renderOption={(props, option, { selected }) => {
+                renderOption={(props, option) => {
                     if (type === Env.RECORD_TYPE.USER) {
                         return (
                             <li {...props} className={`${props.className} ms-option`}>

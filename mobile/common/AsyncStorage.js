@@ -1,5 +1,6 @@
 import ReactAsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-root-toast'
+import i18n from '../lang/i18n'
 
 export const error = (err) => {
     if (err) console.log(err)

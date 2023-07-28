@@ -65,13 +65,13 @@ const Master = (props) => {
                             } else {
                                 exit()
                             }
-                        }).catch((err) => {
+                        }).catch(() => {
                             exit()
                         })
                     } else {
                         exit()
                     }
-                }).catch((err) => {
+                }).catch(() => {
                     exit()
                 })
         } else {
@@ -83,15 +83,16 @@ const Master = (props) => {
         e.preventDefault()
         const data = { email: user.email }
 
-        UserService.resendLink(data).then(status => {
-            if (status === 200) {
-                Helper.info(strings.VALIDATION_EMAIL_SENT)
-            } else {
+        UserService.resendLink(data)
+            .then(status => {
+                if (status === 200) {
+                    Helper.info(strings.VALIDATION_EMAIL_SENT)
+                } else {
+                    Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
+                }
+            }).catch(() => {
                 Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-            }
-        }).catch((err) => {
-            Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-        })
+            })
     }
 
     return (

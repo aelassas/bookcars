@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
 export const withFadeAnimation = (WrappedComponent, containerStyle) => {
-  return props => {
+  const FadeAnimation = (props) => {
     const opacityAnimationValue = useRef(new Animated.Value(0)).current
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export const withFadeAnimation = (WrappedComponent, containerStyle) => {
         useNativeDriver: true,
         easing: Easing.bezier(0.3, 0.58, 0.25, 0.99)
       }).start()
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <Animated.View style={[containerStyle, { opacity: opacityAnimationValue }]}>
@@ -20,4 +20,6 @@ export const withFadeAnimation = (WrappedComponent, containerStyle) => {
       </Animated.View>
     )
   }
+
+  return FadeAnimation
 }

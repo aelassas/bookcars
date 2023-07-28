@@ -14,7 +14,8 @@
     "build:android:local": "eas build --profile production --platform android --local",
     "build:ios": "eas build --profile production --platform ios",
     "eas:config": "eas build:configure",
-    "optimize": "npx expo-optimize --save"
+    "optimize": "npx expo-optimize --save",
+    "lint": "eslint --ext .js,.jsx ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -54,7 +55,10 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "eslint": "latest",
+    "eslint-plugin-react": "latest",
+    "eslint-plugin-react-hooks": "^4.6.0"
   },
   "private": true
 }

@@ -190,7 +190,7 @@ const Notifications = () => {
                         </div>
                         <div ref={notificationsListRef} className='notifications-list'>
                             {
-                                rows.map((row, index) => (
+                                rows.map((row) => (
                                     <div key={row._id} className='notification-container'>
                                         <div className='notification-checkbox'>
                                             <Checkbox checked={row.checked} onChange={(event) => {

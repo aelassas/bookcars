@@ -90,9 +90,9 @@ const SettingsScreen = ({ navigation, route }) => {
         } else {
             setVisible(false)
         }
-    }, [route.params, isFocused])
+    }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setReload(false)
     }
 
@@ -202,7 +202,7 @@ const SettingsScreen = ({ navigation, route }) => {
                 }
             })
             .catch((err) => {
-                UserService.signout(navigation, false, true)
+                Helper.error(err)
             })
 
     }
@@ -277,7 +277,7 @@ const SettingsScreen = ({ navigation, route }) => {
                                                 }
                                             }
                                             catch (err) {
-                                                await UserService.signout(navigation)
+                                                Helper.error(err)
                                             }
 
                                         }}>
@@ -391,7 +391,7 @@ const SettingsScreen = ({ navigation, route }) => {
                                             }
                                         }
                                         catch (err) {
-                                            await UserService.signout(navigation)
+                                            Helper.error(err)
                                         }
                                     }}
                                 >

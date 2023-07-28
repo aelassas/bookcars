@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node -r dotenv/config app.js",
     "dev": "nodemon -r dotenv/config app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .js ."
   },
   "author": "Akram El Assas",
   "license": "ISC",
@@ -32,6 +33,10 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
+    "eslint": "^8.45.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^3.0.1"
   }
 }

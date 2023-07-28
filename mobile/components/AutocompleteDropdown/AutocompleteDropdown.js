@@ -65,7 +65,7 @@ export const AutocompleteDropdown = memo(
           ref.current = inputRef.current
         }
       }
-    }, [inputRef])
+    }, [inputRef]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /** Set initial value */
     useEffect(() => {
@@ -84,14 +84,14 @@ export const AutocompleteDropdown = memo(
       if (dataSetItem) {
         setSelectedItem(dataSetItem)
       }
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     /** expose controller methods */
     useEffect(() => {
       if (typeof props.controller === 'function') {
         props.controller({ close, open, toggle, clear, setInputText, setItem })
       }
-    }, [isOpened, props.controller])
+    }, [isOpened, props.controller]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
       setDataSet(props.dataSet)
@@ -107,7 +107,7 @@ export const AutocompleteDropdown = memo(
       if (typeof props.onSelectItem === 'function') {
         props.onSelectItem(selectedItem)
       }
-    }, [selectedItem])
+    }, [selectedItem]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
       if (typeof props.onOpenSuggestionsList === 'function') {
@@ -119,7 +119,7 @@ export const AutocompleteDropdown = memo(
           setSearchText(selectedItem.title)
         }
       }
-    }, [isOpened])
+    }, [isOpened]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /**
      * For re-render list while typing and useFilter
@@ -128,8 +128,7 @@ export const AutocompleteDropdown = memo(
       if (props.useFilter !== false && Array.isArray(props.dataSet)) {
         setDataSet(props.dataSet.slice())
       }
-    }, [searchText])
-
+    }, [searchText]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /**
      * props.blur
@@ -239,8 +238,7 @@ export const AutocompleteDropdown = memo(
 
         return <EL />
       },
-      [props.renderItem]
-    )
+      [props.renderItem]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const scrollContent = useMemo(() => {
 
@@ -263,7 +261,8 @@ export const AutocompleteDropdown = memo(
         }
       })
       return content
-    }, [dataSet]) // don't use searchText here because it will rerender list twice every time
+    }, [dataSet]) // eslint-disable-line react-hooks/exhaustive-deps
+    // don't use searchText here because it will rerender list twice every time
 
     const onClearPress = useCallback(() => {
       setSearchText('')
@@ -278,27 +277,36 @@ export const AutocompleteDropdown = memo(
       if (typeof props.onClear === 'function') {
         props.onClear()
       }
-    }, [props.onClear, isKeyboardVisible])
+    }, [props.onClear, isKeyboardVisible]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    const debouncer = debounce(text => {
+      if (typeof props.onChangeText === 'function') {
+        props.onChangeText(text)
+      }
+    }, props.debounce ?? 0)
 
     const debouncedEvent = useCallback(
-      debounce(text => {
-        if (typeof props.onChangeText === 'function') {
-          props.onChangeText(text)
-        }
-      }, props.debounce ?? 0),
-      [props.onChangeText]
-    )
+      (text) => debouncer(text)
+      , [props.onChangeText]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // const debouncedEvent = useCallback(
+    //   debounce(text => {
+    //     if (typeof props.onChangeText === 'function') {
+    //       props.onChangeText(text)
+    //     }
+    //   }, props.debounce ?? 0),
+    //   [props.onChangeText]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onChangeText = useCallback(text => {
       setIsOpened(true)
       setSearchText(text)
       debouncedEvent(text)
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onChevronPress = useCallback(() => {
       toggle()
       Keyboard.dismiss()
-    }, [isOpened])
+    }, [isOpened]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onFocus = useCallback(
       e => {
@@ -313,8 +321,7 @@ export const AutocompleteDropdown = memo(
         }
         setIsCleared(false)
       },
-      [dataSet, clearOnFocus, props.onFocus, isCleared]
-    )
+      [dataSet, clearOnFocus, props.onFocus, isCleared]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onBlur = useCallback(
       e => {
@@ -325,8 +332,7 @@ export const AutocompleteDropdown = memo(
           props.onBlur(e)
         }
       },
-      [props.closeOnBlur, props.onBlur]
-    )
+      [props.closeOnBlur, props.onBlur]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onSubmit = useCallback(
       e => {
@@ -339,8 +345,7 @@ export const AutocompleteDropdown = memo(
           props.onSubmit(e)
         }
       },
-      [props.closeOnSubmit, props.onSubmit]
-    )
+      [props.closeOnSubmit, props.onSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <View
@@ -349,7 +354,7 @@ export const AutocompleteDropdown = memo(
         {/* it's necessary use onLayout here for Androd (bug?) */}
         <View
           ref={containerRef}
-          onLayout={_ => { }}
+          onLayout={() => { }}
           style={[styles.inputContainerStyle, props.inputContainerStyle]}
         >
           <InputComponent

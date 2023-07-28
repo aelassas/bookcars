@@ -57,7 +57,7 @@ const SignInScreen = ({ navigation, route }) => {
         if (isFocused) {
             _init()
         }
-    }, [route.params, isFocused])
+    }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const validateEmail = async () => {
         if (email) {

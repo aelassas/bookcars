@@ -60,9 +60,9 @@ const NotificationsScreen = ({ navigation, route }) => {
         } else {
             setVisible(false)
         }
-    }, [route.params, isFocused])
+    }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setReload(false)
     }
 
@@ -82,7 +82,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                 setLoading(false)
             }
             catch (err) {
-                await UserService.signout(navigation)
+                Helper.error(err)
             }
         }
     }, [user, page])
@@ -196,7 +196,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                                             }
                                                         }
                                                         catch (err) {
-                                                            await UserService.signout(navigation)
+                                                            Helper.error(err)
                                                         }
                                                     }}
                                                 >
@@ -284,7 +284,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                                                         }
                                                                     }
                                                                     catch (err) {
-                                                                        await UserService.signout(navigation)
+                                                                        Helper.error(err)
                                                                     }
                                                                 }}
                                                             >
@@ -411,7 +411,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                                     }
                                                 }
                                                 catch (err) {
-                                                    await UserService.signout(navigation)
+                                                    Helper.error(err)
                                                 }
                                             }}
                                         >

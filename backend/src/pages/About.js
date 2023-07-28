@@ -5,7 +5,7 @@ import '../assets/css/about.css'
 
 const About = () => {
 
-    const onLoad = (user) => {
+    const onLoad = () => {
     }
 
     return (

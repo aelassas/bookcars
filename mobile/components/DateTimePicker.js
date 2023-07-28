@@ -20,12 +20,12 @@ const DateTimePicker = (props) => {
         const _locale = props.locale === Env.LANGUAGE.FR ? fr : enUS
         setLoacle(_locale)
         setLabel((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || props.label)
-    }, [props.locale])
+    }, [props.locale]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         setValue(props.value)
         setLabel((value && Helper.capitalize(format(value, _format, { locale }))) || props.label)
-    }, [props.value])
+    }, [props.value]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const styles = StyleSheet.create({
         container: {

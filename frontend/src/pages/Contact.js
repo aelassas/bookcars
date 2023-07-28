@@ -5,7 +5,7 @@ import '../assets/css/contact.css'
 
 const Contact = () => {
 
-    const onLoad = (user) => {
+    const onLoad = () => {
     }
 
     return (

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Image, Pressable, StyleSheet, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Image, StyleSheet, View } from 'react-native'
 
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
@@ -29,14 +29,14 @@ const CompanyFilter = (props) => {
 
     useEffect(() => {
         init()
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         suppliers.length > 0 && props.visible &&
         <View style={{ ...styles.container, ...props.style }}>
             <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
                 <View style={styles.companies}>
-                    {suppliers.map((supplier, index) => (
+                    {suppliers.map((supplier) => (
                         <View key={supplier._id} style={styles.company}>
                             <Switch
                                 value={supplier.checked}

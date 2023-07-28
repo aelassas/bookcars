@@ -34,7 +34,7 @@ import DrawerContent from './DrawerContent'
 import CreateBookingScreen from '../screens/CreateBooking'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
-const DrawerNavigator = (props) => {
+const DrawerNavigator = () => {
     const buildLink = useLinkBuilder()
     const navigation = useNavigation()
     const routes = useNavigationState(state => state && state.routes)
@@ -207,7 +207,7 @@ const DrawerNavigator = (props) => {
                                     )
                                         ? 0 : 'auto'
                                 },
-                                drawerIcon: ({ focused }) =>
+                                drawerIcon: () =>
                                     <MaterialIcons
                                         name={drawer.iconName}
                                         size={24}

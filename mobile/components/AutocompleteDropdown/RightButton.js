@@ -4,59 +4,59 @@ import { MaterialIcons } from '@expo/vector-icons'
 import Feather from 'react-native-vector-icons/Feather'
 Feather.loadFont()
 
-export const RightButton = memo(
-  ({
-    inputHeight,
-    onClearPress,
-    onChevronPress,
-    isOpened,
-    showChevron,
-    showClear,
-    loading,
-    buttonsContainerStyle,
-    ChevronIconComponent,
-    ClearIconComponent
-  }) => {
-    const isOpenedAnimationValue = useRef(new Animated.Value(0)).current
+const RightButtonComponent = ({
+  inputHeight,
+  onClearPress,
+  onChevronPress,
+  isOpened,
+  showChevron,
+  showClear,
+  loading,
+  buttonsContainerStyle,
+  ChevronIconComponent,
+  ClearIconComponent
+}) => {
+  const isOpenedAnimationValue = useRef(new Animated.Value(0)).current
 
-    useEffect(() => {
-      Animated.timing(isOpenedAnimationValue, {
-        duration: 350,
-        toValue: isOpened ? 1 : 0,
-        useNativeDriver: true,
-        easing: Easing.bezier(0.3, 0.58, 0.25, 0.99)
-      }).start()
-    }, [isOpened])
+  useEffect(() => {
+    Animated.timing(isOpenedAnimationValue, {
+      duration: 350,
+      toValue: isOpened ? 1 : 0,
+      useNativeDriver: true,
+      easing: Easing.bezier(0.3, 0.58, 0.25, 0.99)
+    }).start()
+  }, [isOpened]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const chevronSpin = isOpenedAnimationValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '180deg']
-    })
+  const chevronSpin = isOpenedAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg']
+  })
 
-    return (
-      <View
-        style={{
-          ...styles.container,
-          height: inputHeight,
-          ...buttonsContainerStyle
-        }}>
-        {!loading && showClear && (
-          <Pressable onPress={onClearPress} hitSlop={15} style={styles.clearButton}>
-            {ClearIconComponent ?? <MaterialIcons name='clear' size={20} color='rgba(0, 0, 0, 0.54)' />}
+  return (
+    <View
+      style={{
+        ...styles.container,
+        height: inputHeight,
+        ...buttonsContainerStyle
+      }}>
+      {!loading && showClear && (
+        <Pressable onPress={onClearPress} hitSlop={15} style={styles.clearButton}>
+          {ClearIconComponent ?? <MaterialIcons name='clear' size={20} color='rgba(0, 0, 0, 0.54)' />}
+        </Pressable>
+      )}
+      {loading && <ActivityIndicator color="#999" />}
+      {showChevron && (
+        <Animated.View style={{ transform: [{ rotate: chevronSpin }] }}>
+          <Pressable onPress={onChevronPress} style={styles.chevronButton}>
+            {ChevronIconComponent ?? <Feather name="chevron-down" size={20} color="#727992" />}
           </Pressable>
-        )}
-        {loading && <ActivityIndicator color="#999" />}
-        {showChevron && (
-          <Animated.View style={{ transform: [{ rotate: chevronSpin }] }}>
-            <Pressable onPress={onChevronPress} style={styles.chevronButton}>
-              {ChevronIconComponent ?? <Feather name="chevron-down" size={20} color="#727992" />}
-            </Pressable>
-          </Animated.View>
-        )}
-      </View>
-    )
-  }
-)
+        </Animated.View>
+      )}
+    </View>
+  )
+}
+
+export const RightButton = memo(RightButtonComponent)
 
 const styles = StyleSheet.create({
   container: {

@@ -27,7 +27,8 @@
     "build:stats": "react-scripts build --stats",
     "analyze": "webpack-bundle-analyzer build/bundle-stats.json -p 5000",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext .js,.jsx ."
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +50,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "webpack-bundle-analyzer": "^4.9.0"
   }
 }

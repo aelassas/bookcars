@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import Master from './Master'
 import i18n from '../lang/i18n'
@@ -74,9 +74,9 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         } else {
             setVisible(false)
         }
-    }, [route.params, isFocused])
+    }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setReload(false)
     }
 
@@ -125,7 +125,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
             return true
         }
         catch (err) {
-            await UserService.signout(navigation, false, true)
+            Helper.error(err)
         }
     }
 

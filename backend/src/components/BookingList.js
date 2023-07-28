@@ -187,7 +187,7 @@ const BookingList = (props) => {
         return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`
     }
 
-    const getColumns = (user) => {
+    const getColumns = () => {
         const columns = [
             {
                 field: 'driver',

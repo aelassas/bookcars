@@ -126,7 +126,7 @@ const ResetPassword = () => {
                                 setNoMatch(true)
                             }
                         })
-                        .catch((err) => {
+                        .catch(() => {
                             setError(true)
                         })
                 } else {

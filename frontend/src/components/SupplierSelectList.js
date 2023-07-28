@@ -48,7 +48,7 @@ const SupplierSelectList = (props) => {
             })
     }
 
-    const handleChange = (values, key, reference) => {
+    const handleChange = (values) => {
         if (props.onChange) {
             props.onChange(values)
         }
@@ -77,7 +77,7 @@ const SupplierSelectList = (props) => {
                 }
             }}
             onFocus={
-                (event) => {
+                () => {
                     if (!init) {
                         const p = 1
                         setRows([])
@@ -102,7 +102,7 @@ const SupplierSelectList = (props) => {
                 }
             }
             onClear={
-                (event) => {
+                () => {
                     setRows([])
                     setPage(1)
                     setKeyword('')

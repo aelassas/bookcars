@@ -80,7 +80,7 @@ const AvailabilityFilter = (props) => {
         handleUnavailableChange(event)
     }
 
-    const handleUncheckAllChange = (e) => {
+    const handleUncheckAllChange = () => {
         if (allChecked) { // uncheck all
             availableRef.current.checked = false
             unavailableRef.current.checked = false

@@ -45,7 +45,7 @@ const LocationSelectList = (props) => {
         }
     }
 
-    const handleChange = (values, key, reference) => {
+    const handleChange = (values) => {
         if (props.onChange) {
             props.onChange(values)
         }
@@ -73,7 +73,7 @@ const LocationSelectList = (props) => {
                 }
             }}
             onFocus={
-                (event) => {
+                () => {
                     if (!init) {
                         const p = 1
                         setRows([])
@@ -98,7 +98,7 @@ const LocationSelectList = (props) => {
                 }
             }
             onClear={
-                (event) => {
+                () => {
                     setRows([])
                     setPage(1)
                     setKeyword('')

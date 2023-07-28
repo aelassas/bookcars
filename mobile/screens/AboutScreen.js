@@ -26,7 +26,7 @@ const AboutScreen = ({ navigation, route }) => {
         }
     }, [route.params, isFocused])
 
-    const onLoad = (user) => {
+    const onLoad = () => {
         setReload(false)
     }
 

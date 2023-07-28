@@ -175,7 +175,7 @@ const CreateCompany = () => {
                 .then(() => {
                     navigate('/suppliers')
                 })
-                .catch((err) => {
+                .catch(() => {
                     navigate('/suppliers')
                 })
         } else {
