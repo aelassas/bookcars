@@ -18,7 +18,7 @@ export const create = async (req, res) => {
     try {
         if (!body.image) {
             console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${body}`)
-            return res.status(400).send(strings.CAR_IMAGE_REQUIRED + err)
+            return res.status(400).send(strings.CAR_IMAGE_REQUIRED)
         }
 
         const car = new Car(body)

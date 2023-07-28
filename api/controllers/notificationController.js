@@ -50,7 +50,7 @@ export const notify = async (req, res) => {
                         + '---<br>'
                         + notification.message + '<br><br>'
                         + (notification.isLink ? ('<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>') : '')
-                        + '<a href="' + 'http' + (HTTPS ? 's' : '') + ':\/\/' + APP_HOST + '\/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>'
+                        + '<a href="' + 'http' + (HTTPS ? 's' : '') + '://' + APP_HOST + '/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>'
                         + '<br>---'
                         + '<br><br>' + strings.REGARDS + '<br>'
                         + '</p>'
@@ -69,8 +69,8 @@ export const notify = async (req, res) => {
                 return res.sendStatus(200)
             }
         } else {
-            console.error(strings.DB_ERROR, err)
-            res.status(400).send(strings.DB_ERROR + err)
+            console.error(strings.DB_ERROR)
+            res.status(400).send(strings.DB_ERROR)
         }
     } catch (err) {
         console.error(`[notification.notify] ${strings.DB_ERROR} ${req.body}`, err)

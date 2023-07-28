@@ -68,7 +68,7 @@ export const signup = async (req, res) => {
             subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
             html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
                 + strings.ACCOUNT_ACTIVATION_LINK
-                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + '<br><br>http' + (HTTPS ? 's' : '') + '://' + req.headers.host + '/api/confirm-email/' + user.email + '/' + token.token + '<br><br>'
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
@@ -131,7 +131,7 @@ export const adminSignup = async (req, res) => {
             subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
             html: '<p>' + strings.HELLO + user.fullName + ',<br><br>'
                 + strings.ACCOUNT_ACTIVATION_LINK
-                + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                + '<br><br>http' + (HTTPS ? 's' : '') + '://' + req.headers.host + '/api/confirm-email/' + user.email + '/' + token.token + '<br><br>'
                 + strings.REGARDS + '<br>'
                 + '</p>'
         }
@@ -528,7 +528,7 @@ export const resendLink = async (req, res) => {
                 to: user.email,
                 subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
                 html: '<p>' + strings.HELLO + user.fullName + ',<br> <br>'
-                    + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + ':\/\/' + req.headers.host + '\/api/confirm-email\/' + user.email + '\/' + token.token + '<br><br>'
+                    + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>http' + (HTTPS ? 's' : '') + '://' + req.headers.host + '/api/confirm-email/' + user.email + '/' + token.token + '<br><br>'
                     + strings.REGARDS + '<br>' + '</p>'
             }
 
