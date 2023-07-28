@@ -48,6 +48,7 @@ section.car-list .empty-list {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 207px;
     }
 
     section.car-list article div.car .car-img {
@@ -231,6 +232,7 @@ section.car-list .empty-list {
         float: left;
         padding: 10px;
         width: 28%;
+        height: 207px;
     }
 
     section.car-list article div.car .car-img {
