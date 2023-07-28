@@ -183,13 +183,15 @@ const CarList = (props) => {
             CarService.deleteCar(carId)
                 .then(status => {
                     if (status === 200) {
+                        const _rowCount = rowCount - 1
                         rows.splice(carIndex, 1)
                         setRows(rows)
-                        setRowCount(rowCount - 1)
+                        setRowCount(_rowCount)
+                        setTotalRecords(totalRecords - 1)
                         setCarId('')
                         setCarIndex(-1)
                         if (props.onDelete) {
-                            props.onDelete(rowCount)
+                            props.onDelete(_rowCount)
                         }
                         setLoading(false)
                     } else {

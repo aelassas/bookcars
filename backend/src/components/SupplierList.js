@@ -142,6 +142,7 @@ const SupplierList = (props) => {
 
                         setRows(rows)
                         setRowCount(_rowCount)
+                        setTotalRecords(totalRecords - 1)
                         setCompanyId('')
                         setCompanyIndex(-1)
                         setLoading(false)
