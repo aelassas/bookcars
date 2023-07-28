@@ -44,8 +44,8 @@ const SupplierList = (props) => {
 
         SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? data[0] : {}
-                if (_data.length === 0) _data.resultData = []
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+                
                 const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
                 let _rows = []

@@ -30,7 +30,7 @@ const UserSelectList = (props) => {
 
         UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
             .then(data => {
-                const _data = data.length > 0 ? getDrivers(data[0].resultData) : []
+                const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : []
                 const _drivers = page === 1 ? _data : [...drivers, ..._data]
 
                 setDrivers(_drivers)
