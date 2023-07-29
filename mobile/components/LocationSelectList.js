@@ -27,30 +27,27 @@ const LocationSelectList = (props) => {
         _fetch(text)
     }
 
-    const _fetch = (text) => {
-        setLoading(true)
+    const _fetch = async (text) => {
+        try {
+            setLoading(true)
 
-        LocationService.getLocations(text, 1, Env.PAGE_SIZE)
-            .then(data => {
-                if (data) {
-                    const _data = data.length > 0 ? data[0] : {}
-                    if (_data.length === 0) _data.resultData = []
-                    const _rows = _data.resultData.map(location => ({
-                        id: location._id,
-                        title: location.name
-                    }))
-                    setRows(_rows)
-                    if (props.onFetch) {
-                        props.onFetch()
-                    }
-                    setLoading(false)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            const data = await LocationService.getLocations(text, 1, Env.PAGE_SIZE)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+            
+            const _rows = _data.resultData.map(location => ({
+                id: location._id,
+                title: location.name
+            }))
+            setRows(_rows)
+            if (props.onFetch) {
+                props.onFetch()
+            }
+
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const small = props.size === 'small'

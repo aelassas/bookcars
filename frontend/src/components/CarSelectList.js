@@ -88,34 +88,35 @@ const CarSelectList = ({ label, readOnly, required, multiple, variant, value, co
         return { _id, name, image }
     })
 
-    const _fetch = (page, keyword, company, pickupLocation) => {
-        const data = { company, pickupLocation }
+    const _fetch = async (page, keyword, company, pickupLocation) => {
+        try {
+            const payload = { company, pickupLocation }
 
-        if (closeDialog) {
-            setCloseDialog(false)
+            if (closeDialog) {
+                setCloseDialog(false)
+            }
+
+            if (company === '-1' || pickupLocation === '-1') {
+                setOpenDialog(true)
+                return
+            }
+
+            setLoading(true)
+
+            const data = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE)
+            const _data = getCars(data)
+            const _cars = page === 1 ? _data : [...cars, ..._data]
+
+            setCars(_cars)
+            setFetch(data.length > 0)
+            setReload(false)
+            setInit(true)
+            setLoading(false)
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
         }
-
-        if (company === '-1' || pickupLocation === '-1') {
-            setOpenDialog(true)
-            return
-        }
-
-        setLoading(true)
-
-        CarService.getBookingCars(keyword, data, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = getCars(data)
-                const _cars = page === 1 ? _data : [...cars, ..._data]
-
-                setCars(_cars)
-                setFetch(data.length > 0)
-                setReload(false)
-                setInit(true)
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const handleCloseDialog = () => {
