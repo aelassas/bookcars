@@ -200,54 +200,54 @@ const UpdateCar = () => {
         extra === '' ? -1 : parseFloat(extra)
     )
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const minimumAgeValid = validateMinimumAge(minimumAge)
-        if (!minimumAgeValid) {
-            setFormError(true)
-            return
+            const minimumAgeValid = validateMinimumAge(minimumAge)
+            if (!minimumAgeValid) {
+                setFormError(true)
+                return
+            }
+
+            const data = {
+                _id: car._id,
+                name,
+                company,
+                minimumAge: parseInt(minimumAge),
+                locations: locations.map(l => l._id),
+                price,
+                deposit,
+                available,
+                type,
+                gearbox,
+                aircon,
+                image,
+                seats,
+                doors,
+                fuelPolicy,
+                mileage: getExtra(mileage),
+                cancellation: getExtra(cancellation),
+                amendments: getExtra(amendments),
+                theftProtection: getExtra(theftProtection),
+                collisionDamageWaiver: getExtra(collisionDamageWaiver),
+                fullInsurance: getExtra(fullInsurance),
+                additionalDriver: getExtra(additionalDriver)
+            }
+
+            const status = await CarService.update(data)
+
+            if (status === 200) {
+                Helper.info(commonStrings.UPDATED)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const data = {
-            _id: car._id,
-            name,
-            company,
-            minimumAge: parseInt(minimumAge),
-            locations: locations.map(l => l._id),
-            price,
-            deposit,
-            available,
-            type,
-            gearbox,
-            aircon,
-            image,
-            seats,
-            doors,
-            fuelPolicy,
-            mileage: getExtra(mileage),
-            cancellation: getExtra(cancellation),
-            amendments: getExtra(amendments),
-            theftProtection: getExtra(theftProtection),
-            collisionDamageWaiver: getExtra(collisionDamageWaiver),
-            fullInsurance: getExtra(fullInsurance),
-            additionalDriver: getExtra(additionalDriver)
-        }
-
-        CarService.update(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(commonStrings.UPDATED)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         if (user && user.verified) {
             setLoading(true)
             setUser(user)
@@ -255,55 +255,55 @@ const UpdateCar = () => {
             if (params.has('cr')) {
                 const id = params.get('cr')
                 if (id && id !== '') {
-                    CarService.getCar(id)
-                        .then(car => {
-                            if (car) {
-                                if (user.type === Env.RECORD_TYPE.COMPANY && user._id !== car.company._id) {
-                                    setLoading(false)
-                                    setNoMatch(true)
-                                    return
-                                }
+                    try {
+                        const car = await CarService.getCar(id)
 
-                                const company = { _id: car.company._id, name: car.company.fullName, image: car.company.avatar }
-
-                                setCar(car)
-                                setImageRequired(!car.image)
-                                setName(car.name)
-                                setCompany(company)
-                                setMinimumAge(car.minimumAge)
-                                setLocations(car.locations.map(l => {
-                                    const { _id, name } = l
-                                    return { _id, name }
-                                }))
-                                setPrice(car.price)
-                                setDeposit(car.deposit)
-                                setAvailable(car.available)
-                                setType(car.type)
-                                setGearbox(car.gearbox)
-                                setAircon(car.aircon)
-                                setSeats(car.seats)
-                                setDoors(car.doors)
-                                setFuelPolicy(car.fuelPolicy)
-                                setMileage(getCarExtra(car.mileage))
-                                setCancellation(getCarExtra(car.cancellation))
-                                setAmendments(getCarExtra(car.amendments))
-                                setTheftProtection(getCarExtra(car.theftProtection))
-                                setCollisionDamageWaiver(getCarExtra(car.collisionDamageWaiver))
-                                setFullInsurance(getCarExtra(car.fullInsurance))
-                                setAdditionalDriver(getCarExtra(car.additionalDriver))
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
+                        if (car) {
+                            if (user.type === Env.RECORD_TYPE.COMPANY && user._id !== car.company._id) {
                                 setLoading(false)
                                 setNoMatch(true)
+                                return
                             }
-                        })
-                        .catch((err) => {
-                            Helper.error(err)
+
+                            const company = { _id: car.company._id, name: car.company.fullName, image: car.company.avatar }
+
+                            setCar(car)
+                            setImageRequired(!car.image)
+                            setName(car.name)
+                            setCompany(company)
+                            setMinimumAge(car.minimumAge)
+                            setLocations(car.locations.map(l => {
+                                const { _id, name } = l
+                                return { _id, name }
+                            }))
+                            setPrice(car.price)
+                            setDeposit(car.deposit)
+                            setAvailable(car.available)
+                            setType(car.type)
+                            setGearbox(car.gearbox)
+                            setAircon(car.aircon)
+                            setSeats(car.seats)
+                            setDoors(car.doors)
+                            setFuelPolicy(car.fuelPolicy)
+                            setMileage(getCarExtra(car.mileage))
+                            setCancellation(getCarExtra(car.cancellation))
+                            setAmendments(getCarExtra(car.amendments))
+                            setTheftProtection(getCarExtra(car.theftProtection))
+                            setCollisionDamageWaiver(getCarExtra(car.collisionDamageWaiver))
+                            setFullInsurance(getCarExtra(car.fullInsurance))
+                            setAdditionalDriver(getCarExtra(car.additionalDriver))
+                            setVisible(true)
                             setLoading(false)
-                            setError(true)
-                            setVisible(false)
-                        })
+                        } else {
+                            setLoading(false)
+                            setNoMatch(true)
+                        }
+                    } catch (err) {
+                        Helper.error(err)
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
