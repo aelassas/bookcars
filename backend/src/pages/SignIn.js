@@ -40,78 +40,79 @@ const SignIn = () => {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const data = { email, password, stayConnected }
+            const data = { email, password, stayConnected }
 
-        UserService.signin(data)
-            .then(res => {
-                if (res.status === 200) {
-                    if (res.data.blacklisted) {
-                        UserService.signout(false)
-                        setError(false)
-                        setBlacklisted(true)
-                    } else {
-                        setError(false)
+            const res = await UserService.signin(data)
 
-                        const params = new URLSearchParams(window.location.search)
-
-                        if (params.has('u')) {
-                            navigate(`/user${window.location.search}`)
-                        } else if (params.has('c')) {
-                            navigate(`/supplier${window.location.search}`)
-                        } else if (params.has('cr')) {
-                            navigate(`/car${window.location.search}`)
-                        } else if (params.has('b')) {
-                            navigate(`/booking${window.location.search}`)
-                        } else {
-                            navigate('/')
-                        }
-                    }
+            if (res.status === 200) {
+                if (res.data.blacklisted) {
+                    UserService.signout(false)
+                    setError(false)
+                    setBlacklisted(true)
                 } else {
-                    setError(true)
-                    setBlacklisted(false)
+                    setError(false)
+
+                    const params = new URLSearchParams(window.location.search)
+
+                    if (params.has('u')) {
+                        navigate(`/user${window.location.search}`)
+                    } else if (params.has('c')) {
+                        navigate(`/supplier${window.location.search}`)
+                    } else if (params.has('cr')) {
+                        navigate(`/car${window.location.search}`)
+                    } else if (params.has('b')) {
+                        navigate(`/booking${window.location.search}`)
+                    } else {
+                        navigate('/')
+                    }
                 }
-            }).catch(() => {
+            } else {
                 setError(true)
                 setBlacklisted(false)
-            })
+            }
+        } catch {
+            setError(true)
+            setBlacklisted(false)
+        }
     }
 
     useEffect(() => {
-        const queryLanguage = UserService.getQueryLanguage()
+        (async function () {
+            try {
+                const queryLanguage = UserService.getQueryLanguage()
 
-        if (Env.LANGUAGES.includes(queryLanguage)) {
-            strings.setLanguage(queryLanguage)
-        } else {
-            const language = UserService.getLanguage()
-            strings.setLanguage(language)
-        }
+                if (Env.LANGUAGES.includes(queryLanguage)) {
+                    strings.setLanguage(queryLanguage)
+                } else {
+                    const language = UserService.getLanguage()
+                    strings.setLanguage(language)
+                }
 
-        const currentUser = UserService.getCurrentUser()
+                const currentUser = UserService.getCurrentUser()
 
-        if (currentUser) {
-            UserService.validateAccessToken()
-                .then(status => {
+                if (currentUser) {
+                    const status = await UserService.validateAccessToken()
+
                     if (status === 200) {
-                        UserService.getUser(currentUser.id)
-                            .then(user => {
-                                if (user) {
-                                    navigate(`/${window.location.search}`)
-                                } else {
-                                    UserService.signout()
-                                }
-                            }).catch(() => {
-                                UserService.signout()
-                            })
+                        const user = await UserService.getUser(currentUser.id)
+
+                        if (user) {
+                            navigate(`/${window.location.search}`)
+                        } else {
+                            UserService.signout()
+                        }
                     }
-                }).catch(() => {
-                    UserService.signout()
-                })
-        } else {
-            setVisible(true)
-        }
+                } else {
+                    setVisible(true)
+                }
+            } catch {
+                UserService.signout()
+            }
+        })()
     }, [navigate])
 
     return (

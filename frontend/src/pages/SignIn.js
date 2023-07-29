@@ -40,88 +40,86 @@ const SignIn = () => {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const data = { email, password, stayConnected }
+            const data = { email, password, stayConnected }
 
-        UserService.signin(data)
-            .then(res => {
-                if (res.status === 200) {
-                    if (res.data.blacklisted) {
-                        UserService.signout(false)
-                        setError(false)
-                        setBlacklisted(true)
-                    } else {
-                        setError(false)
+            const res = await UserService.signin(data)
+            if (res.status === 200) {
+                if (res.data.blacklisted) {
+                    UserService.signout(false)
+                    setError(false)
+                    setBlacklisted(true)
+                } else {
+                    setError(false)
 
-                        const params = new URLSearchParams(window.location.search)
-                        if (params.has('from')) {
-                            const from = params.get('from')
-                            if (from === 'create-booking') {
-                                navigate(`/create-booking${window.location.search}`)
-                            } else {
-                                navigate('/')
-                            }
+                    const params = new URLSearchParams(window.location.search)
+                    if (params.has('from')) {
+                        const from = params.get('from')
+                        if (from === 'create-booking') {
+                            navigate(`/create-booking${window.location.search}`)
                         } else {
                             navigate('/')
                         }
+                    } else {
+                        navigate('/')
                     }
-                } else {
-                    setError(true)
-                    setBlacklisted(false)
                 }
-            }).catch(() => {
+            } else {
                 setError(true)
                 setBlacklisted(false)
-            })
+            }
+        } catch {
+            setError(true)
+            setBlacklisted(false)
+        }
     }
 
     useEffect(() => {
-        const queryLanguage = UserService.getQueryLanguage()
+        (async function () {
+            try {
+                const queryLanguage = UserService.getQueryLanguage()
 
-        if (Env.LANGUAGES.includes(queryLanguage)) {
-            strings.setLanguage(queryLanguage)
-        } else {
-            const language = UserService.getLanguage()
-            strings.setLanguage(language)
-        }
+                if (Env.LANGUAGES.includes(queryLanguage)) {
+                    strings.setLanguage(queryLanguage)
+                } else {
+                    const language = UserService.getLanguage()
+                    strings.setLanguage(language)
+                }
 
-        const currentUser = UserService.getCurrentUser()
+                const currentUser = UserService.getCurrentUser()
 
-        if (currentUser) {
-            UserService.validateAccessToken()
-                .then(status => {
+                if (currentUser) {
+                    const status = await UserService.validateAccessToken()
+
                     if (status === 200) {
-                        UserService.getUser(currentUser.id)
-                            .then(user => {
-                                if (user) {
-                                    const params = new URLSearchParams(window.location.search)
-                                    if (params.has('from')) {
-                                        const from = params.get('from')
-                                        if (from === 'create-booking') {
-                                            navigate(`/create-booking${window.location.search}`)
-                                        } else {
-                                            navigate(`/${window.location.search}`)
-                                        }
-                                    } else {
-                                        navigate(`/${window.location.search}`)
-                                    }
+                        const user = await UserService.getUser(currentUser.id)
+
+                        if (user) {
+                            const params = new URLSearchParams(window.location.search)
+                            if (params.has('from')) {
+                                const from = params.get('from')
+                                if (from === 'create-booking') {
+                                    navigate(`/create-booking${window.location.search}`)
                                 } else {
-                                    UserService.signout()
+                                    navigate(`/${window.location.search}`)
                                 }
-                            })
-                            .catch(() => {
-                                UserService.signout()
-                            })
+                            } else {
+                                navigate(`/${window.location.search}`)
+                            }
+                        } else {
+                            UserService.signout()
+                        }
                     }
-                })
-                .catch(() => {
-                    UserService.signout()
-                })
-        } else {
-            setVisible(true)
-        }
+                } else {
+                    setVisible(true)
+                }
+            } catch {
+                UserService.signout()
+            }
+        })()
     }, [navigate])
 
     return (
