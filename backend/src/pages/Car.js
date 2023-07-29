@@ -67,25 +67,24 @@ const Car = () => {
         setOpenDeleteDialog(false)
     }
 
-    const handleConfirmDelete = () => {
-        setLoading(true)
-        setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            setOpenDeleteDialog(false)
 
-        CarService.deleteCar(car._id)
-            .then(status => {
-                if (status === 200) {
-                    navigate('/cars')
-                } else {
-                    Helper.error()
-                    setLoading(false)
-                }
-            }).catch((err) => {
-                Helper.error(err)
+            const status = await CarService.deleteCar(car._id)
+
+            if (status === 200) {
+                navigate('/cars')
+            } else {
+                Helper.error()
                 setLoading(false)
-            })
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         setLoading(true)
         setUser(user)
 
@@ -93,38 +92,39 @@ const Car = () => {
         if (user && user.verified && params.has('cr')) {
             const id = params.get('cr')
             if (id && id !== '') {
-                CarService.getCar(id)
-                    .then(car => {
-                        if (car) {
-                            if (user.type === Env.RECORD_TYPE.ADMIN) {
-                                SupplierService.getAllCompanies()
-                                    .then(companies => {
-                                        const companyIds = Helper.flattenCompanies(companies)
-                                        setCompanies(companyIds)
-                                        setCar(car)
-                                        setVisible(true)
-                                        setLoading(false)
-                                    })
-                                    .catch((err) => Helper.error(err))
-                            } else if (car.company._id === user._id) {
-                                setCompanies([user._id])
+                try {
+                    const car = await CarService.getCar(id)
+
+                    if (car) {
+                        if (user.type === Env.RECORD_TYPE.ADMIN) {
+                            try {
+                                const companies = await SupplierService.getAllCompanies()
+                                const companyIds = Helper.flattenCompanies(companies)
+                                setCompanies(companyIds)
                                 setCar(car)
                                 setVisible(true)
                                 setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
+                            } catch (err) {
+                                Helper.error(err)
                             }
+                        } else if (car.company._id === user._id) {
+                            setCompanies([user._id])
+                            setCar(car)
+                            setVisible(true)
+                            setLoading(false)
                         } else {
                             setLoading(false)
                             setNoMatch(true)
                         }
-                    })
-                    .catch(() => {
+                    } else {
                         setLoading(false)
-                        setError(true)
-                        setVisible(false)
-                    })
+                        setNoMatch(true)
+                    }
+                } catch {
+                    setLoading(false)
+                    setError(true)
+                    setVisible(false)
+                }
             } else {
                 setLoading(false)
                 setNoMatch(true)
