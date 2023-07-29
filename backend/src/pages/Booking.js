@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
@@ -77,6 +77,30 @@ const Booking = () => {
     const [_phoneValid, set_PhoneValid] = useState(true)
     const [_birthDateValid, set_BirthDateValid] = useState(true)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+
+    const [adFullName, setAdFullName] = useState(false)
+    const [adEmail, setAdEmail] = useState(false)
+    const [adPhone, setAdPhone] = useState(false)
+    const [adBirthDate, setAdBirthDate] = useState(false)
+    const adRequired = adFullName || adEmail || adPhone || adBirthDate
+
+    const adValidate = (val) => !!val
+
+    useEffect(() => {
+        setAdFullName(adValidate(_fullName))
+    }, [_fullName])
+
+    useEffect(() => {
+        setAdEmail(adValidate(_email))
+    }, [_email])
+
+    useEffect(() => {
+        setAdPhone(adValidate(_phone))
+    }, [_phone])
+
+    useEffect(() => {
+        setAdBirthDate(adValidate(_birthDate))
+    }, [_birthDate])
 
     const handleCompanyChange = (values) => {
         setCompany(values.length > 0 ? values[0] : null)
@@ -308,7 +332,7 @@ const Booking = () => {
         try {
             e.preventDefault()
 
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 const emailValid = _validateEmail(_email)
                 if (!emailValid) {
                     return
@@ -345,7 +369,7 @@ const Booking = () => {
             }
 
             let _additionalDriver
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 _additionalDriver = {
                     fullName: _fullName,
                     email: _email,
@@ -354,9 +378,9 @@ const Booking = () => {
                 }
             }
 
-            const status = await BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
+            const _status = await BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
 
-            if (status === 200) {
+            if (_status === 200) {
                 if (!additionalDriver) {
                     set_FullName('')
                     set_Email('')
@@ -649,7 +673,7 @@ const Booking = () => {
                                             type="text"
                                             label={commonStrings.FULL_NAME}
                                             value={_fullName}
-                                            required
+                                            required={adRequired}
                                             onChange={(e) => {
                                                 set_FullName(e.target.value)
                                             }}
@@ -673,7 +697,7 @@ const Booking = () => {
                                                     set_EmailValid(true)
                                                 }
                                             }}
-                                            required
+                                            required={adRequired}
                                             autoComplete="off"
                                         />
                                         <FormHelperText error={!_emailValid}>
@@ -697,7 +721,7 @@ const Booking = () => {
                                                     set_PhoneValid(true)
                                                 }
                                             }}
-                                            required
+                                            required={adRequired}
                                             autoComplete="off"
                                         />
                                         <FormHelperText error={!_phoneValid}>
@@ -709,7 +733,7 @@ const Booking = () => {
                                             label={commonStrings.BIRTH_DATE}
                                             value={_birthDate}
                                             error={!_birthDateValid}
-                                            required
+                                            required={adRequired}
                                             onChange={(_birthDate) => {
                                                 const _birthDateValid = _validateBirthDate(_birthDate)
                                                 set_BirthDate(_birthDate)
