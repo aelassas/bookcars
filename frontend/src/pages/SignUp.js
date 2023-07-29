@@ -159,105 +159,101 @@ const SignUp = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        const emailValid = await validateEmail(email)
-        if (!emailValid) {
-            return
-        }
+            const emailValid = await validateEmail(email)
+            if (!emailValid) {
+                return
+            }
 
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
-            return
-        }
+            const phoneValid = validatePhone(phone)
+            if (!phoneValid) {
+                return
+            }
 
-        const birthDateValid = validateBirthDate(birthDate)
-        if (!birthDateValid) {
-            return
-        }
+            const birthDateValid = validateBirthDate(birthDate)
+            if (!birthDateValid) {
+                return
+            }
 
-        if (password.length < 6) {
-            setPasswordError(true)
-            setRecaptchaError(false)
-            setPasswordsDontMatch(false)
-            setError(false)
-            setTosError(false)
-            return
-        }
-
-        if (password !== confirmPassword) {
-            setPasswordError(false)
-            setRecaptchaError(false)
-            setPasswordsDontMatch(true)
-            setError(false)
-            setTosError(false)
-            return
-        }
-
-        if (Env.RECAPTCHA_ENABLED && !reCaptchaToken) {
-            setPasswordError(false)
-            setRecaptchaError(true)
-            setPasswordsDontMatch(false)
-            setError(false)
-            setTosError(false)
-            return
-        }
-
-        if (!tosChecked) {
-            setPasswordError(false)
-            setRecaptchaError(false)
-            setPasswordsDontMatch(false)
-            setError(false)
-            setTosError(true)
-            return
-        }
-
-        setLoading(true)
-
-        const data = {
-            email: email,
-            phone: phone,
-            password: password,
-            fullName: fullName,
-            birthDate: birthDate,
-            language: UserService.getLanguage()
-        }
-
-        UserService.signup(data)
-            .then(status => {
-                if (status === 200) {
-                    UserService.signin({ email: email, password: password })
-                        .then(signInResult => {
-                            if (signInResult.status === 200) {
-                                navigate(`/${window.location.search}`)
-                            } else {
-                                setPasswordError(false)
-                                setRecaptchaError(false)
-                                setPasswordsDontMatch(false)
-                                setError(true)
-                                setTosError(false)
-                            }
-                        }).catch(() => {
-                            setPasswordError(false)
-                            setRecaptchaError(false)
-                            setPasswordsDontMatch(false)
-                            setError(true)
-                            setTosError(false)
-                        })
-                } else
-                    setPasswordError(false)
+            if (password.length < 6) {
+                setPasswordError(true)
                 setRecaptchaError(false)
                 setPasswordsDontMatch(false)
-                setError(true)
+                setError(false)
                 setTosError(false)
-            })
-            .catch(() => {
+                return
+            }
+
+            if (password !== confirmPassword) {
+                setPasswordError(false)
+                setRecaptchaError(false)
+                setPasswordsDontMatch(true)
+                setError(false)
+                setTosError(false)
+                return
+            }
+
+            if (Env.RECAPTCHA_ENABLED && !reCaptchaToken) {
+                setPasswordError(false)
+                setRecaptchaError(true)
+                setPasswordsDontMatch(false)
+                setError(false)
+                setTosError(false)
+                return
+            }
+
+            if (!tosChecked) {
+                setPasswordError(false)
+                setRecaptchaError(false)
+                setPasswordsDontMatch(false)
+                setError(false)
+                setTosError(true)
+                return
+            }
+
+            setLoading(true)
+
+            const data = {
+                email: email,
+                phone: phone,
+                password: password,
+                fullName: fullName,
+                birthDate: birthDate,
+                language: UserService.getLanguage()
+            }
+
+            const status = await UserService.signup(data)
+
+            if (status === 200) {
+                const signInResult = await UserService.signin({ email: email, password: password })
+
+                if (signInResult.status === 200) {
+                    navigate(`/${window.location.search}`)
+                } else {
+                    setPasswordError(false)
+                    setRecaptchaError(false)
+                    setPasswordsDontMatch(false)
+                    setError(true)
+                    setTosError(false)
+                }
+            } else {
                 setPasswordError(false)
                 setRecaptchaError(false)
                 setPasswordsDontMatch(false)
                 setError(true)
                 setTosError(false)
-            })
+            }
+
+        } catch (err) {
+            Helper.error(err)
+            setPasswordError(false)
+            setRecaptchaError(false)
+            setPasswordsDontMatch(false)
+            setError(true)
+            setTosError(false)
+        }
     }
 
     const onLoad = (user) => {
