@@ -16,7 +16,7 @@ const Master = (props) => {
         }
     }, [props.user, user])
 
-    useInit(() => {
+    useInit(async () => {
         const exit = () => {
             if (props.strict) {
                 UserService.signout(false, true)
@@ -34,55 +34,54 @@ const Master = (props) => {
         const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-            UserService.validateAccessToken()
-                .then(status => {
-                    if (status === 200) {
-                        UserService.getUser(currentUser.id)
-                            .then(user => {
-                                if (user) {
+            try {
+                const status = await UserService.validateAccessToken()
 
-                                    if (user.blacklisted) {
-                                        exit()
-                                        return
-                                    }
+                if (status === 200) {
+                    const user = await UserService.getUser(currentUser.id)
 
-                                    setUser(user)
-                                    setLoading(false)
+                    if (user) {
 
-                                    if (props.onLoad) {
-                                        props.onLoad(user)
-                                    }
-                                } else {
-                                    exit()
-                                }
-                            }).catch(() => {
-                                exit()
-                            })
+                        if (user.blacklisted) {
+                            exit()
+                            return
+                        }
+
+                        setUser(user)
+                        setLoading(false)
+
+                        if (props.onLoad) {
+                            props.onLoad(user)
+                        }
                     } else {
                         exit()
                     }
-                }).catch(() => {
+                } else {
                     exit()
-                })
+                }
+            } catch {
+                exit()
+            }
         } else {
             exit()
         }
     }, [])
 
-    const handleResend = (e) => {
+    const handleResend = async (e) => {
         e.preventDefault()
-        const data = { email: user.email }
 
-        UserService.resendLink(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(strings.VALIDATION_EMAIL_SENT)
-                } else {
-                    Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-                }
-            }).catch(() => {
+        try {
+            const data = { email: user.email }
+
+            const status = await UserService.resendLink(data)
+            if (status === 200) {
+                Helper.info(strings.VALIDATION_EMAIL_SENT)
+            } else {
                 Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-            })
+            }
+        } catch (err) {
+            Helper.error(err, strings.VALIDATION_EMAIL_ERROR)
+        }
     }
 
     return (
