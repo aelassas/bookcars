@@ -80,28 +80,27 @@ const ForgotPassword = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        const emailValid = await validateEmail(email)
-        if (!emailValid) {
-            return
-        }
+            const emailValid = await validateEmail(email)
+            if (!emailValid) {
+                return
+            }
 
-        UserService.resend(email, true, Env.APP_TYPE)
-            .then(status => {
-                if (status === 200) {
-                    setError(false)
-                    setEmailValid(true)
-                    setSent(true)
-                } else {
-                    setError(true)
-                    setEmailValid(true)
-                }
-            })
-            .catch(() => {
+            const status = await UserService.resend(email, true, Env.APP_TYPE)
+            if (status === 200) {
+                setError(false)
+                setEmailValid(true)
+                setSent(true)
+            } else {
                 setError(true)
                 setEmailValid(true)
-            })
+            }
+        } catch {
+            setError(true)
+            setEmailValid(true)
+        }
     }
 
     const onLoad = (user) => {
