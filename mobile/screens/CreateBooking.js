@@ -91,6 +91,32 @@ const CreateBookingScreen = ({ navigation, route }) => {
     const [_birthDateRequired, set_BirthDateRequired] = useState(false)
     const [_birthDateValid, set_BirthDateValid] = useState(true)
 
+    const [adFullName, setAdFullName] = useState(false)
+    const [adEmail, setAdEmail] = useState(false)
+    const [adPhone, setAdPhone] = useState(false)
+    const [adBirthDate, setAdBirthDate] = useState(false)
+    const adRequired = adFullName || adEmail || adPhone || adBirthDate
+
+    const adValidate = (val) => !!val
+
+    useEffect(() => {
+        setAdFullName(adValidate(_fullName))
+    }, [_fullName])
+
+    useEffect(() => {
+        setAdEmail(adValidate(_email))
+    }, [_email])
+
+    useEffect(() => {
+        setAdPhone(adValidate(_phone))
+    }, [_phone])
+
+    useEffect(() => {
+        setAdBirthDate(adValidate(_birthDate))
+    }, [_birthDate])
+
+    // TODO adRequired
+
     const fullNameRef = useRef(null)
     const emailRef = useRef(null)
     const phoneRef = useRef(null)
@@ -648,7 +674,7 @@ const CreateBookingScreen = ({ navigation, route }) => {
                 }
             }
 
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 const fullNameValid = _validateFullName()
                 if (!fullNameValid) {
                     return
@@ -729,7 +755,7 @@ const CreateBookingScreen = ({ navigation, route }) => {
                 price
             }
 
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 _additionalDriver = {
                     fullName: _fullName,
                     email: _email,
@@ -958,8 +984,8 @@ const CreateBookingScreen = ({ navigation, route }) => {
                                             style={styles.component}
                                             label={i18n.t('FULL_NAME')}
                                             value={_fullName}
-                                            error={_fullNameRequired}
-                                            helperText={(_fullNameRequired && i18n.t('REQUIRED')) || ''}
+                                            error={adRequired && _fullNameRequired}
+                                            helperText={(adRequired && _fullNameRequired && i18n.t('REQUIRED')) || ''}
                                             onChangeText={(text) => {
                                                 set_FullName(text)
                                                 set_FullNameRequired(false)
@@ -973,10 +999,10 @@ const CreateBookingScreen = ({ navigation, route }) => {
                                             style={styles.component}
                                             label={i18n.t('EMAIL')}
                                             value={_email}
-                                            error={_emailRequired || !_emailValid}
+                                            error={adRequired && (_emailRequired || !_emailValid)}
                                             helperText={
-                                                ((_emailRequired && i18n.t('REQUIRED')) || '')
-                                                || ((!_emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
+                                                ((adRequired && _emailRequired && i18n.t('REQUIRED')) || '')
+                                                || ((adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || '')
                                             }
                                             onChangeText={(text) => {
                                                 set_Email(text)
@@ -992,10 +1018,10 @@ const CreateBookingScreen = ({ navigation, route }) => {
                                             style={styles.component}
                                             label={i18n.t('PHONE')}
                                             value={_phone}
-                                            error={_phoneRequired || !_phoneValid}
+                                            error={adRequired && (_phoneRequired || !_phoneValid)}
                                             helperText={
-                                                ((_phoneRequired && i18n.t('REQUIRED')) || '')
-                                                || ((!_phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
+                                                ((adRequired && _phoneRequired && i18n.t('REQUIRED')) || '')
+                                                || ((adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || '')
                                             }
                                             onChangeText={(text) => {
                                                 set_Phone(text)
@@ -1012,10 +1038,10 @@ const CreateBookingScreen = ({ navigation, route }) => {
                                             style={styles.date}
                                             label={i18n.t('BIRTH_DATE')}
                                             value={_birthDate}
-                                            error={_birthDateRequired || !_birthDateValid}
+                                            error={adRequired && (_birthDateRequired || !_birthDateValid)}
                                             helperText={
-                                                ((_birthDateRequired && i18n.t('REQUIRED')) || '')
-                                                || ((!_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || '')
+                                                ((adRequired && _birthDateRequired && i18n.t('REQUIRED')) || '')
+                                                || ((adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || '')
                                             }
                                             onChange={(date) => {
                                                 set_BirthDate(date)

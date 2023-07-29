@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Env from '../config/env.config'
 import * as BookingService from '../services/BookingService'
 import { strings as commonStrings } from '../lang/common'
@@ -93,6 +93,30 @@ const CreateBooking = () => {
     const [_phoneValid, set_PhoneValid] = useState(true)
     const [_birthDateValid, set_BirthDateValid] = useState(true)
     const [payLater, setPayLater] = useState(false)
+
+    const [adFullName, setAdFullName] = useState(false)
+    const [adEmail, setAdEmail] = useState(false)
+    const [adPhone, setAdPhone] = useState(false)
+    const [adBirthDate, setAdBirthDate] = useState(false)
+    const adRequired = adFullName || adEmail || adPhone || adBirthDate
+
+    const adValidate = (val) => !!val
+
+    useEffect(() => {
+        setAdFullName(adValidate(_fullName))
+    }, [_fullName])
+
+    useEffect(() => {
+        setAdEmail(adValidate(_email))
+    }, [_email])
+
+    useEffect(() => {
+        setAdPhone(adValidate(_phone))
+    }, [_phone])
+
+    useEffect(() => {
+        setAdBirthDate(adValidate(_birthDate))
+    }, [_birthDate])
 
     const handleCancellationChange = (e) => {
         const cancellation = e.target.checked
@@ -497,7 +521,7 @@ const CreateBooking = () => {
                 }
             }
 
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 const emailValid = _validateEmail(_email)
                 if (!emailValid) {
                     return
@@ -538,7 +562,7 @@ const CreateBooking = () => {
                 price
             }
 
-            if (additionalDriver) {
+            if (adRequired && additionalDriver) {
                 _additionalDriver = {
                     fullName: _fullName,
                     email: _email,
@@ -916,7 +940,7 @@ const CreateBooking = () => {
                                                 <OutlinedInput
                                                     type="text"
                                                     label={commonStrings.FULL_NAME}
-                                                    required
+                                                    required={adRequired}
                                                     onChange={(e) => {
                                                         set_FullName(e.target.value)
                                                     }}
@@ -939,7 +963,7 @@ const CreateBooking = () => {
                                                             set_EmailValid(true)
                                                         }
                                                     }}
-                                                    required
+                                                    required={adRequired}
                                                     autoComplete="off"
                                                 />
                                                 <FormHelperText error={!_emailValid}>
@@ -962,7 +986,7 @@ const CreateBooking = () => {
                                                             set_PhoneValid(true)
                                                         }
                                                     }}
-                                                    required
+                                                    required={adRequired}
                                                     autoComplete="off"
                                                 />
                                                 <FormHelperText error={!_phoneValid}>
@@ -974,7 +998,7 @@ const CreateBooking = () => {
                                                     label={commonStrings.BIRTH_DATE}
                                                     variant='outlined'
                                                     error={!_birthDateValid}
-                                                    required
+                                                    required={adRequired}
                                                     onChange={(_birthDate) => {
                                                         const _birthDateValid = _validateBirthDate(_birthDate)
 
