@@ -19,7 +19,7 @@ const Master = (props) => {
         }
     }, [props.user, user])
 
-    useInit(() => {
+    useInit(async () => {
         const exit = () => {
             if (props.strict) {
                 UserService.signout()
@@ -36,63 +36,63 @@ const Master = (props) => {
         const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-            UserService.validateAccessToken()
-                .then(status => {
-                    if (status === 200) {
-                        UserService.getUser(currentUser.id).then(user => {
-                            if (user) {
+            try {
+                const status = await UserService.validateAccessToken()
 
-                                if (user.blacklisted) {
-                                    setUser(user)
-                                    setUnauthorized(true)
-                                    setLoading(false)
-                                    return
-                                }
+                if (status === 200) {
+                    const user = await UserService.getUser(currentUser.id)
 
-                                if (props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
-                                    setUser(user)
-                                    setUnauthorized(true)
-                                    setLoading(false)
-                                    return
-                                }
+                    if (user) {
 
-                                setUser(user)
-                                setLoading(false)
+                        if (user.blacklisted) {
+                            setUser(user)
+                            setUnauthorized(true)
+                            setLoading(false)
+                            return
+                        }
 
-                                if (props.onLoad) {
-                                    props.onLoad(user)
-                                }
-                            } else {
-                                exit()
-                            }
-                        }).catch(() => {
-                            exit()
-                        })
+                        if (props.admin && user.type !== Env.RECORD_TYPE.ADMIN) {
+                            setUser(user)
+                            setUnauthorized(true)
+                            setLoading(false)
+                            return
+                        }
+
+                        setUser(user)
+                        setLoading(false)
+
+                        if (props.onLoad) {
+                            props.onLoad(user)
+                        }
                     } else {
                         exit()
                     }
-                }).catch(() => {
+                } else {
                     exit()
-                })
+                }
+            } catch {
+                exit()
+            }
         } else {
             exit()
         }
     })
 
-    const handleResend = (e) => {
+    const handleResend = async (e) => {
         e.preventDefault()
-        const data = { email: user.email }
 
-        UserService.resendLink(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(strings.VALIDATION_EMAIL_SENT)
-                } else {
-                    Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-                }
-            }).catch(() => {
+        try {
+            const data = { email: user.email }
+
+            const status = await UserService.resendLink(data)
+            if (status === 200) {
+                Helper.info(strings.VALIDATION_EMAIL_SENT)
+            } else {
                 Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
-            })
+            }
+        } catch (err) {
+            Helper.error(err, strings.VALIDATION_EMAIL_ERROR)
+        }
     }
 
     return (

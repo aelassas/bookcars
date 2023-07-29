@@ -37,32 +37,36 @@ if (lang !== '') {
             lang = Env.DEFAULT_LANGUAGE
         }
     }
-    if (user) {
-        language = user.language
-        if (lang && lang.length === 2 && user.language !== lang) {
-            const data = {
-                id: user.id,
-                language: lang
-            }
 
-            UserService.validateAccessToken()
-                .then(async status => {
-                    if (status === 200) {
-                        const status = await UserService.updateLanguage(data)
-                        if (status !== 200) {
-                            Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
-                        }
+    try {
+        if (user) {
+            language = user.language
+            if (lang && lang.length === 2 && user.language !== lang) {
+                const data = {
+                    id: user.id,
+                    language: lang
+                }
+
+                const status = await UserService.validateAccessToken()
+
+                if (status === 200) {
+                    const status = await UserService.updateLanguage(data)
+                    if (status !== 200) {
+                        Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
                     }
-                }).catch((err) => {
-                    Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
-                })
+                }
+
+                language = lang
+            }
+        } else if (lang) {
             language = lang
         }
-    } else if (lang) {
-        language = lang
+        UserService.setLanguage(language)
+        commonStrings.setLanguage(language)
     }
-    UserService.setLanguage(language)
-    commonStrings.setLanguage(language)
+    catch (err) {
+        Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
+    }
 }
 
 language = UserService.getLanguage()
