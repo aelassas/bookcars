@@ -59,28 +59,28 @@ const User = () => {
         setOpenDeleteDialog(true)
     }
 
-    const handleConfirmDelete = () => {
-        setLoading(true)
-        setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            setOpenDeleteDialog(false)
 
-        UserService.deleteUsers([user._id]).then(status => {
+            const status = await UserService.deleteUsers([user._id])
+
             if (status === 200) {
                 navigate('/users')
             } else {
                 Helper.error()
                 setLoading(false)
             }
-        }).catch((err) => {
+        } catch (err) {
             Helper.error(err)
-            setLoading(false)
-        })
+        }
     }
 
     const handleCancelDelete = () => {
         setOpenDeleteDialog(false)
     }
 
-    const onLoad = (loggedUser) => {
+    const onLoad = async (loggedUser) => {
         if (loggedUser && loggedUser.verified) {
             setLoading(true)
 
@@ -88,39 +88,37 @@ const User = () => {
             if (params.has('u')) {
                 const id = params.get('u')
                 if (id && id !== '') {
-                    UserService.getUser(id)
-                        .then(user => {
-                            if (user) {
+                    try {
+                        const user = await UserService.getUser(id)
 
-                                const setState = (companies) => {
-                                    setCompanies(companies)
-                                    setLoggedUser(loggedUser)
-                                    setUser(user)
-                                    setVisible(true)
-                                    setLoading(false)
-                                }
+                        if (user) {
 
-                                const admin = Helper.admin(loggedUser)
-                                if (admin) {
-                                    SupplierService.getAllCompanies()
-                                        .then(companies => {
-                                            const companyIds = Helper.flattenCompanies(companies)
-                                            setState(companyIds)
-                                        })
-                                        .catch((err) => Helper.error(err))
-                                } else {
-                                    setState([loggedUser._id])
-                                }
-                            } else {
+                            const setState = (companies) => {
+                                setCompanies(companies)
+                                setLoggedUser(loggedUser)
+                                setUser(user)
+                                setVisible(true)
                                 setLoading(false)
-                                setNoMatch(true)
                             }
-                        })
-                        .catch((err) => {
+
+                            const admin = Helper.admin(loggedUser)
+                            if (admin) {
+                                const companies = await SupplierService.getAllCompanies()
+                                const companyIds = Helper.flattenCompanies(companies)
+                                setState(companyIds)
+                            } else {
+                                setState([loggedUser._id])
+                            }
+                        } else {
                             setLoading(false)
-                            setVisible(false)
-                            Helper.error(err)
-                        })
+                            setNoMatch(true)
+                        }
+
+                    } catch (err) {
+                        Helper.error(err)
+                        setLoading(false)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
