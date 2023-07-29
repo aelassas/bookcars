@@ -34,42 +34,28 @@ const Avatar = (props) => {
         const reader = new FileReader()
         const file = e.target.files[0]
 
-        reader.onloadend = () => {
-            UserService.updateAvatar(_id, file).then(
-                status => {
-                    if (status === 200) {
-                        UserService.getUser(_id)
-                            .then(user => {
-                                if (user) {
-                                    setUser(user)
-                                    if (props.onChange) {
-                                        props.onChange(user)
-                                    }
-                                } else {
-                                    Helper.error()
-                                    if (props.onChange) {
-                                        props.onChange(user)
-                                    }
-                                }
-                            }).catch((err) => {
-                                Helper.error(err)
-                                if (props.onChange) {
-                                    props.onChange(user)
-                                }
-                            })
+        reader.onloadend = async () => {
+            try {
+                const status = await UserService.updateAvatar(_id, file)
+
+                if (status === 200) {
+                    const user = await UserService.getUser(_id)
+
+                    if (user) {
+                        setUser(user)
                     } else {
                         Helper.error()
-                        if (props.onChange) {
-                            props.onChange(user)
-                        }
                     }
+                } else {
+                    Helper.error()
                 }
-            ).catch((err) => {
+            } catch (err) {
                 Helper.error(err)
+            } finally {
                 if (props.onChange) {
                     props.onChange(user)
                 }
-            })
+            }
         }
 
         reader.readAsDataURL(file)
@@ -100,31 +86,29 @@ const Avatar = (props) => {
         closeDialog()
     }
 
-    const handleDelete = () => {
-        const { _id } = user
-        UserService.deleteAvatar(_id)
-            .then(status => {
-                if (status === 200) {
-                    UserService.getUser(_id)
-                        .then(user => {
-                            if (user) {
-                                setUser(user)
-                                if (props.onChange) {
-                                    props.onChange(user)
-                                }
-                                closeDialog()
-                            } else {
-                                Helper.error()
-                            }
-                        }).catch((err) => {
-                            Helper.error(err)
-                        })
+    const handleDelete = async () => {
+        try {
+            const { _id } = user
+            const status = await UserService.deleteAvatar(_id)
+
+            if (status === 200) {
+                const user = await UserService.getUser(_id)
+
+                if (user) {
+                    setUser(user)
+                    if (props.onChange) {
+                        props.onChange(user)
+                    }
+                    closeDialog()
                 } else {
                     Helper.error()
                 }
-            }).catch((err) => {
-                Helper.error(err)
-            })
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     useEffect(() => {
