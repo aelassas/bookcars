@@ -66,43 +66,43 @@ const CarList = (props) => {
         }
     }, [fetch, loading, page])
 
-    const _fetch = (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
-        setLoading(true)
-        const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit }
+    const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
+        try {
+            setLoading(true)
+            const payload = { companies, pickupLocation, fuel, gearbox, mileage, deposit }
 
-        CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                
-                const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
-                let _rows = []
-                if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-                    _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
-                } else {
-                    _rows = _data.resultData
-                }
+            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-                setRows(_rows)
-                setRowCount(((page - 1) * Env.CARS_PAGE_SIZE) + _rows.length)
-                setTotalRecords(totalRecords)
-                setFetch(_data.resultData.length > 0)
+            let _rows = []
+            if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+                _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+            } else {
+                _rows = _data.resultData
+            }
 
-                if (
-                    ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
-                    || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
-                ) {
-                    window.scrollTo(0, 0)
-                }
+            setRows(_rows)
+            setRowCount(((page - 1) * Env.CARS_PAGE_SIZE) + _rows.length)
+            setTotalRecords(totalRecords)
+            setFetch(_data.resultData.length > 0)
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (
+                ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+                || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
+            ) {
+                window.scrollTo(0, 0)
+            }
+
+            if (props.onLoad) {
+                props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
