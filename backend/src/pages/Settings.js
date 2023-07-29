@@ -32,7 +32,7 @@ const Settings = () => {
     const [phoneValid, setPhoneValid] = useState(true)
     const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-    const handleOnChangeFullName = e => {
+    const handleOnChangeFullName = (e) => {
         setFullName(e.target.value)
     }
 
@@ -49,7 +49,7 @@ const Settings = () => {
         }
     }
 
-    const handlePhoneChange = e => {
+    const handlePhoneChange = (e) => {
         setPhone(e.target.value)
 
         if (!e.target.value) {
@@ -57,29 +57,31 @@ const Settings = () => {
         }
     }
 
-    const handleOnChangeLocation = e => {
+    const handleOnChangeLocation = (e) => {
         setLocation(e.target.value)
     }
 
-    const handleOnChangeBio = e => {
+    const handleOnChangeBio = (e) => {
         setBio(e.target.value)
     }
 
-    const handleEmailNotificationsChange = (e) => {
-        setEnableEmailNotifications(e.target.checked)
+    const handleEmailNotificationsChange = async (e) => {
+        try {
+            setEnableEmailNotifications(e.target.checked)
 
-        user.enableEmailNotifications = e.target.checked
+            user.enableEmailNotifications = e.target.checked
 
-        UserService.updateEmailNotifications(user)
-            .then(status => {
-                if (status === 200) {
-                    setUser(user)
-                    Helper.info(strings.SETTINGS_UPDATED)
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            const status = await UserService.updateEmailNotifications(user)
+
+            if (status === 200) {
+                setUser(user)
+                Helper.info(strings.SETTINGS_UPDATED)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const onBeforeUpload = () => {
@@ -97,33 +99,33 @@ const Settings = () => {
         setLoading(false)
     }
 
-    const handleSubmit = e => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
-            return
+            const phoneValid = validatePhone(phone)
+            if (!phoneValid) {
+                return
+            }
+
+            const data = {
+                _id: user._id,
+                fullName,
+                phone,
+                location,
+                bio
+            }
+
+            const status = await UserService.updateUser(data)
+
+            if (status === 200) {
+                Helper.info(strings.SETTINGS_UPDATED)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const data = {
-            _id: user._id,
-            fullName,
-            phone,
-            location,
-            bio
-        }
-
-        UserService.updateUser(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(strings.SETTINGS_UPDATED)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const onLoad = (user) => {
