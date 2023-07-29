@@ -92,66 +92,60 @@ const SignUp = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        const emailValid = await validateEmail(email)
-        if (!emailValid) {
-            return
-        }
+            const emailValid = await validateEmail(email)
+            if (!emailValid) {
+                return
+            }
 
-        if (password.length < 6) {
-            setPasswordError(true)
-            setPasswordsDontMatch(false)
-            setError(false)
-            return
-        }
+            if (password.length < 6) {
+                setPasswordError(true)
+                setPasswordsDontMatch(false)
+                setError(false)
+                return
+            }
 
-        if (password !== confirmPassword) {
-            setPasswordError(false)
-            setPasswordsDontMatch(true)
-            setError(false)
-            return
-        }
+            if (password !== confirmPassword) {
+                setPasswordError(false)
+                setPasswordsDontMatch(true)
+                setError(false)
+                return
+            }
 
-        setLoading(true)
+            setLoading(true)
 
-        const data = {
-            email: email,
-            password: password,
-            fullName: fullName,
-            language: UserService.getLanguage()
-        }
+            const data = {
+                email: email,
+                password: password,
+                fullName: fullName,
+                language: UserService.getLanguage()
+            }
 
-        UserService.signup(data)
-            .then(status => {
-                if (status === 200) {
-                    UserService.signin({ email: email, password: password })
-                        .then(signInResult => {
-                            if (signInResult.status === 200) {
-                                navigate(`/${window.location.search}`)
-                            } else {
-                                setPasswordError(false)
-                                setPasswordsDontMatch(false)
-                                setError(true)
-                            }
-                        }).catch((err) => {
-                            Helper.error(err)
-                            setPasswordError(false)
-                            setPasswordsDontMatch(false)
-                            setError(true)
-                        })
+            const status = await UserService.signup(data)
+
+            if (status === 200) {
+                const signInResult = await UserService.signin({ email: email, password: password })
+
+                if (signInResult.status === 200) {
+                    navigate(`/${window.location.search}`)
                 } else {
                     setPasswordError(false)
+                    setPasswordsDontMatch(false)
+                    setError(true)
                 }
-
-                setPasswordsDontMatch(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
+            } else {
                 setPasswordError(false)
-                setPasswordsDontMatch(false)
-                setError(true)
-            })
+            }
+
+            setPasswordsDontMatch(false)
+        } catch (err) {
+            Helper.error(err)
+            setPasswordError(false)
+            setPasswordsDontMatch(false)
+            setError(true)
+        }
     }
 
     const onLoad = (user) => {
