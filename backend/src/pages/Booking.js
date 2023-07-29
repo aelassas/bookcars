@@ -94,40 +94,40 @@ const Booking = () => {
         setDropOffLocation(values.length > 0 ? values[0] : null)
     }
 
-    const handleCarSelectListChange = useCallback((values) => {
-        const newCar = values.length > 0 ? values[0] : null
+    const handleCarSelectListChange = useCallback(async (values) => {
+        try {
+            const newCar = values.length > 0 ? values[0] : null
 
-        if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
-            CarService.getCar(newCar._id)
-                .then(car => {
-                    if (car) {
-                        const _booking = Helper.clone(booking)
-                        _booking.car = car
-                        Helper.price(
-                            _booking
-                            , car
-                            , (price) => {
-                                setPrice(price)
-                            }
-                            , (err) => {
-                                Helper.error(err)
-                            }
-                        )
+            if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
+                const car = await CarService.getCar(newCar._id)
 
-                        setBooking(_booking)
-                        setCar(newCar)
-                    } else {
-                        Helper.error()
-                    }
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        } else if (!newCar) {
-            setPrice(0)
-            setCar(newCar)
-        } else {
-            setCar(newCar)
+                if (car) {
+                    const _booking = Helper.clone(booking)
+                    _booking.car = car
+                    Helper.price(
+                        _booking
+                        , car
+                        , (price) => {
+                            setPrice(price)
+                        }
+                        , (err) => {
+                            Helper.error(err)
+                        }
+                    )
+
+                    setBooking(_booking)
+                    setCar(newCar)
+                } else {
+                    Helper.error()
+                }
+            } else if (!newCar) {
+                setPrice(0)
+                setCar(newCar)
+            } else {
+                setCar(newCar)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
     }, [car, booking])
 
@@ -246,20 +246,20 @@ const Booking = () => {
         setOpenDeleteDialog(false)
     }
 
-    const handleConfirmDelete = () => {
-        setLoading(true)
-        setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            setOpenDeleteDialog(false)
 
-        BookingService.deleteBookings([booking._id])
-            .then(status => {
-                if (status === 200) {
-                    navigate('/')
-                } else {
-                    err(true)
-                }
-            }).catch((err) => {
-                Helper.error(err)
-            })
+            const status = await BookingService.deleteBookings([booking._id])
+
+            if (status === 200) {
+                navigate('/')
+            } else {
+                err(true)
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const _validateEmail = (email) => {
@@ -304,75 +304,75 @@ const Booking = () => {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        if (additionalDriver) {
-            const emailValid = _validateEmail(_email)
-            if (!emailValid) {
-                return
-            }
-
-            const phoneValid = _validatePhone(_phone)
-            if (!phoneValid) {
-                return
-            }
-
-            const birthDateValid = _validateBirthDate(_birthDate)
-            if (!birthDateValid) {
-                return
-            }
-        }
-
-        const _booking = {
-            _id: booking._id,
-            company: company._id,
-            car: car._id,
-            driver: driver._id,
-            pickupLocation: pickupLocation._id,
-            dropOffLocation: dropOffLocation._id,
-            from,
-            to,
-            status,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price
-        }
-
-        let _additionalDriver
-        if (additionalDriver) {
-            _additionalDriver = {
-                fullName: _fullName,
-                email: _email,
-                phone: _phone,
-                birthDate: _birthDate
-            }
-        }
-
-        BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
-            .then(status => {
-                if (status === 200) {
-                    if (!additionalDriver) {
-                        set_FullName('')
-                        set_Email('')
-                        set_Phone('')
-                        set_BirthDate(null)
-                    }
-                    Helper.info(commonStrings.UPDATED)
-                } else {
-                    err()
+            if (additionalDriver) {
+                const emailValid = _validateEmail(_email)
+                if (!emailValid) {
+                    return
                 }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+
+                const phoneValid = _validatePhone(_phone)
+                if (!phoneValid) {
+                    return
+                }
+
+                const birthDateValid = _validateBirthDate(_birthDate)
+                if (!birthDateValid) {
+                    return
+                }
+            }
+
+            const _booking = {
+                _id: booking._id,
+                company: company._id,
+                car: car._id,
+                driver: driver._id,
+                pickupLocation: pickupLocation._id,
+                dropOffLocation: dropOffLocation._id,
+                from,
+                to,
+                status,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver,
+                price
+            }
+
+            let _additionalDriver
+            if (additionalDriver) {
+                _additionalDriver = {
+                    fullName: _fullName,
+                    email: _email,
+                    phone: _phone,
+                    birthDate: _birthDate
+                }
+            }
+
+            const status = await BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
+
+            if (status === 200) {
+                if (!additionalDriver) {
+                    set_FullName('')
+                    set_Email('')
+                    set_Phone('')
+                    set_BirthDate(null)
+                }
+                Helper.info(commonStrings.UPDATED)
+            } else {
+                err()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         setUser(user)
         setLoading(true)
 
@@ -380,54 +380,54 @@ const Booking = () => {
         if (params.has('b')) {
             const id = params.get('b')
             if (id && id !== '') {
-                BookingService.getBooking(id)
-                    .then(booking => {
-                        if (booking) {
+                try {
+                    const booking = await BookingService.getBooking(id)
 
-                            if (!Helper.admin(user) && booking.company._id !== user._id) {
-                                setLoading(false)
-                                setNoMatch(true)
-                                return
-                            }
+                    if (booking) {
 
-                            setBooking(booking)
-                            setPrice(booking.price)
-                            setLoading(false)
-                            setVisible(true)
-                            setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
-                            setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
-                            setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
-                            setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
-                            setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
-                            setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
-                            setFrom(new Date(booking.from))
-                            setMinDate(new Date(booking.from))
-                            setTo(new Date(booking.to))
-                            setStatus(booking.status)
-                            setCancellation(booking.cancellation)
-                            setAmendments(booking.amendments)
-                            setTheftProtection(booking.theftProtection)
-                            setCollisionDamageWaiver(booking.collisionDamageWaiver)
-                            setFullInsurance(booking.fullInsurance)
-                            setAdditionalDriver(booking.additionalDriver)
-
-                            if (booking.additionalDriver && booking._additionalDriver) {
-                                set_FullName(booking._additionalDriver.fullName)
-                                set_Email(booking._additionalDriver.email)
-                                set_Phone(booking._additionalDriver.phone)
-                                set_BirthDate(new Date(booking._additionalDriver.birthDate))
-                            }
-
-                        } else {
+                        if (!Helper.admin(user) && booking.company._id !== user._id) {
                             setLoading(false)
                             setNoMatch(true)
+                            return
                         }
-                    })
-                    .catch(() => {
+
+                        setBooking(booking)
+                        setPrice(booking.price)
                         setLoading(false)
-                        setError(true)
-                        setVisible(false)
-                    })
+                        setVisible(true)
+                        setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
+                        setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
+                        setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
+                        setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
+                        setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
+                        setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
+                        setFrom(new Date(booking.from))
+                        setMinDate(new Date(booking.from))
+                        setTo(new Date(booking.to))
+                        setStatus(booking.status)
+                        setCancellation(booking.cancellation)
+                        setAmendments(booking.amendments)
+                        setTheftProtection(booking.theftProtection)
+                        setCollisionDamageWaiver(booking.collisionDamageWaiver)
+                        setFullInsurance(booking.fullInsurance)
+                        setAdditionalDriver(booking.additionalDriver)
+
+                        if (booking.additionalDriver && booking._additionalDriver) {
+                            set_FullName(booking._additionalDriver.fullName)
+                            set_Email(booking._additionalDriver.email)
+                            set_Phone(booking._additionalDriver.phone)
+                            set_BirthDate(new Date(booking._additionalDriver.birthDate))
+                        }
+
+                    } else {
+                        setLoading(false)
+                        setNoMatch(true)
+                    }
+                } catch (err) {
+                    setLoading(false)
+                    setError(true)
+                    setVisible(false)
+                }
             } else {
                 setLoading(false)
                 setNoMatch(true)
@@ -436,7 +436,6 @@ const Booking = () => {
             setLoading(false)
             setNoMatch(true)
         }
-
     }
 
     const days = Helper.days(from, to)

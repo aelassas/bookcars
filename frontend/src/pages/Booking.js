@@ -64,32 +64,33 @@ const Booking = () => {
         setDropOffLocation(values.length > 0 ? values[0] : null)
     }
 
-    const handleCarSelectListChange = (values) => {
-        const newCar = values.length > 0 ? values[0] : null
+    const handleCarSelectListChange = async (values) => {
+        try {
+            const newCar = values.length > 0 ? values[0] : null
 
-        if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
-            CarService.getCar(newCar._id)
-                .then(car => {
-                    if (car) {
-                        const _booking = Helper.clone(booking)
-                        _booking.car = car
-                        const price = Helper.price(car, from, to, _booking)
+            if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
+                const car = await CarService.getCar(newCar._id)
 
-                        setBooking(_booking)
-                        setPrice(price)
-                        setCar(newCar)
-                    } else {
-                        Helper.error()
-                    }
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        } else if (!newCar) {
-            setPrice(0)
-            setCar(newCar)
-        } else {
-            setCar(newCar)
+                if (car) {
+                    const _booking = Helper.clone(booking)
+                    _booking.car = car
+                    const price = Helper.price(car, from, to, _booking)
+
+                    setBooking(_booking)
+                    setPrice(price)
+                    setCar(newCar)
+                } else {
+                    Helper.error()
+                }
+
+            } else if (!newCar) {
+                setPrice(0)
+                setCar(newCar)
+            } else {
+                setCar(newCar)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
     }
 
@@ -151,42 +152,43 @@ const Booking = () => {
         setAdditionalDriver(booking.additionalDriver)
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const data = {
-            _id: booking._id,
-            company: company._id,
-            car: car._id,
-            driver: driver._id,
-            pickupLocation: pickupLocation._id,
-            dropOffLocation: dropOffLocation._id,
-            from,
-            to,
-            status,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price
+            const data = {
+                _id: booking._id,
+                company: company._id,
+                car: car._id,
+                driver: driver._id,
+                pickupLocation: pickupLocation._id,
+                dropOffLocation: dropOffLocation._id,
+                from,
+                to,
+                status,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver,
+                price
+            }
+
+            const status = await BookingService.update(data)
+
+            if (status === 200) {
+                Helper.info(commonStrings.UPDATED)
+            } else {
+                Helper.error()
+            }
+
+        } catch (err) {
+            Helper.error(err)
         }
-
-        BookingService.update(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(commonStrings.UPDATED)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         setUser(user)
         setLoading(true)
 
@@ -194,38 +196,37 @@ const Booking = () => {
         if (params.has('b')) {
             const id = params.get('b')
             if (id && id !== '') {
-                BookingService.getBooking(id)
-                    .then(booking => {
-                        if (booking) {
-                            setBooking(booking)
-                            setPrice(booking.price)
-                            setLoading(false)
-                            setVisible(true)
-                            setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
-                            setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
-                            setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
-                            setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
-                            setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
-                            setFrom(new Date(booking.from))
-                            setMinDate(new Date(booking.from))
-                            setTo(new Date(booking.to))
-                            setStatus(booking.status)
-                            setCancellation(booking.cancellation)
-                            setAmendments(booking.amendments)
-                            setTheftProtection(booking.theftProtection)
-                            setCollisionDamageWaiver(booking.collisionDamageWaiver)
-                            setFullInsurance(booking.fullInsurance)
-                            setAdditionalDriver(booking.additionalDriver)
-                        } else {
-                            setLoading(false)
-                            setNoMatch(true)
-                        }
-                    })
-                    .catch(() => {
+                try {
+                    const booking = await BookingService.getBooking(id)
+                    if (booking) {
+                        setBooking(booking)
+                        setPrice(booking.price)
                         setLoading(false)
-                        setError(true)
-                        setVisible(false)
-                    })
+                        setVisible(true)
+                        setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
+                        setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
+                        setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
+                        setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
+                        setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
+                        setFrom(new Date(booking.from))
+                        setMinDate(new Date(booking.from))
+                        setTo(new Date(booking.to))
+                        setStatus(booking.status)
+                        setCancellation(booking.cancellation)
+                        setAmendments(booking.amendments)
+                        setTheftProtection(booking.theftProtection)
+                        setCollisionDamageWaiver(booking.collisionDamageWaiver)
+                        setFullInsurance(booking.fullInsurance)
+                        setAdditionalDriver(booking.additionalDriver)
+                    } else {
+                        setLoading(false)
+                        setNoMatch(true)
+                    }
+                } catch (err) {
+                    setLoading(false)
+                    setError(true)
+                    setVisible(false)
+                }
             } else {
                 setLoading(false)
                 setNoMatch(true)
