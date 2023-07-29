@@ -32,12 +32,12 @@ const Avatar = (props) => {
     const [avatar, setAvatar] = useState(null)
     const [loading, setIsLoading] = useState(true)
 
-    const validate = (file, onValid) => {
+    const validate = async (file, onValid) => {
         if (props.width && props.height) {
             const _URL = window.URL || window.webkitURL
             const img = new Image()
             const objectUrl = _URL.createObjectURL(file)
-            img.onload = () => {
+            img.onload = async () => {
                 if (props.width !== img.width || props.height !== img.height) {
                     if (props.onValidate) {
                         props.onValidate(false)
@@ -47,7 +47,7 @@ const Avatar = (props) => {
                         props.onValidate(true)
                     }
                     if (onValid) {
-                        onValid()
+                        await onValid()
                     }
 
                 }
@@ -70,111 +70,104 @@ const Avatar = (props) => {
         const reader = new FileReader()
         const file = e.target.files[0]
 
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             if (props.type === Env.RECORD_TYPE.ADMIN
                 || props.type === Env.RECORD_TYPE.COMPANY
                 || props.type === Env.RECORD_TYPE.USER) {
                 if (props.mode === 'create') {
-                    const createAvatar = () => {
-                        UserService.createAvatar(file)
-                            .then(data => {
-                                setAvatar(data)
+                    const createAvatar = async () => {
+                        try {
+                            const data = await UserService.createAvatar(file)
 
-                                if (props.onChange) {
-                                    props.onChange(data)
-                                }
-                            })
-                            .catch((err) => {
-                                Helper.error(err)
-                            })
+                            setAvatar(data)
+
+                            if (props.onChange) {
+                                props.onChange(data)
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
-                    validate(file, createAvatar)
+                    await validate(file, createAvatar)
                 } else if (record && props.mode === 'update') {
 
-                    const updateAvatar = () => {
-                        const { _id } = record
+                    const updateAvatar = async () => {
+                        try {
+                            const { _id } = record
 
-                        UserService.updateAvatar(_id, file)
-                            .then(status => {
-                                if (status === 200) {
-                                    UserService.getUser(_id)
-                                        .then(user => {
-                                            if (user) {
-                                                setRecord(user)
-                                                setAvatar(user.avatar)
+                            const status = await UserService.updateAvatar(_id, file)
 
-                                                if (props.onChange) {
-                                                    props.onChange(user.avatar)
-                                                }
-                                            } else {
-                                                Helper.error()
-                                            }
-                                        }).catch((err) => {
-                                            Helper.error(err)
-                                        })
+                            if (status === 200) {
+                                const user = await UserService.getUser(_id)
+
+                                if (user) {
+                                    setRecord(user)
+                                    setAvatar(user.avatar)
+
+                                    if (props.onChange) {
+                                        props.onChange(user.avatar)
+                                    }
                                 } else {
                                     Helper.error()
                                 }
-                            })
-                            .catch((err) => {
-                                Helper.error(err)
-                            })
+                            } else {
+                                Helper.error()
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
-                    validate(file, updateAvatar)
+                    await validate(file, updateAvatar)
 
                 }
             } else if (props.type === Env.RECORD_TYPE.CAR) {
                 if (props.mode === 'create') {
-                    const createAvatar = () => {
-                        CarService.createImage(file)
-                            .then(data => {
-                                setAvatar(data)
+                    const createAvatar = async () => {
+                        try {
+                            const data = await CarService.createImage(file)
+                            setAvatar(data)
 
-                                if (props.onChange) {
-                                    props.onChange(data)
-                                }
-                            })
-                            .catch((err) => {
-                                Helper.error(err)
-                            })
+                            if (props.onChange) {
+                                props.onChange(data)
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
-                    validate(file, createAvatar)
+                    await validate(file, createAvatar)
                 } else if (props.mode === 'update') {
 
-                    const updateAvatar = () => {
-                        const { _id } = record
+                    const updateAvatar = async () => {
+                        try {
+                            const { _id } = record
 
-                        CarService.updateImage(_id, file)
-                            .then(status => {
-                                if (status === 200) {
-                                    CarService.getCar(_id)
-                                        .then(car => {
-                                            if (car) {
-                                                setRecord(car)
-                                                setAvatar(car.image)
+                            const status = await CarService.updateImage(_id, file)
 
-                                                if (props.onChange) {
-                                                    props.onChange(car)
-                                                }
-                                            } else {
-                                                Helper.error()
-                                            }
-                                        }).catch((err) => {
-                                            Helper.error(err)
-                                        })
+                            if (status === 200) {
+                                const car = await CarService.getCar(_id)
+
+                                if (car) {
+                                    setRecord(car)
+                                    setAvatar(car.image)
+
+                                    if (props.onChange) {
+                                        props.onChange(car)
+                                    }
                                 } else {
                                     Helper.error()
                                 }
-                            })
-                            .catch((err) => {
-                                Helper.error(err)
-                            })
+                            } else {
+                                Helper.error()
+                            }
+                        } catch (err) {
+                            Helper.error(err)
+                        }
                     }
 
-                    validate(file, updateAvatar)
+                    await validate(file, updateAvatar)
                 }
             }
 
@@ -213,40 +206,65 @@ const Avatar = (props) => {
         closeDialog()
     }
 
-    const handleDelete = () => {
-        if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
-            if (record && props.mode === 'update') {
-                const { _id } = record
-                UserService.deleteAvatar(_id)
-                    .then(status => {
-                        if (status === 200) {
-                            UserService.getUser(_id)
-                                .then(user => {
-                                    if (user) {
-                                        setRecord(user)
-                                        setAvatar(null)
+    const handleDelete = async () => {
+        try {
+            if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
+                if (record && props.mode === 'update') {
+                    const { _id } = record
+                    const status = await UserService.deleteAvatar(_id)
 
-                                        if (props.onChange) {
-                                            props.onChange(null)
-                                        }
-                                        closeDialog()
-                                    } else {
-                                        Helper.error()
-                                    }
-                                }).catch((err) => {
-                                    Helper.error(err)
-                                })
+                    if (status === 200) {
+                        const user = await UserService.getUser(_id)
+
+                        if (user) {
+                            setRecord(user)
+                            setAvatar(null)
+
+                            if (props.onChange) {
+                                props.onChange(null)
+                            }
+                            closeDialog()
                         } else {
                             Helper.error()
                         }
-                    })
-                    .catch((err) => {
-                        Helper.error(err)
-                    })
-            } else if (!record && props.mode === 'create') {
-                UserService.deleteTempAvatar(avatar)
-                    .then(status => {
-                        if (status === 200) {
+                    } else {
+                        Helper.error()
+                    }
+                } else if (!record && props.mode === 'create') {
+                    const status = await UserService.deleteTempAvatar(avatar)
+
+                    if (status === 200) {
+                        setAvatar(null)
+                        if (props.onChange) {
+                            props.onChange(null)
+                        }
+                        closeDialog()
+                    } else {
+                        Helper.error()
+                    }
+                }
+            } else if (props.type === Env.RECORD_TYPE.CAR) {
+                if (!record && props.mode === 'create') {
+                    const status = await CarService.deleteTempImage(avatar)
+
+                    if (status === 200) {
+                        setAvatar(null)
+                        if (props.onChange) {
+                            props.onChange(null)
+                        }
+                        closeDialog()
+                    } else {
+                        Helper.error()
+                    }
+                } else if (record && props.mode === 'update') {
+                    const { _id } = record
+                    const status = await CarService.deleteImage(_id)
+
+                    if (status === 200) {
+                        const car = await UserService.getUser(_id)
+
+                        if (car) {
+                            setRecord(car)
                             setAvatar(null)
                             if (props.onChange) {
                                 props.onChange(null)
@@ -255,56 +273,13 @@ const Avatar = (props) => {
                         } else {
                             Helper.error()
                         }
-                    })
-                    .catch((err) => {
-                        Helper.error(err)
-                    })
+                    } else {
+                        Helper.error()
+                    }
+                }
             }
-        } else if (props.type === Env.RECORD_TYPE.CAR) {
-            if (!record && props.mode === 'create') {
-                CarService.deleteTempImage(avatar)
-                    .then(status => {
-                        if (status === 200) {
-                            setAvatar(null)
-                            if (props.onChange) {
-                                props.onChange(null)
-                            }
-                            closeDialog()
-                        } else {
-                            Helper.error()
-                        }
-                    })
-                    .catch((err) => {
-                        Helper.error(err)
-                    })
-            } else if (record && props.mode === 'update') {
-                const { _id } = record
-                CarService.deleteImage(_id)
-                    .then(status => {
-                        if (status === 200) {
-                            UserService.getUser(_id)
-                                .then(car => {
-                                    if (car) {
-                                        setRecord(car)
-                                        setAvatar(null)
-                                        if (props.onChange) {
-                                            props.onChange(null)
-                                        }
-                                        closeDialog()
-                                    } else {
-                                        Helper.error()
-                                    }
-                                }).catch((err) => {
-                                    Helper.error(err)
-                                })
-                        } else {
-                            Helper.error()
-                        }
-                    })
-                    .catch((err) => {
-                        Helper.error(err)
-                    })
-            }
+        } catch (err) {
+            Helper.error(err)
         }
     }
 
