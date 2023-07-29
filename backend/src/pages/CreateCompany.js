@@ -6,6 +6,7 @@ import { strings } from '../lang/create-company'
 import * as UserService from '../services/UserService'
 import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import {
     Input,
@@ -370,6 +371,7 @@ const CreateCompany = () => {
 
                 </Paper>
             </div>
+            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
         </Master>
     )
 }
