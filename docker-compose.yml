@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+   api:
+     build:
+      context: ./api
+      dockerfile: ./Dockerfile
+     env_file: ./api/.env.docker
+     restart: always
+     ports:
+       - 4002:4002
+     depends_on:
+       - mongo
+     volumes:
+       - cdn:/var/www/cdn/bookcars
+
+   mongo:
+     image: mongo:latest
+     restart: always
+     environment:
+        # provide your credentials here
+        MONGO_INITDB_ROOT_USERNAME: admin
+        MONGO_INITDB_ROOT_PASSWORD: PASSWORD
+     ports:
+       - 27017:27017
+
+   backend:
+     build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+     depends_on:
+       - api  
+     ports:
+       - 3001:80
+
+   frontend:
+     build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+     depends_on:
+       - api 
+     ports:
+       - 80:80
+     volumes:
+       - cdn:/var/www/cdn/bookcars
+
+volumes:
+   cdn:
+
+# sudo docker compose build --no-cache
+# sudo docker compose down
+# sudo docker compose up -d
+# sudo docker compose up
