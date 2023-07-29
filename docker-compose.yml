@@ -28,7 +28,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfile
      depends_on:
-       - api  
+       - api
      ports:
        - 3001:80
 
@@ -37,7 +37,7 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfile
      depends_on:
-       - api 
+       - api
      ports:
        - 80:80
      volumes:
