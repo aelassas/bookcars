@@ -69,22 +69,20 @@ const Company = () => {
         setOpenDeleteDialog(true)
     }
 
-    const handleConfirmDelete = () => {
-        setLoading(true)
-        setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            setOpenDeleteDialog(false)
 
-        SupplierService.deleteCompany(company._id)
-            .then(status => {
-                if (status === 200) {
-                    navigate('/suppliers')
-                } else {
-                    Helper.error()
-                    setLoading(false)
-                }
-            }).catch((err) => {
-                Helper.error(err)
-                setLoading(false)
-            })
+            const status = await SupplierService.deleteCompany(company._id)
+
+            if (status === 200) {
+                navigate('/suppliers')
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const handleCancelDelete = () => {
@@ -99,7 +97,7 @@ const Company = () => {
         setRowCount(rowCount)
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         setUser(user)
 
         if (user && user.verified) {
@@ -107,23 +105,23 @@ const Company = () => {
             if (params.has('c')) {
                 const id = params.get('c')
                 if (id && id !== '') {
-                    SupplierService.getCompany(id)
-                        .then(company => {
-                            if (company) {
-                                setCompany(company)
-                                setCompanies([company._id])
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch(() => {
+                    try {
+                        const company = await SupplierService.getCompany(id)
+
+                        if (company) {
+                            setCompany(company)
+                            setCompanies([company._id])
+                            setVisible(true)
                             setLoading(false)
-                            setError(true)
-                            setVisible(false)
-                        })
+                        } else {
+                            setLoading(false)
+                            setNoMatch(true)
+                        }
+                    } catch {
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
