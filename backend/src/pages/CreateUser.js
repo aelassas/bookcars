@@ -209,18 +209,15 @@ const CreateUser = () => {
         }
     }
 
-    const handleCancel = () => {
-        if (avatar) {
-            setLoading(true)
-
-            UserService.deleteTempAvatar(avatar)
-                .then(() => {
-                    navigate('/users')
-                })
-                .catch(() => {
-                    navigate('/users')
-                })
-        } else {
+    const handleCancel = async () => {
+        try {
+            if (avatar) {
+                await UserService.deleteTempAvatar(avatar)
+                navigate('/users')
+            } else {
+                navigate('/users')
+            }
+        } catch {
             navigate('/users')
         }
     }
@@ -236,60 +233,57 @@ const CreateUser = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        if (type === Env.RECORD_TYPE.COMPANY) {
-            const fullNameValid = await validateFullName(fullName)
+            if (type === Env.RECORD_TYPE.COMPANY) {
+                const fullNameValid = await validateFullName(fullName)
 
-            if (!fullNameValid) {
+                if (!fullNameValid) {
+                    return
+                }
+            } else {
+                setFullNameError(false)
+            }
+
+            const emailValid = await validateEmail(email)
+            if (!emailValid) {
                 return
             }
-        } else {
-            setFullNameError(false)
+
+            const phoneValid = validatePhone(phone)
+            if (!phoneValid) {
+                return
+            }
+
+            const birthDateValid = validateBirthDate(birthDate)
+            if (!birthDateValid) {
+                return
+            }
+
+            if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
+                setAvatarError(true)
+                setError(false)
+                return
+            }
+
+            const language = UserService.getLanguage()
+            const company = admin ? undefined : user._id
+
+            const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company }
+
+            if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
+
+            const status = await UserService.create(data)
+
+            if (status === 200) {
+                navigate('/users')
+            } else {
+                setError(true)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const emailValid = await validateEmail(email)
-        if (!emailValid) {
-            return
-        }
-
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
-            return
-        }
-
-        const birthDateValid = validateBirthDate(birthDate)
-        if (!birthDateValid) {
-            return
-        }
-
-        if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
-            setAvatarError(true)
-            setError(false)
-            return
-        }
-
-        setLoading(true)
-
-        const language = UserService.getLanguage()
-        const company = admin ? undefined : user._id
-
-        const data = { email, phone, location, bio, fullName, type, avatar, birthDate, language, company }
-
-        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
-
-        UserService.create(data)
-            .then(status => {
-                if (status === 200) {
-                    navigate('/users')
-                } else {
-                    setError(true)
-                    setLoading(false)
-                }
-            }).catch((err) => {
-                Helper.error(err)
-            })
-
     }
 
 
