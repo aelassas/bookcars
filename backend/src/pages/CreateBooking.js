@@ -204,20 +204,19 @@ const CreateBooking = () => {
         Helper.price(
             booking,
             null,
-            (price) => {
-                booking.price = price
+            async (price) => {
+                try {
+                    booking.price = price
 
-                BookingService.create({ booking, additionalDriver: _additionalDriver })
-                    .then(booking => {
-                        if (booking && booking._id) {
-                            navigate('/')
-                        } else {
-                            Helper.error()
-                        }
-                    })
-                    .catch((err) => {
-                        Helper.error(err)
-                    })
+                    const booking = await BookingService.create({ booking, additionalDriver: _additionalDriver })
+                    if (booking && booking._id) {
+                        navigate('/')
+                    } else {
+                        Helper.error()
+                    }
+                } catch (err) {
+                    Helper.error(err)
+                }
             },
             (err) => {
                 Helper.error(err)
