@@ -166,45 +166,43 @@ const SettingsScreen = ({ navigation, route }) => {
         setEnableEmailNotifications(checked)
     }
 
-    const onPressSave = () => {
+    const onPressSave = async () => {
+        try {
+            const fullNameValid = validateFullName()
+            if (!fullNameValid) {
+                return
+            }
 
-        const fullNameValid = validateFullName()
-        if (!fullNameValid) {
-            return
+            const phoneValid = validatePhone()
+            if (!phoneValid) {
+                return
+            }
+
+            const birthDateValid = validateBirthDate()
+            if (!birthDateValid) {
+                return
+            }
+
+            const data = {
+                _id: user._id,
+                fullName,
+                birthDate,
+                phone,
+                location,
+                bio,
+                enableEmailNotifications
+            }
+
+            const status = await UserService.updateUser(data)
+
+            if (status === 200) {
+                Helper.toast(i18n.t('SETTINGS_UPDATED'))
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const phoneValid = validatePhone()
-        if (!phoneValid) {
-            return
-        }
-
-        const birthDateValid = validateBirthDate()
-        if (!birthDateValid) {
-            return
-        }
-
-        const data = {
-            _id: user._id,
-            fullName,
-            birthDate,
-            phone,
-            location,
-            bio,
-            enableEmailNotifications
-        }
-
-        UserService.updateUser(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.toast(i18n.t('SETTINGS_UPDATED'))
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
-
     }
 
     const onPressChangePassword = () => {
