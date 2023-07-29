@@ -11,8 +11,6 @@ export const joinURL = (part1, part2) => {
     return part1 + '/' + part2
 }
 
-export const clone = (obj) => JSON.parse(JSON.stringify(obj))
-
 export const exists = async (path) => {
     try {
         await fs.access(path)
