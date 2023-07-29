@@ -208,8 +208,8 @@ const CreateBooking = () => {
                 try {
                     booking.price = price
 
-                    const booking = await BookingService.create({ booking, additionalDriver: _additionalDriver })
-                    if (booking && booking._id) {
+                    const _booking = await BookingService.create({ booking, additionalDriver: _additionalDriver })
+                    if (_booking && _booking._id) {
                         navigate('/')
                     } else {
                         Helper.error()
