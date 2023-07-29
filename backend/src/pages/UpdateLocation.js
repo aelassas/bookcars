@@ -96,7 +96,7 @@ const UpdateLocation = () => {
         }
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         if (user && user.verified) {
             setLoading(true)
 
@@ -104,31 +104,32 @@ const UpdateLocation = () => {
             if (params.has('l')) {
                 const id = params.get('l')
                 if (id && id !== '') {
-                    LocationService.getLocation(id)
-                        .then(location => {
-                            if (location) {
-                                Env._LANGUAGES.forEach(lang => {
-                                    if (!location.values.some(value => value.language === lang.code)) {
-                                        location.values.push({ language: lang.code, name: '' })
-                                    }
-                                })
+                    try {
+                        const location = await LocationService.getLocation(id)
 
-                                const names = location.values.map(value => ({ language: value.language, name: value.value }))
+                        if (location) {
+                            Env._LANGUAGES.forEach(lang => {
+                                if (!location.values.some(value => value.language === lang.code)) {
+                                    location.values.push({ language: lang.code, name: '' })
+                                }
+                            })
 
-                                setLocation(location)
-                                setNames(names)
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch(() => {
+                            const names = location.values.map(value => ({ language: value.language, name: value.value }))
+
+                            setLocation(location)
+                            setNames(names)
+                            setVisible(true)
                             setLoading(false)
-                            setError(true)
-                            setVisible(false)
-                        })
+                        } else {
+                            setLoading(false)
+                            setNoMatch(true)
+                        }
+                    } catch (err) {
+                        Helper.error(err)
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
