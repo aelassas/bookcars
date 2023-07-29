@@ -193,57 +193,57 @@ const CreateCar = () => {
         extra === '' ? -1 : extra
     )
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const minimumAgeValid = validateMinimumAge(minimumAge)
-        if (!minimumAgeValid) {
-            setFormError(true)
-            setImageError(false)
-            return
+            const minimumAgeValid = validateMinimumAge(minimumAge)
+            if (!minimumAgeValid) {
+                setFormError(true)
+                setImageError(false)
+                return
+            }
+
+            if (!image) {
+                setImageError(true)
+                setImageSizeError(false)
+                return
+            }
+
+            const data = {
+                name,
+                company,
+                minimumAge,
+                locations: locations.map(l => l._id),
+                price,
+                deposit,
+                available,
+                type,
+                gearbox,
+                aircon,
+                image,
+                seats,
+                doors,
+                fuelPolicy,
+                mileage: getExtra(mileage),
+                cancellation: getExtra(cancellation),
+                amendments: getExtra(amendments),
+                theftProtection: getExtra(theftProtection),
+                collisionDamageWaiver: getExtra(collisionDamageWaiver),
+                fullInsurance: getExtra(fullInsurance),
+                additionalDriver: getExtra(additionalDriver)
+            }
+
+            const car = await CarService.create(data)
+
+            if (car && car._id) {
+                navigate('/cars')
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        if (!image) {
-            setImageError(true)
-            setImageSizeError(false)
-            return
-        }
-
-        const data = {
-            name,
-            company,
-            minimumAge,
-            locations: locations.map(l => l._id),
-            price,
-            deposit,
-            available,
-            type,
-            gearbox,
-            aircon,
-            image,
-            seats,
-            doors,
-            fuelPolicy,
-            mileage: getExtra(mileage),
-            cancellation: getExtra(cancellation),
-            amendments: getExtra(amendments),
-            theftProtection: getExtra(theftProtection),
-            collisionDamageWaiver: getExtra(collisionDamageWaiver),
-            fullInsurance: getExtra(fullInsurance),
-            additionalDriver: getExtra(additionalDriver)
-        }
-
-        CarService.create(data)
-            .then(car => {
-                if (car && car._id) {
-                    navigate('/cars')
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const onLoad = (user) => {
