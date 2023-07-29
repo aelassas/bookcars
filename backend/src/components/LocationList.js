@@ -45,43 +45,42 @@ const LocationList = (props) => {
     const [locationId, setLocationId] = useState('')
     const [locationIndex, setLocationIndex] = useState(-1)
 
-    const _fetch = (page, keyword) => {
-        setLoading(true)
+    const _fetch = async (page, keyword) => {
+        try {
+            setLoading(true)
 
-        LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+            const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
-                const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-                let _rows = []
-                if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-                    _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
-                } else {
-                    _rows = _data.resultData
-                }
+            let _rows = []
+            if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+                _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+            } else {
+                _rows = _data.resultData
+            }
 
-                setRows(_rows)
-                setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
-                setTotalRecords(totalRecords)
-                setFetch(_data.resultData.length > 0)
+            setRows(_rows)
+            setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
+            setTotalRecords(totalRecords)
+            setFetch(_data.resultData.length > 0)
 
-                if (
-                    ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
-                    || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
-                ) {
-                    window.scrollTo(0, 0)
-                }
+            if (
+                ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+                || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
+            ) {
+                window.scrollTo(0, 0)
+            }
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
-
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (props.onLoad) {
+                props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -127,67 +126,68 @@ const LocationList = (props) => {
         _fetch(1, '')
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleDelete = (e) => {
-        const locationId = e.currentTarget.getAttribute('data-id')
-        const locationIndex = e.currentTarget.getAttribute('data-index')
+    const handleDelete = async (e) => {
+        try {
+            const locationId = e.currentTarget.getAttribute('data-id')
+            const locationIndex = e.currentTarget.getAttribute('data-index')
 
-        LocationService.check(locationId)
-            .then(status => {
-                if (status === 204) {
-                    setOpenDeleteDialog(true)
-                    setLocationId(locationId)
-                    setLocationIndex(locationIndex)
-                } else if (status === 200) {
-                    setOpenInfoDialog(true)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            const status = await LocationService.check(locationId)
+
+            if (status === 204) {
+                setOpenDeleteDialog(true)
+                setLocationId(locationId)
+                setLocationIndex(locationIndex)
+            } else if (status === 200) {
+                setOpenInfoDialog(true)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const handleCloseInfo = () => {
         setOpenInfoDialog(false)
     }
 
-    const handleConfirmDelete = () => {
-        if (locationId !== '' && locationIndex > -1) {
-            setLoading(true)
-            setOpenDeleteDialog(false)
+    const handleConfirmDelete = async () => {
+        try {
+            if (locationId !== '' && locationIndex > -1) {
+                setLoading(true)
+                setOpenDeleteDialog(false)
 
-            LocationService.deleteLocation(locationId)
-                .then(status => {
-                    if (status === 200) {
-                        const _rowCount = rowCount - 1
+                const status = await LocationService.deleteLocation(locationId)
 
-                        rows.splice(locationIndex, 1)
+                if (status === 200) {
+                    const _rowCount = rowCount - 1
 
-                        setRows(rows)
-                        setRowCount(_rowCount)
-                        setTotalRecords(totalRecords - 1)
-                        setLocationId('')
-                        setLocationIndex(-1)
-                        setLoading(false)
+                    rows.splice(locationIndex, 1)
 
-                        if (props.onDelete) {
-                            props.onDelete(_rowCount)
-                        }
-                    } else {
-                        Helper.error()
-                        setLocationId('')
-                        setLocationIndex(-1)
-                        setLoading(false)
+                    setRows(rows)
+                    setRowCount(_rowCount)
+                    setTotalRecords(totalRecords - 1)
+                    setLocationId('')
+                    setLocationIndex(-1)
+                    setLoading(false)
+
+                    if (props.onDelete) {
+                        props.onDelete(_rowCount)
                     }
-                }).catch((err) => {
-                    Helper.error(err)
-                })
-        } else {
-            Helper.error()
-            setOpenDeleteDialog(false)
-            setLocationId('')
-            setLocationIndex(-1)
+                } else {
+                    Helper.error()
+                    setLocationId('')
+                    setLocationIndex(-1)
+                    setLoading(false)
+                }
+            } else {
+                Helper.error()
+                setOpenDeleteDialog(false)
+                setLocationId('')
+                setLocationIndex(-1)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
     }
 

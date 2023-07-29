@@ -491,8 +491,8 @@ const Booking = () => {
 
                             <CarSelectList
                                 label={blStrings.CAR}
-                                company={company._id}
-                                pickupLocation={pickupLocation._id}
+                                company={company && company._id}
+                                pickupLocation={pickupLocation && pickupLocation._id}
                                 onChange={handleCarSelectListChange}
                                 required
                                 value={car}
