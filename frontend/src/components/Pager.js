@@ -28,7 +28,7 @@ const Pager = ({ page, pageSize, totalRecords, rowCount, onNext, onPrevious }) =
 
                     <IconButton
                         onClick={onNext}
-                        disabled={rowCount === totalRecords}
+                        disabled={rowCount >= totalRecords}
                     >
                         <NextPageIcon className="icon" />
                     </IconButton>
