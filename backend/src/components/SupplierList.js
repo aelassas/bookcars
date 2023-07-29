@@ -39,43 +39,42 @@ const SupplierList = (props) => {
     const [companyId, setCompanyId] = useState('')
     const [companyIndex, setCompanyIndex] = useState(-1)
 
-    const _fetch = (page, keyword) => {
-        setLoading(true)
+    const _fetch = async (page, keyword) => {
+        try {
+            setLoading(true)
+            
+            const data = await SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
-        SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                
-                const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-                let _rows = []
-                if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-                    _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
-                } else {
-                    _rows = _data.resultData
-                }
+            let _rows = []
+            if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+                _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+            } else {
+                _rows = _data.resultData
+            }
 
-                setRows(_rows)
-                setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
-                setTotalRecords(totalRecords)
-                setFetch(_data.resultData.length > 0)
+            setRows(_rows)
+            setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)
+            setTotalRecords(totalRecords)
+            setFetch(_data.resultData.length > 0)
 
-                if (
-                    ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
-                    || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
-                ) {
-                    window.scrollTo(0, 0)
-                }
+            if (
+                ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+                || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
+            ) {
+                window.scrollTo(0, 0)
+            }
 
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
-
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (props.onLoad) {
+                props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -130,42 +129,42 @@ const SupplierList = (props) => {
         setCompanyIndex(companyIndex)
     }
 
-    const handleConfirmDelete = () => {
-        if (companyId !== '' && companyIndex > -1) {
-            setLoading(false)
-            setOpenDeleteDialog(false)
-            SupplierService.deleteCompany(companyId)
-                .then(status => {
-                    if (status === 200) {
-                        const _rowCount = rowCount - 1
-                        rows.splice(companyIndex, 1)
+    const handleConfirmDelete = async () => {
+        try {
+            if (companyId !== '' && companyIndex > -1) {
+                setLoading(false)
+                setOpenDeleteDialog(false)
+                const status = await SupplierService.deleteCompany(companyId)
+                if (status === 200) {
+                    const _rowCount = rowCount - 1
+                    rows.splice(companyIndex, 1)
 
-                        setRows(rows)
-                        setRowCount(_rowCount)
-                        setTotalRecords(totalRecords - 1)
-                        setCompanyId('')
-                        setCompanyIndex(-1)
-                        setLoading(false)
+                    setRows(rows)
+                    setRowCount(_rowCount)
+                    setTotalRecords(totalRecords - 1)
+                    setCompanyId('')
+                    setCompanyIndex(-1)
+                    setLoading(false)
 
-                        if (props.onDelete) {
-                            props.onDelete(_rowCount)
-                        }
-
-                    } else {
-                        Helper.error()
-                        setCompanyId('')
-                        setCompanyIndex(-1)
-                        setLoading(false)
+                    if (props.onDelete) {
+                        props.onDelete(_rowCount)
                     }
-                }).catch((err) => {
-                    Helper.error(err)
-                })
-        } else {
-            Helper.error()
-            setOpenDeleteDialog(false)
-            setCompanyId('')
-            setCompanyIndex(-1)
-            setLoading(false)
+
+                } else {
+                    Helper.error()
+                    setCompanyId('')
+                    setCompanyIndex(-1)
+                    setLoading(false)
+                }
+            } else {
+                Helper.error()
+                setOpenDeleteDialog(false)
+                setCompanyId('')
+                setCompanyIndex(-1)
+                setLoading(false)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
     }
 
