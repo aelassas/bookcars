@@ -434,8 +434,7 @@ const Booking = () => {
                         setTheftProtection(booking.theftProtection)
                         setCollisionDamageWaiver(booking.collisionDamageWaiver)
                         setFullInsurance(booking.fullInsurance)
-                        setAdditionalDriver(booking.additionalDriver)
-
+                        setAdditionalDriver(booking.additionalDriver && !!booking._additionalDriver)
                         if (booking.additionalDriver && booking._additionalDriver) {
                             set_FullName(booking._additionalDriver.fullName)
                             set_Email(booking._additionalDriver.email)
