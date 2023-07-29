@@ -39,12 +39,12 @@ if (DB_SSL) {
 
 mongoose.set('debug', DB_DEBUG)
 mongoose.Promise = global.Promise
-mongoose.connect(DB_URI, options)
-    .then(
-        () => { console.log('Database is connected') },
-        (err) => { console.error('Cannot connect to the database:', err) }
-    )
-
+try {
+    await mongoose.connect(DB_URI, options)
+    console.log('Database is connected')
+} catch (err) {
+    console.error('Cannot connect to the database:', err)
+}
 const app = express()
 app.use(helmet.contentSecurityPolicy())
 app.use(helmet.dnsPrefetchControl())

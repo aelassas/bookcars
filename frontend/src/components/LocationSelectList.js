@@ -23,7 +23,7 @@ const LocationSelectList = (props) => {
     const _fetch = async (page, keyword, onFetch) => {
         try {
             setLoading(true)
-            Env.PAGE_SIZE=10
+            
             const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
             const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
             const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
