@@ -616,143 +616,142 @@ const CreateBookingScreen = ({ navigation, route }) => {
     }
 
     const onPressBook = async () => {
+        try {
+            if (!authenticated) {
 
-        if (!authenticated) {
+                fullNameRef.current.blur()
+                emailRef.current.blur()
+                phoneRef.current.blur()
 
-            fullNameRef.current.blur()
-            emailRef.current.blur()
-            phoneRef.current.blur()
-
-            const fullNameValid = validateFullName()
-            if (!fullNameValid) {
-                return
-            }
-
-            const emailValid = await validateEmail()
-            if (!emailValid) {
-                return
-            }
-
-            const phoneValid = validatePhone()
-            if (!phoneValid) {
-                return
-            }
-
-            const birthDateValid = validateBirthDate()
-            if (!birthDateValid) {
-                return
-            }
-
-            if (!tosChecked) {
-                return setTosError(true)
-            }
-        }
-
-        if (additionalDriver) {
-            const fullNameValid = _validateFullName()
-            if (!fullNameValid) {
-                return
-            }
-
-            const emailValid = _validateEmail()
-            if (!emailValid) {
-                return
-            }
-
-            const phoneValid = _validatePhone()
-            if (!phoneValid) {
-                return
-            }
-
-            const birthDateValid = _validateBirthDate()
-            if (!birthDateValid) {
-                return
-            }
-        }
-
-        if (!payLater) {
-            const cardNameValid = validateCardName()
-            if (!cardNameValid) {
-                return
-            }
-
-            const cardNumberValid = validateCardNumber()
-            if (!cardNumberValid) {
-                return
-            }
-
-            const cardMonthValid = validateCardMonth()
-            if (!cardMonthValid) {
-                return
-            }
-
-            const cardYearValid = validateCardYear()
-            if (!cardYearValid) {
-                return
-            }
-
-            const cvvValid = validateCvv()
-            if (!cvvValid) {
-                return
-            }
-
-            const cardDateValid = validateCardDate(cardMonth, cardYear)
-            if (!cardDateValid) {
-                return setCardDateError(true)
-            }
-        }
-
-        setLoading(true)
-
-        let booking, driver, _additionalDriver
-
-        if (!authenticated) {
-            const language = await UserService.getLanguage()
-            driver = { email, phone, fullName, birthDate, language }
-        }
-
-        booking = {
-            company: car.company._id,
-            car: car._id,
-            driver: authenticated ? user._id : undefined,
-            pickupLocation: pickupLocation._id,
-            dropOffLocation: dropOffLocation._id,
-            from: from,
-            to: to,
-            status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price
-        }
-
-        if (additionalDriver) {
-            _additionalDriver = {
-                fullName: _fullName,
-                email: _email,
-                phone: _phone,
-                birthDate: _birthDate
-            }
-        }
-
-        const payload = { driver, booking, additionalDriver: _additionalDriver, payLater }
-
-        BookingService.book(payload)
-            .then(status => {
-                if (status === 200) {
-                    setLoading(false)
-                    setFormVisible(false)
-                    setSuccess(true)
-                } else {
-                    _error()
+                const fullNameValid = validateFullName()
+                if (!fullNameValid) {
+                    return
                 }
-            })
-            .catch((err) => {
-                _error(err)
-            })
+
+                const emailValid = await validateEmail()
+                if (!emailValid) {
+                    return
+                }
+
+                const phoneValid = validatePhone()
+                if (!phoneValid) {
+                    return
+                }
+
+                const birthDateValid = validateBirthDate()
+                if (!birthDateValid) {
+                    return
+                }
+
+                if (!tosChecked) {
+                    return setTosError(true)
+                }
+            }
+
+            if (additionalDriver) {
+                const fullNameValid = _validateFullName()
+                if (!fullNameValid) {
+                    return
+                }
+
+                const emailValid = _validateEmail()
+                if (!emailValid) {
+                    return
+                }
+
+                const phoneValid = _validatePhone()
+                if (!phoneValid) {
+                    return
+                }
+
+                const birthDateValid = _validateBirthDate()
+                if (!birthDateValid) {
+                    return
+                }
+            }
+
+            if (!payLater) {
+                const cardNameValid = validateCardName()
+                if (!cardNameValid) {
+                    return
+                }
+
+                const cardNumberValid = validateCardNumber()
+                if (!cardNumberValid) {
+                    return
+                }
+
+                const cardMonthValid = validateCardMonth()
+                if (!cardMonthValid) {
+                    return
+                }
+
+                const cardYearValid = validateCardYear()
+                if (!cardYearValid) {
+                    return
+                }
+
+                const cvvValid = validateCvv()
+                if (!cvvValid) {
+                    return
+                }
+
+                const cardDateValid = validateCardDate(cardMonth, cardYear)
+                if (!cardDateValid) {
+                    return setCardDateError(true)
+                }
+            }
+
+            setLoading(true)
+
+            let booking, driver, _additionalDriver
+
+            if (!authenticated) {
+                const language = await UserService.getLanguage()
+                driver = { email, phone, fullName, birthDate, language }
+            }
+
+            booking = {
+                company: car.company._id,
+                car: car._id,
+                driver: authenticated ? user._id : undefined,
+                pickupLocation: pickupLocation._id,
+                dropOffLocation: dropOffLocation._id,
+                from: from,
+                to: to,
+                status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver,
+                price
+            }
+
+            if (additionalDriver) {
+                _additionalDriver = {
+                    fullName: _fullName,
+                    email: _email,
+                    phone: _phone,
+                    birthDate: _birthDate
+                }
+            }
+
+            const payload = { driver, booking, additionalDriver: _additionalDriver, payLater }
+
+            const status = await BookingService.book(payload)
+
+            if (status === 200) {
+                setLoading(false)
+                setFormVisible(false)
+                setSuccess(true)
+            } else {
+                _error()
+            }
+        } catch (err) {
+            _error(err)
+        }
     }
 
     const iconSize = 18

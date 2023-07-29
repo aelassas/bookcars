@@ -80,25 +80,25 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
     }
 
     const onPressReset = async () => {
-        const emailValid = await validateEmail()
-        if (!emailValid) {
-            return
-        }
+        try {
+            const emailValid = await validateEmail()
+            if (!emailValid) {
+                return
+            }
 
-        UserService.resend(email, true)
-            .then(status => {
-                if (status === 200) {
-                    setEmailRequired(false)
-                    setEmailValid(true)
-                    setEmailError(false)
-                    setSent(true)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            const status = await UserService.resend(email, true)
+
+            if (status === 200) {
+                setEmailRequired(false)
+                setEmailValid(true)
+                setEmailError(false)
+                setSent(true)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     return (

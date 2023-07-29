@@ -95,20 +95,21 @@ const Master = (props) => {
         setNotificationCount(props.notificationCount)
     }, [props.notificationCount])
 
-    const handleResend = () => {
-        const data = { email: user.email }
+    const handleResend = async () => {
+        try {
+            const data = { email: user.email }
 
-        UserService.resendLink(data)
-            .then(status => {
-                if (status === 200) {
-                    Helper.toast(i18n.t('VALIDATION_EMAIL_SENT'))
-                } else {
-                    Helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'))
-                }
-            }).catch(async (err) => {
-                Helper.error(err)
-                await UserService.signout()
-            })
+            const status = await UserService.resendLink(data)
+
+            if (status === 200) {
+                Helper.toast(i18n.t('VALIDATION_EMAIL_SENT'))
+            } else {
+                Helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'))
+            }
+        } catch (err) {
+            Helper.error(err)
+            await UserService.signout()
+        }
     }
 
     return (

@@ -235,73 +235,69 @@ const SignUpScreen = ({ navigation, route }) => {
     }
 
     const onPressSignUp = async () => {
+        try {
+            fullNameRef.current.blur()
+            emailRef.current.blur()
+            phoneRef.current.blur()
+            passwordRef.current.blur()
+            confirmPasswordRef.current.blur()
 
-        fullNameRef.current.blur()
-        emailRef.current.blur()
-        phoneRef.current.blur()
-        passwordRef.current.blur()
-        confirmPasswordRef.current.blur()
+            const fullNameValid = validateFullName()
+            if (!fullNameValid) {
+                return
+            }
 
-        const fullNameValid = validateFullName()
-        if (!fullNameValid) {
-            return
-        }
+            const emailValid = await validateEmail()
+            if (!emailValid) {
+                return
+            }
 
-        const emailValid = await validateEmail()
-        if (!emailValid) {
-            return
-        }
+            const phoneValid = validatePhone()
+            if (!phoneValid) {
+                return
+            }
 
-        const phoneValid = validatePhone()
-        if (!phoneValid) {
-            return
-        }
+            const birthDateValid = validateBirthDate()
+            if (!birthDateValid) {
+                return
+            }
 
-        const birthDateValid = validateBirthDate()
-        if (!birthDateValid) {
-            return
-        }
+            const passwordValid = validatePassword()
+            if (!passwordValid) {
+                return
+            }
 
-        const passwordValid = validatePassword()
-        if (!passwordValid) {
-            return
-        }
+            if (!tosChecked) {
+                return setTosError(true)
+            }
 
-        if (!tosChecked) {
-            return setTosError(true)
-        }
+            setLoading(true)
 
-        setLoading(true)
+            const data = {
+                email,
+                phone,
+                password,
+                fullName,
+                birthDate,
+                language
+            }
 
-        const data = {
-            email,
-            phone,
-            password,
-            fullName,
-            birthDate,
-            language
-        }
+            const status = await UserService.signup(data)
 
-        UserService.signup(data)
-            .then(status => {
-                if (status === 200) {
-                    UserService.signin({ email, password })
-                        .then(res => {
-                            if (res.status === 200) {
-                                navigation.navigate('Home', { d: new Date().getTime() })
-                            } else {
-                                error()
-                            }
-                        }).catch((err) => {
-                            error(err)
-                        })
+            if (status === 200) {
+                const result = await UserService.signin({ email, password })
+
+                if (result.status === 200) {
+                    navigation.navigate('Home', { d: new Date().getTime() })
                 } else {
                     error()
                 }
-            })
-            .catch((err) => {
-                error(err)
-            })
+            } else {
+                error()
+            }
+        } catch (err) {
+            error(err)
+        }
     }
 
     return (
