@@ -104,7 +104,7 @@ export const adminSignup = async (req, res) => {
                 const newPath = path.join(CDN, filename)
 
                 try {
-                    await fs.prompises.rename(avatar, newPath)
+                    await fs.rename(avatar, newPath)
                     user.avatar = filename
                     await user.save()
                 } catch (err) {
