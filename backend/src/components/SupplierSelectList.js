@@ -25,27 +25,26 @@ const SupplierSelectList = (props) => {
         return { _id, name: fullName, image: avatar }
     })
 
-    const _fetch = (page, keyword, onFetch) => {
-        setLoading(true)
+    const _fetch = async (page, keyword, onFetch) => {
+        try {
+            setLoading(true)
+            const data = await SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
-        SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                
-                const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = page === 1 ? getCompanies(_data.resultData) : [...rows, ...getCompanies(_data.resultData)]
+            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const _rows = page === 1 ? getCompanies(_data.resultData) : [...rows, ...getCompanies(_data.resultData)]
 
-                setRows(_rows)
-                setFetch(_data.resultData.length > 0)
-                setLoading(false)
+            setRows(_rows)
+            setFetch(_data.resultData.length > 0)
 
-                if (onFetch) {
-                    onFetch({ rows: _data.resultData, rowCount: totalRecords })
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (onFetch) {
+                onFetch({ rows: _data.resultData, rowCount: totalRecords })
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleChange = (values) => {
