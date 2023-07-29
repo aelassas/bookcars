@@ -311,7 +311,7 @@ export const carsEqual = (a, b) => {
 }
 
 export const clone = (obj) => {
-    return JSON.parse(JSON.stringify(obj))
+    return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
 }
 
 export const cloneArray = (arr) => {
