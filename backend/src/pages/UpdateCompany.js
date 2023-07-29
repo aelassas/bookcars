@@ -145,21 +145,21 @@ const UpdateCompany = () => {
         }
     }
 
-    const handleResendActivationLink = () => {
-        UserService.resend(company.email, false, Env.APP_TYPE)
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+    const handleResendActivationLink = async () => {
+        try {
+            const status = await UserService.resend(company.email, false, Env.APP_TYPE)
+
+            if (status === 200) {
+                Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         if (user && user.verified) {
             setLoading(true)
             setUser(user)
@@ -168,29 +168,30 @@ const UpdateCompany = () => {
             if (params.has('c')) {
                 const id = params.get('c')
                 if (id && id !== '') {
-                    SupplierService.getCompany(id)
-                        .then(company => {
-                            if (company) {
-                                setCompany(company)
-                                setEmail(company.email)
-                                setAvatar(company.avatar)
-                                setFullName(company.fullName)
-                                setPhone(company.phone)
-                                setLocation(company.location)
-                                setBio(company.bio)
-                                setPayLater(company.payLater)
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch(() => {
+                    try {
+                        const company = await SupplierService.getCompany(id)
+
+                        if (company) {
+                            setCompany(company)
+                            setEmail(company.email)
+                            setAvatar(company.avatar)
+                            setFullName(company.fullName)
+                            setPhone(company.phone)
+                            setLocation(company.location)
+                            setBio(company.bio)
+                            setPayLater(company.payLater)
+                            setVisible(true)
                             setLoading(false)
-                            setError(true)
-                            setVisible(false)
-                        })
+                        } else {
+                            setLoading(false)
+                            setNoMatch(true)
+                        }
+                    } catch (err) {
+                        Helper.error(err)
+                        setLoading(false)
+                        setError(true)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
@@ -203,46 +204,46 @@ const UpdateCompany = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        const fullNameValid = await validateFullName(fullName)
-        if (!fullNameValid) {
-            return
+            const fullNameValid = await validateFullName(fullName)
+            if (!fullNameValid) {
+                return
+            }
+
+            const phoneValid = validatePhone(phone)
+            if (!phoneValid) {
+                return
+            }
+
+            if (!avatar) {
+                setAvatarError(true)
+                setError(false)
+                return
+            }
+
+            const data = {
+                _id: company._id,
+                fullName,
+                phone,
+                location,
+                bio,
+                payLater
+            }
+
+            const status = await SupplierService.update(data)
+
+            if (status === 200) {
+                company.fullName = fullName
+                setCompany(Helper.clone(company))
+                Helper.info(commonStrings.UPDATED)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
-            return
-        }
-
-        if (!avatar) {
-            setAvatarError(true)
-            setError(false)
-            return
-        }
-
-        const data = {
-            _id: company._id,
-            fullName,
-            phone,
-            location,
-            bio,
-            payLater
-        }
-
-        SupplierService.update(data)
-            .then(status => {
-                if (status === 200) {
-                    company.fullName = fullName
-                    setCompany(Helper.clone(company))
-                    Helper.info(commonStrings.UPDATED)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
     }
 
     const admin = Helper.admin(user)
