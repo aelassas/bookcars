@@ -50,79 +50,71 @@ const ChangePassword = () => {
         Helper.error(null, strings.PASSWORD_UPDATE_ERROR)
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        const submit = () => {
+            const submit = async () => {
 
-            if (newPassword.length < 6) {
-                setPasswordLengthError(true)
-                setConfirmPasswordError(false)
-                setNewPasswordError(false)
-                return
-            } else {
-                setPasswordLengthError(false)
-                setNewPasswordError(false)
-            }
+                if (newPassword.length < 6) {
+                    setPasswordLengthError(true)
+                    setConfirmPasswordError(false)
+                    setNewPasswordError(false)
+                    return
+                } else {
+                    setPasswordLengthError(false)
+                    setNewPasswordError(false)
+                }
 
-            if (newPassword !== confirmPassword) {
-                setConfirmPasswordError(true)
-                setNewPasswordError(false)
-                return
-            } else {
-                setConfirmPasswordError(false)
-                setNewPasswordError(false)
-            }
+                if (newPassword !== confirmPassword) {
+                    setConfirmPasswordError(true)
+                    setNewPasswordError(false)
+                    return
+                } else {
+                    setConfirmPasswordError(false)
+                    setNewPasswordError(false)
+                }
 
-            const data = {
-                _id: user._id,
-                password: currentPassword,
-                newPassword,
-                strict: true
-            }
+                const data = {
+                    _id: user._id,
+                    password: currentPassword,
+                    newPassword,
+                    strict: true
+                }
 
-            UserService.changePassword(data)
-                .then(status => {
-                    if (status === 200) {
-                        UserService.getUser(user._id)
-                            .then(_user => {
-                                if (_user) {
-                                    setUser(_user)
-                                    setNewPasswordError(false)
-                                    setCurrentPassword('')
-                                    setNewPassword('')
-                                    setConfirmPassword('')
-                                    Helper.info(strings.PASSWORD_UPDATE)
-                                } else {
-                                    err()
-                                }
-                            })
-                            .catch((err) => {
-                                Helper.error(err)
-                            })
+                const status = await UserService.changePassword(data)
+
+                if (status === 200) {
+                    const _user = UserService.getUser(user._id)
+
+                    if (_user) {
+                        setUser(_user)
+                        setNewPasswordError(false)
+                        setCurrentPassword('')
+                        setNewPassword('')
+                        setConfirmPassword('')
+                        Helper.info(strings.PASSWORD_UPDATE)
                     } else {
                         err()
                     }
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        }
-
-        UserService.checkPassword(user._id, currentPassword)
-            .then((status) => {
-                setCurrentPasswordError(status !== 200)
-                setNewPasswordError(false)
-                setPasswordLengthError(false)
-                setConfirmPasswordError(false)
-
-                if (status === 200) {
-                    submit()
+                } else {
+                    err()
                 }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            }
+
+            const status = await UserService.checkPassword(user._id, currentPassword)
+
+            setCurrentPasswordError(status !== 200)
+            setNewPasswordError(false)
+            setPasswordLengthError(false)
+            setConfirmPasswordError(false)
+
+            if (status === 200) {
+                submit()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const onLoad = (user) => {
