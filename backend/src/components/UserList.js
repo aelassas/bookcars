@@ -53,27 +53,29 @@ const UserList = (props) => {
         setPageSize(paginationModel.pageSize)
     }, [paginationModel])
 
-    const _fetch = (page, user) => {
-        setLoading(true)
+    const _fetch = async (page, user) => {
+        try {
+            setLoading(true)
 
-        const payload = { user: user._id, types }
+            const payload = { user: user._id, types }
 
-        UserService.getUsers(payload, keyword, page + 1, pageSize)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                
-                const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                const _rows = _data.resultData
-                setRows(_rows)
-                setRowCount(totalRecords)
-                if (props.onLoad) {
-                    props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                }
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            const data = await UserService.getUsers(payload, keyword, page + 1, pageSize)
+            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const _rows = _data.resultData
+
+            setRows(_rows)
+            setRowCount(totalRecords)
+
+            if (props.onLoad) {
+                props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            }
+
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -287,29 +289,28 @@ const UserList = (props) => {
         setSelectedId('')
     }
 
-    const handleConfirmDelete = () => {
-        const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
+    const handleConfirmDelete = async () => {
+        try {
+            const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
 
-        setOpenDeleteDialog(false)
-        setLoading(true)
+            setOpenDeleteDialog(false)
 
-        UserService.deleteUsers(ids)
-            .then(status => {
-                if (status === 200) {
-                    if (selectedIds.length > 0) {
-                        setRows(rows.filter((row) => !selectedIds.includes(row._id)))
-                    } else {
-                        setRows(rows.filter((row) => row._id !== selectedId))
-                    }
+            const status = await UserService.deleteUsers(ids)
+            
+            if (status === 200) {
+                if (selectedIds.length > 0) {
+                    setRows(rows.filter((row) => !selectedIds.includes(row._id)))
                 } else {
-                    Helper.error()
+                    setRows(rows.filter((row) => row._id !== selectedId))
                 }
-
-                setLoading(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (

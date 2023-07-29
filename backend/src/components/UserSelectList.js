@@ -25,25 +25,26 @@ const UserSelectList = (props) => {
         return { _id, name: fullName, image: avatar }
     })
 
-    const _fetch = (page, keyword, onFetch) => {
-        setLoading(true)
+    const _fetch = async (page, keyword, onFetch) => {
+        try {
+            setLoading(true)
 
-        UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
-            .then(data => {
-                const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : []
-                const _drivers = page === 1 ? _data : [...drivers, ..._data]
+            const data = await UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
 
-                setDrivers(_drivers)
-                setFetch(_data.length > 0)
-                setLoading(false)
+            const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : []
+            const _drivers = page === 1 ? _data : [...drivers, ..._data]
 
-                if (onFetch) {
-                    onFetch()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            setDrivers(_drivers)
+            setFetch(_data.length > 0)
+
+            if (onFetch) {
+                onFetch()
+            }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleChange = (values) => {
