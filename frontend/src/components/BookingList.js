@@ -41,7 +41,6 @@ const BookingList = (props) => {
     const [columns, setColumns] = useState([])
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
-    const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [selectedId, setSelectedId] = useState()
     const [companies, setCompanies] = useState(props.companies)
@@ -55,53 +54,52 @@ const BookingList = (props) => {
     const [offset, setOffset] = useState(0)
     const [paginationModel, setPaginationModel] = useState({ pageSize: Env.BOOKINGS_PAGE_SIZE, page: 0 })
     const [load, setLoad] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setPage(paginationModel.page)
         setPageSize(paginationModel.pageSize)
     }, [paginationModel])
 
-    const _fetch = (page, user) => {
-        const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+    const _fetch = async (page, user) => {
+        try {
+            const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-        if (companies.length > 0) {
-            setLoading(true)
+            if (companies.length > 0) {
+                setLoading(true)
 
-            BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
-                .then(data => {
-                    const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                    const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const data = await BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+                const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-                    if (Env.isMobile()) {
-                        const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
-                        setRows(_rows)
-                        setRowCount(totalRecords)
-                        setFetch(_data.resultData.length > 0)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
-                    } else {
-                        setRows(_data.resultData)
-                        setRowCount(totalRecords)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
+                if (Env.isMobile()) {
+                    const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+                    setRows(_rows)
+                    setRowCount(totalRecords)
+                    setFetch(_data.resultData.length > 0)
+                    if (props.onLoad) {
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                     }
+                } else {
+                    setRows(_data.resultData)
+                    setRowCount(totalRecords)
+                    if (props.onLoad) {
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+                    }
+                }
 
-                    setLoad(false)
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        } else {
-            setRows([])
-            setRowCount(0)
-            if (props.onLoad) {
-                props.onLoad({ rows: [], rowCount: 0 })
+            } else {
+                setRows([])
+                setRowCount(0)
+                if (props.onLoad) {
+                    props.onLoad({ rows: [], rowCount: 0 })
+                }
             }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
             setLoading(false)
+            setLoad(false)
         }
     }
 
