@@ -106,11 +106,7 @@ export const adminSignup = async (req, res) => {
                 try {
                     await fs.prompises.rename(avatar, newPath)
                     user.avatar = filename
-                    user.save()
-                        .catch((err) => {
-                            console.error(strings.DB_ERROR, err)
-                            res.status(400).send(strings.DB_ERROR + err)
-                        })
+                    await user.save()
                 } catch (err) {
                     console.error(strings.ERROR, err)
                     res.status(400).send(strings.ERROR + err)
@@ -171,11 +167,7 @@ export const create = async (req, res) => {
                 try {
                     await fs.rename(avatar, newPath)
                     user.avatar = filename
-                    user.save()
-                        .catch((err) => {
-                            console.error(strings.DB_ERROR, err)
-                            res.status(400).send(strings.DB_ERROR + err)
-                        })
+                    await user.save()
                 } catch (err) {
                     console.error(strings.ERROR, err)
                     res.status(400).send(strings.ERROR + err)
