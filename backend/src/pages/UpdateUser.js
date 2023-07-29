@@ -182,37 +182,36 @@ const UpdateUser = () => {
         }
     }
 
-    const handleCancel = () => {
-        if (avatar) {
-            setLoading(true)
+    const handleCancel = async () => {
+        try {
+            if (avatar) {
+                setLoading(true)
 
-            UserService.deleteTempAvatar(avatar)
-                .then(() => {
-                    navigate('/users')
-                })
-                .catch(() => {
-                    navigate('/users')
-                })
-        } else {
+                await UserService.deleteTempAvatar(avatar)
+                navigate('/users')
+            } else {
+                navigate('/users')
+            }
+        } catch {
             navigate('/users')
         }
     }
 
-    const handleResendActivationLink = () => {
-        UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
-            .then(status => {
-                if (status === 200) {
-                    Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
-                } else {
-                    Helper.error()
-                }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+    const handleResendActivationLink = async () => {
+        try {
+            const status = await UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
+
+            if (status === 200) {
+                Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
-    const onLoad = (loggedUser) => {
+    const onLoad = async (loggedUser) => {
         if (loggedUser && loggedUser.verified) {
             setLoading(true)
 
@@ -220,33 +219,33 @@ const UpdateUser = () => {
             if (params.has('u')) {
                 const id = params.get('u')
                 if (id && id !== '') {
-                    UserService.getUser(id)
-                        .then(user => {
-                            if (user) {
-                                setLoggedUser(loggedUser)
-                                setUser(user)
-                                setAdmin(Helper.admin(loggedUser))
-                                setType(user.type)
-                                setEmail(user.email)
-                                setAvatar(user.avatar)
-                                setFullName(user.fullName)
-                                setPhone(user.phone)
-                                setLocation(user.location || '')
-                                setBio(user.bio || '')
-                                setBirthDate(user.birthDate ? new Date(user.birthDate) : null)
-                                setPayLater(user.payLater)
-                                setVisible(true)
-                                setLoading(false)
-                            } else {
-                                setLoading(false)
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch((err) => {
+                    try {
+                        const user = await UserService.getUser(id)
+
+                        if (user) {
+                            setLoggedUser(loggedUser)
+                            setUser(user)
+                            setAdmin(Helper.admin(loggedUser))
+                            setType(user.type)
+                            setEmail(user.email)
+                            setAvatar(user.avatar)
+                            setFullName(user.fullName)
+                            setPhone(user.phone)
+                            setLocation(user.location || '')
+                            setBio(user.bio || '')
+                            setBirthDate(user.birthDate ? new Date(user.birthDate) : null)
+                            setPayLater(user.payLater)
+                            setVisible(true)
                             setLoading(false)
-                            setVisible(false)
-                            Helper.error(err)
-                        })
+                        } else {
+                            setLoading(false)
+                            setNoMatch(true)
+                        }
+                    } catch (err) {
+                        Helper.error(err)
+                        setLoading(false)
+                        setVisible(false)
+                    }
                 } else {
                     setLoading(false)
                     setNoMatch(true)
@@ -259,64 +258,65 @@ const UpdateUser = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        if (type === Env.RECORD_TYPE.COMPANY) {
-            const fullNameValid = await validateFullName(fullName)
+            if (type === Env.RECORD_TYPE.COMPANY) {
+                const fullNameValid = await validateFullName(fullName)
 
-            if (!fullNameValid) {
+                if (!fullNameValid) {
+                    return
+                }
+            } else {
+                setFullNameError(false)
+            }
+
+            const phoneValid = validatePhone(phone)
+            if (!phoneValid) {
                 return
             }
-        } else {
-            setFullNameError(false)
+
+            const birthDateValid = validateBirthDate(birthDate)
+            if (!birthDateValid) {
+                return
+            }
+
+            if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
+                setAvatarError(true)
+                setError(false)
+                return
+            }
+
+            const language = UserService.getLanguage()
+            const data = {
+                _id: user._id,
+                phone,
+                location,
+                bio,
+                fullName,
+                language,
+                type,
+                avatar,
+                birthDate
+            }
+
+            if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
+
+            const status = await UserService.updateUser(data)
+
+            if (status === 200) {
+                user.fullName = fullName
+                user.type = type
+                setUser(user)
+                Helper.info(commonStrings.UPDATED)
+            } else {
+                Helper.error()
+
+                setError(false)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
-
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
-            return
-        }
-
-        const birthDateValid = validateBirthDate(birthDate)
-        if (!birthDateValid) {
-            return
-        }
-
-        if (type === Env.RECORD_TYPE.COMPANY && !avatar) {
-            setAvatarError(true)
-            setError(false)
-            return
-        }
-
-        const language = UserService.getLanguage()
-        const data = {
-            _id: user._id,
-            phone,
-            location,
-            bio,
-            fullName,
-            language,
-            type,
-            avatar,
-            birthDate
-        }
-
-        if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
-
-        UserService.updateUser(data)
-            .then(status => {
-                if (status === 200) {
-                    user.fullName = fullName
-                    user.type = type
-                    setUser(user)
-                    Helper.info(commonStrings.UPDATED)
-                } else {
-                    Helper.error()
-
-                    setError(false)
-                }
-            }).catch((err) => {
-                Helper.error(err)
-            })
     }
 
 
