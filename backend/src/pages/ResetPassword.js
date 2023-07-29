@@ -47,65 +47,56 @@ const ResetPassword = () => {
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault()
 
-        if (password.length < 6) {
-            setPasswordLengthError(true)
-            setConfirmPasswordError(false)
-            setPasswordError(false)
-            return
-        } else {
-            setPasswordLengthError(false)
-            setPasswordError(false)
-        }
+            if (password.length < 6) {
+                setPasswordLengthError(true)
+                setConfirmPasswordError(false)
+                setPasswordError(false)
+                return
+            } else {
+                setPasswordLengthError(false)
+                setPasswordError(false)
+            }
 
-        if (password !== confirmPassword) {
-            setConfirmPasswordError(true)
-            setPasswordError(false)
-            return
-        } else {
-            setConfirmPasswordError(false)
-            setPasswordError(false)
-        }
+            if (password !== confirmPassword) {
+                setConfirmPasswordError(true)
+                setPasswordError(false)
+                return
+            } else {
+                setConfirmPasswordError(false)
+                setPasswordError(false)
+            }
 
-        const data = { userId, token, password }
+            const data = { userId, token, password }
 
-        UserService.activate(data)
-            .then(status => {
-                if (status === 200) {
-                    UserService.signin({ email, password })
-                        .then(signInResult => {
-                            if (signInResult.status === 200) {
-                                UserService.deleteTokens(userId)
-                                    .then(status => {
-                                        if (status === 200) {
-                                            navigate('/')
-                                        } else {
-                                            Helper.error()
-                                        }
-                                    })
-                                    .catch((err) => {
-                                        Helper.error(err)
-                                    })
-                            } else {
-                                Helper.error()
-                            }
-                        })
-                        .catch((err) => {
-                            Helper.error(err)
-                        })
+            const status = await UserService.activate(data)
+
+            if (status === 200) {
+                const signInResult = await UserService.signin({ email, password })
+
+                if (signInResult.status === 200) {
+                    const status = await UserService.deleteTokens(userId)
+
+                    if (status === 200) {
+                        navigate('/')
+                    } else {
+                        Helper.error()
+                    }
                 } else {
                     Helper.error()
                 }
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
-
+            } else {
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
-    const onLoad = (user) => {
+    const onLoad = async (user) => {
         if (user) {
             setNoMatch(true)
         } else {
@@ -115,20 +106,20 @@ const ResetPassword = () => {
                 const email = params.get('e')
                 const token = params.get('t')
                 if (userId && email && token) {
-                    UserService.checkToken(userId, email, token)
-                        .then(status => {
-                            if (status === 200) {
-                                setUserId(userId)
-                                setEmail(email)
-                                setToken(token)
-                                setVisible(true)
-                            } else {
-                                setNoMatch(true)
-                            }
-                        })
-                        .catch(() => {
-                            setError(true)
-                        })
+                    try {
+                        const status = await UserService.checkToken(userId, email, token)
+
+                        if (status === 200) {
+                            setUserId(userId)
+                            setEmail(email)
+                            setToken(token)
+                            setVisible(true)
+                        } else {
+                            setNoMatch(true)
+                        }
+                    } catch {
+                        setError(true)
+                    }
                 } else {
                     setNoMatch(true)
                 }
