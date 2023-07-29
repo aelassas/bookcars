@@ -439,132 +439,131 @@ const CreateBooking = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        try {
+            e.preventDefault()
 
-        if (!authenticated) {
-            const emailValid = await validateEmail(email)
-            if (!emailValid) {
-                return
-            }
-
-            const phoneValid = validatePhone(phone)
-            if (!phoneValid) {
-                return
-            }
-
-            const birthDateValid = validateBirthDate(birthDate)
-            if (!birthDateValid) {
-                return
-            }
-
-            if (!tosChecked) {
-                setTosError(true)
-                return
-            }
-        }
-
-        if (!payLater) {
-
-            if (cardName && cardName.length < 1) {
-                return
-            }
-
-            const cardNumberValid = validateCardNumber(cardNumber)
-            if (!cardNumberValid) {
-                return
-            }
-
-            const cardMonthValid = validateCardMonth(cardMonth)
-            if (!cardMonthValid) {
-                return
-            }
-
-            const cardYearValid = validateCardYear(cardYear)
-            if (!cardYearValid) {
-                return
-            }
-
-            const cvvValid = validateCvv(cvv)
-            if (!cvvValid) {
-                return
-            }
-
-            const cardDateValid = validateCardDate(cardMonth, cardYear)
-            if (!cardDateValid) {
-                setCardDateError(true)
-                return
-            }
-        }
-
-        if (additionalDriver) {
-            const emailValid = _validateEmail(_email)
-            if (!emailValid) {
-                return
-            }
-
-            const phoneValid = _validatePhone(_phone)
-            if (!phoneValid) {
-                return
-            }
-
-            const birthDateValid = _validateBirthDate(_birthDate)
-            if (!birthDateValid) {
-                return
-            }
-        }
-
-        setLoading(true)
-
-        let booking, driver, _additionalDriver
-
-        if (!authenticated) driver = { email, phone, fullName, birthDate, language: UserService.getLanguage() }
-
-        booking = {
-            company: car.company._id,
-            car: car._id,
-            driver: authenticated ? user._id : undefined,
-            pickupLocation: pickupLocation._id,
-            dropOffLocation: dropOffLocation._id,
-            from: from,
-            to: to,
-            status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
-            cancellation,
-            amendments,
-            theftProtection,
-            collisionDamageWaiver,
-            fullInsurance,
-            additionalDriver,
-            price
-        }
-
-        if (additionalDriver) {
-            _additionalDriver = {
-                fullName: _fullName,
-                email: _email,
-                phone: _phone,
-                birthDate: _birthDate
-            }
-        }
-
-        const payload = { driver, booking, additionalDriver: _additionalDriver, payLater }
-
-        BookingService.book(payload)
-            .then(status => {
-                if (status === 200) {
-                    window.history.replaceState({}, window.document.title, '/create-booking')
-
-                    setLoading(false)
-                    setVisible(false)
-                    setSuccess(true)
-                } else {
-                    setLoading(false)
-                    Helper.error()
+            if (!authenticated) {
+                const emailValid = await validateEmail(email)
+                if (!emailValid) {
+                    return
                 }
-            })
-            .catch((err) => {
+
+                const phoneValid = validatePhone(phone)
+                if (!phoneValid) {
+                    return
+                }
+
+                const birthDateValid = validateBirthDate(birthDate)
+                if (!birthDateValid) {
+                    return
+                }
+
+                if (!tosChecked) {
+                    setTosError(true)
+                    return
+                }
+            }
+
+            if (!payLater) {
+
+                if (cardName && cardName.length < 1) {
+                    return
+                }
+
+                const cardNumberValid = validateCardNumber(cardNumber)
+                if (!cardNumberValid) {
+                    return
+                }
+
+                const cardMonthValid = validateCardMonth(cardMonth)
+                if (!cardMonthValid) {
+                    return
+                }
+
+                const cardYearValid = validateCardYear(cardYear)
+                if (!cardYearValid) {
+                    return
+                }
+
+                const cvvValid = validateCvv(cvv)
+                if (!cvvValid) {
+                    return
+                }
+
+                const cardDateValid = validateCardDate(cardMonth, cardYear)
+                if (!cardDateValid) {
+                    setCardDateError(true)
+                    return
+                }
+            }
+
+            if (additionalDriver) {
+                const emailValid = _validateEmail(_email)
+                if (!emailValid) {
+                    return
+                }
+
+                const phoneValid = _validatePhone(_phone)
+                if (!phoneValid) {
+                    return
+                }
+
+                const birthDateValid = _validateBirthDate(_birthDate)
+                if (!birthDateValid) {
+                    return
+                }
+            }
+
+            setLoading(true)
+
+            let booking, driver, _additionalDriver
+
+            if (!authenticated) driver = { email, phone, fullName, birthDate, language: UserService.getLanguage() }
+
+            booking = {
+                company: car.company._id,
+                car: car._id,
+                driver: authenticated ? user._id : undefined,
+                pickupLocation: pickupLocation._id,
+                dropOffLocation: dropOffLocation._id,
+                from: from,
+                to: to,
+                status: payLater ? Env.BOOKING_STATUS.PENDING : Env.BOOKING_STATUS.PAID,
+                cancellation,
+                amendments,
+                theftProtection,
+                collisionDamageWaiver,
+                fullInsurance,
+                additionalDriver,
+                price
+            }
+
+            if (additionalDriver) {
+                _additionalDriver = {
+                    fullName: _fullName,
+                    email: _email,
+                    phone: _phone,
+                    birthDate: _birthDate
+                }
+            }
+
+            const payload = { driver, booking, additionalDriver: _additionalDriver, payLater }
+
+            const status = await BookingService.book(payload)
+
+            if (status === 200) {
+                window.history.replaceState({}, window.document.title, '/create-booking')
+
                 setLoading(false)
-                Helper.error(err)
-            })
+                setVisible(false)
+                setSuccess(true)
+            } else {
+                setLoading(false)
+                Helper.error()
+            }
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const onLoad = async (user) => {
