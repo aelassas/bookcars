@@ -27,7 +27,7 @@ import {
 import {
     Edit as EditIcon,
     Delete as DeleteIcon,
-    Check as CheckIcon,
+    Check as CheckIcon
 } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from "date-fns/locale"
@@ -42,7 +42,6 @@ const BookingList = (props) => {
     const [columns, setColumns] = useState([])
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
-    const [loading, setLoading] = useState(true)
     const [fetch, setFetch] = useState(false)
     const [selectedId, setSelectedId] = useState()
     const [selectedIds, setSelectedIds] = useState([])
@@ -58,52 +57,51 @@ const BookingList = (props) => {
     const [offset, setOffset] = useState(0)
     const [paginationModel, setPaginationModel] = useState({ pageSize: Env.BOOKINGS_PAGE_SIZE, page: 0 })
     const [load, setLoad] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setPage(paginationModel.page)
         setPageSize(paginationModel.pageSize)
     }, [paginationModel])
 
-    const _fetch = (page, user) => {
-        const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+    const _fetch = async (page, user) => {
+        try {
+            const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-        if (companies.length > 0) {
-            setLoading(true)
+            if (companies.length > 0) {
+                setLoading(true)
 
-            BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
-                .then(data => {
-                    const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-                    const totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-                    if (Env.isMobile()) {
-                        const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
-                        setRows(_rows)
-                        setRowCount(totalRecords)
-                        setFetch(_data.resultData.length > 0)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
-                    } else {
-                        setRows(_data.resultData)
-                        setRowCount(totalRecords)
-                        if (props.onLoad) {
-                            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-                        }
-                        setLoading(false)
+                const data = await BookingService.getBookings({ companies, statuses, filter, car, user: ((user && user._id) || undefined) }, page, _pageSize)
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+                const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+
+                if (Env.isMobile()) {
+                    const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+                    setRows(_rows)
+                    setRowCount(totalRecords)
+                    setFetch(_data.resultData.length > 0)
+                    if (props.onLoad) {
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
                     }
-
-                    setLoad(false)
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        } else {
-            setRows([])
-            setRowCount(0)
-            if (props.onLoad) {
-                props.onLoad({ rows: [], rowCount: 0 })
+                } else {
+                    setRows(_data.resultData)
+                    setRowCount(totalRecords)
+                    if (props.onLoad) {
+                        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+                    }
+                }
+            } else {
+                setRows([])
+                setRowCount(0)
+                if (props.onLoad) {
+                    props.onLoad({ rows: [], rowCount: 0 })
+                }
             }
+        } catch (err) {
+            Helper.error(err)
+        } finally {
             setLoading(false)
+            setLoad(false)
         }
     }
 
@@ -341,27 +339,27 @@ const BookingList = (props) => {
         setStatus(status)
     }
 
-    const handleConfirmUpdate = () => {
-        const data = { ids: selectedIds, status }
+    const handleConfirmUpdate = async () => {
+        try {
+            const data = { ids: selectedIds, status }
 
-        BookingService.updateStatus(data)
-            .then(s => {
-                if (s === 200) {
-                    rows.forEach(row => {
-                        if (selectedIds.includes(row._id)) {
-                            row.status = status
-                        }
-                    })
-                    setRows(Helper.clone(rows))
-                } else {
-                    Helper.error()
-                }
+            const _status = await BookingService.updateStatus(data)
 
-                setOpenUpdateDialog(false)
-            })
-            .catch((err) => {
-                Helper.error(err)
-            })
+            if (_status === 200) {
+                rows.forEach(row => {
+                    if (selectedIds.includes(row._id)) {
+                        row.status = status
+                    }
+                })
+                setRows(Helper.clone(rows))
+            } else {
+                Helper.error()
+            }
+
+            setOpenUpdateDialog(false)
+        } catch (err) {
+            Helper.error(err)
+        }
     }
 
     const handleDelete = (e) => {
@@ -380,50 +378,45 @@ const BookingList = (props) => {
         setSelectedId('')
     }
 
-    const handleConfirmDelete = () => {
-        if (Env.isMobile()) {
-            const ids = [selectedId]
+    const handleConfirmDelete = async () => {
+        try {
+            if (Env.isMobile()) {
+                const ids = [selectedId]
 
-            BookingService.deleteBookings(ids)
-                .then(status => {
-                    if (status === 200) {
-                        rows.splice(selectedIndex, 1)
-                        setRows(rows)
-                        setSelectedId('')
-                        setSelectedIndex(-1)
+                const status = await BookingService.deleteBookings(ids)
+
+                if (status === 200) {
+                    rows.splice(selectedIndex, 1)
+                    setRows(rows)
+                    setSelectedId('')
+                    setSelectedIndex(-1)
+                } else {
+                    Helper.error()
+                }
+
+                setopenDeleteDialog(false)
+            } else {
+                const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
+
+                const status = await BookingService.deleteBookings(ids)
+
+                if (status === 200) {
+                    if (selectedIds.length > 0) {
+                        setRows(rows.filter((row) => !selectedIds.includes(row._id)))
                     } else {
-                        Helper.error()
+                        setRows(rows.filter((row) => row._id !== selectedId))
                     }
+                } else {
+                    Helper.error()
+                }
 
-                    setopenDeleteDialog(false)
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
-        } else {
-            const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
-
-            BookingService.deleteBookings(ids)
-                .then(status => {
-                    if (status === 200) {
-                        if (selectedIds.length > 0) {
-                            setRows(rows.filter((row) => !selectedIds.includes(row._id)))
-                        } else {
-                            setRows(rows.filter((row) => row._id !== selectedId))
-                        }
-                    } else {
-                        Helper.error()
-                    }
-
-                    setopenDeleteDialog(false)
-                })
-                .catch((err) => {
-                    Helper.error(err)
-                })
+                setopenDeleteDialog(false)
+            }
+        } catch (err) {
+            Helper.error(err)
         }
     }
 
-    const admin = Helper.admin(loggedUser)
     const _fr = props.language === 'fr'
     const _locale = _fr ? dfnsFR : dfnsENUS
     const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
@@ -434,7 +427,7 @@ const BookingList = (props) => {
 
             {loggedUser && (
                 rows.length === 0 ?
-                    !loading && !props.loading && !admin &&
+                    !loading && !props.loading &&
                     <Card variant="outlined" className="empty-list">
                         <CardContent>
                             <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
@@ -442,7 +435,7 @@ const BookingList = (props) => {
                     </Card>
                     :
                     Env.isMobile() ?
-                        <div>
+                        <>
                             {rows.map((booking, index) => {
                                 const from = new Date(booking.from)
                                 const to = new Date(booking.to)
@@ -581,7 +574,7 @@ const BookingList = (props) => {
                                     </div>
                                 )
                             })}
-                        </div>
+                        </>
                         :
                         <DataGrid
                             checkboxSelection={props.checkboxSelection}
