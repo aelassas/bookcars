@@ -25,7 +25,7 @@ const usesCleartextTraffic = (config) => {
         application.$['tools:replace'] = 'android:usesCleartextTraffic'
         application.$['android:usesCleartextTraffic'] = 'true'
 
-        console.log('usesCleartextTraffic succeeded: ', application.$['android:usesCleartextTraffic'])
+        console.log('usesCleartextTraffic plugin succeeded:', application.$['android:usesCleartextTraffic'])
 
         return config
     })
