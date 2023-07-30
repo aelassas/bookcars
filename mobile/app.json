@@ -37,7 +37,8 @@
       "bundleIdentifier": "com.bookcars"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "./plugins/usesCleartextTraffic"
     ],
     "owner": "aelassas",
     "extra": {
