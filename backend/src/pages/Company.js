@@ -174,7 +174,7 @@ const Company = () => {
 
                             {edit &&
                                 <Tooltip title={commonStrings.UPDATE}>
-                                    <IconButton href={`/update-company?c=${company._id}`}>
+                                    <IconButton href={`/update-supplier?c=${company._id}`}>
                                         <EditIcon />
                                     </IconButton>
                                 </Tooltip>
