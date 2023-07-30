@@ -1,9 +1,5 @@
 div.company {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
+   display: flex;
 }
 
 .company div.col-1 .company-name {
@@ -48,7 +44,7 @@ div.company {
 
 @media only screen and (max-width: 960px) {
     div.company {
-        overflow: auto;
+        flex-direction: column;
     }
 
     .company div.col-1 {
@@ -75,12 +71,13 @@ div.company {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
+    div.company {
+        flex-direction: row;
+    }
+
     .company div.col-1 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
         width: 300px;
+        min-height: 100vh;
         padding-top: 20px;
         background: #fefefe;
         border-right: #eee solid 1px;
@@ -97,10 +94,9 @@ div.company {
     }
 
     .company div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1 1;
     }
 }
