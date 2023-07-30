@@ -31,7 +31,7 @@ const usesCleartextTraffic = (config) => {
     })
 }
 
-export default createRunOncePlugin(
+module.exports = createRunOncePlugin(
     usesCleartextTraffic,
     'usesCleartextTraffic',
     '1.0.0'
