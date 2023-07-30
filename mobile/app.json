@@ -38,11 +38,7 @@
     },
     "plugins": [
       "expo-localization",
-      {
-        "android": {
-          "usesCleartextTraffic": true
-        }
-      }
+      "./plugins/usesCleartextTraffic"
     ],
     "owner": "aelassas",
     "extra": {
