@@ -1,4 +1,4 @@
-import { createRunOncePlugin, withAndroidManifest } from '@expo/config-plugins'
+const { createRunOncePlugin, withAndroidManifest } = require('@expo/config-plugins')
 
 const usesCleartextTraffic = (config) => {
     return withAndroidManifest(config, (config) => {
