@@ -138,3 +138,5 @@ google-services.json
 *.apk
 **/*.apk
 
+android/
+ios/
