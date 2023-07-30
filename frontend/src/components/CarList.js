@@ -319,7 +319,7 @@ const CarList = (props) => {
                                         type="submit"
                                         variant="contained"
                                         className='btn-book btn-margin-bottom'
-                                        href={`/create-booking?c=${car._id}&p=${props.pickupLocation}&d=${props.dropOffLocation}&f=${props.from.getTime()}&t=${props.to.getTime()}`}
+                                        href={`/checkout?c=${car._id}&p=${props.pickupLocation}&d=${props.dropOffLocation}&f=${props.from.getTime()}&t=${props.to.getTime()}`}
                                     >
                                         {strings.BOOK}
                                     </Button>

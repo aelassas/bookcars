@@ -58,8 +58,8 @@ const SignIn = () => {
                     const params = new URLSearchParams(window.location.search)
                     if (params.has('from')) {
                         const from = params.get('from')
-                        if (from === 'create-booking') {
-                            navigate(`/create-booking${window.location.search}`)
+                        if (from === 'checkout') {
+                            navigate(`/checkout${window.location.search}`)
                         } else {
                             navigate('/')
                         }
@@ -101,8 +101,8 @@ const SignIn = () => {
                             const params = new URLSearchParams(window.location.search)
                             if (params.has('from')) {
                                 const from = params.get('from')
-                                if (from === 'create-booking') {
-                                    navigate(`/create-booking${window.location.search}`)
+                                if (from === 'checkout') {
+                                    navigate(`/checkout${window.location.search}`)
                                 } else {
                                     navigate(`/${window.location.search}`)
                                 }
