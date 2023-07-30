@@ -171,7 +171,6 @@ const Company = () => {
                         {company.location && company.location !== '' && <Typography variant="h6" className="company-info">{company.location}</Typography>}
                         {company.phone && company.phone !== '' && <Typography variant="h6" className="company-info">{company.phone}</Typography>}
                         <div className="company-actions">
-
                             {edit &&
                                 <Tooltip title={commonStrings.UPDATE}>
                                     <IconButton href={`/update-supplier?c=${company._id}`}>
