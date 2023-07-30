@@ -1,4 +1,4 @@
-const { createRunOncePlugin, withAndroidManifest } = require('@expo/config-plugins')
+import { createRunOncePlugin, withAndroidManifest } from '@expo/config-plugins'
 
 const usesCleartextTraffic = (config) => {
     return withAndroidManifest(config, (config) => {
@@ -25,11 +25,13 @@ const usesCleartextTraffic = (config) => {
         application.$['tools:replace'] = 'android:usesCleartextTraffic'
         application.$['android:usesCleartextTraffic'] = 'true'
 
+        console.log('usesCleartextTraffic succeeded: ', application.$['android:usesCleartextTraffic'])
+
         return config
     })
 }
 
-module.exports = createRunOncePlugin(
+export default createRunOncePlugin(
     usesCleartextTraffic,
     'usesCleartextTraffic',
     '1.0.0'
