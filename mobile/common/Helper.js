@@ -373,9 +373,9 @@ export const getBookingStatus = (status) => {
     }
 }
 
-export const clone = (obj) => (
-    JSON.parse(JSON.stringify(obj))
-)
+export const clone = (obj) => {
+    return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
+}
 
 export const getBirthDateError = (minimumAge) => (
     `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t('BIRTH_DATE_NOT_VALID_PART2')} `
