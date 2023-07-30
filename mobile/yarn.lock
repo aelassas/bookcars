@@ -3619,14 +3619,14 @@ __metadata:
     eslint: latest
     eslint-plugin-react: latest
     eslint-plugin-react-hooks: ^4.6.0
-    expo: 49.0.5
+    expo: 49.0.6
     expo-asset: ~8.10.1
     expo-constants: ~14.4.2
     expo-device: ~5.4.0
     expo-image-picker: ~14.3.2
     expo-localization: ~14.3.0
     expo-notifications: ~0.20.1
-    expo-splash-screen: ~0.20.4
+    expo-splash-screen: ~0.20.5
     expo-status-bar: ~1.6.0
     expo-updates: ~0.18.11
     i18n-js: ^3.9.2
@@ -5187,13 +5187,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-core@npm:1.5.8":
-  version: 1.5.8
-  resolution: "expo-modules-core@npm:1.5.8"
+"expo-modules-core@npm:1.5.9":
+  version: 1.5.9
+  resolution: "expo-modules-core@npm:1.5.9"
   dependencies:
     compare-versions: ^3.4.0
     invariant: ^2.2.4
-  checksum: 4eedc1f1c4c57707ef1c1b9dc4add3b8ba09880fdc4c89d701ebd53c7dae4b62b2a2898770113c4912b3b073a4389020ec19895d2d3be196b0bbad2d9f15e935
+  checksum: 9a740ef3203356d080745fb80930cd853bbb5492bd329062dcd96114b884f3c0e3c94e940c1b9e7b93ab2c3ecd4fdf3790312c0f773136c4c858b6cdca085701
   languageName: node
   linkType: hard
 
@@ -5216,14 +5216,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-splash-screen@npm:~0.20.4":
-  version: 0.20.4
-  resolution: "expo-splash-screen@npm:0.20.4"
+"expo-splash-screen@npm:~0.20.5":
+  version: 0.20.5
+  resolution: "expo-splash-screen@npm:0.20.5"
   dependencies:
     "@expo/prebuild-config": 6.2.6
   peerDependencies:
     expo: "*"
-  checksum: cbdeffd4493d715b7625fba060e70d647358d5cfea3120d6b8d52df5e721bc65f65d80987f9327ef61ac3f0f3cfe53935af11e009be74d1cc1dcf124822eece5
+  checksum: c4b0db3d0e8ab755a9f4afb1f20824229fa84ea2410528e4316a62e676e08f990157c9edd4af0978f79183d6b47cf3d4843b86f76c084274a40e07adfd697889
   languageName: node
   linkType: hard
 
@@ -5273,9 +5273,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:49.0.5":
-  version: 49.0.5
-  resolution: "expo@npm:49.0.5"
+"expo@npm:49.0.6":
+  version: 49.0.6
+  resolution: "expo@npm:49.0.6"
   dependencies:
     "@babel/runtime": ^7.20.0
     "@expo/cli": 0.10.11
@@ -5290,7 +5290,7 @@ __metadata:
     expo-font: ~11.4.0
     expo-keep-awake: ~12.3.0
     expo-modules-autolinking: 1.5.0
-    expo-modules-core: 1.5.8
+    expo-modules-core: 1.5.9
     fbemitter: ^3.0.0
     invariant: ^2.2.4
     md5-file: ^3.2.3
@@ -5299,7 +5299,7 @@ __metadata:
     uuid: ^3.4.0
   bin:
     expo: bin/cli
-  checksum: f7e5163f1e51e5d10d27fb02a462b07f05ca41962141a6d37f0663aa7e7af2a0174da082f778effd775d4f281a2bb8de04626369bcb035d6b2abe8f35018997e
+  checksum: 1e217fa859525bb83cc260de2ef568fb4103328ca0978aa0e0c5c3a451332ca4cd7d5fc244aa27d7aab07635fdf503297927752b3a1264940148d07e3c56ef9f
   languageName: node
   linkType: hard
 
