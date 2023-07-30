@@ -12,7 +12,7 @@
     "prebuild:ios": "npx expo prebuild --platform ios",
     "build:android": "EAS_NO_VCS=1 eas build --profile production --platform android",
     "build:android:local": "EAS_NO_VCS=1 eas build --profile production --platform android --local",
-    "build:ios": "eas build --profile production --platform ios",
+    "build:ios": "EAS_NO_VCS=1 eas build --profile production --platform ios",
     "eas:config": "eas build:configure",
     "optimize": "npx expo-optimize --save",
     "lint": "eslint --ext .js,.jsx ."
