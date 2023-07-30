@@ -21,10 +21,10 @@ const DatePicker = (props) => {
                 }}
                 minDate={props.minDate}
                 defaultCalendarMonth={props.minDate}
-                required={props.required}
                 slotProps={{
                     textField: {
                         variant: props.variant || 'standard',
+                        required: props.required
                     },
                     actionBar: {
                         actions: ['accept', 'cancel', 'today', 'clear']

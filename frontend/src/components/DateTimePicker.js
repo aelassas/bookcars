@@ -27,30 +27,17 @@ const DateTimePicker = (props) => {
                 }}
                 minDate={props.minDate}
                 defaultCalendarMonth={props.minDate}
-                required={props.required}
                 slotProps={{
                     textField: {
                         variant: props.variant || 'standard',
-                        readOnly: true
+                        readOnly: true,
+                        required: props.required
                     },
                     actionBar: {
                         actions: ['accept', 'cancel', 'today', 'clear']
                     }
                 }}
                 format={_format}
-            // renderInput={(params) => <TextField
-            //     {...params}
-            //     variant={props.variant || 'standard'}
-            //     fullWidth
-            //     autoComplete='off'
-            //     inputProps={{
-            //         ...params.inputProps,
-            //         value: ((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || ''),
-            //         readOnly: true
-            //     }}
-            // />
-            // }
-
             />
         </LocalizationProvider>
     )
