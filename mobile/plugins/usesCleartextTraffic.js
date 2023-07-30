@@ -17,15 +17,9 @@ const usesCleartextTraffic = (config) => {
             return modResults
         }
 
-        manifest.$ = {
-            ...manifest.$,
-            'xmlns:tools': 'http://schemas.android.com/tools',
-        }
-
-        application.$['tools:replace'] = 'android:usesCleartextTraffic'
         application.$['android:usesCleartextTraffic'] = 'true'
-
-        console.log('usesCleartextTraffic plugin succeeded:', application.$['android:usesCleartextTraffic'])
+        
+        console.log('usesCleartextTraffic plugin succeeded')
 
         return config
     })
