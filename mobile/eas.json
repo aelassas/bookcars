@@ -4,6 +4,9 @@
   },
   "build": {
     "development": {
+      "env": {
+        "EAS_NO_VCS": 1
+      },
       "developmentClient": true,
       "distribution": "internal",
       "android": {
@@ -19,6 +22,9 @@
       "distribution": "internal"
     },
     "production": {
+      "env": {
+        "EAS_NO_VCS": 1
+      },
       "android": {
         "image": "latest",
         "buildType": "apk"
