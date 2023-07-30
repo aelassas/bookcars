@@ -3,7 +3,7 @@ import Env from '../config/env.config'
 import * as BookingService from '../services/BookingService'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/create-booking'
+import { strings } from '../lang/checkout'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
@@ -40,9 +40,9 @@ import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from "date-fns/locale"
 
 import SecurePayment from '../assets/img/secure-payment.png'
-import '../assets/css/create-booking.css'
+import '../assets/css/checkout.css'
 
-const CreateBooking = () => {
+const Checkout = () => {
     const [user, setUser] = useState()
     const [car, setCar] = useState()
     const [pickupLocation, setPickupLocation] = useState()
@@ -576,7 +576,7 @@ const CreateBooking = () => {
             const status = await BookingService.book(payload)
 
             if (status === 200) {
-                window.history.replaceState({}, window.document.title, '/create-booking')
+                window.history.replaceState({}, window.document.title, '/checkout')
 
                 setLoading(false)
                 setVisible(false)
@@ -866,7 +866,7 @@ const CreateBooking = () => {
                                                         <span>
                                                             <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
                                                             <span> </span>
-                                                            <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=create-booking`}>{strings.SIGN_IN}</a>
+                                                            <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                                                         </span>
                                                     ) || ''}
                                                     {(emailInfo && strings.EMAIL_INFO) || ''}
@@ -1187,4 +1187,4 @@ const CreateBooking = () => {
     )
 }
 
-export default CreateBooking
+export default Checkout
