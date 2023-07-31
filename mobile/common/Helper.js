@@ -1,4 +1,3 @@
-
 import { Platform } from 'react-native'
 import Toast from 'react-native-root-toast'
 import * as Device from 'expo-device'
@@ -10,6 +9,15 @@ import * as mime from 'mime'
 import Constants from 'expo-constants'
 
 const ANDROID = Platform.OS === 'android'
+
+export const formatPrice = (x) => {
+    if (typeof x === 'number') {
+        const parts = x.toString().split('.')
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+        return parts.join('.')
+    }
+    return ''
+}
 
 export const android = () => (
     ANDROID
@@ -176,7 +184,7 @@ export const getCancellation = (cancellation, fr) => {
     else if (cancellation === 0) {
         return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${cancellation} ${i18n.t('CURRENCY')}`
+        return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${formatPrice(cancellation)} ${i18n.t('CURRENCY')}`
     }
 }
 
@@ -187,7 +195,7 @@ export const getAmendments = (amendments, fr) => {
     else if (amendments === 0) {
         return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
     } else {
-        return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${amendments} ${i18n.t('CURRENCY')}`
+        return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${formatPrice(amendments)} ${i18n.t('CURRENCY')}`
     }
 }
 
@@ -198,7 +206,7 @@ export const getTheftProtection = (theftProtection, fr) => {
     else if (theftProtection === 0) {
         return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${theftProtection} ${i18n.t('CAR_CURRENCY')}`
+        return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${formatPrice(theftProtection)} ${i18n.t('CAR_CURRENCY')}`
     }
 }
 
@@ -209,7 +217,7 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver, fr) => {
     else if (collisionDamageWaiver === 0) {
         return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${collisionDamageWaiver} ${i18n.t('CAR_CURRENCY')}`
+        return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${formatPrice(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')}`
     }
 }
 
@@ -220,7 +228,7 @@ export const getFullInsurance = (fullInsurance, fr) => {
     else if (fullInsurance === 0) {
         return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${fullInsurance} ${i18n.t('CAR_CURRENCY')}`
+        return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${formatPrice(fullInsurance)} ${i18n.t('CAR_CURRENCY')}`
     }
 }
 
@@ -231,7 +239,7 @@ export const getAdditionalDriver = (additionalDriver, fr) => {
     else if (additionalDriver === 0) {
         return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}`
     } else {
-        return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${additionalDriver} ${i18n.t('CAR_CURRENCY')}`
+        return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${formatPrice(additionalDriver)} ${i18n.t('CAR_CURRENCY')}`
     }
 }
 
@@ -274,7 +282,7 @@ export const getCancellationOption = (cancellation, fr, hidePlus) => {
     else if (cancellation === 0) {
         return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${hidePlus ? '' : '+ '}${cancellation} ${i18n.t('CURRENCY')}`
+        return `${hidePlus ? '' : '+ '}${formatPrice(cancellation)} ${i18n.t('CURRENCY')}`
     }
 }
 
@@ -285,7 +293,7 @@ export const getAmendmentsOption = (amendments, fr, hidePlus) => {
     else if (amendments === 0) {
         return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
     } else {
-        return `${hidePlus ? '' : '+ '}${amendments} ${i18n.t('CURRENCY')}`
+        return `${hidePlus ? '' : '+ '}${formatPrice(amendments)} ${i18n.t('CURRENCY')}`
     }
 }
 
@@ -296,7 +304,7 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver, days, fr, 
     else if (collisionDamageWaiver === 0) {
         return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${hidePlus ? '' : '+ '}${collisionDamageWaiver * days} ${i18n.t('CURRENCY')} (${collisionDamageWaiver} ${i18n.t('CAR_CURRENCY')})`
+        return `${hidePlus ? '' : '+ '}${formatPrice(collisionDamageWaiver * days)} ${i18n.t('CURRENCY')} (${formatPrice(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')})`
     }
 }
 
@@ -307,7 +315,7 @@ export const getTheftProtectionOption = (theftProtection, days, fr, hidePlus) =>
     else if (theftProtection === 0) {
         return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${hidePlus ? '' : '+ '}${theftProtection * days} ${i18n.t('CURRENCY')} (${theftProtection} ${i18n.t('CAR_CURRENCY')})`
+        return `${hidePlus ? '' : '+ '}${formatPrice(theftProtection * days)} ${i18n.t('CURRENCY')} (${formatPrice(theftProtection)} ${i18n.t('CAR_CURRENCY')})`
     }
 }
 
@@ -318,7 +326,7 @@ export const getFullInsuranceOption = (fullInsurance, days, fr, hidePlus) => {
     else if (fullInsurance === 0) {
         return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
     } else {
-        return `${hidePlus ? '' : '+ '}${fullInsurance * days} ${i18n.t('CURRENCY')} (${fullInsurance} ${i18n.t('CAR_CURRENCY')})`
+        return `${hidePlus ? '' : '+ '}${formatPrice(fullInsurance * days)} ${i18n.t('CURRENCY')} (${formatPrice(fullInsurance)} ${i18n.t('CAR_CURRENCY')})`
     }
 }
 
@@ -329,7 +337,7 @@ export const getAdditionalDriverOption = (additionalDriver, days, fr, hidePlus) 
     else if (additionalDriver === 0) {
         return i18n.t('INCLUDED')
     } else {
-        return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${i18n.t('CURRENCY')} (${additionalDriver} ${i18n.t('CAR_CURRENCY')})`
+        return `${hidePlus ? '' : '+ '}${formatPrice(additionalDriver * days)} ${i18n.t('CURRENCY')} (${formatPrice(additionalDriver)} ${i18n.t('CAR_CURRENCY')})`
     }
 }
 
