@@ -894,7 +894,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                                     </View>
 
                                     <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                                    <Text style={styles.detailTextBold}>{`${price} ${i18n.t('CURRENCY')}`}</Text>
+                                    <Text style={styles.detailTextBold}>{`${Helper.formatPrice(price)} ${i18n.t('CURRENCY')}`}</Text>
                                 </View>
 
                                 {
@@ -1086,7 +1086,7 @@ const CheckoutScreen = ({ navigation, route }) => {
 
                                             <View style={styles.securePaymentInfo}>
                                                 <Text style={styles.totalText}>{i18n.t('COST')}</Text>
-                                                <Text style={styles.costText}>{`${price} ${i18n.t('CURRENCY')}`}</Text>
+                                                <Text style={styles.costText}>{`${Helper.formatPrice(price)} ${i18n.t('CURRENCY')}`}</Text>
                                             </View>
                                         </View>
 

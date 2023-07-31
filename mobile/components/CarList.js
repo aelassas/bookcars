@@ -212,8 +212,8 @@ const CarList = (props) => {
 
                                     <View style={styles.price}>
                                         <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(props.from, props.to))}</Text>
-                                        <Text style={styles.pricePrimary}>{`${Helper.price(car, props.from, props.to)} ${i18n.t('CURRENCY')}`}</Text>
-                                        <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${car.price} ${i18n.t('CURRENCY')}`}</Text>
+                                        <Text style={styles.pricePrimary}>{`${Helper.formatPrice(Helper.price(car, props.from, props.to))} ${i18n.t('CURRENCY')}`}</Text>
+                                        <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${Helper.formatPrice(car.price)} ${i18n.t('CURRENCY')}`}</Text>
                                     </View>
                                 </View>
 
