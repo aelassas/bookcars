@@ -4,6 +4,15 @@ import { strings } from "../lang/cars"
 import * as CarService from "../services/CarService"
 import { toast } from 'react-toastify'
 
+export const formatPrice = (x) => {
+    if (typeof x === 'number') {
+        const parts = x.toString().split('.')
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+        return parts.join('.')
+    }
+    return ''
+}
+
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
