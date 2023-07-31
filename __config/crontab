@@ -1,2 +1,0 @@
-* * * * * /opt/bookcars/__scripts/noip.sh >> /var/log/noip.log 2>&1
-@reboot /opt/bookcars/__scripts/noip.sh >> /var/log/noip.log 2>&1
