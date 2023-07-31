@@ -359,7 +359,7 @@ const UpdateBooking = () => {
             const _status = await BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
 
             if (_status === 200) {
-                if (!additionalDriver) {
+                if (!additionalDriverSet) {
                     set_FullName('')
                     set_Email('')
                     set_Phone('')
