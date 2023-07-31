@@ -474,3 +474,7 @@ export const getAdditionalDriverOption = (additionalDriver, days, fr, hidePlus) 
 export const getBirthDateError = (minimumAge) => (
     `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`
 )
+
+export const carOptionAvailable = (car, option) => (
+    car && option in car && car[option] > -1
+)

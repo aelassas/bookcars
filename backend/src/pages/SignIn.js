@@ -65,7 +65,7 @@ const SignIn = () => {
                     } else if (params.has('cr')) {
                         navigate(`/car${window.location.search}`)
                     } else if (params.has('b')) {
-                        navigate(`/booking${window.location.search}`)
+                        navigate(`/update-booking${window.location.search}`)
                     } else {
                         navigate('/')
                     }

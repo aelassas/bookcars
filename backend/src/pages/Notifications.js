@@ -213,7 +213,7 @@ const Notifications = () => {
                                                             <IconButton onClick={async () => {
                                                                 try {
                                                                     const __navigate__ = () => {
-                                                                        navigate(`/booking?b=${row.booking}`)
+                                                                        navigate(`/update-booking?b=${row.booking}`)
                                                                     }
 
                                                                     if (!row.isRead) {
