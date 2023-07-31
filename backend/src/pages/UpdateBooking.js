@@ -308,7 +308,9 @@ const UpdateBooking = () => {
         try {
             e.preventDefault()
 
-            if (additionalDriver) {
+            const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+            
+            if (additionalDriverSet) {
                 const emailValid = _validateEmail(_email)
                 if (!emailValid) {
                     return
@@ -340,12 +342,12 @@ const UpdateBooking = () => {
                 theftProtection,
                 collisionDamageWaiver,
                 fullInsurance,
-                additionalDriver,
+                additionalDriver: additionalDriverSet,
                 price
             }
 
             let _additionalDriver
-            if (additionalDriver) {
+            if (additionalDriverSet) {
                 _additionalDriver = {
                     fullName: _fullName,
                     email: _email,

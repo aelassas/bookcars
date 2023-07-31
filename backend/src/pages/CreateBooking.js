@@ -81,7 +81,8 @@ const CreateBooking = () => {
     }
 
     const handleCarSelectListChange = useCallback((values) => {
-        setCar(Array.isArray(values) && values.length > 0 && values[0])
+        const car = Array.isArray(values) && values.length > 0 && values[0]
+        setCar(car)
     }, [])
 
     const handleStatusChange = (value) => {
@@ -157,7 +158,9 @@ const CreateBooking = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (additionalDriver) {
+        const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+
+        if (additionalDriverSet) {
             const emailValid = _validateEmail(_email)
             if (!emailValid) {
                 return
@@ -188,11 +191,11 @@ const CreateBooking = () => {
             theftProtection,
             collisionDamageWaiver,
             fullInsurance,
-            additionalDriver,
+            additionalDriver: additionalDriverSet,
         }
 
         let _additionalDriver
-        if (additionalDriver) {
+        if (additionalDriverSet) {
             _additionalDriver = {
                 fullName: _fullName,
                 email: _email,
@@ -407,7 +410,7 @@ const CreateBooking = () => {
                         </FormControl>
 
                         {
-                            additionalDriver &&
+                            Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver &&
                             <>
                                 <div className='info'>
                                     <DriverIcon />
