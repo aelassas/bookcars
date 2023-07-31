@@ -377,7 +377,7 @@ export const deleteBookings = async (req, res) => {
 
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[booking.delete]  ${strings.DB_ERROR} ${req.body}`, err)
+        console.error(`[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
@@ -434,7 +434,7 @@ export const getBooking = async (req, res) => {
             return res.sendStatus(204)
         }
     } catch (err) {
-        console.error(`[booking.delete]  ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
