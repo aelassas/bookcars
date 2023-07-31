@@ -5,7 +5,7 @@ RUN mkdir -p /var/www/cdn/bookcars/temp/users
 RUN mkdir -p /var/www/cdn/bookcars/cars
 RUN mkdir -p /var/www/cdn/bookcars/temp/cars
 COPY ./package.json ./package-lock.json ./
-RUN npm install
+RUN npm install --production
 COPY . .
 EXPOSE 4002
 CMD [ "npm", "start"]
