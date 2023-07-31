@@ -1,7 +1,5 @@
 FROM node:18-alpine as build
-RUN mkdir /backend
 WORKDIR /backend
-ENV PATH /backend/node_modules/.bin:$PATH
 COPY ./package.json ./package-lock.json ./
 RUN npm ci
 COPY . .
