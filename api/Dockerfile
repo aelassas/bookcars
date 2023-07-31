@@ -1,5 +1,4 @@
 FROM node:18-alpine
-RUN mkdir /api
 WORKDIR /api
 RUN mkdir -p /var/www/cdn/bookcars/users
 RUN mkdir -p /var/www/cdn/bookcars/temp/users
