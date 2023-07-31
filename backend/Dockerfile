@@ -1,7 +1,7 @@
 FROM node:18-alpine as build
 WORKDIR /backend
 COPY ./package.json ./package-lock.json ./
-RUN npm install
+RUN npm install --production
 COPY . .
 COPY ./.env.docker ./.env
 RUN npm run build
