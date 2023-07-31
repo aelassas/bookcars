@@ -31,7 +31,7 @@ import Env from '../config/env.config'
 import SettingsScreen from '../screens/SettingsScreen'
 import ChangePasswordScreen from '../screens/ChangePasswordScreen'
 import DrawerContent from './DrawerContent'
-import CreateBookingScreen from '../screens/CreateBooking'
+import CheckoutScreen from '../screens/Checkout'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
 const DrawerNavigator = () => {
@@ -61,7 +61,7 @@ const DrawerNavigator = () => {
                 hideTitle: true
             },
             {
-                name: 'CreateBooking',
+                name: 'Checkout',
                 title: i18n.t('CREATE_BOOKING'),
                 iconName: 'event-seat',
                 hidden: true
@@ -182,7 +182,7 @@ const DrawerNavigator = () => {
                             component={
                                 drawer.name === 'Home' ? HomeScreen
                                     : drawer.name === 'Cars' ? CarsScreen
-                                        : drawer.name === 'CreateBooking' ? CreateBookingScreen
+                                        : drawer.name === 'Checkout' ? CheckoutScreen
                                             : drawer.name === 'Bookings' ? BookingsScreen
                                                 : drawer.name === 'Booking' ? BookingScreen
                                                     : drawer.name === 'About' ? AboutScreen

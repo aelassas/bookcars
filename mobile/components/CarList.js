@@ -220,7 +220,7 @@ const CarList = (props) => {
                                 <View style={styles.buttonContainer}>
                                     <Button style={styles.button} label={i18n.t('BOOK')} onPress={() => {
                                         const params = { car: car._id, pickupLocation: props.pickupLocation, dropOffLocation: props.dropOffLocation, from: props.from.getTime(), to: props.to.getTime() }
-                                        props.navigation.navigate('CreateBooking', params)
+                                        props.navigation.navigate('Checkout', params)
                                     }} />
                                 </View>
                             </View>
