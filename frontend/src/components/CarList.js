@@ -306,7 +306,7 @@ const CarList = (props) => {
                                         {Helper.getDays(days)}
                                     </label>
                                     <label className='price-main'>
-                                        {`${Helper.price(car, props.from, props.to)} ${commonStrings.CURRENCY}`}
+                                        {`${Helper.formatPrice(Helper.price(car, props.from, props.to))} ${commonStrings.CURRENCY}`}
                                     </label>
                                     <label className='price-day'>
                                         {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}

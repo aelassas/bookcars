@@ -196,7 +196,7 @@ const BookingList = (props) => {
                 headerName: strings.PRICE,
                 flex: 1,
                 valueGetter: (params) => (
-                    `${params.value} ${strings.CURRENCY}`
+                    `${Helper.formatPrice(params.value)} ${strings.CURRENCY}`
                 ),
                 renderCell: (params) => (
                     <span className='bp'>{params.value}</span>
@@ -350,7 +350,7 @@ const BookingList = (props) => {
                                         <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                             <label className='booking-detail-title'>{strings.CAR}</label>
                                             <div className='booking-detail-value'>
-                                                {`${booking.car.name} (${booking.car.price} ${csStrings.CAR_CURRENCY})`}
+                                                {`${booking.car.name} (${Helper.formatPrice(booking.car.price)} ${csStrings.CAR_CURRENCY})`}
                                             </div>
                                         </div>
                                         <div className='booking-detail' style={{ height: bookingDetailHeight }}>
@@ -440,7 +440,7 @@ const BookingList = (props) => {
                                         }
                                         <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                             <label className='booking-detail-title'>{strings.COST}</label>
-                                            <div className='booking-detail-value booking-price'>{`${booking.price} ${commonStrings.CURRENCY}`}</div>
+                                            <div className='booking-detail-value booking-price'>{`${Helper.formatPrice(booking.price)} ${commonStrings.CURRENCY}`}</div>
                                         </div>
 
                                         <div className='bs-buttons'>

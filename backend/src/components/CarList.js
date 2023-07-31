@@ -71,7 +71,7 @@ const CarList = (props) => {
         try {
             setLoading(true)
             const payload = { companies, fuel, gearbox, mileage, deposit, availability }
-            
+
             const data = await CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
             const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
             const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
@@ -87,7 +87,7 @@ const CarList = (props) => {
             setRowCount(((page - 1) * Env.CARS_PAGE_SIZE) + _rows.length)
             setTotalRecords(totalRecords)
             setFetch(_data.resultData.length > 0)
-            
+
             if (
                 ((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
                 || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())
@@ -390,7 +390,7 @@ const CarList = (props) => {
                                         </li>
                                     </ul>
                                 </div>
-                                {!props.hidePrice && <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>}
+                                {!props.hidePrice && <div className='price'>{`${Helper.formatPrice(car.price)} ${strings.CAR_CURRENCY}`}</div>}
                                 <div className='action'>
                                     {edit &&
                                         <>
