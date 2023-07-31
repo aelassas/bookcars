@@ -72,7 +72,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                 setRows([])
                 setLoading(true)
                 const data = await NotificationService.getNotifications(user._id, page)
-                const _data = data[0]
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
                 const _rows = _data.resultData.map(row => ({ checked: false, ...row }))
                 const _totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                 setRows(_rows)
@@ -111,7 +111,7 @@ const NotificationsScreen = ({ navigation, route }) => {
     const allChecked = rows.length > 0 && checkedRows.length === rows.length
     const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length
     const previousPageDisabled = page === 1
-    const nextPageDisabled = (((page - 1) * Env.PAGE_SIZE) + rows.length) === totalRecords
+    const nextPageDisabled = (((page - 1) * Env.PAGE_SIZE) + rows.length) >= totalRecords
 
     return (
         <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} notificationCount={notificationCount} strict>
@@ -371,7 +371,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                     </Dialog.Content>
                                     <Dialog.Actions style={styles.dialogActions}>
                                         <NativeButton
-                                            color='#f37022'
+                                            // color='#f37022'
                                             onPress={() => {
                                                 setOpenDeleteDialog(false)
                                             }}
@@ -379,7 +379,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                                             {i18n.t('CANCEL')}
                                         </NativeButton>
                                         <NativeButton
-                                            color='#f37022'
+                                            // color='#f37022'
                                             onPress={async () => {
                                                 try {
                                                     const ids = selectedRows.map(row => row._id)
