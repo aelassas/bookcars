@@ -170,7 +170,7 @@ const BookingList = (props) => {
 
     const getDate = (date) => {
         const d = new Date(date)
-        return `${Helper.formatNumber(d.getDate())}-${Helper.formatNumber(d.getMonth() + 1)}-${d.getFullYear()}`
+        return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
     }
 
     const getColumns = () => {

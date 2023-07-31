@@ -13,6 +13,10 @@ export const formatPrice = (x) => {
     return ''
 }
 
+export const formatDatePart = (n) => {
+    return n > 9 ? '' + n : '0' + n
+}
+
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
@@ -269,10 +273,6 @@ export const getBookingStatus = (status) => {
         default:
             return ''
     }
-}
-
-export const formatNumber = (n) => {
-    return n > 9 ? '' + n : '0' + n
 }
 
 export const arrayEqual = (a, b) => {
