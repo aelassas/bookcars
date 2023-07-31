@@ -1,9 +1,7 @@
 version: "3.8"
 services:
    api:
-     build:
-      context: ./api
-      dockerfile: ./Dockerfile
+     build: ./api
      env_file: ./api/.env.docker
      restart: always
      ports:
@@ -24,22 +22,18 @@ services:
        - 27017:27017
 
    backend:
-     build:
-      context: ./backend
-      dockerfile: ./Dockerfile
+     build: ./backend
      depends_on:
        - api
      ports:
-       - 3001:80
+       - 3001:3001
 
    frontend:
-     build:
-      context: ./frontend
-      dockerfile: ./Dockerfile
+     build: ./frontend
      depends_on:
        - api
      ports:
-       - 80:80
+       - 80:3002
      volumes:
        - cdn:/var/www/cdn/bookcars
 
