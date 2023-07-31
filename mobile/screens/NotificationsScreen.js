@@ -74,7 +74,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                 const data = await NotificationService.getNotifications(user._id, page)
                 const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
                 const _rows = _data.resultData.map(row => ({ checked: false, ...row }))
-                const _totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+                const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                 setRows(_rows)
                 setTotalRecords(_totalRecords)
                 setRowCount(((page - 1) * Env.PAGE_SIZE) + _rows.length)

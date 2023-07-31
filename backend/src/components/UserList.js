@@ -61,7 +61,7 @@ const UserList = (props) => {
 
             const data = await UserService.getUsers(payload, keyword, page + 1, pageSize)
             const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-            const totalRecords = _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+            const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
             const _rows = _data.resultData
 
             setRows(_rows)
