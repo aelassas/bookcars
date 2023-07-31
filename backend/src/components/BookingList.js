@@ -252,7 +252,7 @@ const BookingList = (props) => {
                         <div>
                             <Tooltip title={commonStrings.UPDATE}>
                                 <IconButton
-                                    href={`booking?b=${params.row._id}`}
+                                    href={`update-booking?b=${params.row._id}`}
                                 >
                                     <EditIcon />
                                 </IconButton>
@@ -555,7 +555,7 @@ const BookingList = (props) => {
                                                 variant="contained"
                                                 className='btn-primary'
                                                 size="small"
-                                                href={`booking?b=${booking._id}`}
+                                                href={`update-booking?b=${booking._id}`}
                                             >
                                                 {commonStrings.UPDATE}
                                             </Button>

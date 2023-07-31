@@ -44,7 +44,7 @@ import { useNavigate } from 'react-router-dom'
 
 import '../assets/css/booking.css'
 
-const Booking = () => {
+const UpdateBooking = () => {
     const navigate = useNavigate()
     const [user, setUser] = useState()
     const [loading, setLoading] = useState(false)
@@ -397,7 +397,7 @@ const Booking = () => {
                         setVisible(true)
                         setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
                         setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
-                        setCar({ _id: booking.car._id, name: booking.car.name, image: booking.car.image })
+                        setCar(booking.car)
                         setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
                         setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
                         setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
@@ -572,6 +572,7 @@ const Booking = () => {
                                     }
                                     label={csStrings.CANCELLATION}
                                     className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'cancellation')}
                                 />
                             </FormControl>
 
@@ -584,18 +585,7 @@ const Booking = () => {
                                     }
                                     label={csStrings.AMENDMENTS}
                                     className='checkbox-fcl'
-                                />
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={collisionDamageWaiver}
-                                            onChange={handleCollisionDamageWaiverChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.COLLISION_DAMAGE_WAVER}
-                                    className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'amendments')}
                                 />
                             </FormControl>
 
@@ -608,6 +598,20 @@ const Booking = () => {
                                     }
                                     label={csStrings.THEFT_PROTECTION}
                                     className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
+                                <FormControlLabel
+                                    control={
+                                        <Switch checked={collisionDamageWaiver}
+                                            onChange={handleCollisionDamageWaiverChange}
+                                            color="primary" />
+                                    }
+                                    label={csStrings.COLLISION_DAMAGE_WAVER}
+                                    className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
                                 />
                             </FormControl>
 
@@ -620,6 +624,7 @@ const Booking = () => {
                                     }
                                     label={csStrings.FULL_INSURANCE}
                                     className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
                                 />
                             </FormControl>
 
@@ -632,11 +637,12 @@ const Booking = () => {
                                     }
                                     label={csStrings.ADDITIONAL_DRIVER}
                                     className='checkbox-fcl'
+                                    disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
                                 />
                             </FormControl>
 
                             {
-                                additionalDriver &&
+                                Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver &&
                                 <>
                                     <div className='info'>
                                         <DriverIcon />
@@ -799,4 +805,4 @@ const Booking = () => {
     )
 }
 
-export default Booking
+export default UpdateBooking

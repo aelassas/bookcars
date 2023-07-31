@@ -83,11 +83,6 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
         }
     }
 
-    const getCars = (cars) => cars.map(car => {
-        const { _id, name, image } = car
-        return { _id, name, image }
-    })
-
     const _fetch = async (page, keyword, company, pickupLocation) => {
         try {
             const payload = { company, pickupLocation }
@@ -104,8 +99,7 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
             setLoading(true)
 
             const data = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE)
-            const _data = getCars(data)
-            const _cars = page === 1 ? _data : [...cars, ..._data]
+            const _cars = page === 1 ? data : [...cars, ...data]
 
             setCars(_cars)
             setFetch(data.length > 0)

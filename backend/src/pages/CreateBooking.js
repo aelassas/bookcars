@@ -81,7 +81,7 @@ const CreateBooking = () => {
     }
 
     const handleCarSelectListChange = useCallback((values) => {
-        setCar(values.length > 0 ? values[0]._id : null)
+        setCar(Array.isArray(values) && values.length > 0 && values[0])
     }, [])
 
     const handleStatusChange = (value) => {
@@ -176,7 +176,7 @@ const CreateBooking = () => {
 
         const booking = {
             company,
-            car,
+            car: car._id,
             driver,
             pickupLocation,
             dropOffLocation,
@@ -337,6 +337,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.CANCELLATION}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'cancellation')}
                             />
                         </FormControl>
 
@@ -349,6 +350,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.AMENDMENTS}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'amendments')}
                             />
                         </FormControl>
 
@@ -361,6 +363,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.THEFT_PROTECTION}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
                             />
                         </FormControl>
 
@@ -373,6 +376,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.COLLISION_DAMAGE_WAVER}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
                             />
                         </FormControl>
 
@@ -385,6 +389,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.FULL_INSURANCE}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
                             />
                         </FormControl>
 
@@ -397,6 +402,7 @@ const CreateBooking = () => {
                                 }
                                 label={csStrings.ADDITIONAL_DRIVER}
                                 className='checkbox-fcl'
+                                disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
                             />
                         </FormControl>
 
