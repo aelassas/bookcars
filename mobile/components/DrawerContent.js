@@ -123,7 +123,7 @@ const DrawerContent = (props) => {
                 {openLanguageMenu &&
                     <View style={styles.languageMenu}>
                         <Pressable style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
-                            if (language === Env.LANGUAGE.EN) {
+                            if (language !== Env.LANGUAGE.FR) {
                                 await updateLanguage(Env.LANGUAGE.FR)
                                 setopenLanguageMenu(false)
                             }
@@ -131,7 +131,7 @@ const DrawerContent = (props) => {
                             <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
                         </Pressable>
                         <Pressable style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem} onPress={async () => {
-                            if (language === Env.LANGUAGE.FR) {
+                            if (language !== Env.LANGUAGE.EN) {
                                 await updateLanguage(Env.LANGUAGE.EN)
                                 setopenLanguageMenu(false)
                             }
