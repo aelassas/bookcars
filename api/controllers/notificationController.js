@@ -180,7 +180,7 @@ export const deleteNotifications = async (req, res) => {
 
         return res.sendStatus(200)
     } catch (err) {
-        console.error(`[notification.delete] ${strings.DB_ERROR}`, err)
+        console.error(`[notification.deleteNotifications] ${strings.DB_ERROR}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
