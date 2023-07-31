@@ -1,6 +1,5 @@
 import LocalizedStrings from 'react-localization'
-import Env from '../config/env.config'
-import * as UserService from '../services/UserService'
+import * as LangHelper from '../common/LangHelper'
 
 const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`
 
@@ -19,10 +18,5 @@ export const strings = new LocalizedStrings({
     }
 })
 
-let language = UserService.getQueryLanguage()
-
-if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage()
-}
-
+const language = LangHelper.getLanguage()
 strings.setLanguage(language)

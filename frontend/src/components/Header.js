@@ -96,7 +96,7 @@ const Header = (props) => {
 
         if (params.has('l')) {
             params.delete('l')
-            navigate(window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : ''))
+            window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? ('?' + params) : '')
         } else {
             window.location.reload()
         }

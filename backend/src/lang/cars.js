@@ -1,6 +1,5 @@
 import LocalizedStrings from 'react-localization'
-import Env from '../config/env.config'
-import * as UserService from '../services/UserService'
+import * as LangHelper from '../common/LangHelper'
 import { strings as commonStrings } from '../lang/common'
 
 export const strings = new LocalizedStrings({
@@ -130,10 +129,5 @@ export const strings = new LocalizedStrings({
     }
 })
 
-let language = UserService.getQueryLanguage()
-
-if (language === '' || !Env.LANGUAGES.includes(language)) {
-    language = UserService.getLanguage()
-}
-
+const language = LangHelper.getLanguage()
 strings.setLanguage(language)
