@@ -178,17 +178,20 @@ const User = () => {
                         </div>
                     </div>
                     <div className='col-2'>
-                        <BookingList
-                            containerClassName='user'
-                            offset={offset}
-                            loggedUser={loggedUser}
-                            user={company ? undefined : user}
-                            companies={company ? [user._id] : companies}
-                            statuses={statuses}
-                            hideDates={Env.isMobile()}
-                            checkboxSelection={!Env.isMobile()}
-                            hideCompanyColumn={company}
-                        />
+                        {
+                            edit &&
+                            <BookingList
+                                containerClassName='user'
+                                offset={offset}
+                                loggedUser={loggedUser}
+                                user={company ? undefined : user}
+                                companies={company ? [user._id] : companies}
+                                statuses={statuses}
+                                hideDates={Env.isMobile()}
+                                checkboxSelection={!Env.isMobile()}
+                                hideCompanyColumn={company}
+                            />
+                        }
                     </div>
                 </div>
             }
