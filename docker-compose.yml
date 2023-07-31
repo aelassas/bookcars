@@ -15,7 +15,7 @@ services:
      image: mongo:latest
      restart: always
      environment:
-        # provide your credentials here
+        # Provide your credentials here
         MONGO_INITDB_ROOT_USERNAME: admin
         MONGO_INITDB_ROOT_PASSWORD: PASSWORD
      ports:
