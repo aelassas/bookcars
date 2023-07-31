@@ -43,7 +43,7 @@ const Notifications = () => {
             try {
                 setLoading(true)
                 const data = await NotificationService.getNotifications(user._id, page)
-                const _data = data[0]
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
                 const _rows = _data.resultData.map(row => ({ checked: false, ...row }))
                 const _totalRecords =  _data && _data.pageInfo && Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
                 setTotalRecords(_totalRecords)
@@ -319,7 +319,7 @@ const Notifications = () => {
                                     <PreviousPageIcon className='icon' />
                                 </IconButton>
                                 <IconButton
-                                    disabled={(((page - 1) * Env.PAGE_SIZE) + rows.length) === totalRecords}
+                                    disabled={(((page - 1) * Env.PAGE_SIZE) + rows.length) >= totalRecords}
                                     onClick={() => {
                                         const _page = page + 1
                                         setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? ((_page - 1) * Env.PAGE_SIZE) + Env.PAGE_SIZE : totalRecords)
