@@ -22,7 +22,7 @@ import * as BookingService from '../services/BookingService'
 import Env from '../config/env.config'
 import Backdrop from '../components/Backdrop'
 
-const CreateBookingScreen = ({ navigation, route }) => {
+const CheckoutScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused()
     const [reload, setReload] = useState(false)
     const [visible, setVisible] = useState(false)
@@ -1378,4 +1378,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CreateBookingScreen
+export default CheckoutScreen
