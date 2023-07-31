@@ -38,7 +38,7 @@ const BookingList = (props) => {
                 setLoading(true)
                 setFetch(true)
                 const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE)
-                const _data = data.length > 0 ? data[0] : {}
+                const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
                 const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
                 setRows(_rows)
                 setFetch(_data.resultData.length > 0)
