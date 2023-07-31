@@ -179,7 +179,7 @@ const User = () => {
                     </div>
                     <div className='col-2'>
                         {
-                            edit &&
+                            (edit || !company) &&
                             <BookingList
                                 containerClassName='user'
                                 offset={offset}
