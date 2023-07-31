@@ -110,7 +110,7 @@ export const getLocation = async (req, res) => {
             return res.sendStatus(204)
         }
     } catch (err) {
-        console.error(`[location.delete] ${strings.DB_ERROR} ${id}`, err)
+        console.error(`[location.getLocation] ${strings.DB_ERROR} ${id}`, err)
         return res.status(400).send(strings.DB_ERROR + err)
     }
 }
