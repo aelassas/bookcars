@@ -3,7 +3,7 @@ import { strings as commonStrings } from "../lang/common"
 import { strings } from "../lang/cars"
 import { toast } from 'react-toastify'
 
-export const formatPrice = (x) => {
+export const formatNumber = (x) => {
     if (typeof x === 'number') {
         const parts = x.toString().split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
@@ -179,7 +179,7 @@ export const getMileage = (mileage) => {
     if (mileage === -1) {
         return strings.UNLIMITED
     } else {
-        return `${mileage} ${strings.MILEAGE_UNIT}`
+        return `${formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
     }
 }
 
@@ -198,7 +198,7 @@ export const getAdditionalDriver = (additionalDriver, fr) => {
     else if (additionalDriver === 0) {
         return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
     } else {
-        return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${formatPrice(additionalDriver)} ${strings.CAR_CURRENCY}`
+        return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
     }
 }
 
@@ -209,7 +209,7 @@ export const getFullInsurance = (fullInsurance, fr) => {
     else if (fullInsurance === 0) {
         return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${formatPrice(fullInsurance)} ${strings.CAR_CURRENCY}`
+        return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
     }
 }
 
@@ -220,7 +220,7 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver, fr) => {
     else if (collisionDamageWaiver === 0) {
         return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${formatPrice(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
+        return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
     }
 }
 
@@ -231,7 +231,7 @@ export const getTheftProtection = (theftProtection, fr) => {
     else if (theftProtection === 0) {
         return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${formatPrice(theftProtection)} ${strings.CAR_CURRENCY}`
+        return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
     }
 }
 
@@ -242,7 +242,7 @@ export const getAmendments = (amendments, fr) => {
     else if (amendments === 0) {
         return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
     } else {
-        return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${formatPrice(amendments)} ${commonStrings.CURRENCY}`
+        return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${formatNumber(amendments)} ${commonStrings.CURRENCY}`
     }
 }
 
@@ -253,7 +253,7 @@ export const getCancellation = (cancellation, fr) => {
     else if (cancellation === 0) {
         return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${formatPrice(cancellation)} ${commonStrings.CURRENCY}`
+        return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${formatNumber(cancellation)} ${commonStrings.CURRENCY}`
     }
 }
 
@@ -416,7 +416,7 @@ export const getCancellationOption = (cancellation, fr) => {
     else if (cancellation === 0) {
         return `${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `+ ${formatPrice(cancellation)} ${commonStrings.CURRENCY}`
+        return `+ ${formatNumber(cancellation)} ${commonStrings.CURRENCY}`
     }
 }
 
@@ -427,7 +427,7 @@ export const getAmendmentsOption = (amendments, fr) => {
     else if (amendments === 0) {
         return `${strings.INCLUDED}${fr ? 'es' : ''}`
     } else {
-        return `+ ${formatPrice(amendments)} ${commonStrings.CURRENCY}`
+        return `+ ${formatNumber(amendments)} ${commonStrings.CURRENCY}`
     }
 }
 
@@ -438,7 +438,7 @@ export const getTheftProtectionOption = (theftProtection, days, fr) => {
     else if (theftProtection === 0) {
         return `${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `+ ${formatPrice(theftProtection * days)} ${commonStrings.CURRENCY} (${formatPrice(theftProtection)} ${strings.CAR_CURRENCY})`
+        return `+ ${formatNumber(theftProtection * days)} ${commonStrings.CURRENCY} (${formatNumber(theftProtection)} ${strings.CAR_CURRENCY})`
     }
 }
 
@@ -449,7 +449,7 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver, days, fr) 
     else if (collisionDamageWaiver === 0) {
         return `${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `+ ${formatPrice(collisionDamageWaiver * days)} ${commonStrings.CURRENCY} (${formatPrice(collisionDamageWaiver)} ${strings.CAR_CURRENCY})`
+        return `+ ${formatNumber(collisionDamageWaiver * days)} ${commonStrings.CURRENCY} (${formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY})`
     }
 }
 
@@ -460,7 +460,7 @@ export const getFullInsuranceOption = (fullInsurance, days, fr) => {
     else if (fullInsurance === 0) {
         return `${strings.INCLUDED}${fr ? 'e' : ''}`
     } else {
-        return `+ ${formatPrice(fullInsurance * days)} ${commonStrings.CURRENCY} (${formatPrice(fullInsurance)} ${strings.CAR_CURRENCY})`
+        return `+ ${formatNumber(fullInsurance * days)} ${commonStrings.CURRENCY} (${formatNumber(fullInsurance)} ${strings.CAR_CURRENCY})`
     }
 }
 
@@ -471,7 +471,7 @@ export const getAdditionalDriverOption = (additionalDriver, days) => {
     else if (additionalDriver === 0) {
         return strings.INCLUDED
     } else {
-        return `+ ${formatPrice(additionalDriver * days)} ${commonStrings.CURRENCY} (${formatPrice(additionalDriver)} ${strings.CAR_CURRENCY})`
+        return `+ ${formatNumber(additionalDriver * days)} ${commonStrings.CURRENCY} (${formatNumber(additionalDriver)} ${strings.CAR_CURRENCY})`
     }
 }
 

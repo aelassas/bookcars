@@ -173,7 +173,7 @@ const Car = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className='price'>{`${car.price} ${strings.CAR_CURRENCY}`}</div>
+                            <div className='price'>{`${Helper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
                             <div className='car-info'>
                                 <ul className='car-info-list'>
                                     <li className='car-type'>

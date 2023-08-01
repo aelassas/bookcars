@@ -390,7 +390,7 @@ const CarList = (props) => {
                                         </li>
                                     </ul>
                                 </div>
-                                {!props.hidePrice && <div className='price'>{`${Helper.formatPrice(car.price)} ${strings.CAR_CURRENCY}`}</div>}
+                                {!props.hidePrice && <div className='price'>{`${Helper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>}
                                 <div className='action'>
                                     {edit &&
                                         <>

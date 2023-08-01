@@ -827,7 +827,7 @@ const Checkout = () => {
                                         </div>
                                         <div className='booking-detail' style={{ height: bookingDetailHeight }}>
                                             <label className='booking-detail-title'>{strings.COST}</label>
-                                            <div className='booking-detail-value booking-price'>{`${Helper.formatPrice(price)} ${commonStrings.CURRENCY}`}</div>
+                                            <div className='booking-detail-value booking-price'>{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1059,7 +1059,7 @@ const Checkout = () => {
                                             </div>
                                             <div className='secure-payment-cost'>
                                                 <label className='cost-title'>{strings.COST}</label>
-                                                <label className='cost-value'>{`${Helper.formatPrice(price)} ${commonStrings.CURRENCY}`}</label>
+                                                <label className='cost-value'>{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
                                             </div>
                                         </div>
 
