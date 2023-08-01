@@ -176,7 +176,7 @@ export const getMileageTooltip = (mileage, fr) => {
     if (mileage === -1) {
         return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
     } else {
-        return `${strings.MILEAGE}${fr ? ' : ' : ': '}${mileage} ${strings.MILEAGE_UNIT}`
+        return `${strings.MILEAGE}${fr ? ' : ' : ': '}${formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
     }
 }
 
