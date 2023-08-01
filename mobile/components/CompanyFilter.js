@@ -73,31 +73,31 @@ const CompanyFilter = (props) => {
                         </View>
                     )
                     )}
-                    <Link style={styles.link} textStyle={styles.linkText} label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')} onPress={() => {
-
-                        let _checkedSuppliers = []
-                        if (allChecked) {
-                            suppliers.forEach((supplier) => {
-                                supplier.checked = false
-                            })
-                            setAllChecked(false)
-                            setSuppliers(Helper.clone(suppliers))
-                            setCheckedSuppliers(_checkedSuppliers)
-                        } else {
-                            suppliers.forEach((supplier) => {
-                                supplier.checked = true
-                            })
-                            setAllChecked(true)
-                            setSuppliers(Helper.clone(suppliers))
-                            _checkedSuppliers = Helper.clone(Helper.flattenCompanies(suppliers))
-                            setCheckedSuppliers(_checkedSuppliers)
-
-                            if (props.onChange) {
-                                props.onChange(_checkedSuppliers)
-                            }
-                        }
-                    }} />
                 </View>
+                <Link style={styles.link} textStyle={styles.linkText} label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')} onPress={() => {
+
+                    let _checkedSuppliers = []
+                    if (allChecked) {
+                        suppliers.forEach((supplier) => {
+                            supplier.checked = false
+                        })
+                        setAllChecked(false)
+                        setSuppliers(Helper.clone(suppliers))
+                        setCheckedSuppliers(_checkedSuppliers)
+                    } else {
+                        suppliers.forEach((supplier) => {
+                            supplier.checked = true
+                        })
+                        setAllChecked(true)
+                        setSuppliers(Helper.clone(suppliers))
+                        _checkedSuppliers = Helper.clone(Helper.flattenCompanies(suppliers))
+                        setCheckedSuppliers(_checkedSuppliers)
+
+                        if (props.onChange) {
+                            props.onChange(_checkedSuppliers)
+                        }
+                    }
+                }} />
             </Accordion>
         </View>
     )
@@ -110,19 +110,18 @@ const styles = StyleSheet.create({
     },
     accordion: {
         width: '100%',
-        maxWidth: 480
+        maxWidth: 480,
     },
     companies: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'center',
         width: 300,
     },
     company: {
         width: '50%',
-        marginBottom: 7
+        marginBottom: 7,
     },
     image: {
         width: Env.COMPANY_IMAGE_WIDTH,
