@@ -463,7 +463,7 @@ const Booking = () => {
                                     {Helper.getDays(days)}
                                 </label>
                                 <label className='price-main'>
-                                    {`${Helper.formatPrice(price)} ${commonStrings.CURRENCY}`}
+                                    {`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}
                                 </label>
                                 <label className='price-day'>
                                     {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}

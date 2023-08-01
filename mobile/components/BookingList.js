@@ -143,7 +143,7 @@ const BookingList = (props) => {
                                 <Text style={styles.detailText}>{booking.dropOffLocation.name}</Text>
 
                                 <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                                <Text style={styles.detailText}>{`${booking.car.name} (${Helper.formatPrice(booking.car.price)} ${i18n.t('CAR_CURRENCY')})`}</Text>
+                                <Text style={styles.detailText}>{`${booking.car.name} (${Helper.formatNumber(booking.car.price)} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
                                 <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                                 <View style={styles.company}>
@@ -212,7 +212,7 @@ const BookingList = (props) => {
                                 }
 
                                 <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                                <Text style={styles.detailTextBold}>{`${Helper.formatPrice(booking.price)} ${i18n.t('CURRENCY')}`}</Text>
+                                <Text style={styles.detailTextBold}>{`${Helper.formatNumber(booking.price)} ${i18n.t('CURRENCY')}`}</Text>
 
                                 {booking.cancellation
                                     && !booking.cancelRequest
