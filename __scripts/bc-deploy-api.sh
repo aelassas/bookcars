@@ -9,7 +9,7 @@ chmod +x -R /opt/bookcars/__scripts
 
 cd /opt/bookcars/api
 
-npm install
+npm install --omit=dev
 
 sudo systemctl restart bookcars
 sudo systemctl status bookcars --no-pager
