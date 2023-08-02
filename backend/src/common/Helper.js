@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 
 export const formatNumber = (x) => {
     if (typeof x === 'number') {
-        const parts = x.toString().split('.')
+        const parts = String(x).split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
         return parts.join('.')
     }
@@ -14,7 +14,7 @@ export const formatNumber = (x) => {
 }
 
 export const formatDatePart = (n) => {
-    return n > 9 ? '' + n : '0' + n
+    return n > 9 ? String(n) : '0' + n
 }
 
 export const capitalize = (str) => {
