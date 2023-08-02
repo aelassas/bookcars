@@ -62,7 +62,7 @@ const UpdateCar = () => {
     const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
     const [fullInsurance, setFullInsurance] = useState('')
     const [additionalDriver, setAdditionalDriver] = useState('')
-    const [minimumAge, setMinimumAge] = useState(Env.MINIMUM_AGE.toString())
+    const [minimumAge, setMinimumAge] = useState(String(Env.MINIMUM_AGE))
     const [minimumAgeValid, setMinimumAgeValid] = useState(true)
     const [formError, setFormError] = useState(false)
     const [deposit, setDeposit] = useState('')
