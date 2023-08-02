@@ -17,7 +17,7 @@ From the frontend and the mobile app, users can sign up, search for available ca
 
 <img src="https://bookcars.github.io/content/docker.png" alt="" width="220" />
 
-BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Docker) to walk you through on how to build BookCars Docker image and run it on a Docker container.
+BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Docker) to walk you through on how to build BookCars Docker image and run it in a Docker container.
 
 # Features
 
