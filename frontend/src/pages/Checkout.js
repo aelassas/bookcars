@@ -450,7 +450,7 @@ const Checkout = () => {
 
     const validateCardDate = (cardMonth, cardYear) => {
         const today = new Date(), cardDate = new Date()
-        const y = parseInt(today.getFullYear().toString().slice(0, 2)) * 100
+        const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100
         const year = y + parseInt(cardYear)
         const month = parseInt(cardMonth)
         cardDate.setFullYear(year, month - 1, 1)
