@@ -536,7 +536,7 @@ const CheckoutScreen = ({ navigation, route }) => {
     const validateCardYear = () => {
         if (cardYear) {
             const year = parseInt(cardYear)
-            const currentYear = parseInt(new Date().getFullYear().toString().slice(2))
+            const currentYear = parseInt(String(new Date().getFullYear()).slice(2))
             const cardYearValid = year >= currentYear
 
             setCardYearRequired(false)
