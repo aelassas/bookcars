@@ -12,7 +12,7 @@ const ANDROID = Platform.OS === 'android'
 
 export const formatNumber = (x) => {
     if (typeof x === 'number') {
-        const parts = x.toString().split('.')
+        const parts = String(x).split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
         return parts.join('.')
     }
