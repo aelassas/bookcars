@@ -16,9 +16,10 @@
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
     "react/prop-types": 0,
-    "prettier/prettier": "error",
+    "prettier/prettier": "warn",
     "no-extra-semi": 0,
-    "no-dupe-keys": 0
+    "no-dupe-keys": 0,
+    "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
     "react": {

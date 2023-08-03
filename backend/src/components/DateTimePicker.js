@@ -14,8 +14,8 @@ const DateTimePicker = (props) => {
     >
       <MuiDateTimePicker
         label={props.label}
-        inputFormat='dd-MM-yyyy HH:mm'
-        mask='__-__-____ __:__'
+        inputFormat="dd-MM-yyyy HH:mm"
+        mask="__-__-____ __:__"
         showToolbar
         value={value}
         onChange={(value) => {

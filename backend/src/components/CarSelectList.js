@@ -187,11 +187,11 @@ const CarSelectList = ({
         }}
       />
 
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
+        <DialogTitle className="dialog-header">
           {commonStrings.INFO}
         </DialogTitle>
-        <DialogContent className='dialog-content'>
+        <DialogContent className="dialog-content">
           {_company === '-1' && _pickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
           ) : _company === '-1' ? (
@@ -202,11 +202,11 @@ const CarSelectList = ({
             <></>
           )}
         </DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCloseDialog}
-            variant='contained'
-            className='btn-secondary'
+            variant="contained"
+            className="btn-secondary"
           >
             {commonStrings.CLOSE}
           </Button>

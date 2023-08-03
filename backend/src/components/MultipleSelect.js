@@ -21,7 +21,7 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
 
   return (
     // eslint-disable-next-line
-    <ul {...rest} ref={innerRef} role='list-box'>
+    <ul {...rest} ref={innerRef} role="list-box">
       {children}
     </ul>
   )
@@ -58,7 +58,7 @@ const MultipleSelect = ({
   }, [selectedOptions, type])
 
   return (
-    <div className='multiple-select'>
+    <div className="multiple-select">
       <Autocomplete
         readOnly={readOnly}
         options={options}
@@ -119,16 +119,16 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         {option.image ? (
                           <Avatar
                             src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                            className='avatar-small suo'
+                            className="avatar-small suo"
                           />
                         ) : (
                           <AccountCircle
-                            className='avatar-small suo'
-                            color='disabled'
+                            className="avatar-small suo"
+                            color="disabled"
                           />
                         )}
                       </InputAdornment>
@@ -158,8 +158,8 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
-                        <div className='company-ia'>
+                      <InputAdornment position="start">
+                        <div className="company-ia">
                           <img
                             src={Helper.joinURL(Env.CDN_USERS, option.image)}
                             alt={option.name}
@@ -190,7 +190,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         <LocationIcon />
                       </InputAdornment>
                       {params.InputProps.startAdornment}
@@ -219,7 +219,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         <img
                           src={Helper.joinURL(Env.CDN_CARS, option.image)}
                           alt={option.name}
@@ -254,44 +254,44 @@ const MultipleSelect = ({
           if (type === Env.RECORD_TYPE.USER) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image'>
+                <span className="option-image">
                   {option.image ? (
                     <Avatar
                       src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                      className='avatar-medium'
+                      className="avatar-medium"
                     />
                   ) : (
-                    <AccountCircle className='avatar-medium' color='disabled' />
+                    <AccountCircle className="avatar-medium" color="disabled" />
                   )}
                 </span>
-                <span className='option-name'>{option.name}</span>
+                <span className="option-name">{option.name}</span>
               </li>
             )
           } else if (type === Env.RECORD_TYPE.COMPANY) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image company-ia'>
+                <span className="option-image company-ia">
                   <img
                     src={Helper.joinURL(Env.CDN_USERS, option.image)}
                     alt={option.name}
                   />
                 </span>
-                <span className='option-name'>{option.name}</span>
+                <span className="option-name">{option.name}</span>
               </li>
             )
           } else if (type === Env.RECORD_TYPE.LOCATION) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image'>
+                <span className="option-image">
                   <LocationIcon />
                 </span>
-                <span className='option-name'>{option.name}</span>
+                <span className="option-name">{option.name}</span>
               </li>
             )
           } else if (type === Env.RECORD_TYPE.CAR) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image car-ia'>
+                <span className="option-image car-ia">
                   <img
                     src={Helper.joinURL(Env.CDN_CARS, option.image)}
                     alt={option.name}
@@ -300,7 +300,7 @@ const MultipleSelect = ({
                     }}
                   />
                 </span>
-                <span className='car-option-name'>{option.name}</span>
+                <span className="car-option-name">{option.name}</span>
               </li>
             )
           }

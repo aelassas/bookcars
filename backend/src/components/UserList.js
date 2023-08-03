@@ -143,13 +143,13 @@ const UserList = (props) => {
               const avatar = (
                 <Avatar
                   src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                  className='avatar-small'
+                  className="avatar-small"
                 />
               )
               if (user.verified) {
                 userAvatar = (
                   <Badge
-                    overlap='circular'
+                    overlap="circular"
                     anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'right',
@@ -157,10 +157,10 @@ const UserList = (props) => {
                     badgeContent={
                       <Tooltip title={commonStrings.VERIFIED}>
                         <Box
-                          borderRadius='50%'
-                          className='user-avatar-verified-small'
+                          borderRadius="50%"
+                          className="user-avatar-verified-small"
                         >
-                          <VerifiedIcon className='user-avatar-verified-icon-small' />
+                          <VerifiedIcon className="user-avatar-verified-icon-small" />
                         </Box>
                       </Tooltip>
                     }
@@ -174,13 +174,13 @@ const UserList = (props) => {
             }
           } else {
             const avatar = (
-              <AccountCircle className='avatar-small' color='disabled' />
+              <AccountCircle className="avatar-small" color="disabled" />
             )
 
             if (user.verified) {
               userAvatar = (
                 <Badge
-                  overlap='circular'
+                  overlap="circular"
                   anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -188,10 +188,10 @@ const UserList = (props) => {
                   badgeContent={
                     <Tooltip title={commonStrings.VERIFIED}>
                       <Box
-                        borderRadius='50%'
-                        className='user-avatar-verified-small'
+                        borderRadius="50%"
+                        className="user-avatar-verified-small"
                       >
-                        <VerifiedIcon className='user-avatar-verified-icon-small' />
+                        <VerifiedIcon className="user-avatar-verified-icon-small" />
                       </Box>
                     </Tooltip>
                   }
@@ -205,8 +205,8 @@ const UserList = (props) => {
           }
 
           return (
-            <Link href={`/user?u=${params.row._id}`} className='us-user'>
-              <span className='us-avatar'>{userAvatar}</span>
+            <Link href={`/user?u=${params.row._id}`} className="us-user">
+              <span className="us-avatar">{userAvatar}</span>
               <span>{params.value}</span>
             </Link>
           )
@@ -325,7 +325,7 @@ const UserList = (props) => {
   }
 
   return (
-    <div className='us-list'>
+    <div className="us-list">
       {user && columns.length > 0 && (
         <DataGrid
           checkboxSelection={props.checkboxSelection}
@@ -341,7 +341,7 @@ const UserList = (props) => {
           pagination
           page={page}
           pageSize={pageSize}
-          paginationMode='server'
+          paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           localeText={
@@ -362,27 +362,27 @@ const UserList = (props) => {
         />
       )}
 
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+        <DialogTitle className="dialog-header">
           {commonStrings.CONFIRM_TITLE}
         </DialogTitle>
-        <DialogContent className='dialog-content'>
+        <DialogContent className="dialog-content">
           {selectedIds.length === 0
             ? strings.DELETE_USER
             : strings.DELETE_USERS}
         </DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCancelDelete}
-            variant='contained'
-            className='btn-secondary'
+            variant="contained"
+            className="btn-secondary"
           >
             {commonStrings.CANCEL}
           </Button>
           <Button
             onClick={handleConfirmDelete}
-            variant='contained'
-            color='error'
+            variant="contained"
+            color="error"
           >
             {commonStrings.DELETE}
           </Button>

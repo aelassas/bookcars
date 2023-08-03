@@ -729,18 +729,18 @@ const Checkout = () => {
   return (
     <Master onLoad={onLoad} strict={false}>
       {visible && car && (
-        <div className='booking'>
-          <Paper className='booking-form' elevation={10}>
-            <h1 className='booking-form-title'> {strings.BOOKING_HEADING} </h1>
+        <div className="booking">
+          <Paper className="booking-form" elevation={10}>
+            <h1 className="booking-form-title"> {strings.BOOKING_HEADING} </h1>
             <form onSubmit={handleSubmit}>
               <div>
-                <div className='booking-options-container'>
-                  <div className='booking-info'>
+                <div className="booking-options-container">
+                  <div className="booking-info">
                     <BookingIcon />
                     <label>{strings.BOOKING_OPTIONS}</label>
                   </div>
-                  <div className='booking-options'>
-                    <FormControl fullWidth margin='dense'>
+                  <div className="booking-options">
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={
                           car.cancellation === -1 || car.cancellation === 0
@@ -749,15 +749,15 @@ const Checkout = () => {
                           <Switch
                             checked={cancellation}
                             onChange={handleCancellationChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.CANCELLATION}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getCancellationOption(
                                 car.cancellation,
                                 _fr,
@@ -768,22 +768,22 @@ const Checkout = () => {
                       />
                     </FormControl>
 
-                    <FormControl fullWidth margin='dense'>
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={car.amendments === -1 || car.amendments === 0}
                         control={
                           <Switch
                             checked={amendments}
                             onChange={handleAmendmentsChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.AMENDMENTS}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getAmendmentsOption(car.amendments, _fr)}
                             </span>
                           </span>
@@ -791,7 +791,7 @@ const Checkout = () => {
                       />
                     </FormControl>
 
-                    <FormControl fullWidth margin='dense'>
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={
                           car.collisionDamageWaiver === -1 ||
@@ -801,15 +801,15 @@ const Checkout = () => {
                           <Switch
                             checked={collisionDamageWaiver}
                             onChange={handleCollisionDamageWaiverChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.COLLISION_DAMAGE_WAVER}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getCollisionDamageWaiverOption(
                                 car.collisionDamageWaiver,
                                 days,
@@ -821,7 +821,7 @@ const Checkout = () => {
                       />
                     </FormControl>
 
-                    <FormControl fullWidth margin='dense'>
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={
                           car.theftProtection === -1 ||
@@ -831,15 +831,15 @@ const Checkout = () => {
                           <Switch
                             checked={theftProtection}
                             onChange={handleTheftProtectionChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.THEFT_PROTECTION}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getTheftProtectionOption(
                                 car.theftProtection,
                                 days,
@@ -851,7 +851,7 @@ const Checkout = () => {
                       />
                     </FormControl>
 
-                    <FormControl fullWidth margin='dense'>
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={
                           car.fullInsurance === -1 || car.fullInsurance === 0
@@ -860,15 +860,15 @@ const Checkout = () => {
                           <Switch
                             checked={fullInsurance}
                             onChange={handleFullInsuranceChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.FULL_INSURANCE}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getFullInsuranceOption(
                                 car.fullInsurance,
                                 days,
@@ -880,7 +880,7 @@ const Checkout = () => {
                       />
                     </FormControl>
 
-                    <FormControl fullWidth margin='dense'>
+                    <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={
                           car.additionalDriver === -1 ||
@@ -890,15 +890,15 @@ const Checkout = () => {
                           <Switch
                             checked={additionalDriver}
                             onChange={handleAdditionalDriverChange}
-                            color='primary'
+                            color="primary"
                           />
                         }
                         label={
                           <span>
-                            <span className='booking-option-label'>
+                            <span className="booking-option-label">
                               {csStrings.ADDITIONAL_DRIVER}
                             </span>
-                            <span className='booking-option-value'>
+                            <span className="booking-option-value">
                               {Helper.getAdditionalDriverOption(
                                 car.additionalDriver,
                                 days,
@@ -912,20 +912,20 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                <div className='booking-details-container'>
-                  <div className='booking-info'>
+                <div className="booking-details-container">
+                  <div className="booking-info">
                     <CarIcon />
                     <label>{strings.BOOKING_DETAILS}</label>
                   </div>
-                  <div className='booking-details'>
+                  <div className="booking-details">
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {strings.DAYS}
                       </label>
-                      <div className='booking-detail-value'>
+                      <div className="booking-detail-value">
                         {`${Helper.getDaysShort(
                           Helper.days(from, to),
                         )} (${Helper.capitalize(
@@ -936,47 +936,47 @@ const Checkout = () => {
                       </div>
                     </div>
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {commonStrings.PICKUP_LOCATION}
                       </label>
-                      <div className='booking-detail-value'>
+                      <div className="booking-detail-value">
                         {pickupLocation.name}
                       </div>
                     </div>
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {commonStrings.DROP_OFF_LOCATION}
                       </label>
-                      <div className='booking-detail-value'>
+                      <div className="booking-detail-value">
                         {dropOffLocation.name}
                       </div>
                     </div>
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {strings.CAR}
                       </label>
-                      <div className='booking-detail-value'>
+                      <div className="booking-detail-value">
                         {`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}
                       </div>
                     </div>
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {commonStrings.SUPPLIER}
                       </label>
-                      <div className='booking-detail-value'>
-                        <div className='car-company'>
+                      <div className="booking-detail-value">
+                        <div className="car-company">
                           <img
                             src={Helper.joinURL(
                               Env.CDN_USERS,
@@ -985,56 +985,56 @@ const Checkout = () => {
                             alt={car.company.fullName}
                             style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
                           />
-                          <label className='car-company-name'>
+                          <label className="car-company-name">
                             {car.company.fullName}
                           </label>
                         </div>
                       </div>
                     </div>
                     <div
-                      className='booking-detail'
+                      className="booking-detail"
                       style={{ height: bookingDetailHeight }}
                     >
-                      <label className='booking-detail-title'>
+                      <label className="booking-detail-title">
                         {strings.COST}
                       </label>
-                      <div className='booking-detail-value booking-price'>{`${Helper.formatNumber(
+                      <div className="booking-detail-value booking-price">{`${Helper.formatNumber(
                         price,
                       )} ${commonStrings.CURRENCY}`}</div>
                     </div>
                   </div>
                 </div>
                 {!authenticated && (
-                  <div className='driver-details'>
-                    <div className='booking-info'>
+                  <div className="driver-details">
+                    <div className="booking-info">
                       <DriverIcon />
                       <label>{strings.DRIVER_DETAILS}</label>
                     </div>
-                    <div className='driver-details-form'>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                    <div className="driver-details-form">
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.FULL_NAME}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.FULL_NAME}
                           required
                           onChange={handleOnChangeFullName}
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.EMAIL}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.EMAIL}
                           error={!emailValid || emailRegitered}
                           onBlur={handleEmailBlur}
                           onChange={handleEmailChange}
                           required
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                         <FormHelperText error={!emailValid || emailRegitered}>
                           {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
@@ -1059,28 +1059,28 @@ const Checkout = () => {
                           {(emailInfo && strings.EMAIL_INFO) || ''}
                         </FormHelperText>
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.PHONE}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.PHONE}
                           error={!phoneValid}
                           onBlur={handlePhoneBlur}
                           onChange={handlePhoneChange}
                           required
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                         <FormHelperText error={!phoneValid}>
                           {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                           {(phoneInfo && strings.PHONE_INFO) || ''}
                         </FormHelperText>
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
+                      <FormControl fullWidth margin="dense">
                         <DatePicker
                           label={commonStrings.BIRTH_DATE}
-                          variant='outlined'
+                          variant="outlined"
                           error={!birthDateValid}
                           required
                           onChange={(birthDate) => {
@@ -1097,7 +1097,7 @@ const Checkout = () => {
                             ''}
                         </FormHelperText>
                       </FormControl>
-                      <div className='booking-tos'>
+                      <div className="booking-tos">
                         <table>
                           <tbody>
                             <tr>
@@ -1105,14 +1105,14 @@ const Checkout = () => {
                                 <Checkbox
                                   checked={tosChecked}
                                   onChange={handleTosChange}
-                                  color='primary'
+                                  color="primary"
                                 />
                               </td>
                               <td>
                                 <Link
-                                  href='/tos'
-                                  target='_blank'
-                                  rel='noreferrer'
+                                  href="/tos"
+                                  target="_blank"
+                                  rel="noreferrer"
                                 >
                                   {commonStrings.TOS}
                                 </Link>
@@ -1125,32 +1125,32 @@ const Checkout = () => {
                   </div>
                 )}
                 {additionalDriver && (
-                  <div className='driver-details'>
-                    <div className='booking-info'>
+                  <div className="driver-details">
+                    <div className="booking-info">
                       <DriverIcon />
                       <label>{csStrings.ADDITIONAL_DRIVER}</label>
                     </div>
-                    <div className='driver-details-form'>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                    <div className="driver-details-form">
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.FULL_NAME}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.FULL_NAME}
                           required={adRequired}
                           onChange={(e) => {
                             set_FullName(e.target.value)
                           }}
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.EMAIL}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.EMAIL}
                           error={!_emailValid}
                           onBlur={(e) => {
@@ -1164,19 +1164,19 @@ const Checkout = () => {
                             }
                           }}
                           required={adRequired}
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                         <FormHelperText error={!_emailValid}>
                           {(!_emailValid && commonStrings.EMAIL_NOT_VALID) ||
                             ''}
                         </FormHelperText>
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
-                        <InputLabel className='required'>
+                      <FormControl fullWidth margin="dense">
+                        <InputLabel className="required">
                           {commonStrings.PHONE}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={commonStrings.PHONE}
                           error={!_phoneValid}
                           onBlur={(e) => {
@@ -1190,17 +1190,17 @@ const Checkout = () => {
                             }
                           }}
                           required={adRequired}
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                         <FormHelperText error={!_phoneValid}>
                           {(!_phoneValid && commonStrings.PHONE_NOT_VALID) ||
                             ''}
                         </FormHelperText>
                       </FormControl>
-                      <FormControl fullWidth margin='dense'>
+                      <FormControl fullWidth margin="dense">
                         <DatePicker
                           label={commonStrings.BIRTH_DATE}
-                          variant='outlined'
+                          variant="outlined"
                           error={!_birthDateValid}
                           required={adRequired}
                           onChange={(_birthDate) => {
@@ -1223,36 +1223,36 @@ const Checkout = () => {
                 )}
 
                 {car.company.payLater && (
-                  <div className='payment-options-container'>
-                    <div className='booking-info'>
+                  <div className="payment-options-container">
+                    <div className="booking-info">
                       <PaymentOptionsIcon />
                       <label>{strings.PAYMENT_OPTIONS}</label>
                     </div>
-                    <div className='payment-options'>
+                    <div className="payment-options">
                       <FormControl>
                         <RadioGroup
-                          defaultValue='payOnline'
+                          defaultValue="payOnline"
                           onChange={(event) => {
                             setPayLater(event.target.value === 'payLater')
                           }}
                         >
                           <FormControlLabel
-                            value='payLater'
+                            value="payLater"
                             control={<Radio />}
                             label={
-                              <span className='payment-button'>
+                              <span className="payment-button">
                                 <span>{strings.PAY_LATER}</span>
-                                <span className='payment-info'>{`(${strings.PAY_LATER_INFO})`}</span>
+                                <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
                               </span>
                             }
                           />
                           <FormControlLabel
-                            value='payOnline'
+                            value="payOnline"
                             control={<Radio />}
                             label={
-                              <span className='payment-button'>
+                              <span className="payment-button">
                                 <span>{strings.PAY_ONLINE}</span>
-                                <span className='payment-info'>{`(${strings.PAY_ONLINE_INFO})`}</span>
+                                <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
                               </span>
                             }
                           />
@@ -1263,59 +1263,59 @@ const Checkout = () => {
                 )}
 
                 {(!car.company.payLater || !payLater) && (
-                  <div className='payment'>
-                    <div className='cost'>
-                      <div className='secure-payment-label'>
-                        <LockIcon className='secure-payment-lock' />
+                  <div className="payment">
+                    <div className="cost">
+                      <div className="secure-payment-label">
+                        <LockIcon className="secure-payment-lock" />
                         <label>{strings.PAYMENT}</label>
                       </div>
-                      <div className='secure-payment-cost'>
-                        <label className='cost-title'>{strings.COST}</label>
-                        <label className='cost-value'>{`${Helper.formatNumber(
+                      <div className="secure-payment-cost">
+                        <label className="cost-title">{strings.COST}</label>
+                        <label className="cost-value">{`${Helper.formatNumber(
                           price,
                         )} ${commonStrings.CURRENCY}`}</label>
                       </div>
                     </div>
 
-                    <div className='secure-payment-logo'>
-                      <img src={SecurePayment} alt='' />
+                    <div className="secure-payment-logo">
+                      <img src={SecurePayment} alt="" />
                     </div>
 
-                    <div className='card'>
+                    <div className="card">
                       <FormControl
-                        margin='dense'
-                        className='card-number'
+                        margin="dense"
+                        className="card-number"
                         fullWidth
                       >
-                        <InputLabel className='required'>
+                        <InputLabel className="required">
                           {strings.CARD_NAME}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={strings.CARD_NAME}
                           onChange={(e) => {
                             setCardName(e.target.value)
                           }}
                           required
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                       </FormControl>
                       <FormControl
-                        margin='dense'
-                        className='card-number'
+                        margin="dense"
+                        className="card-number"
                         fullWidth
                       >
-                        <InputLabel className='required'>
+                        <InputLabel className="required">
                           {strings.CARD_NUMBER}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={strings.CARD_NUMBER}
                           error={!cardNumberValid}
                           onBlur={handleCardNumberBlur}
                           onChange={handleCardNumberChange}
                           required
-                          autoComplete='off'
+                          autoComplete="off"
                         />
                         <FormHelperText error={!cardNumberValid}>
                           {(!cardNumberValid &&
@@ -1323,23 +1323,23 @@ const Checkout = () => {
                             ''}
                         </FormHelperText>
                       </FormControl>
-                      <div className='card-date'>
+                      <div className="card-date">
                         <FormControl
-                          margin='dense'
-                          className='card-month'
+                          margin="dense"
+                          className="card-month"
                           fullWidth
                         >
-                          <InputLabel className='required'>
+                          <InputLabel className="required">
                             {strings.CARD_MONTH}
                           </InputLabel>
                           <OutlinedInput
-                            type='text'
+                            type="text"
                             label={strings.CARD_MONTH}
                             error={!cardMonthValid}
                             onBlur={handleCardMonthBlur}
                             onChange={handleCardMonthChange}
                             required
-                            autoComplete='off'
+                            autoComplete="off"
                             // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
                           />
                           <FormHelperText error={!cardMonthValid}>
@@ -1349,21 +1349,21 @@ const Checkout = () => {
                           </FormHelperText>
                         </FormControl>
                         <FormControl
-                          margin='dense'
-                          className='card-year'
+                          margin="dense"
+                          className="card-year"
                           fullWidth
                         >
-                          <InputLabel className='required'>
+                          <InputLabel className="required">
                             {strings.CARD_YEAR}
                           </InputLabel>
                           <OutlinedInput
-                            type='text'
+                            type="text"
                             label={strings.CARD_YEAR}
                             error={!cardYearValid}
                             onBlur={handleCardYearBlur}
                             onChange={handleCardYearChange}
                             required
-                            autoComplete='off'
+                            autoComplete="off"
                             // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
                           />
                           <FormHelperText error={!cardYearValid}>
@@ -1372,18 +1372,18 @@ const Checkout = () => {
                           </FormHelperText>
                         </FormControl>
                       </div>
-                      <FormControl margin='dense' className='cvv' fullWidth>
-                        <InputLabel className='required'>
+                      <FormControl margin="dense" className="cvv" fullWidth>
+                        <InputLabel className="required">
                           {strings.CVV}
                         </InputLabel>
                         <OutlinedInput
-                          type='text'
+                          type="text"
                           label={strings.CVV}
                           error={!cvvValid}
                           onBlur={handleCvvBlur}
                           onChange={handleCvvChange}
                           required
-                          autoComplete='off'
+                          autoComplete="off"
                           // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
                         />
                         <FormHelperText error={!cvvValid}>
@@ -1392,32 +1392,32 @@ const Checkout = () => {
                       </FormControl>
                     </div>
 
-                    <div className='secure-payment-info'>
-                      <LockIcon className='secure-payment-lock' />
+                    <div className="secure-payment-info">
+                      <LockIcon className="secure-payment-lock" />
                       <label>{strings.SECURE_PAYMENT_INFO}</label>
                     </div>
                   </div>
                 )}
-                <div className='booking-buttons'>
+                <div className="booking-buttons">
                   <Button
-                    type='submit'
-                    variant='contained'
-                    className='btn-book btn-margin-bottom'
-                    size='small'
+                    type="submit"
+                    variant="contained"
+                    className="btn-book btn-margin-bottom"
+                    size="small"
                   >
                     {strings.BOOK}
                   </Button>
                   <Button
-                    variant='contained'
-                    className='btn-cancel btn-margin-bottom'
-                    size='small'
-                    href='/'
+                    variant="contained"
+                    className="btn-cancel btn-margin-bottom"
+                    size="small"
+                    href="/"
                   >
                     {commonStrings.CANCEL}
                   </Button>
                 </div>
               </div>
-              <div className='form-error'>
+              <div className="form-error">
                 {cardDateError && <Error message={strings.CARD_DATE_ERROR} />}
                 {tosError && <Error message={commonStrings.TOS_ERROR} />}
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}

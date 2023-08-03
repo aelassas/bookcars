@@ -105,11 +105,11 @@ const Notifications = () => {
 
   return (
     <Master onLoad={onLoad} notificationCount={notificationCount} strict>
-      <div className='notifications'>
+      <div className="notifications">
         {totalRecords === 0 && (
-          <Card variant='outlined' className='empty-list'>
+          <Card variant="outlined" className="empty-list">
             <CardContent>
-              <Typography color='textSecondary'>
+              <Typography color="textSecondary">
                 {strings.EMPTY_LIST}
               </Typography>
             </CardContent>
@@ -118,9 +118,9 @@ const Notifications = () => {
 
         {totalRecords > 0 && (
           <>
-            <div className='header-container'>
-              <div className='header'>
-                <div className='header-checkbox'>
+            <div className="header-container">
+              <div className="header">
+                <div className="header-checkbox">
                   <Checkbox
                     checked={allChecked}
                     indeterminate={indeterminate}
@@ -139,7 +139,7 @@ const Notifications = () => {
                   />
                 </div>
                 {checkedRows.length > 0 && (
-                  <div className='header-actions'>
+                  <div className="header-actions">
                     {checkedRows.some((row) => !row.isRead) && (
                       <Tooltip title={strings.MARK_ALL_AS_READ}>
                         <IconButton
@@ -224,10 +224,10 @@ const Notifications = () => {
                 )}
               </div>
             </div>
-            <div ref={notificationsListRef} className='notifications-list'>
+            <div ref={notificationsListRef} className="notifications-list">
               {rows.map((row) => (
-                <div key={row._id} className='notification-container'>
-                  <div className='notification-checkbox'>
+                <div key={row._id} className="notification-container">
+                  <div className="notification-checkbox">
                     <Checkbox
                       checked={row.checked}
                       onChange={(event) => {
@@ -239,16 +239,16 @@ const Notifications = () => {
                   <div
                     className={`notification${!row.isRead ? ' unread' : ''}`}
                   >
-                    <div className='date'>
+                    <div className="date">
                       {Helper.capitalize(
                         format(new Date(row.createdAt), _format, {
                           locale: _locale,
                         }),
                       )}
                     </div>
-                    <div className='message-container'>
-                      <div className='message'>{row.message}</div>
-                      <div className='actions'>
+                    <div className="message-container">
+                      <div className="message">{row.message}</div>
+                      <div className="actions">
                         {row.booking && (
                           <Tooltip title={strings.VIEW}>
                             <IconButton
@@ -356,16 +356,16 @@ const Notifications = () => {
                 </div>
               ))}
             </div>
-            <div className='footer'>
+            <div className="footer">
               {rowCount > -1 && (
-                <div className='row-count'>
+                <div className="row-count">
                   {`${(page - 1) * Env.PAGE_SIZE + 1}-${rowCount} ${
                     commonStrings.OF
                   } ${totalRecords}`}
                 </div>
               )}
 
-              <div className='actions'>
+              <div className="actions">
                 <IconButton
                   disabled={page === 1}
                   onClick={() => {
@@ -378,7 +378,7 @@ const Notifications = () => {
                     setPage(_page)
                   }}
                 >
-                  <PreviousPageIcon className='icon' />
+                  <PreviousPageIcon className="icon" />
                 </IconButton>
                 <IconButton
                   disabled={
@@ -394,13 +394,13 @@ const Notifications = () => {
                     setPage(_page)
                   }}
                 >
-                  <NextPageIcon className='icon' />
+                  <NextPageIcon className="icon" />
                 </IconButton>
               </div>
             </div>
 
-            <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-              <DialogTitle className='dialog-header'>
+            <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+              <DialogTitle className="dialog-header">
                 {commonStrings.CONFIRM_TITLE}
               </DialogTitle>
               <DialogContent>
@@ -408,13 +408,13 @@ const Notifications = () => {
                   ? strings.DELETE_NOTIFICATIONS
                   : strings.DELETE_NOTIFICATION}
               </DialogContent>
-              <DialogActions className='dialog-actions'>
+              <DialogActions className="dialog-actions">
                 <Button
                   onClick={() => {
                     setOpenDeleteDialog(false)
                   }}
-                  variant='contained'
-                  className='btn-secondary'
+                  variant="contained"
+                  className="btn-secondary"
                 >
                   {commonStrings.CANCEL}
                 </Button>
@@ -466,8 +466,8 @@ const Notifications = () => {
                       Helper.error(err)
                     }
                   }}
-                  variant='contained'
-                  color='error'
+                  variant="contained"
+                  color="error"
                 >
                   {commonStrings.DELETE}
                 </Button>

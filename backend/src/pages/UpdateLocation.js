@@ -148,24 +148,24 @@ const UpdateLocation = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {!error && !noMatch && location && (
-        <div className='update-location'>
+        <div className="update-location">
           <Paper
-            className='location-form location-form-wrapper'
+            className="location-form location-form-wrapper"
             elevation={10}
             style={visible ? null : { display: 'none' }}
           >
-            <h1 className='location-form-title'> {strings.UPDATE_LOCATION} </h1>
+            <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
             <form onSubmit={handleSubmit}>
               {location.values.map((value, index) => (
-                <FormControl key={index} fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl key={index} fullWidth margin="dense">
+                  <InputLabel className="required">
                     {
                       Env._LANGUAGES.filter((l) => l.code === value.language)[0]
                         .label
                     }
                   </InputLabel>
                   <Input
-                    type='text'
+                    type="text"
                     value={(names[index] && names[index].name) || ''}
                     error={nameErrors[index]}
                     required
@@ -175,7 +175,7 @@ const UpdateLocation = () => {
                       checkName()
                       setNames(Helper.cloneArray(names))
                     }}
-                    autoComplete='off'
+                    autoComplete="off"
                   />
                   <FormHelperText error={nameErrors[index]}>
                     {(nameErrors[index] && clStrings.INVALID_LOCATION) || ''}
@@ -183,21 +183,21 @@ const UpdateLocation = () => {
                 </FormControl>
               ))}
 
-              <div className='buttons'>
+              <div className="buttons">
                 <Button
-                  type='submit'
-                  variant='contained'
-                  className='btn-primary btn-margin-bottom'
-                  size='small'
+                  type="submit"
+                  variant="contained"
+                  className="btn-primary btn-margin-bottom"
+                  size="small"
                   disabled={!nameChanged}
                 >
                   {commonStrings.SAVE}
                 </Button>
                 <Button
-                  variant='contained'
-                  className='btn-secondary btn-margin-bottom'
-                  size='small'
-                  href='/locations'
+                  variant="contained"
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  href="/locations"
                 >
                   {commonStrings.CANCEL}
                 </Button>

@@ -136,56 +136,56 @@ const Company = () => {
   return (
     <Master onLoad={onLoad} user={user} strict={true}>
       {visible && company && companies && (
-        <div className='company'>
-          <div className='col-1'>
-            <section className='company-avatar-sec'>
+        <div className="company">
+          <div className="col-1">
+            <section className="company-avatar-sec">
               {edit ? (
                 <Avatar
                   record={company}
                   type={Env.RECORD_TYPE.COMPANY}
-                  mode='update'
-                  size='large'
+                  mode="update"
+                  size="large"
                   hideDelete
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
                   readonly={!edit}
-                  color='disabled'
-                  className='company-avatar'
+                  color="disabled"
+                  className="company-avatar"
                 />
               ) : (
-                <div className='car-company'>
-                  <span className='car-company-logo'>
+                <div className="car-company">
+                  <span className="car-company-logo">
                     <img
                       src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                       alt={company.fullName}
                       style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                     />
                   </span>
-                  <span className='car-company-info'>{company.fullName}</span>
+                  <span className="car-company-info">{company.fullName}</span>
                 </div>
               )}
             </section>
             {edit && (
-              <Typography variant='h4' className='company-name'>
+              <Typography variant="h4" className="company-name">
                 {company.fullName}
               </Typography>
             )}
             {company.bio && company.bio !== '' && (
-              <Typography variant='h6' className='company-info'>
+              <Typography variant="h6" className="company-info">
                 {company.bio}
               </Typography>
             )}
             {company.location && company.location !== '' && (
-              <Typography variant='h6' className='company-info'>
+              <Typography variant="h6" className="company-info">
                 {company.location}
               </Typography>
             )}
             {company.phone && company.phone !== '' && (
-              <Typography variant='h6' className='company-info'>
+              <Typography variant="h6" className="company-info">
                 {company.phone}
               </Typography>
             )}
-            <div className='company-actions'>
+            <div className="company-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
                   <IconButton href={`/update-supplier?c=${company._id}`}>
@@ -206,17 +206,17 @@ const Company = () => {
                 value={`${rowCount} ${commonStrings.CAR}${
                   rowCount > 1 ? 's' : ''
                 }`}
-                className='car-count'
+                className="car-count"
               />
             )}
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             <CarList
               containerClassName={Env.isMobile() ? 'company' : null}
               offset={offset}
               user={user}
               companies={companies}
-              keyword=''
+              keyword=""
               reload={false}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
@@ -225,23 +225,23 @@ const Company = () => {
           </div>
         </div>
       )}
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+        <DialogTitle className="dialog-header">
           {commonStrings.CONFIRM_TITLE}
         </DialogTitle>
         <DialogContent>{clStrings.DELETE_COMPANY}</DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCancelDelete}
-            variant='contained'
-            className='btn-secondary'
+            variant="contained"
+            className="btn-secondary"
           >
             {commonStrings.CANCEL}
           </Button>
           <Button
             onClick={handleConfirmDelete}
-            variant='contained'
-            color='error'
+            variant="contained"
+            color="error"
           >
             {commonStrings.DELETE}
           </Button>

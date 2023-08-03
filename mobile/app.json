@@ -5,9 +5,7 @@
     "version": "1.2.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "splash": {
       "backgroundColor": "#f37022",
       "image": "./assets/splash.png"
@@ -36,10 +34,7 @@
       },
       "bundleIdentifier": "com.bookcars"
     },
-    "plugins": [
-      "expo-localization",
-      "./plugins/usesCleartextTraffic"
-    ],
+    "plugins": ["expo-localization", "./plugins/usesCleartextTraffic"],
     "owner": "aelassas",
     "extra": {
       "eas": {

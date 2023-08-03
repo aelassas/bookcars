@@ -16,7 +16,7 @@
     "eas:config": "eas build:configure",
     "optimize": "npx expo-optimize --save",
     "lint": "eslint --ext .js,.jsx .",
-    "prettier": "prettier --write --no-semi --single-quote --jsx-single-quote ."
+    "prettier": "prettier --write --no-semi --single-quote ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -61,7 +61,8 @@
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "latest",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.1"
   },
   "private": true
 }

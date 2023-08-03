@@ -244,11 +244,11 @@ const CarList = (props) => {
     }
 
     return extra === -1 ? (
-      <UncheckIcon className='unavailable' />
+      <UncheckIcon className="unavailable" />
     ) : extra === 0 || available ? (
-      <CheckIcon className='available' />
+      <CheckIcon className="available" />
     ) : (
-      <InfoIcon className='extra-info' />
+      <InfoIcon className="extra-info" />
     )
   }
 
@@ -262,9 +262,9 @@ const CarList = (props) => {
         {rows.length === 0
           ? !loading &&
             !props.loading && (
-              <Card variant='outlined' className='empty-list'>
+              <Card variant="outlined" className="empty-list">
                 <CardContent>
-                  <Typography color='textSecondary'>
+                  <Typography color="textSecondary">
                     {strings.EMPTY_LIST}
                   </Typography>
                 </CardContent>
@@ -277,18 +277,18 @@ const CarList = (props) => {
               props.hidePrice) &&
             rows.map((car) => (
               <article key={car._id}>
-                <div className='name'>
+                <div className="name">
                   <h2>{car.name}</h2>
                 </div>
-                <div className='car'>
+                <div className="car">
                   <img
                     src={Helper.joinURL(Env.CDN_CARS, car.image)}
                     alt={car.name}
-                    className='car-img'
+                    className="car-img"
                   />
                   {!props.hideCompany && (
-                    <div className='car-company'>
-                      <span className='car-company-logo'>
+                    <div className="car-company">
+                      <span className="car-company-logo">
                         <img
                           src={Helper.joinURL(
                             Env.CDN_USERS,
@@ -297,83 +297,83 @@ const CarList = (props) => {
                           alt={car.company.fullName}
                         />
                       </span>
-                      <label className='car-company-info'>
+                      <label className="car-company-info">
                         {car.company.fullName}
                       </label>
                     </div>
                   )}
                 </div>
-                <div className='car-info'>
-                  <ul className='car-info-list'>
-                    <li className='car-type'>
+                <div className="car-info">
+                  <ul className="car-info-list">
+                    <li className="car-type">
                       <Tooltip
                         title={Helper.getCarTypeTooltip(car.type)}
-                        placement='top'
+                        placement="top"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           <FuelIcon />
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getCarTypeShort(car.type)}
                           </span>
                         </div>
                       </Tooltip>
                     </li>
-                    <li className='gearbox'>
+                    <li className="gearbox">
                       <Tooltip
                         title={Helper.getGearboxTooltip(car.gearbox)}
-                        placement='top'
+                        placement="top"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           <GearboxIcon />
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getGearboxTypeShort(car.gearbox)}
                           </span>
                         </div>
                       </Tooltip>
                     </li>
-                    <li className='seats'>
+                    <li className="seats">
                       <Tooltip
                         title={Helper.getSeatsTooltip(car.seats)}
-                        placement='top'
+                        placement="top"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           <SeatsIcon />
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {car.seats}
                           </span>
                         </div>
                       </Tooltip>
                     </li>
-                    <li className='doors'>
+                    <li className="doors">
                       <Tooltip
                         title={Helper.getDoorsTooltip(car.doors)}
-                        placement='top'
+                        placement="top"
                       >
-                        <div className='car-info-list-item'>
-                          <img src={DoorsIcon} alt='' className='car-doors' />
-                          <span className='car-info-list-text'>
+                        <div className="car-info-list-item">
+                          <img src={DoorsIcon} alt="" className="car-doors" />
+                          <span className="car-info-list-text">
                             {car.doors}
                           </span>
                         </div>
                       </Tooltip>
                     </li>
                     {car.aircon && (
-                      <li className='aircon'>
-                        <Tooltip title={strings.AIRCON_TOOLTIP} placement='top'>
-                          <div className='car-info-list-item'>
+                      <li className="aircon">
+                        <Tooltip title={strings.AIRCON_TOOLTIP} placement="top">
+                          <div className="car-info-list-item">
                             <AirconIcon />
                           </div>
                         </Tooltip>
                       </li>
                     )}
-                    <li className='mileage'>
+                    <li className="mileage">
                       <Tooltip
                         title={Helper.getMileageTooltip(car.mileage, fr)}
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           <MileageIcon />
-                          <span className='car-info-list-text'>{`${
+                          <span className="car-info-list-text">{`${
                             strings.MILEAGE
                           }${fr ? ' : ' : ': '}${Helper.getMileage(
                             car.mileage,
@@ -381,14 +381,14 @@ const CarList = (props) => {
                         </div>
                       </Tooltip>
                     </li>
-                    <li className='fuel-policy'>
+                    <li className="fuel-policy">
                       <Tooltip
                         title={Helper.getFuelPolicyTooltip(car.fuelPolicy)}
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           <FuelIcon />
-                          <span className='car-info-list-text'>{`${
+                          <span className="car-info-list-text">{`${
                             strings.FUEL_POLICY
                           }${fr ? ' : ' : ': '}${Helper.getFuelPolicy(
                             car.fuelPolicy,
@@ -398,7 +398,7 @@ const CarList = (props) => {
                     </li>
                   </ul>
 
-                  <ul className='extras-list'>
+                  <ul className="extras-list">
                     <li>
                       <Tooltip
                         title={
@@ -408,11 +408,11 @@ const CarList = (props) => {
                             ? strings.CANCELLATION_TOOLTIP
                             : Helper.getCancellation(car.cancellation, fr)
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon('cancellation', car.cancellation)}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getCancellation(car.cancellation, fr)}
                           </span>
                         </div>
@@ -427,11 +427,11 @@ const CarList = (props) => {
                             ? strings.AMENDMENTS_TOOLTIP
                             : Helper.getAmendments(car.amendments, fr)
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon('amendments', car.amendments)}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getAmendments(car.amendments, fr)}
                           </span>
                         </div>
@@ -449,14 +449,14 @@ const CarList = (props) => {
                                 fr,
                               )
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon(
                             'collisionDamageWaiver',
                             car.collisionDamageWaiver,
                           )}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getCollisionDamageWaiver(
                               car.collisionDamageWaiver,
                               fr,
@@ -474,11 +474,11 @@ const CarList = (props) => {
                             ? strings.THEFT_PROTECTION_TOOLTIP
                             : Helper.getTheftProtection(car.theftProtection, fr)
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon('theftProtection', car.theftProtection)}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getTheftProtection(car.theftProtection, fr)}
                           </span>
                         </div>
@@ -493,11 +493,11 @@ const CarList = (props) => {
                             ? strings.FULL_INSURANCE_TOOLTIP
                             : Helper.getFullInsurance(car.fullInsurance, fr)
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon('fullInsurance', car.fullInsurance)}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getFullInsurance(car.fullInsurance, fr)}
                           </span>
                         </div>
@@ -513,14 +513,14 @@ const CarList = (props) => {
                                 fr,
                               )
                         }
-                        placement='left'
+                        placement="left"
                       >
-                        <div className='car-info-list-item'>
+                        <div className="car-info-list-item">
                           {getExtraIcon(
                             'additionalDriver',
                             car.additionalDriver,
                           )}
-                          <span className='car-info-list-text'>
+                          <span className="car-info-list-text">
                             {Helper.getAdditionalDriver(
                               car.additionalDriver,
                               fr,
@@ -532,24 +532,24 @@ const CarList = (props) => {
                   </ul>
                 </div>
                 {!props.hidePrice && (
-                  <div className='price'>
-                    <label className='price-days'>{Helper.getDays(days)}</label>
-                    <label className='price-main'>
+                  <div className="price">
+                    <label className="price-days">{Helper.getDays(days)}</label>
+                    <label className="price-main">
                       {`${Helper.formatNumber(
                         Helper.price(car, props.from, props.to),
                       )} ${commonStrings.CURRENCY}`}
                     </label>
-                    <label className='price-day'>
+                    <label className="price-day">
                       {`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}
                     </label>
                   </div>
                 )}
                 {!props.hidePrice && (
-                  <div className='action'>
+                  <div className="action">
                     <Button
-                      type='submit'
-                      variant='contained'
-                      className='btn-book btn-margin-bottom'
+                      type="submit"
+                      variant="contained"
+                      className="btn-book btn-margin-bottom"
                       href={`/checkout?c=${car._id}&p=${
                         props.pickupLocation
                       }&d=${

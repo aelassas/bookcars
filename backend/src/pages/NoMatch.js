@@ -6,10 +6,10 @@ import Master from '../components/Master'
 
 const NoMatch = (props) => {
   const noMatch = () => (
-    <div className='msg'>
+    <div className="msg">
       <h2>{strings.NO_MATCH}</h2>
       <p>
-        <Link href='/'>{commonStrings.GO_TO_HOME}</Link>
+        <Link href="/">{commonStrings.GO_TO_HOME}</Link>
       </p>
     </div>
   )

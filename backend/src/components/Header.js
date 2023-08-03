@@ -41,7 +41,7 @@ import * as LangHelper from '../common/LangHelper'
 
 import '../assets/css/header.css'
 
-const ListItemLink = (props) => <ListItemButton component='a' {...props} />
+const ListItemLink = (props) => <ListItemButton component="a" {...props} />
 
 const Header = (props) => {
   const navigate = useNavigate()
@@ -223,11 +223,11 @@ const Header = (props) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleOnSettingsClick}>
-        <SettingsIcon className='header-action' />
+        <SettingsIcon className="header-action" />
         <Typography>{strings.SETTINGS}</Typography>
       </MenuItem>
       <MenuItem onClick={handleSignout}>
-        {<SignoutIcon className='header-action' />}
+        {<SignoutIcon className="header-action" />}
         <Typography>{strings.SIGN_OUT}</Typography>
       </MenuItem>
     </Menu>
@@ -245,15 +245,15 @@ const Header = (props) => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleOnSettingsClick}>
-        <SettingsIcon className='header-action' />
+        <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>
       <MenuItem onClick={handleLangMenuOpen}>
-        <LanguageIcon className='header-action' />
+        <LanguageIcon className="header-action" />
         <p>{strings.LANGUAGE}</p>
       </MenuItem>
       <MenuItem onClick={handleSignout}>
-        <SignoutIcon className='header-action' />
+        <SignoutIcon className="header-action" />
         <p>{strings.SIGN_OUT}</p>
       </MenuItem>
     </Menu>
@@ -270,10 +270,10 @@ const Header = (props) => {
       open={isLangMenuOpen}
       onClose={handleLangMenuClose}
     >
-      <MenuItem onClick={handleLangMenuClose} data-code='fr'>
+      <MenuItem onClick={handleLangMenuClose} data-code="fr">
         {strings.LANGUAGE_FR}
       </MenuItem>
-      <MenuItem onClick={handleLangMenuClose} data-code='en'>
+      <MenuItem onClick={handleLangMenuClose} data-code="en">
         {strings.LANGUAGE_EN}
       </MenuItem>
     </Menu>
@@ -282,16 +282,16 @@ const Header = (props) => {
   return (
     <div
       style={props.hidden ? { display: 'none' } : classes.grow}
-      className='header'
+      className="header"
     >
-      <AppBar position='fixed' sx={{ bgcolor: '#121212' }}>
-        <Toolbar className='toolbar'>
+      <AppBar position="fixed" sx={{ bgcolor: '#121212' }}>
+        <Toolbar className="toolbar">
           {isLoaded && !loading && isSignedIn && (
             <IconButton
-              edge='start'
+              edge="start"
               sx={classes.menuButton}
-              color='inherit'
-              aria-label='open drawer'
+              color="inherit"
+              aria-label="open drawer"
               onClick={handleSideMenuOpen}
             >
               <MenuIcon />
@@ -300,35 +300,35 @@ const Header = (props) => {
           <React.Fragment>
             <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
               <List sx={classes.list}>
-                <ListItemLink href='/'>
+                <ListItemLink href="/">
                   <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
                   <ListItemText primary={strings.DASHBOARD} />
                 </ListItemLink>
-                <ListItemLink href='/suppliers'>
+                <ListItemLink href="/suppliers">
                   <ListItemIcon>{<CompaniesIcon />}</ListItemIcon>
                   <ListItemText primary={strings.COMPANIES} />
                 </ListItemLink>
-                <ListItemLink href='/locations'>
+                <ListItemLink href="/locations">
                   <ListItemIcon>{<LocationsIcon />}</ListItemIcon>
                   <ListItemText primary={strings.LOCATIONS} />
                 </ListItemLink>
-                <ListItemLink href='/cars'>
+                <ListItemLink href="/cars">
                   <ListItemIcon>{<CarsIcon />}</ListItemIcon>
                   <ListItemText primary={strings.CARS} />
                 </ListItemLink>
-                <ListItemLink href='/users'>
+                <ListItemLink href="/users">
                   <ListItemIcon>{<UsersIcon />}</ListItemIcon>
                   <ListItemText primary={strings.USERS} />
                 </ListItemLink>
-                <ListItemLink href='/about'>
+                <ListItemLink href="/about">
                   <ListItemIcon>{<AboutIcon />}</ListItemIcon>
                   <ListItemText primary={strings.ABOUT} />
                 </ListItemLink>
-                <ListItemLink href='/tos'>
+                <ListItemLink href="/tos">
                   <ListItemIcon>{<TosIcon />}</ListItemIcon>
                   <ListItemText primary={strings.TOS} />
                 </ListItemLink>
-                <ListItemLink href='/contact'>
+                <ListItemLink href="/contact">
                   <ListItemIcon>{<MailIcon />}</ListItemIcon>
                   <ListItemText primary={strings.CONTACT} />
                 </ListItemLink>
@@ -336,18 +336,18 @@ const Header = (props) => {
             </Drawer>
           </React.Fragment>
           <div style={classes.grow} />
-          <div className='header-desktop'>
+          <div className="header-desktop">
             {isSignedIn && (
               <IconButton
-                aria-label=''
-                color='inherit'
+                aria-label=""
+                color="inherit"
                 onClick={handleNotificationsClick}
               >
                 <Badge
                   badgeContent={
                     notificationCount > 0 ? notificationCount : null
                   }
-                  color='error'
+                  color="error"
                 >
                   <NotificationsIcon />
                 </Badge>
@@ -355,54 +355,54 @@ const Header = (props) => {
             )}
             {isLoaded && !loading && (
               <Button
-                variant='contained'
+                variant="contained"
                 startIcon={<LanguageIcon />}
                 onClick={handleLangMenuOpen}
                 disableElevation
                 fullWidth
-                className='btn-primary'
+                className="btn-primary"
               >
                 {getLang(lang)}
               </Button>
             )}
             {isSignedIn && (
               <IconButton
-                edge='end'
-                aria-label='account'
+                edge="end"
+                aria-label="account"
                 aria-controls={menuId}
-                aria-haspopup='true'
+                aria-haspopup="true"
                 onClick={handleAccountMenuOpen}
-                color='inherit'
+                color="inherit"
               >
                 <Avatar
                   record={props.user}
                   type={props.user.type}
-                  size='small'
+                  size="small"
                   readonly
                 />
               </IconButton>
             )}
           </div>
-          <div className='header-mobile'>
+          <div className="header-mobile">
             {!isSignedIn && !loading && (
               <Button
-                variant='contained'
+                variant="contained"
                 startIcon={<LanguageIcon />}
                 onClick={handleLangMenuOpen}
                 disableElevation
                 fullWidth
-                className='btn-primary'
+                className="btn-primary"
               >
                 {getLang(lang)}
               </Button>
             )}
             {isSignedIn && (
-              <IconButton color='inherit' onClick={handleNotificationsClick}>
+              <IconButton color="inherit" onClick={handleNotificationsClick}>
                 <Badge
                   badgeContent={
                     notificationCount > 0 ? notificationCount : null
                   }
-                  color='error'
+                  color="error"
                 >
                   <NotificationsIcon />
                 </Badge>
@@ -410,11 +410,11 @@ const Header = (props) => {
             )}
             {isSignedIn && (
               <IconButton
-                aria-label='show more'
+                aria-label="show more"
                 aria-controls={mobileMenuId}
-                aria-haspopup='true'
+                aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
-                color='inherit'
+                color="inherit"
               >
                 <MoreIcon />
               </IconButton>

@@ -116,45 +116,45 @@ const DepositFilter = (props) => {
         props.className ? `${props.className} ` : ''
       }deposit-filter`}
     >
-      <div className='filter-elements'>
-        <div className='filter-element'>
+      <div className="filter-elements">
+        <div className="filter-element">
           <input
             ref={deposit2500Ref}
-            type='radio'
-            className='deposit-radio'
+            type="radio"
+            className="deposit-radio"
             onChange={handleDepositLessThan2500Change}
           />
           <label onClick={handleDepositLessThan2500Click}>
             {strings.LESS_THAN_2500}
           </label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={deposit5000Ref}
-            type='radio'
-            className='deposit-radio'
+            type="radio"
+            className="deposit-radio"
             onChange={handleDepositLessThan5000Change}
           />
           <label onClick={handleDepositLessThan5000Click}>
             {strings.LESS_THAN_5000}
           </label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={deposit7500Ref}
-            type='radio'
-            className='deposit-radio'
+            type="radio"
+            className="deposit-radio"
             onChange={handleDepositLessThan7500Change}
           />
           <label onClick={handleDepositLessThan7500Click}>
             {strings.LESS_THAN_7500}
           </label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={depositAllRef}
-            type='radio'
-            className='deposit-radio'
+            type="radio"
+            className="deposit-radio"
             onChange={handleAllDepositChange}
           />
           <label onClick={handleAllDepositClick}>{commonStrings.ALL}</label>

@@ -119,33 +119,33 @@ const SignIn = () => {
     <div>
       <Header />
       {visible && (
-        <div className='signin'>
-          <Paper className='signin-form' elevation={10}>
+        <div className="signin">
+          <Paper className="signin-form" elevation={10}>
             <form onSubmit={handleSubmit}>
-              <h1 className='signin-form-title'>{strings.SIGN_IN_HEADING}</h1>
-              <FormControl fullWidth margin='dense'>
+              <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.EMAIL}</InputLabel>
                 <Input
-                  type='text'
+                  type="text"
                   onChange={handleOnChangeEmail}
-                  autoComplete='email'
+                  autoComplete="email"
                   required
                 />
               </FormControl>
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PASSWORD}</InputLabel>
                 <Input
                   onChange={handleOnChangePassword}
                   onKeyDown={handleOnPasswordKeyDown}
-                  autoComplete='password'
-                  type='password'
+                  autoComplete="password"
+                  type="password"
                   required
                 />
               </FormControl>
 
-              <div className='stay-connected'>
+              <div className="stay-connected">
                 <input
-                  type='checkbox'
+                  type="checkbox"
                   onChange={(e) => {
                     setStayConnected(e.currentTarget.checked)
                   }}
@@ -162,29 +162,29 @@ const SignIn = () => {
                 </label>
               </div>
 
-              <div className='forgot-password'>
-                <Link href='/forgot-password'>{strings.RESET_PASSWORD}</Link>
+              <div className="forgot-password">
+                <Link href="/forgot-password">{strings.RESET_PASSWORD}</Link>
               </div>
 
-              <div className='signin-buttons'>
+              <div className="signin-buttons">
                 <Button
-                  variant='contained'
-                  size='small'
-                  href='/sign-up'
-                  className='btn-secondary btn-margin btn-margin-bottom'
+                  variant="contained"
+                  size="small"
+                  href="/sign-up"
+                  className="btn-secondary btn-margin btn-margin-bottom"
                 >
                   {strings.SIGN_UP}
                 </Button>
                 <Button
-                  type='submit'
-                  variant='contained'
-                  size='small'
-                  className='btn-primary btn-margin btn-margin-bottom'
+                  type="submit"
+                  variant="contained"
+                  size="small"
+                  className="btn-primary btn-margin btn-margin-bottom"
                 >
                   {strings.SIGN_IN}
                 </Button>
               </div>
-              <div className='form-error'>
+              <div className="form-error">
                 {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
                 {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
               </div>

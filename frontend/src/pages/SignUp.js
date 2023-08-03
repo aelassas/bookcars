@@ -270,37 +270,37 @@ const SignUp = () => {
   return (
     <Master strict={false} onLoad={onLoad}>
       {visible && (
-        <div className='signup'>
-          <Paper className='signup-form' elevation={10}>
-            <h1 className='signup-form-title'> {strings.SIGN_UP_HEADING} </h1>
+        <div className="signup">
+          <Paper className="signup-form" elevation={10}>
+            <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
             <form onSubmit={handleSubmit}>
               <div>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.FULL_NAME}
                   </InputLabel>
                   <OutlinedInput
-                    type='text'
+                    type="text"
                     label={commonStrings.FULL_NAME}
                     value={fullName}
                     required
                     onChange={handleOnChangeFullName}
-                    autoComplete='off'
+                    autoComplete="off"
                   />
                 </FormControl>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.EMAIL}
                   </InputLabel>
                   <OutlinedInput
-                    type='text'
+                    type="text"
                     label={commonStrings.EMAIL}
                     error={!emailValid || emailError}
                     value={email}
                     onBlur={handleEmailBlur}
                     onChange={handleEmailChange}
                     required
-                    autoComplete='off'
+                    autoComplete="off"
                   />
                   <FormHelperText error={!emailValid || emailError}>
                     {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
@@ -308,29 +308,29 @@ const SignUp = () => {
                       ''}
                   </FormHelperText>
                 </FormControl>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.PHONE}
                   </InputLabel>
                   <OutlinedInput
-                    type='text'
+                    type="text"
                     label={commonStrings.PHONE}
                     error={!phoneValid}
                     value={phone}
                     onBlur={handlePhoneBlur}
                     onChange={handlePhoneChange}
                     required
-                    autoComplete='off'
+                    autoComplete="off"
                   />
                   <FormHelperText error={!phoneValid}>
                     {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                   </FormHelperText>
                 </FormControl>
-                <FormControl fullWidth margin='dense'>
+                <FormControl fullWidth margin="dense">
                   <DatePicker
                     label={commonStrings.BIRTH_DATE}
                     value={birthDate}
-                    variant='outlined'
+                    variant="outlined"
                     error={!birthDateValid}
                     required
                     onChange={(birthDate) => {
@@ -346,8 +346,8 @@ const SignUp = () => {
                       ''}
                   </FormHelperText>
                 </FormControl>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.PASSWORD}
                   </InputLabel>
                   <OutlinedInput
@@ -355,7 +355,7 @@ const SignUp = () => {
                     value={password}
                     onChange={handleOnChangePassword}
                     required
-                    type='password'
+                    type="password"
                     inputProps={{
                       autoComplete: 'new-password',
                       form: {
@@ -364,8 +364,8 @@ const SignUp = () => {
                     }}
                   />
                 </FormControl>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.CONFIRM_PASSWORD}
                   </InputLabel>
                   <OutlinedInput
@@ -373,7 +373,7 @@ const SignUp = () => {
                     value={confirmPassword}
                     onChange={handleOnChangeConfirmPassword}
                     required
-                    type='password'
+                    type="password"
                     inputProps={{
                       autoComplete: 'new-password',
                       form: {
@@ -384,7 +384,7 @@ const SignUp = () => {
                 </FormControl>
 
                 {Env.RECAPTCHA_ENABLED && (
-                  <div className='recaptcha'>
+                  <div className="recaptcha">
                     <ReCAPTCHA
                       sitekey={Env.RECAPTCHA_SITE_KEY}
                       hl={language}
@@ -393,7 +393,7 @@ const SignUp = () => {
                   </div>
                 )}
 
-                <div className='signup-tos'>
+                <div className="signup-tos">
                   <table>
                     <tbody>
                       <tr>
@@ -401,11 +401,11 @@ const SignUp = () => {
                           <Checkbox
                             checked={tosChecked}
                             onChange={handleTosChange}
-                            color='primary'
+                            color="primary"
                           />
                         </td>
                         <td>
-                          <Link href='/tos' target='_blank' rel='noreferrer'>
+                          <Link href="/tos" target="_blank" rel="noreferrer">
                             {commonStrings.TOS}
                           </Link>
                         </td>
@@ -413,27 +413,27 @@ const SignUp = () => {
                     </tbody>
                   </table>
                 </div>
-                <div className='buttons'>
+                <div className="buttons">
                   <Button
-                    type='submit'
-                    variant='contained'
-                    className='btn-primary btn-margin-bottom'
-                    size='small'
+                    type="submit"
+                    variant="contained"
+                    className="btn-primary btn-margin-bottom"
+                    size="small"
                   >
                     {strings.SIGN_UP}
                   </Button>
                   <Button
-                    variant='contained'
-                    className='btn-secondary btn-margin-bottom'
-                    size='small'
-                    href='/'
+                    variant="contained"
+                    className="btn-secondary btn-margin-bottom"
+                    size="small"
+                    href="/"
                   >
                     {' '}
                     {commonStrings.CANCEL}
                   </Button>
                 </div>
               </div>
-              <div className='form-error'>
+              <div className="form-error">
                 {passwordError && (
                   <Error message={commonStrings.PASSWORD_ERROR} />
                 )}

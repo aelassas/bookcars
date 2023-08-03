@@ -132,18 +132,18 @@ const ResetPassword = () => {
   return (
     <Master onLoad={onLoad} strict={false}>
       {visible && (
-        <div className='reset-password'>
-          <Paper className='reset-password-form' elevation={10}>
+        <div className="reset-password">
+          <Paper className="reset-password-form" elevation={10}>
             <h1>{rpStrings.RESET_PASSWORD_HEADING}</h1>
             <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required' error={passwordError}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required" error={passwordError}>
                   {cpStrings.NEW_PASSWORD}
                 </InputLabel>
                 <Input
-                  id='password-new'
+                  id="password-new"
                   onChange={handleNewPasswordChange}
-                  type='password'
+                  type="password"
                   value={password}
                   error={passwordError}
                   required
@@ -154,18 +154,18 @@ const ResetPassword = () => {
               </FormControl>
               <FormControl
                 fullWidth
-                margin='dense'
+                margin="dense"
                 error={confirmPasswordError}
               >
-                <InputLabel error={confirmPasswordError} className='required'>
+                <InputLabel error={confirmPasswordError} className="required">
                   {commonStrings.CONFIRM_PASSWORD}
                 </InputLabel>
                 <Input
-                  id='password-confirm'
+                  id="password-confirm"
                   onChange={handleConfirmPasswordChange}
                   onKeyDown={handleOnConfirmPasswordKeyDown}
                   error={confirmPasswordError || passwordLengthError}
-                  type='password'
+                  type="password"
                   value={confirmPassword}
                   required
                 />
@@ -179,20 +179,20 @@ const ResetPassword = () => {
                     : ''}
                 </FormHelperText>
               </FormControl>
-              <div className='buttons'>
+              <div className="buttons">
                 <Button
-                  type='submit'
-                  className='btn-primary btn-margin btn-margin-bottom'
-                  size='small'
-                  variant='contained'
+                  type="submit"
+                  className="btn-primary btn-margin btn-margin-bottom"
+                  size="small"
+                  variant="contained"
                 >
                   {commonStrings.UPDATE}
                 </Button>
                 <Button
-                  className='btn-secondary btn-margin-bottom'
-                  size='small'
-                  variant='contained'
-                  href='/'
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  variant="contained"
+                  href="/"
                 >
                   {commonStrings.CANCEL}
                 </Button>

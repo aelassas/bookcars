@@ -6,53 +6,59 @@ import * as UserService from '../services/UserService'
 import Master from './Master'
 
 const ContactScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused()
-    const [reload, setReload] = useState(false)
-    const [visible, setVisible] = useState(false)
+  const isFocused = useIsFocused()
+  const [reload, setReload] = useState(false)
+  const [visible, setVisible] = useState(false)
 
-    const _init = async () => {
-        setVisible(false)
-        const language = await UserService.getLanguage()
-        i18n.locale = language
-        setVisible(true)
+  const _init = async () => {
+    setVisible(false)
+    const language = await UserService.getLanguage()
+    i18n.locale = language
+    setVisible(true)
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      _init()
+      setReload(true)
+    } else {
+      setVisible(false)
     }
+  }, [route.params, isFocused])
 
-    useEffect(() => {
-        if (isFocused) {
-            _init()
-            setReload(true)
-        } else {
-            setVisible(false)
-        }
-    }, [route.params, isFocused])
+  const onLoad = () => {
+    setReload(false)
+  }
 
-    const onLoad = () => {
-        setReload(false)
-    }
-
-    return (
-        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
-            {visible &&
-                <ScrollView
-                    contentContainerStyle={styles.container}
-                    keyboardShouldPersistTaps="handled"
-                    nestedScrollEnabled
-                >
-                    <Text style={{ fontSize: 16 }}>Contact!</Text>
-                </ScrollView>
-            }
-        </Master>
-    )
+  return (
+    <Master
+      style={styles.master}
+      navigation={navigation}
+      route={route}
+      onLoad={onLoad}
+      reload={reload}
+    >
+      {visible && (
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+        >
+          <Text style={{ fontSize: 16 }}>Contact!</Text>
+        </ScrollView>
+      )}
+    </Master>
+  )
 }
 
 const styles = StyleSheet.create({
-    master: {
-        flex: 1
-    },
-    container: {
-        flexGrow: 1,
-        alignItems: 'center'
-    }
+  master: {
+    flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
 })
 
 export default ContactScreen

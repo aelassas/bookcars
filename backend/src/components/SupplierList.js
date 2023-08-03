@@ -198,12 +198,12 @@ const SupplierList = (props) => {
 
   return (
     <>
-      <section className='company-list'>
+      <section className="company-list">
         {rows.length === 0
           ? !loading && (
-              <Card variant='outlined' className='empty-list'>
+              <Card variant="outlined" className="empty-list">
                 <CardContent>
-                  <Typography color='textSecondary'>
+                  <Typography color="textSecondary">
                     {strings.EMPTY_LIST}
                   </Typography>
                 </CardContent>
@@ -216,18 +216,18 @@ const SupplierList = (props) => {
 
               return (
                 <article key={company._id}>
-                  <div className='company-item'>
-                    <div className='company-item-avatar'>
+                  <div className="company-item">
+                    <div className="company-item-avatar">
                       <img
                         src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
                         alt={company.fullName}
                       />
                     </div>
-                    <span className='company-item-title'>
+                    <span className="company-item-title">
                       {company.fullName}
                     </span>
                   </div>
-                  <div className='company-actions'>
+                  <div className="company-actions">
                     {canDelete && (
                       <Tooltip title={commonStrings.DELETE}>
                         <IconButton
@@ -255,23 +255,23 @@ const SupplierList = (props) => {
                 </article>
               )
             })}
-        <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-          <DialogTitle className='dialog-header'>
+        <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+          <DialogTitle className="dialog-header">
             {commonStrings.CONFIRM_TITLE}
           </DialogTitle>
           <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
-          <DialogActions className='dialog-actions'>
+          <DialogActions className="dialog-actions">
             <Button
               onClick={handleCancelDelete}
-              variant='contained'
-              className='btn-secondary'
+              variant="contained"
+              className="btn-secondary"
             >
               {commonStrings.CANCEL}
             </Button>
             <Button
               onClick={handleConfirmDelete}
-              variant='contained'
-              color='error'
+              variant="contained"
+              color="error"
             >
               {commonStrings.DELETE}
             </Button>

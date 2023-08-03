@@ -61,29 +61,29 @@ const Bookings = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {user && (
-        <div className='bookings'>
-          <div className='col-1'>
+        <div className="bookings">
+          <div className="col-1">
             <div>
               <SupplierFilter
                 companies={allCompanies}
                 onChange={handleSupplierFilterChange}
-                className='cl-company-filter'
+                className="cl-company-filter"
               />
               <StatusFilter
                 onChange={handleStatusFilterChange}
-                className='cl-status-filter'
+                className="cl-status-filter"
               />
               <BookingFilter
                 onSubmit={handleBookingFilterSubmit}
                 language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                className='cl-booking-filter'
+                className="cl-booking-filter"
                 collapse={!Env.isMobile()}
               />
             </div>
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             <BookingList
-              containerClassName='bookings'
+              containerClassName="bookings"
               offset={offset}
               user={user}
               language={user.language}

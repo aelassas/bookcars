@@ -15,8 +15,8 @@ const DatePicker = (props) => {
       <MuiDatePicker
         label={props.label}
         views={['year', 'month', 'day']}
-        inputFormat='dd-MM-yyyy'
-        mask='__-__-____'
+        inputFormat="dd-MM-yyyy"
+        mask="__-__-____"
         value={value}
         onChange={(value) => {
           setValue(value)

@@ -92,16 +92,16 @@ const Master = (props) => {
         notificationCount={props.notificationCount}
       />
       {(!user && !loading) || (user && user.verified) ? (
-        <div className='content'>{props.children}</div>
+        <div className="content">{props.children}</div>
       ) : (
         !loading && (
-          <div className='validate-email'>
+          <div className="validate-email">
             <span>{strings.VALIDATE_EMAIL}</span>
             <Button
-              type='button'
-              variant='contained'
-              size='small'
-              className='btn-primary btn-resend'
+              type="button"
+              variant="contained"
+              size="small"
+              className="btn-primary btn-resend"
               onClick={handleResend}
             >
               {strings.RESEND}

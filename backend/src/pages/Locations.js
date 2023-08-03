@@ -41,17 +41,17 @@ const Locations = () => {
 
   return (
     <Master onLoad={onLoad} strict={true}>
-      <div className='locations'>
-        <div className='col-1'>
-          <div className='col-1-container'>
-            <Search className='search' onSubmit={handleSearch} />
+      <div className="locations">
+        <div className="col-1">
+          <div className="col-1-container">
+            <Search className="search" onSubmit={handleSearch} />
 
             {rowCount > -1 && (
               <Button
-                variant='contained'
-                className='btn-primary new-location'
-                size='small'
-                href='/create-location'
+                variant="contained"
+                className="btn-primary new-location"
+                size="small"
+                href="/create-location"
               >
                 {strings.NEW_LOCATION}
               </Button>
@@ -62,14 +62,14 @@ const Locations = () => {
                 value={`${rowCount} ${
                   rowCount > 1 ? strings.LOCATIONS : strings.LOCATION
                 }`}
-                className='location-count'
+                className="location-count"
               />
             )}
           </div>
         </div>
-        <div className='col-2'>
+        <div className="col-2">
           <LocationList
-            containerClassName='locations'
+            containerClassName="locations"
             offset={offset}
             keyword={keyword}
             reload={reload}

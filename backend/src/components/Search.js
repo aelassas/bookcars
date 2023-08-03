@@ -25,7 +25,7 @@ const Search = (props) => {
   return (
     <div className={props.className}>
       <TextField
-        variant='standard'
+        variant="standard"
         value={keyword}
         onKeyDown={handleSearchKeyDown}
         onChange={handleSearchChange}
@@ -33,7 +33,7 @@ const Search = (props) => {
         InputProps={{
           endAdornment: keyword ? (
             <IconButton
-              size='small'
+              size="small"
               onClick={() => {
                 setKeyword('')
               }}
@@ -44,8 +44,8 @@ const Search = (props) => {
             <></>
           ),
         }}
-        autoComplete='off'
-        className='sc-search'
+        autoComplete="off"
+        className="sc-search"
       />
       <IconButton onClick={handleSearch}>
         <SearchIcon />

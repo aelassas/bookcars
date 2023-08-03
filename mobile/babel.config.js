@@ -11,10 +11,10 @@ module.exports = function (api) {
           blacklist: null,
           whitelist: null,
           safe: true,
-          allowUndefined: false
+          allowUndefined: false,
         },
       ],
       'react-native-reanimated/plugin',
-    ]
+    ],
   }
 }
