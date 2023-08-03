@@ -142,11 +142,11 @@ const CreateCar = () => {
     }
 
     const handlePriceChange = (e) => {
-        setPrice(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setPrice(e.target.value)
     }
 
     const handleDepositChange = (e) => {
-        setDeposit(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setDeposit(e.target.value)
     }
 
     const handleSeatsChange = (value) => {
@@ -158,7 +158,7 @@ const CreateCar = () => {
     }
 
     const handleMileageChange = (e) => {
-        setMileage(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setMileage(e.target.value)
     }
 
     const handleFuelPolicyChange = (value) => {
@@ -166,31 +166,31 @@ const CreateCar = () => {
     }
 
     const handleCancellationChange = (e) => {
-        setCancellation(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setCancellation(e.target.value)
     }
 
     const handleAmendmentsChange = (e) => {
-        setAmendments(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setAmendments(e.target.value)
     }
 
     const handleTheftProtectionChange = (e) => {
-        setTheftProtection(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setTheftProtection(e.target.value)
     }
 
     const handleCollisionDamageWaiverChange = (e) => {
-        setCollisionDamageWaiver(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setCollisionDamageWaiver(e.target.value)
     }
 
     const handleFullinsuranceChange = (e) => {
-        setFullInsurance(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setFullInsurance(e.target.value)
     }
 
     const handleAdditionalDriverChange = (e) => {
-        setAdditionalDriver(Helper.isNumber(e.target.value) ? parseFloat(e.target.value) : e.target.value)
+        setAdditionalDriver(e.target.value)
     }
 
     const getExtra = (extra) => (
-        extra === '' ? -1 : extra
+        extra === '' ? -1 : Number(extra)
     )
 
     const handleSubmit = async (e) => {
@@ -213,17 +213,17 @@ const CreateCar = () => {
             const data = {
                 name,
                 company,
-                minimumAge,
+                minimumAge: Number(minimumAge),
                 locations: locations.map(l => l._id),
-                price,
-                deposit,
+                price: Number(price),
+                deposit: Number(deposit),
                 available,
                 type,
                 gearbox,
                 aircon,
                 image,
-                seats,
-                doors,
+                seats: Number(seats),
+                doors: Number(doors),
                 fuelPolicy,
                 mileage: getExtra(mileage),
                 cancellation: getExtra(cancellation),
