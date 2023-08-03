@@ -38,6 +38,7 @@ import {
     ExitToApp as SignoutIcon
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import * as LangHelper from '../common/LangHelper'
 
 import '../assets/css/header.css'
 
@@ -178,16 +179,9 @@ const Header = (props) => {
     }
 
     useEffect(() => {
-        const queryLanguage = UserService.getQueryLanguage()
-
-        if (Env.LANGUAGES.includes(queryLanguage)) {
-            setLang(queryLanguage)
-            strings.setLanguage(queryLanguage)
-        } else {
-            const language = UserService.getLanguage()
-            setLang(language)
-            strings.setLanguage(language)
-        }
+        const language = LangHelper.getLanguage()
+        setLang(language)
+        LangHelper.setLanguage(strings, language)
     }, [])
 
     useEffect(() => {

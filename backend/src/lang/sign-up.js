@@ -18,5 +18,4 @@ export const strings = new LocalizedStrings({
     }
 })
 
-const language = LangHelper.getLanguage()
-strings.setLanguage(language)
+LangHelper.setLanguage(strings)
