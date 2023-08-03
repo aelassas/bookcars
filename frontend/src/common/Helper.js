@@ -47,10 +47,6 @@ export const joinURL = (part1, part2) => {
     return part1 + '/' + part2
 }
 
-export const isNumber = (val) => {
-    return /^-?\d+$/.test(val)
-}
-
 export const isInteger = (val) => {
     return /^\d+$/.test(val)
 }
