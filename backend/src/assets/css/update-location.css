@@ -1,35 +1,35 @@
 /* Update Location */
 
 .location-form-wrapper {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 .location-form-title {
-    text-align: center;
-    text-transform: capitalize;
-    color: #121212;
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .location-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 180px) !important;
-        width: 360px;
-        height: 460px;
-        padding: 30px;
-    }
+  .location-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    height: 460px;
+    padding: 30px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .location-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 275px) !important;
-        width: 550px;
-        height: 380px;
-        padding: 30px;
-    }
+  .location-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    height: 380px;
+    padding: 30px;
+  }
 }

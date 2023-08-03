@@ -1,47 +1,47 @@
 /* Header */
 .header {
-    position: sticky !important;
-    top: 0;
-    z-index: 101;
+  position: sticky !important;
+  top: 0;
+  z-index: 101;
 }
 
 .header-action {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .header-desktop {
-    display: flex;
+  display: flex;
 }
 
 .header-mobile {
-    display: none;
+  display: none;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .header {
-        min-height: 64px;
-    }
+  .header {
+    min-height: 64px;
+  }
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .header {
-        min-height: 56px;
-    }
+  .header {
+    min-height: 56px;
+  }
 
-    .header-desktop {
-        display: none;
-    }
+  .header-desktop {
+    display: none;
+  }
 
-    .header-mobile {
-        display: flex;
-        margin-right: -13px;
-    }
+  .header-mobile {
+    display: flex;
+    margin-right: -13px;
+  }
 
-    .toolbar {
-        min-height: 56px !important;
-    }
+  .toolbar {
+    min-height: 56px !important;
+  }
 }

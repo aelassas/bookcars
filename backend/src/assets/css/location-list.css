@@ -1,38 +1,38 @@
 section.location-list {
-    padding-top: 10px;
-    margin: 0 10px;
-    width: 100%;
-    max-width: 480px;
+  padding-top: 10px;
+  margin: 0 10px;
+  width: 100%;
+  max-width: 480px;
 }
 
 section.location-list .empty-list {
-    margin-top: 15px;
-    text-align: center;
-    width: 250px;
-    margin-left: calc(50% - 125px);
+  margin-top: 15px;
+  text-align: center;
+  width: 250px;
+  margin-left: calc(50% - 125px);
 }
 
 section.location-list .location-list-item {
-    position: relative;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: #333;
-    font-size: 12px;
-    margin-bottom: 10px;
-    height: 75px;
-    word-break: break-word;
+  position: relative;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #333;
+  font-size: 12px;
+  margin-bottom: 10px;
+  height: 75px;
+  word-break: break-word;
 }
 
 section.location-list .location-title {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    section.location-list .location-list-item {
-        width: 500px;
-        margin-left: calc(50% - 250px);
-    }
+  section.location-list .location-list-item {
+    width: 500px;
+    margin-left: calc(50% - 250px);
+  }
 }

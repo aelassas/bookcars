@@ -1,68 +1,68 @@
 div.user-type-filter {
-    background: #fafafa;
-    margin: 10px 10px 0 0;
-    padding: 5px;
-    border: 1px solid #dadada;
-    font-size: 13px;
+  background: #fafafa;
+  margin: 10px 10px 0 0;
+  padding: 5px;
+  border: 1px solid #dadada;
+  font-size: 13px;
 }
 
 div.user-type-filter ul.user-type-list {
-    list-style-type: none;
-    font-size: 13px;
-    margin: 15px 0 0;
-    padding: 0;
-    display: inline-block;
+  list-style-type: none;
+  font-size: 13px;
+  margin: 15px 0 0;
+  padding: 0;
+  display: inline-block;
 }
 
 div.user-type-filter ul.user-type-list li {
-    width: 42%;
-    float: left;
-    margin-bottom: 12px;
-    margin-left: 4%;
-    margin-right: 4%;
-    clear: none;
+  width: 42%;
+  float: left;
+  margin-bottom: 12px;
+  margin-left: 4%;
+  margin-right: 4%;
+  clear: none;
 }
 
 div.user-type-filter ul.user-type-list li label.bs {
-    padding: 3px;
-    width: 80px;
-    text-align: center;
-    color: #fff;
-    box-shadow: none;
-    vertical-align: middle;
-    position: relative;
-    top: -3px;
-    left: 5px;
-    cursor: pointer;
-    overflow: hidden;
-    margin-bottom: 0;
-    display: inline-block;
-    opacity: 1;
+  padding: 3px;
+  width: 80px;
+  text-align: center;
+  color: #fff;
+  box-shadow: none;
+  vertical-align: middle;
+  position: relative;
+  top: -3px;
+  left: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 0;
+  display: inline-block;
+  opacity: 1;
 }
 
 div.user-type-filter ul.user-type-list li label.bs:hover {
-    opacity: .9;
+  opacity: 0.9;
 }
 
 div.user-type-filter ul.user-type-list li label.bs-admin {
-    background: #121212;
+  background: #121212;
 }
 
 div.user-type-filter ul.user-type-list li label.bs-company {
-    background: #e98003;
+  background: #e98003;
 }
 
 div.user-type-filter ul.user-type-list li label.bs-user {
-    background: #22bba7;
+  background: #22bba7;
 }
 
 div.user-type-filter div.filter-actions {
-    text-align: center;
-    padding-bottom: 5px;
+  text-align: center;
+  padding-bottom: 5px;
 }
 
 div.user-type-filter div.filter-actions span.uncheckall {
-    text-decoration: underline;
-    cursor: pointer;
-    color: #0064C8;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0064c8;
 }

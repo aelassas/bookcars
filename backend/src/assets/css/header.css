@@ -1,49 +1,48 @@
 /* Header */
 
 .header {
-    position: sticky !important;
-    top: 0;
-    z-index: 101;
+  position: sticky !important;
+  top: 0;
+  z-index: 101;
 }
 
 .header-action {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .header-desktop {
-    display: none;
+  display: none;
 }
 
 .header-mobile {
-    display: flex;
-    margin-right: -13px;
+  display: flex;
+  margin-right: -13px;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .header {
-        min-height: 56px;
-    }
+  .header {
+    min-height: 56px;
+  }
 
-    .toolbar {
-        min-height: 56px !important;
-    }
-
+  .toolbar {
+    min-height: 56px !important;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .header {
-        min-height: 64px;
-    }
+  .header {
+    min-height: 64px;
+  }
 
-    .header-desktop {
-        display: flex;
-    }
+  .header-desktop {
+    display: flex;
+  }
 
-    .header-mobile {
-        display: none;
-    }
+  .header-mobile {
+    display: none;
+  }
 }

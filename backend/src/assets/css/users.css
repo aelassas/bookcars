@@ -1,84 +1,83 @@
 div.users {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 /* Device width is lower than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.users {
-        top: 56px;
-    }
+  div.users {
+    top: 56px;
+  }
 
-    div.users div.col-1 {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-    }
+  div.users div.col-1 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+  }
 
-    div.users div.col-1 div.col-1-container {
-        width: 100%;
-        max-width: 480px;
-    }
+  div.users div.col-1 div.col-1-container {
+    width: 100%;
+    max-width: 480px;
+  }
 
-    div.users div.col-1 .user-type-filter {
-        display: none;
-    }
+  div.users div.col-1 .user-type-filter {
+    display: none;
+  }
 
-    div.users div.col-1 .search,
-    div.users div.col-1 .new-user {
-        width: 100%;
-    }
+  div.users div.col-1 .search,
+  div.users div.col-1 .new-user {
+    width: 100%;
+  }
 
-    div.users div.col-2 {
-        position: absolute;
-        top: 90px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
+  div.users div.col-2 {
+    position: absolute;
+    top: 90px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.users {
-        top: 64px;
-    }
+  div.users {
+    top: 64px;
+  }
 
-    div.users div.col-1 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 300px;
-        padding: 20px 0 0 12px;
-        background: #fefefe;
-    }
+  div.users div.col-1 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    padding: 20px 0 0 12px;
+    background: #fefefe;
+  }
 
-    div.users div.col-1 .user-type-filter {
-        margin-left: 5px;
-        width: 265px;
-    }
+  div.users div.col-1 .user-type-filter {
+    margin-left: 5px;
+    width: 265px;
+  }
 
-    div.users div.col-1 .new-user {
-        width: 265px;
-        margin-left: 5px;
-        margin-top: 15px;
-    }
+  div.users div.col-1 .new-user {
+    width: 265px;
+    margin-left: 5px;
+    margin-top: 15px;
+  }
 
-    div.users div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 300px;
-    }
-
+  div.users div.col-2 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 300px;
+  }
 }

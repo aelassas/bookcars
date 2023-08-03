@@ -1,102 +1,102 @@
 div.company {
-   display: flex;
+  display: flex;
 }
 
 .company div.col-1 .company-name {
-    text-align: center;
-    font-weight: 600;
-    margin-top: 15px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 15px;
 }
 
 .company div.col-1 .company-info {
-    text-align: center;
-    font-weight: 400;
-    margin-top: 10px;
-    color: #676767;
+  text-align: center;
+  font-weight: 400;
+  margin-top: 10px;
+  color: #676767;
 }
 
 .company div.col-1 .company-actions {
-    text-align: center;
+  text-align: center;
 }
 
 .company div.col-1 div.car-company {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .company div.col-1 div.car-company span.car-company-logo {
-    display: flex;
-    overflow: hidden;
-    vertical-align: text-bottom;
+  display: flex;
+  overflow: hidden;
+  vertical-align: text-bottom;
 }
 
 .company div.col-1 div.car-company span.car-company-info {
-    color: #a8a8a8;
-    display: inline-block;
-    font-size: .9em;
-    line-height: 1em;
-    white-space: nowrap;
-    margin-left: 5px;
+  color: #a8a8a8;
+  display: inline-block;
+  font-size: 0.9em;
+  line-height: 1em;
+  white-space: nowrap;
+  margin-left: 5px;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.company {
-        flex-direction: column;
-    }
+  div.company {
+    flex-direction: column;
+  }
 
-    .company div.col-1 {
-        padding: 10px 0;
-        background: #fefefe;
-        border-bottom: #eee solid 1px;
-    }
+  .company div.col-1 {
+    padding: 10px 0;
+    background: #fefefe;
+    border-bottom: #eee solid 1px;
+  }
 
-    .company div.col-1 section.company-avatar-sec {
-        display: flex;
-        justify-content: center;
-    }
+  .company div.col-1 section.company-avatar-sec {
+    display: flex;
+    justify-content: center;
+  }
 
-    .company div.col-1 .car-count {
-        display: none;
-    }
+  .company div.col-1 .car-count {
+    display: none;
+  }
 
-    .company div.col-2 {
-        display: flex;
-        justify-content: center;
-    }
+  .company div.col-2 {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.company {
-        flex-direction: row;
-    }
+  div.company {
+    flex-direction: row;
+  }
 
-    .company div.col-1 {
-        width: 300px;
-        min-height: 100vh;
-        padding-top: 20px;
-        background: #fefefe;
-        border-right: #eee solid 1px;
-    }
+  .company div.col-1 {
+    width: 300px;
+    min-height: 100vh;
+    padding-top: 20px;
+    background: #fefefe;
+    border-right: #eee solid 1px;
+  }
 
-    .company div.col-1 section.company-avatar-sec {
-        position: relative;
-        left: 50%;
-        transform: translateX(-30%);
-    }
+  .company div.col-1 section.company-avatar-sec {
+    position: relative;
+    left: 50%;
+    transform: translateX(-30%);
+  }
 
-    .company div.col-1 .car-count {
-        margin: 10px 10px 0;
-    }
+  .company div.col-1 .car-count {
+    margin: 10px 10px 0;
+  }
 
-    .company div.col-2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1 1;
-    }
+  .company div.col-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1;
+  }
 }

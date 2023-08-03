@@ -1,29 +1,28 @@
 div.update-company .resend-activation-link {
-    cursor: pointer;
-    margin: 20px 0 10px;
+  cursor: pointer;
+  margin: 20px 0 10px;
 }
-
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .company-form-update {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 180px) !important;
-        width: 360px;
-        height: 920px;
-        padding: 30px;
-    }
+  .company-form-update {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    height: 920px;
+    padding: 30px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .company-form-update {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 275px) !important;
-        width: 550px;
-        height: 850px;
-        padding: 30px;
-    }
+  .company-form-update {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    height: 850px;
+    padding: 30px;
+  }
 }

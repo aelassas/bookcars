@@ -1,80 +1,80 @@
 section.company-list .empty-list {
-    margin-top: 15px;
-    text-align: center;
-    width: 250px;
-    margin-left: calc(50% - 125px);
+  margin-top: 15px;
+  text-align: center;
+  width: 250px;
+  margin-left: calc(50% - 125px);
 }
 
 section.company-list {
-    padding-top: 10px;
-    margin: 0 10px;
-    width: 100%;
-    max-width: 480px;
+  padding-top: 10px;
+  margin: 0 10px;
+  width: 100%;
+  max-width: 480px;
 }
 
 section.company-list article {
-    position: relative;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: #333;
-    font-size: 12px;
-    padding: 25px;
-    margin-bottom: 15px;
-    height: 85px;
+  position: relative;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #333;
+  font-size: 12px;
+  padding: 25px;
+  margin-bottom: 15px;
+  height: 85px;
 }
 
 section.company-list article .company-item {
-    position: absolute;
-    left: 15px;
-    top: 25px;
+  position: absolute;
+  left: 15px;
+  top: 25px;
 }
 
 section.company-list article .company-item .company-item-avatar {
-    float: left;
-    display: inline;
-    margin-top: 3px;
-    color: #333;
-    width: 60px;
-    height: 34px;
+  float: left;
+  display: inline;
+  margin-top: 3px;
+  color: #333;
+  width: 60px;
+  height: 34px;
 }
 
 section.company-list article .company-item .company-item-avatar img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 section.company-list article .company-item .company-item-title {
-    display: inline;
-    font-size: 1.7em;
-    margin-left: 20px;
-    text-size-adjust: none;
-    line-height: 1.3em;
-    text-decoration: none;
-    color: #333;
-    word-break: break-word;
+  display: inline;
+  font-size: 1.7em;
+  margin-left: 20px;
+  text-size-adjust: none;
+  line-height: 1.3em;
+  text-decoration: none;
+  color: #333;
+  word-break: break-word;
 }
 
 section.company-list article .company-actions {
-    position: absolute;
-    right: 10px;
-    width: 160px;
+  position: absolute;
+  right: 10px;
+  width: 160px;
 }
 
 section.company-list article .company-actions a,
 section.company-list article .company-actions button {
-    float: right;
+  float: right;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    section.company-list article {
-        width: 550px;
-        margin-left: calc(50% - 275px);
-    }
+  section.company-list article {
+    width: 550px;
+    margin-left: calc(50% - 275px);
+  }
 
-    section.company-list article .company-item {
-        width: 370px;
-    }
+  section.company-list article .company-item {
+    width: 370px;
+  }
 }

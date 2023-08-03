@@ -1,49 +1,49 @@
 /* Signup */
 .signup-form-title {
-	text-align: center;
-	text-transform: capitalize;
-	color: #121212;
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
 }
 
 .signup .buttons {
-	float: right;
-	margin-top: 15px;
-	margin-bottom: 15px;
+  float: right;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .signup .buttons button {
-	margin-right: 15px;
-	margin-left: 0 !important;
+  margin-right: 15px;
+  margin-left: 0 !important;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-	.signup-form {
-		margin: 45px 0 20px calc(50% - 175px);
-		width: 350px;
-		height: 730px;
-		padding: 30px;
-	}
+  .signup-form {
+    margin: 45px 0 20px calc(50% - 175px);
+    width: 350px;
+    height: 730px;
+    padding: 30px;
+  }
 
-	.recaptcha {
-		margin-top: 25px;
-		margin-left: -10px;
-	}
+  .recaptcha {
+    margin-top: 25px;
+    margin-left: -10px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-	.signup-form {
-		margin: 45px 0 20px calc(50% - 275px);
-		width: 550px;
-		height: 610px;
-		padding: 30px;
-	}
+  .signup-form {
+    margin: 45px 0 20px calc(50% - 275px);
+    width: 550px;
+    height: 610px;
+    padding: 30px;
+  }
 
-	.recaptcha {
-		margin-top: 25px;
-		margin-left: 85px;
-	}
+  .recaptcha {
+    margin-top: 25px;
+    margin-left: 85px;
+  }
 }

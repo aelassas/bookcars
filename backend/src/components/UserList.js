@@ -4,362 +4,392 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/user-list'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
+import { DataGrid, frFR, enUS } from '@mui/x-data-grid'
 import {
-    DataGrid,
-    frFR,
-    enUS
-} from '@mui/x-data-grid'
-import {
-    Tooltip,
-    IconButton,
-    Link,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Avatar,
-    Badge,
-    Box
+  Tooltip,
+  IconButton,
+  Link,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Avatar,
+  Badge,
+  Box,
 } from '@mui/material'
 import {
-    Edit as EditIcon,
-    Delete as DeleteIcon,
-    AccountCircle,
-    Check as VerifiedIcon
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  AccountCircle,
+  Check as VerifiedIcon,
 } from '@mui/icons-material'
 
 import '../assets/css/user-list.css'
 
 const UserList = (props) => {
-    const [user, setUser] = useState()
-    const [page, setPage] = useState(0)
-    const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)
-    const [columns, setColumns] = useState([])
-    const [rows, setRows] = useState([])
-    const [rowCount, setRowCount] = useState(0)
-    const [loading, setLoading] = useState(true)
-    const [selectedId, setSelectedId] = useState()
-    const [selectedIds, setSelectedIds] = useState([])
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-    const [types, setTypes] = useState(props.types)
-    const [keyword, setKeyword] = useState(props.keyword)
-    const [reload, setReload] = useState(props.reload)
-    const [reloadColumns, setReloadColumns] = useState(false)
-    const [paginationModel, setPaginationModel] = useState({ pageSize: Env.PAGE_SIZE, page: 0 })
+  const [user, setUser] = useState()
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)
+  const [columns, setColumns] = useState([])
+  const [rows, setRows] = useState([])
+  const [rowCount, setRowCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [selectedId, setSelectedId] = useState()
+  const [selectedIds, setSelectedIds] = useState([])
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [types, setTypes] = useState(props.types)
+  const [keyword, setKeyword] = useState(props.keyword)
+  const [reload, setReload] = useState(props.reload)
+  const [reloadColumns, setReloadColumns] = useState(false)
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: Env.PAGE_SIZE,
+    page: 0,
+  })
 
-    useEffect(() => {
-        setPage(paginationModel.page)
-        setPageSize(paginationModel.pageSize)
-    }, [paginationModel])
+  useEffect(() => {
+    setPage(paginationModel.page)
+    setPageSize(paginationModel.pageSize)
+  }, [paginationModel])
 
-    const _fetch = async (page, user) => {
-        try {
-            setLoading(true)
+  const _fetch = async (page, user) => {
+    try {
+      setLoading(true)
 
-            const payload = { user: user._id, types }
+      const payload = { user: user._id, types }
 
-            const data = await UserService.getUsers(payload, keyword, page + 1, pageSize)
-            const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-            const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-            const _rows = _data.resultData
+      const data = await UserService.getUsers(
+        payload,
+        keyword,
+        page + 1,
+        pageSize,
+      )
+      const _data =
+        Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+      const totalRecords =
+        Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0
+          ? _data.pageInfo[0].totalRecords
+          : 0
+      const _rows = _data.resultData
 
-            setRows(_rows)
-            setRowCount(totalRecords)
+      setRows(_rows)
+      setRowCount(totalRecords)
 
-            if (props.onLoad) {
-                props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
-            }
-
-        } catch (err) {
-            Helper.error(err)
-        } finally {
-            setLoading(false)
-        }
+      if (props.onLoad) {
+        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+      }
+    } catch (err) {
+      Helper.error(err)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    useEffect(() => {
-        setTypes(props.types || [])
-    }, [props.types])
+  useEffect(() => {
+    setTypes(props.types || [])
+  }, [props.types])
 
-    useEffect(() => {
-        setKeyword(props.keyword || '')
-    }, [props.keyword])
+  useEffect(() => {
+    setKeyword(props.keyword || '')
+  }, [props.keyword])
 
+  useEffect(() => {
+    setReload(props.reload || false)
+  }, [props.reload])
 
-    useEffect(() => {
-        setReload(props.reload || false)
-    }, [props.reload])
-
-    useEffect(() => {
-        if (props.user) {
-            const columns = getColumns(props.user)
-            setColumns(columns)
-            setUser(props.user)
-            _fetch(page, props.user)
-        }
-    }, [props.user, page, pageSize, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (reload) {
-            setPage(0)
-            _fetch(0, user)
-        }
-    }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (user && reloadColumns) {
-            const columns = getColumns(user)
-            setColumns(columns)
-            setReloadColumns(false)
-        }
-    }, [user, selectedIds, reloadColumns]) // eslint-disable-line react-hooks/exhaustive-deps
-
-    const getColumns = (user) => {
-        const columns = [
-            {
-                field: 'fullName',
-                headerName: commonStrings.USER,
-                flex: 1,
-                renderCell: (params) => {
-                    const user = params.row
-                    let userAvatar
-
-                    if (user.avatar) {
-                        if (user.type === Env.RECORD_TYPE.COMPANY) {
-                            userAvatar = (
-                                <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                                    alt={params.row.fullName}
-                                />
-                            )
-
-                        } else {
-                            const avatar = <Avatar
-                                src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                                className='avatar-small'
-
-                            />
-                            if (user.verified) {
-                                userAvatar = <Badge
-                                    overlap="circular"
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'right',
-                                    }}
-                                    badgeContent={
-                                        <Tooltip title={commonStrings.VERIFIED}>
-                                            <Box borderRadius="50%" className="user-avatar-verified-small">
-                                                <VerifiedIcon className='user-avatar-verified-icon-small' />
-                                            </Box>
-                                        </Tooltip>
-                                    }
-                                >
-                                    {avatar}
-                                </Badge>
-                            } else {
-                                userAvatar = avatar
-                            }
-                        }
-                    } else {
-                        const avatar = <AccountCircle className='avatar-small' color='disabled' />
-
-                        if (user.verified) {
-                            userAvatar = <Badge
-                                overlap="circular"
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                }}
-                                badgeContent={
-                                    <Tooltip title={commonStrings.VERIFIED}>
-                                        <Box borderRadius="50%" className="user-avatar-verified-small">
-                                            <VerifiedIcon className='user-avatar-verified-icon-small' />
-                                        </Box>
-                                    </Tooltip>
-                                }
-                            >
-                                {avatar}
-                            </Badge>
-                        } else {
-                            userAvatar = avatar
-                        }
-                    }
-
-                    return (
-                        <Link href={`/user?u=${params.row._id}`} className='us-user'>
-                            <span className='us-avatar'>{userAvatar}</span>
-                            <span>{params.value}</span>
-                        </Link>)
-
-                },
-                valueGetter: (params) => (
-                    params.value
-                )
-            },
-            {
-                field: 'email',
-                headerName: commonStrings.EMAIL,
-                flex: 1,
-                valueGetter: (params) => (
-                    params.value
-                )
-            },
-            {
-                field: 'phone',
-                headerName: commonStrings.PHONE,
-                flex: 1,
-                valueGetter: (params) => (
-                    params.value
-                )
-            },
-            {
-                field: 'type',
-                headerName: commonStrings.TYPE,
-                flex: 1,
-                renderCell: (params) => (
-                    <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>
-                ),
-                valueGetter: (params) => (
-                    params.value
-                )
-            },
-            {
-                field: 'action',
-                headerName: '',
-                sortable: false,
-                disableColumnMenu: true,
-                renderCell: (params) => {
-                    const handleDelete = (e) => {
-                        e.stopPropagation() // don't select this row after clicking
-                        setSelectedId(params.row._id)
-                        setOpenDeleteDialog(true)
-                    }
-
-                    const _user = params.row
-                    return (
-                        user.type === Env.RECORD_TYPE.ADMIN || _user.company === user._id ?
-                            <div>
-                                <Tooltip title={commonStrings.UPDATE}>
-                                    <IconButton href={`update-user?u=${params.row._id}`}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={commonStrings.DELETE}>
-                                    <IconButton
-                                        onClick={handleDelete}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                            : <></>
-
-                    )
-                },
-                renderHeader: () => {
-                    return (
-                        selectedIds.length > 0 ?
-                            <div>
-                                <div style={{ width: 40, display: 'inline-block' }}></div>
-                                <Tooltip title={strings.DELETE_SELECTION}>
-                                    <IconButton
-                                        onClick={() => {
-                                            setOpenDeleteDialog(true)
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                            : <></>
-                    )
-                }
-            }
-        ]
-
-        if (props.hideDesktopColumns) {
-            columns.splice(1, 3)
-        }
-
-
-        return columns
+  useEffect(() => {
+    if (props.user) {
+      const columns = getColumns(props.user)
+      setColumns(columns)
+      setUser(props.user)
+      _fetch(page, props.user)
     }
+  }, [props.user, page, pageSize, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleCancelDelete = () => {
-        setOpenDeleteDialog(false)
-        setSelectedId('')
+  useEffect(() => {
+    if (reload) {
+      setPage(0)
+      _fetch(0, user)
     }
+  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleConfirmDelete = async () => {
-        try {
-            const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
-
-            setOpenDeleteDialog(false)
-
-            const status = await UserService.deleteUsers(ids)
-            
-            if (status === 200) {
-                if (selectedIds.length > 0) {
-                    setRows(rows.filter((row) => !selectedIds.includes(row._id)))
-                } else {
-                    setRows(rows.filter((row) => row._id !== selectedId))
-                }
-            } else {
-                Helper.error()
-            }
-        } catch (err) {
-            Helper.error(err)
-        } finally {
-            setLoading(false)
-        }
+  useEffect(() => {
+    if (user && reloadColumns) {
+      const columns = getColumns(user)
+      setColumns(columns)
+      setReloadColumns(false)
     }
+  }, [user, selectedIds, reloadColumns]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <div className='us-list' >
-            {user && columns.length > 0 &&
-                <DataGrid
-                    checkboxSelection={props.checkboxSelection}
-                    getRowId={(row) => row._id}
-                    columns={columns}
-                    rows={rows}
-                    rowCount={rowCount}
-                    loading={loading}
-                    initialState={{
-                        pagination: { paginationModel: { pageSize: Env.PAGE_SIZE } },
-                    }}
-                    pageSizeOptions={[Env.PAGE_SIZE, 50, 100]}
-                    pagination
-                    page={page}
-                    pageSize={pageSize}
-                    paginationMode='server'
-                    paginationModel={paginationModel}
-                    onPaginationModelChange={setPaginationModel}
-                    localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-                    slots={{
-                        noRowsOverlay: () => ''
-                    }}
-                    onRowSelectionModelChange={(selectedIds) => {
-                        setSelectedIds(selectedIds)
-                        setReloadColumns(true)
-                    }}
-                    getRowClassName={(params) => params.row.blacklisted ? 'us-blacklisted' : ''}
-                    disableRowSelectionOnClick
+  const getColumns = (user) => {
+    const columns = [
+      {
+        field: 'fullName',
+        headerName: commonStrings.USER,
+        flex: 1,
+        renderCell: (params) => {
+          const user = params.row
+          let userAvatar
+
+          if (user.avatar) {
+            if (user.type === Env.RECORD_TYPE.COMPANY) {
+              userAvatar = (
+                <img
+                  src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                  alt={params.row.fullName}
                 />
+              )
+            } else {
+              const avatar = (
+                <Avatar
+                  src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
+                  className='avatar-small'
+                />
+              )
+              if (user.verified) {
+                userAvatar = (
+                  <Badge
+                    overlap='circular'
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    badgeContent={
+                      <Tooltip title={commonStrings.VERIFIED}>
+                        <Box
+                          borderRadius='50%'
+                          className='user-avatar-verified-small'
+                        >
+                          <VerifiedIcon className='user-avatar-verified-icon-small' />
+                        </Box>
+                      </Tooltip>
+                    }
+                  >
+                    {avatar}
+                  </Badge>
+                )
+              } else {
+                userAvatar = avatar
+              }
             }
+          } else {
+            const avatar = (
+              <AccountCircle className='avatar-small' color='disabled' />
+            )
 
-            <Dialog
-                disableEscapeKeyDown
-                maxWidth="xs"
-                open={openDeleteDialog}
-            >
-                <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                <DialogContent className='dialog-content'>{selectedIds.length === 0 ? strings.DELETE_USER : strings.DELETE_USERS}</DialogContent>
-                <DialogActions className='dialog-actions'>
-                    <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                    <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    )
+            if (user.verified) {
+              userAvatar = (
+                <Badge
+                  overlap='circular'
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={
+                    <Tooltip title={commonStrings.VERIFIED}>
+                      <Box
+                        borderRadius='50%'
+                        className='user-avatar-verified-small'
+                      >
+                        <VerifiedIcon className='user-avatar-verified-icon-small' />
+                      </Box>
+                    </Tooltip>
+                  }
+                >
+                  {avatar}
+                </Badge>
+              )
+            } else {
+              userAvatar = avatar
+            }
+          }
+
+          return (
+            <Link href={`/user?u=${params.row._id}`} className='us-user'>
+              <span className='us-avatar'>{userAvatar}</span>
+              <span>{params.value}</span>
+            </Link>
+          )
+        },
+        valueGetter: (params) => params.value,
+      },
+      {
+        field: 'email',
+        headerName: commonStrings.EMAIL,
+        flex: 1,
+        valueGetter: (params) => params.value,
+      },
+      {
+        field: 'phone',
+        headerName: commonStrings.PHONE,
+        flex: 1,
+        valueGetter: (params) => params.value,
+      },
+      {
+        field: 'type',
+        headerName: commonStrings.TYPE,
+        flex: 1,
+        renderCell: (params) => (
+          <span className={`bs us-${params.value}`}>
+            {Helper.getUserType(params.value)}
+          </span>
+        ),
+        valueGetter: (params) => params.value,
+      },
+      {
+        field: 'action',
+        headerName: '',
+        sortable: false,
+        disableColumnMenu: true,
+        renderCell: (params) => {
+          const handleDelete = (e) => {
+            e.stopPropagation() // don't select this row after clicking
+            setSelectedId(params.row._id)
+            setOpenDeleteDialog(true)
+          }
+
+          const _user = params.row
+          return user.type === Env.RECORD_TYPE.ADMIN ||
+            _user.company === user._id ? (
+            <div>
+              <Tooltip title={commonStrings.UPDATE}>
+                <IconButton href={`update-user?u=${params.row._id}`}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={commonStrings.DELETE}>
+                <IconButton onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          ) : (
+            <></>
+          )
+        },
+        renderHeader: () => {
+          return selectedIds.length > 0 ? (
+            <div>
+              <div style={{ width: 40, display: 'inline-block' }}></div>
+              <Tooltip title={strings.DELETE_SELECTION}>
+                <IconButton
+                  onClick={() => {
+                    setOpenDeleteDialog(true)
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          ) : (
+            <></>
+          )
+        },
+      },
+    ]
+
+    if (props.hideDesktopColumns) {
+      columns.splice(1, 3)
+    }
+
+    return columns
+  }
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false)
+    setSelectedId('')
+  }
+
+  const handleConfirmDelete = async () => {
+    try {
+      const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
+
+      setOpenDeleteDialog(false)
+
+      const status = await UserService.deleteUsers(ids)
+
+      if (status === 200) {
+        if (selectedIds.length > 0) {
+          setRows(rows.filter((row) => !selectedIds.includes(row._id)))
+        } else {
+          setRows(rows.filter((row) => row._id !== selectedId))
+        }
+      } else {
+        Helper.error()
+      }
+    } catch (err) {
+      Helper.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className='us-list'>
+      {user && columns.length > 0 && (
+        <DataGrid
+          checkboxSelection={props.checkboxSelection}
+          getRowId={(row) => row._id}
+          columns={columns}
+          rows={rows}
+          rowCount={rowCount}
+          loading={loading}
+          initialState={{
+            pagination: { paginationModel: { pageSize: Env.PAGE_SIZE } },
+          }}
+          pageSizeOptions={[Env.PAGE_SIZE, 50, 100]}
+          pagination
+          page={page}
+          pageSize={pageSize}
+          paginationMode='server'
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          localeText={
+            (user.language === 'fr' ? frFR : enUS).components.MuiDataGrid
+              .defaultProps.localeText
+          }
+          slots={{
+            noRowsOverlay: () => '',
+          }}
+          onRowSelectionModelChange={(selectedIds) => {
+            setSelectedIds(selectedIds)
+            setReloadColumns(true)
+          }}
+          getRowClassName={(params) =>
+            params.row.blacklisted ? 'us-blacklisted' : ''
+          }
+          disableRowSelectionOnClick
+        />
+      )}
+
+      <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
+        <DialogTitle className='dialog-header'>
+          {commonStrings.CONFIRM_TITLE}
+        </DialogTitle>
+        <DialogContent className='dialog-content'>
+          {selectedIds.length === 0
+            ? strings.DELETE_USER
+            : strings.DELETE_USERS}
+        </DialogContent>
+        <DialogActions className='dialog-actions'>
+          <Button
+            onClick={handleCancelDelete}
+            variant='contained'
+            className='btn-secondary'
+          >
+            {commonStrings.CANCEL}
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            variant='contained'
+            color='error'
+          >
+            {commonStrings.DELETE}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
 }
 
 export default UserList

@@ -152,16 +152,16 @@ export const book = async (req, res) => {
     const to = booking.to.toLocaleString(locale, options)
     const car = await Car.findById(booking.car).populate('company')
     const pickupLocation = await Location.findById(
-      booking.pickupLocation
+      booking.pickupLocation,
     ).populate('values')
     pickupLocation.name = pickupLocation.values.filter(
-      (value) => value.language === user.language
+      (value) => value.language === user.language,
     )[0].value
     const dropOffLocation = await Location.findById(
-      booking.dropOffLocation
+      booking.dropOffLocation,
     ).populate('values')
     dropOffLocation.name = dropOffLocation.values.filter(
-      (value) => value.language === user.language
+      (value) => value.language === user.language,
     )[0].value
 
     const mailOptions = {
@@ -414,7 +414,7 @@ export const updateStatus = async (req, res) => {
   } catch (err) {
     console.error(
       `[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`,
-      err
+      err,
     )
     return res.status(400).send(strings.DB_ERROR + err)
   }
@@ -431,7 +431,7 @@ export const deleteBookings = async (req, res) => {
 
     await Booking.deleteMany({ _id: { $in: ids } })
     const additionalDivers = bookings.map(
-      (booking) => new mongoose.Types.ObjectId(booking._additionalDriver)
+      (booking) => new mongoose.Types.ObjectId(booking._additionalDriver),
     )
     await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
 
@@ -439,7 +439,7 @@ export const deleteBookings = async (req, res) => {
   } catch (err) {
     console.error(
       `[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`,
-      err
+      err,
     )
     return res.status(400).send(strings.DB_ERROR + err)
   }
@@ -489,10 +489,10 @@ export const getBooking = async (req, res) => {
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter(
-        (value) => value.language === language
+        (value) => value.language === language,
       )[0].value
       booking.dropOffLocation.name = booking.dropOffLocation.values.filter(
-        (value) => value.language === language
+        (value) => value.language === language,
       )[0].value
 
       return res.json(booking)
@@ -511,7 +511,7 @@ export const getBookings = async (req, res) => {
     const page = parseInt(req.params.page) + 1
     const size = parseInt(req.params.size)
     const companies = req.body.companies.map(
-      (id) => new mongoose.Types.ObjectId(id)
+      (id) => new mongoose.Types.ObjectId(id),
     )
     const statuses = req.body.statuses
     const user = req.body.user
@@ -763,7 +763,7 @@ export const bookingsMinDate = async (req, res) => {
   try {
     const booking = await Booking.findOne(
       { driver: new mongoose.Types.ObjectId(driver) },
-      { from: 1 }
+      { from: 1 },
     ).sort({ from: 1 })
 
     if (booking) {
@@ -773,7 +773,7 @@ export const bookingsMinDate = async (req, res) => {
   } catch (err) {
     console.error(
       `[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`,
-      err
+      err,
     )
     return res.status(400).send(strings.DB_ERROR + err)
   }
@@ -785,7 +785,7 @@ export const bookingsMaxDate = async (req, res) => {
   try {
     const booking = await Booking.findOne(
       { driver: new mongoose.Types.ObjectId(req.params.driver) },
-      { to: 1 }
+      { to: 1 },
     ).sort({ to: -1 })
 
     if (booking) {
@@ -795,7 +795,7 @@ export const bookingsMaxDate = async (req, res) => {
   } catch (err) {
     console.error(
       `[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`,
-      err
+      err,
     )
     return res.status(400).send(strings.DB_ERROR + err)
   }
@@ -820,7 +820,7 @@ export const cancelBooking = async (req, res) => {
         booking.driver,
         booking,
         booking.company,
-        strings.CANCEL_BOOKING_NOTIFICATION
+        strings.CANCEL_BOOKING_NOTIFICATION,
       )
 
       return res.sendStatus(200)

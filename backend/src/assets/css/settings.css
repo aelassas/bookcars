@@ -1,63 +1,63 @@
 /* settings */
 
 .settings-form-wrapper {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 .settings-form-title {
-    text-align: center;
-    text-transform: capitalize;
-    color: #121212;
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
 }
 
 .settings-net-wrapper {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .settings-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 180px) !important;
-        width: 360px;
-        height: 720px;
-        padding: 30px;
-    }
+  .settings-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    height: 720px;
+    padding: 30px;
+  }
 
-    .settings-ctn {
-        height: 240px;
-    }
+  .settings-ctn {
+    height: 240px;
+  }
 
-    .settings-net {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 180px) !important;
-        width: 360px;
-        height: 200px;
-        padding: 30px;
-    }
+  .settings-net {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    height: 200px;
+    padding: 30px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .settings-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 275px) !important;
-        width: 550px;
-        height: 640px;
-        padding: 30px;
-    }
+  .settings-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    height: 640px;
+    padding: 30px;
+  }
 
-    .settings-ctn {
-        height: 190px;
-    }
+  .settings-ctn {
+    height: 190px;
+  }
 
-    .settings-net {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 275px) !important;
-        width: 550px;
-        height: 200px;
-        padding: 30px;
-    }
+  .settings-net {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    height: 200px;
+    padding: 30px;
+  }
 }

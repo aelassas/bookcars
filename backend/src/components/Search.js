@@ -6,47 +6,52 @@ import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import '../assets/css/search.css'
 
 const Search = (props) => {
-    const [keyword, setKeyword] = useState('')
+  const [keyword, setKeyword] = useState('')
 
-    const handleSearchChange = (e) => {
-        setKeyword(e.target.value)
+  const handleSearchChange = (e) => {
+    setKeyword(e.target.value)
+  }
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch()
     }
+  }
 
-    const handleSearchKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            handleSearch()
-        }
-    }
+  const handleSearch = () => {
+    if (props.onSubmit) props.onSubmit(keyword)
+  }
 
-    const handleSearch = () => {
-        if (props.onSubmit) props.onSubmit(keyword)
-    }
-
-    return (
-        <div className={props.className}>
-            <TextField
-                variant='standard'
-                value={keyword}
-                onKeyDown={handleSearchKeyDown}
-                onChange={handleSearchChange}
-                placeholder={commonStrings.SEARCH_PLACEHOLDER}
-                InputProps={{
-                    endAdornment: keyword ? (
-                        <IconButton size='small' onClick={() => {
-                            setKeyword('')
-                        }}>
-                            <ClearIcon style={{ width: 20, height: 20 }} />
-                        </IconButton>
-                    ) : <></>
-                }}
-                autoComplete='off'
-                className='sc-search'
-            />
-            <IconButton onClick={handleSearch} >
-                <SearchIcon />
+  return (
+    <div className={props.className}>
+      <TextField
+        variant='standard'
+        value={keyword}
+        onKeyDown={handleSearchKeyDown}
+        onChange={handleSearchChange}
+        placeholder={commonStrings.SEARCH_PLACEHOLDER}
+        InputProps={{
+          endAdornment: keyword ? (
+            <IconButton
+              size='small'
+              onClick={() => {
+                setKeyword('')
+              }}
+            >
+              <ClearIcon style={{ width: 20, height: 20 }} />
             </IconButton>
-        </div>
-    )
+          ) : (
+            <></>
+          ),
+        }}
+        autoComplete='off'
+        className='sc-search'
+      />
+      <IconButton onClick={handleSearch}>
+        <SearchIcon />
+      </IconButton>
+    </div>
+  )
 }
 
 export default Search

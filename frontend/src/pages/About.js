@@ -4,15 +4,13 @@ import Master from '../components/Master'
 import '../assets/css/about.css'
 
 const About = () => {
+  const onLoad = () => {}
 
-    const onLoad = () => {
-    }
-
-    return (
-        <Master onLoad={onLoad} strict={false}>
-            About!
-        </Master>
-    )
+  return (
+    <Master onLoad={onLoad} strict={false}>
+      About!
+    </Master>
+  )
 }
 
 export default About

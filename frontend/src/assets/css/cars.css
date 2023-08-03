@@ -1,53 +1,53 @@
 div.cars {
-    display: flex;
+  display: flex;
 }
 
 div.cars div.col-1 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5px;
 }
 
 div.cars div.col-1 .filter {
-    margin: 5px 0;
-    width: 100%;
-    max-width: 480px;
+  margin: 5px 0;
+  width: 100%;
+  max-width: 480px;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.cars {
-        flex-direction: column;
-    }
+  div.cars {
+    flex-direction: column;
+  }
 
-    div.cars div.col-1 {
-        padding: 5px;
-        margin-bottom: 5px;
-    }
+  div.cars div.col-1 {
+    padding: 5px;
+    margin-bottom: 5px;
+  }
 
-    div.cars div.col-2 {
-        padding: 1px;
-    }
+  div.cars div.col-2 {
+    padding: 1px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.cars {
-        flex-direction: row;
-    }
+  div.cars {
+    flex-direction: row;
+  }
 
-    div.cars div.col-1 {
-        width: 300px;
-        margin-left: 20px;
-    }
+  div.cars div.col-1 {
+    width: 300px;
+    margin-left: 20px;
+  }
 
-    div.cars div.col-2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-    }
+  div.cars div.col-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
 }

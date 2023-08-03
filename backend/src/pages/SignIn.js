@@ -5,12 +5,12 @@ import * as UserService from '../services/UserService'
 import Header from '../components/Header'
 import Error from '../components/Error'
 import {
-    Paper,
-    FormControl,
-    InputLabel,
-    Input,
-    Button,
-    Link
+  Paper,
+  FormControl,
+  InputLabel,
+  Input,
+  Button,
+  Link,
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as LangHelper from '../common/LangHelper'
@@ -18,163 +18,173 @@ import * as LangHelper from '../common/LangHelper'
 import '../assets/css/signin.css'
 
 const SignIn = () => {
-    const navigate = useNavigate()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [blacklisted, setBlacklisted] = useState(false)
-    const [stayConnected, setStayConnected] = useState(false)
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [blacklisted, setBlacklisted] = useState(false)
+  const [stayConnected, setStayConnected] = useState(false)
 
-    const handleOnChangeEmail = (e) => {
-        setEmail(e.target.value)
+  const handleOnChangeEmail = (e) => {
+    setEmail(e.target.value)
+  }
+
+  const handleOnChangePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
+  const handleOnPasswordKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
     }
+  }
 
-    const handleOnChangePassword = (e) => {
-        setPassword(e.target.value)
-    }
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
 
-    const handleOnPasswordKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            handleSubmit(e)
+      const data = { email, password, stayConnected }
+
+      const res = await UserService.signin(data)
+
+      if (res.status === 200) {
+        if (res.data.blacklisted) {
+          UserService.signout(false)
+          setError(false)
+          setBlacklisted(true)
+        } else {
+          setError(false)
+
+          const params = new URLSearchParams(window.location.search)
+
+          if (params.has('u')) {
+            navigate(`/user${window.location.search}`)
+          } else if (params.has('c')) {
+            navigate(`/supplier${window.location.search}`)
+          } else if (params.has('cr')) {
+            navigate(`/car${window.location.search}`)
+          } else if (params.has('b')) {
+            navigate(`/update-booking${window.location.search}`)
+          } else {
+            navigate('/')
+          }
         }
+      } else {
+        setError(true)
+        setBlacklisted(false)
+      }
+    } catch {
+      setError(true)
+      setBlacklisted(false)
     }
+  }
 
-    const handleSubmit = async (e) => {
-        try {
-            e.preventDefault()
+  useEffect(() => {
+    ;(async function () {
+      try {
+        LangHelper.setLanguage(strings)
 
-            const data = { email, password, stayConnected }
+        const currentUser = UserService.getCurrentUser()
 
-            const res = await UserService.signin(data)
+        if (currentUser) {
+          const status = await UserService.validateAccessToken()
 
-            if (res.status === 200) {
-                if (res.data.blacklisted) {
-                    UserService.signout(false)
-                    setError(false)
-                    setBlacklisted(true)
-                } else {
-                    setError(false)
+          if (status === 200) {
+            const user = await UserService.getUser(currentUser.id)
 
-                    const params = new URLSearchParams(window.location.search)
-
-                    if (params.has('u')) {
-                        navigate(`/user${window.location.search}`)
-                    } else if (params.has('c')) {
-                        navigate(`/supplier${window.location.search}`)
-                    } else if (params.has('cr')) {
-                        navigate(`/car${window.location.search}`)
-                    } else if (params.has('b')) {
-                        navigate(`/update-booking${window.location.search}`)
-                    } else {
-                        navigate('/')
-                    }
-                }
+            if (user) {
+              navigate(`/${window.location.search}`)
             } else {
-                setError(true)
-                setBlacklisted(false)
+              UserService.signout()
             }
-        } catch {
-            setError(true)
-            setBlacklisted(false)
+          }
+        } else {
+          setVisible(true)
         }
-    }
+      } catch {
+        UserService.signout()
+      }
+    })()
+  }, [navigate])
 
-    useEffect(() => {
-        (async function () {
-            try {
-                LangHelper.setLanguage(strings)
+  return (
+    <div>
+      <Header />
+      {visible && (
+        <div className='signin'>
+          <Paper className='signin-form' elevation={10}>
+            <form onSubmit={handleSubmit}>
+              <h1 className='signin-form-title'>{strings.SIGN_IN_HEADING}</h1>
+              <FormControl fullWidth margin='dense'>
+                <InputLabel htmlFor='email'>{commonStrings.EMAIL}</InputLabel>
+                <Input
+                  id='email'
+                  type='text'
+                  name='Email'
+                  onChange={handleOnChangeEmail}
+                  autoComplete='email'
+                  required
+                />
+              </FormControl>
+              <FormControl fullWidth margin='dense'>
+                <InputLabel htmlFor='password'>
+                  {commonStrings.PASSWORD}
+                </InputLabel>
+                <Input
+                  id='password'
+                  name='Password'
+                  onChange={handleOnChangePassword}
+                  onKeyDown={handleOnPasswordKeyDown}
+                  autoComplete='password'
+                  type='password'
+                  required
+                />
+              </FormControl>
 
-                const currentUser = UserService.getCurrentUser()
+              <div className='stay-connected'>
+                <input
+                  type='checkbox'
+                  onChange={(e) => {
+                    setStayConnected(e.currentTarget.checked)
+                  }}
+                />
+                <label
+                  onClick={(e) => {
+                    const checkbox = e.currentTarget.previousSibling
+                    const checked = !checkbox.checked
+                    checkbox.checked = checked
+                    setStayConnected(checked)
+                  }}
+                >
+                  {strings.STAY_CONNECTED}
+                </label>
+              </div>
 
-                if (currentUser) {
-                    const status = await UserService.validateAccessToken()
+              <div className='forgot-password'>
+                <Link href='/forgot-password'>{strings.RESET_PASSWORD}</Link>
+              </div>
 
-                    if (status === 200) {
-                        const user = await UserService.getUser(currentUser.id)
-
-                        if (user) {
-                            navigate(`/${window.location.search}`)
-                        } else {
-                            UserService.signout()
-                        }
-                    }
-                } else {
-                    setVisible(true)
-                }
-            } catch {
-                UserService.signout()
-            }
-        })()
-    }, [navigate])
-
-    return (
-        <div>
-            <Header />
-            {visible &&
-                <div className='signin'>
-                    <Paper className='signin-form' elevation={10}>
-                        <form onSubmit={handleSubmit}>
-                            <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                                <Input
-                                    id="email"
-                                    type="text"
-                                    name="Email"
-                                    onChange={handleOnChangeEmail}
-                                    autoComplete="email"
-                                    required
-                                />
-                            </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
-                                <Input
-                                    id="password"
-                                    name="Password"
-                                    onChange={handleOnChangePassword}
-                                    onKeyDown={handleOnPasswordKeyDown}
-                                    autoComplete="password"
-                                    type="password"
-                                    required
-                                />
-                            </FormControl>
-
-                            <div className='stay-connected'>
-                                <input type='checkbox' onChange={(e) => {
-                                    setStayConnected(e.currentTarget.checked)
-                                }} />
-                                <label onClick={(e) => {
-                                    const checkbox = e.currentTarget.previousSibling
-                                    const checked = !checkbox.checked
-                                    checkbox.checked = checked
-                                    setStayConnected(checked)
-                                }}>{strings.STAY_CONNECTED}</label>
-                            </div>
-
-                            <div className='forgot-password'>
-                                <Link href='/forgot-password'>{strings.RESET_PASSWORD}</Link>
-                            </div>
-
-                            <div className='signin-buttons'>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    size="small"
-                                    className='btn-primary'
-                                >
-                                    {strings.SIGN_IN}
-                                </Button>
-                            </div>
-                            <div className="form-error">
-                                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
-                                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
-                            </div>
-                        </form>
-                    </Paper>
-                </div>}
+              <div className='signin-buttons'>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  size='small'
+                  className='btn-primary'
+                >
+                  {strings.SIGN_IN}
+                </Button>
+              </div>
+              <div className='form-error'>
+                {error && <Error message={strings.ERROR_IN_SIGN_IN} />}
+                {blacklisted && <Error message={strings.IS_BLACKLISTED} />}
+              </div>
+            </form>
+          </Paper>
         </div>
-    )
+      )}
+    </div>
+  )
 }
 
 export default SignIn
