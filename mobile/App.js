@@ -22,9 +22,9 @@ Notifications.setNotificationHandler({
 
 // Prevent native splash screen from autohiding before App component declaration
 SplashScreen.preventAutoHideAsync()
-  .then((result) =>
-    console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`),
-  )
+  .then((result) => {
+    console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`)
+  })
   .catch(console.warn) // it's good to explicitly catch and inspect any error
 
 const App = () => {
