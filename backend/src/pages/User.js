@@ -137,42 +137,42 @@ const User = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {loggedUser && user && visible && (
-        <div className='user'>
-          <div className='col-1'>
-            <section className='user-avatar-sec'>
+        <div className="user">
+          <div className="col-1">
+            <section className="user-avatar-sec">
               <Avatar
                 record={user}
                 type={user.type}
-                mode='update'
-                size='large'
+                mode="update"
+                size="large"
                 hideDelete
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
-                color='disabled'
+                color="disabled"
                 className={company ? 'company-avatar' : 'user-avatar'}
                 readonly
                 verified
               />
             </section>
-            <Typography variant='h4' className='user-name'>
+            <Typography variant="h4" className="user-name">
               {user.fullName}
             </Typography>
             {user.bio && (
-              <Typography variant='h6' className='user-info'>
+              <Typography variant="h6" className="user-info">
                 {user.bio}
               </Typography>
             )}
             {user.location && (
-              <Typography variant='h6' className='user-info'>
+              <Typography variant="h6" className="user-info">
                 {user.location}
               </Typography>
             )}
             {user.phone && (
-              <Typography variant='h6' className='user-info'>
+              <Typography variant="h6" className="user-info">
                 {user.phone}
               </Typography>
             )}
-            <div className='user-actions'>
+            <div className="user-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
                   <IconButton href={`/update-user?u=${user._id}`}>
@@ -189,10 +189,10 @@ const User = () => {
               )}
             </div>
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             {(edit || !company) && (
               <BookingList
-                containerClassName='user'
+                containerClassName="user"
                 offset={offset}
                 loggedUser={loggedUser}
                 user={company ? undefined : user}
@@ -206,23 +206,23 @@ const User = () => {
           </div>
         </div>
       )}
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+        <DialogTitle className="dialog-header">
           {commonStrings.CONFIRM_TITLE}
         </DialogTitle>
         <DialogContent>{ulStrings.DELETE_USER}</DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCancelDelete}
-            variant='contained'
-            className='btn-secondary'
+            variant="contained"
+            className="btn-secondary"
           >
             {commonStrings.CANCEL}
           </Button>
           <Button
             onClick={handleConfirmDelete}
-            variant='contained'
-            color='error'
+            variant="contained"
+            color="error"
           >
             {commonStrings.DELETE}
           </Button>

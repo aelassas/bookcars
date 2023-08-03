@@ -20,7 +20,7 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   useImperativeHandle(ref, () => innerRef.current)
   return (
     // eslint-disable-next-line
-    <ul {...rest} ref={innerRef} role='list-box'>
+    <ul {...rest} ref={innerRef} role="list-box">
       {children}
     </ul>
   )
@@ -62,7 +62,7 @@ const MultipleSelect = ({
   }, [selectedOptions, type])
 
   return (
-    <div className='multiple-select'>
+    <div className="multiple-select">
       <Autocomplete
         open={customOpen ? open : undefined}
         readOnly={readOnly}
@@ -172,7 +172,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         <LocationIcon />
                       </InputAdornment>
                       {params.InputProps.startAdornment}
@@ -201,7 +201,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         <img
                           src={Helper.joinURL(Env.CDN_USERS, option.image)}
                           alt={option.name}
@@ -234,7 +234,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position='start'>
+                      <InputAdornment position="start">
                         <img
                           src={Helper.joinURL(Env.CDN_CARS, option.image)}
                           alt={option.name}
@@ -264,29 +264,29 @@ const MultipleSelect = ({
           if (type === Env.RECORD_TYPE.LOCATION) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image'>
+                <span className="option-image">
                   <LocationIcon />
                 </span>
-                <span className='option-name'>{option.name}</span>
+                <span className="option-name">{option.name}</span>
               </li>
             )
           } else if (type === Env.RECORD_TYPE.COMPANY) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image'>
+                <span className="option-image">
                   <img
                     src={Helper.joinURL(Env.CDN_USERS, option.image)}
                     alt={option.name}
                     style={{ width: Env.COMPANY_IMAGE_WIDTH }}
                   />
                 </span>
-                <span className='option-name'>{option.name}</span>
+                <span className="option-name">{option.name}</span>
               </li>
             )
           } else if (type === Env.RECORD_TYPE.CAR) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className='option-image'>
+                <span className="option-image">
                   <img
                     src={Helper.joinURL(Env.CDN_CARS, option.image)}
                     alt={option.name}
@@ -295,7 +295,7 @@ const MultipleSelect = ({
                     }}
                   />
                 </span>
-                <span className='car-option-name'>{option.name}</span>
+                <span className="car-option-name">{option.name}</span>
               </li>
             )
           }

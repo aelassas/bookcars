@@ -118,28 +118,28 @@ const FuelFilter = (props) => {
       title={strings.ENGINE}
       className={`${props.className ? `${props.className} ` : ''}fuel-filter`}
     >
-      <div className='filter-elements'>
-        <div className='filter-element'>
+      <div className="filter-elements">
+        <div className="filter-element">
           <input
             ref={dieselRef}
-            type='checkbox'
-            className='fuel-checkbox'
+            type="checkbox"
+            className="fuel-checkbox"
             onChange={handleCheckDieselChange}
           />
           <label onClick={handleDieselClick}>{strings.DIESEL}</label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={gasolineRef}
-            type='checkbox'
-            className='fuel-checkbox'
+            type="checkbox"
+            className="fuel-checkbox"
             onChange={handleCheckGasolineChange}
           />
           <label onClick={handleGasolineClick}>{strings.GASOLINE}</label>
         </div>
       </div>
-      <div className='filter-actions'>
-        <span onClick={handleUncheckAllChange} className='uncheckall'>
+      <div className="filter-actions">
+        <span onClick={handleUncheckAllChange} className="uncheckall">
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>

@@ -127,49 +127,49 @@ const Avatar = (props) => {
     <div className={className}>
       {loggedUser._id === user._id && !readonly ? (
         <div>
-          <input id='upload' type='file' hidden onChange={handleChange} />
+          <input id="upload" type="file" hidden onChange={handleChange} />
           {user.avatar ? (
             <Badge
-              overlap='circular'
+              overlap="circular"
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
               }}
               badgeContent={
                 <Box
-                  borderRadius='50%'
-                  className='avatar-action-box'
+                  borderRadius="50%"
+                  className="avatar-action-box"
                   onClick={handleDeleteAvatar}
                 >
-                  <DeleteIcon className='avatar-action-icon' />
+                  <DeleteIcon className="avatar-action-icon" />
                 </Box>
               }
             >
               <Badge
-                overlap='circular'
+                overlap="circular"
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'right',
                 }}
                 badgeContent={
                   <Box
-                    borderRadius='50%'
-                    className='avatar-action-box'
+                    borderRadius="50%"
+                    className="avatar-action-box"
                     onClick={handleUpload}
                   >
-                    <PhotoCameraIcon className='avatar-action-icon' />
+                    <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 }
               >
                 <MaterialAvatar
                   src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
-                  className='avatar'
+                  className="avatar"
                 />
               </Badge>
             </Badge>
           ) : (
             <Badge
-              overlap='circular'
+              overlap="circular"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
@@ -177,8 +177,8 @@ const Avatar = (props) => {
               badgeContent={
                 <div>
                   <Box
-                    borderRadius='50%'
-                    className='avatar-action-box'
+                    borderRadius="50%"
+                    className="avatar-action-box"
                     onClick={handleUpload}
                   >
                     <PhotoCameraIcon
@@ -192,8 +192,8 @@ const Avatar = (props) => {
                 </div>
               }
             >
-              <MaterialAvatar className='avatar'>
-                <AccountCircle className='avatar' />
+              <MaterialAvatar className="avatar">
+                <AccountCircle className="avatar" />
               </MaterialAvatar>
             </Badge>
           )}
@@ -209,16 +209,16 @@ const Avatar = (props) => {
           color={props.color || 'inherit'}
         />
       )}
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={open}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={open}>
+        <DialogTitle className="dialog-header">
           {commonStrings.CONFIRM_TITLE}
         </DialogTitle>
         <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
-        <DialogActions className='dialog-actions'>
-          <Button onClick={handleCancelDelete} className='btn-secondary'>
+        <DialogActions className="dialog-actions">
+          <Button onClick={handleCancelDelete} className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button onClick={handleDelete} className='btn-primary'>
+          <Button onClick={handleDelete} className="btn-primary">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

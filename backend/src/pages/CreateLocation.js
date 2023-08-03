@@ -60,22 +60,22 @@ const CreateLocation = () => {
 
   return (
     <Master onLoad={onLoad} strict={true}>
-      <div className='create-location'>
+      <div className="create-location">
         <Paper
-          className='location-form location-form-wrapper'
+          className="location-form location-form-wrapper"
           elevation={10}
           style={visible ? null : { display: 'none' }}
         >
-          <h1 className='location-form-title'>
+          <h1 className="location-form-title">
             {' '}
             {strings.NEW_LOCATION_HEADING}{' '}
           </h1>
           <form onSubmit={handleSubmit}>
             {Env._LANGUAGES.map((language, index) => (
-              <FormControl key={index} fullWidth margin='dense'>
-                <InputLabel className='required'>{language.label}</InputLabel>
+              <FormControl key={index} fullWidth margin="dense">
+                <InputLabel className="required">{language.label}</InputLabel>
                 <Input
-                  type='text'
+                  type="text"
                   value={(names[index] && names[index].name) || ''}
                   error={nameErrors[index]}
                   required
@@ -89,7 +89,7 @@ const CreateLocation = () => {
                     nameErrors[index] = false
                     setNameErrors(Helper.cloneArray(nameErrors))
                   }}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
                 <FormHelperText error={nameErrors[index]}>
                   {(nameErrors[index] && strings.INVALID_LOCATION) || ''}
@@ -97,20 +97,20 @@ const CreateLocation = () => {
               </FormControl>
             ))}
 
-            <div className='buttons'>
+            <div className="buttons">
               <Button
-                type='submit'
-                variant='contained'
-                className='btn-primary btn-margin-bottom'
-                size='small'
+                type="submit"
+                variant="contained"
+                className="btn-primary btn-margin-bottom"
+                size="small"
               >
                 {commonStrings.CREATE}
               </Button>
               <Button
-                variant='contained'
-                className='btn-secondary btn-margin-bottom'
-                size='small'
-                href='/locations'
+                variant="contained"
+                className="btn-secondary btn-margin-bottom"
+                size="small"
+                href="/locations"
               >
                 {commonStrings.CANCEL}
               </Button>

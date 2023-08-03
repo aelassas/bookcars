@@ -215,7 +215,7 @@ const BookingList = (props) => {
         flex: 1,
         valueGetter: (params) =>
           `${Helper.formatNumber(params.value)} ${strings.CURRENCY}`,
-        renderCell: (params) => <span className='bp'>{params.value}</span>,
+        renderCell: (params) => <span className="bp">{params.value}</span>,
       },
       {
         field: 'status',
@@ -280,7 +280,7 @@ const BookingList = (props) => {
         headerName: commonStrings.SUPPLIER,
         flex: 1,
         renderCell: (params) => (
-          <div className='cell-company'>
+          <div className="cell-company">
             <img
               src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
               alt={params.value}
@@ -333,14 +333,14 @@ const BookingList = (props) => {
   const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
 
   return (
-    <div className='bs-list'>
+    <div className="bs-list">
       {user &&
         (rows.length === 0 ? (
           !loading &&
           !props.loading && (
-            <Card variant='outlined' className='empty-list'>
+            <Card variant="outlined" className="empty-list">
               <CardContent>
-                <Typography color='textSecondary'>
+                <Typography color="textSecondary">
                   {strings.EMPTY_LIST}
                 </Typography>
               </CardContent>
@@ -354,31 +354,31 @@ const BookingList = (props) => {
               const days = Helper.days(from, to)
 
               return (
-                <div key={booking._id} className='booking-details'>
+                <div key={booking._id} className="booking-details">
                   <div className={`bs bs-${booking.status}`}>
                     <label>{Helper.getBookingStatus(booking.status)}</label>
                   </div>
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {strings.CAR}
                     </label>
-                    <div className='booking-detail-value'>
+                    <div className="booking-detail-value">
                       {`${booking.car.name} (${Helper.formatNumber(
                         booking.car.price,
                       )} ${csStrings.CAR_CURRENCY})`}
                     </div>
                   </div>
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {strings.DAYS}
                     </label>
-                    <div className='booking-detail-value'>
+                    <div className="booking-detail-value">
                       {`${Helper.getDaysShort(
                         Helper.days(from, to),
                       )} (${Helper.capitalize(
@@ -389,36 +389,36 @@ const BookingList = (props) => {
                     </div>
                   </div>
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {commonStrings.PICKUP_LOCATION}
                     </label>
-                    <div className='booking-detail-value'>
+                    <div className="booking-detail-value">
                       {booking.pickupLocation.name}
                     </div>
                   </div>
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {commonStrings.DROP_OFF_LOCATION}
                     </label>
-                    <div className='booking-detail-value'>
+                    <div className="booking-detail-value">
                       {booking.dropOffLocation.name}
                     </div>
                   </div>
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {commonStrings.SUPPLIER}
                     </label>
-                    <div className='booking-detail-value'>
-                      <div className='car-company'>
+                    <div className="booking-detail-value">
+                      <div className="car-company">
                         <img
                           src={Helper.joinURL(
                             Env.CDN_USERS,
@@ -426,7 +426,7 @@ const BookingList = (props) => {
                           )}
                           alt={booking.company.fullName}
                         />
-                        <label className='car-company-name'>
+                        <label className="car-company-name">
                           {booking.company.fullName}
                         </label>
                       </div>
@@ -440,17 +440,17 @@ const BookingList = (props) => {
                     booking.fullInsurance ||
                     booking.additionalDriver) && (
                     <>
-                      <div className='extras'>
-                        <label className='extras-title'>
+                      <div className="extras">
+                        <label className="extras-title">
                           {commonStrings.OPTIONS}
                         </label>
                         {booking.cancellation && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.CANCELLATION}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getCancellationOption(
                                 booking.car.cancellation,
                                 _fr,
@@ -461,12 +461,12 @@ const BookingList = (props) => {
                         )}
 
                         {booking.amendments && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.AMENDMENTS}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getAmendmentsOption(
                                 booking.car.amendments,
                                 _fr,
@@ -477,12 +477,12 @@ const BookingList = (props) => {
                         )}
 
                         {booking.collisionDamageWaiver && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.COLLISION_DAMAGE_WAVER}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getCollisionDamageWaiverOption(
                                 booking.car.collisionDamageWaiver,
                                 days,
@@ -494,12 +494,12 @@ const BookingList = (props) => {
                         )}
 
                         {booking.theftProtection && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.THEFT_PROTECTION}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getTheftProtectionOption(
                                 booking.car.theftProtection,
                                 days,
@@ -511,12 +511,12 @@ const BookingList = (props) => {
                         )}
 
                         {booking.fullInsurance && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.FULL_INSURANCE}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getFullInsuranceOption(
                                 booking.car.fullInsurance,
                                 days,
@@ -528,12 +528,12 @@ const BookingList = (props) => {
                         )}
 
                         {booking.additionalDriver && (
-                          <div className='extra'>
-                            <CheckIcon className='extra-icon' />
-                            <label className='extra-title'>
+                          <div className="extra">
+                            <CheckIcon className="extra-icon" />
+                            <label className="extra-title">
                               {csStrings.ADDITIONAL_DRIVER}
                             </label>
-                            <label className='extra-text'>
+                            <label className="extra-text">
                               {Helper.getAdditionalDriverOption(
                                 booking.car.additionalDriver,
                                 days,
@@ -547,25 +547,25 @@ const BookingList = (props) => {
                     </>
                   )}
                   <div
-                    className='booking-detail'
+                    className="booking-detail"
                     style={{ height: bookingDetailHeight }}
                   >
-                    <label className='booking-detail-title'>
+                    <label className="booking-detail-title">
                       {strings.COST}
                     </label>
-                    <div className='booking-detail-value booking-price'>{`${Helper.formatNumber(
+                    <div className="booking-detail-value booking-price">{`${Helper.formatNumber(
                       booking.price,
                     )} ${commonStrings.CURRENCY}`}</div>
                   </div>
 
-                  <div className='bs-buttons'>
+                  <div className="bs-buttons">
                     {booking.cancellation &&
                       !booking.cancelRequest &&
                       booking.status !== Env.BOOKING_STATUS.CANCELLED &&
                       new Date(booking.from) > new Date() && (
                         <Button
-                          variant='contained'
-                          className='btn-secondary'
+                          variant="contained"
+                          className="btn-secondary"
                           onClick={() => {
                             setSelectedId(booking._id)
                             setOpenCancelDialog(true)
@@ -581,7 +581,7 @@ const BookingList = (props) => {
           </>
         ) : (
           <DataGrid
-            className='data-grid'
+            className="data-grid"
             checkboxSelection={props.checkboxSelection}
             getRowId={(row) => row._id}
             columns={columns}
@@ -594,7 +594,7 @@ const BookingList = (props) => {
               },
             }}
             pageSizeOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
-            paginationMode='server'
+            paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             localeText={
@@ -608,16 +608,16 @@ const BookingList = (props) => {
           />
         ))}
 
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openCancelDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openCancelDialog}>
+        <DialogTitle className="dialog-header">
           {!cancelRequestSent &&
             !cancelRequestProcessing &&
             commonStrings.CONFIRM_TITLE}
         </DialogTitle>
-        <DialogContent className='dialog-content'>
+        <DialogContent className="dialog-content">
           {cancelRequestProcessing ? (
             <Stack sx={{ color: '#f37022' }}>
-              <CircularProgress color='inherit' />
+              <CircularProgress color="inherit" />
             </Stack>
           ) : cancelRequestSent ? (
             strings.CANCEL_BOOKING_REQUEST_SENT
@@ -625,12 +625,12 @@ const BookingList = (props) => {
             strings.CANCEL_BOOKING
           )}
         </DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           {!cancelRequestProcessing && (
             <Button
               onClick={handleCloseCancelBooking}
-              variant='contained'
-              className='btn-secondary'
+              variant="contained"
+              className="btn-secondary"
             >
               {commonStrings.CLOSE}
             </Button>
@@ -638,8 +638,8 @@ const BookingList = (props) => {
           {!cancelRequestSent && !cancelRequestProcessing && (
             <Button
               onClick={handleConfirmCancelBooking}
-              variant='contained'
-              className='btn-primary'
+              variant="contained"
+              className="btn-primary"
             >
               {commonStrings.CONFIRM}
             </Button>

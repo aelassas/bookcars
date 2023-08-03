@@ -106,17 +106,17 @@ const Cars = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {user && (
-        <div className='cars'>
-          <div className='col-1'>
-            <div className='col-1-container'>
-              <Search onSubmit={handleSearch} className='search' />
+        <div className="cars">
+          <div className="col-1">
+            <div className="col-1-container">
+              <Search onSubmit={handleSearch} className="search" />
 
               <Button
-                type='submit'
-                variant='contained'
-                className='btn-primary new-car'
-                size='small'
-                href='/create-car'
+                type="submit"
+                variant="contained"
+                className="btn-primary new-car"
+                size="small"
+                href="/create-car"
               >
                 {strings.NEW_CAR}
               </Button>
@@ -126,37 +126,37 @@ const Cars = () => {
                   value={`${rowCount} ${commonStrings.CAR}${
                     rowCount > 1 ? 's' : ''
                   }`}
-                  className='car-count'
+                  className="car-count"
                 />
               )}
 
               <SupplierFilter
                 companies={allCompanies}
                 onChange={handleSupplierFilterChange}
-                className='filter'
+                className="filter"
               />
 
               {rowCount > -1 && (
                 <>
                   <FuelFilter
-                    className='car-filter'
+                    className="car-filter"
                     onChange={handleFuelFilterChange}
                   />
                   <GearboxFilter
-                    className='car-filter'
+                    className="car-filter"
                     onChange={handleGearboxFilterChange}
                   />
                   <MileageFilter
-                    className='car-filter'
+                    className="car-filter"
                     onChange={handleMileageFilterChange}
                   />
                   <DepositFilter
-                    className='car-filter'
+                    className="car-filter"
                     onChange={handleDepositFilterChange}
                   />
                   {admin && (
                     <AvailabilityFilter
-                      className='car-filter'
+                      className="car-filter"
                       onChange={handleAvailabilityFilterChange}
                     />
                   )}
@@ -164,9 +164,9 @@ const Cars = () => {
               )}
             </div>
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             <CarList
-              containerClassName='cars'
+              containerClassName="cars"
               offset={offset}
               user={user}
               companies={companies}

@@ -69,15 +69,15 @@ const Bookings = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {user && (
-        <div className='bookings'>
-          <div className='col-1'>
+        <div className="bookings">
+          <div className="col-1">
             {leftPanel && (
               <>
                 <Button
-                  variant='contained'
-                  className='btn-primary cl-new-booking'
-                  size='small'
-                  href='/create-booking'
+                  variant="contained"
+                  className="btn-primary cl-new-booking"
+                  size="small"
+                  href="/create-booking"
                 >
                   {strings.NEW_BOOKING}
                 </Button>
@@ -85,25 +85,25 @@ const Bookings = () => {
                   <SupplierFilter
                     companies={allCompanies}
                     onChange={handleSupplierFilterChange}
-                    className='cl-company-filter'
+                    className="cl-company-filter"
                   />
                 )}
                 <StatusFilter
                   onChange={handleStatusFilterChange}
-                  className='cl-status-filter'
+                  className="cl-status-filter"
                 />
                 <BookingFilter
                   onSubmit={handleBookingFilterSubmit}
                   language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                  className='cl-booking-filter'
+                  className="cl-booking-filter"
                   collapse={!Env.isMobile()}
                 />
               </>
             )}
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             <BookingList
-              containerClassName='bookings'
+              containerClassName="bookings"
               offset={offset}
               language={user.language}
               loggedUser={user}

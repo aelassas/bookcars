@@ -82,14 +82,14 @@ const UserTypeFilter = (props) => {
         props.className ? `${props.className} ` : ''
       }user-type-filter`}
     >
-      <ul className='user-type-list'>
+      <ul className="user-type-list">
         {userTypes.map((userType, index) => (
           <li key={userType.value}>
             <input
               ref={(ref) => (refs.current[index] = ref)}
-              type='checkbox'
+              type="checkbox"
               data-value={userType.value}
-              className='user-type-checkbox'
+              className="user-type-checkbox"
               onChange={handleUserTypeChange}
             />
             <label
@@ -101,8 +101,8 @@ const UserTypeFilter = (props) => {
           </li>
         ))}
       </ul>
-      <div className='filter-actions'>
-        <span onClick={handleUncheckAllChange} className='uncheckall'>
+      <div className="filter-actions">
+        <span onClick={handleUncheckAllChange} className="uncheckall">
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>

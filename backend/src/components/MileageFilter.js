@@ -120,29 +120,29 @@ const MileageFilter = (props) => {
         props.className ? `${props.className} ` : ''
       }mileage-filter`}
     >
-      <div className='filter-elements'>
-        <div className='filter-element'>
+      <div className="filter-elements">
+        <div className="filter-element">
           <input
             ref={limitedRef}
-            type='checkbox'
-            className='mileage-checkbox'
+            type="checkbox"
+            className="mileage-checkbox"
             onChange={handleLimitedMileageChange}
           />
           <label onClick={handleLimitedMileageClick}>{strings.LIMITED}</label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={unlimitedRef}
-            type='checkbox'
-            className='mileage-checkbox'
+            type="checkbox"
+            className="mileage-checkbox"
             onChange={handleUnlimitedMileageChange}
           />
           <label onClick={handleUnlimitedMileageClick}>
             {strings.UNLIMITED}
           </label>
         </div>
-        <div className='filter-actions'>
-          <span onClick={handleUncheckAllChange} className='uncheckall'>
+        <div className="filter-actions">
+          <span onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

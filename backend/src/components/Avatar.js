@@ -346,7 +346,7 @@ const Avatar = (props) => {
               alt={record && record.name}
             />
           ) : props.type === Env.RECORD_TYPE.COMPANY ? (
-            <div className='company-avatar-readonly'>
+            <div className="company-avatar-readonly">
               <img
                 src={Helper.joinURL(cdn(), avatar)}
                 alt={record && record.fullName}
@@ -354,7 +354,7 @@ const Avatar = (props) => {
             </div>
           ) : props.verified && record.verified ? (
             <Badge
-              overlap='circular'
+              overlap="circular"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
@@ -362,7 +362,7 @@ const Avatar = (props) => {
               badgeContent={
                 <Tooltip title={commonStrings.VERIFIED}>
                   <Box
-                    borderRadius='50%'
+                    borderRadius="50%"
                     className={
                       size
                         ? 'user-avatar-verified-' + size
@@ -388,7 +388,7 @@ const Avatar = (props) => {
         ) : (
           //!readonly
           <Badge
-            overlap='circular'
+            overlap="circular"
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right',
@@ -399,18 +399,18 @@ const Avatar = (props) => {
               ) : (
                 <Tooltip title={commonStrings.DELETE_IMAGE}>
                   <Box
-                    borderRadius='50%'
-                    className='avatar-action-box'
+                    borderRadius="50%"
+                    className="avatar-action-box"
                     onClick={handleDeleteAvatar}
                   >
-                    <DeleteIcon className='avatar-action-icon' />
+                    <DeleteIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
               )
             }
           >
             <Badge
-              overlap='circular'
+              overlap="circular"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
@@ -421,17 +421,17 @@ const Avatar = (props) => {
               badgeContent={
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                   <Box
-                    borderRadius='50%'
-                    className='avatar-action-box'
+                    borderRadius="50%"
+                    className="avatar-action-box"
                     onClick={handleUpload}
                   >
-                    <PhotoCameraIcon className='avatar-action-icon' />
+                    <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
               }
             >
               {props.type === Env.RECORD_TYPE.CAR ? (
-                <div className='car-avatar'>
+                <div className="car-avatar">
                   <img
                     src={Helper.joinURL(cdn(), avatar)}
                     alt={record && record.name}
@@ -463,7 +463,7 @@ const Avatar = (props) => {
           />
         ) : props.verified && record.verified ? (
           <Badge
-            overlap='circular'
+            overlap="circular"
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',
@@ -471,7 +471,7 @@ const Avatar = (props) => {
             badgeContent={
               <Tooltip title={commonStrings.VERIFIED}>
                 <Box
-                  borderRadius='50%'
+                  borderRadius="50%"
                   className={
                     size
                       ? 'user-avatar-verified-' + size
@@ -497,14 +497,14 @@ const Avatar = (props) => {
       ) : (
         //!readonly
         <Badge
-          overlap='circular'
+          overlap="circular"
           anchorOrigin={{
             vertical: 'top',
             horizontal: 'right',
           }}
         >
           <Badge
-            overlap='circular'
+            overlap="circular"
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',
@@ -512,11 +512,11 @@ const Avatar = (props) => {
             badgeContent={
               <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                 <Box
-                  borderRadius='50%'
-                  className='avatar-action-box'
+                  borderRadius="50%"
+                  className="avatar-action-box"
                   onClick={handleUpload}
                 >
-                  <PhotoCameraIcon className='avatar-action-icon' />
+                  <PhotoCameraIcon className="avatar-action-icon" />
                 </Box>
               </Tooltip>
             }
@@ -540,37 +540,37 @@ const Avatar = (props) => {
           </Badge>
         </Badge>
       )}
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={openTypeDialog}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={openTypeDialog}>
+        <DialogTitle className="dialog-header">
           {commonStrings.INFO}
         </DialogTitle>
         <DialogContent>{commonStrings.USER_TYPE_REQUIRED}</DialogContent>
-        <DialogActions className='dialog-actions'>
+        <DialogActions className="dialog-actions">
           <Button
             onClick={handleCloseDialog}
-            variant='contained'
-            className='btn-secondary'
+            variant="contained"
+            className="btn-secondary"
           >
             {commonStrings.CLOSE}
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog disableEscapeKeyDown maxWidth='xs' open={open}>
-        <DialogTitle className='dialog-header'>
+      <Dialog disableEscapeKeyDown maxWidth="xs" open={open}>
+        <DialogTitle className="dialog-header">
           {commonStrings.CONFIRM_TITLE}
         </DialogTitle>
         <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
-        <DialogActions className='dialog-actions'>
-          <Button onClick={handleCancelDelete} className='btn-secondary'>
+        <DialogActions className="dialog-actions">
+          <Button onClick={handleCancelDelete} className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button onClick={handleDelete} color='error' variant='contained'>
+          <Button onClick={handleDelete} color="error" variant="contained">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>
       </Dialog>
       {!readonly && (
-        <input id='upload' type='file' hidden onChange={handleChange} />
+        <input id="upload" type="file" hidden onChange={handleChange} />
       )}
     </div>
   ) : null

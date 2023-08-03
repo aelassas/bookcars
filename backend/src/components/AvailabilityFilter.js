@@ -120,27 +120,27 @@ const AvailabilityFilter = (props) => {
         props.className ? `${props.className} ` : ''
       }availability-filter`}
     >
-      <div className='filter-elements'>
-        <div className='filter-element'>
+      <div className="filter-elements">
+        <div className="filter-element">
           <input
             ref={availableRef}
-            type='checkbox'
-            className='availability-checkbox'
+            type="checkbox"
+            className="availability-checkbox"
             onChange={handleAvailableChange}
           />
           <label onClick={handleAvailableClick}>{strings.AVAILABLE}</label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={unavailableRef}
-            type='checkbox'
-            className='availability-checkbox'
+            type="checkbox"
+            className="availability-checkbox"
             onChange={handleUnavailableChange}
           />
           <label onClick={handleUnavailableClick}>{strings.UNAVAILABLE}</label>
         </div>
-        <div className='filter-actions'>
-          <span onClick={handleUncheckAllChange} className='uncheckall'>
+        <div className="filter-actions">
+          <span onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

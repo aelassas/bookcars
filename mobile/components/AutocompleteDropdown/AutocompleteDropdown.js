@@ -8,9 +8,17 @@ import React, {
   useLayoutEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react'
-import { Dimensions, Keyboard, Platform, ScrollView, Pressable, View, TextInput } from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Platform,
+  ScrollView,
+  Pressable,
+  View,
+  TextInput,
+} from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { withFadeAnimation } from './HOC/withFadeAnimation'
 import { NothingFound } from './NothingFound'
@@ -31,7 +39,8 @@ export const AutocompleteDropdown = memo(
     const [dataSet, setDataSet] = useState(props.dataSet)
     const clearOnFocus = props.clearOnFocus === false ? false : true
     const inputHeight = props.inputHeight ?? moderateScale(40, 0.2)
-    const suggestionsListMaxHeight = props.suggestionsListMaxHeight ?? moderateScale(200, 0.2)
+    const suggestionsListMaxHeight =
+      props.suggestionsListMaxHeight ?? moderateScale(200, 0.2)
     const position = props.position ?? 'absolute'
     const bottomOffset = props.bottomOffset ?? 0
     const ScrollViewComponent = props.ScrollViewComponent ?? ScrollView
@@ -42,13 +51,13 @@ export const AutocompleteDropdown = memo(
         'keyboardDidShow',
         () => {
           setIsKeyboardVisible(true)
-        }
+        },
       )
       const keyboardDidHideListener = Keyboard.addListener(
         'keyboardDidHide',
         () => {
           setIsKeyboardVisible(false)
-        }
+        },
       )
 
       return () => {
@@ -76,9 +85,12 @@ export const AutocompleteDropdown = memo(
 
       let dataSetItem
       if (typeof props.initialValue === 'string') {
-        dataSetItem = dataSet.find(el => el.id === props.initialValue)
-      } else if (typeof props.initialValue === 'object' && props.initialValue.id) {
-        dataSetItem = dataSet.find(el => el.id === props.initialValue.id)
+        dataSetItem = dataSet.find((el) => el.id === props.initialValue)
+      } else if (
+        typeof props.initialValue === 'object' &&
+        props.initialValue.id
+      ) {
+        dataSetItem = dataSet.find((el) => el.id === props.initialValue.id)
       }
 
       if (dataSetItem) {
@@ -139,7 +151,7 @@ export const AutocompleteDropdown = memo(
       }
     }, [props.blur])
 
-    const _onSelectItem = useCallback(item => {
+    const _onSelectItem = useCallback((item) => {
       setSelectedItem(item)
 
       inputRef.current.blur()
@@ -147,15 +159,16 @@ export const AutocompleteDropdown = memo(
     }, [])
 
     const calculateDirection = async () => {
-      const [, positionY] = await new Promise(resolve =>
+      const [, positionY] = await new Promise((resolve) =>
         containerRef.current.measureInWindow((...rect) => {
           resolve(rect)
-        })
+        }),
       )
 
       const screenHeight = Dimensions.get('window').height
 
-      const lowestPointOfDropdown = positionY + inputHeight + suggestionsListMaxHeight + bottomOffset
+      const lowestPointOfDropdown =
+        positionY + inputHeight + suggestionsListMaxHeight + bottomOffset
       setDirection(lowestPointOfDropdown < screenHeight ? 'down' : 'up')
     }
 
@@ -180,11 +193,11 @@ export const AutocompleteDropdown = memo(
       onClearPress()
     }
 
-    const setInputText = text => {
+    const setInputText = (text) => {
       setSearchText(text)
     }
 
-    const setItem = item => {
+    const setItem = (item) => {
       setSelectedItem(item)
     }
 
@@ -204,10 +217,15 @@ export const AutocompleteDropdown = memo(
           item.title.length > 0 &&
           searchText.length > 0
         ) {
-          substrIndex = item.title.toLowerCase().indexOf(searchText.toLowerCase())
+          substrIndex = item.title
+            .toLowerCase()
+            .indexOf(searchText.toLowerCase())
           if (substrIndex !== -1) {
             titleStart = item.title.slice(0, substrIndex)
-            titleHighlighted = item.title.slice(substrIndex, substrIndex + searchText.length)
+            titleHighlighted = item.title.slice(
+              substrIndex,
+              substrIndex + searchText.length,
+            )
             titleEnd = item.title.slice(substrIndex + searchText.length)
           }
         }
@@ -218,9 +236,15 @@ export const AutocompleteDropdown = memo(
 
         if (typeof props.renderItem === 'function') {
           const EL = props.renderItem(item, searchText)
-          return <Pressable onPress={() => {
-            _onSelectItem(item)
-          }}>{EL}</Pressable>
+          return (
+            <Pressable
+              onPress={() => {
+                _onSelectItem(item)
+              }}
+            >
+              {EL}
+            </Pressable>
+          )
         }
 
         const EL = withFadeAnimation(
@@ -233,15 +257,15 @@ export const AutocompleteDropdown = memo(
               }}
             />
           ),
-          {}
+          {},
         )
 
         return <EL />
-      },
-      [props.renderItem]) // eslint-disable-line react-hooks/exhaustive-deps
+      }, // eslint-disable-next-line react-hooks/exhaustive-deps
+      [props.renderItem],
+    )
 
     const scrollContent = useMemo(() => {
-
       if (!Array.isArray(dataSet)) {
         return null
       }
@@ -256,7 +280,7 @@ export const AutocompleteDropdown = memo(
             <View key={item.id}>
               {content.length > 0 && i < itemsCount && ItemSeparatorComponent}
               {listItem}
-            </View>
+            </View>,
           )
         }
       })
@@ -279,15 +303,16 @@ export const AutocompleteDropdown = memo(
       }
     }, [props.onClear, isKeyboardVisible]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const debouncer = debounce(text => {
+    const debouncer = debounce((text) => {
       if (typeof props.onChangeText === 'function') {
         props.onChangeText(text)
       }
     }, props.debounce ?? 0)
 
     const debouncedEvent = useCallback(
-      (text) => debouncer(text)
-      , [props.onChangeText]) // eslint-disable-line react-hooks/exhaustive-deps
+      (text) => debouncer(text), // eslint-disable-next-line react-hooks/exhaustive-deps
+      [props.onChangeText],
+    )
 
     // const debouncedEvent = useCallback(
     //   debounce(text => {
@@ -297,7 +322,7 @@ export const AutocompleteDropdown = memo(
     //   }, props.debounce ?? 0),
     //   [props.onChangeText]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const onChangeText = useCallback(text => {
+    const onChangeText = useCallback((text) => {
       setIsOpened(true)
       setSearchText(text)
       debouncedEvent(text)
@@ -309,7 +334,7 @@ export const AutocompleteDropdown = memo(
     }, [isOpened]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onFocus = useCallback(
-      e => {
+      (e) => {
         if (clearOnFocus) {
           setSearchText('')
         }
@@ -320,22 +345,24 @@ export const AutocompleteDropdown = memo(
           open()
         }
         setIsCleared(false)
-      },
-      [dataSet, clearOnFocus, props.onFocus, isCleared]) // eslint-disable-line react-hooks/exhaustive-deps
+      }, // eslint-disable-next-line react-hooks/exhaustive-deps
+      [dataSet, clearOnFocus, props.onFocus, isCleared],
+    )
 
     const onBlur = useCallback(
-      e => {
+      (e) => {
         if (props.closeOnBlur) {
           close()
         }
         if (typeof props.onBlur === 'function') {
           props.onBlur(e)
         }
-      },
-      [props.closeOnBlur, props.onBlur]) // eslint-disable-line react-hooks/exhaustive-deps
+      }, // eslint-disable-next-line react-hooks/exhaustive-deps
+      [props.closeOnBlur, props.onBlur],
+    )
 
     const onSubmit = useCallback(
-      e => {
+      (e) => {
         inputRef.current.blur()
         if (props.closeOnSubmit) {
           close()
@@ -344,17 +371,22 @@ export const AutocompleteDropdown = memo(
         if (typeof props.onSubmit === 'function') {
           props.onSubmit(e)
         }
-      },
-      [props.closeOnSubmit, props.onSubmit]) // eslint-disable-line react-hooks/exhaustive-deps
+      }, // eslint-disable-next-line react-hooks/exhaustive-deps
+      [props.closeOnSubmit, props.onSubmit],
+    )
 
     return (
       <View
-        style={[styles.container, props.containerStyle, Platform.select({ ios: { zIndex: 1 } })]}
+        style={[
+          styles.container,
+          props.containerStyle,
+          Platform.select({ ios: { zIndex: 1 } }),
+        ]}
       >
         {/* it's necessary use onLayout here for Androd (bug?) */}
         <View
           ref={containerRef}
-          onLayout={() => { }}
+          onLayout={() => {}}
           style={[styles.inputContainerStyle, props.inputContainerStyle]}
         >
           <InputComponent
@@ -370,7 +402,7 @@ export const AutocompleteDropdown = memo(
             style={{
               ...styles.Input,
               height: inputHeight,
-              ...(props.textInputProps ?? {}).style
+              ...(props.textInputProps ?? {}).style,
             }}
           />
           <RightButton
@@ -379,7 +411,7 @@ export const AutocompleteDropdown = memo(
             onClearPress={onClearPress}
             onChevronPress={onChevronPress}
             showChevron={props.showChevron ?? true}
-            showClear={(props.showClear || searchText !== '')}
+            showClear={props.showClear || searchText !== ''}
             loading={props.loading}
             buttonsContainerStyle={props.rightButtonsContainerStyle}
             ChevronIconComponent={props.ChevronIconComponent}
@@ -395,11 +427,12 @@ export const AutocompleteDropdown = memo(
               ...(position === 'relative'
                 ? { marginTop: 5 }
                 : {
-                  [direction === 'down' ? 'top' : 'bottom']: inputHeight + 5
-                }),
+                    [direction === 'down' ? 'top' : 'bottom']: inputHeight + 5,
+                  }),
               ...props.suggestionsListContainerStyle,
-              flex: 1
-            }}>
+              flex: 1,
+            }}
+          >
             {/* <ScrollViewComponent
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
@@ -410,22 +443,26 @@ export const AutocompleteDropdown = memo(
             <ScrollViewComponent
               keyboardShouldPersistTaps="handled"
               nestedScrollEnabled
-              style={{ maxHeight: suggestionsListMaxHeight, zIndex: 999, elevation: 999 }}
+              style={{
+                maxHeight: suggestionsListMaxHeight,
+                zIndex: 999,
+                elevation: 999,
+              }}
             >
               <View>
                 {scrollContent.length > 0
                   ? scrollContent
                   : !!searchText &&
-                  (props.EmptyResultComponent ?? (
-                    <NothingFound emptyResultText={props.emptyResultText} />
-                  ))}
+                    (props.EmptyResultComponent ?? (
+                      <NothingFound emptyResultText={props.emptyResultText} />
+                    ))}
               </View>
             </ScrollViewComponent>
           </View>
         )}
       </View>
     )
-  })
+  }),
 )
 
 AutocompleteDropdown.propTypes = {
@@ -459,19 +496,19 @@ AutocompleteDropdown.propTypes = {
   ClearIconComponent: PropTypes.element,
   ScrollViewComponent: PropTypes.elementType,
   EmptyResultComponent: PropTypes.element,
-  emptyResultText: PropTypes.string
+  emptyResultText: PropTypes.string,
 }
 
 const styles = ScaledSheet.create({
   container: {
-    marginVertical: 2
+    marginVertical: 2,
   },
   inputContainerStyle: {
     position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: '#e5ecf2',
-    borderRadius: 5
+    borderRadius: 5,
   },
   Input: {
     flexGrow: 1,
@@ -488,10 +525,10 @@ const styles = ScaledSheet.create({
     shadowColor: '#00000099',
     shadowOffset: {
       width: 0,
-      height: 12
+      height: 12,
     },
     shadowOpacity: 0.3,
     shadowRadius: 15.46,
-    elevation: 20
-  }
+    elevation: 20,
+  },
 })

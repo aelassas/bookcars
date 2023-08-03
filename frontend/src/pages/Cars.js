@@ -151,12 +151,12 @@ const Cars = () => {
         dropOffLocation &&
         from &&
         to && (
-          <div className='cars'>
-            <div className='col-1'>
+          <div className="cars">
+            <div className="col-1">
               {!loading && (
                 <>
                   <CarFilter
-                    className='filter'
+                    className="filter"
                     pickupLocation={pickupLocation}
                     dropOffLocation={dropOffLocation}
                     from={from}
@@ -164,33 +164,33 @@ const Cars = () => {
                     onSubmit={handleCarFilterSubmit}
                   />
                   <SupplierFilter
-                    className='filter'
+                    className="filter"
                     companies={allCompanies}
                     onChange={handleSupplierFilterChange}
                     collapse={!Env.isMobile()}
                   />
                   <FuelFilter
-                    className='filter'
+                    className="filter"
                     onChange={handleFuelFilterChange}
                   />
                   <GearboxFilter
-                    className='filter'
+                    className="filter"
                     onChange={handleGearboxFilterChange}
                   />
                   <MileageFilter
-                    className='filter'
+                    className="filter"
                     onChange={handleMileageFilterChange}
                   />
                   <DepositFilter
-                    className='filter'
+                    className="filter"
                     onChange={handleDepositFilterChange}
                   />
                 </>
               )}
             </div>
-            <div className='col-2'>
+            <div className="col-2">
               <CarList
-                containerClassName='cars'
+                containerClassName="cars"
                 offset={offset}
                 companies={companies}
                 fuel={fuel}

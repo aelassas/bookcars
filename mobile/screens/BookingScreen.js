@@ -8,66 +8,73 @@ import BookingList from '../components/BookingList'
 import Env from '../config/env.config'
 
 const BookingScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused()
-    const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-    const [reload, setReload] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [user, setUser] = useState(null)
+  const isFocused = useIsFocused()
+  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [reload, setReload] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [user, setUser] = useState(null)
 
-    const _init = async () => {
-        setVisible(false)
-        const language = await UserService.getLanguage()
-        setLanguage(language)
-        i18n.locale = language
+  const _init = async () => {
+    setVisible(false)
+    const language = await UserService.getLanguage()
+    setLanguage(language)
+    i18n.locale = language
 
-        const currentUser = await UserService.getCurrentUser()
+    const currentUser = await UserService.getCurrentUser()
 
-        if (!currentUser) {
-            await UserService.signout(navigation, false, true)
-            return
-        }
-
-        const user = await UserService.getUser(currentUser.id)
-
-        if (!user) {
-            await UserService.signout(navigation, false, true)
-            return
-        }
-
-        setUser(user)
-        setVisible(true)
+    if (!currentUser) {
+      await UserService.signout(navigation, false, true)
+      return
     }
 
-    useEffect(() => {
-        if (isFocused) {
-            _init()
-            setReload(true)
-        } else {
-            setVisible(false)
-        }
-    }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+    const user = await UserService.getUser(currentUser.id)
 
-    const onLoad = () => {
-        setReload(false)
+    if (!user) {
+      await UserService.signout(navigation, false, true)
+      return
     }
 
-    return (
-        <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
-            {visible &&
-                <BookingList
-                    user={user._id}
-                    booking={route.params.id}
-                    language={language}
-                />
-            }
-        </Master>
-    )
+    setUser(user)
+    setVisible(true)
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      _init()
+      setReload(true)
+    } else {
+      setVisible(false)
+    }
+  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const onLoad = () => {
+    setReload(false)
+  }
+
+  return (
+    <Master
+      style={styles.master}
+      navigation={navigation}
+      route={route}
+      onLoad={onLoad}
+      reload={reload}
+      strict
+    >
+      {visible && (
+        <BookingList
+          user={user._id}
+          booking={route.params.id}
+          language={language}
+        />
+      )}
+    </Master>
+  )
 }
 
 const styles = StyleSheet.create({
-    master: {
-        flex: 1
-    }
+  master: {
+    flex: 1,
+  },
 })
 
 export default BookingScreen

@@ -220,12 +220,12 @@ const LocationList = (props) => {
 
   return (
     <>
-      <section className='location-list'>
+      <section className="location-list">
         {rows.length === 0 ? (
           !loading && (
-            <Card variant='outlined' className='empty-list'>
+            <Card variant="outlined" className="empty-list">
               <CardContent>
-                <Typography color='textSecondary'>
+                <Typography color="textSecondary">
                   {strings.EMPTY_LIST}
                 </Typography>
               </CardContent>
@@ -235,13 +235,13 @@ const LocationList = (props) => {
           <List>
             {rows.map((location, index) => (
               <ListItem
-                className='location-list-item'
+                className="location-list-item"
                 key={location._id}
                 secondaryAction={
                   <div>
                     <Tooltip title={commonStrings.UPDATE}>
                       <IconButton
-                        edge='end'
+                        edge="end"
                         href={`/update-location?l=${location._id}`}
                       >
                         <EditIcon />
@@ -249,7 +249,7 @@ const LocationList = (props) => {
                     </Tooltip>
                     <Tooltip title={commonStrings.DELETE}>
                       <IconButton
-                        edge='end'
+                        edge="end"
                         data-id={location._id}
                         data-index={index}
                         onClick={handleDelete}
@@ -267,7 +267,7 @@ const LocationList = (props) => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Typography className='location-title'>
+                    <Typography className="location-title">
                       {location.name}
                     </Typography>
                   }
@@ -276,39 +276,39 @@ const LocationList = (props) => {
             ))}
           </List>
         )}
-        <Dialog disableEscapeKeyDown maxWidth='xs' open={openInfoDialog}>
-          <DialogTitle className='dialog-header'>
+        <Dialog disableEscapeKeyDown maxWidth="xs" open={openInfoDialog}>
+          <DialogTitle className="dialog-header">
             {commonStrings.INFO}
           </DialogTitle>
           <DialogContent>{strings.CANNOT_DELETE_LOCATION}</DialogContent>
-          <DialogActions className='dialog-actions'>
+          <DialogActions className="dialog-actions">
             <Button
               onClick={handleCloseInfo}
-              variant='contained'
-              className='btn-secondary'
+              variant="contained"
+              className="btn-secondary"
             >
               {commonStrings.CLOSE}
             </Button>
           </DialogActions>
         </Dialog>
 
-        <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
-          <DialogTitle className='dialog-header'>
+        <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
+          <DialogTitle className="dialog-header">
             {commonStrings.CONFIRM_TITLE}
           </DialogTitle>
           <DialogContent>{strings.DELETE_LOCATION}</DialogContent>
-          <DialogActions className='dialog-actions'>
+          <DialogActions className="dialog-actions">
             <Button
               onClick={handleCancelDelete}
-              variant='contained'
-              className='btn-secondary'
+              variant="contained"
+              className="btn-secondary"
             >
               {commonStrings.CANCEL}
             </Button>
             <Button
               onClick={handleConfirmDelete}
-              variant='contained'
-              color='error'
+              variant="contained"
+              color="error"
             >
               {commonStrings.DELETE}
             </Button>

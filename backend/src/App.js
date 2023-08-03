@@ -34,40 +34,40 @@ const NoMatch = lazy(() => import('./pages/NoMatch'))
 
 const App = () => (
   <Router>
-    <div className='App'>
+    <div className="App">
       <Suspense fallback={<></>}>
         <Routes>
-          <Route exact path='/sign-in' element={<SignIn />} />
-          <Route exact path='/activate' element={<Activate />} />
-          <Route exact path='/forgot-password' element={<ForgotPassword />} />
-          <Route exact path='/reset-password' element={<ResetPassword />} />
-          <Route exact path='/sign-up' element={<SignUp />} />
-          <Route exact path='/' element={<Bookings />} />
-          <Route exact path='/suppliers' element={<Companies />} />
-          <Route exact path='/supplier' element={<Company />} />
-          <Route exact path='/create-supplier' element={<CreateCompany />} />
-          <Route exact path='/update-supplier' element={<UpdateCompany />} />
-          <Route exact path='/locations' element={<Locations />} />
-          <Route exact path='/create-location' element={<CreateLocation />} />
-          <Route exact path='/update-location' element={<UpdateLocation />} />
-          <Route exact path='/cars' element={<Cars />} />
-          <Route exact path='/car' element={<Car />} />
-          <Route exact path='/create-car' element={<CreateCar />} />
-          <Route exact path='/update-car' element={<UpdateCar />} />
-          <Route exact path='/update-booking' element={<UpdateBooking />} />
-          <Route exact path='/create-booking' element={<CreateBooking />} />
-          <Route exact path='/users' element={<Users />} />
-          <Route exact path='/user' element={<User />} />
-          <Route exact path='/create-user' element={<CreateUser />} />
-          <Route exact path='/update-user' element={<UpdateUser />} />
-          <Route exact path='/settings' element={<Settings />} />
-          <Route exact path='/notifications' element={<Notifications />} />
-          <Route exact path='/change-password' element={<ChangePassword />} />
-          <Route exact path='/about' element={<About />} />
-          <Route exact path='/tos' element={<ToS />} />
-          <Route exact path='/contact' element={<Contact />} />
+          <Route exact path="/sign-in" element={<SignIn />} />
+          <Route exact path="/activate" element={<Activate />} />
+          <Route exact path="/forgot-password" element={<ForgotPassword />} />
+          <Route exact path="/reset-password" element={<ResetPassword />} />
+          <Route exact path="/sign-up" element={<SignUp />} />
+          <Route exact path="/" element={<Bookings />} />
+          <Route exact path="/suppliers" element={<Companies />} />
+          <Route exact path="/supplier" element={<Company />} />
+          <Route exact path="/create-supplier" element={<CreateCompany />} />
+          <Route exact path="/update-supplier" element={<UpdateCompany />} />
+          <Route exact path="/locations" element={<Locations />} />
+          <Route exact path="/create-location" element={<CreateLocation />} />
+          <Route exact path="/update-location" element={<UpdateLocation />} />
+          <Route exact path="/cars" element={<Cars />} />
+          <Route exact path="/car" element={<Car />} />
+          <Route exact path="/create-car" element={<CreateCar />} />
+          <Route exact path="/update-car" element={<UpdateCar />} />
+          <Route exact path="/update-booking" element={<UpdateBooking />} />
+          <Route exact path="/create-booking" element={<CreateBooking />} />
+          <Route exact path="/users" element={<Users />} />
+          <Route exact path="/user" element={<User />} />
+          <Route exact path="/create-user" element={<CreateUser />} />
+          <Route exact path="/update-user" element={<UpdateUser />} />
+          <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/notifications" element={<Notifications />} />
+          <Route exact path="/change-password" element={<ChangePassword />} />
+          <Route exact path="/about" element={<About />} />
+          <Route exact path="/tos" element={<ToS />} />
+          <Route exact path="/contact" element={<Contact />} />
 
-          <Route path='*' element={<NoMatch header />} />
+          <Route path="*" element={<NoMatch header />} />
         </Routes>
       </Suspense>
     </div>

@@ -120,30 +120,30 @@ const GearboxFilter = (props) => {
         props.className ? `${props.className} ` : ''
       }gearbox-filter`}
     >
-      <div className='filter-elements'>
-        <div className='filter-element'>
+      <div className="filter-elements">
+        <div className="filter-element">
           <input
             ref={automaticRef}
-            type='checkbox'
-            className='gearbox-checkbox'
+            type="checkbox"
+            className="gearbox-checkbox"
             onChange={handleCheckAutomaticChange}
           />
           <label onClick={handleAutomaticClick}>
             {strings.GEARBOX_AUTOMATIC}
           </label>
         </div>
-        <div className='filter-element'>
+        <div className="filter-element">
           <input
             ref={manualRef}
-            type='checkbox'
-            className='gearbox-checkbox'
+            type="checkbox"
+            className="gearbox-checkbox"
             onChange={handleCheckManualChange}
           />
           <label onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</label>
         </div>
       </div>
-      <div className='filter-actions'>
-        <span onClick={handleUncheckAllChange} className='uncheckall'>
+      <div className="filter-actions">
+        <span onClick={handleUncheckAllChange} className="uncheckall">
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>

@@ -28,7 +28,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx .",
-    "prettier": "prettier --write --no-semi --single-quote --jsx-single-quote ."
+    "prettier": "prettier --write --no-semi --single-quote ."
   },
   "eslintConfig": {
     "extends": [
@@ -55,7 +55,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "3.0.1",
+    "prettier": "^3.0.1",
     "webpack-bundle-analyzer": "^4.9.0"
   }
 }

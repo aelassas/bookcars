@@ -96,30 +96,30 @@ const Home = () => {
 
   return (
     <Master onLoad={onLoad} strict={false}>
-      <div className='home'>
-        <div className='home-content'>
-          <div className='home-logo'>
-            <label className='home-logo-main' />
-            <label className='home-logo-registered' />
+      <div className="home">
+        <div className="home-content">
+          <div className="home-logo">
+            <label className="home-logo-main" />
+            <label className="home-logo-registered" />
           </div>
-          <div className='home-search'>
-            <form onSubmit={handleSubmit} className='home-search-form'>
-              <FormControl className='pickup-location'>
+          <div className="home-search">
+            <form onSubmit={handleSubmit} className="home-search-form">
+              <FormControl className="pickup-location">
                 <LocationSelectList
                   label={commonStrings.PICKUP_LOCATION}
                   hidePopupIcon
                   customOpen
                   required
-                  variant='outlined'
+                  variant="outlined"
                   onChange={handlePickupLocationChange}
                 />
               </FormControl>
-              <FormControl className='from'>
+              <FormControl className="from">
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
                   minDate={new Date()}
-                  variant='outlined'
+                  variant="outlined"
                   required
                   onChange={(from) => {
                     setFrom(from)
@@ -127,12 +127,12 @@ const Home = () => {
                   language={UserService.getLanguage()}
                 />
               </FormControl>
-              <FormControl className='to'>
+              <FormControl className="to">
                 <DateTimePicker
                   label={commonStrings.TO}
                   value={to}
                   minDate={minDate}
-                  variant='outlined'
+                  variant="outlined"
                   required
                   onChange={(to) => {
                     setTo(to)
@@ -140,25 +140,25 @@ const Home = () => {
                   language={UserService.getLanguage()}
                 />
               </FormControl>
-              <Button type='submit' variant='contained' className='btn-search'>
+              <Button type="submit" variant="contained" className="btn-search">
                 {commonStrings.SEARCH}
               </Button>
               {!sameLocation && (
-                <FormControl className='drop-off-location'>
+                <FormControl className="drop-off-location">
                   <LocationSelectList
                     label={commonStrings.DROP_OFF_LOCATION}
                     // overflowHidden
                     hidePopupIcon
                     customOpen
                     required
-                    variant='outlined'
+                    variant="outlined"
                     onChange={handleDropOffLocationChange}
                   />
                 </FormControl>
               )}
-              <FormControl className='chk-same-location'>
+              <FormControl className="chk-same-location">
                 <input
-                  type='checkbox'
+                  type="checkbox"
                   checked={sameLocation}
                   onChange={handleSameLocationChange}
                 />
@@ -170,13 +170,13 @@ const Home = () => {
           </div>
         </div>
         <footer>
-          <div className='copyright'>
-            <span className='part1'>{strings.COPYRIGHT_PART1}</span>
-            <span className='part2'>{strings.COPYRIGHT_PART2}</span>
-            <span className='part3'>{strings.COPYRIGHT_PART3}</span>
+          <div className="copyright">
+            <span className="part1">{strings.COPYRIGHT_PART1}</span>
+            <span className="part2">{strings.COPYRIGHT_PART2}</span>
+            <span className="part3">{strings.COPYRIGHT_PART3}</span>
           </div>
-          <div className='secure-payment'>
-            <img src={SecurePayment} alt='' />
+          <div className="secure-payment">
+            <img src={SecurePayment} alt="" />
           </div>
         </footer>
       </div>

@@ -8,7 +8,7 @@ const Info = (props) => (
     className={`${props.className ? `${props.className} ` : ''}msg`}
   >
     <p>{props.message}</p>
-    <Link href='/'>{commonStrings.GO_TO_HOME}</Link>
+    <Link href="/">{commonStrings.GO_TO_HOME}</Link>
   </div>
 )
 

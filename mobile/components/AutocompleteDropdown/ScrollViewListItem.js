@@ -1,7 +1,14 @@
 import React, { memo } from 'react'
 import { StyleSheet, Text, Pressable, View } from 'react-native'
 
-const ScrollViewListItemComponent = ({ titleHighlighted, titleStart, titleEnd, style, onPress, numberOfLines = 2 }) => {
+const ScrollViewListItemComponent = ({
+  titleHighlighted,
+  titleStart,
+  titleEnd,
+  style,
+  onPress,
+  numberOfLines = 2,
+}) => {
   return (
     <Pressable onPress={onPress}>
       <View style={styles.container}>
@@ -9,7 +16,10 @@ const ScrollViewListItemComponent = ({ titleHighlighted, titleStart, titleEnd, s
           <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
             {titleStart}
           </Text>
-          <Text numberOfLines={1} style={{ ...styles.text, ...style, fontWeight: 'bold' }}>
+          <Text
+            numberOfLines={1}
+            style={{ ...styles.text, ...style, fontWeight: 'bold' }}
+          >
             {titleHighlighted}
           </Text>
           <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
@@ -32,12 +42,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexWrap: 'nowrap',
 
-    width: '100%'
+    width: '100%',
   },
   text: {
     color: '#333',
     fontSize: 16,
     flexGrow: 1,
-    flexShrink: 0
-  }
+    flexShrink: 0,
+  },
 })

@@ -16,9 +16,9 @@
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
     "react/prop-types": 0,
-    // "react-hooks/exhaustive-deps": "off",
-    "prettier/prettier": "error",
-    "no-extra-semi": 0
+    "prettier/prettier": "warn",
+    "no-extra-semi": 0,
+    "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {
     "react": {

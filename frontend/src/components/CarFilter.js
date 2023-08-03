@@ -75,21 +75,21 @@ const CarFilter = (props) => {
     <div
       className={`${props.className ? `${props.className} ` : ''}car-filter`}
     >
-      <form onSubmit={handleSubmit} className='home-search-form'>
-        <FormControl fullWidth className='pickup-location'>
+      <form onSubmit={handleSubmit} className="home-search-form">
+        <FormControl fullWidth className="pickup-location">
           <LocationSelectList
             label={commonStrings.PICKUP_LOCATION}
             hidePopupIcon
             customOpen
             hidePopupOnload
             required
-            variant='standard'
+            variant="standard"
             value={pickupLocation}
             onChange={handlePickupLocationChange}
           />
         </FormControl>
         {!sameLocation && (
-          <FormControl fullWidth className='drop-off-location'>
+          <FormControl fullWidth className="drop-off-location">
             <LocationSelectList
               label={commonStrings.DROP_OFF_LOCATION}
               value={dropOffLocation}
@@ -97,17 +97,17 @@ const CarFilter = (props) => {
               customOpen
               hidePopupOnload
               required
-              variant='standard'
+              variant="standard"
               onChange={handleDropOffLocationChange}
             />
           </FormControl>
         )}
-        <FormControl fullWidth className='from'>
+        <FormControl fullWidth className="from">
           <DateTimePicker
             label={commonStrings.FROM}
             value={from}
             minDate={new Date()}
-            variant='standard'
+            variant="standard"
             required
             onChange={(from) => {
               const minDate = new Date(from)
@@ -119,12 +119,12 @@ const CarFilter = (props) => {
             language={UserService.getLanguage()}
           />
         </FormControl>
-        <FormControl fullWidth className='to'>
+        <FormControl fullWidth className="to">
           <DateTimePicker
             label={commonStrings.TO}
             value={to}
             minDate={minDate}
-            variant='standard'
+            variant="standard"
             required
             onChange={(to) => {
               setTo(to)
@@ -132,14 +132,14 @@ const CarFilter = (props) => {
             language={UserService.getLanguage()}
           />
         </FormControl>
-        <FormControl fullWidth className='search'>
-          <Button type='submit' variant='contained' className='btn-search'>
+        <FormControl fullWidth className="search">
+          <Button type="submit" variant="contained" className="btn-search">
             {commonStrings.SEARCH}
           </Button>
         </FormControl>
-        <FormControl fullWidth className='chk-same-location'>
+        <FormControl fullWidth className="chk-same-location">
           <input
-            type='checkbox'
+            type="checkbox"
             checked={sameLocation}
             onChange={handleSameLocationChange}
           />

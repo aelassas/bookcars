@@ -49,37 +49,37 @@ const StatusList = (props) => {
           >
             <MenuItem
               value={Env.BOOKING_STATUS.VOID}
-              className='bs-s bs-s-void'
+              className="bs-s bs-s-void"
             >
               {commonStrings.BOOKING_STATUS_VOID}
             </MenuItem>
             <MenuItem
               value={Env.BOOKING_STATUS.PENDING}
-              className='bs-s bs-s-pending'
+              className="bs-s bs-s-pending"
             >
               {commonStrings.BOOKING_STATUS_PENDING}
             </MenuItem>
             <MenuItem
               value={Env.BOOKING_STATUS.DEPOSIT}
-              className='bs-s bs-s-deposit'
+              className="bs-s bs-s-deposit"
             >
               {commonStrings.BOOKING_STATUS_DEPOSIT}
             </MenuItem>
             <MenuItem
               value={Env.BOOKING_STATUS.PAID}
-              className='bs-s bs-s-paid'
+              className="bs-s bs-s-paid"
             >
               {commonStrings.BOOKING_STATUS_PAID}
             </MenuItem>
             <MenuItem
               value={Env.BOOKING_STATUS.RESERVED}
-              className='bs-s bs-s-reserved'
+              className="bs-s bs-s-reserved"
             >
               {commonStrings.BOOKING_STATUS_RESERVED}
             </MenuItem>
             <MenuItem
               value={Env.BOOKING_STATUS.CANCELLED}
-              className='bs-s bs-s-cancelled'
+              className="bs-s bs-s-cancelled"
             >
               {commonStrings.BOOKING_STATUS_CANCELLED}
             </MenuItem>

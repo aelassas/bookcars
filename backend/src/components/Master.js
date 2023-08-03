@@ -103,19 +103,19 @@ const Master = (props) => {
       />
       {((!user && !loading) || (user && user.verified) || !props.strict) &&
       !unauthorized ? (
-        <div className='content' style={props.style}>
+        <div className="content" style={props.style}>
           {props.children}
         </div>
       ) : (
         !loading &&
         !unauthorized && (
-          <div className='validate-email'>
+          <div className="validate-email">
             <span>{strings.VALIDATE_EMAIL}</span>
             <Button
-              type='button'
-              variant='contained'
-              size='small'
-              className='btn-primary btn-resend'
+              type="button"
+              variant="contained"
+              size="small"
+              className="btn-primary btn-resend"
               onClick={handleResend}
             >
               {strings.RESEND}

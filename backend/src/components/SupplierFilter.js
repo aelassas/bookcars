@@ -95,14 +95,14 @@ const CompanyFilter = (props) => {
           props.className ? `${props.className} ` : ''
         }company-filter`}
       >
-        <ul className='company-list'>
+        <ul className="company-list">
           {suppliers.map((supplier, index) => (
             <li key={supplier._id}>
               <input
                 ref={(ref) => (refs.current[index] = ref)}
-                type='checkbox'
+                type="checkbox"
                 data-id={supplier._id}
-                className='company-checkbox'
+                className="company-checkbox"
                 onChange={handleCheckCompanyChange}
               />
               <label onClick={handleCompanyClick}>
@@ -114,8 +114,8 @@ const CompanyFilter = (props) => {
             </li>
           ))}
         </ul>
-        <div className='filter-actions'>
-          <span onClick={handleUncheckAllChange} className='uncheckall'>
+        <div className="filter-actions">
+          <span onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

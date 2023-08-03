@@ -38,7 +38,7 @@ const Accordion = (props) => {
     >
       <label
         ref={accordionRef}
-        className='accordion'
+        className="accordion"
         onClick={handleAccordionClick}
       >
         {props.title}

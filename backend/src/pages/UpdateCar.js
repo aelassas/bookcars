@@ -325,66 +325,66 @@ const UpdateCar = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {!error && !noMatch && (
-        <div className='update-car'>
+        <div className="update-car">
           <Paper
-            className='car-form car-form-wrapper'
+            className="car-form car-form-wrapper"
             elevation={10}
             style={visible ? null : { display: 'none' }}
           >
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={Env.RECORD_TYPE.CAR}
-                mode='update'
+                mode="update"
                 record={car}
                 hideDelete={true}
-                size='large'
+                size="large"
                 readonly={false}
                 onBeforeUpload={handleBeforeUpload}
                 onChange={handleImageChange}
                 onValidate={handleImageValidate}
-                color='disabled'
-                className='avatar-ctn'
+                color="disabled"
+                className="avatar-ctn"
               />
 
-              <div className='info'>
+              <div className="info">
                 <InfoIcon />
                 <label>{strings.RECOMMENDED_IMAGE_SIZE}</label>
               </div>
 
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required'>{strings.NAME}</InputLabel>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">{strings.NAME}</InputLabel>
                 <Input
-                  type='text'
+                  type="text"
                   required
                   value={name}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={handleNameChange}
                 />
               </FormControl>
 
               {admin && (
-                <FormControl fullWidth margin='dense'>
+                <FormControl fullWidth margin="dense">
                   <SupplierSelectList
                     label={strings.COMPANY}
                     required
                     value={company}
                     type={Env.RECORD_TYPE.COMPANY}
-                    variant='standard'
+                    variant="standard"
                     onChange={handleCompanyChange}
                   />
                 </FormControl>
               )}
 
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required'>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">
                   {strings.MINIMUM_AGE}
                 </InputLabel>
                 <Input
-                  type='text'
+                  type="text"
                   required
                   error={!minimumAgeValid}
                   value={minimumAge}
-                  autoComplete='off'
+                  autoComplete="off"
                   onChange={handleMinimumAgeChange}
                   inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
                 />
@@ -393,18 +393,18 @@ const UpdateCar = () => {
                 </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <LocationSelectList
                   label={strings.LOCATIONS}
                   multiple
                   required
-                  variant='standard'
+                  variant="standard"
                   value={locations}
                   onChange={handleLocationsChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
                   // eslint-disable-next-line
@@ -414,13 +414,13 @@ const UpdateCar = () => {
                   }}
                   onChange={handlePriceChange}
                   required
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={price}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
                   // eslint-disable-next-line
@@ -430,98 +430,98 @@ const UpdateCar = () => {
                   }}
                   onChange={handleDepositChange}
                   required
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={deposit}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   control={
                     <Switch
                       checked={available}
                       onChange={handleAvailableChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={strings.AVAILABLE}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <CarTypeList
                   label={strings.CAR_TYPE}
-                  variant='standard'
+                  variant="standard"
                   required
                   value={type}
                   onChange={handleCarTypeChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <GearboxList
                   label={strings.GEARBOX}
-                  variant='standard'
+                  variant="standard"
                   required
                   value={gearbox}
                   onChange={handleGearboxChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <SeatsList
                   label={strings.SEATS}
-                  variant='standard'
+                  variant="standard"
                   required
                   value={seats}
                   onChange={handleSeatsChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <DoorsList
                   label={strings.DOORS}
-                  variant='standard'
+                  variant="standard"
                   required
                   value={doors}
                   onChange={handleDoorsChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <FuelPolicyList
                   label={csStrings.FUEL_POLICY}
-                  variant='standard'
+                  variant="standard"
                   required
                   value={fuelPolicy}
                   onChange={handleFuelPolicyChange}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
-                <div className='info'>
+              <FormControl fullWidth margin="dense">
+                <div className="info">
                   <InfoIcon />
                   <label>{commonStrings.OPTIONAL}</label>
                 </div>
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   control={
                     <Switch
                       checked={aircon}
                       onChange={handleAirconChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={strings.AIRCON}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
                   // eslint-disable-next-line
@@ -530,13 +530,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleMileageChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={mileage}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
                   // eslint-disable-next-line
@@ -545,13 +545,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleCancellationChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={cancellation}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
                   // eslint-disable-next-line
@@ -560,13 +560,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleAmendmentsChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={amendments}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
                   // eslint-disable-next-line
@@ -575,13 +575,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleTheftProtectionChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={theftProtection}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
                   // eslint-disable-next-line
@@ -590,13 +590,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleCollisionDamageWaiverChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={collisionDamageWaiver}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
                   // eslint-disable-next-line
@@ -605,13 +605,13 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleFullinsuranceChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={fullInsurance}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
                   // eslint-disable-next-line
@@ -620,32 +620,32 @@ const UpdateCar = () => {
                     pattern: '^\\d+(.\\d+)?$',
                   }}
                   onChange={handleAdditionalDriverChange}
-                  variant='standard'
-                  autoComplete='off'
+                  variant="standard"
+                  autoComplete="off"
                   value={additionalDriver}
                 />
               </FormControl>
 
-              <div className='buttons'>
+              <div className="buttons">
                 <Button
-                  type='submit'
-                  variant='contained'
-                  className='btn-primary btn-margin-bottom'
-                  size='small'
+                  type="submit"
+                  variant="contained"
+                  className="btn-primary btn-margin-bottom"
+                  size="small"
                 >
                   {commonStrings.SAVE}
                 </Button>
                 <Button
-                  variant='contained'
-                  className='btn-secondary btn-margin-bottom'
-                  size='small'
-                  href='/cars'
+                  variant="contained"
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  href="/cars"
                 >
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
-              <div className='form-error'>
+              <div className="form-error">
                 {imageRequired && (
                   <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />
                 )}

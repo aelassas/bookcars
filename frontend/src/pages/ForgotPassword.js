@@ -115,9 +115,9 @@ const ForgotPassword = () => {
   return (
     <Master onLoad={onLoad} strict={false}>
       {visible && (
-        <div className='forgot-password'>
-          <Paper className='forgot-password-form' elevation={10}>
-            <h1 className='forgot-password-title'>
+        <div className="forgot-password">
+          <Paper className="forgot-password-form" elevation={10}>
+            <h1 className="forgot-password-title">
               {' '}
               {strings.RESET_PASSWORD_HEADING}{' '}
             </h1>
@@ -125,24 +125,24 @@ const ForgotPassword = () => {
               <div>
                 <label>{strings.EMAIL_SENT}</label>
                 <p>
-                  <Link href='/'>{commonStrings.GO_TO_HOME}</Link>
+                  <Link href="/">{commonStrings.GO_TO_HOME}</Link>
                 </p>
               </div>
             )}
             {!sent && (
               <form onSubmit={handleSubmit}>
                 <label>{strings.RESET_PASSWORD}</label>
-                <FormControl fullWidth margin='dense'>
-                  <InputLabel className='required'>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">
                     {commonStrings.EMAIL}
                   </InputLabel>
                   <Input
                     onChange={handleEmailChange}
                     onKeyDown={handleEmailKeyDown}
                     onBlur={handleEmailBlur}
-                    type='text'
+                    type="text"
                     error={error || !emailValid}
-                    autoComplete='off'
+                    autoComplete="off"
                     required
                   />
                   <FormHelperText error={error || !emailValid}>
@@ -151,20 +151,20 @@ const ForgotPassword = () => {
                   </FormHelperText>
                 </FormControl>
 
-                <div className='buttons'>
+                <div className="buttons">
                   <Button
-                    type='submit'
-                    className='btn-primary btn-margin btn-margin-bottom'
-                    size='small'
-                    variant='contained'
+                    type="submit"
+                    className="btn-primary btn-margin btn-margin-bottom"
+                    size="small"
+                    variant="contained"
                   >
                     {strings.RESET}
                   </Button>
                   <Button
-                    className='btn-secondary btn-margin-bottom'
-                    size='small'
-                    variant='contained'
-                    href='/'
+                    className="btn-secondary btn-margin-bottom"
+                    size="small"
+                    variant="contained"
+                    href="/"
                   >
                     {commonStrings.CANCEL}
                   </Button>

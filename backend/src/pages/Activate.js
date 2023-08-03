@@ -154,44 +154,44 @@ const Activate = () => {
   return (
     <Master onLoad={onLoad} strict={false}>
       {resend && (
-        <div className='resend'>
-          <Paper className='resend-form' elevation={10}>
+        <div className="resend">
+          <Paper className="resend-form" elevation={10}>
             <h1>{strings.ACTIVATE_HEADING}</h1>
-            <div className='resend-form-content'>
+            <div className="resend-form-content">
               <label>{strings.TOKEN_EXPIRED}</label>
               <Button
-                type='button'
-                variant='contained'
-                size='small'
-                className='btn-primary btn-resend'
+                type="button"
+                variant="contained"
+                size="small"
+                className="btn-primary btn-resend"
                 onClick={handleResend}
               >
                 {mStrings.RESEND}
               </Button>
-              <p className='go-to-home'>
-                <Link href='/'>{commonStrings.GO_TO_HOME}</Link>
+              <p className="go-to-home">
+                <Link href="/">{commonStrings.GO_TO_HOME}</Link>
               </p>
             </div>
           </Paper>
         </div>
       )}
       {visible && (
-        <div className='activate'>
-          <Paper className='activate-form' elevation={10}>
+        <div className="activate">
+          <Paper className="activate-form" elevation={10}>
             <h1>
               {reset
                 ? rpStrings.RESET_PASSWORD_HEADING
                 : strings.ACTIVATE_HEADING}
             </h1>
             <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required' error={passwordError}>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required" error={passwordError}>
                   {cpStrings.NEW_PASSWORD}
                 </InputLabel>
                 <Input
-                  id='password-new'
+                  id="password-new"
                   onChange={handleNewPasswordChange}
-                  type='password'
+                  type="password"
                   value={password}
                   error={passwordError}
                   required
@@ -202,18 +202,18 @@ const Activate = () => {
               </FormControl>
               <FormControl
                 fullWidth
-                margin='dense'
+                margin="dense"
                 error={confirmPasswordError}
               >
-                <InputLabel error={confirmPasswordError} className='required'>
+                <InputLabel error={confirmPasswordError} className="required">
                   {commonStrings.CONFIRM_PASSWORD}
                 </InputLabel>
                 <Input
-                  id='password-confirm'
+                  id="password-confirm"
                   onChange={handleConfirmPasswordChange}
                   onKeyDown={handleOnConfirmPasswordKeyDown}
                   error={confirmPasswordError || passwordLengthError}
-                  type='password'
+                  type="password"
                   value={confirmPassword}
                   required
                 />
@@ -227,20 +227,20 @@ const Activate = () => {
                     : ''}
                 </FormHelperText>
               </FormControl>
-              <div className='buttons'>
+              <div className="buttons">
                 <Button
-                  type='submit'
-                  className='btn-primary btn-margin btn-margin-bottom'
-                  size='small'
-                  variant='contained'
+                  type="submit"
+                  className="btn-primary btn-margin btn-margin-bottom"
+                  size="small"
+                  variant="contained"
                 >
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
                 <Button
-                  className='btn-secondary btn-margin-bottom'
-                  size='small'
-                  variant='contained'
-                  href='/'
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
+                  variant="contained"
+                  href="/"
                 >
                   {commonStrings.CANCEL}
                 </Button>

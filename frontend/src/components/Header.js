@@ -39,7 +39,7 @@ import * as LangHelper from '../common/LangHelper'
 
 import '../assets/css/header.css'
 
-const ListItemLink = (props) => <ListItemButton component='a' {...props} />
+const ListItemLink = (props) => <ListItemButton component="a" {...props} />
 
 const Header = (props) => {
   const navigate = useNavigate()
@@ -221,11 +221,11 @@ const Header = (props) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleOnSettingsClick}>
-        <SettingsIcon className='header-action' />
+        <SettingsIcon className="header-action" />
         {strings.SETTINGS}
       </MenuItem>
       <MenuItem onClick={handleSignout}>
-        {<SignoutIcon className='header-action' />}
+        {<SignoutIcon className="header-action" />}
         <Typography>{strings.SIGN_OUT}</Typography>
       </MenuItem>
     </Menu>
@@ -243,22 +243,22 @@ const Header = (props) => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleOnSettingsClick}>
-        <SettingsIcon className='header-action' />
+        <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>
       <MenuItem onClick={handleLangMenuOpen}>
         <IconButton
-          aria-label='language of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'
+          aria-label="language of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
         >
           <LanguageIcon />
         </IconButton>
         <p>{strings.LANGUAGE}</p>
       </MenuItem>
       <MenuItem onClick={handleSignout}>
-        <IconButton color='inherit'>
+        <IconButton color="inherit">
           <SignoutIcon />
         </IconButton>
         <Typography>{strings.SIGN_OUT}</Typography>
@@ -277,10 +277,10 @@ const Header = (props) => {
       open={isLangMenuOpen}
       onClose={handleLangMenuClose}
     >
-      <MenuItem onClick={handleLangMenuClose} data-code='fr'>
+      <MenuItem onClick={handleLangMenuClose} data-code="fr">
         {strings.LANGUAGE_FR}
       </MenuItem>
-      <MenuItem onClick={handleLangMenuClose} data-code='en'>
+      <MenuItem onClick={handleLangMenuClose} data-code="en">
         {strings.LANGUAGE_EN}
       </MenuItem>
     </Menu>
@@ -288,15 +288,15 @@ const Header = (props) => {
 
   return (
     !props.hidden && (
-      <div style={classes.grow} className='header'>
-        <AppBar position='fixed' sx={{ bgcolor: '#f37022' }}>
-          <Toolbar className='toolbar'>
+      <div style={classes.grow} className="header">
+        <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
+          <Toolbar className="toolbar">
             {isLoaded && !loading && (
               <IconButton
-                edge='start'
+                edge="start"
                 sx={classes.menuButton}
-                color='inherit'
-                aria-label='open drawer'
+                color="inherit"
+                aria-label="open drawer"
                 onClick={handleSideMenuOpen}
               >
                 <MenuIcon />
@@ -305,25 +305,25 @@ const Header = (props) => {
             <React.Fragment>
               <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
                 <List sx={classes.list}>
-                  <ListItemLink href='/'>
+                  <ListItemLink href="/">
                     <ListItemIcon>{<HomeIcon />}</ListItemIcon>
                     <ListItemText primary={strings.HOME} />
                   </ListItemLink>
                   {isSignedIn && (
-                    <ListItemLink href='/bookings'>
+                    <ListItemLink href="/bookings">
                       <ListItemIcon>{<BookingsIcon />}</ListItemIcon>
                       <ListItemText primary={strings.BOOKINGS} />
                     </ListItemLink>
                   )}
-                  <ListItemLink href='/about'>
+                  <ListItemLink href="/about">
                     <ListItemIcon>{<AboutIcon />}</ListItemIcon>
                     <ListItemText primary={strings.ABOUT} />
                   </ListItemLink>
-                  <ListItemLink href='/tos'>
+                  <ListItemLink href="/tos">
                     <ListItemIcon>{<TosIcon />}</ListItemIcon>
                     <ListItemText primary={strings.TOS} />
                   </ListItemLink>
-                  <ListItemLink href='/contact'>
+                  <ListItemLink href="/contact">
                     <ListItemIcon>{<MailIcon />}</ListItemIcon>
                     <ListItemText primary={strings.CONTACT} />
                   </ListItemLink>
@@ -332,7 +332,7 @@ const Header = (props) => {
                     !isSignedIn &&
                     isLoaded &&
                     !loading && (
-                      <ListItemLink href='/sign-in'>
+                      <ListItemLink href="/sign-in">
                         <ListItemIcon>{<LoginIcon />}</ListItemIcon>
                         <ListItemText primary={strings.SIGN_IN} />
                       </ListItemLink>
@@ -341,18 +341,18 @@ const Header = (props) => {
               </Drawer>
             </React.Fragment>
             <div style={classes.grow} />
-            <div className='header-desktop'>
+            <div className="header-desktop">
               {isSignedIn && (
                 <IconButton
-                  aria-label=''
-                  color='inherit'
+                  aria-label=""
+                  color="inherit"
                   onClick={handleNotificationsClick}
                 >
                   <Badge
                     badgeContent={
                       notificationCount > 0 ? notificationCount : null
                     }
-                    color='primary'
+                    color="primary"
                   >
                     <NotificationsIcon />
                   </Badge>
@@ -360,12 +360,12 @@ const Header = (props) => {
               )}
               {!props.hideSignin && !isSignedIn && isLoaded && !loading && (
                 <Button
-                  variant='contained'
+                  variant="contained"
                   startIcon={<LoginIcon />}
-                  href='/sign-in'
+                  href="/sign-in"
                   disableElevation
                   fullWidth
-                  className='btn-primary'
+                  className="btn-primary"
                   style={{ minWidth: '180px' }}
                 >
                   {strings.SIGN_IN}
@@ -373,54 +373,54 @@ const Header = (props) => {
               )}
               {isLoaded && !loading && (
                 <Button
-                  variant='contained'
+                  variant="contained"
                   startIcon={<LanguageIcon />}
                   onClick={handleLangMenuOpen}
                   disableElevation
                   fullWidth
-                  className='btn-primary'
+                  className="btn-primary"
                 >
                   {getLang(lang)}
                 </Button>
               )}
               {isSignedIn && (
                 <IconButton
-                  edge='end'
-                  aria-label='account'
+                  edge="end"
+                  aria-label="account"
                   aria-controls={menuId}
-                  aria-haspopup='true'
+                  aria-haspopup="true"
                   onClick={handleAccountMenuOpen}
-                  color='inherit'
+                  color="inherit"
                 >
                   <Avatar
                     loggedUser={props.user}
                     user={props.user}
-                    size='small'
+                    size="small"
                     readonly
                   />
                 </IconButton>
               )}
             </div>
-            <div className='header-mobile'>
+            <div className="header-mobile">
               {!isSignedIn && !loading && (
                 <Button
-                  variant='contained'
+                  variant="contained"
                   startIcon={<LanguageIcon />}
                   onClick={handleLangMenuOpen}
                   disableElevation
                   fullWidth
-                  className='btn-primary'
+                  className="btn-primary"
                 >
                   {getLang(lang)}
                 </Button>
               )}
               {isSignedIn && (
-                <IconButton color='inherit' onClick={handleNotificationsClick}>
+                <IconButton color="inherit" onClick={handleNotificationsClick}>
                   <Badge
                     badgeContent={
                       notificationCount > 0 ? notificationCount : null
                     }
-                    color='secondary'
+                    color="secondary"
                   >
                     <NotificationsIcon />
                   </Badge>
@@ -428,11 +428,11 @@ const Header = (props) => {
               )}
               {isSignedIn && (
                 <IconButton
-                  aria-label='show more'
+                  aria-label="show more"
                   aria-controls={mobileMenuId}
-                  aria-haspopup='true'
+                  aria-haspopup="true"
                   onClick={handleMobileMenuOpen}
-                  color='inherit'
+                  color="inherit"
                 >
                   <MoreIcon />
                 </IconButton>

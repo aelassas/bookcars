@@ -54,7 +54,7 @@ const BookingFilter = (props) => {
       }booking-filter`}
     >
       <form onSubmit={handleSubmit}>
-        <FormControl fullWidth margin='dense'>
+        <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.FROM}
             onChange={(from) => {
@@ -62,10 +62,10 @@ const BookingFilter = (props) => {
               setMinDate(from)
             }}
             language={props.language}
-            variant='standard'
+            variant="standard"
           />
         </FormControl>
-        <FormControl fullWidth margin='dense'>
+        <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.TO}
             minDate={minDate}
@@ -73,30 +73,30 @@ const BookingFilter = (props) => {
               setTo(to)
             }}
             language={props.language}
-            variant='standard'
+            variant="standard"
           />
         </FormControl>
-        <FormControl fullWidth margin='dense'>
+        <FormControl fullWidth margin="dense">
           <LocationSelectList
             label={strings.PICKUP_LOCATION}
-            variant='standard'
+            variant="standard"
             onChange={handlePickupLocationChange}
             hidePopupIcon
             customOpen
           />
         </FormControl>
-        <FormControl fullWidth margin='dense'>
+        <FormControl fullWidth margin="dense">
           <LocationSelectList
             label={strings.DROP_OFF_LOCATION}
-            variant='standard'
+            variant="standard"
             onChange={handleDropOffLocationChange}
             hidePopupIcon
             customOpen
           />
         </FormControl>
-        <FormControl fullWidth margin='dense'>
+        <FormControl fullWidth margin="dense">
           <TextField
-            variant='standard'
+            variant="standard"
             value={keyword}
             onKeyDown={handleSearchKeyDown}
             onChange={handleSearchChange}
@@ -104,25 +104,25 @@ const BookingFilter = (props) => {
             InputProps={{
               endAdornment: keyword ? (
                 <IconButton
-                  size='small'
+                  size="small"
                   onClick={() => {
                     setKeyword('')
                   }}
                 >
-                  <ClearIcon className='d-adornment-icon' />
+                  <ClearIcon className="d-adornment-icon" />
                 </IconButton>
               ) : (
-                <SearchIcon className='d-adornment-icon' />
+                <SearchIcon className="d-adornment-icon" />
               ),
             }}
-            autoComplete='off'
-            className='bf-search'
+            autoComplete="off"
+            className="bf-search"
           />
         </FormControl>
         <Button
-          type='submit'
-          variant='contained'
-          className='btn-primary btn-search'
+          type="submit"
+          variant="contained"
+          className="btn-primary btn-search"
           fullWidth
         >
           {commonStrings.SEARCH}

@@ -85,14 +85,14 @@ const StatusFilter = (props) => {
           props.className ? `${props.className} ` : ''
         }status-filter`}
       >
-        <ul className='status-list'>
+        <ul className="status-list">
           {statuses.map((status, index) => (
             <li key={status.value}>
               <input
                 ref={(ref) => (refs.current[index] = ref)}
-                type='checkbox'
+                type="checkbox"
                 data-value={status.value}
-                className='status-checkbox'
+                className="status-checkbox"
                 onChange={handleCheckStatusChange}
               />
               <label
@@ -104,8 +104,8 @@ const StatusFilter = (props) => {
             </li>
           ))}
         </ul>
-        <div className='filter-actions'>
-          <span onClick={handleUncheckAllChange} className='uncheckall'>
+        <div className="filter-actions">
+          <span onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

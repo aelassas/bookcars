@@ -303,31 +303,31 @@ const CreateUser = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {user && (
-        <div className='create-user'>
+        <div className="create-user">
           <Paper
-            className='user-form user-form-wrapper'
+            className="user-form user-form-wrapper"
             elevation={10}
             style={visible ? null : { display: 'none' }}
           >
-            <h1 className='user-form-title'>
+            <h1 className="user-form-title">
               {' '}
               {strings.CREATE_COMPANY_HEADING}{' '}
             </h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={type}
-                mode='create'
+                mode="create"
                 record={null}
-                size='large'
+                size="large"
                 readonly={false}
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
-                color='disabled'
-                className='avatar-ctn'
+                color="disabled"
+                className="avatar-ctn"
               />
 
               {company && (
-                <div className='info'>
+                <div className="info">
                   <InfoIcon />
                   <label>{ccStrings.RECOMMENDED_IMAGE_SIZE}</label>
                 </div>
@@ -336,17 +336,17 @@ const CreateUser = () => {
               {admin && (
                 <FormControl
                   fullWidth
-                  margin='dense'
+                  margin="dense"
                   style={{ marginTop: company ? 0 : 39 }}
                 >
-                  <InputLabel className='required'>
+                  <InputLabel className="required">
                     {commonStrings.TYPE}
                   </InputLabel>
                   <Select
                     label={commonStrings.TYPE}
                     value={type}
                     onChange={handleUserTypeChange}
-                    variant='standard'
+                    variant="standard"
                     required
                     fullWidth
                   >
@@ -363,35 +363,35 @@ const CreateUser = () => {
                 </FormControl>
               )}
 
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required'>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">
                   {commonStrings.FULL_NAME}
                 </InputLabel>
                 <Input
-                  id='full-name'
-                  type='text'
+                  id="full-name"
+                  type="text"
                   error={fullNameError}
                   required
                   onBlur={handleFullNameOnBlur}
                   onChange={handleOnChangeFullName}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
                 <FormHelperText error={fullNameError}>
                   {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
                 </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
-                <InputLabel className='required'>
+              <FormControl fullWidth margin="dense">
+                <InputLabel className="required">
                   {commonStrings.EMAIL}
                 </InputLabel>
                 <Input
-                  id='email'
-                  type='text'
+                  id="email"
+                  type="text"
                   error={!emailValid || emailError}
                   onBlur={handleEmailBlur}
                   onChange={handleEmailChange}
-                  autoComplete='off'
+                  autoComplete="off"
                   required
                 />
                 <FormHelperText error={!emailValid || emailError}>
@@ -401,7 +401,7 @@ const CreateUser = () => {
               </FormControl>
 
               {driver && (
-                <FormControl fullWidth margin='dense'>
+                <FormControl fullWidth margin="dense">
                   <DatePicker
                     label={strings.BIRTH_DATE}
                     value={birthDate}
@@ -421,46 +421,46 @@ const CreateUser = () => {
                 </FormControl>
               )}
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <InputLabel className={driver ? 'required' : ''}>
                   {commonStrings.PHONE}
                 </InputLabel>
                 <Input
-                  id='phone'
-                  type='text'
+                  id="phone"
+                  type="text"
                   onBlur={handlePhoneBlur}
                   onChange={handlePhoneChange}
                   error={!phoneValid}
                   required={driver ? true : false}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
                 <FormHelperText error={!phoneValid}>
                   {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                 </FormHelperText>
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
                 <Input
-                  id='location'
-                  type='text'
+                  id="location"
+                  type="text"
                   onChange={handleOnChangeLocation}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
                 <Input
-                  id='bio'
-                  type='text'
+                  id="bio"
+                  type="text"
                   onChange={handleOnChangeBio}
-                  autoComplete='off'
+                  autoComplete="off"
                 />
               </FormControl>
 
               {company && (
-                <FormControl component='fieldset' style={{ marginTop: 15 }}>
+                <FormControl component="fieldset" style={{ marginTop: 15 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -468,7 +468,7 @@ const CreateUser = () => {
                         onChange={(e) => {
                           setPayLater(e.target.checked)
                         }}
-                        color='primary'
+                        color="primary"
                       />
                     }
                     label={commonStrings.PAY_LATER}
@@ -476,26 +476,26 @@ const CreateUser = () => {
                 </FormControl>
               )}
 
-              <div className='buttons'>
+              <div className="buttons">
                 <Button
-                  type='submit'
-                  variant='contained'
-                  className='btn-primary btn-margin-bottom'
-                  size='small'
+                  type="submit"
+                  variant="contained"
+                  className="btn-primary btn-margin-bottom"
+                  size="small"
                 >
                   {commonStrings.CREATE}
                 </Button>
                 <Button
-                  variant='contained'
-                  className='btn-secondary btn-margin-bottom'
-                  size='small'
+                  variant="contained"
+                  className="btn-secondary btn-margin-bottom"
+                  size="small"
                   onClick={handleCancel}
                 >
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
-              <div className='form-error'>
+              <div className="form-error">
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
                 {avatarError && (
                   <Error message={commonStrings.IMAGE_REQUIRED} />

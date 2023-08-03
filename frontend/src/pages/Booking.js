@@ -287,25 +287,25 @@ const Booking = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {visible && booking && (
-        <div className='booking'>
-          <div className='col-1'>
+        <div className="booking">
+          <div className="col-1">
             <form onSubmit={handleSubmit}>
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <SupplierSelectList
                   label={blStrings.COMPANY}
                   required
-                  variant='standard'
+                  variant="standard"
                   onChange={handleCompanyChange}
                   value={company}
                   readOnly={!edit}
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <LocationSelectList
                   label={bfStrings.PICKUP_LOCATION}
                   required
-                  variant='standard'
+                  variant="standard"
                   onChange={handlePickupLocationChange}
                   value={pickupLocation}
                   init
@@ -313,11 +313,11 @@ const Booking = () => {
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <LocationSelectList
                   label={bfStrings.DROP_OFF_LOCATION}
                   required
-                  variant='standard'
+                  variant="standard"
                   onChange={handleDropOffLocationChange}
                   value={dropOffLocation}
                   init
@@ -335,7 +335,7 @@ const Booking = () => {
                 readOnly={!edit}
               />
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
@@ -363,7 +363,7 @@ const Booking = () => {
                   language={UserService.getLanguage()}
                 />
               </FormControl>
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <DateTimePicker
                   label={commonStrings.TO}
                   value={to}
@@ -392,7 +392,7 @@ const Booking = () => {
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense'>
+              <FormControl fullWidth margin="dense">
                 <StatusList
                   label={blStrings.STATUS}
                   onChange={handleStatusChange}
@@ -402,12 +402,12 @@ const Booking = () => {
                 />
               </FormControl>
 
-              <div className='info'>
+              <div className="info">
                 <InfoIcon />
                 <label>{commonStrings.OPTIONAL}</label>
               </div>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -418,15 +418,15 @@ const Booking = () => {
                     <Switch
                       checked={cancellation}
                       onChange={handleCancellationChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.CANCELLATION}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -437,15 +437,15 @@ const Booking = () => {
                     <Switch
                       checked={amendments}
                       onChange={handleAmendmentsChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.AMENDMENTS}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -456,15 +456,15 @@ const Booking = () => {
                     <Switch
                       checked={collisionDamageWaiver}
                       onChange={handleCollisionDamageWaiverChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.COLLISION_DAMAGE_WAVER}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -475,15 +475,15 @@ const Booking = () => {
                     <Switch
                       checked={theftProtection}
                       onChange={handleTheftProtectionChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.THEFT_PROTECTION}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -494,15 +494,15 @@ const Booking = () => {
                     <Switch
                       checked={fullInsurance}
                       onChange={handleFullInsuranceChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.FULL_INSURANCE}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
-              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+              <FormControl fullWidth margin="dense" className="checkbox-fc">
                 <FormControlLabel
                   disabled={
                     !edit ||
@@ -513,22 +513,22 @@ const Booking = () => {
                     <Switch
                       checked={additionalDriver}
                       onChange={handleAdditionalDriverChange}
-                      color='primary'
+                      color="primary"
                     />
                   }
                   label={csStrings.ADDITIONAL_DRIVER}
-                  className='checkbox-fcl'
+                  className="checkbox-fcl"
                 />
               </FormControl>
 
               <div>
                 {edit && (
-                  <div className='booking-buttons'>
+                  <div className="booking-buttons">
                     <Button
-                      variant='contained'
-                      className='btn-primary btn-margin-bottom'
-                      size='small'
-                      type='submit'
+                      variant="contained"
+                      className="btn-primary btn-margin-bottom"
+                      size="small"
+                      type="submit"
                     >
                       {commonStrings.SAVE}
                     </Button>
@@ -537,14 +537,14 @@ const Booking = () => {
               </div>
             </form>
           </div>
-          <div className='col-2'>
-            <div className='col-2-header'>
-              <div className='price'>
-                <label className='price-days'>{Helper.getDays(days)}</label>
-                <label className='price-main'>
+          <div className="col-2">
+            <div className="col-2-header">
+              <div className="price">
+                <label className="price-days">{Helper.getDays(days)}</label>
+                <label className="price-main">
                   {`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}
                 </label>
-                <label className='price-day'>
+                <label className="price-day">
                   {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${
                     commonStrings.CURRENCY
                   }`}
@@ -552,7 +552,7 @@ const Booking = () => {
               </div>
             </div>
             <CarList
-              className='car'
+              className="car"
               user={user}
               booking={booking}
               cars={[booking.car]}

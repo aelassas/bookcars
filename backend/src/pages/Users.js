@@ -45,29 +45,29 @@ const Users = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       {user && (
-        <div className='users'>
-          <div className='col-1'>
-            <div className='div.col-1-container'>
-              <Search onSubmit={handleSearch} className='search' />
+        <div className="users">
+          <div className="col-1">
+            <div className="div.col-1-container">
+              <Search onSubmit={handleSearch} className="search" />
 
               {admin && (
                 <UserTypeFilter
-                  className='user-type-filter'
+                  className="user-type-filter"
                   onChange={handleUserTypeFilterChange}
                 />
               )}
 
               <Button
-                variant='contained'
-                className='btn-primary new-user'
-                size='small'
-                href='/create-user'
+                variant="contained"
+                className="btn-primary new-user"
+                size="small"
+                href="/create-user"
               >
                 {strings.NEW_USER}
               </Button>
             </div>
           </div>
-          <div className='col-2'>
+          <div className="col-2">
             <UserList
               user={user}
               types={types}
