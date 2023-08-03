@@ -82,11 +82,11 @@ const Cars = () => {
         if (params.has('d')) dropOffLocationId = params.get('d')
         if (params.has('f')) {
             const val = params.get('f')
-            from = Helper.isInteger(val) && new Date(Number(val))
+            from = Helper.isInteger(val) && new Date(parseInt(val))
         }
         if (params.has('t')) {
             const val = params.get('t')
-            to = Helper.isInteger(val) && new Date(Number(val))
+            to = Helper.isInteger(val) && new Date(parseInt(val))
         }
 
         if (!pickupLocationId || !dropOffLocationId || !from || !to) {
