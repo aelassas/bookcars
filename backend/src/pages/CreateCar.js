@@ -189,7 +189,7 @@ const CreateCar = () => {
         setAdditionalDriver(e.target.value)
     }
 
-    const getExtra = (extra) => (
+    const extraToNumber = (extra) => (
         extra === '' ? -1 : Number(extra)
     )
 
@@ -225,13 +225,13 @@ const CreateCar = () => {
                 seats: parseInt(seats),
                 doors: parseInt(doors),
                 fuelPolicy,
-                mileage: getExtra(mileage),
-                cancellation: getExtra(cancellation),
-                amendments: getExtra(amendments),
-                theftProtection: getExtra(theftProtection),
-                collisionDamageWaiver: getExtra(collisionDamageWaiver),
-                fullInsurance: getExtra(fullInsurance),
-                additionalDriver: getExtra(additionalDriver)
+                mileage: extraToNumber(mileage),
+                cancellation: extraToNumber(cancellation),
+                amendments: extraToNumber(amendments),
+                theftProtection: extraToNumber(theftProtection),
+                collisionDamageWaiver: extraToNumber(collisionDamageWaiver),
+                fullInsurance: extraToNumber(fullInsurance),
+                additionalDriver: extraToNumber(additionalDriver)
             }
 
             const car = await CarService.create(data)
