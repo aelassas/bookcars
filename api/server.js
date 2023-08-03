@@ -24,26 +24,30 @@ const DB_USERNAME = process.env.BC_DB_USERNAME
 const DB_PASSWORD = process.env.BC_DB_PASSWORD
 const DB_APP_NAME = process.env.BC_DB_APP_NAME
 const DB_NAME = process.env.BC_DB_NAME
-const DB_URI = `mongodb://${encodeURIComponent(DB_USERNAME)}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=${DB_AUTH_SOURCE}&appName=${DB_APP_NAME}`
+const DB_URI = `mongodb://${encodeURIComponent(
+  DB_USERNAME,
+)}:${encodeURIComponent(
+  DB_PASSWORD,
+)}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=${DB_AUTH_SOURCE}&appName=${DB_APP_NAME}`
 
 let options = {}
 if (DB_SSL) {
-    options = {
-        ssl: true,
-        sslValidate: true,
-        sslKey: DB_SSL_KEY,
-        sslCert: DB_SSL_CERT,
-        sslCA: [DB_SSL_CA]
-    }
+  options = {
+    ssl: true,
+    sslValidate: true,
+    sslKey: DB_SSL_KEY,
+    sslCert: DB_SSL_CERT,
+    sslCA: [DB_SSL_CA],
+  }
 }
 
 mongoose.set('debug', DB_DEBUG)
 mongoose.Promise = global.Promise
 try {
-    await mongoose.connect(DB_URI, options)
-    console.log('Database is connected')
+  await mongoose.connect(DB_URI, options)
+  console.log('Database is connected')
 } catch (err) {
-    console.error('Cannot connect to the database:', err)
+  console.error('Cannot connect to the database:', err)
 }
 const app = express()
 app.use(helmet.contentSecurityPolicy())
