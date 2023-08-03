@@ -10,3 +10,8 @@ export const getLanguage = () => {
 
     return language
 }
+
+export const setLanguage = (strings, language) => {
+    const lang = language || getLanguage()
+    strings.setLanguage(lang)
+}

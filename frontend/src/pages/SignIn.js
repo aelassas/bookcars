@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
@@ -14,6 +13,7 @@ import {
     Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import * as LangHelper from '../common/LangHelper'
 
 import '../assets/css/signin.css'
 
@@ -80,14 +80,7 @@ const SignIn = () => {
     useEffect(() => {
         (async function () {
             try {
-                const queryLanguage = UserService.getQueryLanguage()
-
-                if (Env.LANGUAGES.includes(queryLanguage)) {
-                    strings.setLanguage(queryLanguage)
-                } else {
-                    const language = UserService.getLanguage()
-                    strings.setLanguage(language)
-                }
+                LangHelper.setLanguage(strings)
 
                 const currentUser = UserService.getCurrentUser()
 
