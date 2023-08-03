@@ -595,7 +595,6 @@ const Checkout = () => {
         setAuthenticated(user !== undefined)
         setLanguage(UserService.getLanguage())
 
-
         let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to
         const params = new URLSearchParams(window.location.search)
         if (params.has('c')) carId = params.get('c')
