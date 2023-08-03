@@ -603,11 +603,11 @@ const Checkout = () => {
         if (params.has('d')) dropOffLocationId = params.get('d')
         if (params.has('f')) {
             const val = params.get('f')
-            from = Helper.isNumber(val) && new Date(parseInt(val))
+            from = Helper.isInteger(val) && new Date(Number(val))
         }
         if (params.has('t')) {
             const val = params.get('t')
-            to = Helper.isNumber(val) && new Date(parseInt(val))
+            to = Helper.isInteger(val) && new Date(Number(val))
         }
 
         if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
