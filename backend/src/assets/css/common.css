@@ -1,256 +1,255 @@
 .buttons button {
-    margin-right: 15px;
-    margin-left: 0 !important;
+  margin-right: 15px;
+  margin-left: 0 !important;
 }
 
 .btn-primary {
-    background-color: #121212 !important;
-    color: #ffffff !important;
-    opacity: .9;
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  opacity: 0.9;
 }
 
 .btn-secondary {
-    background-color: #999999 !important;
-    color: #ffffff !important;
+  background-color: #999999 !important;
+  color: #ffffff !important;
 }
 
 .btn-primary:hover,
 .btn-secondary:hover,
 .btn-orange:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .btn-margin {
-    margin-right: 10px !important;
+  margin-right: 10px !important;
 }
 
 .btn-margin-bottom {
-    margin-bottom: 10px !important;
+  margin-bottom: 10px !important;
 }
 
 .validate-email {
-    position: absolute;
-    top: 65px;
-    margin: 15px;
+  position: absolute;
+  top: 65px;
+  margin: 15px;
 }
 
 .btn-resend {
-    margin: 0 10px !important;
+  margin: 0 10px !important;
 }
 
 .required:after {
-    content: " *";
+  content: ' *';
 }
 
 .form-error {
-    clear: both;
-    height: 65px;
-    padding-top: 10px;
-    text-align: center;
+  clear: both;
+  height: 65px;
+  padding-top: 10px;
+  text-align: center;
 }
 
 .msg {
-    margin: 15px;
+  margin: 15px;
 }
 
 .msg h2 {
-    color: #121212;
+  color: #121212;
 }
 
 /* Avatar */
 
 .car-avatar {
-    width: 300px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .car-avatar img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .avatar,
 .avatar-large {
-    width: 170px !important;
-    height: 170px !important;
+  width: 170px !important;
+  height: 170px !important;
 }
 
 .avatar-medium {
-    width: 64px !important;
-    height: 64px !important;
+  width: 64px !important;
+  height: 64px !important;
 }
 
 .avatar-small {
-    width: 32px !important;
-    height: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .avatar-action-box {
-    width: 46px;
-    height: 46px;
-    background: #ddd;
-    cursor: pointer;
+  width: 46px;
+  height: 46px;
+  background: #ddd;
+  cursor: pointer;
 }
 
 .avatar-action-icon {
-    width: 32px !important;
-    height: 32px !important;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 8px;
+  width: 32px !important;
+  height: 32px !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
 }
 
 .company-avatar-readonly {
-    width: 64px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 64px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .company-avatar {
-    width: 150px;
-    height: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 150px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .company-avatar-readonly img,
 .company-avatar img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .avatar-ctn {
-    position: relative;
-    margin: 20px 0;
-    height: 170px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  margin: 20px 0;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-avatar-verified-small,
 .user-avatar-verified-medium,
 .user-avatar-verified-large {
-    color: #ffff;
-    background: #07ac51;
+  color: #ffff;
+  background: #07ac51;
 }
 
 .user-avatar-verified-small {
-    width: 12px !important;
-    height: 12px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 .user-avatar-verified-icon-small {
-    width: 12px !important;
-    height: 12px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 .user-avatar-verified-medium {
-    width: 24px !important;
-    height: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 .user-avatar-verified-icon-medium {
-    width: 24px !important;
-    height: 24px !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 .user-avatar-verified-large {
-    width: 32px !important;
-    height: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .user-avatar-verified-icon-large {
-    width: 32px !important;
-    height: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 15px 0;
 }
 
 .info label {
-    color: #a8a8a8;
-    display: inline-block;
-    font-size: .9em;
-    line-height: 1em;
-    white-space: nowrap;
-    margin-left: 5px;
+  color: #a8a8a8;
+  display: inline-block;
+  font-size: 0.9em;
+  line-height: 1em;
+  white-space: nowrap;
+  margin-left: 5px;
 }
 
 .dialog-header {
-    text-align: center;
+  text-align: center;
 }
 
 .dialog-content {
-    margin: 0;
+  margin: 0;
 }
 
 .dialog-actions {
-    margin-right: 5px;
-    margin-bottom: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
 }
 
 .d-adornment {
-    margin-right: -13px;
+  margin-right: -13px;
 }
 
 .d-adornment-icon {
-    color: rgba(0, 0, 0, 0.54);
-    width: 20px !important;
-    height: 20px !important;
+  color: rgba(0, 0, 0, 0.54);
+  width: 20px !important;
+  height: 20px !important;
 }
 
 @media only screen and (max-width: 960px) {
-    div.content {
-        margin: 0;
-        padding: 0;
-    }
+  div.content {
+    margin: 0;
+    padding: 0;
+  }
 
-    .buttons {
-        margin-top: 15px;
-        margin-bottom: 5px;
-        display: grid;
-        width: 100%;
-    }
+  .buttons {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: grid;
+    width: 100%;
+  }
 
-    .buttons button {
-        margin-right: 0 !important;
-    }
+  .buttons button {
+    margin-right: 0 !important;
+  }
 
-    .btn-margin {
-        margin-right: 0 !important;
-    }
+  .btn-margin {
+    margin-right: 0 !important;
+  }
 
-    .d-adornment {
-        margin-right: -3px;
-    }
+  .d-adornment {
+    margin-right: -3px;
+  }
 }
 
 @media only screen and (min-width: 960px) {
-    div.content {
-        margin: 0;
-        padding: 0;
-    }
+  div.content {
+    margin: 0;
+    padding: 0;
+  }
 
-    .buttons {
-        margin-top: 15px;
-        margin-bottom: 5px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-    }
-
+  .buttons {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }

@@ -4,15 +4,13 @@ import Master from '../components/Master'
 import '../assets/css/tos.css'
 
 const ToS = () => {
+  const onLoad = () => {}
 
-    const onLoad = () => {
-    }
-
-    return (
-        <Master onLoad={onLoad} strict={false}>
-            ToS!
-        </Master>
-    )
+  return (
+    <Master onLoad={onLoad} strict={false}>
+      ToS!
+    </Master>
+  )
 }
 
 export default ToS

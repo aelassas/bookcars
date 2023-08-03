@@ -1,85 +1,85 @@
 div.user {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 div.user div.col-1 .user-name {
-    text-align: center;
-    font-weight: 600;
-    margin-top: 15px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 15px;
 }
 
 div.user div.col-1 .user-info {
-    text-align: center;
-    font-weight: 400;
-    margin-top: 10px;
-    color: #676767;
+  text-align: center;
+  font-weight: 400;
+  margin-top: 10px;
+  color: #676767;
 }
 
 div.user div.col-1 .user-actions {
-    text-align: center;
+  text-align: center;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.user {
-        top: 56px;
-        overflow: auto;
-    }
+  div.user {
+    top: 56px;
+    overflow: auto;
+  }
 
-    div.user div.col-1 {
-        padding-top: 10px;
-        padding-bottom: 15px;
-        background: #fefefe;
-        border-bottom: #eee solid 1px;
-    }
+  div.user div.col-1 {
+    padding-top: 10px;
+    padding-bottom: 15px;
+    background: #fefefe;
+    border-bottom: #eee solid 1px;
+  }
 
-    div.user div.col-1 section.user-avatar-sec {
-        display: flex;
-        justify-content: center;
-    }
+  div.user div.col-1 section.user-avatar-sec {
+    display: flex;
+    justify-content: center;
+  }
 
-    div.user div.col-2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  div.user div.col-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.user {
-        top: 64px;
-        overflow: auto;
-    }
+  div.user {
+    top: 64px;
+    overflow: auto;
+  }
 
-    div.user div.col-1 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 300px;
-        padding-top: 20px;
-        background: #fefefe;
-        border-right: #eee solid 1px;
-    }
+  div.user div.col-1 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    padding-top: 20px;
+    background: #fefefe;
+    border-right: #eee solid 1px;
+  }
 
-    div.user div.col-1 section.user-avatar-sec {
-        position: relative;
-        left: 50%;
-        transform: translateX(-30%);
-    }
+  div.user div.col-1 section.user-avatar-sec {
+    position: relative;
+    left: 50%;
+    transform: translateX(-30%);
+  }
 
-    div.user div.col-2 {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 300px;
-        overflow: auto;
-    }
+  div.user div.col-2 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 300px;
+    overflow: auto;
+  }
 }

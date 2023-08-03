@@ -1,84 +1,84 @@
 div.locations {
-    display: flex;
+  display: flex;
 }
 
 div.locations .search {
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 div.locations .info-box {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.locations {
-        flex-direction: column;
-    }
+  div.locations {
+    flex-direction: column;
+  }
 
-    div.locations div.col-1 {
-        width: 100%;
-        padding: 15px;
-        display: flex;
-        justify-content: center;
-    }
+  div.locations div.col-1 {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+  }
 
-    div.locations div.col-1 div.col-1-container {
-        width: 100%;
-        max-width: 480px;
-    }
+  div.locations div.col-1 div.col-1-container {
+    width: 100%;
+    max-width: 480px;
+  }
 
-    div.locations .sc-search {
-        width: 80%;
-    }
+  div.locations .sc-search {
+    width: 80%;
+  }
 
-    div.locations .new-location {
-        margin: 20px 5px 5px 0;
-        width: 100%;
-    }
+  div.locations .new-location {
+    margin: 20px 5px 5px 0;
+    width: 100%;
+  }
 
-    div.locations div.col-1 .location-count {
-        display: none;
-    }
+  div.locations div.col-1 .location-count {
+    display: none;
+  }
 
-    div.locations div.col-2 {
-        margin-top: 3px;
-        padding: 1px;
-        display: flex;
-        justify-content: center
-    }
+  div.locations div.col-2 {
+    margin-top: 3px;
+    padding: 1px;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.locations {
-        flex-direction: row;
-    }
+  div.locations {
+    flex-direction: row;
+  }
 
-    div.locations div.col-1 {
-        float: left;
-        width: 300px;
-        margin-left: 20px;
-    }
+  div.locations div.col-1 {
+    float: left;
+    width: 300px;
+    margin-left: 20px;
+  }
 
-    div.locations div.col-2 {
-        margin-bottom: 50px;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        flex: 1;
-    }
+  div.locations div.col-2 {
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
+  }
 
-    div.locations .search {
-        margin-top: 15px;
-    }
+  div.locations .search {
+    margin-top: 15px;
+  }
 
-    div.locations .new-location {
-        margin: 10px 5px 0 0;
-        width: 100%;
-    }
+  div.locations .new-location {
+    margin: 10px 5px 0 0;
+    width: 100%;
+  }
 }

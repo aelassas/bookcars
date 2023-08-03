@@ -9,73 +9,77 @@ import { Button } from '@mui/material'
 import '../assets/css/locations.css'
 
 const Locations = () => {
-    const [user, setUser] = useState()
-    const [keyword, setKeyword] = useState('')
-    const [rowCount, setRowCount] = useState(-1)
-    const [reload, setReload] = useState(false)
-    const [offset, setOffset] = useState(0)
+  const [user, setUser] = useState()
+  const [keyword, setKeyword] = useState('')
+  const [rowCount, setRowCount] = useState(-1)
+  const [reload, setReload] = useState(false)
+  const [offset, setOffset] = useState(0)
 
-    useEffect(() => {
-        if (user && user.verified) {
-            setOffset(document.querySelector('.col-1').clientHeight)
-        }
-    }, [user])
-
-    const handleSearch = (newKeyword) => {
-        setKeyword(newKeyword)
-        setReload(newKeyword === keyword)
+  useEffect(() => {
+    if (user && user.verified) {
+      setOffset(document.querySelector('.col-1').clientHeight)
     }
+  }, [user])
 
-    const handleLocationListLoad = (data) => {
-        setRowCount(data.rowCount)
-        setReload(false)
-    }
+  const handleSearch = (newKeyword) => {
+    setKeyword(newKeyword)
+    setReload(newKeyword === keyword)
+  }
 
-    const handleLocationDelete = (rowCount) => {
-        setRowCount(rowCount)
-    }
+  const handleLocationListLoad = (data) => {
+    setRowCount(data.rowCount)
+    setReload(false)
+  }
 
-    const onLoad = (user) => {
-        setUser(user)
-    }
+  const handleLocationDelete = (rowCount) => {
+    setRowCount(rowCount)
+  }
 
-    return (
-        <Master onLoad={onLoad} strict={true}>
-            <div className='locations'>
-                <div className='col-1'>
-                    <div className='col-1-container'>
-                        <Search className='search' onSubmit={handleSearch} />
+  const onLoad = (user) => {
+    setUser(user)
+  }
 
-                        {rowCount > -1 &&
-                            <Button
-                                variant="contained"
-                                className='btn-primary new-location'
-                                size="small"
-                                href='/create-location'
-                            >
-                                {strings.NEW_LOCATION}
-                            </Button>
-                        }
+  return (
+    <Master onLoad={onLoad} strict={true}>
+      <div className='locations'>
+        <div className='col-1'>
+          <div className='col-1-container'>
+            <Search className='search' onSubmit={handleSearch} />
 
-                        {rowCount > 0 &&
-                            <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className='location-count' />
-                        }
-                    </div>
-                </div>
-                <div className='col-2'>
-                    <LocationList
-                        containerClassName='locations'
-                        offset={offset}
-                        keyword={keyword}
-                        reload={reload}
-                        onLoad={handleLocationListLoad}
-                        onDelete={handleLocationDelete}
-                    />
-                </div>
-            </div>
+            {rowCount > -1 && (
+              <Button
+                variant='contained'
+                className='btn-primary new-location'
+                size='small'
+                href='/create-location'
+              >
+                {strings.NEW_LOCATION}
+              </Button>
+            )}
 
-        </Master>
-    )
+            {rowCount > 0 && (
+              <InfoBox
+                value={`${rowCount} ${
+                  rowCount > 1 ? strings.LOCATIONS : strings.LOCATION
+                }`}
+                className='location-count'
+              />
+            )}
+          </div>
+        </div>
+        <div className='col-2'>
+          <LocationList
+            containerClassName='locations'
+            offset={offset}
+            keyword={keyword}
+            reload={reload}
+            onLoad={handleLocationListLoad}
+            onDelete={handleLocationDelete}
+          />
+        </div>
+      </div>
+    </Master>
+  )
 }
 
 export default Locations

@@ -4,86 +4,89 @@ import { strings } from '../lang/companies'
 import Search from '../components/Search'
 import SupplierList from '../components/SupplierList'
 import InfoBox from '../components/InfoBox'
-import {
-    Button,
-} from '@mui/material'
+import { Button } from '@mui/material'
 import * as Helper from '../common/Helper'
 
 import '../assets/css/companies.css'
 
 const Companies = () => {
-    const [user, setUser] = useState()
-    const [keyword, setKeyword] = useState('')
-    const [reload, setReload] = useState(false)
-    const [rowCount, setRowCount] = useState(-1)
-    const [offset, setOffset] = useState(0)
+  const [user, setUser] = useState()
+  const [keyword, setKeyword] = useState('')
+  const [reload, setReload] = useState(false)
+  const [rowCount, setRowCount] = useState(-1)
+  const [offset, setOffset] = useState(0)
 
-    useEffect(() => {
-        if (user && user.verified) {
-            setOffset(document.querySelector('.col-1').clientHeight)
-        }
-    }, [user])
-
-    const handleSearch = (newKeyword) => {
-        setKeyword(newKeyword)
-        setReload(newKeyword === keyword)
+  useEffect(() => {
+    if (user && user.verified) {
+      setOffset(document.querySelector('.col-1').clientHeight)
     }
+  }, [user])
 
-    const handleSupplierListLoad = (data) => {
-        setReload(false)
-        setRowCount(data.rowCount)
-    }
+  const handleSearch = (newKeyword) => {
+    setKeyword(newKeyword)
+    setReload(newKeyword === keyword)
+  }
 
-    const handleCompanyDelete = (rowCount) => {
-        setRowCount(rowCount)
-    }
+  const handleSupplierListLoad = (data) => {
+    setReload(false)
+    setRowCount(data.rowCount)
+  }
 
-    const onLoad = (user) => {
-        setUser(user)
-    }
+  const handleCompanyDelete = (rowCount) => {
+    setRowCount(rowCount)
+  }
 
-    const admin = Helper.admin(user)
+  const onLoad = (user) => {
+    setUser(user)
+  }
 
-    return (
-        <Master onLoad={onLoad} strict={true}>
-            {user &&
-                <div className='companies'>
-                    <div className='col-1'>
-                        <div className='col-1-container'>
-                            <Search className='search' onSubmit={handleSearch} />
+  const admin = Helper.admin(user)
 
-                            {rowCount > -1 && admin &&
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    className='btn-primary new-company'
-                                    size="small"
-                                    href='/create-supplier'
-                                >
-                                    {strings.NEW_COMPANY}
-                                </Button>
-                            }
+  return (
+    <Master onLoad={onLoad} strict={true}>
+      {user && (
+        <div className='companies'>
+          <div className='col-1'>
+            <div className='col-1-container'>
+              <Search className='search' onSubmit={handleSearch} />
 
-                            {rowCount > 0 &&
-                                <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className='company-count' />
-                            }
-                        </div>
-                    </div>
-                    <div className='col-2'>
-                        <SupplierList
-                            containerClassName='companies'
-                            offset={offset}
-                            user={user}
-                            keyword={keyword}
-                            reload={reload}
-                            onLoad={handleSupplierListLoad}
-                            onDelete={handleCompanyDelete}
-                        />
-                    </div>
-                </div>}
+              {rowCount > -1 && admin && (
+                <Button
+                  type='submit'
+                  variant='contained'
+                  className='btn-primary new-company'
+                  size='small'
+                  href='/create-supplier'
+                >
+                  {strings.NEW_COMPANY}
+                </Button>
+              )}
 
-        </Master>
-    )
+              {rowCount > 0 && (
+                <InfoBox
+                  value={`${rowCount} ${
+                    rowCount > 1 ? strings.COMPANIES : strings.COMPANY
+                  }`}
+                  className='company-count'
+                />
+              )}
+            </div>
+          </div>
+          <div className='col-2'>
+            <SupplierList
+              containerClassName='companies'
+              offset={offset}
+              user={user}
+              keyword={keyword}
+              reload={reload}
+              onLoad={handleSupplierListLoad}
+              onDelete={handleCompanyDelete}
+            />
+          </div>
+        </div>
+      )}
+    </Master>
+  )
 }
 
 export default Companies

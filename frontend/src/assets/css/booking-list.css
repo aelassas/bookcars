@@ -1,236 +1,249 @@
 div.bs-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 div.bs-list .data-grid {
-    width: 100%;
+  width: 100%;
 }
 
 div.bs-list .empty-list {
-    text-align: center;
-    width: 250px;
+  text-align: center;
+  width: 250px;
 }
 
 div.bs-list {
-    width: 100%;
+  width: 100%;
 }
 
 div.bs-list div.cell-company {
-    display: flex;
-    align-items: center;
-    width: 60px;
-    height: 30px;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
 }
 
 div.bs-list div.cell-company img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 div.bs-list span.bs {
-    padding: 3px;
-    width: 80px;
-    text-align: center;
-    color: #fff;
+  padding: 3px;
+  width: 80px;
+  text-align: center;
+  color: #fff;
 }
 
 div.bs-list span.bs-void {
-    background: #999;
+  background: #999;
 }
 
 div.bs-list span.bs-pending {
-    background: #e98003;
+  background: #e98003;
 }
 
 div.bs-list span.bs-deposit {
-    background: #22bba7;
+  background: #22bba7;
 }
 
 div.bs-list span.bs-paid {
-    background: #77bc23;
+  background: #77bc23;
 }
 
 div.bs-list span.bs-reserved {
-    background: #188ace;
+  background: #188ace;
 }
 
 div.bs-list span.bs-cancelled {
-    background: #bc2143;
+  background: #bc2143;
 }
 
 div.bs-update-status {
-    width: 444px;
-    height: 70px;
-    overflow: hidden;
+  width: 444px;
+  height: 70px;
+  overflow: hidden;
 }
 
 div.bs-list span.bp {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 div.bs-list div.booking-details {
-    display: table;
-    color: #333;
-    font-size: 15px;
-    background-color: #fff;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #d9d8d9;
-    border-radius: 5px;
-    width: calc(100% - 20px);
+  display: table;
+  color: #333;
+  font-size: 15px;
+  background-color: #fff;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #d9d8d9;
+  border-radius: 5px;
+  width: calc(100% - 20px);
 }
 
 div.bs-list div.booking-details div.booking-detail {
-    display: table-row;
+  display: table-row;
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value {
-    display: table-row;
-    line-height: 25px;
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.47);
+  display: table-row;
+  line-height: 25px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.47);
 }
 
 div.bs-list div.booking-details div.booking-detail label.booking-detail-title {
-    display: table-row;
-    font-weight: 700;
-    width: 250px;
-    font-size: 15px;
-    color: rgba(0, 0, 0, 0.87);
+  display: table-row;
+  font-weight: 700;
+  width: 250px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.87);
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    width: 60px;
-    height: 30px;
+div.bs-list
+  div.booking-details
+  div.booking-detail
+  div.booking-detail-value
+  div.car-company {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 60px;
+  height: 30px;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company img {
-    max-width: 100%;
-    max-height: 100%;
+div.bs-list
+  div.booking-details
+  div.booking-detail
+  div.booking-detail-value
+  div.car-company
+  img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value label.car-company-name {
-    color: rgba(0, 0, 0, 0.6);
-    font-size: .9em;
-    line-height: 1em;
-    white-space: nowrap;
-    margin-left: 5px;
+div.bs-list
+  div.booking-details
+  div.booking-detail
+  div.booking-detail-value
+  label.car-company-name {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+  line-height: 1em;
+  white-space: nowrap;
+  margin-left: 5px;
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-price {
-    font-size: 17px;
-    font-weight: 700;
-    color: rgba(0, 0, 0, 0.87);
+  font-size: 17px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 div.bs-list div.booking-details div.bs {
-    width: 100%;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 400;
-    margin-bottom: 5px;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 5px;
 }
 
 div.bs-list div.booking-details div.bs label {
-    color: #fff;
+  color: #fff;
 }
 
 div.bs-list div.booking-details div.bs-void {
-    background: #999;
+  background: #999;
 }
 
 div.bs-list div.booking-details div.bs-pending {
-    background: #e98003;
+  background: #e98003;
 }
 
 div.bs-list div.booking-details div.bs-deposit {
-    background: #22bba7;
+  background: #22bba7;
 }
 
 div.bs-list div.booking-details div.bs-paid {
-    background: #77bc23;
+  background: #77bc23;
 }
 
 div.bs-list div.booking-details div.bs-reserved {
-    background: #188ace;
+  background: #188ace;
 }
 
 div.bs-list div.booking-details div.bs-cancelled {
-    background: #bc2143;
+  background: #bc2143;
 }
 
 div.bs-list div.extras {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 div.bs-list div.extras label.extras-title {
-    font-size: 15px;
-    font-weight: 700;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 div.bs-list div.extras div.extra {
-    display: flex;
-    align-items: center;
-    margin: 3px;
+  display: flex;
+  align-items: center;
+  margin: 3px;
 }
 
 div.bs-list div.extras div.extra .extra-icon {
-    color: #1f9201;
-    height: 20px;
+  color: #1f9201;
+  height: 20px;
 }
 
 div.bs-list div.extras div.extra label.extra-title {
-    font-size: 13px;
-    font-weight: 700;
-    margin-right: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 5px;
 }
 
 div.bs-list div.extras div.extra label.extra-text {
-    font-size: 13px;
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.47);
+  font-size: 13px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.47);
 }
 
 div.bs-list div.bs-buttons {
-    display: grid;
-    margin-top: 10px;
+  display: grid;
+  margin-top: 10px;
 }
 
 div.bs-list div.bs-buttons a,
 div.bs-list div.bs-buttons button {
-    width: 100%;
-    margin-bottom: 5px;
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 @media only screen and (max-width: 960px) {
-    div.bs-list {
-        max-width: 480px;
-    }
+  div.bs-list {
+    max-width: 480px;
+  }
 
-    div.bs-list .empty-list {
-        margin-top: 10px;
-    }
+  div.bs-list .empty-list {
+    margin-top: 10px;
+  }
 }
 
 @media only screen and (min-width: 960px) {
-    div.bs-list {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        overflow-y: auto;
-    }
+  div.bs-list {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+  }
 
-    div.bs-list .empty-list {
-        margin-top: 15px;
-    }
+  div.bs-list .empty-list {
+    margin-top: 15px;
+  }
 }

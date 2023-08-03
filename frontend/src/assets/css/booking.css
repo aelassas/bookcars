@@ -1,78 +1,78 @@
 div.booking {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 div.booking div.col-2 div.col-2-header {
-    text-align: right;
+  text-align: right;
 }
 
 div.booking div.col-1 div.booking-buttons {
-    float: right;
+  float: right;
 }
 
 div.booking div.col-2 div.col-2-header div.price {
-    width: fit-content;
-    float: right;
+  width: fit-content;
+  float: right;
 }
 
 div.booking div.col-2 div.col-2-header label.price-main {
-    color: #383838;
-    font-size: 2em;
-    font-weight: 700;
-    line-height: 1em;
-    white-space: nowrap;
-    display: table-row;
-    text-align: right;
+  color: #383838;
+  font-size: 2em;
+  font-weight: 700;
+  line-height: 1em;
+  white-space: nowrap;
+  display: table-row;
+  text-align: right;
 }
 
 div.booking div.col-2 div.col-2-header label.price-days,
 div.booking div.col-2 div.col-2-header label.price-day {
-    font-size: 13px;
-    color: #a1a1a1;
-    display: table-row;
-    text-align: right;
+  font-size: 13px;
+  color: #a1a1a1;
+  display: table-row;
+  text-align: right;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    div.booking div.col-1 {
-        padding: 20px;
-        background: #fefefe;
-        border-bottom: #eee solid 1px;
-    }
+  div.booking div.col-1 {
+    padding: 20px;
+    background: #fefefe;
+    border-bottom: #eee solid 1px;
+  }
 
-    div.booking div.col-2 {
-        display: none;
-    }
+  div.booking div.col-2 {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 1270px) {
-    div.booking div.col-2 .car {
-        display: none;
-    }
+  div.booking div.col-2 .car {
+    display: none;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    div.booking div.col-1 {
-        background: #fefefe;
-        border-right: #eee solid 1px;
-        padding: 25px;
-        flex: 0 1 30%;
-    }
+  div.booking div.col-1 {
+    background: #fefefe;
+    border-right: #eee solid 1px;
+    padding: 25px;
+    flex: 0 1 30%;
+  }
 
-    div.booking div.col-2 {
-        flex: 1 1;
-        padding-top: 10px;
-    }
+  div.booking div.col-2 {
+    flex: 1 1;
+    padding-top: 10px;
+  }
 
-    div.booking div.col-2 div.col-2-header {
-        padding-right: 25px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-    }
+  div.booking div.col-2 div.col-2-header {
+    padding-right: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }

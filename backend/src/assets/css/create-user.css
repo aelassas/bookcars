@@ -1,35 +1,35 @@
 /* Create Company */
 
 .user-form-wrapper {
-	margin: 32px 0;
+  margin: 32px 0;
 }
 
 .user-form-title {
-	text-align: center;
-	text-transform: capitalize;
-	color: #121212;
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-	.user-form {
-		margin-top: 45px !important;
-		margin-left: calc(50% - 180px) !important;
-		width: 360px;
-		height: 950px;
-		padding: 30px;
-	}
+  .user-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    height: 950px;
+    padding: 30px;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-	.user-form {
-		margin-top: 45px !important;
-		margin-left: calc(50% - 275px) !important;
-		width: 550px;
-		height: 840px;
-		padding: 30px;
-	}
+  .user-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    height: 840px;
+    padding: 30px;
+  }
 }

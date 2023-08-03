@@ -4,15 +4,13 @@ import Master from '../components/Master'
 import '../assets/css/contact.css'
 
 const Contact = () => {
+  const onLoad = () => {}
 
-    const onLoad = () => {
-    }
-
-    return (
-        <Master onLoad={onLoad} strict={false}>
-            Contact!
-        </Master>
-    )
+  return (
+    <Master onLoad={onLoad} strict={false}>
+      Contact!
+    </Master>
+  )
 }
 
 export default Contact

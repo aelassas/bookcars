@@ -1,31 +1,31 @@
 div.pager-container {
-    height: 54px;
-    width: 100%;
-    padding: 5px 10px 5px 0;
-    margin-bottom: 15px;
-    background-color: #fff;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+  height: 54px;
+  width: 100%;
+  padding: 5px 10px 5px 0;
+  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 div.pager {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 div.pager div.row-count {
-    font-size: 14px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 7px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 7px;
 }
 
 div.pager div.actions {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

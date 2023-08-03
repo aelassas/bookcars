@@ -1,45 +1,45 @@
 /* Create Location */
 
 .booking-form-wrapper {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 .booking-form-title {
-    text-align: center;
-    text-transform: capitalize;
-    color: #121212;
+  text-align: center;
+  text-transform: capitalize;
+  color: #121212;
 }
 
 .checkbox-fc {
-    margin: 13px 0 !important;
+  margin: 13px 0 !important;
 }
 
 .checkbox-fc .checkbox-fcl {
-    color: rgba(0, 0, 0, 0.6);
-    font-size: .9em;
-    line-height: 1em;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+  line-height: 1em;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (max-width: 960px) {
-    .booking-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 180px) !important;
-        width: 360px;
-        padding: 30px;
-        display: inline-block;
-    }
+  .booking-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 180px) !important;
+    width: 360px;
+    padding: 30px;
+    display: inline-block;
+  }
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (min-width: 960px) {
-    .booking-form {
-        margin-top: 45px !important;
-        margin-left: calc(50% - 275px) !important;
-        width: 550px;
-        padding: 30px;
-        display: inline-block;
-    }
+  .booking-form {
+    margin-top: 45px !important;
+    margin-left: calc(50% - 275px) !important;
+    width: 550px;
+    padding: 30px;
+    display: inline-block;
+  }
 }

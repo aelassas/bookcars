@@ -1,11 +1,11 @@
 import React from 'react'
-import ReactDOM from "react-dom/client"
+import ReactDOM from 'react-dom/client'
 import App from './App'
 import Env from './config/env.config'
 import { strings as commonStrings } from './lang/common'
 import * as UserService from './services/UserService'
-import { createTheme, ThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import { ToastContainer } from 'react-toastify'
 
 import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
@@ -20,106 +20,104 @@ import './assets/css/index.css'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 if (process.env.REACT_APP_NODE_ENV === 'production') {
-    if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-        window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () { }
-    }
+  if (window.__REACT_DEVTOOLS_GLOBAL_HOOK__) {
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function () {}
+  }
 }
-
 
 let language = Env.DEFAULT_LANGUAGE
 const user = JSON.parse(localStorage.getItem('bc-user'))
 let lang = UserService.getQueryLanguage()
 
 if (lang !== '') {
+  if (!Env.LANGUAGES.includes(lang)) {
+    lang = localStorage.getItem('bc-language')
+
     if (!Env.LANGUAGES.includes(lang)) {
-        lang = localStorage.getItem('bc-language')
+      lang = Env.DEFAULT_LANGUAGE
+    }
+  }
 
-        if (!Env.LANGUAGES.includes(lang)) {
-            lang = Env.DEFAULT_LANGUAGE
+  try {
+    if (user) {
+      language = user.language
+      if (lang && lang.length === 2 && user.language !== lang) {
+        const data = {
+          id: user.id,
+          language: lang,
         }
-    }
 
-    try {
-        if (user) {
-            language = user.language
-            if (lang && lang.length === 2 && user.language !== lang) {
-                const data = {
-                    id: user.id,
-                    language: lang
-                }
+        const status = await UserService.validateAccessToken()
 
-                const status = await UserService.validateAccessToken()
-
-                if (status === 200) {
-                    const status = await UserService.updateLanguage(data)
-                    if (status !== 200) {
-                        Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
-                    }
-                }
-
-                language = lang
-            }
-        } else if (lang) {
-            language = lang
+        if (status === 200) {
+          const status = await UserService.updateLanguage(data)
+          if (status !== 200) {
+            Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
+          }
         }
-        UserService.setLanguage(language)
-        commonStrings.setLanguage(language)
+
+        language = lang
+      }
+    } else if (lang) {
+      language = lang
     }
-    catch (err) {
-        Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
-    }
+    UserService.setLanguage(language)
+    commonStrings.setLanguage(language)
+  } catch (err) {
+    Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
+  }
 }
 
 language = UserService.getLanguage()
 const isFr = language === 'fr'
 
 const theme = createTheme(
-    {
-        typography: {
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
+  {
+    typography: {
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundColor: '#fafafa',
+          },
         },
-        components: {
-            MuiCssBaseline: {
-                styleOverrides: {
-                    body: {
-                        backgroundColor: "#fafafa",
-                    }
-                },
-            },
-        }
-    }
-    , isFr ? frFR : enUS
-    , isFr ? dataGridfrFR : dataGridenUS
-    , isFr ? corefrFR : coreenUS
+      },
+    },
+  },
+  isFr ? frFR : enUS,
+  isFr ? dataGridfrFR : dataGridenUS,
+  isFr ? corefrFR : coreenUS,
 )
 
 root.render(
-    <ThemeProvider theme={theme}>
-        <CssBaseline>
-            <App />
-            <ToastContainer
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                pauseOnFocusLoss={false}
-                draggable={false}
-                pauseOnHover={true}
-                icon={true}
-                theme="dark"
-            />
-        </CssBaseline>
-    </ThemeProvider>
+  <ThemeProvider theme={theme}>
+    <CssBaseline>
+      <App />
+      <ToastContainer
+        position='bottom-right'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={true}
+        icon={true}
+        theme='dark'
+      />
+    </CssBaseline>
+  </ThemeProvider>,
 )

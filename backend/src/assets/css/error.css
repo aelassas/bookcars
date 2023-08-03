@@ -1,10 +1,10 @@
 /* Error */
 
 .error {
-	color: #ec5555;
-	text-align: center;
+  color: #ec5555;
+  text-align: center;
 }
 
 .message {
-	padding: 5px;
+  padding: 5px;
 }

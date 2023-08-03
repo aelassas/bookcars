@@ -22,22 +22,19 @@ import StatusList from '../components/StatusList'
 import DateTimePicker from '../components/DateTimePicker'
 import DatePicker from '../components/DatePicker'
 import {
-    FormControl,
-    FormControlLabel,
-    Switch,
-    Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    FormHelperText,
-    InputLabel,
-    Input,
+  FormControl,
+  FormControlLabel,
+  Switch,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormHelperText,
+  InputLabel,
+  Input,
 } from '@mui/material'
-import {
-    Info as InfoIcon,
-    Person as DriverIcon,
-} from '@mui/icons-material'
+import { Info as InfoIcon, Person as DriverIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
@@ -45,766 +42,829 @@ import { useNavigate } from 'react-router-dom'
 import '../assets/css/booking.css'
 
 const UpdateBooking = () => {
-    const navigate = useNavigate()
-    const [user, setUser] = useState()
-    const [loading, setLoading] = useState(false)
-    const [noMatch, setNoMatch] = useState(false)
-    const [error, setError] = useState(false)
-    const [booking, setBooking] = useState()
-    const [visible, setVisible] = useState(false)
-    const [isCompany, setIsCompany] = useState(false)
-    const [company, setCompany] = useState()
-    const [car, setCar] = useState()
-    const [price, setPrice] = useState()
-    const [driver, setDriver] = useState()
-    const [pickupLocation, setPickupLocation] = useState()
-    const [dropOffLocation, setDropOffLocation] = useState()
-    const [from, setFrom] = useState()
-    const [to, setTo] = useState()
-    const [status, setStatus] = useState()
-    const [cancellation, setCancellation] = useState(false)
-    const [amendments, setAmendments] = useState(false)
-    const [theftProtection, setTheftProtection] = useState(false)
-    const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-    const [fullInsurance, setFullInsurance] = useState(false)
-    const [additionalDriver, setAdditionalDriver] = useState(false)
-    const [minDate, setMinDate] = useState()
-    const [_fullName, set_FullName] = useState('')
-    const [_email, set_Email] = useState('')
-    const [_phone, set_Phone] = useState('')
-    const [_birthDate, set_BirthDate] = useState()
-    const [_emailValid, set_EmailValid] = useState(true)
-    const [_phoneValid, set_PhoneValid] = useState(true)
-    const [_birthDateValid, set_BirthDateValid] = useState(true)
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const navigate = useNavigate()
+  const [user, setUser] = useState()
+  const [loading, setLoading] = useState(false)
+  const [noMatch, setNoMatch] = useState(false)
+  const [error, setError] = useState(false)
+  const [booking, setBooking] = useState()
+  const [visible, setVisible] = useState(false)
+  const [isCompany, setIsCompany] = useState(false)
+  const [company, setCompany] = useState()
+  const [car, setCar] = useState()
+  const [price, setPrice] = useState()
+  const [driver, setDriver] = useState()
+  const [pickupLocation, setPickupLocation] = useState()
+  const [dropOffLocation, setDropOffLocation] = useState()
+  const [from, setFrom] = useState()
+  const [to, setTo] = useState()
+  const [status, setStatus] = useState()
+  const [cancellation, setCancellation] = useState(false)
+  const [amendments, setAmendments] = useState(false)
+  const [theftProtection, setTheftProtection] = useState(false)
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
+  const [fullInsurance, setFullInsurance] = useState(false)
+  const [additionalDriver, setAdditionalDriver] = useState(false)
+  const [minDate, setMinDate] = useState()
+  const [_fullName, set_FullName] = useState('')
+  const [_email, set_Email] = useState('')
+  const [_phone, set_Phone] = useState('')
+  const [_birthDate, set_BirthDate] = useState()
+  const [_emailValid, set_EmailValid] = useState(true)
+  const [_phoneValid, set_PhoneValid] = useState(true)
+  const [_birthDateValid, set_BirthDateValid] = useState(true)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-    const handleCompanyChange = (values) => {
-        setCompany(values.length > 0 ? values[0] : null)
-    }
+  const handleCompanyChange = (values) => {
+    setCompany(values.length > 0 ? values[0] : null)
+  }
 
-    const handleDriverChange = (values) => {
-        setDriver(values.length > 0 ? values[0] : null)
-    }
+  const handleDriverChange = (values) => {
+    setDriver(values.length > 0 ? values[0] : null)
+  }
 
-    const handlePickupLocationChange = (values) => {
-        setPickupLocation(values.length > 0 ? values[0] : null)
-    }
+  const handlePickupLocationChange = (values) => {
+    setPickupLocation(values.length > 0 ? values[0] : null)
+  }
 
-    const handleDropOffLocationChange = (values) => {
-        setDropOffLocation(values.length > 0 ? values[0] : null)
-    }
+  const handleDropOffLocationChange = (values) => {
+    setDropOffLocation(values.length > 0 ? values[0] : null)
+  }
 
-    const handleCarSelectListChange = useCallback(async (values) => {
-        try {
-            const newCar = values.length > 0 ? values[0] : null
+  const handleCarSelectListChange = useCallback(
+    async (values) => {
+      try {
+        const newCar = values.length > 0 ? values[0] : null
 
-            if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) { // car changed
-                const car = await CarService.getCar(newCar._id)
+        if (
+          (car === null && newCar !== null) ||
+          (car && newCar && car._id !== newCar._id)
+        ) {
+          // car changed
+          const car = await CarService.getCar(newCar._id)
 
-                if (car) {
-                    const _booking = Helper.clone(booking)
-                    _booking.car = car
-                    Helper.price(
-                        _booking
-                        , car
-                        , (price) => {
-                            setPrice(price)
-                        }
-                        , (err) => {
-                            Helper.error(err)
-                        }
-                    )
+          if (car) {
+            const _booking = Helper.clone(booking)
+            _booking.car = car
+            Helper.price(
+              _booking,
+              car,
+              (price) => {
+                setPrice(price)
+              },
+              (err) => {
+                Helper.error(err)
+              },
+            )
 
-                    setBooking(_booking)
-                    setCar(newCar)
-                } else {
-                    Helper.error()
-                }
-            } else if (!newCar) {
-                setPrice(0)
-                setCar(newCar)
-            } else {
-                setCar(newCar)
-            }
-        } catch (err) {
-            Helper.error(err)
+            setBooking(_booking)
+            setCar(newCar)
+          } else {
+            Helper.error()
+          }
+        } else if (!newCar) {
+          setPrice(0)
+          setCar(newCar)
+        } else {
+          setCar(newCar)
         }
-    }, [car, booking])
+      } catch (err) {
+        Helper.error(err)
+      }
+    },
+    [car, booking],
+  )
 
-    const handleStatusChange = (value) => {
-        setStatus(value)
+  const handleStatusChange = (value) => {
+    setStatus(value)
+  }
+
+  const handleCancellationChange = (e) => {
+    booking.cancellation = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setCancellation(booking.cancellation)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const handleAmendmentsChange = (e) => {
+    booking.amendments = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setAmendments(booking.amendments)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const handleCollisionDamageWaiverChange = (e) => {
+    booking.collisionDamageWaiver = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setCollisionDamageWaiver(booking.collisionDamageWaiver)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const handleTheftProtectionChange = (e) => {
+    booking.theftProtection = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setTheftProtection(booking.theftProtection)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const handleFullInsuranceChange = (e) => {
+    booking.fullInsurance = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setFullInsurance(booking.fullInsurance)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const handleAdditionalDriverChange = (e) => {
+    booking.additionalDriver = e.target.checked
+
+    Helper.price(
+      booking,
+      booking.car,
+      (price) => {
+        setBooking(booking)
+        setPrice(price)
+        setAdditionalDriver(booking.additionalDriver)
+      },
+      (err) => {
+        Helper.error(err)
+      },
+    )
+  }
+
+  const err = (hideLoading) => {
+    Helper.error()
+    if (hideLoading) {
+      setLoading(false)
     }
+  }
 
-    const handleCancellationChange = (e) => {
-        booking.cancellation = e.target.checked
+  const handleDelete = () => {
+    setOpenDeleteDialog(true)
+  }
 
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setCancellation(booking.cancellation)
-            },
-            (err) => {
-                Helper.error(err)
-            })
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false)
+  }
+
+  const handleConfirmDelete = async () => {
+    try {
+      setOpenDeleteDialog(false)
+
+      const status = await BookingService.deleteBookings([booking._id])
+
+      if (status === 200) {
+        navigate('/')
+      } else {
+        err(true)
+      }
+    } catch (err) {
+      Helper.error(err)
     }
+  }
 
-    const handleAmendmentsChange = (e) => {
-        booking.amendments = e.target.checked
-
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setAmendments(booking.amendments)
-            },
-            (err) => {
-                Helper.error(err)
-            })
+  const _validateEmail = (email) => {
+    if (email) {
+      if (validator.isEmail(email)) {
+        set_EmailValid(true)
+        return true
+      } else {
+        set_EmailValid(false)
+        return false
+      }
+    } else {
+      set_EmailValid(true)
+      return false
     }
+  }
 
-    const handleCollisionDamageWaiverChange = (e) => {
-        booking.collisionDamageWaiver = e.target.checked
+  const _validatePhone = (phone) => {
+    if (phone) {
+      const _phoneValid = validator.isMobilePhone(phone)
+      set_PhoneValid(_phoneValid)
 
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setCollisionDamageWaiver(booking.collisionDamageWaiver)
-            },
-            (err) => {
-                Helper.error(err)
-            })
+      return _phoneValid
+    } else {
+      set_PhoneValid(true)
+
+      return true
     }
+  }
 
-    const handleTheftProtectionChange = (e) => {
-        booking.theftProtection = e.target.checked
+  const _validateBirthDate = (date) => {
+    if (date) {
+      const now = new Date()
+      const sub = intervalToDuration({ start: date, end: now }).years
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setTheftProtection(booking.theftProtection)
-            },
-            (err) => {
-                Helper.error(err)
-            })
+      set_BirthDateValid(_birthDateValid)
+      return _birthDateValid
+    } else {
+      set_BirthDateValid(true)
+      return true
     }
+  }
 
-    const handleFullInsuranceChange = (e) => {
-        booking.fullInsurance = e.target.checked
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
 
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setFullInsurance(booking.fullInsurance)
-            },
-            (err) => {
-                Helper.error(err)
-            })
+      const additionalDriverSet =
+        Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+
+      if (additionalDriverSet) {
+        const emailValid = _validateEmail(_email)
+        if (!emailValid) {
+          return
+        }
+
+        const phoneValid = _validatePhone(_phone)
+        if (!phoneValid) {
+          return
+        }
+
+        const birthDateValid = _validateBirthDate(_birthDate)
+        if (!birthDateValid) {
+          return
+        }
+      }
+
+      const _booking = {
+        _id: booking._id,
+        company: company._id,
+        car: car._id,
+        driver: driver._id,
+        pickupLocation: pickupLocation._id,
+        dropOffLocation: dropOffLocation._id,
+        from,
+        to,
+        status,
+        cancellation,
+        amendments,
+        theftProtection,
+        collisionDamageWaiver,
+        fullInsurance,
+        additionalDriver: additionalDriverSet,
+        price,
+      }
+
+      let _additionalDriver
+      if (additionalDriverSet) {
+        _additionalDriver = {
+          fullName: _fullName,
+          email: _email,
+          phone: _phone,
+          birthDate: _birthDate,
+        }
+      }
+
+      const _status = await BookingService.update({
+        booking: _booking,
+        additionalDriver: _additionalDriver,
+      })
+
+      if (_status === 200) {
+        if (!additionalDriverSet) {
+          set_FullName('')
+          set_Email('')
+          set_Phone('')
+          set_BirthDate(null)
+        }
+        Helper.info(commonStrings.UPDATED)
+      } else {
+        err()
+      }
+    } catch (err) {
+      Helper.error(err)
     }
+  }
 
-    const handleAdditionalDriverChange = (e) => {
-        booking.additionalDriver = e.target.checked
+  const onLoad = async (user) => {
+    setUser(user)
+    setLoading(true)
 
-        Helper.price(
-            booking,
-            booking.car,
-            (price) => {
-                setBooking(booking)
-                setPrice(price)
-                setAdditionalDriver(booking.additionalDriver)
-            },
-            (err) => {
-                Helper.error(err)
-            })
-    }
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('b')) {
+      const id = params.get('b')
+      if (id && id !== '') {
+        try {
+          const booking = await BookingService.getBooking(id)
 
-    const err = (hideLoading) => {
-        Helper.error()
-        if (hideLoading) {
+          if (booking) {
+            if (!Helper.admin(user) && booking.company._id !== user._id) {
+              setLoading(false)
+              setNoMatch(true)
+              return
+            }
+
+            setBooking(booking)
+            setPrice(booking.price)
             setLoading(false)
-        }
-    }
-
-    const handleDelete = () => {
-        setOpenDeleteDialog(true)
-    }
-
-    const handleCancelDelete = () => {
-        setOpenDeleteDialog(false)
-    }
-
-    const handleConfirmDelete = async () => {
-        try {
-            setOpenDeleteDialog(false)
-
-            const status = await BookingService.deleteBookings([booking._id])
-
-            if (status === 200) {
-                navigate('/')
-            } else {
-                err(true)
+            setVisible(true)
+            setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
+            setCompany({
+              _id: booking.company._id,
+              name: booking.company.fullName,
+              image: booking.company.avatar,
+            })
+            setCar(booking.car)
+            setDriver({
+              _id: booking.driver._id,
+              name: booking.driver.fullName,
+              image: booking.driver.avatar,
+            })
+            setPickupLocation({
+              _id: booking.pickupLocation._id,
+              name: booking.pickupLocation.name,
+            })
+            setDropOffLocation({
+              _id: booking.dropOffLocation._id,
+              name: booking.dropOffLocation.name,
+            })
+            setFrom(new Date(booking.from))
+            setMinDate(new Date(booking.from))
+            setTo(new Date(booking.to))
+            setStatus(booking.status)
+            setCancellation(booking.cancellation)
+            setAmendments(booking.amendments)
+            setTheftProtection(booking.theftProtection)
+            setCollisionDamageWaiver(booking.collisionDamageWaiver)
+            setFullInsurance(booking.fullInsurance)
+            setAdditionalDriver(
+              booking.additionalDriver && !!booking._additionalDriver,
+            )
+            if (booking.additionalDriver && booking._additionalDriver) {
+              set_FullName(booking._additionalDriver.fullName)
+              set_Email(booking._additionalDriver.email)
+              set_Phone(booking._additionalDriver.phone)
+              set_BirthDate(new Date(booking._additionalDriver.birthDate))
             }
-        } catch (err) {
-            Helper.error(err)
-        }
-    }
-
-    const _validateEmail = (email) => {
-        if (email) {
-            if (validator.isEmail(email)) {
-                set_EmailValid(true)
-                return true
-            } else {
-                set_EmailValid(false)
-                return false
-            }
-        } else {
-            set_EmailValid(true)
-            return false
-        }
-    }
-
-    const _validatePhone = (phone) => {
-        if (phone) {
-            const _phoneValid = validator.isMobilePhone(phone)
-            set_PhoneValid(_phoneValid)
-
-            return _phoneValid
-        } else {
-            set_PhoneValid(true)
-
-            return true
-        }
-    }
-
-    const _validateBirthDate = (date) => {
-        if (date) {
-            const now = new Date()
-            const sub = intervalToDuration({ start: date, end: now }).years
-            const _birthDateValid = sub >= Env.MINIMUM_AGE
-
-            set_BirthDateValid(_birthDateValid)
-            return _birthDateValid
-        } else {
-            set_BirthDateValid(true)
-            return true
-        }
-    }
-
-    const handleSubmit = async (e) => {
-        try {
-            e.preventDefault()
-
-            const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
-
-            if (additionalDriverSet) {
-                const emailValid = _validateEmail(_email)
-                if (!emailValid) {
-                    return
-                }
-
-                const phoneValid = _validatePhone(_phone)
-                if (!phoneValid) {
-                    return
-                }
-
-                const birthDateValid = _validateBirthDate(_birthDate)
-                if (!birthDateValid) {
-                    return
-                }
-            }
-
-            const _booking = {
-                _id: booking._id,
-                company: company._id,
-                car: car._id,
-                driver: driver._id,
-                pickupLocation: pickupLocation._id,
-                dropOffLocation: dropOffLocation._id,
-                from,
-                to,
-                status,
-                cancellation,
-                amendments,
-                theftProtection,
-                collisionDamageWaiver,
-                fullInsurance,
-                additionalDriver: additionalDriverSet,
-                price
-            }
-
-            let _additionalDriver
-            if (additionalDriverSet) {
-                _additionalDriver = {
-                    fullName: _fullName,
-                    email: _email,
-                    phone: _phone,
-                    birthDate: _birthDate
-                }
-            }
-
-            const _status = await BookingService.update({ booking: _booking, additionalDriver: _additionalDriver })
-
-            if (_status === 200) {
-                if (!additionalDriverSet) {
-                    set_FullName('')
-                    set_Email('')
-                    set_Phone('')
-                    set_BirthDate(null)
-                }
-                Helper.info(commonStrings.UPDATED)
-            } else {
-                err()
-            }
-        } catch (err) {
-            Helper.error(err)
-        }
-    }
-
-    const onLoad = async (user) => {
-        setUser(user)
-        setLoading(true)
-
-        const params = new URLSearchParams(window.location.search)
-        if (params.has('b')) {
-            const id = params.get('b')
-            if (id && id !== '') {
-                try {
-                    const booking = await BookingService.getBooking(id)
-
-                    if (booking) {
-
-                        if (!Helper.admin(user) && booking.company._id !== user._id) {
-                            setLoading(false)
-                            setNoMatch(true)
-                            return
-                        }
-
-                        setBooking(booking)
-                        setPrice(booking.price)
-                        setLoading(false)
-                        setVisible(true)
-                        setIsCompany(user.type === Env.RECORD_TYPE.COMPANY)
-                        setCompany({ _id: booking.company._id, name: booking.company.fullName, image: booking.company.avatar })
-                        setCar(booking.car)
-                        setDriver({ _id: booking.driver._id, name: booking.driver.fullName, image: booking.driver.avatar })
-                        setPickupLocation({ _id: booking.pickupLocation._id, name: booking.pickupLocation.name })
-                        setDropOffLocation({ _id: booking.dropOffLocation._id, name: booking.dropOffLocation.name })
-                        setFrom(new Date(booking.from))
-                        setMinDate(new Date(booking.from))
-                        setTo(new Date(booking.to))
-                        setStatus(booking.status)
-                        setCancellation(booking.cancellation)
-                        setAmendments(booking.amendments)
-                        setTheftProtection(booking.theftProtection)
-                        setCollisionDamageWaiver(booking.collisionDamageWaiver)
-                        setFullInsurance(booking.fullInsurance)
-                        setAdditionalDriver(booking.additionalDriver && !!booking._additionalDriver)
-                        if (booking.additionalDriver && booking._additionalDriver) {
-                            set_FullName(booking._additionalDriver.fullName)
-                            set_Email(booking._additionalDriver.email)
-                            set_Phone(booking._additionalDriver.phone)
-                            set_BirthDate(new Date(booking._additionalDriver.birthDate))
-                        }
-
-                    } else {
-                        setLoading(false)
-                        setNoMatch(true)
-                    }
-                } catch (err) {
-                    setLoading(false)
-                    setError(true)
-                    setVisible(false)
-                }
-            } else {
-                setLoading(false)
-                setNoMatch(true)
-            }
-        } else {
+          } else {
             setLoading(false)
             setNoMatch(true)
+          }
+        } catch (err) {
+          setLoading(false)
+          setError(true)
+          setVisible(false)
         }
+      } else {
+        setLoading(false)
+        setNoMatch(true)
+      }
+    } else {
+      setLoading(false)
+      setNoMatch(true)
     }
+  }
 
-    const days = Helper.days(from, to)
+  const days = Helper.days(from, to)
 
-    return (
-        <Master onLoad={onLoad} strict={true}>
-            {visible && booking &&
-                <div className='booking'>
-                    <div className='col-1'>
-                        <form onSubmit={handleSubmit}>
+  return (
+    <Master onLoad={onLoad} strict={true}>
+      {visible && booking && (
+        <div className='booking'>
+          <div className='col-1'>
+            <form onSubmit={handleSubmit}>
+              {!isCompany && (
+                <FormControl fullWidth margin='dense'>
+                  <SupplierSelectList
+                    label={blStrings.COMPANY}
+                    required
+                    variant='standard'
+                    onChange={handleCompanyChange}
+                    value={company}
+                  />
+                </FormControl>
+              )}
 
-                            {!isCompany &&
-                                <FormControl fullWidth margin="dense">
-                                    <SupplierSelectList
-                                        label={blStrings.COMPANY}
-                                        required
+              <UserSelectList
+                label={blStrings.DRIVER}
+                required
+                variant='standard'
+                onChange={handleDriverChange}
+                value={driver}
+              />
 
-                                        variant='standard'
-                                        onChange={handleCompanyChange}
-                                        value={company}
-                                    />
-                                </FormControl>
-                            }
+              <FormControl fullWidth margin='dense'>
+                <LocationSelectList
+                  label={bfStrings.PICKUP_LOCATION}
+                  required
+                  variant='standard'
+                  onChange={handlePickupLocationChange}
+                  value={pickupLocation}
+                />
+              </FormControl>
 
-                            <UserSelectList
-                                label={blStrings.DRIVER}
-                                required
-                                variant='standard'
-                                onChange={handleDriverChange}
-                                value={driver}
-                            />
+              <FormControl fullWidth margin='dense'>
+                <LocationSelectList
+                  label={bfStrings.DROP_OFF_LOCATION}
+                  required
+                  variant='standard'
+                  onChange={handleDropOffLocationChange}
+                  value={dropOffLocation}
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense">
-                                <LocationSelectList
-                                    label={bfStrings.PICKUP_LOCATION}
-                                    required
-                                    variant='standard'
-                                    onChange={handlePickupLocationChange}
-                                    value={pickupLocation}
-                                />
-                            </FormControl>
+              <CarSelectList
+                label={blStrings.CAR}
+                company={company && company._id}
+                pickupLocation={pickupLocation && pickupLocation._id}
+                onChange={handleCarSelectListChange}
+                required
+                value={car}
+              />
 
-                            <FormControl fullWidth margin="dense">
-                                <LocationSelectList
-                                    label={bfStrings.DROP_OFF_LOCATION}
-                                    required
-                                    variant='standard'
-                                    onChange={handleDropOffLocationChange}
-                                    value={dropOffLocation}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense'>
+                <DateTimePicker
+                  label={commonStrings.FROM}
+                  value={from}
+                  required
+                  onChange={(from) => {
+                    if (from) {
+                      booking.from = from
 
-                            <CarSelectList
-                                label={blStrings.CAR}
-                                company={company && company._id}
-                                pickupLocation={pickupLocation && pickupLocation._id}
-                                onChange={handleCarSelectListChange}
-                                required
-                                value={car}
-                            />
+                      Helper.price(
+                        booking,
+                        booking.car,
+                        (price) => {
+                          setBooking(booking)
+                          setPrice(price)
+                          setFrom(from)
+                          setMinDate(from)
+                        },
+                        (err) => {
+                          err()
+                        },
+                      )
+                    }
+                  }}
+                  language={UserService.getLanguage()}
+                />
+              </FormControl>
+              <FormControl fullWidth margin='dense'>
+                <DateTimePicker
+                  label={commonStrings.TO}
+                  value={to}
+                  minDate={minDate}
+                  required
+                  onChange={(to) => {
+                    if (to) {
+                      booking.to = to
 
-                            <FormControl fullWidth margin="dense">
-                                <DateTimePicker
-                                    label={commonStrings.FROM}
-                                    value={from}
-                                    required
-                                    onChange={(from) => {
-                                        if (from) {
-                                            booking.from = from
+                      Helper.price(
+                        booking,
+                        booking.car,
+                        (price) => {
+                          setBooking(booking)
+                          setPrice(price)
+                          setTo(to)
+                        },
+                        (err) => {
+                          err()
+                        },
+                      )
+                    }
+                  }}
+                  language={UserService.getLanguage()}
+                />
+              </FormControl>
 
-                                            Helper.price(
-                                                booking,
-                                                booking.car,
-                                                (price) => {
-                                                    setBooking(booking)
-                                                    setPrice(price)
-                                                    setFrom(from)
-                                                    setMinDate(from)
-                                                },
-                                                (err) => {
-                                                    err()
-                                                })
-                                        }
-                                    }}
-                                    language={UserService.getLanguage()}
-                                />
-                            </FormControl>
-                            <FormControl fullWidth margin="dense">
-                                <DateTimePicker
-                                    label={commonStrings.TO}
-                                    value={to}
-                                    minDate={minDate}
-                                    required
-                                    onChange={(to) => {
-                                        if (to) {
-                                            booking.to = to
+              <FormControl fullWidth margin='dense'>
+                <StatusList
+                  label={blStrings.STATUS}
+                  onChange={handleStatusChange}
+                  required
+                  value={status}
+                />
+              </FormControl>
 
-                                            Helper.price(
-                                                booking,
-                                                booking.car,
-                                                (price) => {
-                                                    setBooking(booking)
-                                                    setPrice(price)
-                                                    setTo(to)
-                                                },
-                                                (err) => {
-                                                    err()
-                                                })
-                                        }
-                                    }}
-                                    language={UserService.getLanguage()}
-                                />
-                            </FormControl>
+              <div className='info'>
+                <InfoIcon />
+                <label>{commonStrings.OPTIONAL}</label>
+              </div>
 
-                            <FormControl fullWidth margin="dense">
-                                <StatusList
-                                    label={blStrings.STATUS}
-                                    onChange={handleStatusChange}
-                                    required
-                                    value={status}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={cancellation}
+                      onChange={handleCancellationChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.CANCELLATION}
+                  className='checkbox-fcl'
+                  disabled={!Helper.carOptionAvailable(car, 'cancellation')}
+                />
+              </FormControl>
 
-                            <div className='info'>
-                                <InfoIcon />
-                                <label>{commonStrings.OPTIONAL}</label>
-                            </div>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={amendments}
+                      onChange={handleAmendmentsChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.AMENDMENTS}
+                  className='checkbox-fcl'
+                  disabled={!Helper.carOptionAvailable(car, 'amendments')}
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={cancellation}
-                                            onChange={handleCancellationChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.CANCELLATION}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'cancellation')}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={theftProtection}
+                      onChange={handleTheftProtectionChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.THEFT_PROTECTION}
+                  className='checkbox-fcl'
+                  disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={amendments}
-                                            onChange={handleAmendmentsChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.AMENDMENTS}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'amendments')}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={collisionDamageWaiver}
+                      onChange={handleCollisionDamageWaiverChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.COLLISION_DAMAGE_WAVER}
+                  className='checkbox-fcl'
+                  disabled={
+                    !Helper.carOptionAvailable(car, 'collisionDamageWaiver')
+                  }
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={theftProtection}
-                                            onChange={handleTheftProtectionChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.THEFT_PROTECTION}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={fullInsurance}
+                      onChange={handleFullInsuranceChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.FULL_INSURANCE}
+                  className='checkbox-fcl'
+                  disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={collisionDamageWaiver}
-                                            onChange={handleCollisionDamageWaiverChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.COLLISION_DAMAGE_WAVER}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
-                                />
-                            </FormControl>
+              <FormControl fullWidth margin='dense' className='checkbox-fc'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={additionalDriver}
+                      onChange={handleAdditionalDriverChange}
+                      color='primary'
+                    />
+                  }
+                  label={csStrings.ADDITIONAL_DRIVER}
+                  className='checkbox-fcl'
+                  disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
+                />
+              </FormControl>
 
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={fullInsurance}
-                                            onChange={handleFullInsuranceChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.FULL_INSURANCE}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
-                                />
-                            </FormControl>
-
-                            <FormControl fullWidth margin="dense" className='checkbox-fc'>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={additionalDriver}
-                                            onChange={handleAdditionalDriverChange}
-                                            color="primary" />
-                                    }
-                                    label={csStrings.ADDITIONAL_DRIVER}
-                                    className='checkbox-fcl'
-                                    disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
-                                />
-                            </FormControl>
-
-                            {
-                                Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver &&
-                                <>
-                                    <div className='info'>
-                                        <DriverIcon />
-                                        <label>{csStrings.ADDITIONAL_DRIVER}</label>
-                                    </div>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.FULL_NAME}</InputLabel>
-                                        <Input
-                                            type="text"
-                                            label={commonStrings.FULL_NAME}
-                                            value={_fullName}
-                                            required
-                                            onChange={(e) => {
-                                                set_FullName(e.target.value)
-                                            }}
-                                            autoComplete="off"
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.EMAIL}</InputLabel>
-                                        <Input
-                                            type="text"
-                                            label={commonStrings.EMAIL}
-                                            value={_email}
-                                            error={!_emailValid}
-                                            onBlur={(e) => {
-                                                _validateEmail(e.target.value)
-                                            }}
-                                            onChange={(e) => {
-                                                set_Email(e.target.value)
-
-                                                if (!e.target.value) {
-                                                    set_EmailValid(true)
-                                                }
-                                            }}
-                                            required
-                                            autoComplete="off"
-                                        />
-                                        <FormHelperText error={!_emailValid}>
-                                            {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel className='required'>{commonStrings.PHONE}</InputLabel>
-                                        <Input
-                                            type="text"
-                                            label={commonStrings.PHONE}
-                                            value={_phone}
-                                            error={!_phoneValid}
-                                            onBlur={(e) => {
-                                                _validatePhone(e.target.value)
-                                            }}
-                                            onChange={(e) => {
-                                                set_Phone(e.target.value)
-
-                                                if (!e.target.value) {
-                                                    set_PhoneValid(true)
-                                                }
-                                            }}
-                                            required
-                                            autoComplete="off"
-                                        />
-                                        <FormHelperText error={!_phoneValid}>
-                                            {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                    <FormControl fullWidth margin="dense">
-                                        <DatePicker
-                                            label={commonStrings.BIRTH_DATE}
-                                            value={_birthDate}
-                                            error={!_birthDateValid}
-                                            required
-                                            onChange={(_birthDate) => {
-                                                const _birthDateValid = _validateBirthDate(_birthDate)
-                                                set_BirthDate(_birthDate)
-                                                set_BirthDateValid(_birthDateValid)
-                                            }}
-                                            language={UserService.getLanguage()}
-                                        />
-                                        <FormHelperText error={!_birthDateValid}>
-                                            {(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}
-                                        </FormHelperText>
-                                    </FormControl>
-                                </>
-                            }
-
-                            <div>
-                                <div className="buttons">
-                                    <Button
-                                        variant="contained"
-                                        className='btn-primary btn-margin-bottom'
-                                        size="small"
-                                        type="submit"
-                                    >
-                                        {commonStrings.SAVE}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-margin-bottom'
-                                        color='error'
-                                        size="small"
-                                        onClick={handleDelete}
-                                    >
-                                        {commonStrings.DELETE}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className='btn-secondary btn-margin-bottom'
-                                        size="small"
-                                        href='/'
-                                    >
-                                        {commonStrings.CANCEL}
-                                    </Button>
-                                </div>
-                            </div>
-                        </form>
+              {Helper.carOptionAvailable(car, 'additionalDriver') &&
+                additionalDriver && (
+                  <>
+                    <div className='info'>
+                      <DriverIcon />
+                      <label>{csStrings.ADDITIONAL_DRIVER}</label>
                     </div>
-                    <div className='col-2'>
-                        <div className='col-2-header'>
-                            <div className='price'>
-                                <label className='price-days'>
-                                    {Helper.getDays(days)}
-                                </label>
-                                <label className='price-main'>
-                                    {`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}
-                                </label>
-                                <label className='price-day'>
-                                    {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${commonStrings.CURRENCY}`}
-                                </label>
-                            </div>
-                        </div>
-                        <CarList
-                            className='car'
-                            user={user}
-                            booking={booking}
-                            cars={(car && [booking.car]) || []}
-                            hidePrice
-                        />
-                    </div>
+                    <FormControl fullWidth margin='dense'>
+                      <InputLabel className='required'>
+                        {commonStrings.FULL_NAME}
+                      </InputLabel>
+                      <Input
+                        type='text'
+                        label={commonStrings.FULL_NAME}
+                        value={_fullName}
+                        required
+                        onChange={(e) => {
+                          set_FullName(e.target.value)
+                        }}
+                        autoComplete='off'
+                      />
+                    </FormControl>
+                    <FormControl fullWidth margin='dense'>
+                      <InputLabel className='required'>
+                        {commonStrings.EMAIL}
+                      </InputLabel>
+                      <Input
+                        type='text'
+                        label={commonStrings.EMAIL}
+                        value={_email}
+                        error={!_emailValid}
+                        onBlur={(e) => {
+                          _validateEmail(e.target.value)
+                        }}
+                        onChange={(e) => {
+                          set_Email(e.target.value)
 
-                    <Dialog
-                        disableEscapeKeyDown
-                        maxWidth="xs"
-                        open={openDeleteDialog}
-                    >
-                        <DialogTitle className='dialog-header'>{commonStrings.CONFIRM_TITLE}</DialogTitle>
-                        <DialogContent>{strings.DELETE_BOOKING}</DialogContent>
-                        <DialogActions className='dialog-actions'>
-                            <Button onClick={handleCancelDelete} variant='contained' className='btn-secondary'>{commonStrings.CANCEL}</Button>
-                            <Button onClick={handleConfirmDelete} variant='contained' color='error'>{commonStrings.DELETE}</Button>
-                        </DialogActions>
-                    </Dialog>
+                          if (!e.target.value) {
+                            set_EmailValid(true)
+                          }
+                        }}
+                        required
+                        autoComplete='off'
+                      />
+                      <FormHelperText error={!_emailValid}>
+                        {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
+                      </FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth margin='dense'>
+                      <InputLabel className='required'>
+                        {commonStrings.PHONE}
+                      </InputLabel>
+                      <Input
+                        type='text'
+                        label={commonStrings.PHONE}
+                        value={_phone}
+                        error={!_phoneValid}
+                        onBlur={(e) => {
+                          _validatePhone(e.target.value)
+                        }}
+                        onChange={(e) => {
+                          set_Phone(e.target.value)
+
+                          if (!e.target.value) {
+                            set_PhoneValid(true)
+                          }
+                        }}
+                        required
+                        autoComplete='off'
+                      />
+                      <FormHelperText error={!_phoneValid}>
+                        {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                      </FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth margin='dense'>
+                      <DatePicker
+                        label={commonStrings.BIRTH_DATE}
+                        value={_birthDate}
+                        error={!_birthDateValid}
+                        required
+                        onChange={(_birthDate) => {
+                          const _birthDateValid = _validateBirthDate(_birthDate)
+                          set_BirthDate(_birthDate)
+                          set_BirthDateValid(_birthDateValid)
+                        }}
+                        language={UserService.getLanguage()}
+                      />
+                      <FormHelperText error={!_birthDateValid}>
+                        {(!_birthDateValid &&
+                          Helper.getBirthDateError(Env.MINIMUM_AGE)) ||
+                          ''}
+                      </FormHelperText>
+                    </FormControl>
+                  </>
+                )}
+
+              <div>
+                <div className='buttons'>
+                  <Button
+                    variant='contained'
+                    className='btn-primary btn-margin-bottom'
+                    size='small'
+                    type='submit'
+                  >
+                    {commonStrings.SAVE}
+                  </Button>
+                  <Button
+                    variant='contained'
+                    className='btn-margin-bottom'
+                    color='error'
+                    size='small'
+                    onClick={handleDelete}
+                  >
+                    {commonStrings.DELETE}
+                  </Button>
+                  <Button
+                    variant='contained'
+                    className='btn-secondary btn-margin-bottom'
+                    size='small'
+                    href='/'
+                  >
+                    {commonStrings.CANCEL}
+                  </Button>
                 </div>
-            }
+              </div>
+            </form>
+          </div>
+          <div className='col-2'>
+            <div className='col-2-header'>
+              <div className='price'>
+                <label className='price-days'>{Helper.getDays(days)}</label>
+                <label className='price-main'>
+                  {`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}
+                </label>
+                <label className='price-day'>
+                  {`${csStrings.PRICE_PER_DAY} ${Math.floor(price / days)} ${
+                    commonStrings.CURRENCY
+                  }`}
+                </label>
+              </div>
+            </div>
+            <CarList
+              className='car'
+              user={user}
+              booking={booking}
+              cars={(car && [booking.car]) || []}
+              hidePrice
+            />
+          </div>
 
-            {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-            {noMatch && <NoMatch hideHeader />}
-            {error && <Error />}
-        </Master>
-    )
+          <Dialog disableEscapeKeyDown maxWidth='xs' open={openDeleteDialog}>
+            <DialogTitle className='dialog-header'>
+              {commonStrings.CONFIRM_TITLE}
+            </DialogTitle>
+            <DialogContent>{strings.DELETE_BOOKING}</DialogContent>
+            <DialogActions className='dialog-actions'>
+              <Button
+                onClick={handleCancelDelete}
+                variant='contained'
+                className='btn-secondary'
+              >
+                {commonStrings.CANCEL}
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                variant='contained'
+                color='error'
+              >
+                {commonStrings.DELETE}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      )}
+
+      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
+      {noMatch && <NoMatch hideHeader />}
+      {error && <Error />}
+    </Master>
+  )
 }
 
 export default UpdateBooking
