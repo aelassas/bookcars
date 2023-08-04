@@ -1,41 +1,41 @@
 version: "3.8"
 services:
-   api:
-     build: ./api
-     env_file: ./api/.env.docker
-     restart: always
-     ports:
-       - 4002:4002
-     depends_on:
-       - mongo
-     volumes:
-       - cdn:/var/www/cdn/bookcars
+  api:
+    build: ./api
+    env_file: ./api/.env.docker
+    restart: always
+    ports:
+      - 4002:4002
+    depends_on:
+      - mongo
+    volumes:
+      - cdn:/var/www/cdn/bookcars
 
-   mongo:
-     image: mongo:latest
-     restart: always
-     environment:
-        # Provide your credentials here
-        MONGO_INITDB_ROOT_USERNAME: admin
-        MONGO_INITDB_ROOT_PASSWORD: PASSWORD
-     ports:
-       - 27017:27017
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      # Provide your credentials here
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: PASSWORD
+    ports:
+      - 27017:27017
 
-   backend:
-     build: ./backend
-     depends_on:
-       - api
-     ports:
-       - 3001:3001
+  backend:
+    build: ./backend
+    depends_on:
+      - api
+    ports:
+      - 3001:3001
 
-   frontend:
-     build: ./frontend
-     depends_on:
-       - api
-     ports:
-       - 80:3002
-     volumes:
-       - cdn:/var/www/cdn/bookcars
+  frontend:
+    build: ./frontend
+    depends_on:
+      - api
+    ports:
+      - 80:3002
+    volumes:
+      - cdn:/var/www/cdn/bookcars
 
 volumes:
-   cdn:
+  cdn:
