@@ -120,7 +120,7 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
               style={styles.component}
               label={i18n.t('EMAIL')}
               error={emailRequired || !emailValid || emailError}
-              helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ERROR')) || ''}
               onSubmitEditing={onPressReset}
               onChangeText={onChangeEmail}
             />

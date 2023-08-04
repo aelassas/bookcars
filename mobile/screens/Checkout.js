@@ -925,7 +925,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('EMAIL')}
                       value={email}
                       error={emailRequired || !emailValid || emailError}
-                      helperText={(emailInfo && i18n.t('EMAIL_INFO')) || '' || (emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''}
+                      helperText={(emailInfo && i18n.t('EMAIL_INFO')) || (emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''}
                       onChangeText={onChangeEmail}
                       backgroundColor="#fbfbfb"
                     />
@@ -936,7 +936,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('PHONE')}
                       value={phone}
                       error={phoneRequired || !phoneValid}
-                      helperText={(phoneInfo && i18n.t('PHONE_INFO')) || '' || (phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
+                      helperText={(phoneInfo && i18n.t('PHONE_INFO')) || (phoneRequired && i18n.t('REQUIRED')) || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
                       onChangeText={onChangePhone}
                       backgroundColor="#fbfbfb"
                     />
@@ -948,7 +948,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('BIRTH_DATE')}
                       value={birthDate}
                       error={birthDateRequired || !birthDateValid}
-                      helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      helperText={(birthDateRequired && i18n.t('REQUIRED')) || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={onChangeBirthDate}
                       backgroundColor="#fbfbfb"
                     />
@@ -985,7 +985,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('EMAIL')}
                       value={_email}
                       error={adRequired && (_emailRequired || !_emailValid)}
-                      helperText={(adRequired && _emailRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
+                      helperText={(adRequired && _emailRequired && i18n.t('REQUIRED')) || (adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
                       onChangeText={(text) => {
                         set_Email(text)
                         set_EmailRequired(false)
@@ -1001,7 +1001,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('PHONE')}
                       value={_phone}
                       error={adRequired && (_phoneRequired || !_phoneValid)}
-                      helperText={(adRequired && _phoneRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
+                      helperText={(adRequired && _phoneRequired && i18n.t('REQUIRED')) || (adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
                       onChangeText={(text) => {
                         set_Phone(text)
                         set_PhoneRequired(false)
@@ -1018,7 +1018,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('BIRTH_DATE')}
                       value={_birthDate}
                       error={adRequired && (_birthDateRequired || !_birthDateValid)}
-                      helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={(date) => {
                         set_BirthDate(date)
                         set_BirthDateRequired(false)
@@ -1083,7 +1083,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       maxLength={16}
                       value={cardNumber}
                       error={cardNumberRequired || !cardNumberValid}
-                      helperText={(cardNumberRequired && i18n.t('REQUIRED')) || '' || (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || ''}
+                      helperText={(cardNumberRequired && i18n.t('REQUIRED')) || (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || ''}
                       backgroundColor="#e5efe5"
                       onChangeText={onCardNumberChange}
                     />
@@ -1096,7 +1096,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       maxLength={2}
                       value={cardMonth}
                       error={cardMonthRequired || !cardMonthValid}
-                      helperText={(cardMonthRequired && i18n.t('REQUIRED')) || '' || (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || ''}
+                      helperText={(cardMonthRequired && i18n.t('REQUIRED')) || (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || ''}
                       backgroundColor="#e5efe5"
                       onChangeText={onCardMonthChange}
                     />
@@ -1109,7 +1109,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       maxLength={2}
                       value={cardYear}
                       error={cardYearRequired || !cardYearValid}
-                      helperText={(cardYearRequired && i18n.t('REQUIRED')) || '' || (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || ''}
+                      helperText={(cardYearRequired && i18n.t('REQUIRED')) || (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || ''}
                       backgroundColor="#e5efe5"
                       onChangeText={onCardYearChange}
                     />
@@ -1122,7 +1122,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('CVV')}
                       value={cvv}
                       error={cvvRequired || !cvvValid}
-                      helperText={(cvvRequired && i18n.t('REQUIRED')) || '' || (!cvvValid && i18n.t('CVV_NOT_VALID')) || ''}
+                      helperText={(cvvRequired && i18n.t('REQUIRED')) || (!cvvValid && i18n.t('CVV_NOT_VALID')) || ''}
                       backgroundColor="#e5efe5"
                       onChangeText={onCardCvvChange}
                     />

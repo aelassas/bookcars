@@ -189,7 +189,7 @@ const SignInScreen = ({ navigation, route }) => {
             label={i18n.t('EMAIL')}
             value={email}
             error={emailRequired || !emailValid || emailError}
-            helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+            helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ERROR')) || ''}
             onChangeText={onChangeEmail}
           />
 
@@ -200,7 +200,7 @@ const SignInScreen = ({ navigation, route }) => {
             label={i18n.t('PASSWORD')}
             value={password}
             error={passwordRequired || passwordLengthError || passwordError}
-            helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '' || (passwordError && i18n.t('PASSWORD_ERROR')) || ''}
+            helperText={(passwordRequired && i18n.t('REQUIRED')) || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || (passwordError && i18n.t('PASSWORD_ERROR')) || ''}
             onChangeText={onChangePassword}
             onSubmitEditing={onPressSignIn}
           />

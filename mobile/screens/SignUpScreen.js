@@ -318,11 +318,11 @@ const SignUpScreen = ({ navigation, route }) => {
               label={i18n.t('EMAIL')}
               value={email}
               error={emailRequired || !emailValid || emailError}
-              helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''}
               onChangeText={onChangeEmail}
             />
 
-            <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
+            <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
 
             <DateTimePicker
               mode="date"
@@ -331,7 +331,7 @@ const SignUpScreen = ({ navigation, route }) => {
               label={i18n.t('BIRTH_DATE')}
               value={birthDate}
               error={birthDateRequired || !birthDateValid}
-              helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''}
+              helperText={(birthDateRequired && i18n.t('REQUIRED')) || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''}
               onChange={onChangeBirthDate}
             />
 
@@ -342,7 +342,7 @@ const SignUpScreen = ({ navigation, route }) => {
               label={i18n.t('PASSWORD')}
               value={password}
               error={passwordRequired || passwordLengthError}
-              helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''}
+              helperText={(passwordRequired && i18n.t('REQUIRED')) || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''}
               onChangeText={onChangePassword}
             />
 
@@ -353,7 +353,7 @@ const SignUpScreen = ({ navigation, route }) => {
               label={i18n.t('CONFIRM_PASSWORD')}
               value={confirmPassword}
               error={confirmPasswordRequired || confirmPasswordError}
-              helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || '' || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
+              helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
               onChangeText={onChangeConfirmPassword}
             />
 
