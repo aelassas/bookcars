@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native'
+import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import i18n from '../lang/i18n'
@@ -39,15 +32,7 @@ const CarList = (props) => {
     })()
   }, [])
 
-  const _fetch = async (
-    page,
-    companies,
-    pickupLocation,
-    fuel,
-    gearbox,
-    mileage,
-    deposit,
-  ) => {
+  const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
     try {
       if (companies.length > 0) {
         setLoading(true)
@@ -63,12 +48,9 @@ const CarList = (props) => {
         }
 
         const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
-        const _data =
-          Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-        const totalRecords =
-          _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-        const _rows =
-          page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+        const totalRecords = _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+        const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
         setRows(_rows)
         setFetch(_data.resultData.length > 0)
@@ -89,15 +71,7 @@ const CarList = (props) => {
   useEffect(() => {
     if (props.companies) {
       if (props.companies.length > 0) {
-        _fetch(
-          page,
-          props.companies,
-          props.pickupLocation,
-          props.fuel,
-          props.gearbox,
-          props.mileage,
-          props.deposit,
-        )
+        _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -106,32 +80,15 @@ const CarList = (props) => {
         }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    page,
-    props.companies,
-    props.pickupLocatio,
-    props.fuel,
-    props.gearbox,
-    props.mileage,
-    props.deposit,
-  ])
+  }, [page, props.companies, props.pickupLocatio, props.fuel, props.gearbox, props.mileage, props.deposit])
 
   useEffect(() => {
     setPage(1)
-  }, [
-    props.companies,
-    props.pickupLocation,
-    props.fuel,
-    props.gearbox,
-    props.mileage,
-    props.deposit,
-  ])
+  }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit])
 
-  const getExtraIcon = (extra) =>
-    extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
+  const getExtraIcon = (extra) => (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info')
 
-  const getExtraColor = (extra) =>
-    extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
+  const getExtraColor = (extra) => (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
   const fr = language === Env.LANGUAGE.FR
   const iconSize = 24
@@ -152,161 +109,72 @@ const CarList = (props) => {
                 <Text style={styles.name}>{car.name}</Text>
 
                 <View style={styles.imgView}>
-                  <Image
-                    style={styles.img}
-                    source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }}
-                  />
+                  <Image style={styles.img} source={{ uri: Helper.joinURL(Env.CDN_CARS, car.image) }} />
                 </View>
 
                 <View style={styles.infos}>
                   <View style={styles.info}>
-                    <MaterialIcons
-                      name="local-gas-station"
-                      size={iconSize}
-                      color={iconColor}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getCarTypeShort(car.type)}
-                    </Text>
+                    <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
                   </View>
                   <View style={styles.info}>
-                    <MaterialIcons
-                      name="account-tree"
-                      size={iconSize}
-                      color={iconColor}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getGearboxTypeShort(car.gearbox)}
-                    </Text>
+                    <MaterialIcons name="account-tree" size={iconSize} color={iconColor} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
                   </View>
                   <View style={styles.info}>
-                    <MaterialIcons
-                      name="person"
-                      size={iconSize}
-                      color={iconColor}
-                      style={styles.infoIcon}
-                    />
+                    <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
                     <Text style={styles.text}>{car.seats}</Text>
                   </View>
                   <View style={styles.info}>
-                    <Image
-                      source={require('../assets/car-door.png')}
-                      style={{ ...styles.infoIcon, width: 20, height: 20 }}
-                    />
+                    <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
                     <Text style={styles.text}>{car.doors}</Text>
                   </View>
                   {car.aircon && (
                     <View style={styles.info}>
-                      <MaterialIcons
-                        name="ac-unit"
-                        size={iconSize}
-                        color={iconColor}
-                        style={styles.infoIcon}
-                      />
+                      <MaterialIcons name="ac-unit" size={iconSize} color={iconColor} style={styles.infoIcon} />
                     </View>
                   )}
                 </View>
 
                 <View style={styles.infos}>
-                  <MaterialIcons
-                    name="directions-car"
-                    size={iconSize}
-                    color={iconColor}
-                    style={styles.infoIcon}
-                  />
-                  <Text style={styles.text}>{`${i18n.t('MILEAGE')}${
-                    fr ? ' : ' : ': '
-                  }${Helper.getMileage(car.mileage)}`}</Text>
+                  <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
+                  <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
                 </View>
 
                 <View style={styles.infos}>
-                  <MaterialIcons
-                    name="local-gas-station"
-                    size={iconSize}
-                    color={iconColor}
-                    style={styles.infoIcon}
-                  />
-                  <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${
-                    fr ? ' : ' : ': '
-                  }${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
+                  <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
+                  <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
                 </View>
 
                 <View style={styles.extras}>
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.cancellation)}
-                      color={getExtraColor(car.cancellation)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getCancellation(car.cancellation, fr)}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.amendments)}
-                      color={getExtraColor(car.amendments)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getAmendments(car.amendments, fr)}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.theftProtection)}
-                      color={getExtraColor(car.theftProtection)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getTheftProtection(car.theftProtection, fr)}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.collisionDamageWaiver)}
-                      color={getExtraColor(car.collisionDamageWaiver)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getCollisionDamageWaiver(
-                        car.collisionDamageWaiver,
-                        fr,
-                      )}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.fullInsurance)}
-                      color={getExtraColor(car.fullInsurance)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getFullInsurance(car.fullInsurance, fr)}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <MaterialIcons
-                      name={getExtraIcon(car.additionalDriver)}
-                      color={getExtraColor(car.additionalDriver)}
-                      size={iconSize}
-                      style={styles.infoIcon}
-                    />
-                    <Text style={styles.text}>
-                      {Helper.getAdditionalDriver(car.additionalDriver, fr)}
-                    </Text>
+                    <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
+                    <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
                   </View>
                 </View>
 
@@ -318,23 +186,13 @@ const CarList = (props) => {
                         uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar),
                       }}
                     />
-                    <Text style={styles.companyText}>
-                      {car.company.fullName}
-                    </Text>
+                    <Text style={styles.companyText}>{car.company.fullName}</Text>
                   </View>
 
                   <View style={styles.price}>
-                    <Text style={styles.priceSecondary}>
-                      {Helper.getDays(Helper.days(props.from, props.to))}
-                    </Text>
-                    <Text style={styles.pricePrimary}>{`${Helper.formatNumber(
-                      Helper.price(car, props.from, props.to),
-                    )} ${i18n.t('CURRENCY')}`}</Text>
-                    <Text style={styles.priceSecondary}>{`${i18n.t(
-                      'PRICE_PER_DAY',
-                    )} ${Helper.formatNumber(car.price)} ${i18n.t(
-                      'CURRENCY',
-                    )}`}</Text>
+                    <Text style={styles.priceSecondary}>{Helper.getDays(Helper.days(props.from, props.to))}</Text>
+                    <Text style={styles.pricePrimary}>{`${Helper.formatNumber(Helper.price(car, props.from, props.to))} ${i18n.t('CURRENCY')}`}</Text>
+                    <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${Helper.formatNumber(car.price)} ${i18n.t('CURRENCY')}`}</Text>
                   </View>
                 </View>
 
@@ -366,15 +224,7 @@ const CarList = (props) => {
             setOnScrollEnd(false)
           }}
           ListHeaderComponent={props.header}
-          ListFooterComponent={
-            fetch && (
-              <ActivityIndicator
-                size="large"
-                color="#f37022"
-                style={styles.indicator}
-              />
-            )
-          }
+          ListFooterComponent={fetch && <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />}
           ListEmptyComponent={
             !loading && (
               <View style={styles.container}>

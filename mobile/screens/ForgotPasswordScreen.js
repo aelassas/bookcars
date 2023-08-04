@@ -102,53 +102,22 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.master}>
-      <Header
-        title={i18n.t('FORGOT_PASSWORD')}
-        hideTitle={false}
-        loggedIn={false}
-        notificationCount={0}
-      />
+      <Header title={i18n.t('FORGOT_PASSWORD')} hideTitle={false} loggedIn={false} notificationCount={0} />
 
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-        nestedScrollEnabled
-      >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
         {sent && (
           <View style={styles.contentContainer}>
             <Text style={styles.text}>{i18n.t('RESET_EMAIL_SENT')}</Text>
-            <Link
-              label={i18n.t('GO_TO_HOME')}
-              onPress={() => navigation.navigate('Home')}
-            />
+            <Link label={i18n.t('GO_TO_HOME')} onPress={() => navigation.navigate('Home')} />
           </View>
         )}
         {!sent && (
           <View style={styles.contentContainer}>
             <Text style={styles.text}>{i18n.t('RESET_PASSWORD')}</Text>
 
-            <TextInput
-              ref={ref}
-              style={styles.component}
-              label={i18n.t('EMAIL')}
-              error={emailRequired || !emailValid || emailError}
-              helperText={
-                (emailRequired && i18n.t('REQUIRED')) ||
-                '' ||
-                (!emailValid && i18n.t('EMAIL_NOT_VALID')) ||
-                '' ||
-                (emailError && i18n.t('EMAIL_ERROR')) ||
-                ''
-              }
-              onSubmitEditing={onPressReset}
-              onChangeText={onChangeEmail}
-            />
+            <TextInput ref={ref} style={styles.component} label={i18n.t('EMAIL')} error={emailRequired || !emailValid || emailError} helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''} onSubmitEditing={onPressReset} onChangeText={onChangeEmail} />
 
-            <Button
-              style={styles.component}
-              label={i18n.t('RESET')}
-              onPress={onPressReset}
-            />
+            <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
           </View>
         )}
       </ScrollView>

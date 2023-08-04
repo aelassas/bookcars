@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useRef,
-  useImperativeHandle,
-} from 'react'
+import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import { Autocomplete, TextField, InputAdornment, Avatar } from '@mui/material'
@@ -27,25 +21,7 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   )
 })
 
-const MultipleSelect = ({
-  label,
-  callbackFromMultipleSelect,
-  reference,
-  selectedOptions,
-  key,
-  required,
-  options,
-  ListboxProps,
-  onFocus,
-  onInputChange,
-  onClear,
-  loading,
-  multiple,
-  type,
-  variant,
-  onOpen,
-  readOnly,
-}) => {
+const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selectedOptions, key, required, options, ListboxProps, onFocus, onInputChange, onClear, loading, multiple, type, variant, onOpen, readOnly }) => {
   const [values, setValues] = useState([])
   const [inputValue, setInputValue] = useState('')
 
@@ -101,12 +77,7 @@ const MultipleSelect = ({
           const inputProps = params.inputProps
           inputProps.autoComplete = 'off'
 
-          if (
-            type === Env.RECORD_TYPE.USER &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.USER && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -119,19 +90,7 @@ const MultipleSelect = ({
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position="start">
-                        {option.image ? (
-                          <Avatar
-                            src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                            className="avatar-small suo"
-                          />
-                        ) : (
-                          <AccountCircle
-                            className="avatar-small suo"
-                            color="disabled"
-                          />
-                        )}
-                      </InputAdornment>
+                      <InputAdornment position="start">{option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" /> : <AccountCircle className="avatar-small suo" color="disabled" />}</InputAdornment>
                       {params.InputProps.startAdornment}
                     </>
                   ),
@@ -140,12 +99,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.COMPANY &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -160,10 +114,7 @@ const MultipleSelect = ({
                     <>
                       <InputAdornment position="start">
                         <div className="company-ia">
-                          <img
-                            src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                            alt={option.name}
-                          />
+                          <img src={Helper.joinURL(Env.CDN_USERS, option.image)} alt={option.name} />
                         </div>
                       </InputAdornment>
                       {params.InputProps.startAdornment}
@@ -174,12 +125,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.LOCATION &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 1 && values[0]) {
             return (
               <TextField
                 {...params}
@@ -201,12 +147,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.CAR &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.CAR && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -236,14 +177,7 @@ const MultipleSelect = ({
             )
           }
 
-          return (
-            <TextField
-              {...params}
-              label={label}
-              variant={variant || 'outlined'}
-              required={required && values && values.length === 0}
-            />
-          )
+          return <TextField {...params} label={label} variant={variant || 'outlined'} required={required && values && values.length === 0} />
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -254,16 +188,7 @@ const MultipleSelect = ({
           if (type === Env.RECORD_TYPE.USER) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className="option-image">
-                  {option.image ? (
-                    <Avatar
-                      src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                      className="avatar-medium"
-                    />
-                  ) : (
-                    <AccountCircle className="avatar-medium" color="disabled" />
-                  )}
-                </span>
+                <span className="option-image">{option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}</span>
                 <span className="option-name">{option.name}</span>
               </li>
             )
@@ -271,10 +196,7 @@ const MultipleSelect = ({
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image company-ia">
-                  <img
-                    src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                    alt={option.name}
-                  />
+                  <img src={Helper.joinURL(Env.CDN_USERS, option.image)} alt={option.name} />
                 </span>
                 <span className="option-name">{option.name}</span>
               </li>

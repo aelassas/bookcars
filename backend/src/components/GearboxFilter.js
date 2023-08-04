@@ -8,10 +8,7 @@ import '../assets/css/gearbox-filter.css'
 
 const GearboxFilter = (props) => {
   const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([
-    Env.GEARBOX_TYPE.AUTOMATIC,
-    Env.GEARBOX_TYPE.MANUAL,
-  ])
+  const [values, setValues] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
 
   const automaticRef = useRef()
   const manualRef = useRef()
@@ -114,31 +111,14 @@ const GearboxFilter = (props) => {
   }
 
   return (
-    <Accordion
-      title={strings.GEARBOX}
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }gearbox-filter`}
-    >
+    <Accordion title={strings.GEARBOX} className={`${props.className ? `${props.className} ` : ''}gearbox-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
-          <input
-            ref={automaticRef}
-            type="checkbox"
-            className="gearbox-checkbox"
-            onChange={handleCheckAutomaticChange}
-          />
-          <label onClick={handleAutomaticClick}>
-            {strings.GEARBOX_AUTOMATIC}
-          </label>
+          <input ref={automaticRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckAutomaticChange} />
+          <label onClick={handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</label>
         </div>
         <div className="filter-element">
-          <input
-            ref={manualRef}
-            type="checkbox"
-            className="gearbox-checkbox"
-            onChange={handleCheckManualChange}
-          />
+          <input ref={manualRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckManualChange} />
           <label onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</label>
         </div>
       </div>

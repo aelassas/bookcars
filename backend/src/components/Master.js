@@ -96,13 +96,8 @@ const Master = (props) => {
 
   return (
     <>
-      <Header
-        user={user}
-        hidden={props.hideHeader || loading}
-        notificationCount={props.notificationCount}
-      />
-      {((!user && !loading) || (user && user.verified) || !props.strict) &&
-      !unauthorized ? (
+      <Header user={user} hidden={props.hideHeader || loading} notificationCount={props.notificationCount} />
+      {((!user && !loading) || (user && user.verified) || !props.strict) && !unauthorized ? (
         <div className="content" style={props.style}>
           {props.children}
         </div>
@@ -111,13 +106,7 @@ const Master = (props) => {
         !unauthorized && (
           <div className="validate-email">
             <span>{strings.VALIDATE_EMAIL}</span>
-            <Button
-              type="button"
-              variant="contained"
-              size="small"
-              className="btn-primary btn-resend"
-              onClick={handleResend}
-            >
+            <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>
               {strings.RESEND}
             </Button>
           </div>

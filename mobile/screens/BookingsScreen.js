@@ -93,14 +93,7 @@ const BookingsScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      route={route}
-      onLoad={onLoad}
-      reload={reload}
-      strict
-    >
+    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
       {visible && (
         <BookingList
           user={user._id}
@@ -110,24 +103,9 @@ const BookingsScreen = ({ navigation, route }) => {
           filter={filter}
           header={
             <View>
-              <CompanyFilter
-                style={styles.filter}
-                visible={hasBookings}
-                onLoad={onLoadCompanies}
-                onChange={onChangeCompanies}
-              />
-              <StatusFilter
-                style={styles.filter}
-                visible={hasBookings}
-                onLoad={onLoadStatuses}
-                onChange={onChangeStatuses}
-              />
-              <BookingFilter
-                style={styles.filter}
-                visible={hasBookings}
-                driver={user._id}
-                onSubmit={onSubmitBookingFilter}
-              />
+              <CompanyFilter style={styles.filter} visible={hasBookings} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+              <StatusFilter style={styles.filter} visible={hasBookings} onLoad={onLoadStatuses} onChange={onChangeStatuses} />
+              <BookingFilter style={styles.filter} visible={hasBookings} driver={user._id} onSubmit={onSubmitBookingFilter} />
             </View>
           }
         />

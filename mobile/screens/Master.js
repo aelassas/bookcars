@@ -57,8 +57,7 @@ const Master = (props) => {
               return
             }
 
-            const notificationCounter =
-              await NotificationService.getNotificationCounter(currentUser.id)
+            const notificationCounter = await NotificationService.getNotificationCounter(currentUser.id)
             setNotificationCount(notificationCounter.count)
 
             setLoggedIn(true)
@@ -113,25 +112,14 @@ const Master = (props) => {
 
   return (
     <View style={{ ...styles.container, ...props.style }}>
-      <Header
-        title={props.title}
-        hideTitle={props.hideTitle}
-        loggedIn={loggedIn}
-        notificationCount={notificationCount}
-        reload={props.reload}
-        _avatar={props.avatar}
-      />
+      <Header title={props.title} hideTitle={props.hideTitle} loggedIn={loggedIn} notificationCount={notificationCount} reload={props.reload} _avatar={props.avatar} />
       {!loading &&
         ((!user && !props.strict) || (user && user.verified) ? (
           props.children
         ) : (
           <View style={styles.validate}>
             <Text style={styles.validateText}>{i18n.t('VALIDATE_EMAIL')}</Text>
-            <Button
-              style={styles.validateButton}
-              label={i18n.t('RESEND')}
-              onPress={handleResend}
-            />
+            <Button style={styles.validateButton} label={i18n.t('RESEND')} onPress={handleResend} />
           </View>
         ))}
     </View>

@@ -8,10 +8,7 @@ import '../assets/css/fuel-filter.css'
 
 const FuelFilter = (props) => {
   const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([
-    Env.CAR_TYPE.DIESEL,
-    Env.CAR_TYPE.GASOLINE,
-  ])
+  const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
 
   const dieselRef = useRef()
   const gasolineRef = useRef()
@@ -114,27 +111,14 @@ const FuelFilter = (props) => {
   }
 
   return (
-    <Accordion
-      title={strings.ENGINE}
-      className={`${props.className ? `${props.className} ` : ''}fuel-filter`}
-    >
+    <Accordion title={strings.ENGINE} className={`${props.className ? `${props.className} ` : ''}fuel-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
-          <input
-            ref={dieselRef}
-            type="checkbox"
-            className="fuel-checkbox"
-            onChange={handleCheckDieselChange}
-          />
+          <input ref={dieselRef} type="checkbox" className="fuel-checkbox" onChange={handleCheckDieselChange} />
           <label onClick={handleDieselClick}>{strings.DIESEL}</label>
         </div>
         <div className="filter-element">
-          <input
-            ref={gasolineRef}
-            type="checkbox"
-            className="fuel-checkbox"
-            onChange={handleCheckGasolineChange}
-          />
+          <input ref={gasolineRef} type="checkbox" className="fuel-checkbox" onChange={handleCheckGasolineChange} />
           <label onClick={handleGasolineClick}>{strings.GASOLINE}</label>
         </div>
       </div>

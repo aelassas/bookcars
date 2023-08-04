@@ -7,9 +7,7 @@ import '../assets/css/status-filter.css'
 
 const StatusFilter = (props) => {
   const statuses = Helper.getBookingStatuses()
-  const [checkedStatuses, setCheckedStatuses] = useState(
-    statuses.map((status) => status.value),
-  )
+  const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)
   const refs = useRef([])
 
@@ -78,27 +76,12 @@ const StatusFilter = (props) => {
 
   return (
     statuses.length > 0 && (
-      <Accordion
-        title={commonStrings.STATUS}
-        collapse={props.collapse}
-        className={`${
-          props.className ? `${props.className} ` : ''
-        }status-filter`}
-      >
+      <Accordion title={commonStrings.STATUS} collapse={props.collapse} className={`${props.className ? `${props.className} ` : ''}status-filter`}>
         <ul className="status-list">
           {statuses.map((status, index) => (
             <li key={status.value}>
-              <input
-                ref={(ref) => (refs.current[index] = ref)}
-                type="checkbox"
-                data-value={status.value}
-                className="status-checkbox"
-                onChange={handleCheckStatusChange}
-              />
-              <label
-                onClick={handleStatusClick}
-                className={`bs bs-${status.value}`}
-              >
+              <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-value={status.value} className="status-checkbox" onChange={handleCheckStatusChange} />
+              <label onClick={handleStatusClick} className={`bs bs-${status.value}`}>
                 {Helper.getBookingStatus(status.value)}
               </label>
             </li>

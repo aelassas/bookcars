@@ -5,8 +5,7 @@ import * as LangHelper from '../common/LangHelper'
 export const strings = new LocalizedStrings({
   fr: {
     GENERIC_ERROR: "Une erreur non gérée s'est produite.",
-    CHANGE_LANGUAGE_ERROR:
-      "Une erreur s'est produite lors du changement de langue.",
+    CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
     UPDATED: 'Modifications effectuées avec succès.',
     GO_TO_HOME: "Aller à la page d'accueil",
     FULL_NAME: 'Nom complet',
@@ -64,8 +63,7 @@ export const strings = new LocalizedStrings({
     ACTIVATION_EMAIL_SENT: "E-mail d'activation envoyé.",
     EMAIL_NOT_VALID: 'E-mail non valide',
     PHONE_NOT_VALID: 'Numéro de téléphone non valide',
-    BIRTH_DATE_NOT_VALID:
-      'Le conducteur doit avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
+    BIRTH_DATE_NOT_VALID: 'Le conducteur doit avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
     FORM_ERROR: 'Veuillez corriger les erreurs.',
     ALL: 'Tous',
     SUPPLIER: 'Fournisseur',
@@ -139,8 +137,7 @@ export const strings = new LocalizedStrings({
     ACTIVATION_EMAIL_SENT: 'Activation email sent.',
     EMAIL_NOT_VALID: 'Invalid email address',
     PHONE_NOT_VALID: 'Invalid phone number',
-    BIRTH_DATE_NOT_VALID:
-      'The driver must be at least ' + Env.MINIMUM_AGE + ' years old.',
+    BIRTH_DATE_NOT_VALID: 'The driver must be at least ' + Env.MINIMUM_AGE + ' years old.',
     FORM_ERROR: 'Please fix errors.',
     ALL: 'All',
     SUPPLIER: 'Supplier',

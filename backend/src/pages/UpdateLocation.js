@@ -7,14 +7,7 @@ import * as LocationService from '../services/LocationService'
 import NoMatch from './NoMatch'
 import Error from './Error'
 import Backdrop from '../components/SimpleBackdrop'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 
@@ -108,9 +101,7 @@ const UpdateLocation = () => {
 
             if (location) {
               Env._LANGUAGES.forEach((lang) => {
-                if (
-                  !location.values.some((value) => value.language === lang.code)
-                ) {
+                if (!location.values.some((value) => value.language === lang.code)) {
                   location.values.push({ language: lang.code, name: '' })
                 }
               })
@@ -149,21 +140,12 @@ const UpdateLocation = () => {
     <Master onLoad={onLoad} strict={true}>
       {!error && !noMatch && location && (
         <div className="update-location">
-          <Paper
-            className="location-form location-form-wrapper"
-            elevation={10}
-            style={visible ? null : { display: 'none' }}
-          >
+          <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
             <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
             <form onSubmit={handleSubmit}>
               {location.values.map((value, index) => (
                 <FormControl key={index} fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {
-                      Env._LANGUAGES.filter((l) => l.code === value.language)[0]
-                        .label
-                    }
-                  </InputLabel>
+                  <InputLabel className="required">{Env._LANGUAGES.filter((l) => l.code === value.language)[0].label}</InputLabel>
                   <Input
                     type="text"
                     value={(names[index] && names[index].name) || ''}
@@ -177,28 +159,15 @@ const UpdateLocation = () => {
                     }}
                     autoComplete="off"
                   />
-                  <FormHelperText error={nameErrors[index]}>
-                    {(nameErrors[index] && clStrings.INVALID_LOCATION) || ''}
-                  </FormHelperText>
+                  <FormHelperText error={nameErrors[index]}>{(nameErrors[index] && clStrings.INVALID_LOCATION) || ''}</FormHelperText>
                 </FormControl>
               ))}
 
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                  disabled={!nameChanged}
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small" disabled={!nameChanged}>
                   {commonStrings.SAVE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  href="/locations"
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/locations">
                   {commonStrings.CANCEL}
                 </Button>
               </div>

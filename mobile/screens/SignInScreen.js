@@ -179,85 +179,23 @@ const SignInScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.master}>
-      <Header
-        title={i18n.t('SIGN_IN_TITLE')}
-        hideTitle={false}
-        loggedIn={false}
-        notificationCount={0}
-      />
+      <Header title={i18n.t('SIGN_IN_TITLE')} hideTitle={false} loggedIn={false} notificationCount={0} />
 
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-        nestedScrollEnabled
-      >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
         <View style={styles.contentContainer}>
-          <TextInput
-            ref={emailRef}
-            style={styles.component}
-            label={i18n.t('EMAIL')}
-            value={email}
-            error={emailRequired || !emailValid || emailError}
-            helperText={
-              (emailRequired && i18n.t('REQUIRED')) ||
-              '' ||
-              (!emailValid && i18n.t('EMAIL_NOT_VALID')) ||
-              '' ||
-              (emailError && i18n.t('EMAIL_ERROR')) ||
-              ''
-            }
-            onChangeText={onChangeEmail}
-          />
+          <TextInput ref={emailRef} style={styles.component} label={i18n.t('EMAIL')} value={email} error={emailRequired || !emailValid || emailError} helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''} onChangeText={onChangeEmail} />
 
-          <TextInput
-            ref={passwordRef}
-            style={styles.component}
-            secureTextEntry
-            label={i18n.t('PASSWORD')}
-            value={password}
-            error={passwordRequired || passwordLengthError || passwordError}
-            helperText={
-              (passwordRequired && i18n.t('REQUIRED')) ||
-              '' ||
-              (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) ||
-              '' ||
-              (passwordError && i18n.t('PASSWORD_ERROR')) ||
-              ''
-            }
-            onChangeText={onChangePassword}
-            onSubmitEditing={onPressSignIn}
-          />
+          <TextInput ref={passwordRef} style={styles.component} secureTextEntry label={i18n.t('PASSWORD')} value={password} error={passwordRequired || passwordLengthError || passwordError} helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '' || (passwordError && i18n.t('PASSWORD_ERROR')) || ''} onChangeText={onChangePassword} onSubmitEditing={onPressSignIn} />
 
-          <Switch
-            style={styles.stayConnected}
-            textStyle={styles.stayConnectedText}
-            label={i18n.t('STAY_CONNECTED')}
-            value={stayConnected}
-            onValueChange={onChangeStayConnected}
-          />
+          <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
 
-          <Button
-            style={styles.component}
-            label={i18n.t('SIGN_IN')}
-            onPress={onPressSignIn}
-          />
+          <Button style={styles.component} label={i18n.t('SIGN_IN')} onPress={onPressSignIn} />
 
-          <Button
-            style={styles.component}
-            color="secondary"
-            label={i18n.t('SIGN_UP')}
-            onPress={onPressSignUp}
-          />
+          <Button style={styles.component} color="secondary" label={i18n.t('SIGN_UP')} onPress={onPressSignUp} />
 
-          <Link
-            style={styles.link}
-            label={i18n.t('FORGOT_PASSWORD')}
-            onPress={onPressForgotPassword}
-          />
+          <Link style={styles.link} label={i18n.t('FORGOT_PASSWORD')} onPress={onPressForgotPassword} />
 
-          {blacklisted && (
-            <Error style={styles.error} message={i18n.t('IS_BLACKLISTED')} />
-          )}
+          {blacklisted && <Error style={styles.error} message={i18n.t('IS_BLACKLISTED')} />}
         </View>
       </ScrollView>
     </View>

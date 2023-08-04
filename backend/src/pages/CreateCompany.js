@@ -8,16 +8,7 @@ import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, FormControlLabel, Switch } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
@@ -238,27 +229,10 @@ const CreateCompany = () => {
   return (
     <Master onLoad={onLoad} strict={true} admin={true}>
       <div className="create-company">
-        <Paper
-          className="company-form company-form-wrapper"
-          elevation={10}
-          style={visible ? null : { display: 'none' }}
-        >
-          <h1 className="company-form-title">
-            {' '}
-            {strings.CREATE_COMPANY_HEADING}{' '}
-          </h1>
+        <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+          <h1 className="company-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
           <form onSubmit={handleSubmit}>
-            <Avatar
-              type={Env.RECORD_TYPE.COMPANY}
-              mode="create"
-              record={null}
-              size="large"
-              readonly={false}
-              onBeforeUpload={onBeforeUpload}
-              onChange={onAvatarChange}
-              color="disabled"
-              className="avatar-ctn"
-            />
+            <Avatar type={Env.RECORD_TYPE.COMPANY} mode="create" record={null} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
 
             <div className="info">
               <InfoIcon />
@@ -266,36 +240,14 @@ const CreateCompany = () => {
             </div>
 
             <FormControl fullWidth margin="dense">
-              <InputLabel className="required">
-                {commonStrings.FULL_NAME}
-              </InputLabel>
-              <Input
-                id="full-name"
-                type="text"
-                error={fullNameError}
-                required
-                onBlur={handleFullNameOnBlur}
-                onChange={handleOnChangeFullName}
-                autoComplete="off"
-              />
-              <FormHelperText error={fullNameError}>
-                {(fullNameError && strings.INVALID_COMPANY_NAME) || ''}
-              </FormHelperText>
+              <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+              <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameOnBlur} onChange={handleOnChangeFullName} autoComplete="off" />
+              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <InputLabel className="required">
-                {commonStrings.EMAIL}
-              </InputLabel>
-              <Input
-                id="email"
-                type="text"
-                error={!emailValid || emailError}
-                onBlur={handleEmailOnBlur}
-                onChange={handleOnChangeEmail}
-                autoComplete="off"
-                required
-              />
+              <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+              <Input id="email" type="text" error={!emailValid || emailError} onBlur={handleEmailOnBlur} onChange={handleOnChangeEmail} autoComplete="off" required />
               <FormHelperText error={!emailValid || emailError}>
                 {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                 {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
@@ -324,54 +276,25 @@ const CreateCompany = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.PHONE}</InputLabel>
-              <Input
-                id="phone"
-                type="text"
-                onChange={handlePhoneChange}
-                onBlur={handlePhoneBlur}
-                autoComplete="off"
-                error={!phoneValid}
-              />
-              <FormHelperText error={!phoneValid}>
-                {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-              </FormHelperText>
+              <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" error={!phoneValid} />
+              <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input
-                id="location"
-                type="text"
-                onChange={handleOnChangeLocation}
-                autoComplete="off"
-              />
+              <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.BIO}</InputLabel>
-              <Input
-                id="bio"
-                type="text"
-                onChange={handleOnChangeBio}
-                autoComplete="off"
-              />
+              <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" />
             </FormControl>
 
             <div className="buttons">
-              <Button
-                type="submit"
-                variant="contained"
-                className="btn-primary btn-margin-bottom"
-                size="small"
-              >
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                 {commonStrings.CREATE}
               </Button>
-              <Button
-                variant="contained"
-                className="btn-secondary btn-margin-bottom"
-                size="small"
-                onClick={handleCancel}
-              >
+              <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={handleCancel}>
                 {commonStrings.CANCEL}
               </Button>
             </div>

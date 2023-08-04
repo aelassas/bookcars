@@ -51,37 +51,16 @@ const Companies = () => {
               <Search className="search" onSubmit={handleSearch} />
 
               {rowCount > -1 && admin && (
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary new-company"
-                  size="small"
-                  href="/create-supplier"
-                >
+                <Button type="submit" variant="contained" className="btn-primary new-company" size="small" href="/create-supplier">
                   {strings.NEW_COMPANY}
                 </Button>
               )}
 
-              {rowCount > 0 && (
-                <InfoBox
-                  value={`${rowCount} ${
-                    rowCount > 1 ? strings.COMPANIES : strings.COMPANY
-                  }`}
-                  className="company-count"
-                />
-              )}
+              {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`} className="company-count" />}
             </div>
           </div>
           <div className="col-2">
-            <SupplierList
-              containerClassName="companies"
-              offset={offset}
-              user={user}
-              keyword={keyword}
-              reload={reload}
-              onLoad={handleSupplierListLoad}
-              onDelete={handleCompanyDelete}
-            />
+            <SupplierList containerClassName="companies" offset={offset} user={user} keyword={keyword} reload={reload} onLoad={handleSupplierListLoad} onDelete={handleCompanyDelete} />
           </div>
         </div>
       )}

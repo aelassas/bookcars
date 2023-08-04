@@ -16,16 +16,7 @@ import CarSelectList from '../components/CarSelectList'
 import StatusList from '../components/StatusList'
 import DateTimePicker from '../components/DateTimePicker'
 import DatePicker from '../components/DatePicker'
-import {
-  FormControl,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-  FormHelperText,
-  InputLabel,
-  Input,
-} from '@mui/material'
+import { FormControl, Button, Paper, FormControlLabel, Switch, FormHelperText, InputLabel, Input } from '@mui/material'
 import { Info as InfoIcon, Person as DriverIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
@@ -155,8 +146,7 @@ const CreateBooking = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const additionalDriverSet =
-      Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+    const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
     if (additionalDriverSet) {
       const emailValid = _validateEmail(_email)
@@ -241,60 +231,26 @@ const CreateBooking = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       <div className="create-booking">
-        <Paper
-          className="booking-form booking-form-wrapper"
-          elevation={10}
-          style={visible ? null : { display: 'none' }}
-        >
-          <h1 className="booking-form-title">
-            {' '}
-            {strings.NEW_BOOKING_HEADING}{' '}
-          </h1>
+        <Paper className="booking-form booking-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+          <h1 className="booking-form-title"> {strings.NEW_BOOKING_HEADING} </h1>
           <form onSubmit={handleSubmit}>
             {!isCompany && (
               <FormControl fullWidth margin="dense">
-                <SupplierSelectList
-                  label={blStrings.COMPANY}
-                  required
-                  variant="standard"
-                  onChange={handleCompanyChange}
-                />
+                <SupplierSelectList label={blStrings.COMPANY} required variant="standard" onChange={handleCompanyChange} />
               </FormControl>
             )}
 
-            <UserSelectList
-              label={blStrings.DRIVER}
-              required
-              variant="standard"
-              user={user}
-              onChange={handleDriverChange}
-            />
+            <UserSelectList label={blStrings.DRIVER} required variant="standard" user={user} onChange={handleDriverChange} />
 
             <FormControl fullWidth margin="dense">
-              <LocationSelectList
-                label={bfStrings.PICKUP_LOCATION}
-                required
-                variant="standard"
-                onChange={handlePickupLocationChange}
-              />
+              <LocationSelectList label={bfStrings.PICKUP_LOCATION} required variant="standard" onChange={handlePickupLocationChange} />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <LocationSelectList
-                label={bfStrings.DROP_OFF_LOCATION}
-                required
-                variant="standard"
-                onChange={handleDropOffLocationChange}
-              />
+              <LocationSelectList label={bfStrings.DROP_OFF_LOCATION} required variant="standard" onChange={handleDropOffLocationChange} />
             </FormControl>
 
-            <CarSelectList
-              label={blStrings.CAR}
-              company={company}
-              pickupLocation={pickupLocation}
-              onChange={handleCarSelectListChange}
-              required
-            />
+            <CarSelectList label={blStrings.CAR} company={company} pickupLocation={pickupLocation} onChange={handleCarSelectListChange} required />
 
             <FormControl fullWidth margin="dense">
               <DateTimePicker
@@ -327,11 +283,7 @@ const CreateBooking = () => {
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <StatusList
-                label={blStrings.STATUS}
-                onChange={handleStatusChange}
-                required
-              />
+              <StatusList label={blStrings.STATUS} onChange={handleStatusChange} required />
             </FormControl>
 
             <div className="info">
@@ -340,206 +292,113 @@ const CreateBooking = () => {
             </div>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={cancellation}
-                    onChange={handleCancellationChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.CANCELLATION}
-                className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'cancellation')}
-              />
+              <FormControlLabel control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />} label={csStrings.CANCELLATION} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'cancellation')} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={amendments}
-                    onChange={handleAmendmentsChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.AMENDMENTS}
-                className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'amendments')}
-              />
+              <FormControlLabel control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />} label={csStrings.AMENDMENTS} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'amendments')} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={theftProtection}
-                    onChange={handleTheftProtectionChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.THEFT_PROTECTION}
-                className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
-              />
+              <FormControlLabel control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />} label={csStrings.THEFT_PROTECTION} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'theftProtection')} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={collisionDamageWaiver}
-                    onChange={handleCollisionDamageWaiverChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.COLLISION_DAMAGE_WAVER}
-                className="checkbox-fcl"
-                disabled={
-                  !Helper.carOptionAvailable(car, 'collisionDamageWaiver')
-                }
-              />
+              <FormControlLabel control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />} label={csStrings.COLLISION_DAMAGE_WAVER} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={fullInsurance}
-                    onChange={handleFullInsuranceChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.FULL_INSURANCE}
-                className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
-              />
+              <FormControlLabel control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />} label={csStrings.FULL_INSURANCE} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'fullInsurance')} />
             </FormControl>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={additionalDriver}
-                    onChange={handleAdditionalDriverChange}
-                    color="primary"
-                  />
-                }
-                label={csStrings.ADDITIONAL_DRIVER}
-                className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
-              />
+              <FormControlLabel control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />} label={csStrings.ADDITIONAL_DRIVER} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'additionalDriver')} />
             </FormControl>
 
-            {Helper.carOptionAvailable(car, 'additionalDriver') &&
-              additionalDriver && (
-                <>
-                  <div className="info">
-                    <DriverIcon />
-                    <label>{csStrings.ADDITIONAL_DRIVER}</label>
-                  </div>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">
-                      {commonStrings.FULL_NAME}
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      label={commonStrings.FULL_NAME}
-                      required
-                      onChange={(e) => {
-                        set_FullName(e.target.value)
-                      }}
-                      autoComplete="off"
-                    />
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">
-                      {commonStrings.EMAIL}
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      label={commonStrings.EMAIL}
-                      error={!_emailValid}
-                      onBlur={(e) => {
-                        _validateEmail(e.target.value)
-                      }}
-                      onChange={(e) => {
-                        set_Email(e.target.value)
+            {Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
+              <>
+                <div className="info">
+                  <DriverIcon />
+                  <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                </div>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                  <Input
+                    type="text"
+                    label={commonStrings.FULL_NAME}
+                    required
+                    onChange={(e) => {
+                      set_FullName(e.target.value)
+                    }}
+                    autoComplete="off"
+                  />
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                  <Input
+                    type="text"
+                    label={commonStrings.EMAIL}
+                    error={!_emailValid}
+                    onBlur={(e) => {
+                      _validateEmail(e.target.value)
+                    }}
+                    onChange={(e) => {
+                      set_Email(e.target.value)
 
-                        if (!e.target.value) {
-                          set_EmailValid(true)
-                        }
-                      }}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!_emailValid}>
-                      {(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <InputLabel className="required">
-                      {commonStrings.PHONE}
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      label={commonStrings.PHONE}
-                      error={!_phoneValid}
-                      onBlur={(e) => {
-                        _validatePhone(e.target.value)
-                      }}
-                      onChange={(e) => {
-                        set_Phone(e.target.value)
+                      if (!e.target.value) {
+                        set_EmailValid(true)
+                      }
+                    }}
+                    required
+                    autoComplete="off"
+                  />
+                  <FormHelperText error={!_emailValid}>{(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                  <Input
+                    type="text"
+                    label={commonStrings.PHONE}
+                    error={!_phoneValid}
+                    onBlur={(e) => {
+                      _validatePhone(e.target.value)
+                    }}
+                    onChange={(e) => {
+                      set_Phone(e.target.value)
 
-                        if (!e.target.value) {
-                          set_PhoneValid(true)
-                        }
-                      }}
-                      required
-                      autoComplete="off"
-                    />
-                    <FormHelperText error={!_phoneValid}>
-                      {(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl fullWidth margin="dense">
-                    <DatePicker
-                      label={commonStrings.BIRTH_DATE}
-                      error={!_birthDateValid}
-                      required
-                      onChange={(_birthDate) => {
-                        const _birthDateValid = _validateBirthDate(_birthDate)
+                      if (!e.target.value) {
+                        set_PhoneValid(true)
+                      }
+                    }}
+                    required
+                    autoComplete="off"
+                  />
+                  <FormHelperText error={!_phoneValid}>{(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <DatePicker
+                    label={commonStrings.BIRTH_DATE}
+                    error={!_birthDateValid}
+                    required
+                    onChange={(_birthDate) => {
+                      const _birthDateValid = _validateBirthDate(_birthDate)
 
-                        set_BirthDate(_birthDate)
-                        set_BirthDateValid(_birthDateValid)
-                      }}
-                      language={UserService.getLanguage()}
-                    />
-                    <FormHelperText error={!_birthDateValid}>
-                      {(!_birthDateValid &&
-                        Helper.getBirthDateError(Env.MINIMUM_AGE)) ||
-                        ''}
-                    </FormHelperText>
-                  </FormControl>
-                </>
-              )}
+                      set_BirthDate(_birthDate)
+                      set_BirthDateValid(_birthDateValid)
+                    }}
+                    language={UserService.getLanguage()}
+                  />
+                  <FormHelperText error={!_birthDateValid}>{(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}</FormHelperText>
+                </FormControl>
+              </>
+            )}
 
             <div>
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.CREATE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  href="/"
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
                   {commonStrings.CANCEL}
                 </Button>
               </div>

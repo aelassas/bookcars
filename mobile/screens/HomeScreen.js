@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Keyboard,
-} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Keyboard } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import Env from '../config/env.config'
 import i18n from '../lang/i18n'
@@ -139,19 +132,9 @@ const HomeScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      onLoad={onLoad}
-      reload={reload}
-      route={route}
-    >
+    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       {init && visible && (
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-        >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
           <View style={styles.contentContainer}>
             <View style={styles.logo}>
               <Text style={styles.logoMain}>BookCars</Text>
@@ -187,53 +170,15 @@ const HomeScreen = ({ navigation, route }) => {
               blur={blur}
             />
 
-            <DateTimePicker
-              mode="date"
-              locale={language}
-              style={styles.component}
-              label={i18n.t('FROM_DATE')}
-              value={fromDate}
-              minimumDate={_fromDate}
-              onChange={(date) => setFromDate(date)}
-              onPress={blurLocations}
-            />
+            <DateTimePicker mode="date" locale={language} style={styles.component} label={i18n.t('FROM_DATE')} value={fromDate} minimumDate={_fromDate} onChange={(date) => setFromDate(date)} onPress={blurLocations} />
 
-            <DateTimePicker
-              mode="time"
-              locale={language}
-              style={styles.component}
-              label={i18n.t('FROM_TIME')}
-              value={fromTime}
-              onChange={(time) => setFromTime(time)}
-              onPress={blurLocations}
-            />
+            <DateTimePicker mode="time" locale={language} style={styles.component} label={i18n.t('FROM_TIME')} value={fromTime} onChange={(time) => setFromTime(time)} onPress={blurLocations} />
 
-            <DateTimePicker
-              mode="date"
-              locale={language}
-              style={styles.component}
-              label={i18n.t('TO_DATE')}
-              value={toDate}
-              minimumDate={fromDate}
-              onChange={(date) => setToDate(date)}
-              onPress={blurLocations}
-            />
+            <DateTimePicker mode="date" locale={language} style={styles.component} label={i18n.t('TO_DATE')} value={toDate} minimumDate={fromDate} onChange={(date) => setToDate(date)} onPress={blurLocations} />
 
-            <DateTimePicker
-              mode="time"
-              locale={language}
-              style={styles.component}
-              label={i18n.t('TO_TIME')}
-              value={toTime}
-              onChange={(time) => setToTime(time)}
-              onPress={blurLocations}
-            />
+            <DateTimePicker mode="time" locale={language} style={styles.component} label={i18n.t('TO_TIME')} value={toTime} onChange={(time) => setToTime(time)} onPress={blurLocations} />
 
-            <Button
-              style={styles.component}
-              label={i18n.t('SEARCH')}
-              onPress={handleSearch}
-            />
+            <Button style={styles.component} label={i18n.t('SEARCH')} onPress={handleSearch} />
 
             {!sameLocation && (
               <LocationSelectList
@@ -253,12 +198,7 @@ const HomeScreen = ({ navigation, route }) => {
               />
             )}
 
-            <Switch
-              style={styles.component}
-              label={i18n.t('SAME_LOCATION')}
-              value={sameLocation}
-              onValueChange={handleSameLocationChange}
-            />
+            <Switch style={styles.component} label={i18n.t('SAME_LOCATION')} value={sameLocation} onValueChange={handleSameLocationChange} />
           </View>
         </ScrollView>
       )}

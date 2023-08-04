@@ -222,14 +222,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       if (cardYearRef.current) cardYearRef.current.clear()
       if (cvvRef.current) cvvRef.current.clear()
 
-      if (
-        !route.params ||
-        !route.params.car ||
-        !route.params.pickupLocation ||
-        !route.params.dropOffLocation ||
-        !route.params.from ||
-        !route.params.to
-      ) {
+      if (!route.params || !route.params.car || !route.params.pickupLocation || !route.params.dropOffLocation || !route.params.from || !route.params.to) {
         await UserService.signout(navigation)
         return
       }
@@ -237,15 +230,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       const car = await CarService.getCar(route.params.car)
       setCar(car)
 
-      const pickupLocation = await LocationService.getLocation(
-        route.params.pickupLocation,
-      )
+      const pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
       setPickupLocation(pickupLocation)
 
       if (route.params.dropOffLocation !== route.params.pickupLocation) {
-        const dropOffLocation = await LocationService.getLocation(
-          route.params.dropOffLocation,
-        )
+        const dropOffLocation = await LocationService.getLocation(route.params.dropOffLocation)
         setDropOffLocation(dropOffLocation)
       } else {
         setDropOffLocation(pickupLocation)
@@ -845,178 +834,66 @@ const CheckoutScreen = ({ navigation, route }) => {
   const days = Helper.days(from, to)
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      onLoad={onLoad}
-      reload={reload}
-      route={route}
-    >
+    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       {visible && (
         <>
           {formVisible && (
-            <ScrollView
-              contentContainerStyle={styles.container}
-              keyboardShouldPersistTaps="handled"
-              nestedScrollEnabled
-            >
+            <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
               <View style={styles.contentContainer}>
                 <View style={styles.section}>
                   <View style={styles.sectionHeader}>
-                    <MaterialIcons
-                      name="event-seat"
-                      size={iconSize}
-                      color={iconColor}
-                    />
-                    <Text style={styles.sectionHeaderText}>
-                      {i18n.t('BOOKING_OPTIONS')}
-                    </Text>
+                    <MaterialIcons name="event-seat" size={iconSize} color={iconColor} />
+                    <Text style={styles.sectionHeaderText}>{i18n.t('BOOKING_OPTIONS')}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={
-                        car.cancellation === -1 || car.cancellation === 0
-                      }
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('CANCELLATION')}
-                      value={cancellation}
-                      onValueChange={onCancellationChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getCancellationOption(car.cancellation, _fr)}
-                    </Text>
+                    <Switch disabled={car.cancellation === -1 || car.cancellation === 0} textStyle={styles.extraSwitch} label={i18n.t('CANCELLATION')} value={cancellation} onValueChange={onCancellationChange} />
+                    <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={car.amendments === -1 || car.amendments === 0}
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('AMENDMENTS')}
-                      value={amendments}
-                      onValueChange={onAmendmentsChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getAmendmentsOption(car.amendments, _fr)}
-                    </Text>
+                    <Switch disabled={car.amendments === -1 || car.amendments === 0} textStyle={styles.extraSwitch} label={i18n.t('AMENDMENTS')} value={amendments} onValueChange={onAmendmentsChange} />
+                    <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={
-                        car.collisionDamageWaiver === -1 ||
-                        car.collisionDamageWaiver === 0
-                      }
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('COLLISION_DAMAGE_WAVER')}
-                      value={collisionDamageWaiver}
-                      onValueChange={onCollisionDamageWaiverChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getCollisionDamageWaiverOption(
-                        car.collisionDamageWaiver,
-                        days,
-                        _fr,
-                      )}
-                    </Text>
+                    <Switch disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0} textStyle={styles.extraSwitch} label={i18n.t('COLLISION_DAMAGE_WAVER')} value={collisionDamageWaiver} onValueChange={onCollisionDamageWaiverChange} />
+                    <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={
-                        car.theftProtection === -1 || car.theftProtection === 0
-                      }
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('THEFT_PROTECTION')}
-                      value={theftProtection}
-                      onValueChange={onTheftProtectionChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getTheftProtectionOption(
-                        car.theftProtection,
-                        days,
-                        _fr,
-                      )}
-                    </Text>
+                    <Switch disabled={car.theftProtection === -1 || car.theftProtection === 0} textStyle={styles.extraSwitch} label={i18n.t('THEFT_PROTECTION')} value={theftProtection} onValueChange={onTheftProtectionChange} />
+                    <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={
-                        car.fullInsurance === -1 || car.fullInsurance === 0
-                      }
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('FULL_INSURANCE')}
-                      value={fullInsurance}
-                      onValueChange={onFullInsuranceChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getFullInsuranceOption(
-                        car.fullInsurance,
-                        days,
-                        _fr,
-                      )}
-                    </Text>
+                    <Switch disabled={car.fullInsurance === -1 || car.fullInsurance === 0} textStyle={styles.extraSwitch} label={i18n.t('FULL_INSURANCE')} value={fullInsurance} onValueChange={onFullInsuranceChange} />
+                    <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch
-                      disabled={
-                        car.additionalDriver === -1 ||
-                        car.additionalDriver === 0
-                      }
-                      textStyle={styles.extraSwitch}
-                      label={i18n.t('ADDITIONAL_DRIVER')}
-                      value={additionalDriver}
-                      onValueChange={onAdditionalDriverChange}
-                    />
-                    <Text style={styles.extraText}>
-                      {Helper.getAdditionalDriverOption(
-                        car.additionalDriver,
-                        days,
-                        _fr,
-                      )}
-                    </Text>
+                    <Switch disabled={car.additionalDriver === -1 || car.additionalDriver === 0} textStyle={styles.extraSwitch} label={i18n.t('ADDITIONAL_DRIVER')} value={additionalDriver} onValueChange={onAdditionalDriverChange} />
+                    <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
                   </View>
                 </View>
 
                 <View style={styles.section}>
                   <View style={styles.sectionHeader}>
-                    <MaterialIcons
-                      name="directions-car"
-                      size={iconSize}
-                      color={iconColor}
-                    />
-                    <Text style={styles.sectionHeaderText}>
-                      {i18n.t('BOOKING_DETAILS')}
-                    </Text>
+                    <MaterialIcons name="directions-car" size={iconSize} color={iconColor} />
+                    <Text style={styles.sectionHeaderText}>{i18n.t('BOOKING_DETAILS')}</Text>
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-                  <Text style={styles.detailText}>
-                    {`${Helper.getDaysShort(
-                      Helper.days(from, to),
-                    )} (${Helper.capitalize(
-                      format(from, _format, { locale }),
-                    )} - ${Helper.capitalize(
-                      format(to, _format, { locale }),
-                    )})`}
-                  </Text>
+                  <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}</Text>
 
-                  <Text style={styles.detailTitle}>
-                    {i18n.t('PICKUP_LOCATION')}
-                  </Text>
+                  <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
                   <Text style={styles.detailText}>{pickupLocation.name}</Text>
 
-                  <Text style={styles.detailTitle}>
-                    {i18n.t('DROP_OFF_LOCATION')}
-                  </Text>
+                  <Text style={styles.detailTitle}>{i18n.t('DROP_OFF_LOCATION')}</Text>
                   <Text style={styles.detailText}>{dropOffLocation.name}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                  <Text style={styles.detailText}>{`${car.name} (${
-                    car.price
-                  } ${i18n.t('CAR_CURRENCY')})`}</Text>
+                  <Text style={styles.detailText}>{`${car.name} (${car.price} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                   <View style={styles.company}>
@@ -1026,121 +903,37 @@ const CheckoutScreen = ({ navigation, route }) => {
                         uri: Helper.joinURL(Env.CDN_USERS, car.company.avatar),
                       }}
                     />
-                    <Text style={styles.companyText}>
-                      {car.company.fullName}
-                    </Text>
+                    <Text style={styles.companyText}>{car.company.fullName}</Text>
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                  <Text style={styles.detailTextBold}>{`${Helper.formatNumber(
-                    price,
-                  )} ${i18n.t('CURRENCY')}`}</Text>
+                  <Text style={styles.detailTextBold}>{`${Helper.formatNumber(price)} ${i18n.t('CURRENCY')}`}</Text>
                 </View>
 
                 {!authenticated && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <MaterialIcons
-                        name="person"
-                        size={iconSize}
-                        color={iconColor}
-                      />
-                      <Text style={styles.sectionHeaderText}>
-                        {i18n.t('DRIVER_DETAILS')}
-                      </Text>
+                      <MaterialIcons name="person" size={iconSize} color={iconColor} />
+                      <Text style={styles.sectionHeaderText}>{i18n.t('DRIVER_DETAILS')}</Text>
                     </View>
 
-                    <TextInput
-                      ref={fullNameRef}
-                      style={styles.component}
-                      label={i18n.t('FULL_NAME')}
-                      value={fullName}
-                      error={fullNameRequired}
-                      helperText={
-                        (fullNameRequired && i18n.t('REQUIRED')) || ''
-                      }
-                      onChangeText={onChangeFullName}
-                      backgroundColor="#fbfbfb"
-                    />
+                    <TextInput ref={fullNameRef} style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} backgroundColor="#fbfbfb" />
 
-                    <TextInput
-                      ref={emailRef}
-                      style={styles.component}
-                      label={i18n.t('EMAIL')}
-                      value={email}
-                      error={emailRequired || !emailValid || emailError}
-                      helperText={
-                        (emailInfo && i18n.t('EMAIL_INFO')) ||
-                        '' ||
-                        (emailRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!emailValid && i18n.t('EMAIL_NOT_VALID')) ||
-                        '' ||
-                        (emailError &&
-                          i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) ||
-                        ''
-                      }
-                      onChangeText={onChangeEmail}
-                      backgroundColor="#fbfbfb"
-                    />
+                    <TextInput ref={emailRef} style={styles.component} label={i18n.t('EMAIL')} value={email} error={emailRequired || !emailValid || emailError} helperText={(emailInfo && i18n.t('EMAIL_INFO')) || '' || (emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''} onChangeText={onChangeEmail} backgroundColor="#fbfbfb" />
 
-                    <TextInput
-                      ref={phoneRef}
-                      style={styles.component}
-                      label={i18n.t('PHONE')}
-                      value={phone}
-                      error={phoneRequired || !phoneValid}
-                      helperText={
-                        (phoneInfo && i18n.t('PHONE_INFO')) ||
-                        '' ||
-                        (phoneRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!phoneValid && i18n.t('PHONE_NOT_VALID')) ||
-                        ''
-                      }
-                      onChangeText={onChangePhone}
-                      backgroundColor="#fbfbfb"
-                    />
+                    <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneInfo && i18n.t('PHONE_INFO')) || '' || (phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} backgroundColor="#fbfbfb" />
 
-                    <DateTimePicker
-                      mode="date"
-                      locale={language}
-                      style={styles.date}
-                      label={i18n.t('BIRTH_DATE')}
-                      value={birthDate}
-                      error={birthDateRequired || !birthDateValid}
-                      helperText={
-                        (birthDateRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!birthDateValid &&
-                          Helper.getBirthDateError(car.minimumAge)) ||
-                        ''
-                      }
-                      onChange={onChangeBirthDate}
-                      backgroundColor="#fbfbfb"
-                    />
+                    <DateTimePicker mode="date" locale={language} style={styles.date} label={i18n.t('BIRTH_DATE')} value={birthDate} error={birthDateRequired || !birthDateValid} helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''} onChange={onChangeBirthDate} backgroundColor="#fbfbfb" />
 
-                    <Switch
-                      style={styles.component}
-                      textStyle={styles.tosText}
-                      label={i18n.t('ACCEPT_TOS')}
-                      value={tosChecked}
-                      onValueChange={onChangeToS}
-                    />
+                    <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
                   </View>
                 )}
 
                 {additionalDriver && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <MaterialIcons
-                        name="person"
-                        size={iconSize}
-                        color={iconColor}
-                      />
-                      <Text style={styles.sectionHeaderText}>
-                        {i18n.t('ADDITIONAL_DRIVER')}
-                      </Text>
+                      <MaterialIcons name="person" size={iconSize} color={iconColor} />
+                      <Text style={styles.sectionHeaderText}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
                     </View>
 
                     <TextInput
@@ -1149,12 +942,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('FULL_NAME')}
                       value={_fullName}
                       error={adRequired && _fullNameRequired}
-                      helperText={
-                        (adRequired &&
-                          _fullNameRequired &&
-                          i18n.t('REQUIRED')) ||
-                        ''
-                      }
+                      helperText={(adRequired && _fullNameRequired && i18n.t('REQUIRED')) || ''}
                       onChangeText={(text) => {
                         set_FullName(text)
                         set_FullNameRequired(false)
@@ -1169,14 +957,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('EMAIL')}
                       value={_email}
                       error={adRequired && (_emailRequired || !_emailValid)}
-                      helperText={
-                        (adRequired && _emailRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (adRequired &&
-                          !_emailValid &&
-                          i18n.t('EMAIL_NOT_VALID')) ||
-                        ''
-                      }
+                      helperText={(adRequired && _emailRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
                       onChangeText={(text) => {
                         set_Email(text)
                         set_EmailRequired(false)
@@ -1192,14 +973,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('PHONE')}
                       value={_phone}
                       error={adRequired && (_phoneRequired || !_phoneValid)}
-                      helperText={
-                        (adRequired && _phoneRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (adRequired &&
-                          !_phoneValid &&
-                          i18n.t('PHONE_NOT_VALID')) ||
-                        ''
-                      }
+                      helperText={(adRequired && _phoneRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
                       onChangeText={(text) => {
                         set_Phone(text)
                         set_PhoneRequired(false)
@@ -1215,19 +989,8 @@ const CheckoutScreen = ({ navigation, route }) => {
                       style={styles.date}
                       label={i18n.t('BIRTH_DATE')}
                       value={_birthDate}
-                      error={
-                        adRequired && (_birthDateRequired || !_birthDateValid)
-                      }
-                      helperText={
-                        (adRequired &&
-                          _birthDateRequired &&
-                          i18n.t('REQUIRED')) ||
-                        '' ||
-                        (adRequired &&
-                          !_birthDateValid &&
-                          Helper.getBirthDateError(car.minimumAge)) ||
-                        ''
-                      }
+                      error={adRequired && (_birthDateRequired || !_birthDateValid)}
+                      helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || '' || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={(date) => {
                         set_BirthDate(date)
                         set_BirthDateRequired(false)
@@ -1242,14 +1005,8 @@ const CheckoutScreen = ({ navigation, route }) => {
                 {car.company.payLater && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                      <MaterialIcons
-                        name="settings"
-                        size={iconSize}
-                        color={iconColor}
-                      />
-                      <Text style={styles.sectionHeaderText}>
-                        {i18n.t('PAYMENT_OPTIONS')}
-                      </Text>
+                      <MaterialIcons name="settings" size={iconSize} color={iconColor} />
+                      <Text style={styles.sectionHeaderText}>{i18n.t('PAYMENT_OPTIONS')}</Text>
                     </View>
 
                     <RadioButton
@@ -1259,9 +1016,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                         setPayLater(checked)
                       }}
                     />
-                    <Text style={styles.paymentInfo}>
-                      {i18n.t('PAY_LATER_INFO')}
-                    </Text>
+                    <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
 
                     <RadioButton
                       label={i18n.t('PAY_ONLINE')}
@@ -1270,9 +1025,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                         setPayLater(!checked)
                       }}
                     />
-                    <Text style={styles.paymentInfo}>
-                      {i18n.t('PAY_ONLINE_INFO')}
-                    </Text>
+                    <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
                   </View>
                 )}
 
@@ -1280,138 +1033,40 @@ const CheckoutScreen = ({ navigation, route }) => {
                   <View style={styles.payment}>
                     <View style={styles.paymentHeader}>
                       <View style={styles.securePaymentInfo}>
-                        <MaterialIcons
-                          name="lock"
-                          size={iconSize}
-                          color="#1c8901"
-                        />
-                        <Text style={styles.securePaymentInfoText}>
-                          {i18n.t('PAYMENT')}
-                        </Text>
+                        <MaterialIcons name="lock" size={iconSize} color="#1c8901" />
+                        <Text style={styles.securePaymentInfoText}>{i18n.t('PAYMENT')}</Text>
                       </View>
 
                       <View style={styles.securePaymentInfo}>
                         <Text style={styles.totalText}>{i18n.t('COST')}</Text>
-                        <Text style={styles.costText}>{`${Helper.formatNumber(
-                          price,
-                        )} ${i18n.t('CURRENCY')}`}</Text>
+                        <Text style={styles.costText}>{`${Helper.formatNumber(price)} ${i18n.t('CURRENCY')}`}</Text>
                       </View>
                     </View>
 
-                    <Image
-                      source={require('../assets/secure-payment.png')}
-                      style={styles.paymentImage}
-                    />
+                    <Image source={require('../assets/secure-payment.png')} style={styles.paymentImage} />
 
-                    <TextInput
-                      ref={cardNameRef}
-                      style={styles.component}
-                      label={i18n.t('CARD_NAME')}
-                      value={cardName}
-                      error={cardNameRequired}
-                      helperText={
-                        (cardNameRequired && i18n.t('REQUIRED')) || ''
-                      }
-                      backgroundColor="#e5efe5"
-                      onChangeText={onCardNameChange}
-                    />
+                    <TextInput ref={cardNameRef} style={styles.component} label={i18n.t('CARD_NAME')} value={cardName} error={cardNameRequired} helperText={(cardNameRequired && i18n.t('REQUIRED')) || ''} backgroundColor="#e5efe5" onChangeText={onCardNameChange} />
 
-                    <TextInput
-                      ref={cardNumberRef}
-                      style={styles.component}
-                      label={i18n.t('CARD_NUMBER')}
-                      keyboardType="numeric"
-                      maxLength={16}
-                      value={cardNumber}
-                      error={cardNumberRequired || !cardNumberValid}
-                      helperText={
-                        (cardNumberRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) ||
-                        ''
-                      }
-                      backgroundColor="#e5efe5"
-                      onChangeText={onCardNumberChange}
-                    />
+                    <TextInput ref={cardNumberRef} style={styles.component} label={i18n.t('CARD_NUMBER')} keyboardType="numeric" maxLength={16} value={cardNumber} error={cardNumberRequired || !cardNumberValid} helperText={(cardNumberRequired && i18n.t('REQUIRED')) || '' || (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardNumberChange} />
 
-                    <TextInput
-                      ref={cardMonthRef}
-                      style={styles.component}
-                      label={i18n.t('CARD_MONTH')}
-                      keyboardType="numeric"
-                      maxLength={2}
-                      value={cardMonth}
-                      error={cardMonthRequired || !cardMonthValid}
-                      helperText={
-                        (cardMonthRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) ||
-                        ''
-                      }
-                      backgroundColor="#e5efe5"
-                      onChangeText={onCardMonthChange}
-                    />
+                    <TextInput ref={cardMonthRef} style={styles.component} label={i18n.t('CARD_MONTH')} keyboardType="numeric" maxLength={2} value={cardMonth} error={cardMonthRequired || !cardMonthValid} helperText={(cardMonthRequired && i18n.t('REQUIRED')) || '' || (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardMonthChange} />
 
-                    <TextInput
-                      ref={cardYearRef}
-                      style={styles.component}
-                      label={i18n.t('CARD_YEAR')}
-                      keyboardType="numeric"
-                      maxLength={2}
-                      value={cardYear}
-                      error={cardYearRequired || !cardYearValid}
-                      helperText={
-                        (cardYearRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) ||
-                        ''
-                      }
-                      backgroundColor="#e5efe5"
-                      onChangeText={onCardYearChange}
-                    />
+                    <TextInput ref={cardYearRef} style={styles.component} label={i18n.t('CARD_YEAR')} keyboardType="numeric" maxLength={2} value={cardYear} error={cardYearRequired || !cardYearValid} helperText={(cardYearRequired && i18n.t('REQUIRED')) || '' || (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardYearChange} />
 
-                    <TextInput
-                      ref={cvvRef}
-                      style={styles.component}
-                      keyboardType="numeric"
-                      maxLength={4}
-                      label={i18n.t('CVV')}
-                      value={cvv}
-                      error={cvvRequired || !cvvValid}
-                      helperText={
-                        (cvvRequired && i18n.t('REQUIRED')) ||
-                        '' ||
-                        (!cvvValid && i18n.t('CVV_NOT_VALID')) ||
-                        ''
-                      }
-                      backgroundColor="#e5efe5"
-                      onChangeText={onCardCvvChange}
-                    />
+                    <TextInput ref={cvvRef} style={styles.component} keyboardType="numeric" maxLength={4} label={i18n.t('CVV')} value={cvv} error={cvvRequired || !cvvValid} helperText={(cvvRequired && i18n.t('REQUIRED')) || '' || (!cvvValid && i18n.t('CVV_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardCvvChange} />
 
                     <View style={styles.securePaymentInfo}>
-                      <MaterialIcons
-                        name="lock"
-                        size={iconSize}
-                        color="#1c8901"
-                      />
-                      <Text style={styles.securePaymentInfoText}>
-                        {i18n.t('SECURE_PAYMENT_INFO')}
-                      </Text>
+                      <MaterialIcons name="lock" size={iconSize} color="#1c8901" />
+                      <Text style={styles.securePaymentInfoText}>{i18n.t('SECURE_PAYMENT_INFO')}</Text>
                     </View>
                   </View>
                 )}
                 <View style={styles.footer}>
-                  <Button
-                    style={styles.component}
-                    label={i18n.t('BOOK_NOW')}
-                    onPress={onPressBook}
-                  />
+                  <Button style={styles.component} label={i18n.t('BOOK_NOW')} onPress={onPressBook} />
 
                   <View style={styles.error}>
                     {error && <Error message={i18n.t('FIX_ERRORS')} />}
-                    {cardDateError && (
-                      <Error message={i18n.t('CARD_DATE_ERROR')} />
-                    )}
+                    {cardDateError && <Error message={i18n.t('CARD_DATE_ERROR')} />}
                     {tosError && <Error message={i18n.t('TOS_ERROR')} />}
                   </View>
                 </View>
@@ -1420,11 +1075,7 @@ const CheckoutScreen = ({ navigation, route }) => {
           )}
           {success && (
             <View style={styles.sucess}>
-              <Text style={styles.sucessText}>
-                {payLater
-                  ? i18n.t('PAY_LATER_SUCCESS')
-                  : i18n.t('BOOKING_SUCCESS')}
-              </Text>
+              <Text style={styles.sucessText}>{payLater ? i18n.t('PAY_LATER_SUCCESS') : i18n.t('BOOKING_SUCCESS')}</Text>
               <Link
                 style={styles.sucessLink}
                 label={i18n.t('GO_TO_HOME')}

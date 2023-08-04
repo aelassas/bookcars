@@ -5,14 +5,7 @@ import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
 import validator from 'validator'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
@@ -162,48 +155,24 @@ const SignUp = () => {
   return (
     <Master strict={false} onLoad={onLoad}>
       <div className="signup">
-        <Paper
-          className="signup-form"
-          elevation={10}
-          style={visible ? null : { display: 'none' }}
-        >
+        <Paper className="signup-form" elevation={10} style={visible ? null : { display: 'none' }}>
           <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
           <form onSubmit={handleSubmit}>
             <div>
               <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="full-name">
-                  {commonStrings.FULL_NAME}
-                </InputLabel>
-                <Input
-                  id="full-name"
-                  type="text"
-                  name="FullName"
-                  required
-                  onChange={handleOnChangeFullName}
-                  autoComplete="off"
-                />
+                <InputLabel htmlFor="full-name">{commonStrings.FULL_NAME}</InputLabel>
+                <Input id="full-name" type="text" name="FullName" required onChange={handleOnChangeFullName} autoComplete="off" />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input
-                  id="email"
-                  type="text"
-                  error={!emailValid || emailError}
-                  name="Email"
-                  onBlur={handleOnBlur}
-                  onChange={handleEmailChange}
-                  required
-                  autoComplete="off"
-                />
+                <Input id="email" type="text" error={!emailValid || emailError} name="Email" onBlur={handleOnBlur} onChange={handleEmailChange} required autoComplete="off" />
                 <FormHelperText error={!emailValid || emailError}>
                   {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                   {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                 </FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="password">
-                  {commonStrings.PASSWORD}
-                </InputLabel>
+                <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
                 <Input
                   id="password"
                   name="Password"
@@ -219,9 +188,7 @@ const SignUp = () => {
                 />
               </FormControl>
               <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="confirm-password">
-                  {commonStrings.CONFIRM_PASSWORD}
-                </InputLabel>
+                <InputLabel htmlFor="confirm-password">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                 <Input
                   id="confirm-password"
                   name="ConfirmPassword"
@@ -238,32 +205,18 @@ const SignUp = () => {
                 />
               </FormControl>
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {strings.SIGN_UP}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  href="/"
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
                   {' '}
                   {commonStrings.CANCEL}
                 </Button>
               </div>
             </div>
             <div className="form-error">
-              {passwordError && (
-                <Error message={commonStrings.PASSWORD_ERROR} />
-              )}
-              {passwordsDontMatch && (
-                <Error message={commonStrings.PASSWORDS_DONT_MATCH} />
-              )}
+              {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
+              {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
               {error && <Error message={strings.SIGN_UP_ERROR} />}
             </div>
           </form>

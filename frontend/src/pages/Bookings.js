@@ -14,9 +14,7 @@ const Bookings = () => {
   const [user, setUser] = useState()
   const [allCompanies, setAllCompanies] = useState([])
   const [companies, setCompanies] = useState([])
-  const [statuses, setStatuses] = useState(
-    Helper.getBookingStatuses().map((status) => status.value),
-  )
+  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState(null)
   const [reload, setReload] = useState(false)
   const [loadingCompanies, setLoadingCompanies] = useState(true)
@@ -64,38 +62,13 @@ const Bookings = () => {
         <div className="bookings">
           <div className="col-1">
             <div>
-              <SupplierFilter
-                companies={allCompanies}
-                onChange={handleSupplierFilterChange}
-                className="cl-company-filter"
-              />
-              <StatusFilter
-                onChange={handleStatusFilterChange}
-                className="cl-status-filter"
-              />
-              <BookingFilter
-                onSubmit={handleBookingFilterSubmit}
-                language={(user && user.language) || Env.DEFAULT_LANGUAGE}
-                className="cl-booking-filter"
-                collapse={!Env.isMobile()}
-              />
+              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="cl-company-filter" />
+              <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
+              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || Env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!Env.isMobile()} />
             </div>
           </div>
           <div className="col-2">
-            <BookingList
-              containerClassName="bookings"
-              offset={offset}
-              user={user}
-              language={user.language}
-              companies={companies}
-              statuses={statuses}
-              filter={filter}
-              loading={loadingCompanies}
-              reload={reload}
-              onLoad={handleBookingListLoad}
-              hideDates={Env.isMobile()}
-              checkboxSelection={false}
-            />
+            <BookingList containerClassName="bookings" offset={offset} user={user} language={user.language} companies={companies} statuses={statuses} filter={filter} loading={loadingCompanies} reload={reload} onLoad={handleBookingListLoad} hideDates={Env.isMobile()} checkboxSelection={false} />
           </div>
         </div>
       )}

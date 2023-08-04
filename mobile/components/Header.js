@@ -7,14 +7,7 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 
-const Header = ({
-  title,
-  hideTitle,
-  loggedIn,
-  notificationCount,
-  reload,
-  _avatar,
-}) => {
+const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar }) => {
   const navigation = useNavigation()
   const [avatar, setAvatar] = useState(null)
 
@@ -40,11 +33,7 @@ const Header = ({
 
   return (
     <View style={styles.container}>
-      <Pressable
-        hitSlop={15}
-        style={styles.menu}
-        onPress={() => navigation.toggleDrawer()}
-      >
+      <Pressable hitSlop={15} style={styles.menu} onPress={() => navigation.toggleDrawer()}>
         <MaterialIcons name="menu" size={24} color="#fff" />
       </Pressable>
       {!hideTitle && (
@@ -54,31 +43,16 @@ const Header = ({
       )}
       {loggedIn && (
         <View style={styles.actions}>
-          <Pressable
-            style={styles.notifications}
-            onPress={() => navigation.navigate('Notifications')}
-          >
+          <Pressable style={styles.notifications} onPress={() => navigation.navigate('Notifications')}>
             {notificationCount > 0 && (
               <Badge style={styles.badge} size={18}>
                 {notificationCount}
               </Badge>
             )}
-            <MaterialIcons
-              name="notifications"
-              size={24}
-              color="#fff"
-              style={styles.badgeIcon}
-            />
+            <MaterialIcons name="notifications" size={24} color="#fff" style={styles.badgeIcon} />
           </Pressable>
-          <Pressable
-            style={styles.avatar}
-            onPress={() => navigation.navigate('Settings')}
-          >
-            {avatar ? (
-              <Avatar.Image size={24} source={{ uri: avatar }} />
-            ) : (
-              <MaterialIcons name="account-circle" size={24} color="#fff" />
-            )}
+          <Pressable style={styles.avatar} onPress={() => navigation.navigate('Settings')}>
+            {avatar ? <Avatar.Image size={24} source={{ uri: avatar }} /> : <MaterialIcons name="account-circle" size={24} color="#fff" />}
           </Pressable>
         </View>
       )}

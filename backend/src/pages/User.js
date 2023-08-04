@@ -9,16 +9,7 @@ import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import BookingList from '../components/BookingList'
 import NoMatch from './NoMatch'
-import {
-  Typography,
-  IconButton,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tooltip,
-} from '@mui/material'
+import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import * as SupplierService from '../services/SupplierService'
 import { useNavigate } from 'react-router-dom'
@@ -125,13 +116,7 @@ const User = () => {
     }
   }
 
-  const edit =
-    loggedUser &&
-    user &&
-    (loggedUser.type === Env.RECORD_TYPE.ADMIN ||
-      loggedUser._id === user._id ||
-      (loggedUser.type === Env.RECORD_TYPE.COMPANY &&
-        loggedUser._id === user.company))
+  const edit = loggedUser && user && (loggedUser.type === Env.RECORD_TYPE.ADMIN || loggedUser._id === user._id || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company))
   const company = user && user.type === Env.RECORD_TYPE.COMPANY
 
   return (
@@ -140,19 +125,7 @@ const User = () => {
         <div className="user">
           <div className="col-1">
             <section className="user-avatar-sec">
-              <Avatar
-                record={user}
-                type={user.type}
-                mode="update"
-                size="large"
-                hideDelete
-                onBeforeUpload={onBeforeUpload}
-                onChange={onAvatarChange}
-                color="disabled"
-                className={company ? 'company-avatar' : 'user-avatar'}
-                readonly
-                verified
-              />
+              <Avatar record={user} type={user.type} mode="update" size="large" hideDelete onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className={company ? 'company-avatar' : 'user-avatar'} readonly verified />
             </section>
             <Typography variant="h4" className="user-name">
               {user.fullName}
@@ -189,41 +162,17 @@ const User = () => {
               )}
             </div>
           </div>
-          <div className="col-2">
-            {(edit || !company) && (
-              <BookingList
-                containerClassName="user"
-                offset={offset}
-                loggedUser={loggedUser}
-                user={company ? undefined : user}
-                companies={company ? [user._id] : companies}
-                statuses={statuses}
-                hideDates={Env.isMobile()}
-                checkboxSelection={!Env.isMobile()}
-                hideCompanyColumn={company}
-              />
-            )}
-          </div>
+          <div className="col-2">{(edit || !company) && <BookingList containerClassName="user" offset={offset} loggedUser={loggedUser} user={company ? undefined : user} companies={company ? [user._id] : companies} statuses={statuses} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} hideCompanyColumn={company} />}</div>
         </div>
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
         <DialogContent>{ulStrings.DELETE_USER}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelDelete}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

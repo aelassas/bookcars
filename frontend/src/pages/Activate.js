@@ -7,15 +7,7 @@ import { strings as rpStrings } from '../lang/reset-password'
 import { strings as mStrings } from '../lang/master'
 import { strings } from '../lang/activate'
 import NoMatch from './NoMatch'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Link,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 
@@ -160,13 +152,7 @@ const Activate = () => {
             <h1>{strings.ACTIVATE_HEADING}</h1>
             <div className="resend-form-content">
               <label>{strings.TOKEN_EXPIRED}</label>
-              <Button
-                type="button"
-                variant="contained"
-                size="small"
-                className="btn-primary btn-resend"
-                onClick={handleResend}
-              >
+              <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>
                 {mStrings.RESEND}
               </Button>
               <p className="go-to-home">
@@ -179,70 +165,27 @@ const Activate = () => {
       {visible && (
         <div className="activate">
           <Paper className="activate-form" elevation={10}>
-            <h1>
-              {reset
-                ? rpStrings.RESET_PASSWORD_HEADING
-                : strings.ACTIVATE_HEADING}
-            </h1>
+            <h1>{reset ? rpStrings.RESET_PASSWORD_HEADING : strings.ACTIVATE_HEADING}</h1>
             <form onSubmit={handleSubmit}>
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required" error={passwordError}>
                   {cpStrings.NEW_PASSWORD}
                 </InputLabel>
-                <Input
-                  id="password-new"
-                  onChange={handleNewPasswordChange}
-                  type="password"
-                  value={password}
-                  error={passwordError}
-                  required
-                />
-                <FormHelperText error={passwordError}>
-                  {(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}
-                </FormHelperText>
+                <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={password} error={passwordError} required />
+                <FormHelperText error={passwordError}>{(passwordError && cpStrings.NEW_PASSWORD_ERROR) || ''}</FormHelperText>
               </FormControl>
-              <FormControl
-                fullWidth
-                margin="dense"
-                error={confirmPasswordError}
-              >
+              <FormControl fullWidth margin="dense" error={confirmPasswordError}>
                 <InputLabel error={confirmPasswordError} className="required">
                   {commonStrings.CONFIRM_PASSWORD}
                 </InputLabel>
-                <Input
-                  id="password-confirm"
-                  onChange={handleConfirmPasswordChange}
-                  onKeyDown={handleOnConfirmPasswordKeyDown}
-                  error={confirmPasswordError || passwordLengthError}
-                  type="password"
-                  value={confirmPassword}
-                  required
-                />
-                <FormHelperText
-                  error={confirmPasswordError || passwordLengthError}
-                >
-                  {confirmPasswordError
-                    ? commonStrings.PASSWORDS_DONT_MATCH
-                    : passwordLengthError
-                    ? commonStrings.PASSWORD_ERROR
-                    : ''}
-                </FormHelperText>
+                <Input id="password-confirm" onChange={handleConfirmPasswordChange} onKeyDown={handleOnConfirmPasswordKeyDown} error={confirmPasswordError || passwordLengthError} type="password" value={confirmPassword} required />
+                <FormHelperText error={confirmPasswordError || passwordLengthError}>{confirmPasswordError ? commonStrings.PASSWORDS_DONT_MATCH : passwordLengthError ? commonStrings.PASSWORD_ERROR : ''}</FormHelperText>
               </FormControl>
               <div className="buttons">
-                <Button
-                  type="submit"
-                  className="btn-primary btn-margin btn-margin-bottom"
-                  size="small"
-                  variant="contained"
-                >
+                <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                   {reset ? commonStrings.UPDATE : strings.ACTIVATE}
                 </Button>
-                <Button
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  variant="contained"
-                  href="/"
-                >
+                <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
                   {commonStrings.CANCEL}
                 </Button>
               </div>

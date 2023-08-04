@@ -18,17 +18,7 @@ import GearboxList from '../components/GearboxList'
 import SeatsList from '../components/SeatsList'
 import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-  TextField,
-  FormHelperText,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, Button, Paper, FormControlLabel, Switch, TextField, FormHelperText } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 
 import '../assets/css/create-car.css'
@@ -255,10 +245,7 @@ const UpdateCar = () => {
             const car = await CarService.getCar(id)
 
             if (car) {
-              if (
-                user.type === Env.RECORD_TYPE.COMPANY &&
-                user._id !== car.company._id
-              ) {
+              if (user.type === Env.RECORD_TYPE.COMPANY && user._id !== car.company._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -326,25 +313,9 @@ const UpdateCar = () => {
     <Master onLoad={onLoad} strict={true}>
       {!error && !noMatch && (
         <div className="update-car">
-          <Paper
-            className="car-form car-form-wrapper"
-            elevation={10}
-            style={visible ? null : { display: 'none' }}
-          >
+          <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
             <form onSubmit={handleSubmit}>
-              <Avatar
-                type={Env.RECORD_TYPE.CAR}
-                mode="update"
-                record={car}
-                hideDelete={true}
-                size="large"
-                readonly={false}
-                onBeforeUpload={handleBeforeUpload}
-                onChange={handleImageChange}
-                onValidate={handleImageValidate}
-                color="disabled"
-                className="avatar-ctn"
-              />
+              <Avatar type={Env.RECORD_TYPE.CAR} mode="update" record={car} hideDelete={true} size="large" readonly={false} onBeforeUpload={handleBeforeUpload} onChange={handleImageChange} onValidate={handleImageValidate} color="disabled" className="avatar-ctn" />
 
               <div className="info">
                 <InfoIcon />
@@ -353,55 +324,23 @@ const UpdateCar = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{strings.NAME}</InputLabel>
-                <Input
-                  type="text"
-                  required
-                  value={name}
-                  autoComplete="off"
-                  onChange={handleNameChange}
-                />
+                <Input type="text" required value={name} autoComplete="off" onChange={handleNameChange} />
               </FormControl>
 
               {admin && (
                 <FormControl fullWidth margin="dense">
-                  <SupplierSelectList
-                    label={strings.COMPANY}
-                    required
-                    value={company}
-                    type={Env.RECORD_TYPE.COMPANY}
-                    variant="standard"
-                    onChange={handleCompanyChange}
-                  />
+                  <SupplierSelectList label={strings.COMPANY} required value={company} type={Env.RECORD_TYPE.COMPANY} variant="standard" onChange={handleCompanyChange} />
                 </FormControl>
               )}
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {strings.MINIMUM_AGE}
-                </InputLabel>
-                <Input
-                  type="text"
-                  required
-                  error={!minimumAgeValid}
-                  value={minimumAge}
-                  autoComplete="off"
-                  onChange={handleMinimumAgeChange}
-                  inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
-                />
-                <FormHelperText error={!minimumAgeValid}>
-                  {(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}
-                </FormHelperText>
+                <InputLabel className="required">{strings.MINIMUM_AGE}</InputLabel>
+                <Input type="text" required error={!minimumAgeValid} value={minimumAge} autoComplete="off" onChange={handleMinimumAgeChange} inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }} />
+                <FormHelperText error={!minimumAgeValid}>{(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <LocationSelectList
-                  label={strings.LOCATIONS}
-                  multiple
-                  required
-                  variant="standard"
-                  value={locations}
-                  onChange={handleLocationsChange}
-                />
+                <LocationSelectList label={strings.LOCATIONS} multiple required variant="standard" value={locations} onChange={handleLocationsChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -437,67 +376,27 @@ const UpdateCar = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={available}
-                      onChange={handleAvailableChange}
-                      color="primary"
-                    />
-                  }
-                  label={strings.AVAILABLE}
-                  className="checkbox-fcl"
-                />
+                <FormControlLabel control={<Switch checked={available} onChange={handleAvailableChange} color="primary" />} label={strings.AVAILABLE} className="checkbox-fcl" />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <CarTypeList
-                  label={strings.CAR_TYPE}
-                  variant="standard"
-                  required
-                  value={type}
-                  onChange={handleCarTypeChange}
-                />
+                <CarTypeList label={strings.CAR_TYPE} variant="standard" required value={type} onChange={handleCarTypeChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <GearboxList
-                  label={strings.GEARBOX}
-                  variant="standard"
-                  required
-                  value={gearbox}
-                  onChange={handleGearboxChange}
-                />
+                <GearboxList label={strings.GEARBOX} variant="standard" required value={gearbox} onChange={handleGearboxChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <SeatsList
-                  label={strings.SEATS}
-                  variant="standard"
-                  required
-                  value={seats}
-                  onChange={handleSeatsChange}
-                />
+                <SeatsList label={strings.SEATS} variant="standard" required value={seats} onChange={handleSeatsChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <DoorsList
-                  label={strings.DOORS}
-                  variant="standard"
-                  required
-                  value={doors}
-                  onChange={handleDoorsChange}
-                />
+                <DoorsList label={strings.DOORS} variant="standard" required value={doors} onChange={handleDoorsChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <FuelPolicyList
-                  label={csStrings.FUEL_POLICY}
-                  variant="standard"
-                  required
-                  value={fuelPolicy}
-                  onChange={handleFuelPolicyChange}
-                />
+                <FuelPolicyList label={csStrings.FUEL_POLICY} variant="standard" required value={fuelPolicy} onChange={handleFuelPolicyChange} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -508,17 +407,7 @@ const UpdateCar = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={aircon}
-                      onChange={handleAirconChange}
-                      color="primary"
-                    />
-                  }
-                  label={strings.AIRCON}
-                  className="checkbox-fcl"
-                />
+                <FormControlLabel control={<Switch checked={aircon} onChange={handleAirconChange} color="primary" />} label={strings.AIRCON} className="checkbox-fcl" />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -627,34 +516,18 @@ const UpdateCar = () => {
               </FormControl>
 
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  href="/cars"
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/cars">
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
               <div className="form-error">
-                {imageRequired && (
-                  <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />
-                )}
-                {imageSizeError && (
-                  <ErrorMessage message={strings.CAR_IMAGE_SIZE_ERROR} />
-                )}
-                {formError && (
-                  <ErrorMessage message={commonStrings.FORM_ERROR} />
-                )}
+                {imageRequired && <ErrorMessage message={commonStrings.IMAGE_REQUIRED} />}
+                {imageSizeError && <ErrorMessage message={strings.CAR_IMAGE_SIZE_ERROR} />}
+                {formError && <ErrorMessage message={commonStrings.FORM_ERROR} />}
               </div>
             </form>
           </Paper>

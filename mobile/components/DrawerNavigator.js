@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import {
-  useLinkBuilder,
-  useNavigation,
-  useNavigationState,
-} from '@react-navigation/native'
+import { useLinkBuilder, useNavigation, useNavigationState } from '@react-navigation/native'
 // import { getHeaderTitle } from '@react-navigation/elements'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -154,75 +150,20 @@ const DrawerNavigator = () => {
         screenOptions={{
           drawerActiveTintColor: '#f37022',
         }}
-        drawerContent={(props) => (
-          <DrawerContent
-            navigation={navigation}
-            routes={routes}
-            index={index}
-            drawerItems={drawerItems}
-            loggedIn={loggedIn}
-            language={language}
-            activeBackgroundColor="#feeee4"
-            activeTintColor="#f37022"
-            buildLink={buildLink}
-            {...props}
-          />
-        )}
+        drawerContent={(props) => <DrawerContent navigation={navigation} routes={routes} index={index} drawerItems={drawerItems} loggedIn={loggedIn} language={language} activeBackgroundColor="#feeee4" activeTintColor="#f37022" buildLink={buildLink} {...props} />}
         // useLegacyImplementation
       >
         {drawerItems.map((drawer) => (
           <Drawer.Screen
             key={drawer.name}
             name={drawer.name}
-            component={
-              drawer.name === 'Home'
-                ? HomeScreen
-                : drawer.name === 'Cars'
-                ? CarsScreen
-                : drawer.name === 'Checkout'
-                ? CheckoutScreen
-                : drawer.name === 'Bookings'
-                ? BookingsScreen
-                : drawer.name === 'Booking'
-                ? BookingScreen
-                : drawer.name === 'About'
-                ? AboutScreen
-                : drawer.name === 'ToS'
-                ? ToSScreen
-                : drawer.name === 'Contact'
-                ? ContactScreen
-                : drawer.name === 'Settings'
-                ? SettingsScreen
-                : drawer.name === 'ChangePassword'
-                ? ChangePasswordScreen
-                : drawer.name === 'SignIn'
-                ? SignInScreen
-                : drawer.name === 'SignUp'
-                ? SignUpScreen
-                : drawer.name === 'ForgotPassword'
-                ? ForgotPasswordScreen
-                : drawer.name === 'Notifications'
-                ? NotificationsScreen
-                : null
-            }
+            component={drawer.name === 'Home' ? HomeScreen : drawer.name === 'Cars' ? CarsScreen : drawer.name === 'Checkout' ? CheckoutScreen : drawer.name === 'Bookings' ? BookingsScreen : drawer.name === 'Booking' ? BookingScreen : drawer.name === 'About' ? AboutScreen : drawer.name === 'ToS' ? ToSScreen : drawer.name === 'Contact' ? ContactScreen : drawer.name === 'Settings' ? SettingsScreen : drawer.name === 'ChangePassword' ? ChangePasswordScreen : drawer.name === 'SignIn' ? SignInScreen : drawer.name === 'SignUp' ? SignUpScreen : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen : drawer.name === 'Notifications' ? NotificationsScreen : null}
             options={{
               title: drawer.title,
               drawerItemStyle: {
-                height:
-                  drawer.hidden ||
-                  (drawer.name === 'SignIn' && loggedIn) ||
-                  (drawer.name === 'Bookings' && !loggedIn) ||
-                  (drawer.name === 'Settings' && !loggedIn)
-                    ? 0
-                    : 'auto',
+                height: drawer.hidden || (drawer.name === 'SignIn' && loggedIn) || (drawer.name === 'Bookings' && !loggedIn) || (drawer.name === 'Settings' && !loggedIn) ? 0 : 'auto',
               },
-              drawerIcon: () => (
-                <MaterialIcons
-                  name={drawer.iconName}
-                  size={24}
-                  color="rgba(0, 0, 0, 0.54)"
-                />
-              ),
+              drawerIcon: () => <MaterialIcons name={drawer.iconName} size={24} color="rgba(0, 0, 0, 0.54)" />,
               headerShown: false,
               // header: ({ navigation, route, options }) => {
               //     const title = getHeaderTitle(options, route.name)

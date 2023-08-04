@@ -11,41 +11,17 @@ export const authHeader = () => {
   }
 }
 
-export const signup = (data) =>
-  axios.post(`${Env.API_HOST}/api/sign-up`, data).then((res) => res.status)
+export const signup = (data) => axios.post(`${Env.API_HOST}/api/sign-up`, data).then((res) => res.status)
 
-export const checkToken = (userId, email, token) =>
-  axios
-    .get(
-      `${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(
-        userId,
-      )}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`,
-    )
-    .then((res) => res.status)
+export const checkToken = (userId, email, token) => axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then((res) => res.status)
 
-export const deleteTokens = (userId) =>
-  axios
-    .delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`)
-    .then((res) => res.status)
+export const deleteTokens = (userId) => axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then((res) => res.status)
 
-export const resend = (email, reset = false) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/resend/${Env.APP_TYPE}/${encodeURIComponent(
-        email,
-      )}/${reset}`,
-    )
-    .then((res) => res.status)
+export const resend = (email, reset = false) => axios.post(`${Env.API_HOST}/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email)}/${reset}`).then((res) => res.status)
 
-export const activate = (data) =>
-  axios
-    .post(`${Env.API_HOST}/api/activate/ `, data, { headers: authHeader() })
-    .then((res) => res.status)
+export const activate = (data) => axios.post(`${Env.API_HOST}/api/activate/ `, data, { headers: authHeader() }).then((res) => res.status)
 
-export const validateEmail = (data) =>
-  axios
-    .post(`${Env.API_HOST}/api/validate-email`, data)
-    .then((exist) => exist.status)
+export const validateEmail = (data) => axios.post(`${Env.API_HOST}/api/validate-email`, data).then((exist) => exist.status)
 
 export const signin = (data) =>
   axios.post(`${Env.API_HOST}/api/sign-in/frontend`, data).then((res) => {
@@ -91,20 +67,9 @@ export const validateAccessToken = () =>
     })
     .then((res) => res.status)
 
-export const confirmEmail = (email, token) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/confirm-email/` +
-        encodeURIComponent(email) +
-        '/' +
-        encodeURIComponent(token),
-    )
-    .then((res) => res.status)
+export const confirmEmail = (email, token) => axios.post(`${Env.API_HOST}/api/confirm-email/` + encodeURIComponent(email) + '/' + encodeURIComponent(token)).then((res) => res.status)
 
-export const resendLink = (data) =>
-  axios
-    .post(`${Env.API_HOST}/api/resend-link`, data, { headers: authHeader() })
-    .then((res) => res.status)
+export const resendLink = (data) => axios.post(`${Env.API_HOST}/api/resend-link`, data, { headers: authHeader() }).then((res) => res.status)
 
 export const getLanguage = () => {
   const user = JSON.parse(localStorage.getItem('bc-user'))
@@ -163,10 +128,7 @@ export const getUser = (id) => {
     .then((res) => res.data)
 }
 
-export const updateUser = (data) =>
-  axios
-    .post(`${Env.API_HOST}/api/update-user`, data, { headers: authHeader() })
-    .then((res) => res.status)
+export const updateUser = (data) => axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: authHeader() }).then((res) => res.status)
 
 export const updateEmailNotifications = (data) =>
   axios
@@ -182,15 +144,7 @@ export const updateEmailNotifications = (data) =>
       return res.status
     })
 
-export const checkPassword = (id, pass) =>
-  axios
-    .get(
-      `${Env.API_HOST}/api/check-password/${encodeURIComponent(
-        id,
-      )}/${encodeURIComponent(pass)}`,
-      { headers: authHeader() },
-    )
-    .then((res) => res.status)
+export const checkPassword = (id, pass) => axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: authHeader() }).then((res) => res.status)
 
 export const changePassword = (data) =>
   axios
@@ -219,11 +173,4 @@ export const updateAvatar = (userId, file) => {
     .then((res) => res.status)
 }
 
-export const deleteAvatar = (userId) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId),
-      null,
-      { headers: authHeader() },
-    )
-    .then((res) => res.status)
+export const deleteAvatar = (userId) => axios.post(`${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId), null, { headers: authHeader() }).then((res) => res.status)

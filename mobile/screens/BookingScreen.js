@@ -52,21 +52,8 @@ const BookingScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      route={route}
-      onLoad={onLoad}
-      reload={reload}
-      strict
-    >
-      {visible && (
-        <BookingList
-          user={user._id}
-          booking={route.params.id}
-          language={language}
-        />
-      )}
+    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
+      {visible && <BookingList user={user._id} booking={route.params.id} language={language} />}
     </Master>
   )
 }

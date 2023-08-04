@@ -32,8 +32,7 @@ const LocationSelectList = (props) => {
       setLoading(true)
 
       const data = await LocationService.getLocations(text, 1, Env.PAGE_SIZE)
-      const _data =
-        Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
       const _rows = _data.resultData.map((location) => ({
         id: location._id,
@@ -118,11 +117,7 @@ const LocationSelectList = (props) => {
         }}
         renderItem={(item) => (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons
-              name="location-on"
-              size={23}
-              style={{ marginLeft: 5 }}
-            />
+            <MaterialIcons name="location-on" size={23} style={{ marginLeft: 5 }} />
             <Text
               style={{
                 paddingTop: 15,

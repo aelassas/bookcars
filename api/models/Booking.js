@@ -40,14 +40,7 @@ const bookingSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [
-        Env.BOOKING_STATUS.VOID,
-        Env.BOOKING_STATUS.PENDING,
-        Env.BOOKING_STATUS.DEPOSIT,
-        Env.BOOKING_STATUS.PAID,
-        Env.BOOKING_STATUS.RESERVED,
-        Env.BOOKING_STATUS.CANCELLED,
-      ],
+      enum: [Env.BOOKING_STATUS.VOID, Env.BOOKING_STATUS.PENDING, Env.BOOKING_STATUS.DEPOSIT, Env.BOOKING_STATUS.PAID, Env.BOOKING_STATUS.RESERVED, Env.BOOKING_STATUS.CANCELLED],
       required: [true, "can't be blank"],
     },
     cancellation: {

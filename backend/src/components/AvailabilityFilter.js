@@ -8,10 +8,7 @@ import '../assets/css/availability-filter.css'
 
 const AvailabilityFilter = (props) => {
   const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([
-    Env.AVAILABILITY.AVAILABLE,
-    Env.AVAILABILITY.UNAVAILABLE,
-  ])
+  const [values, setValues] = useState([Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE])
 
   const availableRef = useRef()
   const unavailableRef = useRef()
@@ -114,29 +111,14 @@ const AvailabilityFilter = (props) => {
   }
 
   return (
-    <Accordion
-      title={strings.AVAILABILITY}
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }availability-filter`}
-    >
+    <Accordion title={strings.AVAILABILITY} className={`${props.className ? `${props.className} ` : ''}availability-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
-          <input
-            ref={availableRef}
-            type="checkbox"
-            className="availability-checkbox"
-            onChange={handleAvailableChange}
-          />
+          <input ref={availableRef} type="checkbox" className="availability-checkbox" onChange={handleAvailableChange} />
           <label onClick={handleAvailableClick}>{strings.AVAILABLE}</label>
         </div>
         <div className="filter-element">
-          <input
-            ref={unavailableRef}
-            type="checkbox"
-            className="availability-checkbox"
-            onChange={handleUnavailableChange}
-          />
+          <input ref={unavailableRef} type="checkbox" className="availability-checkbox" onChange={handleUnavailableChange} />
           <label onClick={handleUnavailableClick}>{strings.UNAVAILABLE}</label>
         </div>
         <div className="filter-actions">

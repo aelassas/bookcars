@@ -22,10 +22,7 @@ export const notificationCounter = async (req, res) => {
       return res.json(cnt)
     }
   } catch (err) {
-    console.error(
-      `[notification.notificationCounter] ${strings.DB_ERROR} ${userId}`,
-      err,
-    )
+    console.error(`[notification.notificationCounter] ${strings.DB_ERROR} ${userId}`, err)
     return res.status(400).send(strings.ERROR + err)
   }
 }
@@ -49,38 +46,7 @@ export const notify = async (req, res) => {
           from: SMTP_FROM,
           to: user.email,
           subject: strings.NOTIFICATION_SUBJECT,
-          html:
-            '<p>' +
-            strings.HELLO +
-            user.fullName +
-            ',<br><br>' +
-            strings.NOTIFICATION_BODY +
-            '<br><br>' +
-            '---<br>' +
-            notification.message +
-            '<br><br>' +
-            (notification.isLink
-              ? '<a href="' +
-                notification.link +
-                '">' +
-                strings.NOTIFICATION_LINK +
-                '</a>' +
-                '<br>'
-              : '') +
-            '<a href="' +
-            'http' +
-            (HTTPS ? 's' : '') +
-            '://' +
-            APP_HOST +
-            '/notifications' +
-            '">' +
-            strings.NOTIFICATIONS_LINK +
-            '</a>' +
-            '<br>---' +
-            '<br><br>' +
-            strings.REGARDS +
-            '<br>' +
-            '</p>',
+          html: '<p>' + strings.HELLO + user.fullName + ',<br><br>' + strings.NOTIFICATION_BODY + '<br><br>' + '---<br>' + notification.message + '<br><br>' + (notification.isLink ? '<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>' : '') + '<a href="' + 'http' + (HTTPS ? 's' : '') + '://' + APP_HOST + '/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>' + '<br>---' + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
         }
 
         await Helper.sendMail(mailOptions)
@@ -120,11 +86,7 @@ export const getNotifications = async (req, res) => {
       { $match: { user: userId } },
       {
         $facet: {
-          resultData: [
-            { $sort: { createdAt: -1 } },
-            { $skip: (page - 1) * size },
-            { $limit: size },
-          ],
+          resultData: [{ $sort: { createdAt: -1 } }, { $skip: (page - 1) * size }, { $limit: size }],
           pageInfo: [
             {
               $count: 'totalRecords',
@@ -136,10 +98,7 @@ export const getNotifications = async (req, res) => {
 
     return res.json(notifications)
   } catch (err) {
-    console.error(
-      `[notification.getNotifications] ${strings.DB_ERROR} ${_userId}`,
-      err,
-    )
+    console.error(`[notification.getNotifications] ${strings.DB_ERROR} ${_userId}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -158,9 +117,7 @@ export const markAsRead = async (req, res) => {
     })
     const length = notifications.length
 
-    bulk
-      .find({ _id: { $in: ids }, isRead: false })
-      .update({ $set: { isRead: true } })
+    bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } })
     const result = await bulk.execute()
 
     if (result.modifiedCount !== length) {
@@ -192,9 +149,7 @@ export const markAsUnRead = async (req, res) => {
     })
     const length = notifications.length
 
-    bulk
-      .find({ _id: { $in: ids }, isRead: true })
-      .update({ $set: { isRead: false } })
+    bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } })
     const result = await bulk.execute()
 
     if (result.modifiedCount !== length) {

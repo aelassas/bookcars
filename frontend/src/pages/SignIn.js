@@ -4,14 +4,7 @@ import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
 import Header from '../components/Header'
 import Error from '../components/Error'
-import {
-  Paper,
-  FormControl,
-  InputLabel,
-  Input,
-  Button,
-  Link,
-} from '@mui/material'
+import { Paper, FormControl, InputLabel, Input, Button, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as LangHelper from '../common/LangHelper'
 
@@ -125,22 +118,11 @@ const SignIn = () => {
               <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.EMAIL}</InputLabel>
-                <Input
-                  type="text"
-                  onChange={handleOnChangeEmail}
-                  autoComplete="email"
-                  required
-                />
+                <Input type="text" onChange={handleOnChangeEmail} autoComplete="email" required />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PASSWORD}</InputLabel>
-                <Input
-                  onChange={handleOnChangePassword}
-                  onKeyDown={handleOnPasswordKeyDown}
-                  autoComplete="password"
-                  type="password"
-                  required
-                />
+                <Input onChange={handleOnChangePassword} onKeyDown={handleOnPasswordKeyDown} autoComplete="password" type="password" required />
               </FormControl>
 
               <div className="stay-connected">
@@ -167,20 +149,10 @@ const SignIn = () => {
               </div>
 
               <div className="signin-buttons">
-                <Button
-                  variant="contained"
-                  size="small"
-                  href="/sign-up"
-                  className="btn-secondary btn-margin btn-margin-bottom"
-                >
+                <Button variant="contained" size="small" href="/sign-up" className="btn-secondary btn-margin btn-margin-bottom">
                   {strings.SIGN_UP}
                 </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="small"
-                  className="btn-primary btn-margin btn-margin-bottom"
-                >
+                <Button type="submit" variant="contained" size="small" className="btn-primary btn-margin btn-margin-bottom">
                   {strings.SIGN_IN}
                 </Button>
               </div>

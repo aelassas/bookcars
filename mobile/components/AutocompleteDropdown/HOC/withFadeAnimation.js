@@ -15,9 +15,7 @@ export const withFadeAnimation = (WrappedComponent, containerStyle) => {
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-      <Animated.View
-        style={[containerStyle, { opacity: opacityAnimationValue }]}
-      >
+      <Animated.View style={[containerStyle, { opacity: opacityAnimationValue }]}>
         <WrappedComponent {...props} />
       </Animated.View>
     )

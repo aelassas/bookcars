@@ -10,17 +10,7 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '../components/Avatar'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Link,
-  FormControlLabel,
-  Switch,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link, FormControlLabel, Switch } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 
@@ -145,11 +135,7 @@ const UpdateCompany = () => {
 
   const handleResendActivationLink = async () => {
     try {
-      const status = await UserService.resend(
-        company.email,
-        false,
-        Env.APP_TYPE,
-      )
+      const status = await UserService.resend(company.email, false, Env.APP_TYPE)
 
       if (status === 200) {
         Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
@@ -254,23 +240,9 @@ const UpdateCompany = () => {
     <Master onLoad={onLoad} strict={true} user={user}>
       {visible && (
         <div className="update-company">
-          <Paper
-            className="company-form-update company-form-wrapper"
-            elevation={10}
-          >
+          <Paper className="company-form-update company-form-wrapper" elevation={10}>
             <form onSubmit={handleSubmit}>
-              <Avatar
-                type={Env.RECORD_TYPE.COMPANY}
-                mode="update"
-                record={company}
-                size="large"
-                readonly={false}
-                hideDelete={true}
-                onBeforeUpload={onBeforeUpload}
-                onChange={onAvatarChange}
-                color="disabled"
-                className="avatar-ctn"
-              />
+              <Avatar type={Env.RECORD_TYPE.COMPANY} mode="update" record={company} size="large" readonly={false} hideDelete={true} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
 
               <div className="info">
                 <InfoIcon />
@@ -278,28 +250,13 @@ const UpdateCompany = () => {
               </div>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.FULL_NAME}
-                </InputLabel>
-                <Input
-                  id="full-name"
-                  type="text"
-                  error={fullNameError}
-                  required
-                  onBlur={handleFullNameOnBlur}
-                  onChange={handleOnChangeFullName}
-                  autoComplete="off"
-                  value={fullName}
-                />
-                <FormHelperText error={fullNameError}>
-                  {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
-                </FormHelperText>
+                <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameOnBlur} onChange={handleOnChangeFullName} autoComplete="off" value={fullName} />
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.EMAIL}
-                </InputLabel>
+                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                 <Input id="email" type="text" value={email} disabled />
               </FormControl>
 
@@ -325,83 +282,37 @@ const UpdateCompany = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  onChange={handlePhoneChange}
-                  onBlur={handlePhoneBlur}
-                  autoComplete="off"
-                  value={phone}
-                  error={!phoneValid}
-                />
-                <FormHelperText error={!phoneValid}>
-                  {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                </FormHelperText>
+                <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
+                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input
-                  id="location"
-                  type="text"
-                  onChange={handleOnChangeLocation}
-                  autoComplete="off"
-                  value={location}
-                />
+                <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" value={location} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input
-                  id="bio"
-                  type="text"
-                  onChange={handleOnChangeBio}
-                  autoComplete="off"
-                  value={bio}
-                />
+                <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" value={bio} />
               </FormControl>
               {admin && (
-                <FormControl
-                  fullWidth
-                  margin="dense"
-                  className="resend-activation-link"
-                >
-                  <Link onClick={handleResendActivationLink}>
-                    {commonStrings.RESEND_ACTIVATION_LINK}
-                  </Link>
+                <FormControl fullWidth margin="dense" className="resend-activation-link">
+                  <Link onClick={handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
                 </FormControl>
               )}
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin btn-margin-bottom"
-                  size="small"
-                  href={`/change-password?u=${company._id}`}
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${company._id}`}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  href="/suppliers"
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/suppliers">
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
               <div className="form-error">
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                {avatarError && (
-                  <Error message={commonStrings.IMAGE_REQUIRED} />
-                )}
+                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
           </Paper>

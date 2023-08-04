@@ -40,19 +40,12 @@ const BookingFilter = (props) => {
 
     let filter = { from, to, pickupLocation, dropOffLocation, keyword }
 
-    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword)
-      filter = null
+    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) filter = null
     if (props.onSubmit) props.onSubmit(filter)
   }
 
   return (
-    <Accordion
-      title={commonStrings.SEARCH}
-      collapse={props.collapse}
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }booking-filter`}
-    >
+    <Accordion title={commonStrings.SEARCH} collapse={props.collapse} className={`${props.className ? `${props.className} ` : ''}booking-filter`}>
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth margin="dense">
           <DatePicker
@@ -77,22 +70,10 @@ const BookingFilter = (props) => {
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
-          <LocationSelectList
-            label={strings.PICKUP_LOCATION}
-            variant="standard"
-            onChange={handlePickupLocationChange}
-            hidePopupIcon
-            customOpen
-          />
+          <LocationSelectList label={strings.PICKUP_LOCATION} variant="standard" onChange={handlePickupLocationChange} hidePopupIcon customOpen />
         </FormControl>
         <FormControl fullWidth margin="dense">
-          <LocationSelectList
-            label={strings.DROP_OFF_LOCATION}
-            variant="standard"
-            onChange={handleDropOffLocationChange}
-            hidePopupIcon
-            customOpen
-          />
+          <LocationSelectList label={strings.DROP_OFF_LOCATION} variant="standard" onChange={handleDropOffLocationChange} hidePopupIcon customOpen />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <TextField
@@ -119,12 +100,7 @@ const BookingFilter = (props) => {
             className="bf-search"
           />
         </FormControl>
-        <Button
-          type="submit"
-          variant="contained"
-          className="btn-primary btn-search"
-          fullWidth
-        >
+        <Button type="submit" variant="contained" className="btn-primary btn-search" fullWidth>
           {commonStrings.SEARCH}
         </Button>
       </form>

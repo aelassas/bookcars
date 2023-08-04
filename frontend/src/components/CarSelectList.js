@@ -6,26 +6,10 @@ import { strings as blStrings } from '../lang/booking-list'
 import { strings } from '../lang/booking-car-list'
 import * as CarService from '../services/CarService'
 import MultipleSelect from './MultipleSelect'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import * as Helper from '../common/Helper'
 
-const CarSelectList = ({
-  label,
-  readOnly,
-  required,
-  multiple,
-  variant,
-  value,
-  company,
-  pickupLocation,
-  onChange,
-}) => {
+const CarSelectList = ({ label, readOnly, required, multiple, variant, value, company, pickupLocation, onChange }) => {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)
@@ -114,12 +98,7 @@ const CarSelectList = ({
 
       setLoading(true)
 
-      const data = await CarService.getBookingCars(
-        keyword,
-        payload,
-        page,
-        Env.PAGE_SIZE,
-      )
+      const data = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE)
       const _data = getCars(data)
       const _cars = page === 1 ? _data : [...cars, ..._data]
 
@@ -156,12 +135,7 @@ const CarSelectList = ({
         ListboxProps={{
           onScroll: (event) => {
             const listboxNode = event.currentTarget
-            if (
-              fetch &&
-              !loading &&
-              listboxNode.scrollTop + listboxNode.clientHeight >=
-                listboxNode.scrollHeight - Env.PAGE_OFFSET
-            ) {
+            if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
               _fetch(p, keyword, _company, _pickupLocation)
@@ -177,8 +151,7 @@ const CarSelectList = ({
           }
         }}
         onInputChange={(event) => {
-          const value =
-            (event && event.target ? event.target.value : null) || ''
+          const value = (event && event.target ? event.target.value : null) || ''
 
           if (value !== keyword) {
             setCars([])
@@ -197,26 +170,10 @@ const CarSelectList = ({
       />
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.INFO}
-        </DialogTitle>
-        <DialogContent className="dialog-content">
-          {_company === '-1' && _pickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
-          ) : _company === '-1' ? (
-            `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
-          ) : _pickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
-          ) : (
-            <></>
-          )}
-        </DialogContent>
+        <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
+        <DialogContent className="dialog-content">{_company === '-1' && _pickupLocation === '-1' ? `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}` : _company === '-1' ? `${strings.REQUIRED_FIELD}${blStrings.COMPANY}` : _pickupLocation === '-1' ? `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}` : <></>}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCloseDialog}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCloseDialog} variant="contained" className="btn-secondary">
             {commonStrings.CLOSE}
           </Button>
         </DialogActions>

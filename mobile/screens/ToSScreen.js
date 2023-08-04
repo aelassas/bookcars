@@ -32,19 +32,9 @@ const ToSScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      route={route}
-      onLoad={onLoad}
-      reload={reload}
-    >
+    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload}>
       {visible && (
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-        >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
           <Text style={{ fontSize: 16 }}>ToS!</Text>
         </ScrollView>
       )}

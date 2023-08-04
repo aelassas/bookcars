@@ -5,25 +5,8 @@ import { strings } from '../lang/user-list'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import { DataGrid, frFR, enUS } from '@mui/x-data-grid'
-import {
-  Tooltip,
-  IconButton,
-  Link,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Avatar,
-  Badge,
-  Box,
-} from '@mui/material'
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  AccountCircle,
-  Check as VerifiedIcon,
-} from '@mui/icons-material'
+import { Tooltip, IconButton, Link, Dialog, DialogTitle, DialogContent, DialogActions, Button, Avatar, Badge, Box } from '@mui/material'
+import { Edit as EditIcon, Delete as DeleteIcon, AccountCircle, Check as VerifiedIcon } from '@mui/icons-material'
 
 import '../assets/css/user-list.css'
 
@@ -58,18 +41,9 @@ const UserList = (props) => {
 
       const payload = { user: user._id, types }
 
-      const data = await UserService.getUsers(
-        payload,
-        keyword,
-        page + 1,
-        pageSize,
-      )
-      const _data =
-        Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-      const totalRecords =
-        Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0
-          ? _data.pageInfo[0].totalRecords
-          : 0
+      const data = await UserService.getUsers(payload, keyword, page + 1, pageSize)
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
       const _rows = _data.resultData
 
       setRows(_rows)
@@ -133,19 +107,9 @@ const UserList = (props) => {
 
           if (user.avatar) {
             if (user.type === Env.RECORD_TYPE.COMPANY) {
-              userAvatar = (
-                <img
-                  src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                  alt={params.row.fullName}
-                />
-              )
+              userAvatar = <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)} alt={params.row.fullName} />
             } else {
-              const avatar = (
-                <Avatar
-                  src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)}
-                  className="avatar-small"
-                />
-              )
+              const avatar = <Avatar src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)} className="avatar-small" />
               if (user.verified) {
                 userAvatar = (
                   <Badge
@@ -156,10 +120,7 @@ const UserList = (props) => {
                     }}
                     badgeContent={
                       <Tooltip title={commonStrings.VERIFIED}>
-                        <Box
-                          borderRadius="50%"
-                          className="user-avatar-verified-small"
-                        >
+                        <Box borderRadius="50%" className="user-avatar-verified-small">
                           <VerifiedIcon className="user-avatar-verified-icon-small" />
                         </Box>
                       </Tooltip>
@@ -173,9 +134,7 @@ const UserList = (props) => {
               }
             }
           } else {
-            const avatar = (
-              <AccountCircle className="avatar-small" color="disabled" />
-            )
+            const avatar = <AccountCircle className="avatar-small" color="disabled" />
 
             if (user.verified) {
               userAvatar = (
@@ -187,10 +146,7 @@ const UserList = (props) => {
                   }}
                   badgeContent={
                     <Tooltip title={commonStrings.VERIFIED}>
-                      <Box
-                        borderRadius="50%"
-                        className="user-avatar-verified-small"
-                      >
+                      <Box borderRadius="50%" className="user-avatar-verified-small">
                         <VerifiedIcon className="user-avatar-verified-icon-small" />
                       </Box>
                     </Tooltip>
@@ -229,11 +185,7 @@ const UserList = (props) => {
         field: 'type',
         headerName: commonStrings.TYPE,
         flex: 1,
-        renderCell: (params) => (
-          <span className={`bs us-${params.value}`}>
-            {Helper.getUserType(params.value)}
-          </span>
-        ),
+        renderCell: (params) => <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>,
         valueGetter: (params) => params.value,
       },
       {
@@ -249,8 +201,7 @@ const UserList = (props) => {
           }
 
           const _user = params.row
-          return user.type === Env.RECORD_TYPE.ADMIN ||
-            _user.company === user._id ? (
+          return user.type === Env.RECORD_TYPE.ADMIN || _user.company === user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
                 <IconButton href={`update-user?u=${params.row._id}`}>
@@ -344,10 +295,7 @@ const UserList = (props) => {
           paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          localeText={
-            (user.language === 'fr' ? frFR : enUS).components.MuiDataGrid
-              .defaultProps.localeText
-          }
+          localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
           slots={{
             noRowsOverlay: () => '',
           }}
@@ -355,35 +303,19 @@ const UserList = (props) => {
             setSelectedIds(selectedIds)
             setReloadColumns(true)
           }}
-          getRowClassName={(params) =>
-            params.row.blacklisted ? 'us-blacklisted' : ''
-          }
+          getRowClassName={(params) => (params.row.blacklisted ? 'us-blacklisted' : '')}
           disableRowSelectionOnClick
         />
       )}
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
-        <DialogContent className="dialog-content">
-          {selectedIds.length === 0
-            ? strings.DELETE_USER
-            : strings.DELETE_USERS}
-        </DialogContent>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
+        <DialogContent className="dialog-content">{selectedIds.length === 0 ? strings.DELETE_USER : strings.DELETE_USERS}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelDelete}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

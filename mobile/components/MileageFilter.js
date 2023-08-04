@@ -10,10 +10,7 @@ import Switch from './Switch'
 const MileageFilter = (props) => {
   const [limited, setLimited] = useState(true)
   const [unlimited, setUnlimited] = useState(true)
-  const [values, setValues] = useState([
-    Env.MILEAGE.LIMITED,
-    Env.MILEAGE.UNLIMITED,
-  ])
+  const [values, setValues] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
   const [allChecked, setAllChecked] = useState(true)
 
   const onValueChangeLimited = (checked) => {
@@ -67,20 +64,8 @@ const MileageFilter = (props) => {
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('MILEAGE')}>
           <View style={styles.contentContainer}>
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={limited}
-              label={i18n.t('LIMITED')}
-              onValueChange={onValueChangeLimited}
-            />
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={unlimited}
-              label={i18n.t('UNLIMITED')}
-              onValueChange={onValueChangeUnlimited}
-            />
+            <Switch style={styles.component} textStyle={styles.text} value={limited} label={i18n.t('LIMITED')} onValueChange={onValueChangeLimited} />
+            <Switch style={styles.component} textStyle={styles.text} value={unlimited} label={i18n.t('UNLIMITED')} onValueChange={onValueChangeUnlimited} />
           </View>
           <Link
             style={styles.link}

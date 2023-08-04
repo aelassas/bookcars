@@ -6,9 +6,7 @@ import '../assets/css/user-type-filter.css'
 
 const UserTypeFilter = (props) => {
   const userTypes = Helper.getUserTypes()
-  const [checkedUserTypes, setCheckedUserTypes] = useState(
-    userTypes.map((user) => user.value),
-  )
+  const [checkedUserTypes, setCheckedUserTypes] = useState(userTypes.map((user) => user.value))
   const [allChecked, setAllChecked] = useState(true)
   const refs = useRef([])
 
@@ -77,25 +75,12 @@ const UserTypeFilter = (props) => {
   }
 
   return (
-    <div
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }user-type-filter`}
-    >
+    <div className={`${props.className ? `${props.className} ` : ''}user-type-filter`}>
       <ul className="user-type-list">
         {userTypes.map((userType, index) => (
           <li key={userType.value}>
-            <input
-              ref={(ref) => (refs.current[index] = ref)}
-              type="checkbox"
-              data-value={userType.value}
-              className="user-type-checkbox"
-              onChange={handleUserTypeChange}
-            />
-            <label
-              onClick={handleUserTypeClick}
-              className={`bs bs-${userType.value}`}
-            >
+            <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-value={userType.value} className="user-type-checkbox" onChange={handleUserTypeChange} />
+            <label onClick={handleUserTypeClick} className={`bs bs-${userType.value}`}>
               {Helper.getUserType(userType.value)}
             </label>
           </li>

@@ -4,25 +4,8 @@ import { strings as commonStrings } from '../lang/common'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
-import {
-  Button,
-  Avatar as MaterialAvatar,
-  Badge,
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tooltip,
-} from '@mui/material'
-import {
-  AccountCircle,
-  PhotoCamera as PhotoCameraIcon,
-  BrokenImageTwoTone as DeleteIcon,
-  CorporateFare as CompanyIcon,
-  DirectionsCar as CarIcon,
-  Check as VerifiedIcon,
-} from '@mui/icons-material'
+import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import { AccountCircle, PhotoCamera as PhotoCameraIcon, BrokenImageTwoTone as DeleteIcon, CorporateFare as CompanyIcon, DirectionsCar as CarIcon, Check as VerifiedIcon } from '@mui/icons-material'
 
 const Avatar = (props) => {
   const [error, setError] = useState(false)
@@ -69,11 +52,7 @@ const Avatar = (props) => {
     const file = e.target.files[0]
 
     reader.onloadend = async () => {
-      if (
-        props.type === Env.RECORD_TYPE.ADMIN ||
-        props.type === Env.RECORD_TYPE.COMPANY ||
-        props.type === Env.RECORD_TYPE.USER
-      ) {
+      if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
         if (props.mode === 'create') {
           const createAvatar = async () => {
             try {
@@ -204,11 +183,7 @@ const Avatar = (props) => {
 
   const handleDelete = async () => {
     try {
-      if (
-        props.type === Env.RECORD_TYPE.ADMIN ||
-        props.type === Env.RECORD_TYPE.COMPANY ||
-        props.type === Env.RECORD_TYPE.USER
-      ) {
+      if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
         if (record && props.mode === 'update') {
           const { _id } = record
           const status = await UserService.deleteAvatar(_id)
@@ -319,38 +294,19 @@ const Avatar = (props) => {
 
   const carImageStyle = { width: Env.CAR_IMAGE_WIDTH }
 
-  const userAvatar = avatar ? (
-    <MaterialAvatar
-      src={Helper.joinURL(cdn(), avatar)}
-      className={size ? 'avatar-' + size : 'avatar'}
-    />
-  ) : (
-    <></>
-  )
+  const userAvatar = avatar ? <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} /> : <></>
 
-  const emptyAvatar = (
-    <AccountCircle
-      className={size ? 'avatar-' + size : 'avatar'}
-      color={props.color || 'inherit'}
-    />
-  )
+  const emptyAvatar = <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
 
   return !error && !loading ? (
     <div className={className}>
       {avatar ? (
         readonly ? (
           props.type === Env.RECORD_TYPE.CAR ? (
-            <img
-              style={carImageStyle}
-              src={Helper.joinURL(cdn(), avatar)}
-              alt={record && record.name}
-            />
+            <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
           ) : props.type === Env.RECORD_TYPE.COMPANY ? (
             <div className="company-avatar-readonly">
-              <img
-                src={Helper.joinURL(cdn(), avatar)}
-                alt={record && record.fullName}
-              />
+              <img src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
             </div>
           ) : props.verified && record.verified ? (
             <Badge
@@ -361,21 +317,8 @@ const Avatar = (props) => {
               }}
               badgeContent={
                 <Tooltip title={commonStrings.VERIFIED}>
-                  <Box
-                    borderRadius="50%"
-                    className={
-                      size
-                        ? 'user-avatar-verified-' + size
-                        : 'user-avatar-verified-medium'
-                    }
-                  >
-                    <VerifiedIcon
-                      className={
-                        size
-                          ? 'user-avatar-verified-icon-' + size
-                          : 'user-avatar-verified-icon-medium'
-                      }
-                    />
+                  <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                    <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
                   </Box>
                 </Tooltip>
               }
@@ -398,11 +341,7 @@ const Avatar = (props) => {
                 <></>
               ) : (
                 <Tooltip title={commonStrings.DELETE_IMAGE}>
-                  <Box
-                    borderRadius="50%"
-                    className="avatar-action-box"
-                    onClick={handleDeleteAvatar}
-                  >
+                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
                     <DeleteIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
@@ -415,16 +354,10 @@ const Avatar = (props) => {
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              className={
-                props.type === Env.RECORD_TYPE.COMPANY ? 'company-avatar' : null
-              }
+              className={props.type === Env.RECORD_TYPE.COMPANY ? 'company-avatar' : null}
               badgeContent={
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
-                  <Box
-                    borderRadius="50%"
-                    className="avatar-action-box"
-                    onClick={handleUpload}
-                  >
+                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 </Tooltip>
@@ -432,22 +365,12 @@ const Avatar = (props) => {
             >
               {props.type === Env.RECORD_TYPE.CAR ? (
                 <div className="car-avatar">
-                  <img
-                    src={Helper.joinURL(cdn(), avatar)}
-                    alt={record && record.name}
-                  />
+                  <img src={Helper.joinURL(cdn(), avatar)} alt={record && record.name} />
                 </div>
               ) : props.type === Env.RECORD_TYPE.COMPANY ? (
-                <img
-                  style={companyImageStyle}
-                  src={Helper.joinURL(cdn(), avatar)}
-                  alt={record && record.fullName}
-                />
+                <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={record && record.fullName} />
               ) : (
-                <MaterialAvatar
-                  src={Helper.joinURL(cdn(), avatar)}
-                  className={size ? 'avatar-' + size : 'avatar'}
-                />
+                <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} />
               )}
             </Badge>
           </Badge>
@@ -457,10 +380,7 @@ const Avatar = (props) => {
         props.type === Env.RECORD_TYPE.CAR ? (
           <CarIcon style={carImageStyle} color={props.color || 'inherit'} />
         ) : props.type === Env.RECORD_TYPE.COMPANY ? (
-          <CompanyIcon
-            style={companyImageStyle}
-            color={props.color || 'inherit'}
-          />
+          <CompanyIcon style={companyImageStyle} color={props.color || 'inherit'} />
         ) : props.verified && record.verified ? (
           <Badge
             overlap="circular"
@@ -470,21 +390,8 @@ const Avatar = (props) => {
             }}
             badgeContent={
               <Tooltip title={commonStrings.VERIFIED}>
-                <Box
-                  borderRadius="50%"
-                  className={
-                    size
-                      ? 'user-avatar-verified-' + size
-                      : 'user-avatar-verified-medium'
-                  }
-                >
-                  <VerifiedIcon
-                    className={
-                      size
-                        ? 'user-avatar-verified-icon-' + size
-                        : 'user-avatar-verified-icon-medium'
-                    }
-                  />
+                <Box borderRadius="50%" className={size ? 'user-avatar-verified-' + size : 'user-avatar-verified-medium'}>
+                  <VerifiedIcon className={size ? 'user-avatar-verified-icon-' + size : 'user-avatar-verified-icon-medium'} />
                 </Box>
               </Tooltip>
             }
@@ -511,54 +418,27 @@ const Avatar = (props) => {
             }}
             badgeContent={
               <Tooltip title={commonStrings.UPLOAD_IMAGE}>
-                <Box
-                  borderRadius="50%"
-                  className="avatar-action-box"
-                  onClick={handleUpload}
-                >
+                <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                   <PhotoCameraIcon className="avatar-action-icon" />
                 </Box>
               </Tooltip>
             }
           >
-            {props.type === Env.RECORD_TYPE.CAR ? (
-              <CarIcon
-                className={size ? 'avatar-' + size : 'avatar'}
-                color={props.color || 'inherit'}
-              />
-            ) : props.type === Env.RECORD_TYPE.COMPANY ? (
-              <CompanyIcon
-                className={size ? 'avatar-' + size : 'avatar'}
-                color={props.color || 'inherit'}
-              />
-            ) : (
-              <AccountCircle
-                className={size ? 'avatar-' + size : 'avatar'}
-                color={props.color || 'inherit'}
-              />
-            )}
+            {props.type === Env.RECORD_TYPE.CAR ? <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} /> : props.type === Env.RECORD_TYPE.COMPANY ? <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} /> : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />}
           </Badge>
         </Badge>
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openTypeDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.INFO}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent>{commonStrings.USER_TYPE_REQUIRED}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCloseDialog}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCloseDialog} variant="contained" className="btn-secondary">
             {commonStrings.CLOSE}
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog disableEscapeKeyDown maxWidth="xs" open={open}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
         <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={handleCancelDelete} className="btn-secondary">
@@ -569,9 +449,7 @@ const Avatar = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {!readonly && (
-        <input id="upload" type="file" hidden onChange={handleChange} />
-      )}
+      {!readonly && <input id="upload" type="file" hidden onChange={handleChange} />}
     </div>
   ) : null
 }

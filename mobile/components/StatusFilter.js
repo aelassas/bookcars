@@ -9,12 +9,8 @@ import Link from './Link'
 import Switch from './Switch'
 
 const StatusFilter = (props) => {
-  const [statuses, setStatuses] = useState(
-    Helper.getBookingStatuses().map((status) => ({ ...status, checked: true })),
-  )
-  const [checkedStatuses, setCheckedStatuses] = useState(
-    Helper.getBookingStatuses().map((status) => status.value),
-  )
+  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => ({ ...status, checked: true })))
+  const [checkedStatuses, setCheckedStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)
 
   useEffect(() => {
@@ -57,10 +53,7 @@ const StatusFilter = (props) => {
                     }
                   }}
                 >
-                  <BookingStatus
-                    style={styles.bookingStatus}
-                    status={status.value}
-                  />
+                  <BookingStatus style={styles.bookingStatus} status={status.value} />
                 </Switch>
               </View>
             ))}
@@ -84,9 +77,7 @@ const StatusFilter = (props) => {
                   })
                   setAllChecked(true)
                   setStatuses(Helper.clone(statuses))
-                  _checkedStatuses = Helper.clone(
-                    statuses.map((status) => status.value),
-                  )
+                  _checkedStatuses = Helper.clone(statuses.map((status) => status.value))
                   setCheckedStatuses(_checkedStatuses)
 
                   if (props.onChange) {

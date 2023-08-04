@@ -85,31 +85,13 @@ const CompanyFilter = (props) => {
 
   return (
     suppliers.length > 1 && (
-      <Accordion
-        title={commonStrings.SUPPLIER}
-        collapse={props.collapse}
-        offsetHeight={Math.floor(
-          (suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT,
-        )}
-        className={`${
-          props.className ? `${props.className} ` : ''
-        }company-filter`}
-      >
+      <Accordion title={commonStrings.SUPPLIER} collapse={props.collapse} offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${props.className ? `${props.className} ` : ''}company-filter`}>
         <ul className="company-list">
           {suppliers.map((supplier, index) => (
             <li key={supplier._id}>
-              <input
-                ref={(ref) => (refs.current[index] = ref)}
-                type="checkbox"
-                data-id={supplier._id}
-                className="company-checkbox"
-                onChange={handleCheckCompanyChange}
-              />
+              <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-id={supplier._id} className="company-checkbox" onChange={handleCheckCompanyChange} />
               <label onClick={handleCompanyClick}>
-                <img
-                  src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)}
-                  alt={supplier.fullName}
-                />
+                <img src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
               </label>
             </li>
           ))}

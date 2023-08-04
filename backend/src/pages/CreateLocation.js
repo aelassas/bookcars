@@ -3,14 +3,7 @@ import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-location'
 import * as LocationService from '../services/LocationService'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 
@@ -61,15 +54,8 @@ const CreateLocation = () => {
   return (
     <Master onLoad={onLoad} strict={true}>
       <div className="create-location">
-        <Paper
-          className="location-form location-form-wrapper"
-          elevation={10}
-          style={visible ? null : { display: 'none' }}
-        >
-          <h1 className="location-form-title">
-            {' '}
-            {strings.NEW_LOCATION_HEADING}{' '}
-          </h1>
+        <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+          <h1 className="location-form-title"> {strings.NEW_LOCATION_HEADING} </h1>
           <form onSubmit={handleSubmit}>
             {Env._LANGUAGES.map((language, index) => (
               <FormControl key={index} fullWidth margin="dense">
@@ -91,27 +77,15 @@ const CreateLocation = () => {
                   }}
                   autoComplete="off"
                 />
-                <FormHelperText error={nameErrors[index]}>
-                  {(nameErrors[index] && strings.INVALID_LOCATION) || ''}
-                </FormHelperText>
+                <FormHelperText error={nameErrors[index]}>{(nameErrors[index] && strings.INVALID_LOCATION) || ''}</FormHelperText>
               </FormControl>
             ))}
 
             <div className="buttons">
-              <Button
-                type="submit"
-                variant="contained"
-                className="btn-primary btn-margin-bottom"
-                size="small"
-              >
+              <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                 {commonStrings.CREATE}
               </Button>
-              <Button
-                variant="contained"
-                className="btn-secondary btn-margin-bottom"
-                size="small"
-                href="/locations"
-              >
+              <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/locations">
                 {commonStrings.CANCEL}
               </Button>
             </div>

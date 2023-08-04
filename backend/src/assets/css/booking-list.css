@@ -93,11 +93,7 @@ div.bs-list div.booking-details div.booking-detail label.booking-detail-title {
   color: rgba(0, 0, 0, 0.87);
 }
 
-div.bs-list
-  div.booking-details
-  div.booking-detail
-  div.booking-detail-value
-  div.car-company {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
@@ -105,21 +101,12 @@ div.bs-list
   height: 30px;
 }
 
-div.bs-list
-  div.booking-details
-  div.booking-detail
-  div.booking-detail-value
-  div.car-company
-  img {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company img {
   max-width: 100%;
   max-height: 100%;
 }
 
-div.bs-list
-  div.booking-details
-  div.booking-detail
-  div.booking-detail-value
-  label.car-company-name {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value label.car-company-name {
   color: rgba(0, 0, 0, 0.6);
   font-size: 0.9em;
   line-height: 1em;

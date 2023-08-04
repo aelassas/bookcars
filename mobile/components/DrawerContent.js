@@ -70,12 +70,9 @@ const DrawerContent = (props) => {
       <View forceInset={styles.drawerList}>
         {props.state.routes.map((route, i) => {
           const focused = i === props.state.index
-          const { title, drawerLabel, drawerIcon } =
-            props.descriptors[route.key].options
+          const { title, drawerLabel, drawerIcon } = props.descriptors[route.key].options
 
-          const hidden = props.drawerItems.find(
-            (item) => item.name === route.name,
-          ).hidden
+          const hidden = props.drawerItems.find((item) => item.name === route.name).hidden
           if (hidden) {
             return <View key={route.key} />
           }
@@ -83,13 +80,7 @@ const DrawerContent = (props) => {
           return (
             <DrawerItem
               key={route.key}
-              label={
-                drawerLabel !== undefined
-                  ? drawerLabel
-                  : title !== undefined
-                  ? title
-                  : route.name
-              }
+              label={drawerLabel !== undefined ? drawerLabel : title !== undefined ? title : route.name}
               icon={drawerIcon}
               focused={focused}
               activeTintColor={props.activeTintColor}
@@ -101,9 +92,7 @@ const DrawerContent = (props) => {
               to={props.buildLink(route.name, route.params)}
               onPress={() => {
                 props.navigation.dispatch({
-                  ...(focused
-                    ? DrawerActions.closeDrawer()
-                    : CommonActions.navigate(route.name)),
+                  ...(focused ? DrawerActions.closeDrawer() : CommonActions.navigate(route.name)),
                   target: props.state.key,
                 })
               }}
@@ -111,17 +100,8 @@ const DrawerContent = (props) => {
           )
         })}
         {props.loggedIn && (
-          <Pressable
-            style={styles.signout}
-            hitSlop={15}
-            onPress={async () => await UserService.signout(props.navigation)}
-          >
-            <MaterialIcons
-              style={styles.signoutIcon}
-              name="logout"
-              size={24}
-              color="rgba(0, 0, 0, 0.54)"
-            />
+          <Pressable style={styles.signout} hitSlop={15} onPress={async () => await UserService.signout(props.navigation)}>
+            <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
             <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
           </Pressable>
         )}
@@ -135,22 +115,13 @@ const DrawerContent = (props) => {
             setopenLanguageMenu(!openLanguageMenu)
           }}
         >
-          <MaterialIcons
-            style={styles.languageIcon}
-            name="language"
-            size={24}
-            color="rgba(0, 0, 0, 0.54)"
-          />
+          <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
           <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
         </Pressable>
         {openLanguageMenu && (
           <View style={styles.languageMenu}>
             <Pressable
-              style={
-                language === Env.LANGUAGE.FR
-                  ? styles.languageMenuSelectedItem
-                  : styles.languageMenuItem
-              }
+              style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem}
               onPress={async () => {
                 if (language !== Env.LANGUAGE.FR) {
                   await updateLanguage(Env.LANGUAGE.FR)
@@ -158,22 +129,10 @@ const DrawerContent = (props) => {
                 }
               }}
             >
-              <Text
-                style={
-                  language === Env.LANGUAGE.FR
-                    ? styles.languageMenuSelectedText
-                    : styles.languageMenuText
-                }
-              >
-                {i18n.t('LANGUAGE_FR')}
-              </Text>
+              <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
             </Pressable>
             <Pressable
-              style={
-                language === Env.LANGUAGE.EN
-                  ? styles.languageMenuSelectedItem
-                  : styles.languageMenuItem
-              }
+              style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem}
               onPress={async () => {
                 if (language !== Env.LANGUAGE.EN) {
                   await updateLanguage(Env.LANGUAGE.EN)
@@ -181,15 +140,7 @@ const DrawerContent = (props) => {
                 }
               }}
             >
-              <Text
-                style={
-                  language === Env.LANGUAGE.EN
-                    ? styles.languageMenuSelectedText
-                    : styles.languageMenuText
-                }
-              >
-                {i18n.t('LANGUAGE_EN')}
-              </Text>
+              <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
             </Pressable>
           </View>
         )}

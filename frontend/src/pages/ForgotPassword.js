@@ -4,15 +4,7 @@ import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
 import NoMatch from './NoMatch'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Link,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material'
 import validator from 'validator'
 import * as Helper from '../common/Helper'
 
@@ -117,10 +109,7 @@ const ForgotPassword = () => {
       {visible && (
         <div className="forgot-password">
           <Paper className="forgot-password-form" elevation={10}>
-            <h1 className="forgot-password-title">
-              {' '}
-              {strings.RESET_PASSWORD_HEADING}{' '}
-            </h1>
+            <h1 className="forgot-password-title"> {strings.RESET_PASSWORD_HEADING} </h1>
             {sent && (
               <div>
                 <label>{strings.EMAIL_SENT}</label>
@@ -133,18 +122,8 @@ const ForgotPassword = () => {
               <form onSubmit={handleSubmit}>
                 <label>{strings.RESET_PASSWORD}</label>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.EMAIL}
-                  </InputLabel>
-                  <Input
-                    onChange={handleEmailChange}
-                    onKeyDown={handleEmailKeyDown}
-                    onBlur={handleEmailBlur}
-                    type="text"
-                    error={error || !emailValid}
-                    autoComplete="off"
-                    required
-                  />
+                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                  <Input onChange={handleEmailChange} onKeyDown={handleEmailKeyDown} onBlur={handleEmailBlur} type="text" error={error || !emailValid} autoComplete="off" required />
                   <FormHelperText error={error || !emailValid}>
                     {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                     {(error && strings.EMAIL_ERROR) || ''}
@@ -152,20 +131,10 @@ const ForgotPassword = () => {
                 </FormControl>
 
                 <div className="buttons">
-                  <Button
-                    type="submit"
-                    className="btn-primary btn-margin btn-margin-bottom"
-                    size="small"
-                    variant="contained"
-                  >
+                  <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
                     {strings.RESET}
                   </Button>
-                  <Button
-                    className="btn-secondary btn-margin-bottom"
-                    size="small"
-                    variant="contained"
-                    href="/"
-                  >
+                  <Button className="btn-secondary btn-margin-bottom" size="small" variant="contained" href="/">
                     {commonStrings.CANCEL}
                   </Button>
                 </div>

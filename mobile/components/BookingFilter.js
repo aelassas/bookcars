@@ -62,30 +62,9 @@ const BookingFilter = (props) => {
     props.visible && (
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('SEARCH')}>
-          <DateTimePicker
-            mode="date"
-            backgroundColor="#fff"
-            locale={props.language}
-            style={styles.component}
-            size="small"
-            label={i18n.t('FROM')}
-            value={from}
-            onChange={(date) => setFrom(date)}
-            onPress={blurLocations}
-          />
+          <DateTimePicker mode="date" backgroundColor="#fff" locale={props.language} style={styles.component} size="small" label={i18n.t('FROM')} value={from} onChange={(date) => setFrom(date)} onPress={blurLocations} />
 
-          <DateTimePicker
-            mode="date"
-            backgroundColor="#fff"
-            locale={props.language}
-            style={styles.component}
-            size="small"
-            label={i18n.t('TO')}
-            value={to}
-            minimumDate={from}
-            onChange={(date) => setTo(date)}
-            onPress={blurLocations}
-          />
+          <DateTimePicker mode="date" backgroundColor="#fff" locale={props.language} style={styles.component} size="small" label={i18n.t('TO')} value={to} minimumDate={from} onChange={(date) => setTo(date)} onPress={blurLocations} />
 
           <LocationSelectList
             backgroundColor="#fff"
@@ -123,23 +102,9 @@ const BookingFilter = (props) => {
             blur={blur}
           />
 
-          <TextInput
-            ref={searchRef}
-            backgroundColor="#fff"
-            style={styles.component}
-            size="small"
-            hideLabel
-            label={i18n.t('SEARCH_PLACEHOLDER')}
-            value={keyword}
-            onChangeText={setKeyword}
-          />
+          <TextInput ref={searchRef} backgroundColor="#fff" style={styles.component} size="small" hideLabel label={i18n.t('SEARCH_PLACEHOLDER')} value={keyword} onChangeText={setKeyword} />
 
-          <Button
-            style={styles.component}
-            size="small"
-            label={i18n.t('SEARCH')}
-            onPress={onPressSearch}
-          />
+          <Button style={styles.component} size="small" label={i18n.t('SEARCH')} onPress={onPressSearch} />
         </Accordion>
       </View>
     )

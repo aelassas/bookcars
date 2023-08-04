@@ -10,10 +10,7 @@ import Switch from './Switch'
 const GearboxFilter = (props) => {
   const [automatic, setAutomatic] = useState(true)
   const [manual, setManual] = useState(true)
-  const [values, setValues] = useState([
-    Env.GEARBOX_TYPE.AUTOMATIC,
-    Env.GEARBOX_TYPE.MANUAL,
-  ])
+  const [values, setValues] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
   const [allChecked, setAllChecked] = useState(true)
 
   const onValueChangeAutomatic = (checked) => {
@@ -67,20 +64,8 @@ const GearboxFilter = (props) => {
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('GEARBOX')}>
           <View style={styles.contentContainer}>
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={automatic}
-              label={i18n.t('GEARBOX_AUTOMATIC')}
-              onValueChange={onValueChangeAutomatic}
-            />
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={manual}
-              label={i18n.t('GEARBOX_MANUAL')}
-              onValueChange={onValueChangeManual}
-            />
+            <Switch style={styles.component} textStyle={styles.text} value={automatic} label={i18n.t('GEARBOX_AUTOMATIC')} onValueChange={onValueChangeAutomatic} />
+            <Switch style={styles.component} textStyle={styles.text} value={manual} label={i18n.t('GEARBOX_MANUAL')} onValueChange={onValueChangeManual} />
           </View>
           <Link
             style={styles.link}
@@ -93,10 +78,7 @@ const GearboxFilter = (props) => {
                 setAllChecked(false)
                 setValues([])
               } else {
-                const _values = [
-                  Env.GEARBOX_TYPE.AUTOMATIC,
-                  Env.GEARBOX_TYPE.MANUAL,
-                ]
+                const _values = [Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]
                 setAutomatic(true)
                 setManual(true)
                 setAllChecked(true)

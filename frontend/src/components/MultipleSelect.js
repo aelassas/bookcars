@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useRef,
-  useImperativeHandle,
-} from 'react'
+import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import { Autocomplete, TextField, InputAdornment } from '@mui/material'
@@ -26,28 +20,7 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   )
 })
 
-const MultipleSelect = ({
-  label,
-  callbackFromMultipleSelect,
-  reference,
-  selectedOptions,
-  key,
-  required,
-  options,
-  ListboxProps,
-  onFocus,
-  onInputChange,
-  onClear,
-  loading,
-  multiple,
-  freeSolo,
-  type,
-  variant,
-  onOpen,
-  readOnly,
-  hidePopupIcon,
-  customOpen,
-}) => {
+const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selectedOptions, key, required, options, ListboxProps, onFocus, onInputChange, onClear, loading, multiple, freeSolo, type, variant, onOpen, readOnly, hidePopupIcon, customOpen }) => {
   const [init, setInit] = React.useState(selectedOptions.length === 0)
   const [open, setOpen] = React.useState(false)
   const [values, setValues] = useState([])
@@ -132,11 +105,7 @@ const MultipleSelect = ({
           const inputProps = params.inputProps
           inputProps.autoComplete = 'off'
 
-          if (
-            type === Env.RECORD_TYPE.LOCATION &&
-            !multiple &&
-            values.length === 0
-          ) {
+          if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 0) {
             return (
               <TextField
                 {...params}
@@ -155,12 +124,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.LOCATION &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.LOCATION && !multiple && values.length === 1 && values[0]) {
             return (
               <TextField
                 {...params}
@@ -183,12 +147,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.COMPANY &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.COMPANY && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -202,11 +161,7 @@ const MultipleSelect = ({
                   startAdornment: (
                     <>
                       <InputAdornment position="start">
-                        <img
-                          src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                          alt={option.name}
-                          style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                        />
+                        <img src={Helper.joinURL(Env.CDN_USERS, option.image)} alt={option.name} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                       </InputAdornment>
                       {params.InputProps.startAdornment}
                     </>
@@ -216,12 +171,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (
-            type === Env.RECORD_TYPE.CAR &&
-            !multiple &&
-            values.length === 1 &&
-            values[0]
-          ) {
+          if (type === Env.RECORD_TYPE.CAR && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -251,14 +201,7 @@ const MultipleSelect = ({
             )
           }
 
-          return (
-            <TextField
-              {...params}
-              label={label}
-              variant={variant || 'outlined'}
-              required={required && values && values.length === 0}
-            />
-          )
+          return <TextField {...params} label={label} variant={variant || 'outlined'} required={required && values && values.length === 0} />
         }}
         renderOption={(props, option) => {
           if (type === Env.RECORD_TYPE.LOCATION) {
@@ -274,11 +217,7 @@ const MultipleSelect = ({
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image">
-                  <img
-                    src={Helper.joinURL(Env.CDN_USERS, option.image)}
-                    alt={option.name}
-                    style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                  />
+                  <img src={Helper.joinURL(Env.CDN_USERS, option.image)} alt={option.name} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                 </span>
                 <span className="option-name">{option.name}</span>
               </li>
