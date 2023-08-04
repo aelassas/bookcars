@@ -183,7 +183,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
               label={i18n.t('CURRENT_PASSWORD')}
               value={currentPassword}
               error={currentPasswordRequired || currentPasswordError}
-              helperText={(currentPasswordRequired && i18n.t('REQUIRED')) || '' || (currentPasswordError && i18n.t('PASSWORD_ERROR')) || ''}
+              helperText={(currentPasswordRequired && i18n.t('REQUIRED')) || (currentPasswordError && i18n.t('PASSWORD_ERROR')) || ''}
               onChangeText={onChangeCurrentPassword}
             />
 
@@ -194,7 +194,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
               label={i18n.t('NEW_PASSWORD')}
               value={password}
               error={passwordRequired || passwordLengthError}
-              helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''}
+              helperText={(passwordRequired && i18n.t('REQUIRED')) || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''}
               onChangeText={onChangePassword}
             />
 
@@ -205,7 +205,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
               label={i18n.t('CONFIRM_PASSWORD')}
               value={confirmPassword}
               error={confirmPasswordRequired || confirmPasswordError}
-              helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || '' || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
+              helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
               onChangeText={onChangeConfirmPassword}
             />
 
