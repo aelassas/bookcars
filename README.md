@@ -13,7 +13,7 @@ From the backend, admin users can create and manage suppliers, cars, locations, 
 
 When an admin user creates a new supplier, the supplier will receive an automatic email for creating his account to access the backend so he can manage his car fleet and bookings.
 
-From the frontend and the mobile app, users can sign up, search for available cars depending on pickup and drop-off locations, dates and time booking, choose a car and checkout.
+From the frontend and the mobile app, users can sign up, search for available cars depending on pickup point and time, choose a car and checkout.
 
 <img src="https://bookcars.github.io/content/docker.png" alt="" width="220" />
 
