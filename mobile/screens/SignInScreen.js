@@ -183,9 +183,27 @@ const SignInScreen = ({ navigation, route }) => {
 
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
         <View style={styles.contentContainer}>
-          <TextInput ref={emailRef} style={styles.component} label={i18n.t('EMAIL')} value={email} error={emailRequired || !emailValid || emailError} helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''} onChangeText={onChangeEmail} />
+          <TextInput
+            ref={emailRef}
+            style={styles.component}
+            label={i18n.t('EMAIL')}
+            value={email}
+            error={emailRequired || !emailValid || emailError}
+            helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+            onChangeText={onChangeEmail}
+          />
 
-          <TextInput ref={passwordRef} style={styles.component} secureTextEntry label={i18n.t('PASSWORD')} value={password} error={passwordRequired || passwordLengthError || passwordError} helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '' || (passwordError && i18n.t('PASSWORD_ERROR')) || ''} onChangeText={onChangePassword} onSubmitEditing={onPressSignIn} />
+          <TextInput
+            ref={passwordRef}
+            style={styles.component}
+            secureTextEntry
+            label={i18n.t('PASSWORD')}
+            value={password}
+            error={passwordRequired || passwordLengthError || passwordError}
+            helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || '' || (passwordError && i18n.t('PASSWORD_ERROR')) || ''}
+            onChangeText={onChangePassword}
+            onSubmitEditing={onPressSignIn}
+          />
 
           <Switch style={styles.stayConnected} textStyle={styles.stayConnectedText} label={i18n.t('STAY_CONNECTED')} value={stayConnected} onValueChange={onChangeStayConnected} />
 

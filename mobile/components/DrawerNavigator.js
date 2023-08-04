@@ -157,7 +157,37 @@ const DrawerNavigator = () => {
           <Drawer.Screen
             key={drawer.name}
             name={drawer.name}
-            component={drawer.name === 'Home' ? HomeScreen : drawer.name === 'Cars' ? CarsScreen : drawer.name === 'Checkout' ? CheckoutScreen : drawer.name === 'Bookings' ? BookingsScreen : drawer.name === 'Booking' ? BookingScreen : drawer.name === 'About' ? AboutScreen : drawer.name === 'ToS' ? ToSScreen : drawer.name === 'Contact' ? ContactScreen : drawer.name === 'Settings' ? SettingsScreen : drawer.name === 'ChangePassword' ? ChangePasswordScreen : drawer.name === 'SignIn' ? SignInScreen : drawer.name === 'SignUp' ? SignUpScreen : drawer.name === 'ForgotPassword' ? ForgotPasswordScreen : drawer.name === 'Notifications' ? NotificationsScreen : null}
+            component={
+              drawer.name === 'Home'
+                ? HomeScreen
+                : drawer.name === 'Cars'
+                ? CarsScreen
+                : drawer.name === 'Checkout'
+                ? CheckoutScreen
+                : drawer.name === 'Bookings'
+                ? BookingsScreen
+                : drawer.name === 'Booking'
+                ? BookingScreen
+                : drawer.name === 'About'
+                ? AboutScreen
+                : drawer.name === 'ToS'
+                ? ToSScreen
+                : drawer.name === 'Contact'
+                ? ContactScreen
+                : drawer.name === 'Settings'
+                ? SettingsScreen
+                : drawer.name === 'ChangePassword'
+                ? ChangePasswordScreen
+                : drawer.name === 'SignIn'
+                ? SignInScreen
+                : drawer.name === 'SignUp'
+                ? SignUpScreen
+                : drawer.name === 'ForgotPassword'
+                ? ForgotPasswordScreen
+                : drawer.name === 'Notifications'
+                ? NotificationsScreen
+                : null
+            }
             options={{
               title: drawer.title,
               drawerItemStyle: {

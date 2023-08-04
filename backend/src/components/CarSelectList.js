@@ -163,7 +163,17 @@ const CarSelectList = ({ label, required, multiple, variant, value, company, pic
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
-        <DialogContent className="dialog-content">{_company === '-1' && _pickupLocation === '-1' ? `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}` : _company === '-1' ? `${strings.REQUIRED_FIELD}${blStrings.COMPANY}` : _pickupLocation === '-1' ? `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}` : <></>}</DialogContent>
+        <DialogContent className="dialog-content">
+          {_company === '-1' && _pickupLocation === '-1' ? (
+            `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
+          ) : _company === '-1' ? (
+            `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
+          ) : _pickupLocation === '-1' ? (
+            `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
+          ) : (
+            <></>
+          )}
+        </DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={handleCloseDialog} variant="contained" className="btn-secondary">
             {commonStrings.CLOSE}

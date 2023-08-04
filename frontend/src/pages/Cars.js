@@ -149,7 +149,22 @@ const Cars = () => {
             )}
           </div>
           <div className="col-2">
-            <CarList containerClassName="cars" offset={offset} companies={companies} fuel={fuel} gearbox={gearbox} mileage={mileage} deposit={deposit} pickupLocation={pickupLocation._id} dropOffLocation={dropOffLocation._id} reload={reload} loading={loading} from={from} to={to} onLoad={handleCarListLoad} />
+            <CarList
+              containerClassName="cars"
+              offset={offset}
+              companies={companies}
+              fuel={fuel}
+              gearbox={gearbox}
+              mileage={mileage}
+              deposit={deposit}
+              pickupLocation={pickupLocation._id}
+              dropOffLocation={dropOffLocation._id}
+              reload={reload}
+              loading={loading}
+              from={from}
+              to={to}
+              onLoad={handleCarListLoad}
+            />
           </div>
         </div>
       )}

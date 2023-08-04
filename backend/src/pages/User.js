@@ -162,7 +162,11 @@ const User = () => {
               )}
             </div>
           </div>
-          <div className="col-2">{(edit || !company) && <BookingList containerClassName="user" offset={offset} loggedUser={loggedUser} user={company ? undefined : user} companies={company ? [user._id] : companies} statuses={statuses} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} hideCompanyColumn={company} />}</div>
+          <div className="col-2">
+            {(edit || !company) && (
+              <BookingList containerClassName="user" offset={offset} loggedUser={loggedUser} user={company ? undefined : user} companies={company ? [user._id] : companies} statuses={statuses} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} hideCompanyColumn={company} />
+            )}
+          </div>
         </div>
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>

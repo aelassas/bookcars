@@ -424,7 +424,13 @@ const Avatar = (props) => {
               </Tooltip>
             }
           >
-            {props.type === Env.RECORD_TYPE.CAR ? <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} /> : props.type === Env.RECORD_TYPE.COMPANY ? <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} /> : <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />}
+            {props.type === Env.RECORD_TYPE.CAR ? (
+              <CarIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+            ) : props.type === Env.RECORD_TYPE.COMPANY ? (
+              <CompanyIcon className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+            ) : (
+              <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+            )}
           </Badge>
         </Badge>
       )}

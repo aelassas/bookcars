@@ -919,11 +919,39 @@ const CheckoutScreen = ({ navigation, route }) => {
 
                     <TextInput ref={fullNameRef} style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} backgroundColor="#fbfbfb" />
 
-                    <TextInput ref={emailRef} style={styles.component} label={i18n.t('EMAIL')} value={email} error={emailRequired || !emailValid || emailError} helperText={(emailInfo && i18n.t('EMAIL_INFO')) || '' || (emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''} onChangeText={onChangeEmail} backgroundColor="#fbfbfb" />
+                    <TextInput
+                      ref={emailRef}
+                      style={styles.component}
+                      label={i18n.t('EMAIL')}
+                      value={email}
+                      error={emailRequired || !emailValid || emailError}
+                      helperText={(emailInfo && i18n.t('EMAIL_INFO')) || '' || (emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''}
+                      onChangeText={onChangeEmail}
+                      backgroundColor="#fbfbfb"
+                    />
 
-                    <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneInfo && i18n.t('PHONE_INFO')) || '' || (phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} backgroundColor="#fbfbfb" />
+                    <TextInput
+                      ref={phoneRef}
+                      style={styles.component}
+                      label={i18n.t('PHONE')}
+                      value={phone}
+                      error={phoneRequired || !phoneValid}
+                      helperText={(phoneInfo && i18n.t('PHONE_INFO')) || '' || (phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
+                      onChangeText={onChangePhone}
+                      backgroundColor="#fbfbfb"
+                    />
 
-                    <DateTimePicker mode="date" locale={language} style={styles.date} label={i18n.t('BIRTH_DATE')} value={birthDate} error={birthDateRequired || !birthDateValid} helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''} onChange={onChangeBirthDate} backgroundColor="#fbfbfb" />
+                    <DateTimePicker
+                      mode="date"
+                      locale={language}
+                      style={styles.date}
+                      label={i18n.t('BIRTH_DATE')}
+                      value={birthDate}
+                      error={birthDateRequired || !birthDateValid}
+                      helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      onChange={onChangeBirthDate}
+                      backgroundColor="#fbfbfb"
+                    />
 
                     <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
                   </View>
@@ -1047,13 +1075,57 @@ const CheckoutScreen = ({ navigation, route }) => {
 
                     <TextInput ref={cardNameRef} style={styles.component} label={i18n.t('CARD_NAME')} value={cardName} error={cardNameRequired} helperText={(cardNameRequired && i18n.t('REQUIRED')) || ''} backgroundColor="#e5efe5" onChangeText={onCardNameChange} />
 
-                    <TextInput ref={cardNumberRef} style={styles.component} label={i18n.t('CARD_NUMBER')} keyboardType="numeric" maxLength={16} value={cardNumber} error={cardNumberRequired || !cardNumberValid} helperText={(cardNumberRequired && i18n.t('REQUIRED')) || '' || (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardNumberChange} />
+                    <TextInput
+                      ref={cardNumberRef}
+                      style={styles.component}
+                      label={i18n.t('CARD_NUMBER')}
+                      keyboardType="numeric"
+                      maxLength={16}
+                      value={cardNumber}
+                      error={cardNumberRequired || !cardNumberValid}
+                      helperText={(cardNumberRequired && i18n.t('REQUIRED')) || '' || (!cardNumberValid && i18n.t('CARD_NUMBER_NOT_VALID')) || ''}
+                      backgroundColor="#e5efe5"
+                      onChangeText={onCardNumberChange}
+                    />
 
-                    <TextInput ref={cardMonthRef} style={styles.component} label={i18n.t('CARD_MONTH')} keyboardType="numeric" maxLength={2} value={cardMonth} error={cardMonthRequired || !cardMonthValid} helperText={(cardMonthRequired && i18n.t('REQUIRED')) || '' || (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardMonthChange} />
+                    <TextInput
+                      ref={cardMonthRef}
+                      style={styles.component}
+                      label={i18n.t('CARD_MONTH')}
+                      keyboardType="numeric"
+                      maxLength={2}
+                      value={cardMonth}
+                      error={cardMonthRequired || !cardMonthValid}
+                      helperText={(cardMonthRequired && i18n.t('REQUIRED')) || '' || (!cardMonthValid && i18n.t('CARD_MONTH_NOT_VALID')) || ''}
+                      backgroundColor="#e5efe5"
+                      onChangeText={onCardMonthChange}
+                    />
 
-                    <TextInput ref={cardYearRef} style={styles.component} label={i18n.t('CARD_YEAR')} keyboardType="numeric" maxLength={2} value={cardYear} error={cardYearRequired || !cardYearValid} helperText={(cardYearRequired && i18n.t('REQUIRED')) || '' || (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardYearChange} />
+                    <TextInput
+                      ref={cardYearRef}
+                      style={styles.component}
+                      label={i18n.t('CARD_YEAR')}
+                      keyboardType="numeric"
+                      maxLength={2}
+                      value={cardYear}
+                      error={cardYearRequired || !cardYearValid}
+                      helperText={(cardYearRequired && i18n.t('REQUIRED')) || '' || (!cardYearValid && i18n.t('CARD_YEAR_NOT_VALID')) || ''}
+                      backgroundColor="#e5efe5"
+                      onChangeText={onCardYearChange}
+                    />
 
-                    <TextInput ref={cvvRef} style={styles.component} keyboardType="numeric" maxLength={4} label={i18n.t('CVV')} value={cvv} error={cvvRequired || !cvvValid} helperText={(cvvRequired && i18n.t('REQUIRED')) || '' || (!cvvValid && i18n.t('CVV_NOT_VALID')) || ''} backgroundColor="#e5efe5" onChangeText={onCardCvvChange} />
+                    <TextInput
+                      ref={cvvRef}
+                      style={styles.component}
+                      keyboardType="numeric"
+                      maxLength={4}
+                      label={i18n.t('CVV')}
+                      value={cvv}
+                      error={cvvRequired || !cvvValid}
+                      helperText={(cvvRequired && i18n.t('REQUIRED')) || '' || (!cvvValid && i18n.t('CVV_NOT_VALID')) || ''}
+                      backgroundColor="#e5efe5"
+                      onChangeText={onCardCvvChange}
+                    />
 
                     <View style={styles.securePaymentInfo}>
                       <MaterialIcons name="lock" size={iconSize} color="#1c8901" />

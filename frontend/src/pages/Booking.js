@@ -346,7 +346,12 @@ const Booking = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.collisionDamageWaiver === -1 || booking.car.collisionDamageWaiver === 0} control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />} label={csStrings.COLLISION_DAMAGE_WAVER} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.collisionDamageWaiver === -1 || booking.car.collisionDamageWaiver === 0}
+                  control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
+                  label={csStrings.COLLISION_DAMAGE_WAVER}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">

@@ -284,7 +284,16 @@ const SettingsScreen = ({ navigation, route }) => {
 
               <TextInput style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
 
-              <DateTimePicker mode="date" locale={language} style={styles.date} label={i18n.t('BIRTH_DATE')} value={birthDate} error={birthDateRequired || !birthDateValid} helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''} onChange={onChangeBirthDate} />
+              <DateTimePicker
+                mode="date"
+                locale={language}
+                style={styles.date}
+                label={i18n.t('BIRTH_DATE')}
+                value={birthDate}
+                error={birthDateRequired || !birthDateValid}
+                helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''}
+                onChange={onChangeBirthDate}
+              />
 
               <TextInput style={styles.component} label={i18n.t('LOCATION')} value={location} onChangeText={onChangeLocation} />
 
