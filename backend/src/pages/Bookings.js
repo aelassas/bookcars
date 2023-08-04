@@ -81,7 +81,20 @@ const Bookings = () => {
             )}
           </div>
           <div className="col-2">
-            <BookingList containerClassName="bookings" offset={offset} language={user.language} loggedUser={user} companies={companies} statuses={statuses} filter={filter} loading={loadingCompanies} reload={reload} onLoad={handleBookingListLoad} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} />
+            <BookingList
+              containerClassName="bookings"
+              offset={offset}
+              language={user.language}
+              loggedUser={user}
+              companies={companies}
+              statuses={statuses}
+              filter={filter}
+              loading={loadingCompanies}
+              reload={reload}
+              onLoad={handleBookingListLoad}
+              hideDates={Env.isMobile()}
+              checkboxSelection={!Env.isMobile()}
+            />
           </div>
         </div>
       )}

@@ -6,7 +6,20 @@ import * as NotificationService from '../services/NotificationService'
 import { toast } from 'react-toastify'
 import Avatar from './Avatar'
 import { AppBar, Toolbar, Typography, IconButton, Badge, MenuItem, Menu, Button, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { Menu as MenuIcon, Mail as MailIcon, Notifications as NotificationsIcon, More as MoreIcon, Language as LanguageIcon, Settings as SettingsIcon, Home as HomeIcon, InfoTwoTone as AboutIcon, DescriptionTwoTone as TosIcon, ExitToApp as SignoutIcon, Login as LoginIcon, EventSeat as BookingsIcon } from '@mui/icons-material'
+import {
+  Menu as MenuIcon,
+  Mail as MailIcon,
+  Notifications as NotificationsIcon,
+  More as MoreIcon,
+  Language as LanguageIcon,
+  Settings as SettingsIcon,
+  Home as HomeIcon,
+  InfoTwoTone as AboutIcon,
+  DescriptionTwoTone as TosIcon,
+  ExitToApp as SignoutIcon,
+  Login as LoginIcon,
+  EventSeat as BookingsIcon,
+} from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as LangHelper from '../common/LangHelper'
 

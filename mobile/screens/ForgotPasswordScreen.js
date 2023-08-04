@@ -115,7 +115,15 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
           <View style={styles.contentContainer}>
             <Text style={styles.text}>{i18n.t('RESET_PASSWORD')}</Text>
 
-            <TextInput ref={ref} style={styles.component} label={i18n.t('EMAIL')} error={emailRequired || !emailValid || emailError} helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''} onSubmitEditing={onPressReset} onChangeText={onChangeEmail} />
+            <TextInput
+              ref={ref}
+              style={styles.component}
+              label={i18n.t('EMAIL')}
+              error={emailRequired || !emailValid || emailError}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ERROR')) || ''}
+              onSubmitEditing={onPressReset}
+              onChangeText={onChangeEmail}
+            />
 
             <Button style={styles.component} label={i18n.t('RESET')} onPress={onPressReset} />
           </View>

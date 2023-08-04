@@ -312,15 +312,50 @@ const SignUpScreen = ({ navigation, route }) => {
           <View style={styles.contentContainer}>
             <TextInput ref={fullNameRef} style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} />
 
-            <TextInput ref={emailRef} style={styles.component} label={i18n.t('EMAIL')} value={email} error={emailRequired || !emailValid || emailError} helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''} onChangeText={onChangeEmail} />
+            <TextInput
+              ref={emailRef}
+              style={styles.component}
+              label={i18n.t('EMAIL')}
+              value={email}
+              error={emailRequired || !emailValid || emailError}
+              helperText={(emailRequired && i18n.t('REQUIRED')) || '' || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || '' || (emailError && i18n.t('EMAIL_ALREADY_REGISTERED')) || ''}
+              onChangeText={onChangeEmail}
+            />
 
             <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
 
-            <DateTimePicker mode="date" locale={language} style={styles.date} label={i18n.t('BIRTH_DATE')} value={birthDate} error={birthDateRequired || !birthDateValid} helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''} onChange={onChangeBirthDate} />
+            <DateTimePicker
+              mode="date"
+              locale={language}
+              style={styles.date}
+              label={i18n.t('BIRTH_DATE')}
+              value={birthDate}
+              error={birthDateRequired || !birthDateValid}
+              helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''}
+              onChange={onChangeBirthDate}
+            />
 
-            <TextInput ref={passwordRef} style={styles.component} secureTextEntry label={i18n.t('PASSWORD')} value={password} error={passwordRequired || passwordLengthError} helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''} onChangeText={onChangePassword} />
+            <TextInput
+              ref={passwordRef}
+              style={styles.component}
+              secureTextEntry
+              label={i18n.t('PASSWORD')}
+              value={password}
+              error={passwordRequired || passwordLengthError}
+              helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''}
+              onChangeText={onChangePassword}
+            />
 
-            <TextInput ref={confirmPasswordRef} style={styles.component} secureTextEntry label={i18n.t('CONFIRM_PASSWORD')} value={confirmPassword} error={confirmPasswordRequired || confirmPasswordError} helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || '' || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''} onChangeText={onChangeConfirmPassword} />
+            <TextInput
+              ref={confirmPasswordRef}
+              style={styles.component}
+              secureTextEntry
+              label={i18n.t('CONFIRM_PASSWORD')}
+              value={confirmPassword}
+              error={confirmPasswordRequired || confirmPasswordError}
+              helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || '' || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''}
+              onChangeText={onChangeConfirmPassword}
+            />
 
             <Switch style={styles.component} textStyle={styles.tosText} label={i18n.t('ACCEPT_TOS')} value={tosChecked} onValueChange={onChangeToS} />
 

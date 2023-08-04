@@ -182,7 +182,24 @@ export const create = async (req, res) => {
       from: SMTP_FROM,
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-      html: '<p>' + strings.HELLO + user.fullName + ',<br><br>' + strings.ACCOUNT_ACTIVATION_LINK + '<br><br>' + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate') + '/?u=' + encodeURIComponent(user._id) + '&e=' + encodeURIComponent(user.email) + '&t=' + encodeURIComponent(token.token) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
+      html:
+        '<p>' +
+        strings.HELLO +
+        user.fullName +
+        ',<br><br>' +
+        strings.ACCOUNT_ACTIVATION_LINK +
+        '<br><br>' +
+        Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate') +
+        '/?u=' +
+        encodeURIComponent(user._id) +
+        '&e=' +
+        encodeURIComponent(user.email) +
+        '&t=' +
+        encodeURIComponent(token.token) +
+        '<br><br>' +
+        strings.REGARDS +
+        '<br>' +
+        '</p>',
     }
 
     await Helper.sendMail(mailOptions)
@@ -271,7 +288,24 @@ export const resend = async (req, res) => {
           from: SMTP_FROM,
           to: user.email,
           subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
-          html: '<p>' + strings.HELLO + user.fullName + ',<br><br>' + (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) + '<br><br>' + Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, reset ? 'reset-password' : 'activate') + '/?u=' + encodeURIComponent(user._id) + '&e=' + encodeURIComponent(user.email) + '&t=' + encodeURIComponent(token.token) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
+          html:
+            '<p>' +
+            strings.HELLO +
+            user.fullName +
+            ',<br><br>' +
+            (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) +
+            '<br><br>' +
+            Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, reset ? 'reset-password' : 'activate') +
+            '/?u=' +
+            encodeURIComponent(user._id) +
+            '&e=' +
+            encodeURIComponent(user.email) +
+            '&t=' +
+            encodeURIComponent(token.token) +
+            '<br><br>' +
+            strings.REGARDS +
+            '<br>' +
+            '</p>',
         }
 
         await Helper.sendMail(mailOptions)

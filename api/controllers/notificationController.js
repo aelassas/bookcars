@@ -46,7 +46,31 @@ export const notify = async (req, res) => {
           from: SMTP_FROM,
           to: user.email,
           subject: strings.NOTIFICATION_SUBJECT,
-          html: '<p>' + strings.HELLO + user.fullName + ',<br><br>' + strings.NOTIFICATION_BODY + '<br><br>' + '---<br>' + notification.message + '<br><br>' + (notification.isLink ? '<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>' : '') + '<a href="' + 'http' + (HTTPS ? 's' : '') + '://' + APP_HOST + '/notifications' + '">' + strings.NOTIFICATIONS_LINK + '</a>' + '<br>---' + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
+          html:
+            '<p>' +
+            strings.HELLO +
+            user.fullName +
+            ',<br><br>' +
+            strings.NOTIFICATION_BODY +
+            '<br><br>' +
+            '---<br>' +
+            notification.message +
+            '<br><br>' +
+            (notification.isLink ? '<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>' : '') +
+            '<a href="' +
+            'http' +
+            (HTTPS ? 's' : '') +
+            '://' +
+            APP_HOST +
+            '/notifications' +
+            '">' +
+            strings.NOTIFICATIONS_LINK +
+            '</a>' +
+            '<br>---' +
+            '<br><br>' +
+            strings.REGARDS +
+            '<br>' +
+            '</p>',
         }
 
         await Helper.sendMail(mailOptions)
