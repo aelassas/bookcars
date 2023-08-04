@@ -8,10 +8,7 @@ const DateTimePicker = (props) => {
   const [value, setValue] = useState(props.value || null)
 
   return (
-    <LocalizationProvider
-      adapterLocale={props.language === 'fr' ? fr : enUS}
-      dateAdapter={AdapterDateFns}
-    >
+    <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
       <MuiDateTimePicker
         label={props.label}
         inputFormat="dd-MM-yyyy HH:mm"

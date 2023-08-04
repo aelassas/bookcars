@@ -5,8 +5,7 @@ import * as LangHelper from '../common/LangHelper'
 export const strings = new LocalizedStrings({
   fr: {
     GENERIC_ERROR: "Une erreur non gérée s'est produite.",
-    CHANGE_LANGUAGE_ERROR:
-      "Une erreur s'est produite lors du changement de langue.",
+    CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
     UPDATED: 'Modifications effectuées avec succès.',
     GO_TO_HOME: "Aller à la page d'accueil",
     FULL_NAME: 'Nom complet',
@@ -71,8 +70,7 @@ export const strings = new LocalizedStrings({
     BIRTH_DATE: 'Date de naissance',
     RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
     TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-    BIRTH_DATE_NOT_VALID:
-      'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
+    BIRTH_DATE_NOT_VALID: 'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
     BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
     BIRTH_DATE_NOT_VALID_PART2: 'ans.',
     SUPPLIER: 'Fournisseur',
@@ -148,8 +146,7 @@ export const strings = new LocalizedStrings({
     BIRTH_DATE: 'Birth date',
     RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
     TOS_ERROR: 'Please accept the Terms of Use.',
-    BIRTH_DATE_NOT_VALID:
-      'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
+    BIRTH_DATE_NOT_VALID: 'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
     BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
     BIRTH_DATE_NOT_VALID_PART2: 'years old.',
     SUPPLIER: 'Supplier',

@@ -8,10 +8,7 @@ import '../assets/css/mileage-filter.css'
 
 const MileageFilter = (props) => {
   const [allChecked, setAllChecked] = useState(true)
-  const [values, setValues] = useState([
-    Env.MILEAGE.LIMITED,
-    Env.MILEAGE.UNLIMITED,
-  ])
+  const [values, setValues] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
 
   const limitedRef = useRef()
   const unlimitedRef = useRef()
@@ -114,32 +111,15 @@ const MileageFilter = (props) => {
   }
 
   return (
-    <Accordion
-      title={strings.MILEAGE}
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }mileage-filter`}
-    >
+    <Accordion title={strings.MILEAGE} className={`${props.className ? `${props.className} ` : ''}mileage-filter`}>
       <div className="filter-elements">
         <div className="filter-element">
-          <input
-            ref={limitedRef}
-            type="checkbox"
-            className="mileage-checkbox"
-            onChange={handleLimitedMileageChange}
-          />
+          <input ref={limitedRef} type="checkbox" className="mileage-checkbox" onChange={handleLimitedMileageChange} />
           <label onClick={handleLimitedMileageClick}>{strings.LIMITED}</label>
         </div>
         <div className="filter-element">
-          <input
-            ref={unlimitedRef}
-            type="checkbox"
-            className="mileage-checkbox"
-            onChange={handleUnlimitedMileageChange}
-          />
-          <label onClick={handleUnlimitedMileageClick}>
-            {strings.UNLIMITED}
-          </label>
+          <input ref={unlimitedRef} type="checkbox" className="mileage-checkbox" onChange={handleUnlimitedMileageChange} />
+          <label onClick={handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
         </div>
         <div className="filter-actions">
           <span onClick={handleUncheckAllChange} className="uncheckall">

@@ -8,8 +8,7 @@ export const strings = new LocalizedStrings({
     CURRENT_PASSWORD_ERROR: 'Mauvais mot de passe',
     NEW_PASSWORD: 'Nouveau mot de passe',
     NEW_PASSWORD_ERROR: 'Veuillez choisir un nouveau mot de passe',
-    PASSWORD_UPDATE_ERROR:
-      "Une erreur s'est produite lors de la modification du mot de passe.",
+    PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
     PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
   },
   en: {

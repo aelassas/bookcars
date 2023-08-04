@@ -26,10 +26,7 @@ const notificationCounterSchema = new Schema(
   },
 )
 
-const notificationCounterModel = mongoose.model(
-  'NotificationCounter',
-  notificationCounterSchema,
-)
+const notificationCounterModel = mongoose.model('NotificationCounter', notificationCounterSchema)
 
 notificationCounterModel.on('index', (err) => {
   if (err) {

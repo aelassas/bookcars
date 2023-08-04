@@ -1,14 +1,7 @@
 import React, { memo } from 'react'
 import { StyleSheet, Text, Pressable, View } from 'react-native'
 
-const ScrollViewListItemComponent = ({
-  titleHighlighted,
-  titleStart,
-  titleEnd,
-  style,
-  onPress,
-  numberOfLines = 2,
-}) => {
+const ScrollViewListItemComponent = ({ titleHighlighted, titleStart, titleEnd, style, onPress, numberOfLines = 2 }) => {
   return (
     <Pressable onPress={onPress}>
       <View style={styles.container}>
@@ -16,10 +9,7 @@ const ScrollViewListItemComponent = ({
           <Text numberOfLines={1} style={{ ...styles.text, ...style }}>
             {titleStart}
           </Text>
-          <Text
-            numberOfLines={1}
-            style={{ ...styles.text, ...style, fontWeight: 'bold' }}
-          >
+          <Text numberOfLines={1} style={{ ...styles.text, ...style, fontWeight: 'bold' }}>
             {titleHighlighted}
           </Text>
           <Text numberOfLines={1} style={{ ...styles.text, ...style }}>

@@ -47,35 +47,16 @@ const Locations = () => {
             <Search className="search" onSubmit={handleSearch} />
 
             {rowCount > -1 && (
-              <Button
-                variant="contained"
-                className="btn-primary new-location"
-                size="small"
-                href="/create-location"
-              >
+              <Button variant="contained" className="btn-primary new-location" size="small" href="/create-location">
                 {strings.NEW_LOCATION}
               </Button>
             )}
 
-            {rowCount > 0 && (
-              <InfoBox
-                value={`${rowCount} ${
-                  rowCount > 1 ? strings.LOCATIONS : strings.LOCATION
-                }`}
-                className="location-count"
-              />
-            )}
+            {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className="location-count" />}
           </div>
         </div>
         <div className="col-2">
-          <LocationList
-            containerClassName="locations"
-            offset={offset}
-            keyword={keyword}
-            reload={reload}
-            onLoad={handleLocationListLoad}
-            onDelete={handleLocationDelete}
-          />
+          <LocationList containerClassName="locations" offset={offset} keyword={keyword} reload={reload} onLoad={handleLocationListLoad} onDelete={handleLocationDelete} />
         </div>
       </div>
     </Master>

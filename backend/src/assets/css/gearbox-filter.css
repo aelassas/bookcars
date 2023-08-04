@@ -2,10 +2,7 @@ div.gearbox-filter div.filter-elements {
   padding: 7px 5px;
 }
 
-div.gearbox-filter
-  div.filter-elements
-  div.filter-element
-  input[type='checkbox'].gearbox-checkbox {
+div.gearbox-filter div.filter-elements div.filter-element input[type='checkbox'].gearbox-checkbox {
   cursor: pointer;
   margin-left: 5px;
 }

@@ -1,11 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput as ReactTextInput,
-  Platform,
-} from 'react-native'
+import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
 const TextInputComponent = (props, ref) => {
@@ -69,9 +63,7 @@ const TextInputComponent = (props, ref) => {
 
   return (
     <View style={{ ...props.style, ...styles.container }}>
-      {value !== '' && !props.hideLabel && (
-        <Text style={styles.label}>{props.label}</Text>
-      )}
+      {value !== '' && !props.hideLabel && <Text style={styles.label}>{props.label}</Text>}
       <View style={styles.inputContainer}>
         <ReactTextInput
           ref={(r) => {

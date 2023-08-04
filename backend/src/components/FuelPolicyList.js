@@ -21,23 +21,10 @@ const FuelPolicyList = (props) => {
 
   return (
     <div>
-      <InputLabel className={props.required ? 'required' : null}>
-        {props.label}
-      </InputLabel>
-      <Select
-        label={props.label}
-        value={value}
-        onChange={handleChange}
-        variant={props.variant || 'standard'}
-        required={props.required}
-        fullWidth
-      >
-        <MenuItem value={Env.FUEL_POLICY.LIKE_FOR_LIKE}>
-          {strings.FUEL_POLICY_LIKE_FOR_LIKE}
-        </MenuItem>
-        <MenuItem value={Env.FUEL_POLICY.FREE_TANK}>
-          {strings.FUEL_POLICY_FREE_TANK}
-        </MenuItem>
+      <InputLabel className={props.required ? 'required' : null}>{props.label}</InputLabel>
+      <Select label={props.label} value={value} onChange={handleChange} variant={props.variant || 'standard'} required={props.required} fullWidth>
+        <MenuItem value={Env.FUEL_POLICY.LIKE_FOR_LIKE}>{strings.FUEL_POLICY_LIKE_FOR_LIKE}</MenuItem>
+        <MenuItem value={Env.FUEL_POLICY.FREE_TANK}>{strings.FUEL_POLICY_FREE_TANK}</MenuItem>
       </Select>
     </div>
   )

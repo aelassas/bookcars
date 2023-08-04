@@ -118,26 +118,12 @@ div.car section.car-sec div.car-img div.car-company span.car-company-logo img {
     margin-bottom: 5px;
   }
 
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    li.mileage
-    div.car-info-list-item,
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    li.fuel-policy
-    div.car-info-list-item {
+  div.car section.car-sec div.car-info ul.car-info-list li.mileage div.car-info-list-item,
+  div.car section.car-sec div.car-info ul.car-info-list li.fuel-policy div.car-info-list-item {
     width: fit-content;
   }
 
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    span.car-info-list-text {
+  div.car section.car-sec div.car-info ul.car-info-list span.car-info-list-text {
     vertical-align: super;
     margin-left: 3px;
   }
@@ -270,26 +256,12 @@ div.car section.car-sec div.car-img div.car-company span.car-company-logo img {
     margin-bottom: 5px;
   }
 
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    li.mileage
-    div.car-info-list-item,
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    li.fuel-policy
-    div.car-info-list-item {
+  div.car section.car-sec div.car-info ul.car-info-list li.mileage div.car-info-list-item,
+  div.car section.car-sec div.car-info ul.car-info-list li.fuel-policy div.car-info-list-item {
     width: fit-content;
   }
 
-  div.car
-    section.car-sec
-    div.car-info
-    ul.car-info-list
-    span.car-info-list-text {
+  div.car section.car-sec div.car-info ul.car-info-list span.car-info-list-text {
     vertical-align: super;
     margin-left: 3px;
   }

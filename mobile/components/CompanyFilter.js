@@ -98,9 +98,7 @@ const CompanyFilter = (props) => {
                 })
                 setAllChecked(true)
                 setSuppliers(Helper.clone(suppliers))
-                _checkedSuppliers = Helper.clone(
-                  Helper.flattenCompanies(suppliers),
-                )
+                _checkedSuppliers = Helper.clone(Helper.flattenCompanies(suppliers))
                 setCheckedSuppliers(_checkedSuppliers)
 
                 if (props.onChange) {

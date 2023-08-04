@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  Switch as ReactSwitch,
-} from 'react-native'
+import { StyleSheet, View, Text, Pressable, Switch as ReactSwitch } from 'react-native'
 
 const Switch = (props) => {
   const [value, setValue] = useState(props.value)
@@ -25,18 +19,10 @@ const Switch = (props) => {
 
   return (
     <View style={{ ...styles.container, ...props.style }}>
-      <ReactSwitch
-        trackColor={{ true: '#f7b68f', false: '#9d9d9d' }}
-        thumbColor="#f37022"
-        value={value}
-        onValueChange={onValueChange}
-        disabled={props.disabled}
-      />
+      <ReactSwitch trackColor={{ true: '#f7b68f', false: '#9d9d9d' }} thumbColor="#f37022" value={value} onValueChange={onValueChange} disabled={props.disabled} />
       {typeof props.label !== 'undefined' && (
         <Pressable style={styles.pressable} onPress={onPress}>
-          <Text style={{ ...styles.text, ...props.textStyle }}>
-            {props.label}
-          </Text>
+          <Text style={{ ...styles.text, ...props.textStyle }}>{props.label}</Text>
         </Pressable>
       )}
       {typeof props.children !== 'undefined' && (

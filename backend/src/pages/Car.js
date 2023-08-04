@@ -11,24 +11,8 @@ import Error from './Error'
 import Avatar from '../components/Avatar'
 import BookingList from '../components/BookingList'
 import * as Helper from '../common/Helper'
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tooltip,
-} from '@mui/material'
-import {
-  LocalGasStation as FuelIcon,
-  AccountTree as GearboxIcon,
-  Person as SeatsIcon,
-  AcUnit as AirconIcon,
-  DirectionsCar as MileageIcon,
-  Check as CheckIcon,
-  Clear as UncheckIcon,
-  LocationOn as LocationIcon,
-} from '@mui/icons-material'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import { LocalGasStation as FuelIcon, AccountTree as GearboxIcon, Person as SeatsIcon, AcUnit as AirconIcon, DirectionsCar as MileageIcon, Check as CheckIcon, Clear as UncheckIcon, LocationOn as LocationIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
 import DoorsIcon from '../assets/img/car-door.png'
@@ -135,11 +119,7 @@ const Car = () => {
     }
   }
 
-  const edit =
-    user &&
-    car &&
-    car.company &&
-    (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id)
+  const edit = user && car && car.company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id)
   const statuses = Helper.getBookingStatuses().map((status) => status.value)
   const fr = user && user.language === 'fr'
 
@@ -153,66 +133,35 @@ const Car = () => {
                 <h2>{car.name}</h2>
               </div>
               <div className="car-img">
-                <Avatar
-                  type={Env.RECORD_TYPE.CAR}
-                  mode="update"
-                  record={car}
-                  size="large"
-                  readonly={!edit}
-                  hideDelete={true}
-                  onBeforeUpload={handleBeforeUpload}
-                  onChange={handleImageChange}
-                  color="disabled"
-                  className="avatar-ctn"
-                />
+                <Avatar type={Env.RECORD_TYPE.CAR} mode="update" record={car} size="large" readonly={!edit} hideDelete={true} onBeforeUpload={handleBeforeUpload} onChange={handleImageChange} color="disabled" className="avatar-ctn" />
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img
-                      src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)}
-                      alt={car.company.fullName}
-                    />
+                    <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                   </span>
-                  <span className="car-company-info">
-                    {car.company.fullName}
-                  </span>
+                  <span className="car-company-info">{car.company.fullName}</span>
                 </div>
               </div>
-              <div className="price">{`${Helper.formatNumber(car.price)} ${
-                strings.CAR_CURRENCY
-              }`}</div>
+              <div className="price">{`${Helper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
               <div className="car-info">
                 <ul className="car-info-list">
                   <li className="car-type">
-                    <Tooltip
-                      title={Helper.getCarTypeTooltip(car.type)}
-                      placement="top"
-                    >
+                    <Tooltip title={Helper.getCarTypeTooltip(car.type)} placement="top">
                       <div className="car-info-list-item">
                         <FuelIcon />
-                        <span className="car-info-list-text">
-                          {Helper.getCarTypeShort(car.type)}
-                        </span>
+                        <span className="car-info-list-text">{Helper.getCarTypeShort(car.type)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li className="gearbox">
-                    <Tooltip
-                      title={Helper.getGearboxTooltip(car.gearbox)}
-                      placement="top"
-                    >
+                    <Tooltip title={Helper.getGearboxTooltip(car.gearbox)} placement="top">
                       <div className="car-info-list-item">
                         <GearboxIcon />
-                        <span className="car-info-list-text">
-                          {Helper.getGearboxTypeShort(car.gearbox)}
-                        </span>
+                        <span className="car-info-list-text">{Helper.getGearboxTypeShort(car.gearbox)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li className="seats">
-                    <Tooltip
-                      title={Helper.getSeatsTooltip(car.seats)}
-                      placement="top"
-                    >
+                    <Tooltip title={Helper.getSeatsTooltip(car.seats)} placement="top">
                       <div className="car-info-list-item">
                         <SeatsIcon />
                         <span className="car-info-list-text">{car.seats}</span>
@@ -220,10 +169,7 @@ const Car = () => {
                     </Tooltip>
                   </li>
                   <li className="doors">
-                    <Tooltip
-                      title={Helper.getDoorsTooltip(car.doors)}
-                      placement="top"
-                    >
+                    <Tooltip title={Helper.getDoorsTooltip(car.doors)} placement="top">
                       <div className="car-info-list-item">
                         <img src={DoorsIcon} alt="" className="car-doors" />
                         <span className="car-info-list-text">{car.doors}</span>
@@ -240,191 +186,76 @@ const Car = () => {
                     </li>
                   )}
                   <li className="mileage">
-                    <Tooltip
-                      title={Helper.getMileageTooltip(car.mileage, fr)}
-                      placement="left"
-                    >
+                    <Tooltip title={Helper.getMileageTooltip(car.mileage, fr)} placement="left">
                       <div className="car-info-list-item">
                         <MileageIcon />
-                        <span className="car-info-list-text">{`${
-                          strings.MILEAGE
-                        }${fr ? ' : ' : ': '}${Helper.getMileage(
-                          car.mileage,
-                        )}`}</span>
+                        <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li className="fuel-policy">
-                    <Tooltip
-                      title={Helper.getFuelPolicyTooltip(car.fuelPolicy)}
-                      placement="left"
-                    >
+                    <Tooltip title={Helper.getFuelPolicyTooltip(car.fuelPolicy)} placement="left">
                       <div className="car-info-list-item">
                         <FuelIcon />
-                        <span className="car-info-list-text">{`${
-                          strings.FUEL_POLICY
-                        }${fr ? ' : ' : ': '}${Helper.getFuelPolicy(
-                          car.fuelPolicy,
-                        )}`}</span>
+                        <span className="car-info-list-text">{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</span>
                       </div>
                     </Tooltip>
                   </li>
                 </ul>
                 <ul className="extras-list">
-                  <li
-                    className={
-                      car.available ? 'car-available' : 'car-unavailable'
-                    }
-                  >
-                    <Tooltip
-                      title={
-                        car.available
-                          ? strings.CAR_AVAILABLE_TOOLTIP
-                          : strings.CAR_UNAVAILABLE_TOOLTIP
-                      }
-                    >
+                  <li className={car.available ? 'car-available' : 'car-unavailable'}>
+                    <Tooltip title={car.available ? strings.CAR_AVAILABLE_TOOLTIP : strings.CAR_UNAVAILABLE_TOOLTIP}>
                       <div className="car-info-list-item">
                         {car.available ? <CheckIcon /> : <UncheckIcon />}
-                        {car.available ? (
-                          <span className="car-info-list-text">
-                            {strings.CAR_AVAILABLE}
-                          </span>
-                        ) : (
-                          <span className="car-info-list-text">
-                            {strings.CAR_UNAVAILABLE}
-                          </span>
-                        )}
+                        {car.available ? <span className="car-info-list-text">{strings.CAR_AVAILABLE}</span> : <span className="car-info-list-text">{strings.CAR_UNAVAILABLE}</span>}
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={
-                        car.cancellation > -1
-                          ? strings.CANCELLATION_TOOLTIP
-                          : Helper.getCancellation(car.cancellation, fr)
-                      }
-                      placement="left"
-                    >
+                    <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : Helper.getCancellation(car.cancellation, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.collisionDamageWaiver > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getCancellation(car.cancellation, fr)}
-                        </span>
+                        {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getCancellation(car.cancellation, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={
-                        car.amendments > -1
-                          ? strings.AMENDMENTS_TOOLTIP
-                          : Helper.getAmendments(car.amendments, fr)
-                      }
-                      placement="left"
-                    >
+                    <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : Helper.getAmendments(car.amendments, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.collisionDamageWaiver > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getAmendments(car.amendments, fr)}
-                        </span>
+                        {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getAmendments(car.amendments, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={
-                        car.theftProtection > -1
-                          ? strings.THEFT_PROTECTION_TOOLTIP
-                          : Helper.getTheftProtection(car.theftProtection, fr)
-                      }
-                      placement="left"
-                    >
+                    <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.collisionDamageWaiver > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getTheftProtection(car.theftProtection, fr)}
-                        </span>
+                        {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getTheftProtection(car.theftProtection, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={
-                        car.collisionDamageWaiver > -1
-                          ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP
-                          : Helper.getCollisionDamageWaiver(
-                              car.collisionDamageWaiver,
-                              fr,
-                            )
-                      }
-                      placement="left"
-                    >
+                    <Tooltip title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.collisionDamageWaiver > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getCollisionDamageWaiver(
-                            car.collisionDamageWaiver,
-                            fr,
-                          )}
-                        </span>
+                        {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={
-                        car.fullInsurance > -1
-                          ? strings.FULL_INSURANCE_TOOLTIP
-                          : Helper.getFullInsurance(car.fullInsurance, fr)
-                      }
-                      placement="left"
-                    >
+                    <Tooltip title={car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : Helper.getFullInsurance(car.fullInsurance, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.fullInsurance > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getFullInsurance(car.fullInsurance, fr)}
-                        </span>
+                        {car.fullInsurance > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getFullInsurance(car.fullInsurance, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip
-                      title={Helper.getAdditionalDriver(
-                        car.additionalDriver,
-                        fr,
-                      )}
-                      placement="left"
-                    >
+                    <Tooltip title={Helper.getAdditionalDriver(car.additionalDriver, fr)} placement="left">
                       <div className="car-info-list-item">
-                        {car.additionalDriver > -1 ? (
-                          <CheckIcon />
-                        ) : (
-                          <UncheckIcon />
-                        )}
-                        <span className="car-info-list-text">
-                          {Helper.getAdditionalDriver(car.additionalDriver, fr)}
-                        </span>
+                        {car.additionalDriver > -1 ? <CheckIcon /> : <UncheckIcon />}
+                        <span className="car-info-list-text">{Helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
                       </div>
                     </Tooltip>
                   </li>
@@ -434,9 +265,7 @@ const Car = () => {
                     <li key={location._id}>
                       <div className="car-info-list-item">
                         <LocationIcon />
-                        <span className="car-info-list-text">
-                          {location.name}
-                        </span>
+                        <span className="car-info-list-text">{location.name}</span>
                       </div>
                     </li>
                   ))}
@@ -445,60 +274,28 @@ const Car = () => {
             </section>
             {edit && (
               <section className="buttons action">
-                <Button
-                  variant="contained"
-                  className="btn-primary btn-margin btn-margin-bottom"
-                  size="small"
-                  href={`/update-car?cr=${car._id}`}
-                >
+                <Button variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/update-car?cr=${car._id}`}>
                   {commonStrings.UPDATE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-margin-bottom"
-                  color="error"
-                  size="small"
-                  onClick={handleDelete}
-                >
+                <Button variant="contained" className="btn-margin-bottom" color="error" size="small" onClick={handleDelete}>
                   {commonStrings.DELETE}
                 </Button>
               </section>
             )}
           </div>
           <div className="col-2">
-            <BookingList
-              containerClassName="car"
-              offset={offset}
-              loggedUser={user}
-              companies={companies}
-              statuses={statuses}
-              car={car._id}
-              hideCompanyColumn={true}
-              hideCarColumn={true}
-              hideDates={Env.isMobile()}
-              checkboxSelection={!Env.isMobile()}
-            />
+            <BookingList containerClassName="car" offset={offset} loggedUser={user} companies={companies} statuses={statuses} car={car._id} hideCompanyColumn={true} hideCarColumn={true} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} />
           </div>
         </div>
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
         <DialogContent>{strings.DELETE_CAR}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelDelete}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

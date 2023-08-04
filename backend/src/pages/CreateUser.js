@@ -11,18 +11,7 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import DatePicker from '../components/DatePicker'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Switch,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Select, MenuItem, FormControlLabel, Switch } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
@@ -304,27 +293,10 @@ const CreateUser = () => {
     <Master onLoad={onLoad} strict={true}>
       {user && (
         <div className="create-user">
-          <Paper
-            className="user-form user-form-wrapper"
-            elevation={10}
-            style={visible ? null : { display: 'none' }}
-          >
-            <h1 className="user-form-title">
-              {' '}
-              {strings.CREATE_COMPANY_HEADING}{' '}
-            </h1>
+          <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
+            <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
             <form onSubmit={handleSubmit}>
-              <Avatar
-                type={type}
-                mode="create"
-                record={null}
-                size="large"
-                readonly={false}
-                onBeforeUpload={onBeforeUpload}
-                onChange={onAvatarChange}
-                color="disabled"
-                className="avatar-ctn"
-              />
+              <Avatar type={type} mode="create" record={null} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
 
               {company && (
                 <div className="info">
@@ -334,66 +306,25 @@ const CreateUser = () => {
               )}
 
               {admin && (
-                <FormControl
-                  fullWidth
-                  margin="dense"
-                  style={{ marginTop: company ? 0 : 39 }}
-                >
-                  <InputLabel className="required">
-                    {commonStrings.TYPE}
-                  </InputLabel>
-                  <Select
-                    label={commonStrings.TYPE}
-                    value={type}
-                    onChange={handleUserTypeChange}
-                    variant="standard"
-                    required
-                    fullWidth
-                  >
-                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>
-                      {Helper.getUserType(Env.RECORD_TYPE.ADMIN)}
-                    </MenuItem>
-                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>
-                      {Helper.getUserType(Env.RECORD_TYPE.COMPANY)}
-                    </MenuItem>
-                    <MenuItem value={Env.RECORD_TYPE.USER}>
-                      {Helper.getUserType(Env.RECORD_TYPE.USER)}
-                    </MenuItem>
+                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                  <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
+                  <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
+                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
+                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
+                    <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
                   </Select>
                 </FormControl>
               )}
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.FULL_NAME}
-                </InputLabel>
-                <Input
-                  id="full-name"
-                  type="text"
-                  error={fullNameError}
-                  required
-                  onBlur={handleFullNameOnBlur}
-                  onChange={handleOnChangeFullName}
-                  autoComplete="off"
-                />
-                <FormHelperText error={fullNameError}>
-                  {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
-                </FormHelperText>
+                <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameOnBlur} onChange={handleOnChangeFullName} autoComplete="off" />
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.EMAIL}
-                </InputLabel>
-                <Input
-                  id="email"
-                  type="text"
-                  error={!emailValid || emailError}
-                  onBlur={handleEmailBlur}
-                  onChange={handleEmailChange}
-                  autoComplete="off"
-                  required
-                />
+                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                <Input id="email" type="text" error={!emailValid || emailError} onBlur={handleEmailBlur} onChange={handleEmailChange} autoComplete="off" required />
                 <FormHelperText error={!emailValid || emailError}>
                   {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                   {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
@@ -414,49 +345,24 @@ const CreateUser = () => {
                     }}
                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                   />
-                  <FormHelperText error={!birthDateValid}>
-                    {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) ||
-                      ''}
-                  </FormHelperText>
+                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
               )}
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className={driver ? 'required' : ''}>
-                  {commonStrings.PHONE}
-                </InputLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  onBlur={handlePhoneBlur}
-                  onChange={handlePhoneChange}
-                  error={!phoneValid}
-                  required={driver ? true : false}
-                  autoComplete="off"
-                />
-                <FormHelperText error={!phoneValid}>
-                  {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                </FormHelperText>
+                <InputLabel className={driver ? 'required' : ''}>{commonStrings.PHONE}</InputLabel>
+                <Input id="phone" type="text" onBlur={handlePhoneBlur} onChange={handlePhoneChange} error={!phoneValid} required={driver ? true : false} autoComplete="off" />
+                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input
-                  id="location"
-                  type="text"
-                  onChange={handleOnChangeLocation}
-                  autoComplete="off"
-                />
+                <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input
-                  id="bio"
-                  type="text"
-                  onChange={handleOnChangeBio}
-                  autoComplete="off"
-                />
+                <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" />
               </FormControl>
 
               {company && (
@@ -477,29 +383,17 @@ const CreateUser = () => {
               )}
 
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.CREATE}
                 </Button>
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  onClick={handleCancel}
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={handleCancel}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
               <div className="form-error">
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                {avatarError && (
-                  <Error message={commonStrings.IMAGE_REQUIRED} />
-                )}
+                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
           </Paper>

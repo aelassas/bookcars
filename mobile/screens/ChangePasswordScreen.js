@@ -172,74 +172,17 @@ const ChangePasswordScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      route={route}
-      onLoad={onLoad}
-      reload={reload}
-      strict
-    >
+    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
       {visible && (
-        <ScrollView
-          contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-        >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
           <View style={styles.contentContainer}>
-            <TextInput
-              ref={currentPasswordRef}
-              style={styles.component}
-              secureTextEntry
-              label={i18n.t('CURRENT_PASSWORD')}
-              value={currentPassword}
-              error={currentPasswordRequired || currentPasswordError}
-              helperText={
-                (currentPasswordRequired && i18n.t('REQUIRED')) ||
-                '' ||
-                (currentPasswordError && i18n.t('PASSWORD_ERROR')) ||
-                ''
-              }
-              onChangeText={onChangeCurrentPassword}
-            />
+            <TextInput ref={currentPasswordRef} style={styles.component} secureTextEntry label={i18n.t('CURRENT_PASSWORD')} value={currentPassword} error={currentPasswordRequired || currentPasswordError} helperText={(currentPasswordRequired && i18n.t('REQUIRED')) || '' || (currentPasswordError && i18n.t('PASSWORD_ERROR')) || ''} onChangeText={onChangeCurrentPassword} />
 
-            <TextInput
-              ref={passwordRef}
-              style={styles.component}
-              secureTextEntry
-              label={i18n.t('NEW_PASSWORD')}
-              value={password}
-              error={passwordRequired || passwordLengthError}
-              helperText={
-                (passwordRequired && i18n.t('REQUIRED')) ||
-                '' ||
-                (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) ||
-                ''
-              }
-              onChangeText={onChangePassword}
-            />
+            <TextInput ref={passwordRef} style={styles.component} secureTextEntry label={i18n.t('NEW_PASSWORD')} value={password} error={passwordRequired || passwordLengthError} helperText={(passwordRequired && i18n.t('REQUIRED')) || '' || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) || ''} onChangeText={onChangePassword} />
 
-            <TextInput
-              ref={confirmPasswordRef}
-              style={styles.component}
-              secureTextEntry
-              label={i18n.t('CONFIRM_PASSWORD')}
-              value={confirmPassword}
-              error={confirmPasswordRequired || confirmPasswordError}
-              helperText={
-                (confirmPasswordRequired && i18n.t('REQUIRED')) ||
-                '' ||
-                (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) ||
-                ''
-              }
-              onChangeText={onChangeConfirmPassword}
-            />
+            <TextInput ref={confirmPasswordRef} style={styles.component} secureTextEntry label={i18n.t('CONFIRM_PASSWORD')} value={confirmPassword} error={confirmPasswordRequired || confirmPasswordError} helperText={(confirmPasswordRequired && i18n.t('REQUIRED')) || '' || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) || ''} onChangeText={onChangeConfirmPassword} />
 
-            <Button
-              style={styles.component}
-              label={i18n.t('UPDATE')}
-              onPress={onPressUpdate}
-            />
+            <Button style={styles.component} label={i18n.t('UPDATE')} onPress={onPressUpdate} />
           </View>
         </ScrollView>
       )}

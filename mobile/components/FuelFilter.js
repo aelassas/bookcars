@@ -10,10 +10,7 @@ import Switch from './Switch'
 const FuelFilter = (props) => {
   const [diesel, setDiesel] = useState(true)
   const [gasoline, setGasoline] = useState(true)
-  const [values, setValues] = useState([
-    Env.CAR_TYPE.DIESEL,
-    Env.CAR_TYPE.GASOLINE,
-  ])
+  const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
   const [allChecked, setAllChecked] = useState(true)
 
   const onValueChangeDiesel = (checked) => {
@@ -67,20 +64,8 @@ const FuelFilter = (props) => {
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('ENGINE')}>
           <View style={styles.contentContainer}>
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={diesel}
-              label={i18n.t('DIESEL')}
-              onValueChange={onValueChangeDiesel}
-            />
-            <Switch
-              style={styles.component}
-              textStyle={styles.text}
-              value={gasoline}
-              label={i18n.t('GASOLINE')}
-              onValueChange={onValueChangeGasoline}
-            />
+            <Switch style={styles.component} textStyle={styles.text} value={diesel} label={i18n.t('DIESEL')} onValueChange={onValueChangeDiesel} />
+            <Switch style={styles.component} textStyle={styles.text} value={gasoline} label={i18n.t('GASOLINE')} onValueChange={onValueChangeGasoline} />
           </View>
           <Link
             style={styles.link}

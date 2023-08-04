@@ -59,19 +59,13 @@ div.notifications div.notifications-list div.notification-container {
   max-width: 680px;
 }
 
-div.notifications
-  div.notifications-list
-  div.notification-container
-  div.notification-checkbox {
+div.notifications div.notifications-list div.notification-container div.notification-checkbox {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-div.notifications
-  div.notifications-list
-  div.notification-container
-  div.notification {
+div.notifications div.notifications-list div.notification-container div.notification {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -88,31 +82,18 @@ div.notifications div.notifications-list div.notification-container .unread {
   font-weight: bold;
 }
 
-div.notifications
-  div.notifications-list
-  div.notification-container
-  div.notification
-  div.date {
+div.notifications div.notifications-list div.notification-container div.notification div.date {
   color: #878787;
   margin-bottom: 5px;
 }
 
-div.notifications
-  div.notifications-list
-  div.notification-container
-  div.notification
-  div.message-container {
+div.notifications div.notifications-list div.notification-container div.notification div.message-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-div.notifications
-  div.notifications-list
-  div.notification-container
-  div.notification
-  div.message-container
-  div.actions {
+div.notifications div.notifications-list div.notification-container div.notification div.message-container div.actions {
   display: flex;
   flex-direction: row;
   margin-left: 5px;

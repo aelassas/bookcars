@@ -32,10 +32,7 @@ const UserSelectList = (props) => {
 
       const data = await UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
 
-      const _data =
-        Array.isArray(data) && data.length > 0
-          ? getDrivers(data[0].resultData)
-          : []
+      const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : []
       const _drivers = page === 1 ? _data : [...drivers, ..._data]
 
       setDrivers(_drivers)
@@ -71,12 +68,7 @@ const UserSelectList = (props) => {
       ListboxProps={{
         onScroll: (event) => {
           const listboxNode = event.currentTarget
-          if (
-            fetch &&
-            !loading &&
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight - Env.PAGE_OFFSET
-          ) {
+          if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
             const p = page + 1
             setPage(p)
             _fetch(p, keyword)

@@ -31,21 +31,11 @@ const Accordion = (props) => {
   }, [props.collapse, props.offsetHeight])
 
   return (
-    <div
-      className={`${
-        props.className ? `${props.className} ` : ''
-      }accordion-container`}
-    >
-      <label
-        ref={accordionRef}
-        className="accordion"
-        onClick={handleAccordionClick}
-      >
+    <div className={`${props.className ? `${props.className} ` : ''}accordion-container`}>
+      <label ref={accordionRef} className="accordion" onClick={handleAccordionClick}>
         {props.title}
       </label>
-      <div className={props.collapse ? 'panel-collapse' : 'panel'}>
-        {props.children}
-      </div>
+      <div className={props.collapse ? 'panel-collapse' : 'panel'}>{props.children}</div>
     </div>
   )
 }

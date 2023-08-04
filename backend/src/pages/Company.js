@@ -11,16 +11,7 @@ import CarList from '../components/CarList'
 import InfoBox from '../components/InfoBox'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import {
-  Typography,
-  IconButton,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tooltip,
-} from '@mui/material'
+import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
@@ -128,10 +119,7 @@ const Company = () => {
     }
   }
 
-  const edit =
-    user &&
-    company &&
-    (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id)
+  const edit = user && company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id)
 
   return (
     <Master onLoad={onLoad} user={user} strict={true}>
@@ -140,26 +128,11 @@ const Company = () => {
           <div className="col-1">
             <section className="company-avatar-sec">
               {edit ? (
-                <Avatar
-                  record={company}
-                  type={Env.RECORD_TYPE.COMPANY}
-                  mode="update"
-                  size="large"
-                  hideDelete
-                  onBeforeUpload={onBeforeUpload}
-                  onChange={onAvatarChange}
-                  readonly={!edit}
-                  color="disabled"
-                  className="company-avatar"
-                />
+                <Avatar record={company} type={Env.RECORD_TYPE.COMPANY} mode="update" size="large" hideDelete onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} readonly={!edit} color="disabled" className="company-avatar" />
               ) : (
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img
-                      src={Helper.joinURL(Env.CDN_USERS, company.avatar)}
-                      alt={company.fullName}
-                      style={{ width: Env.COMPANY_IMAGE_WIDTH }}
-                    />
+                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                   </span>
                   <span className="car-company-info">{company.fullName}</span>
                 </div>
@@ -201,48 +174,21 @@ const Company = () => {
                 </Tooltip>
               )}
             </div>
-            {rowCount > 0 && (
-              <InfoBox
-                value={`${rowCount} ${commonStrings.CAR}${
-                  rowCount > 1 ? 's' : ''
-                }`}
-                className="car-count"
-              />
-            )}
+            {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
           </div>
           <div className="col-2">
-            <CarList
-              containerClassName={Env.isMobile() ? 'company' : null}
-              offset={offset}
-              user={user}
-              companies={companies}
-              keyword=""
-              reload={false}
-              onLoad={handleCarListLoad}
-              onDelete={handleCarDelete}
-              hideCompany
-            />
+            <CarList containerClassName={Env.isMobile() ? 'company' : null} offset={offset} user={user} companies={companies} keyword="" reload={false} onLoad={handleCarListLoad} onDelete={handleCarDelete} hideCompany />
           </div>
         </div>
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
         <DialogContent>{clStrings.DELETE_COMPANY}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelDelete}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

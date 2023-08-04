@@ -33,9 +33,7 @@ const Users = () => {
 
   const onLoad = (user) => {
     const admin = Helper.admin(user)
-    const types = admin
-      ? Helper.getUserTypes().map((userType) => userType.value)
-      : [Env.RECORD_TYPE.COMPANY, Env.RECORD_TYPE.USER]
+    const types = admin ? Helper.getUserTypes().map((userType) => userType.value) : [Env.RECORD_TYPE.COMPANY, Env.RECORD_TYPE.USER]
 
     setUser(user)
     setAdmin(admin)
@@ -50,33 +48,15 @@ const Users = () => {
             <div className="div.col-1-container">
               <Search onSubmit={handleSearch} className="search" />
 
-              {admin && (
-                <UserTypeFilter
-                  className="user-type-filter"
-                  onChange={handleUserTypeFilterChange}
-                />
-              )}
+              {admin && <UserTypeFilter className="user-type-filter" onChange={handleUserTypeFilterChange} />}
 
-              <Button
-                variant="contained"
-                className="btn-primary new-user"
-                size="small"
-                href="/create-user"
-              >
+              <Button variant="contained" className="btn-primary new-user" size="small" href="/create-user">
                 {strings.NEW_USER}
               </Button>
             </div>
           </div>
           <div className="col-2">
-            <UserList
-              user={user}
-              types={types}
-              keyword={keyword}
-              checkboxSelection={!Env.isMobile() && admin}
-              hideDesktopColumns={Env.isMobile()}
-              reload={reload}
-              onLoad={handleUserListLoad}
-            />
+            <UserList user={user} types={types} keyword={keyword} checkboxSelection={!Env.isMobile() && admin} hideDesktopColumns={Env.isMobile()} reload={reload} onLoad={handleUserListLoad} />
           </div>
         </div>
       )}

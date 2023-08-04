@@ -1,12 +1,5 @@
 import React, { useRef, useState } from 'react'
-import {
-  Animated,
-  Easing,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
 const Accordion = (props) => {
@@ -104,11 +97,7 @@ const Accordion = (props) => {
               <Text style={styles.titleText}>{props.title}</Text>
             </View>
             <Animated.View style={{ transform: [{ rotateZ: arrowAngle }] }}>
-              <MaterialIcons
-                name="keyboard-arrow-down"
-                size={22}
-                color="rgba(0, 0, 0, 0.7)"
-              />
+              <MaterialIcons name="keyboard-arrow-down" size={22} color="rgba(0, 0, 0, 0.7)" />
             </Animated.View>
           </View>
         </TouchableWithoutFeedback>

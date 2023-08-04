@@ -12,19 +12,7 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import DatePicker from '../components/DatePicker'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Select,
-  MenuItem,
-  Link,
-  FormControlLabel,
-  Switch,
-} from '@mui/material'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Select, MenuItem, Link, FormControlLabel, Switch } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
@@ -197,11 +185,7 @@ const UpdateUser = () => {
 
   const handleResendActivationLink = async () => {
     try {
-      const status = await UserService.resend(
-        email,
-        false,
-        type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend',
-      )
+      const status = await UserService.resend(email, false, type === Env.RECORD_TYPE.USER ? 'frontend' : 'backend')
 
       if (status === 200) {
         Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
@@ -323,36 +307,16 @@ const UpdateUser = () => {
 
   const company = type === Env.RECORD_TYPE.COMPANY
   const driver = type === Env.RECORD_TYPE.USER
-  const activate =
-    admin ||
-    (loggedUser &&
-      user &&
-      loggedUser.type === Env.RECORD_TYPE.COMPANY &&
-      user.type === Env.RECORD_TYPE.USER &&
-      user.company === loggedUser._id)
+  const activate = admin || (loggedUser && user && loggedUser.type === Env.RECORD_TYPE.COMPANY && user.type === Env.RECORD_TYPE.USER && user.company === loggedUser._id)
 
   return (
     <Master onLoad={onLoad} user={loggedUser} strict={true}>
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
-            <h1 className="user-form-title">
-              {' '}
-              {strings.CREATE_COMPANY_HEADING}{' '}
-            </h1>
+            <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
             <form onSubmit={handleSubmit}>
-              <Avatar
-                type={type}
-                mode="update"
-                record={user}
-                size="large"
-                readonly={false}
-                onBeforeUpload={onBeforeUpload}
-                onChange={onAvatarChange}
-                color="disabled"
-                className="avatar-ctn"
-                hideDelete={type === Env.RECORD_TYPE.COMPANY}
-              />
+              <Avatar type={type} mode="update" record={user} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" hideDelete={type === Env.RECORD_TYPE.COMPANY} />
 
               {company && (
                 <div className="info">
@@ -362,58 +326,24 @@ const UpdateUser = () => {
               )}
 
               {admin && (
-                <FormControl
-                  fullWidth
-                  margin="dense"
-                  style={{ marginTop: company ? 0 : 39 }}
-                >
-                  <InputLabel className="required">
-                    {commonStrings.TYPE}
-                  </InputLabel>
-                  <Select
-                    label={commonStrings.TYPE}
-                    value={type}
-                    onChange={handleUserTypeChange}
-                    variant="standard"
-                    required
-                    fullWidth
-                  >
-                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>
-                      {Helper.getUserType(Env.RECORD_TYPE.ADMIN)}
-                    </MenuItem>
-                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>
-                      {Helper.getUserType(Env.RECORD_TYPE.COMPANY)}
-                    </MenuItem>
-                    <MenuItem value={Env.RECORD_TYPE.USER}>
-                      {Helper.getUserType(Env.RECORD_TYPE.USER)}
-                    </MenuItem>
+                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                  <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
+                  <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
+                    <MenuItem value={Env.RECORD_TYPE.ADMIN}>{Helper.getUserType(Env.RECORD_TYPE.ADMIN)}</MenuItem>
+                    <MenuItem value={Env.RECORD_TYPE.COMPANY}>{Helper.getUserType(Env.RECORD_TYPE.COMPANY)}</MenuItem>
+                    <MenuItem value={Env.RECORD_TYPE.USER}>{Helper.getUserType(Env.RECORD_TYPE.USER)}</MenuItem>
                   </Select>
                 </FormControl>
               )}
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.FULL_NAME}
-                </InputLabel>
-                <Input
-                  id="full-name"
-                  type="text"
-                  error={fullNameError}
-                  required
-                  onBlur={handleFullNameOnBlur}
-                  onChange={handleOnChangeFullName}
-                  autoComplete="off"
-                  value={fullName}
-                />
-                <FormHelperText error={fullNameError}>
-                  {(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}
-                </FormHelperText>
+                <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameOnBlur} onChange={handleOnChangeFullName} autoComplete="off" value={fullName} />
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
-                <InputLabel className="required">
-                  {commonStrings.EMAIL}
-                </InputLabel>
+                <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                 <Input id="email" type="text" value={email} disabled />
               </FormControl>
 
@@ -431,10 +361,7 @@ const UpdateUser = () => {
                     }}
                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                   />
-                  <FormHelperText error={!birthDateValid}>
-                    {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) ||
-                      ''}
-                  </FormHelperText>
+                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
               )}
 
@@ -462,89 +389,43 @@ const UpdateUser = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.PHONE}</InputLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  onChange={handlePhoneChange}
-                  onBlur={handlePhoneBlur}
-                  autoComplete="off"
-                  value={phone}
-                  error={!phoneValid}
-                />
-                <FormHelperText error={!phoneValid}>
-                  {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                </FormHelperText>
+                <Input id="phone" type="text" onChange={handlePhoneChange} onBlur={handlePhoneBlur} autoComplete="off" value={phone} error={!phoneValid} />
+                <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input
-                  id="location"
-                  type="text"
-                  onChange={handleOnChangeLocation}
-                  autoComplete="off"
-                  value={location}
-                />
+                <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" value={location} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input
-                  id="bio"
-                  type="text"
-                  onChange={handleOnChangeBio}
-                  autoComplete="off"
-                  value={bio}
-                />
+                <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" value={bio} />
               </FormControl>
 
               {activate && (
-                <FormControl
-                  fullWidth
-                  margin="dense"
-                  className="resend-activation-link"
-                >
-                  <Link onClick={handleResendActivationLink}>
-                    {commonStrings.RESEND_ACTIVATION_LINK}
-                  </Link>
+                <FormControl fullWidth margin="dense" className="resend-activation-link">
+                  <Link onClick={handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
                 </FormControl>
               )}
 
               <div className="buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin btn-margin-bottom"
-                  size="small"
-                  href={`/change-password?u=${user._id}`}
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${user._id}`}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  className="btn-primary btn-margin-bottom"
-                  size="small"
-                >
+                <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                   {commonStrings.SAVE}
                 </Button>
 
-                <Button
-                  variant="contained"
-                  className="btn-secondary btn-margin-bottom"
-                  size="small"
-                  onClick={handleCancel}
-                >
+                <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" onClick={handleCancel}>
                   {commonStrings.CANCEL}
                 </Button>
               </div>
 
               <div className="form-error">
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
-                {avatarError && (
-                  <Error message={commonStrings.IMAGE_REQUIRED} />
-                )}
+                {avatarError && <Error message={commonStrings.IMAGE_REQUIRED} />}
               </div>
             </form>
           </Paper>

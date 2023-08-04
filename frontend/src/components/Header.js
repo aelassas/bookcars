@@ -5,35 +5,8 @@ import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import { toast } from 'react-toastify'
 import Avatar from './Avatar'
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Badge,
-  MenuItem,
-  Menu,
-  Button,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material'
-import {
-  Menu as MenuIcon,
-  Mail as MailIcon,
-  Notifications as NotificationsIcon,
-  More as MoreIcon,
-  Language as LanguageIcon,
-  Settings as SettingsIcon,
-  Home as HomeIcon,
-  InfoTwoTone as AboutIcon,
-  DescriptionTwoTone as TosIcon,
-  ExitToApp as SignoutIcon,
-  Login as LoginIcon,
-  EventSeat as BookingsIcon,
-} from '@mui/icons-material'
+import { AppBar, Toolbar, Typography, IconButton, Badge, MenuItem, Menu, Button, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Menu as MenuIcon, Mail as MailIcon, Notifications as NotificationsIcon, More as MoreIcon, Language as LanguageIcon, Settings as SettingsIcon, Home as HomeIcon, InfoTwoTone as AboutIcon, DescriptionTwoTone as TosIcon, ExitToApp as SignoutIcon, Login as LoginIcon, EventSeat as BookingsIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as LangHelper from '../common/LangHelper'
 
@@ -94,9 +67,7 @@ const Header = (props) => {
 
     if (params.has('l')) {
       params.delete('l')
-      window.location.href =
-        window.location.href.split('?')[0] +
-        ([...params].length > 0 ? '?' + params : '')
+      window.location.href = window.location.href.split('?')[0] + ([...params].length > 0 ? '?' + params : '')
     } else {
       window.location.reload()
     }
@@ -184,14 +155,12 @@ const Header = (props) => {
   useEffect(() => {
     if (!props.hidden) {
       if (props.user) {
-        NotificationService.getNotificationCounter(props.user._id).then(
-          (notificationCounter) => {
-            setIsSignedIn(true)
-            setNotificationCount(notificationCounter.count)
-            setIsLoading(false)
-            setIsLoaded(true)
-          },
-        )
+        NotificationService.getNotificationCounter(props.user._id).then((notificationCounter) => {
+          setIsSignedIn(true)
+          setNotificationCount(notificationCounter.count)
+          setIsLoading(false)
+          setIsLoaded(true)
+        })
       } else {
         setIsLoading(false)
         setIsLoaded(true)
@@ -211,15 +180,7 @@ const Header = (props) => {
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
+    <Menu anchorEl={anchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={menuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMenuOpen} onClose={handleMenuClose}>
       <MenuItem onClick={handleOnSettingsClick}>
         <SettingsIcon className="header-action" />
         {strings.SETTINGS}
@@ -233,26 +194,13 @@ const Header = (props) => {
 
   const mobileMenuId = 'mobile-menu'
   const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
+    <Menu anchorEl={mobileMoreAnchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={mobileMenuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMobileMenuOpen} onClose={handleMobileMenuClose}>
       <MenuItem onClick={handleOnSettingsClick}>
         <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>
       <MenuItem onClick={handleLangMenuOpen}>
-        <IconButton
-          aria-label="language of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
+        <IconButton aria-label="language of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
           <LanguageIcon />
         </IconButton>
         <p>{strings.LANGUAGE}</p>
@@ -268,15 +216,7 @@ const Header = (props) => {
 
   const languageMenuId = 'language-menu'
   const renderLanguageMenu = (
-    <Menu
-      anchorEl={langAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={languageMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isLangMenuOpen}
-      onClose={handleLangMenuClose}
-    >
+    <Menu anchorEl={langAnchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={languageMenuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isLangMenuOpen} onClose={handleLangMenuClose}>
       <MenuItem onClick={handleLangMenuClose} data-code="fr">
         {strings.LANGUAGE_FR}
       </MenuItem>
@@ -292,13 +232,7 @@ const Header = (props) => {
         <AppBar position="fixed" sx={{ bgcolor: '#f37022' }}>
           <Toolbar className="toolbar">
             {isLoaded && !loading && (
-              <IconButton
-                edge="start"
-                sx={classes.menuButton}
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleSideMenuOpen}
-              >
+              <IconButton edge="start" sx={classes.menuButton} color="inherit" aria-label="open drawer" onClick={handleSideMenuOpen}>
                 <MenuIcon />
               </IconButton>
             )}
@@ -327,113 +261,55 @@ const Header = (props) => {
                     <ListItemIcon>{<MailIcon />}</ListItemIcon>
                     <ListItemText primary={strings.CONTACT} />
                   </ListItemLink>
-                  {Env.isMobile() &&
-                    !props.hideSignin &&
-                    !isSignedIn &&
-                    isLoaded &&
-                    !loading && (
-                      <ListItemLink href="/sign-in">
-                        <ListItemIcon>{<LoginIcon />}</ListItemIcon>
-                        <ListItemText primary={strings.SIGN_IN} />
-                      </ListItemLink>
-                    )}
+                  {Env.isMobile() && !props.hideSignin && !isSignedIn && isLoaded && !loading && (
+                    <ListItemLink href="/sign-in">
+                      <ListItemIcon>{<LoginIcon />}</ListItemIcon>
+                      <ListItemText primary={strings.SIGN_IN} />
+                    </ListItemLink>
+                  )}
                 </List>
               </Drawer>
             </React.Fragment>
             <div style={classes.grow} />
             <div className="header-desktop">
               {isSignedIn && (
-                <IconButton
-                  aria-label=""
-                  color="inherit"
-                  onClick={handleNotificationsClick}
-                >
-                  <Badge
-                    badgeContent={
-                      notificationCount > 0 ? notificationCount : null
-                    }
-                    color="primary"
-                  >
+                <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
+                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="primary">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
               )}
               {!props.hideSignin && !isSignedIn && isLoaded && !loading && (
-                <Button
-                  variant="contained"
-                  startIcon={<LoginIcon />}
-                  href="/sign-in"
-                  disableElevation
-                  fullWidth
-                  className="btn-primary"
-                  style={{ minWidth: '180px' }}
-                >
+                <Button variant="contained" startIcon={<LoginIcon />} href="/sign-in" disableElevation fullWidth className="btn-primary" style={{ minWidth: '180px' }}>
                   {strings.SIGN_IN}
                 </Button>
               )}
               {isLoaded && !loading && (
-                <Button
-                  variant="contained"
-                  startIcon={<LanguageIcon />}
-                  onClick={handleLangMenuOpen}
-                  disableElevation
-                  fullWidth
-                  className="btn-primary"
-                >
+                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
                   {getLang(lang)}
                 </Button>
               )}
               {isSignedIn && (
-                <IconButton
-                  edge="end"
-                  aria-label="account"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleAccountMenuOpen}
-                  color="inherit"
-                >
-                  <Avatar
-                    loggedUser={props.user}
-                    user={props.user}
-                    size="small"
-                    readonly
-                  />
+                <IconButton edge="end" aria-label="account" aria-controls={menuId} aria-haspopup="true" onClick={handleAccountMenuOpen} color="inherit">
+                  <Avatar loggedUser={props.user} user={props.user} size="small" readonly />
                 </IconButton>
               )}
             </div>
             <div className="header-mobile">
               {!isSignedIn && !loading && (
-                <Button
-                  variant="contained"
-                  startIcon={<LanguageIcon />}
-                  onClick={handleLangMenuOpen}
-                  disableElevation
-                  fullWidth
-                  className="btn-primary"
-                >
+                <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
                   {getLang(lang)}
                 </Button>
               )}
               {isSignedIn && (
                 <IconButton color="inherit" onClick={handleNotificationsClick}>
-                  <Badge
-                    badgeContent={
-                      notificationCount > 0 ? notificationCount : null
-                    }
-                    color="secondary"
-                  >
+                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="secondary">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
               )}
               {isSignedIn && (
-                <IconButton
-                  aria-label="show more"
-                  aria-controls={mobileMenuId}
-                  aria-haspopup="true"
-                  onClick={handleMobileMenuOpen}
-                  color="inherit"
-                >
+                <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
                   <MoreIcon />
                 </IconButton>
               )}

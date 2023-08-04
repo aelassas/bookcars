@@ -4,14 +4,7 @@ import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
 import Header from '../components/Header'
 import Error from '../components/Error'
-import {
-  Paper,
-  FormControl,
-  InputLabel,
-  Input,
-  Button,
-  Link,
-} from '@mui/material'
+import { Paper, FormControl, InputLabel, Input, Button, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import * as LangHelper from '../common/LangHelper'
 
@@ -118,28 +111,11 @@ const SignIn = () => {
               <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input
-                  id="email"
-                  type="text"
-                  name="Email"
-                  onChange={handleOnChangeEmail}
-                  autoComplete="email"
-                  required
-                />
+                <Input id="email" type="text" name="Email" onChange={handleOnChangeEmail} autoComplete="email" required />
               </FormControl>
               <FormControl fullWidth margin="dense">
-                <InputLabel htmlFor="password">
-                  {commonStrings.PASSWORD}
-                </InputLabel>
-                <Input
-                  id="password"
-                  name="Password"
-                  onChange={handleOnChangePassword}
-                  onKeyDown={handleOnPasswordKeyDown}
-                  autoComplete="password"
-                  type="password"
-                  required
-                />
+                <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
+                <Input id="password" name="Password" onChange={handleOnChangePassword} onKeyDown={handleOnPasswordKeyDown} autoComplete="password" type="password" required />
               </FormControl>
 
               <div className="stay-connected">
@@ -166,12 +142,7 @@ const SignIn = () => {
               </div>
 
               <div className="signin-buttons">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="small"
-                  className="btn-primary"
-                >
+                <Button type="submit" variant="contained" size="small" className="btn-primary">
                   {strings.SIGN_IN}
                 </Button>
               </div>

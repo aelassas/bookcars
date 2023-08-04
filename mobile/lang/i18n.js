@@ -6,8 +6,7 @@ const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars`
 i18n.translations = {
   fr: {
     GENERIC_ERROR: "Une erreur non gérée s'est produite.",
-    CHANGE_LANGUAGE_ERROR:
-      "Une erreur s'est produite lors du changement de langue.",
+    CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
     UPDATED: 'Modifications effectuées avec succès.',
     GO_TO_HOME: "Aller à la page d'accueil",
     FULL_NAME: 'Nom complet',
@@ -24,8 +23,7 @@ i18n.translations = {
     SEARCH: 'Rechercher',
     SEARCH_PLACEHOLDER: 'Rechercher...',
     CONFIRM_TITLE: 'Confirmation',
-    PASSWORD_LENGTH_ERROR:
-      'Le mot de passe doit contenir au moins 6 caractères.',
+    PASSWORD_LENGTH_ERROR: 'Le mot de passe doit contenir au moins 6 caractères.',
     PASSWORDS_DONT_MATCH: 'Les mots de passe ne correspondent pas.',
     CREATE: 'Créer',
     UPDATE: 'Modifier',
@@ -74,8 +72,7 @@ i18n.translations = {
     BIRTH_DATE: 'Date de naissance',
     RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
     TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-    BIRTH_DATE_NOT_VALID:
-      'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
+    BIRTH_DATE_NOT_VALID: 'Vous devez avoir au moins ' + Env.MINIMUM_AGE + ' ans.',
     BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
     BIRTH_DATE_NOT_VALID_PART2: 'ans.',
     SUPPLIER: 'Fournisseur',
@@ -91,12 +88,10 @@ i18n.translations = {
     DROP_OFF_LOCATION_EMPTY: 'Veuillez saisir un lieu de restitution.',
     HOME: 'Accueil',
     ABOUT: 'À propos',
-    VALIDATE_EMAIL:
-      "Un e-mail de validation a été envoyé à votre adresse e-mail. Veuillez vérifier votre boîte aux lettres et valider votre compte en cliquant sur le lien dans l'e-mail. Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
+    VALIDATE_EMAIL: "Un e-mail de validation a été envoyé à votre adresse e-mail. Veuillez vérifier votre boîte aux lettres et valider votre compte en cliquant sur le lien dans l'e-mail. Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
     RESEND: 'Renvoyer',
     VALIDATION_EMAIL_SENT: 'E-mail de validation envoyé.',
-    VALIDATION_EMAIL_ERROR:
-      "Une erreur s'est produite lors de l'envoi de l'e-mail de validation.",
+    VALIDATION_EMAIL_ERROR: "Une erreur s'est produite lors de l'envoi de l'e-mail de validation.",
     TOS: 'Conditions',
     CONTACT: 'Contact',
     SIGN_IN: 'Se connecter',
@@ -116,8 +111,7 @@ i18n.translations = {
     CONFIRM_PASSWORD: 'Confirmer le mot de passe',
     ACCEPT_TOS: "J'ai lu et j'accepte les conditions générales d'utilisation.",
     TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-    RESET_PASSWORD:
-      'Veuillez saisir votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
+    RESET_PASSWORD: 'Veuillez saisir votre adresse e-mail afin de vous envoyer un e-mail pour réinitialiser votre mot de passe.',
     RESET: 'Réinitialiser',
     RESET_EMAIL_SENT: 'E-mail de réinitialisation du mot de passe envoyé.',
     REQUIRED: 'Veuillez renseigner ce champ.',
@@ -136,8 +130,7 @@ i18n.translations = {
     PASSWORD_ERROR: 'Mot de passe incorrect',
     NEW_PASSWORD: 'Nouveau mot de passe',
     PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
-    PASSWORD_UPDATE_ERROR:
-      "Une erreur s'est produite lors de la modification du mot de passe.",
+    PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
     EMPTY_CAR_LIST: 'Pas de voitures.',
     CAR_CURRENCY: ' DH/jour',
     DIESEL_SHORT: 'D',
@@ -185,13 +178,10 @@ i18n.translations = {
     CVV: 'Code de sécurité',
     CVV_NOT_VALID: 'Code de sécurité non valide',
     BOOK_NOW: 'Réserver',
-    SECURE_PAYMENT_INFO:
-      'Vos données sont protégées par le paiement sécurisé SSL.',
+    SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
     CARD_DATE_ERROR: 'Date de carte non valide.',
-    BOOKING_SUCCESS:
-      'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-    BOOKING_EMAIL_ALREADY_REGISTERED:
-      'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
+    BOOKING_SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
+    BOOKING_EMAIL_ALREADY_REGISTERED: 'Cette adresse e-mail est déjà enregistrée. Veuillez vous connecter.',
     EMPTY_BOOKING_LIST: 'Pas de réservations.',
     OPTIONS: 'Options',
     ENGINE: 'Moteur',
@@ -207,25 +197,20 @@ i18n.translations = {
     LESS_THAN_7500: 'Moins de 7500 DH',
     CANCEL_BOOKING_BTN: 'Annuler cette réservation',
     CANCEL_BOOKING: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
-    CANCEL_BOOKING_REQUEST_SENT:
-      "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
+    CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
     OF: 'sur',
     EMPTY_NOTIFICATION_LIST: 'Pas de notifications',
-    DELETE_NOTIFICATION:
-      'Êtes-vous sûr de vouloir supprimer cette notification ?',
-    DELETE_NOTIFICATIONS:
-      'Êtes-vous sûr de vouloir supprimer ces notifications ?',
+    DELETE_NOTIFICATION: 'Êtes-vous sûr de vouloir supprimer cette notification ?',
+    DELETE_NOTIFICATIONS: 'Êtes-vous sûr de vouloir supprimer ces notifications ?',
     DELETE_AVATAR: 'Êtes-vous sûr de vouloir supprimer votre photo de profil ?',
-    CAMERA_PERMISSION:
-      "L'autorisation d'accéder aux fichiers et contenus multimédias est requise!",
+    CAMERA_PERMISSION: "L'autorisation d'accéder aux fichiers et contenus multimédias est requise!",
     BOOKING_DELETED: 'Cette réservation a été supprimée.',
     PAYMENT_OPTIONS: 'Options de paiement',
     PAY_LATER: 'Payer plus tard',
     PAY_LATER_INFO: 'Modification et annulation gratuites',
     PAY_ONLINE: 'Payer en ligne',
     PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
-    PAY_LATER_SUCCESS:
-      'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
+    PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
   },
   en: {
     GENERIC_ERROR: 'An unhandled error occurred.',
@@ -296,8 +281,7 @@ i18n.translations = {
     BIRTH_DATE: 'Birth date',
     RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
     TOS_ERROR: 'Please accept the Terms of Use.',
-    BIRTH_DATE_NOT_VALID:
-      'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
+    BIRTH_DATE_NOT_VALID: 'You must be at least ' + Env.MINIMUM_AGE + ' years old.',
     BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
     BIRTH_DATE_NOT_VALID_PART2: 'years old.',
     SUPPLIER: 'Supplier',
@@ -313,8 +297,7 @@ i18n.translations = {
     DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.',
     HOME: 'Home',
     ABOUT: 'About',
-    VALIDATE_EMAIL:
-      "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
+    VALIDATE_EMAIL: "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
     RESEND: 'Resend',
     VALIDATION_EMAIL_SENT: 'Validation email sent.',
     VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
@@ -337,8 +320,7 @@ i18n.translations = {
     CONFIRM_PASSWORD: 'Confirm Password',
     ACCEPT_TOS: 'I read and agree with the Terms of Use.',
     TOS_ERROR: 'Please accept the Terms of Use.',
-    RESET_PASSWORD:
-      'Please enter your email address so we can send you an email to reset your password.',
+    RESET_PASSWORD: 'Please enter your email address so we can send you an email to reset your password.',
     RESET: 'Reset',
     RESET_EMAIL_SENT: 'Password reset email sent.',
     REQUIRED: 'This field is required',
@@ -407,10 +389,8 @@ i18n.translations = {
     BOOK_NOW: 'Book  now',
     SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
     CARD_DATE_ERROR: 'Invalid card date.',
-    BOOKING_SUCCESS:
-      'Your booking and payment were successfully done. We have sent you a confirmation email.',
-    BOOKING_EMAIL_ALREADY_REGISTERED:
-      'This email address is already registered. Please sign in.',
+    BOOKING_SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.',
+    BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
     EMPTY_BOOKING_LIST: 'No bookings.',
     OPTIONS: 'Options',
     ENGINE: 'Engine',
@@ -426,13 +406,11 @@ i18n.translations = {
     LESS_THAN_7500: 'Less than 7500 DH',
     CANCEL_BOOKING_BTN: 'Cancel this booking',
     CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
-    CANCEL_BOOKING_REQUEST_SENT:
-      'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
+    CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
     OF: 'of',
     EMPTY_NOTIFICATION_LIST: 'No notifications',
     DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
-    DELETE_NOTIFICATIONS:
-      'Are you sure you want to delete these notifications?',
+    DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
     DELETE_AVATAR: 'Are you sure you want to delete your profile picture?',
     CAMERA_PERMISSION: 'Permission to access camera roll is required!',
     BOOKING_DELETED: 'This booking was deleted.',
@@ -441,8 +419,7 @@ i18n.translations = {
     PAY_LATER_INFO: 'Free amendments and cancellation',
     PAY_ONLINE: 'Pay online',
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
-    PAY_LATER_SUCCESS:
-      'Your booking were successfully done. We have sent you a confirmation email.',
+    PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
   },
 }
 

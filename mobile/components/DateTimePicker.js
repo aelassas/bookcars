@@ -11,9 +11,7 @@ const DateTimePicker = (props) => {
   const [label, setLabel] = useState('')
   const [value, setValue] = useState(props.value)
   const [show, setShow] = useState(false)
-  const [locale, setLoacle] = useState(
-    props.locale === Env.LANGUAGE.FR ? fr : enUS,
-  )
+  const [locale, setLoacle] = useState(props.locale === Env.LANGUAGE.FR ? fr : enUS)
   const _format = props.mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm'
   const now = new Date()
   const small = props.size === 'small'
@@ -21,19 +19,12 @@ const DateTimePicker = (props) => {
   useEffect(() => {
     const _locale = props.locale === Env.LANGUAGE.FR ? fr : enUS
     setLoacle(_locale)
-    setLabel(
-      (value &&
-        Helper.capitalize(format(value, _format, { locale: _locale }))) ||
-        props.label,
-    )
+    setLabel((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || props.label)
   }, [props.locale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setValue(props.value)
-    setLabel(
-      (value && Helper.capitalize(format(value, _format, { locale }))) ||
-        props.label,
-    )
+    setLabel((value && Helper.capitalize(format(value, _format, { locale }))) || props.label)
   }, [props.value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const styles = StyleSheet.create({

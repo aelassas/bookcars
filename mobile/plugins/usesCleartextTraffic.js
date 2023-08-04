@@ -1,7 +1,4 @@
-const {
-  createRunOncePlugin,
-  withAndroidManifest,
-} = require('@expo/config-plugins')
+const { createRunOncePlugin, withAndroidManifest } = require('@expo/config-plugins')
 
 const usesCleartextTraffic = (config) => {
   return withAndroidManifest(config, (config) => {
@@ -13,8 +10,7 @@ const usesCleartextTraffic = (config) => {
       return modResults
     }
 
-    const application =
-      manifest.application.length > 0 && manifest.application[0]
+    const application = manifest.application.length > 0 && manifest.application[0]
 
     if (!application) {
       console.warn('usesCleartextTraffic: No .MainApplication')
@@ -29,8 +25,4 @@ const usesCleartextTraffic = (config) => {
   })
 }
 
-module.exports = createRunOncePlugin(
-  usesCleartextTraffic,
-  'usesCleartextTraffic',
-  '1.0.0',
-)
+module.exports = createRunOncePlugin(usesCleartextTraffic, 'usesCleartextTraffic', '1.0.0')

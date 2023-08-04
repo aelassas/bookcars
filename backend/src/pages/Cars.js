@@ -27,19 +27,10 @@ const Cars = () => {
   const [rowCount, setRowCount] = useState(0)
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [gearbox, setGearbox] = useState([
-    Env.GEARBOX_TYPE.AUTOMATIC,
-    Env.GEARBOX_TYPE.MANUAL,
-  ])
+  const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
   const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
-  const [mileage, setMileage] = useState([
-    Env.MILEAGE.LIMITED,
-    Env.MILEAGE.UNLIMITED,
-  ])
-  const [availability, setAvailability] = useState([
-    Env.AVAILABILITY.AVAILABLE,
-    Env.AVAILABILITY.UNAVAILABLE,
-  ])
+  const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
+  const [availability, setAvailability] = useState([Env.AVAILABILITY.AVAILABLE, Env.AVAILABILITY.UNAVAILABLE])
   const [deposit, setDeposit] = useState(-1)
   const [offset, setOffset] = useState(0)
 
@@ -111,76 +102,27 @@ const Cars = () => {
             <div className="col-1-container">
               <Search onSubmit={handleSearch} className="search" />
 
-              <Button
-                type="submit"
-                variant="contained"
-                className="btn-primary new-car"
-                size="small"
-                href="/create-car"
-              >
+              <Button type="submit" variant="contained" className="btn-primary new-car" size="small" href="/create-car">
                 {strings.NEW_CAR}
               </Button>
 
-              {rowCount > 0 && (
-                <InfoBox
-                  value={`${rowCount} ${commonStrings.CAR}${
-                    rowCount > 1 ? 's' : ''
-                  }`}
-                  className="car-count"
-                />
-              )}
+              {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
 
-              <SupplierFilter
-                companies={allCompanies}
-                onChange={handleSupplierFilterChange}
-                className="filter"
-              />
+              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="filter" />
 
               {rowCount > -1 && (
                 <>
-                  <FuelFilter
-                    className="car-filter"
-                    onChange={handleFuelFilterChange}
-                  />
-                  <GearboxFilter
-                    className="car-filter"
-                    onChange={handleGearboxFilterChange}
-                  />
-                  <MileageFilter
-                    className="car-filter"
-                    onChange={handleMileageFilterChange}
-                  />
-                  <DepositFilter
-                    className="car-filter"
-                    onChange={handleDepositFilterChange}
-                  />
-                  {admin && (
-                    <AvailabilityFilter
-                      className="car-filter"
-                      onChange={handleAvailabilityFilterChange}
-                    />
-                  )}
+                  <FuelFilter className="car-filter" onChange={handleFuelFilterChange} />
+                  <GearboxFilter className="car-filter" onChange={handleGearboxFilterChange} />
+                  <MileageFilter className="car-filter" onChange={handleMileageFilterChange} />
+                  <DepositFilter className="car-filter" onChange={handleDepositFilterChange} />
+                  {admin && <AvailabilityFilter className="car-filter" onChange={handleAvailabilityFilterChange} />}
                 </>
               )}
             </div>
           </div>
           <div className="col-2">
-            <CarList
-              containerClassName="cars"
-              offset={offset}
-              user={user}
-              companies={companies}
-              fuel={fuel}
-              gearbox={gearbox}
-              mileage={mileage}
-              deposit={deposit}
-              availability={availability}
-              keyword={keyword}
-              reload={reload}
-              loading={loading}
-              onLoad={handleCarListLoad}
-              onDelete={handleCarDelete}
-            />
+            <CarList containerClassName="cars" offset={offset} user={user} companies={companies} fuel={fuel} gearbox={gearbox} mileage={mileage} deposit={deposit} availability={availability} keyword={keyword} reload={reload} loading={loading} onLoad={handleCarListLoad} onDelete={handleCarDelete} />
           </div>
         </div>
       )}

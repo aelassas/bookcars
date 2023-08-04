@@ -14,9 +14,7 @@ const CarFilter = (props) => {
   const [minDate, setMinDate] = useState(null)
   const [pickupLocation, setPickupLocation] = useState(props.pickupLocation)
   const [dropOffLocation, setDropOffLocation] = useState(props.dropOffLocation)
-  const [sameLocation, setSameLocation] = useState(
-    props.pickupLocation === props.dropOffLocation,
-  )
+  const [sameLocation, setSameLocation] = useState(props.pickupLocation === props.dropOffLocation)
 
   useEffect(() => {
     if (props.from) {
@@ -72,34 +70,14 @@ const CarFilter = (props) => {
   }
 
   return (
-    <div
-      className={`${props.className ? `${props.className} ` : ''}car-filter`}
-    >
+    <div className={`${props.className ? `${props.className} ` : ''}car-filter`}>
       <form onSubmit={handleSubmit} className="home-search-form">
         <FormControl fullWidth className="pickup-location">
-          <LocationSelectList
-            label={commonStrings.PICKUP_LOCATION}
-            hidePopupIcon
-            customOpen
-            hidePopupOnload
-            required
-            variant="standard"
-            value={pickupLocation}
-            onChange={handlePickupLocationChange}
-          />
+          <LocationSelectList label={commonStrings.PICKUP_LOCATION} hidePopupIcon customOpen hidePopupOnload required variant="standard" value={pickupLocation} onChange={handlePickupLocationChange} />
         </FormControl>
         {!sameLocation && (
           <FormControl fullWidth className="drop-off-location">
-            <LocationSelectList
-              label={commonStrings.DROP_OFF_LOCATION}
-              value={dropOffLocation}
-              hidePopupIcon
-              customOpen
-              hidePopupOnload
-              required
-              variant="standard"
-              onChange={handleDropOffLocationChange}
-            />
+            <LocationSelectList label={commonStrings.DROP_OFF_LOCATION} value={dropOffLocation} hidePopupIcon customOpen hidePopupOnload required variant="standard" onChange={handleDropOffLocationChange} />
           </FormControl>
         )}
         <FormControl fullWidth className="from">
@@ -138,11 +116,7 @@ const CarFilter = (props) => {
           </Button>
         </FormControl>
         <FormControl fullWidth className="chk-same-location">
-          <input
-            type="checkbox"
-            checked={sameLocation}
-            onChange={handleSameLocationChange}
-          />
+          <input type="checkbox" checked={sameLocation} onChange={handleSameLocationChange} />
           <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
         </FormControl>
       </form>

@@ -2,10 +2,7 @@ div.fuel-filter div.filter-elements {
   padding: 7px 5px;
 }
 
-div.fuel-filter
-  div.filter-elements
-  div.filter-element
-  input[type='checkbox'].fuel-checkbox {
+div.fuel-filter div.filter-elements div.filter-element input[type='checkbox'].fuel-checkbox {
   cursor: pointer;
   margin-left: 5px;
 }

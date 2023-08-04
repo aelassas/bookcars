@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  View,
-  Text,
-  Image,
-} from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View, Text, Image } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import {
-  Paragraph,
-  Dialog,
-  Portal,
-  Button as NativeButton,
-} from 'react-native-paper'
+import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
 
@@ -54,15 +42,9 @@ const BookingList = (props) => {
         }
         setLoading(true)
         setFetch(true)
-        const data = await BookingService.getBookings(
-          payload,
-          _page,
-          Env.BOOKINGS_PAGE_SIZE,
-        )
-        const _data =
-          Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-        const _rows =
-          _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+        const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE)
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+        const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
         setRows(_rows)
         setFetch(_data.resultData.length > 0)
         setLoading(false)
@@ -87,13 +69,7 @@ const BookingList = (props) => {
 
   useEffect(() => {
     ;(async function () {
-      if (
-        firstLoad &&
-        props.companies &&
-        props.companies.length > 0 &&
-        props.statuses &&
-        props.statuses.length > 0
-      ) {
+      if (firstLoad && props.companies && props.companies.length > 0 && props.statuses && props.statuses.length > 0) {
         await _fetch()
         setFirstLoad(false)
       }
@@ -154,198 +130,84 @@ const BookingList = (props) => {
             <View key={booking._id} style={styles.bookingContainer}>
               <View style={styles.booking}>
                 <View style={styles.header}>
-                  <MaterialIcons
-                    name="directions-car"
-                    size={iconSize}
-                    color={iconColor}
-                  />
+                  <MaterialIcons name="directions-car" size={iconSize} color={iconColor} />
                   <Text style={styles.headerText}>{booking.car.name}</Text>
                 </View>
 
                 <BookingStatus style={styles.status} status={booking.status} />
 
                 <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-                <Text style={styles.detailText}>
-                  {`${Helper.getDaysShort(
-                    Helper.days(from, to),
-                  )} (${Helper.capitalize(
-                    format(from, _format, { locale }),
-                  )} - ${Helper.capitalize(format(to, _format, { locale }))})`}
-                </Text>
+                <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}</Text>
 
-                <Text style={styles.detailTitle}>
-                  {i18n.t('PICKUP_LOCATION')}
-                </Text>
-                <Text style={styles.detailText}>
-                  {booking.pickupLocation.name}
-                </Text>
+                <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
+                <Text style={styles.detailText}>{booking.pickupLocation.name}</Text>
 
-                <Text style={styles.detailTitle}>
-                  {i18n.t('DROP_OFF_LOCATION')}
-                </Text>
-                <Text style={styles.detailText}>
-                  {booking.dropOffLocation.name}
-                </Text>
+                <Text style={styles.detailTitle}>{i18n.t('DROP_OFF_LOCATION')}</Text>
+                <Text style={styles.detailText}>{booking.dropOffLocation.name}</Text>
 
                 <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                <Text style={styles.detailText}>{`${
-                  booking.car.name
-                } (${Helper.formatNumber(booking.car.price)} ${i18n.t(
-                  'CAR_CURRENCY',
-                )})`}</Text>
+                <Text style={styles.detailText}>{`${booking.car.name} (${Helper.formatNumber(booking.car.price)} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
                 <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
                 <View style={styles.company}>
                   <Image
                     style={styles.companyImg}
                     source={{
-                      uri: Helper.joinURL(
-                        Env.CDN_USERS,
-                        booking.company.avatar,
-                      ),
+                      uri: Helper.joinURL(Env.CDN_USERS, booking.company.avatar),
                     }}
                   />
-                  <Text style={styles.companyText}>
-                    {booking.company.fullName}
-                  </Text>
+                  <Text style={styles.companyText}>{booking.company.fullName}</Text>
                 </View>
 
-                {(booking.cancellation ||
-                  booking.amendments ||
-                  booking.collisionDamageWaiver ||
-                  booking.theftProtection ||
-                  booking.fullInsurance ||
-                  booking.additionalDriver) && (
+                {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver) && (
                   <>
                     <Text style={styles.detailTitle}>{i18n.t('OPTIONS')}</Text>
                     <View style={styles.extras}>
                       {booking.cancellation && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('CANCELLATION')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getCancellationOption(
-                              booking.car.cancellation,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('CANCELLATION')}</Text>
+                          <Text style={styles.extraText}>{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</Text>
                         </View>
                       )}
 
                       {booking.amendments && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('AMENDMENTS')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getAmendmentsOption(
-                              booking.car.amendments,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('AMENDMENTS')}</Text>
+                          <Text style={styles.extraText}>{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</Text>
                         </View>
                       )}
 
                       {booking.collisionDamageWaiver && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('COLLISION_DAMAGE_WAVER')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getCollisionDamageWaiverOption(
-                              booking.car.collisionDamageWaiver,
-                              days,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('COLLISION_DAMAGE_WAVER')}</Text>
+                          <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</Text>
                         </View>
                       )}
 
                       {booking.theftProtection && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('THEFT_PROTECTION')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getTheftProtectionOption(
-                              booking.car.theftProtection,
-                              days,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('THEFT_PROTECTION')}</Text>
+                          <Text style={styles.extraText}>{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</Text>
                         </View>
                       )}
 
                       {booking.fullInsurance && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('FULL_INSURANCE')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getFullInsuranceOption(
-                              booking.car.fullInsurance,
-                              days,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('FULL_INSURANCE')}</Text>
+                          <Text style={styles.extraText}>{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</Text>
                         </View>
                       )}
 
                       {booking.additionalDriver && (
                         <View style={styles.extra}>
-                          <MaterialIcons
-                            style={styles.extraIcon}
-                            name="check"
-                            size={extraIconSize}
-                            color={extraIconColor}
-                          />
-                          <Text style={styles.extraTitle}>
-                            {i18n.t('ADDITIONAL_DRIVER')}
-                          </Text>
-                          <Text style={styles.extraText}>
-                            {Helper.getAdditionalDriverOption(
-                              booking.car.additionalDriver,
-                              days,
-                              _fr,
-                              true,
-                            )}
-                          </Text>
+                          <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
+                          <Text style={styles.extraTitle}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
+                          <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</Text>
                         </View>
                       )}
                     </View>
@@ -353,49 +215,25 @@ const BookingList = (props) => {
                 )}
 
                 <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                <Text style={styles.detailTextBold}>{`${Helper.formatNumber(
-                  booking.price,
-                )} ${i18n.t('CURRENCY')}`}</Text>
+                <Text style={styles.detailTextBold}>{`${Helper.formatNumber(booking.price)} ${i18n.t('CURRENCY')}`}</Text>
 
-                {booking.cancellation &&
-                  !booking.cancelRequest &&
-                  booking.status !== Env.BOOKING_STATUS.CANCELLED &&
-                  new Date(booking.from) > new Date() && (
-                    <Button
-                      size="small"
-                      color="secondary"
-                      style={styles.button}
-                      label={i18n.t('CANCEL_BOOKING_BTN')}
-                      onPress={() => {
-                        setSelectedId(booking._id)
-                        setOpenCancelDialog(true)
-                      }}
-                    />
-                  )}
+                {booking.cancellation && !booking.cancelRequest && booking.status !== Env.BOOKING_STATUS.CANCELLED && new Date(booking.from) > new Date() && (
+                  <Button
+                    size="small"
+                    color="secondary"
+                    style={styles.button}
+                    label={i18n.t('CANCEL_BOOKING_BTN')}
+                    onPress={() => {
+                      setSelectedId(booking._id)
+                      setOpenCancelDialog(true)
+                    }}
+                  />
+                )}
 
                 <Portal>
-                  <Dialog
-                    style={styles.dialog}
-                    visible={openCancelDialog}
-                    dismissable={false}
-                  >
-                    <Dialog.Title style={styles.dialogTitleContent}>
-                      {(!cancelRequestSent &&
-                        !cancelRequestProcessing &&
-                        i18n.t('CONFIRM_TITLE')) ||
-                        ''}
-                    </Dialog.Title>
-                    <Dialog.Content style={styles.dialogContent}>
-                      {cancelRequestProcessing ? (
-                        <ActivityIndicator size="large" color="#f37022" />
-                      ) : cancelRequestSent ? (
-                        <Paragraph>
-                          {i18n.t('CANCEL_BOOKING_REQUEST_SENT')}
-                        </Paragraph>
-                      ) : (
-                        <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>
-                      )}
-                    </Dialog.Content>
+                  <Dialog style={styles.dialog} visible={openCancelDialog} dismissable={false}>
+                    <Dialog.Title style={styles.dialogTitleContent}>{(!cancelRequestSent && !cancelRequestProcessing && i18n.t('CONFIRM_TITLE')) || ''}</Dialog.Title>
+                    <Dialog.Content style={styles.dialogContent}>{cancelRequestProcessing ? <ActivityIndicator size="large" color="#f37022" /> : cancelRequestSent ? <Paragraph>{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</Paragraph> : <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>}</Dialog.Content>
                     <Dialog.Actions style={styles.dialogActions}>
                       {!cancelRequestProcessing && (
                         <NativeButton
@@ -418,14 +256,10 @@ const BookingList = (props) => {
                           onPress={async () => {
                             try {
                               setCancelRequestProcessing(true)
-                              const status = await BookingService.cancel(
-                                selectedId,
-                              )
+                              const status = await BookingService.cancel(selectedId)
 
                               if (status === 200) {
-                                const row = rows.find(
-                                  (r) => r._id === selectedId,
-                                )
+                                const row = rows.find((r) => r._id === selectedId)
                                 row.cancelRequest = true
 
                                 setCancelRequestSent(true)
@@ -463,24 +297,11 @@ const BookingList = (props) => {
           setOnScrollEnd(false)
         }}
         ListHeaderComponent={props.header}
-        ListFooterComponent={
-          fetch &&
-          !openCancelDialog && (
-            <ActivityIndicator
-              size="large"
-              color="#f37022"
-              style={styles.indicator}
-            />
-          )
-        }
+        ListFooterComponent={fetch && !openCancelDialog && <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />}
         ListEmptyComponent={
           !loading && (
             <View style={styles.container}>
-              <Text style={styles.text}>
-                {deleted
-                  ? i18n.t('BOOKING_DELETED')
-                  : i18n.t('EMPTY_BOOKING_LIST')}
-              </Text>
+              <Text style={styles.text}>{deleted ? i18n.t('BOOKING_DELETED') : i18n.t('EMPTY_BOOKING_LIST')}</Text>
             </View>
           )
         }

@@ -22,9 +22,7 @@ Notifications.setNotificationHandler({
 
 // Prevent native splash screen from autohiding before App component declaration
 SplashScreen.preventAutoHideAsync()
-  .then((result) => {
-    console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`)
-  })
+  .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
   .catch(console.warn) // it's good to explicitly catch and inspect any error
 
 const App = () => {
@@ -45,29 +43,24 @@ const App = () => {
     register()
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener(
-        async (response) => {
-          try {
-            if (navigationRef.current) {
-              const data = response.notification.request.content.data
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      try {
+        if (navigationRef.current) {
+          const data = response.notification.request.content.data
 
-              if (data.booking) {
-                if (data.user && data.notification) {
-                  await NotificationService.markAsRead(data.user, [
-                    data.notification,
-                  ])
-                }
-                navigationRef.current.navigate('Booking', { id: data.booking })
-              } else {
-                navigationRef.current.navigate('Notifications')
-              }
+          if (data.booking) {
+            if (data.user && data.notification) {
+              await NotificationService.markAsRead(data.user, [data.notification])
             }
-          } catch (err) {
-            Helper.error(err, false)
+            navigationRef.current.navigate('Booking', { id: data.booking })
+          } else {
+            navigationRef.current.navigate('Notifications')
           }
-        },
-      )
+        }
+      } catch (err) {
+        Helper.error(err, false)
+      }
+    })
 
     return () => {
       Notifications.removeNotificationSubscription(responseListener.current)

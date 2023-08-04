@@ -3,21 +3,8 @@ import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
-import {
-  Button,
-  Avatar as MaterialAvatar,
-  Badge,
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@mui/material'
-import {
-  AccountCircle,
-  PhotoCamera as PhotoCameraIcon,
-  BrokenImageTwoTone as DeleteIcon,
-} from '@mui/icons-material'
+import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
+import { AccountCircle, PhotoCamera as PhotoCameraIcon, BrokenImageTwoTone as DeleteIcon } from '@mui/icons-material'
 
 const Avatar = (props) => {
   const [error, setError] = useState(false)
@@ -136,11 +123,7 @@ const Avatar = (props) => {
                 horizontal: 'right',
               }}
               badgeContent={
-                <Box
-                  borderRadius="50%"
-                  className="avatar-action-box"
-                  onClick={handleDeleteAvatar}
-                >
+                <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
                   <DeleteIcon className="avatar-action-icon" />
                 </Box>
               }
@@ -152,19 +135,12 @@ const Avatar = (props) => {
                   horizontal: 'right',
                 }}
                 badgeContent={
-                  <Box
-                    borderRadius="50%"
-                    className="avatar-action-box"
-                    onClick={handleUpload}
-                  >
+                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
                 }
               >
-                <MaterialAvatar
-                  src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
-                  className="avatar"
-                />
+                <MaterialAvatar src={Helper.joinURL(Env.CDN_USERS, user.avatar)} className="avatar" />
               </Badge>
             </Badge>
           ) : (
@@ -176,18 +152,8 @@ const Avatar = (props) => {
               }}
               badgeContent={
                 <div>
-                  <Box
-                    borderRadius="50%"
-                    className="avatar-action-box"
-                    onClick={handleUpload}
-                  >
-                    <PhotoCameraIcon
-                      className={
-                        user.language === 'ar'
-                          ? 'avatar-action-icon-rtl'
-                          : 'avatar-action-icon'
-                      }
-                    />
+                  <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
+                    <PhotoCameraIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
                   </Box>
                 </div>
               }
@@ -199,20 +165,12 @@ const Avatar = (props) => {
           )}
         </div>
       ) : user.avatar ? (
-        <MaterialAvatar
-          src={Helper.joinURL(Env.CDN_USERS, user.avatar)}
-          className={size ? 'avatar-' + size : 'avatar'}
-        />
+        <MaterialAvatar src={Helper.joinURL(Env.CDN_USERS, user.avatar)} className={size ? 'avatar-' + size : 'avatar'} />
       ) : (
-        <AccountCircle
-          className={size ? 'avatar-' + size : 'avatar'}
-          color={props.color || 'inherit'}
-        />
+        <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={open}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
         <DialogContent>{commonStrings.DELETE_AVATAR_CONFIRM}</DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={handleCancelDelete} className="btn-secondary">

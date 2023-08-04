@@ -8,16 +8,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import DatePicker from '../components/DatePicker'
-import {
-  OutlinedInput,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Checkbox,
-  Link,
-} from '@mui/material'
+import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link } from '@mui/material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import * as Helper from '../common/Helper'
@@ -276,55 +267,21 @@ const SignUp = () => {
             <form onSubmit={handleSubmit}>
               <div>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.FULL_NAME}
-                  </InputLabel>
-                  <OutlinedInput
-                    type="text"
-                    label={commonStrings.FULL_NAME}
-                    value={fullName}
-                    required
-                    onChange={handleOnChangeFullName}
-                    autoComplete="off"
-                  />
+                  <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                  <OutlinedInput type="text" label={commonStrings.FULL_NAME} value={fullName} required onChange={handleOnChangeFullName} autoComplete="off" />
                 </FormControl>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.EMAIL}
-                  </InputLabel>
-                  <OutlinedInput
-                    type="text"
-                    label={commonStrings.EMAIL}
-                    error={!emailValid || emailError}
-                    value={email}
-                    onBlur={handleEmailBlur}
-                    onChange={handleEmailChange}
-                    required
-                    autoComplete="off"
-                  />
+                  <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                  <OutlinedInput type="text" label={commonStrings.EMAIL} error={!emailValid || emailError} value={email} onBlur={handleEmailBlur} onChange={handleEmailChange} required autoComplete="off" />
                   <FormHelperText error={!emailValid || emailError}>
                     {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
-                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) ||
-                      ''}
+                    {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
                   </FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.PHONE}
-                  </InputLabel>
-                  <OutlinedInput
-                    type="text"
-                    label={commonStrings.PHONE}
-                    error={!phoneValid}
-                    value={phone}
-                    onBlur={handlePhoneBlur}
-                    onChange={handlePhoneChange}
-                    required
-                    autoComplete="off"
-                  />
-                  <FormHelperText error={!phoneValid}>
-                    {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
-                  </FormHelperText>
+                  <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                  <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} value={phone} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
+                  <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <DatePicker
@@ -341,15 +298,10 @@ const SignUp = () => {
                     }}
                     language={language}
                   />
-                  <FormHelperText error={!birthDateValid}>
-                    {(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) ||
-                      ''}
-                  </FormHelperText>
+                  <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.PASSWORD}
-                  </InputLabel>
+                  <InputLabel className="required">{commonStrings.PASSWORD}</InputLabel>
                   <OutlinedInput
                     label={commonStrings.PASSWORD}
                     value={password}
@@ -365,9 +317,7 @@ const SignUp = () => {
                   />
                 </FormControl>
                 <FormControl fullWidth margin="dense">
-                  <InputLabel className="required">
-                    {commonStrings.CONFIRM_PASSWORD}
-                  </InputLabel>
+                  <InputLabel className="required">{commonStrings.CONFIRM_PASSWORD}</InputLabel>
                   <OutlinedInput
                     label={commonStrings.CONFIRM_PASSWORD}
                     value={confirmPassword}
@@ -385,11 +335,7 @@ const SignUp = () => {
 
                 {Env.RECAPTCHA_ENABLED && (
                   <div className="recaptcha">
-                    <ReCAPTCHA
-                      sitekey={Env.RECAPTCHA_SITE_KEY}
-                      hl={language}
-                      onChange={handleOnRecaptchaVerify}
-                    />
+                    <ReCAPTCHA sitekey={Env.RECAPTCHA_SITE_KEY} hl={language} onChange={handleOnRecaptchaVerify} />
                   </div>
                 )}
 
@@ -398,11 +344,7 @@ const SignUp = () => {
                     <tbody>
                       <tr>
                         <td>
-                          <Checkbox
-                            checked={tosChecked}
-                            onChange={handleTosChange}
-                            color="primary"
-                          />
+                          <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
                         </td>
                         <td>
                           <Link href="/tos" target="_blank" rel="noreferrer">
@@ -414,35 +356,19 @@ const SignUp = () => {
                   </table>
                 </div>
                 <div className="buttons">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className="btn-primary btn-margin-bottom"
-                    size="small"
-                  >
+                  <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
                     {strings.SIGN_UP}
                   </Button>
-                  <Button
-                    variant="contained"
-                    className="btn-secondary btn-margin-bottom"
-                    size="small"
-                    href="/"
-                  >
+                  <Button variant="contained" className="btn-secondary btn-margin-bottom" size="small" href="/">
                     {' '}
                     {commonStrings.CANCEL}
                   </Button>
                 </div>
               </div>
               <div className="form-error">
-                {passwordError && (
-                  <Error message={commonStrings.PASSWORD_ERROR} />
-                )}
-                {passwordsDontMatch && (
-                  <Error message={commonStrings.PASSWORDS_DONT_MATCH} />
-                )}
-                {recaptchaError && (
-                  <Error message={commonStrings.RECAPTCHA_ERROR} />
-                )}
+                {passwordError && <Error message={commonStrings.PASSWORD_ERROR} />}
+                {passwordsDontMatch && <Error message={commonStrings.PASSWORDS_DONT_MATCH} />}
+                {recaptchaError && <Error message={commonStrings.RECAPTCHA_ERROR} />}
                 {tosError && <Error message={commonStrings.TOS_ERROR} />}
                 {error && <Error message={strings.SIGN_UP_ERROR} />}
               </div>

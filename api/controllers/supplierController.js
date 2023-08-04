@@ -69,13 +69,8 @@ export const deleteSupplier = async (req, res) => {
           await fs.unlink(avatar)
         }
         await Notification.deleteMany({ user: id })
-        const _additionalDrivers = await Booking.find(
-          { supplier: id, _additionalDriver: { $ne: null } },
-          { _additionalDriver: 1 },
-        )
-        const additionalDrivers = _additionalDrivers.map(
-          (b) => new new mongoose.Types.ObjectId(b._additionalDriver)(),
-        )
+        const _additionalDrivers = await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 })
+        const additionalDrivers = _additionalDrivers.map((b) => new new mongoose.Types.ObjectId(b._additionalDriver)())
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
         await Booking.deleteMany({ supplier: id })
         const cars = await Car.find({ supplier: id })
@@ -107,8 +102,7 @@ export const getSupplier = async (req, res) => {
       console.error('[supplier.getSupplier] Supplier not found:', id)
       return res.sendStatus(204)
     } else {
-      const { _id, email, fullName, avatar, phone, location, bio, payLater } =
-        user
+      const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
       return res.json({
         _id,
         email,
@@ -143,11 +137,7 @@ export const getSuppliers = async (req, res) => {
         },
         {
           $facet: {
-            resultData: [
-              { $sort: { fullName: 1 } },
-              { $skip: (page - 1) * size },
-              { $limit: size },
-            ],
+            resultData: [{ $sort: { fullName: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -168,20 +158,14 @@ export const getSuppliers = async (req, res) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(
-      `[supplier.getSuppliers] ${strings.DB_ERROR} ${req.query.s}`,
-      err,
-    )
+    console.error(`[supplier.getSuppliers] ${strings.DB_ERROR} ${req.query.s}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
 
 export const getAllSuppliers = async (req, res) => {
   try {
-    let data = await User.aggregate(
-      [{ $match: { type: Env.USER_TYPE.COMPANY } }, { $sort: { fullName: 1 } }],
-      { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } },
-    )
+    let data = await User.aggregate([{ $match: { type: Env.USER_TYPE.COMPANY } }, { $sort: { fullName: 1 } }], { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } })
 
     if (data.length > 0) {
       data = data.map((supplier) => {

@@ -31,8 +31,7 @@ export const registerPushToken = async (userId) => {
 
     try {
       if (Device.isDevice) {
-        const { status: existingStatus } =
-          await Notifications.getPermissionsAsync()
+        const { status: existingStatus } = await Notifications.getPermissionsAsync()
         let finalStatus = existingStatus
         if (existingStatus !== 'granted') {
           const { status } = await Notifications.requestPermissionsAsync()
@@ -176,115 +175,73 @@ export const getFuelPolicy = (type) => {
 
 export const getCancellation = (cancellation, fr) => {
   if (cancellation === -1) {
-    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}`
+    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
   } else if (cancellation === 0) {
-    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${
-      fr ? 'e' : ''
-    }`
+    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${formatNumber(
-      cancellation,
-    )} ${i18n.t('CURRENCY')}`
+    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
   }
 }
 
 export const getAmendments = (amendments, fr) => {
   if (amendments === -1) {
-    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}${fr ? 's' : ''}`
+    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`
   } else if (amendments === 0) {
-    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${
-      fr ? 'es' : ''
-    }`
+    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   } else {
-    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${formatNumber(
-      amendments,
-    )} ${i18n.t('CURRENCY')}`
+    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${formatNumber(amendments)} ${i18n.t('CURRENCY')}`
   }
 }
 
 export const getTheftProtection = (theftProtection, fr) => {
   if (theftProtection === -1) {
-    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}`
+    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
   } else if (theftProtection === 0) {
-    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t(
-      'INCLUDED',
-    )}${fr ? 'e' : ''}`
+    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${formatNumber(
-      theftProtection,
-    )} ${i18n.t('CAR_CURRENCY')}`
+    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')}`
   }
 }
 
 export const getCollisionDamageWaiver = (collisionDamageWaiver, fr) => {
   if (collisionDamageWaiver === -1) {
-    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}`
+    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
   } else if (collisionDamageWaiver === 0) {
-    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t(
-      'INCLUDED',
-    )}${fr ? 'e' : ''}`
+    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${
-      fr ? ' : ' : ': '
-    }${formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')}`
+    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')}`
   }
 }
 
 export const getFullInsurance = (fullInsurance, fr) => {
   if (fullInsurance === -1) {
-    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}`
+    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
   } else if (fullInsurance === 0) {
-    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t(
-      'INCLUDED',
-    )}${fr ? 'e' : ''}`
+    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${formatNumber(
-      fullInsurance,
-    )} ${i18n.t('CAR_CURRENCY')}`
+    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')}`
   }
 }
 
 export const getAdditionalDriver = (additionalDriver, fr) => {
   if (additionalDriver === -1) {
-    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t(
-      'UNAVAILABLE',
-    )}`
+    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
   } else if (additionalDriver === 0) {
-    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t(
-      'INCLUDED',
-    )}`
+    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}`
   } else {
-    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${formatNumber(
-      additionalDriver,
-    )} ${i18n.t('CAR_CURRENCY')}`
+    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')}`
   }
 }
 
 export const getDays = (days) => {
-  return `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t(
-    'PRICE_DAYS_PART_2',
-  )}${days > 1 ? 's' : ''}`
+  return `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 }
 
 export const getDaysShort = (days) => {
   return `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 }
 
-export const days = (from, to) =>
-  (from &&
-    to &&
-    Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) ||
-  0
+export const days = (from, to) => (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
 
 export const price = (car, from, to, options) => {
   const _days = days(from, to)
@@ -293,14 +250,10 @@ export const price = (car, from, to, options) => {
   if (options) {
     if (options.cancellation && car.cancellation > 0) price += car.cancellation
     if (options.amendments && car.amendments > 0) price += car.amendments
-    if (options.theftProtection && car.theftProtection > 0)
-      price += car.theftProtection * _days
-    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0)
-      price += car.collisionDamageWaiver * _days
-    if (options.fullInsurance && car.fullInsurance > 0)
-      price += car.fullInsurance * _days
-    if (options.additionalDriver && car.additionalDriver > 0)
-      price += car.additionalDriver * _days
+    if (options.theftProtection && car.theftProtection > 0) price += car.theftProtection * _days
+    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * _days
+    if (options.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * _days
+    if (options.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * _days
   }
 
   return price
@@ -314,9 +267,7 @@ export const getCancellationOption = (cancellation, fr, hidePlus) => {
   } else if (cancellation === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(cancellation)} ${i18n.t(
-      'CURRENCY',
-    )}`
+    return `${hidePlus ? '' : '+ '}${formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
   }
 }
 
@@ -326,47 +277,27 @@ export const getAmendmentsOption = (amendments, fr, hidePlus) => {
   } else if (amendments === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(amendments)} ${i18n.t(
-      'CURRENCY',
-    )}`
+    return `${hidePlus ? '' : '+ '}${formatNumber(amendments)} ${i18n.t('CURRENCY')}`
   }
 }
 
-export const getCollisionDamageWaiverOption = (
-  collisionDamageWaiver,
-  days,
-  fr,
-  hidePlus,
-) => {
+export const getCollisionDamageWaiverOption = (collisionDamageWaiver, days, fr, hidePlus) => {
   if (collisionDamageWaiver === -1) {
     return i18n.t('UNAVAILABLE')
   } else if (collisionDamageWaiver === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(
-      collisionDamageWaiver * days,
-    )} ${i18n.t('CURRENCY')} (${formatNumber(collisionDamageWaiver)} ${i18n.t(
-      'CAR_CURRENCY',
-    )})`
+    return `${hidePlus ? '' : '+ '}${formatNumber(collisionDamageWaiver * days)} ${i18n.t('CURRENCY')} (${formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')})`
   }
 }
 
-export const getTheftProtectionOption = (
-  theftProtection,
-  days,
-  fr,
-  hidePlus,
-) => {
+export const getTheftProtectionOption = (theftProtection, days, fr, hidePlus) => {
   if (theftProtection === -1) {
     return i18n.t('UNAVAILABLE')
   } else if (theftProtection === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(
-      theftProtection * days,
-    )} ${i18n.t('CURRENCY')} (${formatNumber(theftProtection)} ${i18n.t(
-      'CAR_CURRENCY',
-    )})`
+    return `${hidePlus ? '' : '+ '}${formatNumber(theftProtection * days)} ${i18n.t('CURRENCY')} (${formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')})`
   }
 }
 
@@ -376,30 +307,17 @@ export const getFullInsuranceOption = (fullInsurance, days, fr, hidePlus) => {
   } else if (fullInsurance === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(
-      fullInsurance * days,
-    )} ${i18n.t('CURRENCY')} (${formatNumber(fullInsurance)} ${i18n.t(
-      'CAR_CURRENCY',
-    )})`
+    return `${hidePlus ? '' : '+ '}${formatNumber(fullInsurance * days)} ${i18n.t('CURRENCY')} (${formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')})`
   }
 }
 
-export const getAdditionalDriverOption = (
-  additionalDriver,
-  days,
-  fr,
-  hidePlus,
-) => {
+export const getAdditionalDriverOption = (additionalDriver, days, fr, hidePlus) => {
   if (additionalDriver === -1) {
     return i18n.t('UNAVAILABLE')
   } else if (additionalDriver === 0) {
     return i18n.t('INCLUDED')
   } else {
-    return `${hidePlus ? '' : '+ '}${formatNumber(
-      additionalDriver * days,
-    )} ${i18n.t('CURRENCY')} (${formatNumber(additionalDriver)} ${i18n.t(
-      'CAR_CURRENCY',
-    )})`
+    return `${hidePlus ? '' : '+ '}${formatNumber(additionalDriver * days)} ${i18n.t('CURRENCY')} (${formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')})`
   }
 }
 
@@ -424,8 +342,7 @@ export const getBookingStatuses = () => [
   },
 ]
 
-export const flattenCompanies = (companies) =>
-  companies.map((company) => company._id)
+export const flattenCompanies = (companies) => companies.map((company) => company._id)
 
 export const getBookingStatus = (status) => {
   switch (status) {
@@ -456,7 +373,4 @@ export const clone = (obj) => {
   return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
 }
 
-export const getBirthDateError = (minimumAge) =>
-  `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t(
-    'BIRTH_DATE_NOT_VALID_PART2',
-  )} `
+export const getBirthDateError = (minimumAge) => `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t('BIRTH_DATE_NOT_VALID_PART2')} `

@@ -2,14 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ScrollView, Pressable } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
-import {
-  Avatar,
-  Dialog,
-  Portal,
-  Button as NativeButton,
-  Paragraph,
-  Badge,
-} from 'react-native-paper'
+import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph, Badge } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
@@ -35,8 +28,7 @@ const SettingsScreen = ({ navigation, route }) => {
   const [birthDate, setBirthDate] = useState(null)
   const [location, setLocation] = useState('')
   const [bio, setBio] = useState('')
-  const [enableEmailNotifications, setEnableEmailNotifications] =
-    useState(false)
+  const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
   const [avatar, setAvatar] = useState(null)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [fullNameRequired, setFullNameRequired] = useState(false)
@@ -221,33 +213,13 @@ const SettingsScreen = ({ navigation, route }) => {
   }
 
   return (
-    <Master
-      style={styles.master}
-      navigation={navigation}
-      route={route}
-      onLoad={onLoad}
-      reload={reload}
-      avatar={avatar}
-      strict
-    >
+    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
       {visible && language && (
         <>
-          <ScrollView
-            contentContainerStyle={styles.container}
-            keyboardShouldPersistTaps="handled"
-            nestedScrollEnabled
-          >
+          <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
             <View style={styles.contentContainer}>
               <View style={styles.avatar}>
-                {avatar ? (
-                  <Avatar.Image size={94} source={{ uri: avatar }} />
-                ) : (
-                  <MaterialIcons
-                    name="account-circle"
-                    size={94}
-                    color="#bdbdbd"
-                  />
-                )}
+                {avatar ? <Avatar.Image size={94} source={{ uri: avatar }} /> : <MaterialIcons name="account-circle" size={94} color="#bdbdbd" />}
                 <View style={styles.avatarActions}>
                   {avatar && (
                     <Pressable
@@ -258,11 +230,7 @@ const SettingsScreen = ({ navigation, route }) => {
                       }}
                     >
                       <Badge style={styles.badge} size={36}>
-                        <MaterialIcons
-                          name="broken-image"
-                          size={22}
-                          color="#373737"
-                        />
+                        <MaterialIcons name="broken-image" size={22} color="#373737" />
                       </Badge>
                     </Pressable>
                   )}
@@ -271,16 +239,14 @@ const SettingsScreen = ({ navigation, route }) => {
                     hitSlop={15}
                     onPress={async () => {
                       try {
-                        let permissionResult =
-                          await ImagePicker.requestMediaLibraryPermissionsAsync()
+                        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
                         if (permissionResult.granted === false) {
                           alert(i18n.t('CAMERA_PERMISSION'))
                           return
                         }
 
-                        let pickerResult =
-                          await ImagePicker.launchImageLibraryAsync()
+                        let pickerResult = await ImagePicker.launchImageLibraryAsync()
 
                         if (pickerResult.canceled === true) {
                           return
@@ -290,18 +256,12 @@ const SettingsScreen = ({ navigation, route }) => {
                         const name = Helper.getFileName(uri)
                         const type = Helper.getMimeType(name)
                         const image = { uri, name, type }
-                        const status = await UserService.updateAvatar(
-                          user._id,
-                          image,
-                        )
+                        const status = await UserService.updateAvatar(user._id, image)
 
                         if (status == 200) {
                           const _user = await UserService.getUser(user._id)
                           setUser(_user)
-                          const _avatar = Helper.joinURL(
-                            Env.CDN_USERS,
-                            _user.avatar,
-                          )
+                          const _avatar = Helper.joinURL(Env.CDN_USERS, _user.avatar)
                           setAvatar(_avatar)
                         } else {
                           Helper.error()
@@ -312,108 +272,35 @@ const SettingsScreen = ({ navigation, route }) => {
                     }}
                   >
                     <Badge style={styles.badge} size={36}>
-                      <MaterialIcons
-                        name="photo-camera"
-                        size={22}
-                        color="#373737"
-                      />
+                      <MaterialIcons name="photo-camera" size={22} color="#373737" />
                     </Badge>
                   </Pressable>
                 </View>
               </View>
 
-              <TextInput
-                style={styles.component}
-                label={i18n.t('FULL_NAME')}
-                value={fullName}
-                error={fullNameRequired}
-                helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
-                onChangeText={onChangeFullName}
-              />
+              <TextInput style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} />
 
-              <TextInput
-                style={styles.component}
-                label={i18n.t('EMAIL')}
-                value={email}
-                readOnly
-              />
+              <TextInput style={styles.component} label={i18n.t('EMAIL')} value={email} readOnly />
 
-              <TextInput
-                style={styles.component}
-                label={i18n.t('PHONE')}
-                value={phone}
-                error={phoneRequired || !phoneValid}
-                helperText={
-                  (phoneRequired && i18n.t('REQUIRED')) ||
-                  '' ||
-                  (!phoneValid && i18n.t('PHONE_NOT_VALID')) ||
-                  ''
-                }
-                onChangeText={onChangePhone}
-              />
+              <TextInput style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || '' || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
 
-              <DateTimePicker
-                mode="date"
-                locale={language}
-                style={styles.date}
-                label={i18n.t('BIRTH_DATE')}
-                value={birthDate}
-                error={birthDateRequired || !birthDateValid}
-                helperText={
-                  (birthDateRequired && i18n.t('REQUIRED')) ||
-                  '' ||
-                  (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) ||
-                  ''
-                }
-                onChange={onChangeBirthDate}
-              />
+              <DateTimePicker mode="date" locale={language} style={styles.date} label={i18n.t('BIRTH_DATE')} value={birthDate} error={birthDateRequired || !birthDateValid} helperText={(birthDateRequired && i18n.t('REQUIRED')) || '' || (!birthDateValid && i18n.t('BIRTH_DATE_NOT_VALID')) || ''} onChange={onChangeBirthDate} />
 
-              <TextInput
-                style={styles.component}
-                label={i18n.t('LOCATION')}
-                value={location}
-                onChangeText={onChangeLocation}
-              />
+              <TextInput style={styles.component} label={i18n.t('LOCATION')} value={location} onChangeText={onChangeLocation} />
 
-              <TextInput
-                style={styles.component}
-                label={i18n.t('BIO')}
-                value={bio}
-                onChangeText={onChangeBio}
-              />
+              <TextInput style={styles.component} label={i18n.t('BIO')} value={bio} onChangeText={onChangeBio} />
 
-              <Switch
-                style={styles.component}
-                textStyle={styles.enableEmailNotificationsText}
-                label={i18n.t('ENABLE_EMAIL_NOTIFICATIONS')}
-                value={enableEmailNotifications}
-                onValueChange={onChangeEnableEmailNotificationsChecked}
-              />
+              <Switch style={styles.component} textStyle={styles.enableEmailNotificationsText} label={i18n.t('ENABLE_EMAIL_NOTIFICATIONS')} value={enableEmailNotifications} onValueChange={onChangeEnableEmailNotificationsChecked} />
 
-              <Button
-                style={styles.component}
-                label={i18n.t('SAVE')}
-                onPress={onPressSave}
-              />
+              <Button style={styles.component} label={i18n.t('SAVE')} onPress={onPressSave} />
 
-              <Button
-                style={styles.component}
-                color="secondary"
-                label={i18n.t('CHANGE_PASSWORD')}
-                onPress={onPressChangePassword}
-              />
+              <Button style={styles.component} color="secondary" label={i18n.t('CHANGE_PASSWORD')} onPress={onPressChangePassword} />
             </View>
           </ScrollView>
 
           <Portal>
-            <Dialog
-              style={styles.dialog}
-              visible={openDeleteDialog}
-              dismissable={false}
-            >
-              <Dialog.Title style={styles.dialogTitleContent}>
-                {i18n.t('CONFIRM_TITLE')}
-              </Dialog.Title>
+            <Dialog style={styles.dialog} visible={openDeleteDialog} dismissable={false}>
+              <Dialog.Title style={styles.dialogTitleContent}>{i18n.t('CONFIRM_TITLE')}</Dialog.Title>
               <Dialog.Content style={styles.dialogContent}>
                 <Paragraph>{i18n.t('DELETE_AVATAR')}</Paragraph>
               </Dialog.Content>

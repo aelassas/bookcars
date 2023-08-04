@@ -21,17 +21,8 @@ const CarTypeList = (props) => {
 
   return (
     <div>
-      <InputLabel className={props.required ? 'required' : null}>
-        {props.label}
-      </InputLabel>
-      <Select
-        label={props.label}
-        value={value}
-        onChange={handleChange}
-        variant={props.variant || 'standard'}
-        required={props.required}
-        fullWidth
-      >
+      <InputLabel className={props.required ? 'required' : null}>{props.label}</InputLabel>
+      <Select label={props.label} value={value} onChange={handleChange} variant={props.variant || 'standard'} required={props.required} fullWidth>
         <MenuItem value={Env.CAR_TYPE.DIESEL}>{strings.DIESEL}</MenuItem>
         <MenuItem value={Env.CAR_TYPE.GASOLINE}>{strings.GASOLINE}</MenuItem>
       </Select>

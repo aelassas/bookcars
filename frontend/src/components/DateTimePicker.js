@@ -12,14 +12,10 @@ const DateTimePicker = (props) => {
 
   // const _locale = props.language === 'fr' ? fr : enUS
   // const _format = props.language === 'fr' ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const _format =
-    props.language === 'fr' ? 'eee d LLL HH:mm' : 'eee, d LLL, HH:mm'
+  const _format = props.language === 'fr' ? 'eee d LLL HH:mm' : 'eee, d LLL, HH:mm'
 
   return (
-    <LocalizationProvider
-      adapterLocale={props.language === 'fr' ? fr : enUS}
-      dateAdapter={AdapterDateFns}
-    >
+    <LocalizationProvider adapterLocale={props.language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
       <MuiDateTimePicker
         label={props.label}
         showToolbar

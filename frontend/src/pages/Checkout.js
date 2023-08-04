@@ -14,27 +14,8 @@ import DatePicker from '../components/DatePicker'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Info from './Info'
-import {
-  OutlinedInput,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  Button,
-  Paper,
-  Checkbox,
-  Link,
-  FormControlLabel,
-  Switch,
-  RadioGroup,
-  Radio,
-} from '@mui/material'
-import {
-  DirectionsCar as CarIcon,
-  Lock as LockIcon,
-  Person as DriverIcon,
-  EventSeat as BookingIcon,
-  Settings as PaymentOptionsIcon,
-} from '@mui/icons-material'
+import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link, FormControlLabel, Switch, RadioGroup, Radio } from '@mui/material'
+import { DirectionsCar as CarIcon, Lock as LockIcon, Person as DriverIcon, EventSeat as BookingIcon, Settings as PaymentOptionsIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
@@ -647,14 +628,7 @@ const Checkout = () => {
     setAuthenticated(user !== undefined)
     setLanguage(UserService.getLanguage())
 
-    let carId,
-      car,
-      pickupLocationId,
-      pickupLocation,
-      dropOffLocationId,
-      dropOffLocation,
-      from,
-      to
+    let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to
     const params = new URLSearchParams(window.location.search)
     if (params.has('c')) carId = params.get('c')
     if (params.has('p')) pickupLocationId = params.get('p')
@@ -742,27 +716,12 @@ const Checkout = () => {
                   <div className="booking-options">
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={
-                          car.cancellation === -1 || car.cancellation === 0
-                        }
-                        control={
-                          <Switch
-                            checked={cancellation}
-                            onChange={handleCancellationChange}
-                            color="primary"
-                          />
-                        }
+                        disabled={car.cancellation === -1 || car.cancellation === 0}
+                        control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.CANCELLATION}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getCancellationOption(
-                                car.cancellation,
-                                _fr,
-                              )}
-                            </span>
+                            <span className="booking-option-label">{csStrings.CANCELLATION}</span>
+                            <span className="booking-option-value">{Helper.getCancellationOption(car.cancellation, _fr)}</span>
                           </span>
                         }
                       />
@@ -771,21 +730,11 @@ const Checkout = () => {
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={car.amendments === -1 || car.amendments === 0}
-                        control={
-                          <Switch
-                            checked={amendments}
-                            onChange={handleAmendmentsChange}
-                            color="primary"
-                          />
-                        }
+                        control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.AMENDMENTS}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getAmendmentsOption(car.amendments, _fr)}
-                            </span>
+                            <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
+                            <span className="booking-option-value">{Helper.getAmendmentsOption(car.amendments, _fr)}</span>
                           </span>
                         }
                       />
@@ -793,29 +742,12 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={
-                          car.collisionDamageWaiver === -1 ||
-                          car.collisionDamageWaiver === 0
-                        }
-                        control={
-                          <Switch
-                            checked={collisionDamageWaiver}
-                            onChange={handleCollisionDamageWaiverChange}
-                            color="primary"
-                          />
-                        }
+                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
+                        control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.COLLISION_DAMAGE_WAVER}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getCollisionDamageWaiverOption(
-                                car.collisionDamageWaiver,
-                                days,
-                                _fr,
-                              )}
-                            </span>
+                            <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
+                            <span className="booking-option-value">{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
                           </span>
                         }
                       />
@@ -823,29 +755,12 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={
-                          car.theftProtection === -1 ||
-                          car.theftProtection === 0
-                        }
-                        control={
-                          <Switch
-                            checked={theftProtection}
-                            onChange={handleTheftProtectionChange}
-                            color="primary"
-                          />
-                        }
+                        disabled={car.theftProtection === -1 || car.theftProtection === 0}
+                        control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.THEFT_PROTECTION}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getTheftProtectionOption(
-                                car.theftProtection,
-                                days,
-                                _fr,
-                              )}
-                            </span>
+                            <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
+                            <span className="booking-option-value">{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
                           </span>
                         }
                       />
@@ -853,28 +768,12 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={
-                          car.fullInsurance === -1 || car.fullInsurance === 0
-                        }
-                        control={
-                          <Switch
-                            checked={fullInsurance}
-                            onChange={handleFullInsuranceChange}
-                            color="primary"
-                          />
-                        }
+                        disabled={car.fullInsurance === -1 || car.fullInsurance === 0}
+                        control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.FULL_INSURANCE}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getFullInsuranceOption(
-                                car.fullInsurance,
-                                days,
-                                _fr,
-                              )}
-                            </span>
+                            <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
+                            <span className="booking-option-value">{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
                           </span>
                         }
                       />
@@ -882,29 +781,12 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={
-                          car.additionalDriver === -1 ||
-                          car.additionalDriver === 0
-                        }
-                        control={
-                          <Switch
-                            checked={additionalDriver}
-                            onChange={handleAdditionalDriverChange}
-                            color="primary"
-                          />
-                        }
+                        disabled={car.additionalDriver === -1 || car.additionalDriver === 0}
+                        control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
                         label={
                           <span>
-                            <span className="booking-option-label">
-                              {csStrings.ADDITIONAL_DRIVER}
-                            </span>
-                            <span className="booking-option-value">
-                              {Helper.getAdditionalDriverOption(
-                                car.additionalDriver,
-                                days,
-                                _fr,
-                              )}
-                            </span>
+                            <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
+                            <span className="booking-option-value">{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</span>
                           </span>
                         }
                       />
@@ -918,89 +800,34 @@ const Checkout = () => {
                     <label>{strings.BOOKING_DETAILS}</label>
                   </div>
                   <div className="booking-details">
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {strings.DAYS}
-                      </label>
-                      <div className="booking-detail-value">
-                        {`${Helper.getDaysShort(
-                          Helper.days(from, to),
-                        )} (${Helper.capitalize(
-                          format(from, _format, { locale: _locale }),
-                        )} - ${Helper.capitalize(
-                          format(to, _format, { locale: _locale }),
-                        )})`}
-                      </div>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{strings.DAYS}</label>
+                      <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                     </div>
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {commonStrings.PICKUP_LOCATION}
-                      </label>
-                      <div className="booking-detail-value">
-                        {pickupLocation.name}
-                      </div>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>
+                      <div className="booking-detail-value">{pickupLocation.name}</div>
                     </div>
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {commonStrings.DROP_OFF_LOCATION}
-                      </label>
-                      <div className="booking-detail-value">
-                        {dropOffLocation.name}
-                      </div>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</label>
+                      <div className="booking-detail-value">{dropOffLocation.name}</div>
                     </div>
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {strings.CAR}
-                      </label>
-                      <div className="booking-detail-value">
-                        {`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}
-                      </div>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{strings.CAR}</label>
+                      <div className="booking-detail-value">{`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}</div>
                     </div>
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {commonStrings.SUPPLIER}
-                      </label>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{commonStrings.SUPPLIER}</label>
                       <div className="booking-detail-value">
                         <div className="car-company">
-                          <img
-                            src={Helper.joinURL(
-                              Env.CDN_USERS,
-                              car.company.avatar,
-                            )}
-                            alt={car.company.fullName}
-                            style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
-                          />
-                          <label className="car-company-name">
-                            {car.company.fullName}
-                          </label>
+                          <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
+                          <label className="car-company-name">{car.company.fullName}</label>
                         </div>
                       </div>
                     </div>
-                    <div
-                      className="booking-detail"
-                      style={{ height: bookingDetailHeight }}
-                    >
-                      <label className="booking-detail-title">
-                        {strings.COST}
-                      </label>
-                      <div className="booking-detail-value booking-price">{`${Helper.formatNumber(
-                        price,
-                      )} ${commonStrings.CURRENCY}`}</div>
+                    <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                      <label className="booking-detail-title">{strings.COST}</label>
+                      <div className="booking-detail-value booking-price">{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
                     </div>
                   </div>
                 </div>
@@ -1012,47 +839,19 @@ const Checkout = () => {
                     </div>
                     <div className="driver-details-form">
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.FULL_NAME}
-                        </InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.FULL_NAME}
-                          required
-                          onChange={handleOnChangeFullName}
-                          autoComplete="off"
-                        />
+                        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
+                        <OutlinedInput type="text" label={commonStrings.FULL_NAME} required onChange={handleOnChangeFullName} autoComplete="off" />
                       </FormControl>
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.EMAIL}
-                        </InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.EMAIL}
-                          error={!emailValid || emailRegitered}
-                          onBlur={handleEmailBlur}
-                          onChange={handleEmailChange}
-                          required
-                          autoComplete="off"
-                        />
+                        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
+                        <OutlinedInput type="text" label={commonStrings.EMAIL} error={!emailValid || emailRegitered} onBlur={handleEmailBlur} onChange={handleEmailChange} required autoComplete="off" />
                         <FormHelperText error={!emailValid || emailRegitered}>
                           {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                           {(emailRegitered && (
                             <span>
-                              <span>
-                                {commonStrings.EMAIL_ALREADY_REGISTERED}
-                              </span>
+                              <span>{commonStrings.EMAIL_ALREADY_REGISTERED}</span>
                               <span> </span>
-                              <a
-                                href={`/sign-in?c=${car._id}&p=${
-                                  pickupLocation._id
-                                }&d=${
-                                  dropOffLocation._id
-                                }&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}
-                              >
-                                {strings.SIGN_IN}
-                              </a>
+                              <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                             </span>
                           )) ||
                             ''}
@@ -1060,18 +859,8 @@ const Checkout = () => {
                         </FormHelperText>
                       </FormControl>
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.PHONE}
-                        </InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={commonStrings.PHONE}
-                          error={!phoneValid}
-                          onBlur={handlePhoneBlur}
-                          onChange={handlePhoneChange}
-                          required
-                          autoComplete="off"
-                        />
+                        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
+                        <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
                         <FormHelperText error={!phoneValid}>
                           {(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                           {(phoneInfo && strings.PHONE_INFO) || ''}
@@ -1091,29 +880,17 @@ const Checkout = () => {
                           }}
                           language={language}
                         />
-                        <FormHelperText error={!birthDateValid}>
-                          {(!birthDateValid &&
-                            Helper.getBirthDateError(car.minimumAge)) ||
-                            ''}
-                        </FormHelperText>
+                        <FormHelperText error={!birthDateValid}>{(!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
                       <div className="booking-tos">
                         <table>
                           <tbody>
                             <tr>
                               <td>
-                                <Checkbox
-                                  checked={tosChecked}
-                                  onChange={handleTosChange}
-                                  color="primary"
-                                />
+                                <Checkbox checked={tosChecked} onChange={handleTosChange} color="primary" />
                               </td>
                               <td>
-                                <Link
-                                  href="/tos"
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
+                                <Link href="/tos" target="_blank" rel="noreferrer">
                                   {commonStrings.TOS}
                                 </Link>
                               </td>
@@ -1132,9 +909,7 @@ const Checkout = () => {
                     </div>
                     <div className="driver-details-form">
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.FULL_NAME}
-                        </InputLabel>
+                        <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={commonStrings.FULL_NAME}
@@ -1146,9 +921,7 @@ const Checkout = () => {
                         />
                       </FormControl>
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.EMAIL}
-                        </InputLabel>
+                        <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={commonStrings.EMAIL}
@@ -1166,15 +939,10 @@ const Checkout = () => {
                           required={adRequired}
                           autoComplete="off"
                         />
-                        <FormHelperText error={!_emailValid}>
-                          {(!_emailValid && commonStrings.EMAIL_NOT_VALID) ||
-                            ''}
-                        </FormHelperText>
+                        <FormHelperText error={!_emailValid}>{(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                       <FormControl fullWidth margin="dense">
-                        <InputLabel className="required">
-                          {commonStrings.PHONE}
-                        </InputLabel>
+                        <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={commonStrings.PHONE}
@@ -1192,10 +960,7 @@ const Checkout = () => {
                           required={adRequired}
                           autoComplete="off"
                         />
-                        <FormHelperText error={!_phoneValid}>
-                          {(!_phoneValid && commonStrings.PHONE_NOT_VALID) ||
-                            ''}
-                        </FormHelperText>
+                        <FormHelperText error={!_phoneValid}>{(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                       <FormControl fullWidth margin="dense">
                         <DatePicker
@@ -1204,19 +969,14 @@ const Checkout = () => {
                           error={!_birthDateValid}
                           required={adRequired}
                           onChange={(_birthDate) => {
-                            const _birthDateValid =
-                              _validateBirthDate(_birthDate)
+                            const _birthDateValid = _validateBirthDate(_birthDate)
 
                             set_BirthDate(_birthDate)
                             set_BirthDateValid(_birthDateValid)
                           }}
                           language={language}
                         />
-                        <FormHelperText error={!_birthDateValid}>
-                          {(!_birthDateValid &&
-                            Helper.getBirthDateError(car.minimumAge)) ||
-                            ''}
-                        </FormHelperText>
+                        <FormHelperText error={!_birthDateValid}>{(!_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
                     </div>
                   </div>
@@ -1271,9 +1031,7 @@ const Checkout = () => {
                       </div>
                       <div className="secure-payment-cost">
                         <label className="cost-title">{strings.COST}</label>
-                        <label className="cost-value">{`${Helper.formatNumber(
-                          price,
-                        )} ${commonStrings.CURRENCY}`}</label>
+                        <label className="cost-value">{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
                       </div>
                     </div>
 
@@ -1282,14 +1040,8 @@ const Checkout = () => {
                     </div>
 
                     <div className="card">
-                      <FormControl
-                        margin="dense"
-                        className="card-number"
-                        fullWidth
-                      >
-                        <InputLabel className="required">
-                          {strings.CARD_NAME}
-                        </InputLabel>
+                      <FormControl margin="dense" className="card-number" fullWidth>
+                        <InputLabel className="required">{strings.CARD_NAME}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={strings.CARD_NAME}
@@ -1300,38 +1052,14 @@ const Checkout = () => {
                           autoComplete="off"
                         />
                       </FormControl>
-                      <FormControl
-                        margin="dense"
-                        className="card-number"
-                        fullWidth
-                      >
-                        <InputLabel className="required">
-                          {strings.CARD_NUMBER}
-                        </InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={strings.CARD_NUMBER}
-                          error={!cardNumberValid}
-                          onBlur={handleCardNumberBlur}
-                          onChange={handleCardNumberChange}
-                          required
-                          autoComplete="off"
-                        />
-                        <FormHelperText error={!cardNumberValid}>
-                          {(!cardNumberValid &&
-                            strings.CARD_NUMBER_NOT_VALID) ||
-                            ''}
-                        </FormHelperText>
+                      <FormControl margin="dense" className="card-number" fullWidth>
+                        <InputLabel className="required">{strings.CARD_NUMBER}</InputLabel>
+                        <OutlinedInput type="text" label={strings.CARD_NUMBER} error={!cardNumberValid} onBlur={handleCardNumberBlur} onChange={handleCardNumberChange} required autoComplete="off" />
+                        <FormHelperText error={!cardNumberValid}>{(!cardNumberValid && strings.CARD_NUMBER_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                       <div className="card-date">
-                        <FormControl
-                          margin="dense"
-                          className="card-month"
-                          fullWidth
-                        >
-                          <InputLabel className="required">
-                            {strings.CARD_MONTH}
-                          </InputLabel>
+                        <FormControl margin="dense" className="card-month" fullWidth>
+                          <InputLabel className="required">{strings.CARD_MONTH}</InputLabel>
                           <OutlinedInput
                             type="text"
                             label={strings.CARD_MONTH}
@@ -1342,20 +1070,10 @@ const Checkout = () => {
                             autoComplete="off"
                             // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
                           />
-                          <FormHelperText error={!cardMonthValid}>
-                            {(!cardMonthValid &&
-                              strings.CARD_MONTH_NOT_VALID) ||
-                              ''}
-                          </FormHelperText>
+                          <FormHelperText error={!cardMonthValid}>{(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}</FormHelperText>
                         </FormControl>
-                        <FormControl
-                          margin="dense"
-                          className="card-year"
-                          fullWidth
-                        >
-                          <InputLabel className="required">
-                            {strings.CARD_YEAR}
-                          </InputLabel>
+                        <FormControl margin="dense" className="card-year" fullWidth>
+                          <InputLabel className="required">{strings.CARD_YEAR}</InputLabel>
                           <OutlinedInput
                             type="text"
                             label={strings.CARD_YEAR}
@@ -1366,16 +1084,11 @@ const Checkout = () => {
                             autoComplete="off"
                             // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
                           />
-                          <FormHelperText error={!cardYearValid}>
-                            {(!cardYearValid && strings.CARD_YEAR_NOT_VALID) ||
-                              ''}
-                          </FormHelperText>
+                          <FormHelperText error={!cardYearValid}>{(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}</FormHelperText>
                         </FormControl>
                       </div>
                       <FormControl margin="dense" className="cvv" fullWidth>
-                        <InputLabel className="required">
-                          {strings.CVV}
-                        </InputLabel>
+                        <InputLabel className="required">{strings.CVV}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={strings.CVV}
@@ -1386,9 +1099,7 @@ const Checkout = () => {
                           autoComplete="off"
                           // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
                         />
-                        <FormHelperText error={!cvvValid}>
-                          {(!cvvValid && strings.CVV_NOT_VALID) || ''}
-                        </FormHelperText>
+                        <FormHelperText error={!cvvValid}>{(!cvvValid && strings.CVV_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                     </div>
 
@@ -1399,20 +1110,10 @@ const Checkout = () => {
                   </div>
                 )}
                 <div className="booking-buttons">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className="btn-book btn-margin-bottom"
-                    size="small"
-                  >
+                  <Button type="submit" variant="contained" className="btn-book btn-margin-bottom" size="small">
                     {strings.BOOK}
                   </Button>
-                  <Button
-                    variant="contained"
-                    className="btn-cancel btn-margin-bottom"
-                    size="small"
-                    href="/"
-                  >
+                  <Button variant="contained" className="btn-cancel btn-margin-bottom" size="small" href="/">
                     {commonStrings.CANCEL}
                   </Button>
                 </div>
@@ -1427,11 +1128,7 @@ const Checkout = () => {
         </div>
       )}
       {noMatch && <NoMatch hideHeader />}
-      {success && (
-        <Info
-          message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS}
-        />
-      )}
+      {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
   )

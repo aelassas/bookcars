@@ -7,24 +7,8 @@ import * as Helper from '../common/Helper'
 import * as BookingService from '../services/BookingService'
 import StatusList from './StatusList'
 import { DataGrid, frFR, enUS } from '@mui/x-data-grid'
-import {
-  Tooltip,
-  IconButton,
-  Link,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-} from '@mui/material'
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Check as CheckIcon,
-} from '@mui/icons-material'
+import { Tooltip, IconButton, Link, Dialog, DialogTitle, DialogContent, DialogActions, Button, Card, CardContent, Typography } from '@mui/material'
+import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 
@@ -34,9 +18,7 @@ const BookingList = (props) => {
   const [loggedUser, setLoggedUser] = useState()
   const [user, setUser] = useState()
   const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(
-    Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE,
-  )
+  const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE)
   const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([])
   const [rowCount, setRowCount] = useState(0)
@@ -67,9 +49,7 @@ const BookingList = (props) => {
 
   const _fetch = async (page, user) => {
     try {
-      const _pageSize = Env.isMobile()
-        ? Env.BOOKINGS_MOBILE_PAGE_SIZE
-        : pageSize
+      const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
       if (companies.length > 0) {
         setLoading(true)
@@ -85,16 +65,11 @@ const BookingList = (props) => {
           page,
           _pageSize,
         )
-        const _data =
-          Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-        const totalRecords =
-          Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0
-            ? _data.pageInfo[0].totalRecords
-            : 0
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
         if (Env.isMobile()) {
-          const _rows =
-            page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+          const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
           setRows(_rows)
           setRowCount(totalRecords)
           setFetch(_data.resultData.length > 0)
@@ -181,19 +156,11 @@ const BookingList = (props) => {
 
   useEffect(() => {
     if (Env.isMobile()) {
-      const element = props.containerClassName
-        ? document.querySelector(`.${props.containerClassName}`)
-        : document.querySelector('div.bookings')
+      const element = props.containerClassName ? document.querySelector(`.${props.containerClassName}`) : document.querySelector('div.bookings')
 
       if (element) {
         element.onscroll = (event) => {
-          if (
-            fetch &&
-            !loading &&
-            event.target.scrollTop > 0 &&
-            event.target.offsetHeight + event.target.scrollTop >=
-              event.target.scrollHeight
-          ) {
+          if (fetch && !loading && event.target.scrollTop > 0 && event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
             const p = page + 1
             setPage(p)
           }
@@ -204,9 +171,7 @@ const BookingList = (props) => {
 
   const getDate = (date) => {
     const d = new Date(date)
-    return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(
-      d.getMonth() + 1,
-    )}-${d.getFullYear()}`
+    return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
   }
 
   const getColumns = () => {
@@ -215,9 +180,7 @@ const BookingList = (props) => {
         field: 'driver',
         headerName: strings.DRIVER,
         flex: 1,
-        renderCell: (params) => (
-          <Link href={`/user?u=${params.row.driver._id}`}>{params.value}</Link>
-        ),
+        renderCell: (params) => <Link href={`/user?u=${params.row.driver._id}`}>{params.value}</Link>,
         valueGetter: (params) => params.value.fullName,
       },
       {
@@ -236,19 +199,14 @@ const BookingList = (props) => {
         field: 'price',
         headerName: strings.PRICE,
         flex: 1,
-        valueGetter: (params) =>
-          `${Helper.formatNumber(params.value)} ${strings.CURRENCY}`,
+        valueGetter: (params) => `${Helper.formatNumber(params.value)} ${strings.CURRENCY}`,
         renderCell: (params) => <span className="bp">{params.value}</span>,
       },
       {
         field: 'status',
         headerName: strings.STATUS,
         flex: 1,
-        renderCell: (params) => (
-          <span className={`bs bs-${params.value}`}>
-            {Helper.getBookingStatus(params.value)}
-          </span>
-        ),
+        renderCell: (params) => <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>,
         valueGetter: (params) => params.value,
       },
       {
@@ -314,9 +272,7 @@ const BookingList = (props) => {
         field: 'car',
         headerName: strings.CAR,
         flex: 1,
-        renderCell: (params) => (
-          <Link href={`/car?cr=${params.row.car._id}`}>{params.value}</Link>
-        ),
+        renderCell: (params) => <Link href={`/car?cr=${params.row.car._id}`}>{params.value}</Link>,
         valueGetter: (params) => params.value.name,
       })
     }
@@ -327,14 +283,8 @@ const BookingList = (props) => {
         headerName: commonStrings.SUPPLIER,
         flex: 1,
         renderCell: (params) => (
-          <Link
-            href={`/supplier?c=${params.row.company._id}`}
-            className="cell-company"
-          >
-            <img
-              src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)}
-              alt={params.value}
-            />
+          <Link href={`/supplier?c=${params.row.company._id}`} className="cell-company">
+            <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)} alt={params.value} />
           </Link>
         ),
         valueGetter: (params) => params.value.fullName,
@@ -443,9 +393,7 @@ const BookingList = (props) => {
           !props.loading && (
             <Card variant="outlined" className="empty-list">
               <CardContent>
-                <Typography color="textSecondary">
-                  {strings.EMPTY_LIST}
-                </Typography>
+                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
               </CardContent>
             </Card>
           )
@@ -461,237 +409,105 @@ const BookingList = (props) => {
                   <div className={`bs bs-${booking.status}`}>
                     <label>{Helper.getBookingStatus(booking.status)}</label>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {strings.CAR}
-                    </label>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{strings.CAR}</label>
                     <div className="booking-detail-value">
-                      <Link href={`car/?cr=${booking.car._id}`}>
-                        {booking.car.name}
-                      </Link>
+                      <Link href={`car/?cr=${booking.car._id}`}>{booking.car.name}</Link>
                     </div>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {strings.DRIVER}
-                    </label>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{strings.DRIVER}</label>
                     <div className="booking-detail-value">
-                      <Link href={`user/?u=${booking.driver._id}`}>
-                        {booking.driver.fullName}
-                      </Link>
+                      <Link href={`user/?u=${booking.driver._id}`}>{booking.driver.fullName}</Link>
                     </div>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {strings.DAYS}
-                    </label>
-                    <div className="booking-detail-value">
-                      {`${Helper.getDaysShort(
-                        Helper.days(from, to),
-                      )} (${Helper.capitalize(
-                        format(from, _format, { locale: _locale }),
-                      )} - ${Helper.capitalize(
-                        format(to, _format, { locale: _locale }),
-                      )})`}
-                    </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{strings.DAYS}</label>
+                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {commonStrings.PICKUP_LOCATION}
-                    </label>
-                    <div className="booking-detail-value">
-                      {booking.pickupLocation.name}
-                    </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>
+                    <div className="booking-detail-value">{booking.pickupLocation.name}</div>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {commonStrings.DROP_OFF_LOCATION}
-                    </label>
-                    <div className="booking-detail-value">
-                      {booking.dropOffLocation.name}
-                    </div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</label>
+                    <div className="booking-detail-value">{booking.dropOffLocation.name}</div>
                   </div>
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {commonStrings.SUPPLIER}
-                    </label>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{commonStrings.SUPPLIER}</label>
                     <div className="booking-detail-value">
                       <div className="car-company">
-                        <img
-                          src={Helper.joinURL(
-                            Env.CDN_USERS,
-                            booking.company.avatar,
-                          )}
-                          alt={booking.company.fullName}
-                        />
-                        <label className="car-company-name">
-                          {booking.company.fullName}
-                        </label>
+                        <img src={Helper.joinURL(Env.CDN_USERS, booking.company.avatar)} alt={booking.company.fullName} />
+                        <label className="car-company-name">{booking.company.fullName}</label>
                       </div>
                     </div>
                   </div>
 
-                  {(booking.cancellation ||
-                    booking.amendments ||
-                    booking.collisionDamageWaiver ||
-                    booking.theftProtection ||
-                    booking.fullInsurance ||
-                    booking.additionalDriver) && (
+                  {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver) && (
                     <>
                       <div className="extras">
-                        <label className="extras-title">
-                          {commonStrings.OPTIONS}
-                        </label>
+                        <label className="extras-title">{commonStrings.OPTIONS}</label>
                         {booking.cancellation && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.CANCELLATION}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getCancellationOption(
-                                booking.car.cancellation,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.CANCELLATION}</label>
+                            <label className="extra-text">{Helper.getCancellationOption(booking.car.cancellation, _fr, true)}</label>
                           </div>
                         )}
 
                         {booking.amendments && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.AMENDMENTS}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getAmendmentsOption(
-                                booking.car.amendments,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.AMENDMENTS}</label>
+                            <label className="extra-text">{Helper.getAmendmentsOption(booking.car.amendments, _fr, true)}</label>
                           </div>
                         )}
 
                         {booking.collisionDamageWaiver && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.COLLISION_DAMAGE_WAVER}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getCollisionDamageWaiverOption(
-                                booking.car.collisionDamageWaiver,
-                                days,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</label>
+                            <label className="extra-text">{Helper.getCollisionDamageWaiverOption(booking.car.collisionDamageWaiver, days, _fr, true)}</label>
                           </div>
                         )}
 
                         {booking.theftProtection && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.THEFT_PROTECTION}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getTheftProtectionOption(
-                                booking.car.theftProtection,
-                                days,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.THEFT_PROTECTION}</label>
+                            <label className="extra-text">{Helper.getTheftProtectionOption(booking.car.theftProtection, days, _fr, true)}</label>
                           </div>
                         )}
 
                         {booking.fullInsurance && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.FULL_INSURANCE}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getFullInsuranceOption(
-                                booking.car.fullInsurance,
-                                days,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.FULL_INSURANCE}</label>
+                            <label className="extra-text">{Helper.getFullInsuranceOption(booking.car.fullInsurance, days, _fr, true)}</label>
                           </div>
                         )}
 
                         {booking.additionalDriver && (
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
-                            <label className="extra-title">
-                              {csStrings.ADDITIONAL_DRIVER}
-                            </label>
-                            <label className="extra-text">
-                              {Helper.getAdditionalDriverOption(
-                                booking.car.additionalDriver,
-                                days,
-                                _fr,
-                                true,
-                              )}
-                            </label>
+                            <label className="extra-title">{csStrings.ADDITIONAL_DRIVER}</label>
+                            <label className="extra-text">{Helper.getAdditionalDriverOption(booking.car.additionalDriver, days, _fr, true)}</label>
                           </div>
                         )}
                       </div>
                     </>
                   )}
 
-                  <div
-                    className="booking-detail"
-                    style={{ height: bookingDetailHeight }}
-                  >
-                    <label className="booking-detail-title">
-                      {strings.COST}
-                    </label>
-                    <div className="booking-detail-value booking-price">{`${Helper.formatNumber(
-                      booking.price,
-                    )} ${commonStrings.CURRENCY}`}</div>
+                  <div className="booking-detail" style={{ height: bookingDetailHeight }}>
+                    <label className="booking-detail-title">{strings.COST}</label>
+                    <div className="booking-detail-value booking-price">{`${Helper.formatNumber(booking.price)} ${commonStrings.CURRENCY}`}</div>
                   </div>
 
                   <div className="bs-buttons">
-                    <Button
-                      variant="contained"
-                      className="btn-primary"
-                      size="small"
-                      href={`update-booking?b=${booking._id}`}
-                    >
+                    <Button variant="contained" className="btn-primary" size="small" href={`update-booking?b=${booking._id}`}>
                       {commonStrings.UPDATE}
                     </Button>
-                    <Button
-                      variant="contained"
-                      className="btn-secondary"
-                      size="small"
-                      data-id={booking._id}
-                      data-index={index}
-                      onClick={handleDelete}
-                    >
+                    <Button variant="contained" className="btn-secondary" size="small" data-id={booking._id} data-index={index} onClick={handleDelete}>
                       {commonStrings.DELETE}
                     </Button>
                   </div>
@@ -717,10 +533,7 @@ const BookingList = (props) => {
             paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            localeText={
-              (loggedUser.language === 'fr' ? frFR : enUS).components
-                .MuiDataGrid.defaultProps.localeText
-            }
+            localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
             slots={{
               noRowsOverlay: () => '',
             }}
@@ -731,55 +544,28 @@ const BookingList = (props) => {
           />
         ))}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openUpdateDialog}>
-        <DialogTitle className="dialog-header">
-          {strings.UPDATE_STATUS}
-        </DialogTitle>
+        <DialogTitle className="dialog-header">{strings.UPDATE_STATUS}</DialogTitle>
         <DialogContent className="bs-update-status">
-          <StatusList
-            label={strings.NEW_STATUS}
-            onChange={handleStatusChange}
-          />
+          <StatusList label={strings.NEW_STATUS} onChange={handleStatusChange} />
         </DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelUpdate}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelUpdate} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmUpdate}
-            variant="contained"
-            className="btn-primary"
-          >
+          <Button onClick={handleConfirmUpdate} variant="contained" className="btn-primary">
             {commonStrings.UPDATE}
           </Button>
         </DialogActions>
       </Dialog>
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
-        <DialogTitle className="dialog-header">
-          {commonStrings.CONFIRM_TITLE}
-        </DialogTitle>
-        <DialogContent className="dialog-content">
-          {selectedIds.length === 0
-            ? strings.DELETE_BOOKING
-            : strings.DELETE_BOOKINGS}
-        </DialogContent>
+        <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
+        <DialogContent className="dialog-content">{selectedIds.length === 0 ? strings.DELETE_BOOKING : strings.DELETE_BOOKINGS}</DialogContent>
         <DialogActions className="dialog-actions">
-          <Button
-            onClick={handleCancelDelete}
-            variant="contained"
-            className="btn-secondary"
-          >
+          <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}
           </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            variant="contained"
-            color="error"
-          >
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
             {commonStrings.DELETE}
           </Button>
         </DialogActions>

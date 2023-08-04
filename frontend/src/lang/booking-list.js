@@ -14,8 +14,7 @@ export const strings = new LocalizedStrings({
     UPDATE_STATUS: 'Modification du statut',
     NEW_STATUS: 'Nouveau statut',
     DELETE_BOOKING: 'Êtes-vous sûr de vouloir supprimer cette réservation ?',
-    DELETE_BOOKINGS:
-      'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
+    DELETE_BOOKINGS: 'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
     EMPTY_LIST: 'Pas de réservations.',
     VIEW: 'Voir cette réservation',
     UPDATE: 'Modifier cette réservation',
@@ -24,8 +23,7 @@ export const strings = new LocalizedStrings({
 
     CANCEL: 'Annuler cette réservation',
     CANCEL_BOOKING: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
-    CANCEL_BOOKING_REQUEST_SENT:
-      "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
+    CANCEL_BOOKING_REQUEST_SENT: "Votre requête d'annulation a bien été prise en compte. Nous vous contacterons pour finaliser la procédure d'annulation.",
   },
   en: {
     CAR: 'Car',
@@ -48,8 +46,7 @@ export const strings = new LocalizedStrings({
 
     CANCEL: 'Cancel this booking',
     CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
-    CANCEL_BOOKING_REQUEST_SENT:
-      'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
+    CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
   },
 })
 

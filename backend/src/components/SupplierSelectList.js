@@ -29,21 +29,10 @@ const SupplierSelectList = (props) => {
   const _fetch = async (page, keyword, onFetch) => {
     try {
       setLoading(true)
-      const data = await SupplierService.getCompanies(
-        keyword,
-        page,
-        Env.PAGE_SIZE,
-      )
-      const _data =
-        Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-      const totalRecords =
-        Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0
-          ? _data.pageInfo[0].totalRecords
-          : 0
-      const _rows =
-        page === 1
-          ? getCompanies(_data.resultData)
-          : [...rows, ...getCompanies(_data.resultData)]
+      const data = await SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+      const _rows = page === 1 ? getCompanies(_data.resultData) : [...rows, ...getCompanies(_data.resultData)]
 
       setRows(_rows)
       setFetch(_data.resultData.length > 0)
@@ -79,12 +68,7 @@ const SupplierSelectList = (props) => {
       ListboxProps={{
         onScroll: (event) => {
           const listboxNode = event.currentTarget
-          if (
-            fetch &&
-            !loading &&
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight - Env.PAGE_OFFSET
-          ) {
+          if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
             const p = page + 1
             setPage(p)
             _fetch(p, keyword)

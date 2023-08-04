@@ -14,11 +14,7 @@ const NoMatch = (props) => {
     </div>
   )
 
-  return props.hideHeader ? (
-    noMatch()
-  ) : (
-    <Master strict={false}>{noMatch()}</Master>
-  )
+  return props.hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>
 }
 
 export default NoMatch

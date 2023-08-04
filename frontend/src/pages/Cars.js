@@ -27,14 +27,8 @@ const Cars = () => {
   const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
-  const [gearbox, setGearbox] = useState([
-    Env.GEARBOX_TYPE.AUTOMATIC,
-    Env.GEARBOX_TYPE.MANUAL,
-  ])
-  const [mileage, setMileage] = useState([
-    Env.MILEAGE.LIMITED,
-    Env.MILEAGE.UNLIMITED,
-  ])
+  const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
+  const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
   const [deposit, setDeposit] = useState(-1)
   const [offset, setOffset] = useState(0)
 
@@ -82,12 +76,7 @@ const Cars = () => {
   }
 
   const onLoad = async (user) => {
-    let pickupLocationId,
-      dropOffLocationId,
-      pickupLocation,
-      dropOffLocation,
-      from,
-      to
+    let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to
     const params = new URLSearchParams(window.location.search)
     if (params.has('p')) pickupLocationId = params.get('p')
     if (params.has('d')) dropOffLocationId = params.get('d')
@@ -145,69 +134,25 @@ const Cars = () => {
 
   return (
     <Master onLoad={onLoad} strict={false}>
-      {visible &&
-        companies &&
-        pickupLocation &&
-        dropOffLocation &&
-        from &&
-        to && (
-          <div className="cars">
-            <div className="col-1">
-              {!loading && (
-                <>
-                  <CarFilter
-                    className="filter"
-                    pickupLocation={pickupLocation}
-                    dropOffLocation={dropOffLocation}
-                    from={from}
-                    to={to}
-                    onSubmit={handleCarFilterSubmit}
-                  />
-                  <SupplierFilter
-                    className="filter"
-                    companies={allCompanies}
-                    onChange={handleSupplierFilterChange}
-                    collapse={!Env.isMobile()}
-                  />
-                  <FuelFilter
-                    className="filter"
-                    onChange={handleFuelFilterChange}
-                  />
-                  <GearboxFilter
-                    className="filter"
-                    onChange={handleGearboxFilterChange}
-                  />
-                  <MileageFilter
-                    className="filter"
-                    onChange={handleMileageFilterChange}
-                  />
-                  <DepositFilter
-                    className="filter"
-                    onChange={handleDepositFilterChange}
-                  />
-                </>
-              )}
-            </div>
-            <div className="col-2">
-              <CarList
-                containerClassName="cars"
-                offset={offset}
-                companies={companies}
-                fuel={fuel}
-                gearbox={gearbox}
-                mileage={mileage}
-                deposit={deposit}
-                pickupLocation={pickupLocation._id}
-                dropOffLocation={dropOffLocation._id}
-                reload={reload}
-                loading={loading}
-                from={from}
-                to={to}
-                onLoad={handleCarListLoad}
-              />
-            </div>
+      {visible && companies && pickupLocation && dropOffLocation && from && to && (
+        <div className="cars">
+          <div className="col-1">
+            {!loading && (
+              <>
+                <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
+                <SupplierFilter className="filter" companies={allCompanies} onChange={handleSupplierFilterChange} collapse={!Env.isMobile()} />
+                <FuelFilter className="filter" onChange={handleFuelFilterChange} />
+                <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
+                <MileageFilter className="filter" onChange={handleMileageFilterChange} />
+                <DepositFilter className="filter" onChange={handleDepositFilterChange} />
+              </>
+            )}
           </div>
-        )}
+          <div className="col-2">
+            <CarList containerClassName="cars" offset={offset} companies={companies} fuel={fuel} gearbox={gearbox} mileage={mileage} deposit={deposit} pickupLocation={pickupLocation._id} dropOffLocation={dropOffLocation._id} reload={reload} loading={loading} from={from} to={to} onLoad={handleCarListLoad} />
+          </div>
+        </div>
+      )}
       {noMatch && <NoMatch hideHeader />}
     </Master>
   )

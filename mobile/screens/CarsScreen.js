@@ -19,14 +19,8 @@ export default function CarsScreen({ navigation, route }) {
   const [visible, setVisible] = useState(false)
   const [companies, setCompanies] = useState([])
   const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
-  const [gearbox, setGearbox] = useState([
-    Env.GEARBOX_TYPE.AUTOMATIC,
-    Env.GEARBOX_TYPE.MANUAL,
-  ])
-  const [mileage, setMileage] = useState([
-    Env.MILEAGE.LIMITED,
-    Env.MILEAGE.UNLIMITED,
-  ])
+  const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
+  const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
   const [deposit, setDeposit] = useState(-1)
 
   const _init = async () => {
@@ -74,13 +68,7 @@ export default function CarsScreen({ navigation, route }) {
   }
 
   return (
-    <Master
-      style={styles.master}
-      onLoad={onLoad}
-      reload={reload}
-      navigation={navigation}
-      route={route}
-    >
+    <Master style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
       {visible && (
         <CarList
           navigation={navigation}
@@ -95,32 +83,11 @@ export default function CarsScreen({ navigation, route }) {
           to={new Date(route.params.to)}
           header={
             <View>
-              <CompanyFilter
-                style={styles.filter}
-                visible
-                onLoad={onLoadCompanies}
-                onChange={onChangeCompanies}
-              />
-              <FuelFilter
-                style={styles.filter}
-                visible={loaded}
-                onChange={onChangeFuel}
-              />
-              <GearboxFilter
-                style={styles.filter}
-                visible={loaded}
-                onChange={onChangeGearbox}
-              />
-              <MileageFilter
-                style={styles.filter}
-                visible={loaded}
-                onChange={onChangeMileage}
-              />
-              <DepositFilter
-                style={styles.filter}
-                visible={loaded}
-                onChange={onChangeDeposit}
-              />
+              <CompanyFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+              <FuelFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
+              <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
+              <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
+              <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
             </View>
           }
         />

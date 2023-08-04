@@ -14,8 +14,7 @@ export const strings = new LocalizedStrings({
     UPDATE_STATUS: 'Modification du statut',
     NEW_STATUS: 'Nouveau statut',
     DELETE_BOOKING: 'Êtes-vous sûr de vouloir supprimer cette réservation ?',
-    DELETE_BOOKINGS:
-      'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
+    DELETE_BOOKINGS: 'Êtes-vous sûr de vouloir supprimer les réservations sélectionnées ?',
     EMPTY_LIST: 'Pas de réservations.',
     DAYS: 'Jours',
     COST: 'Total',

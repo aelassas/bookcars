@@ -1,28 +1,10 @@
 import React, { memo, useEffect, useRef } from 'react'
-import {
-  ActivityIndicator,
-  Animated,
-  Easing,
-  StyleSheet,
-  Pressable,
-  View,
-} from 'react-native'
+import { ActivityIndicator, Animated, Easing, StyleSheet, Pressable, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import Feather from 'react-native-vector-icons/Feather'
 Feather.loadFont()
 
-const RightButtonComponent = ({
-  inputHeight,
-  onClearPress,
-  onChevronPress,
-  isOpened,
-  showChevron,
-  showClear,
-  loading,
-  buttonsContainerStyle,
-  ChevronIconComponent,
-  ClearIconComponent,
-}) => {
+const RightButtonComponent = ({ inputHeight, onClearPress, onChevronPress, isOpened, showChevron, showClear, loading, buttonsContainerStyle, ChevronIconComponent, ClearIconComponent }) => {
   const isOpenedAnimationValue = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -48,23 +30,15 @@ const RightButtonComponent = ({
       }}
     >
       {!loading && showClear && (
-        <Pressable
-          onPress={onClearPress}
-          hitSlop={15}
-          style={styles.clearButton}
-        >
-          {ClearIconComponent ?? (
-            <MaterialIcons name="clear" size={20} color="rgba(0, 0, 0, 0.54)" />
-          )}
+        <Pressable onPress={onClearPress} hitSlop={15} style={styles.clearButton}>
+          {ClearIconComponent ?? <MaterialIcons name="clear" size={20} color="rgba(0, 0, 0, 0.54)" />}
         </Pressable>
       )}
       {loading && <ActivityIndicator color="#999" />}
       {showChevron && (
         <Animated.View style={{ transform: [{ rotate: chevronSpin }] }}>
           <Pressable onPress={onChevronPress} style={styles.chevronButton}>
-            {ChevronIconComponent ?? (
-              <Feather name="chevron-down" size={20} color="#727992" />
-            )}
+            {ChevronIconComponent ?? <Feather name="chevron-down" size={20} color="#727992" />}
           </Pressable>
         </Animated.View>
       )}

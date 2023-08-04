@@ -87,9 +87,7 @@ const Home = () => {
       return
     }
 
-    navigate(
-      `/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`,
-    )
+    navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`)
   }
 
   const onLoad = () => {}
@@ -105,14 +103,7 @@ const Home = () => {
           <div className="home-search">
             <form onSubmit={handleSubmit} className="home-search-form">
               <FormControl className="pickup-location">
-                <LocationSelectList
-                  label={commonStrings.PICKUP_LOCATION}
-                  hidePopupIcon
-                  customOpen
-                  required
-                  variant="outlined"
-                  onChange={handlePickupLocationChange}
-                />
+                <LocationSelectList label={commonStrings.PICKUP_LOCATION} hidePopupIcon customOpen required variant="outlined" onChange={handlePickupLocationChange} />
               </FormControl>
               <FormControl className="from">
                 <DateTimePicker
@@ -157,14 +148,8 @@ const Home = () => {
                 </FormControl>
               )}
               <FormControl className="chk-same-location">
-                <input
-                  type="checkbox"
-                  checked={sameLocation}
-                  onChange={handleSameLocationChange}
-                />
-                <label onClick={handleSameLocationClick}>
-                  {strings.DROP_OFF}
-                </label>
+                <input type="checkbox" checked={sameLocation} onChange={handleSameLocationChange} />
+                <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
               </FormControl>
             </form>
           </div>

@@ -30,15 +30,7 @@ export const getCompany = (id) =>
     })
     .then((res) => res.data)
 
-export const getCompanies = (keyword, page, size) =>
-  axios
-    .get(
-      `${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(
-        keyword,
-      )}`,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.data)
+export const getCompanies = (keyword, page, size) => axios.get(`${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then((res) => res.data)
 
 export const getAllCompanies = () =>
   axios

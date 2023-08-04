@@ -168,26 +168,12 @@ section.car-list .empty-list {
     margin-left: 3px;
   }
 
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    li.mileage
-    div.car-info-list-item,
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    li.fuel-policy
-    div.car-info-list-item {
+  section.car-list article div.car-info ul.car-info-list li.mileage div.car-info-list-item,
+  section.car-list article div.car-info ul.car-info-list li.fuel-policy div.car-info-list-item {
     width: fit-content;
   }
 
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    span.car-info-list-text {
+  section.car-list article div.car-info ul.car-info-list span.car-info-list-text {
     vertical-align: super;
     margin-left: 3px;
   }
@@ -355,26 +341,12 @@ section.car-list .empty-list {
     margin-left: 3px;
   }
 
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    li.mileage
-    div.car-info-list-item,
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    li.fuel-policy
-    div.car-info-list-item {
+  section.car-list article div.car-info ul.car-info-list li.mileage div.car-info-list-item,
+  section.car-list article div.car-info ul.car-info-list li.fuel-policy div.car-info-list-item {
     width: fit-content;
   }
 
-  section.car-list
-    article
-    div.car-info
-    ul.car-info-list
-    span.car-info-list-text {
+  section.car-list article div.car-info ul.car-info-list span.car-info-list-text {
     vertical-align: super;
     margin-left: 3px;
   }

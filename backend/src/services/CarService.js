@@ -72,52 +72,12 @@ export const updateImage = (id, file) => {
     .then((res) => res.status)
 }
 
-export const deleteImage = (id) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`,
-      null,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.status)
+export const deleteImage = (id) => axios.post(`${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`, null, { headers: UserService.authHeader() }).then((res) => res.status)
 
-export const deleteTempImage = (image) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(image)}`,
-      null,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.status)
+export const deleteTempImage = (image) => axios.post(`${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(image)}`, null, { headers: UserService.authHeader() }).then((res) => res.status)
 
-export const getCar = (id) =>
-  axios
-    .get(
-      `${Env.API_HOST}/api/car/${encodeURIComponent(
-        id,
-      )}/${UserService.getLanguage()}`,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.data)
+export const getCar = (id) => axios.get(`${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`, { headers: UserService.authHeader() }).then((res) => res.data)
 
-export const getCars = (keyword, data, page, size) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/cars/${page}/${size}/?s=${encodeURIComponent(
-        keyword,
-      )}`,
-      data,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.data)
+export const getCars = (keyword, data, page, size) => axios.post(`${Env.API_HOST}/api/cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader() }).then((res) => res.data)
 
-export const getBookingCars = (keyword, data, page, size) =>
-  axios
-    .post(
-      `${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(
-        keyword,
-      )}`,
-      data,
-      { headers: UserService.authHeader() },
-    )
-    .then((res) => res.data)
+export const getBookingCars = (keyword, data, page, size) => axios.post(`${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader() }).then((res) => res.data)
