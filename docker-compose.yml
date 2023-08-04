@@ -33,7 +33,7 @@ services:
     depends_on:
       - api
     ports:
-      - 80:3002
+      - 80:80
     volumes:
       - cdn:/var/www/cdn/bookcars
 
