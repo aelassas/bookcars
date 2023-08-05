@@ -9,7 +9,7 @@
     "dev": "nodemon -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js .",
-    "prettier": "prettier --write --no-semi --single-quote --print-width 80 ."
+    "prettier": "prettier --write --no-semi --single-quote --print-width 200 ."
   },
   "author": "Akram El Assas",
   "license": "ISC",

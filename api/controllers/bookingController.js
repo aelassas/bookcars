@@ -63,18 +63,7 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
     from: SMTP_FROM,
     to: company.email,
     subject: message,
-    html:
-      '<p>' +
-      strings.HELLO +
-      company.fullName +
-      ',<br><br>' +
-      message +
-      '<br><br>' +
-      Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`) +
-      '<br><br>' +
-      strings.REGARDS +
-      '<br>' +
-      '</p>',
+    html: '<p>' + strings.HELLO + company.fullName + ',<br><br>' + message + '<br><br>' + Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
   }
 
   await Helper.sendMail(mailOptions)
@@ -151,18 +140,10 @@ export const book = async (req, res) => {
     const from = booking.from.toLocaleString(locale, options)
     const to = booking.to.toLocaleString(locale, options)
     const car = await Car.findById(booking.car).populate('company')
-    const pickupLocation = await Location.findById(
-      booking.pickupLocation,
-    ).populate('values')
-    pickupLocation.name = pickupLocation.values.filter(
-      (value) => value.language === user.language,
-    )[0].value
-    const dropOffLocation = await Location.findById(
-      booking.dropOffLocation,
-    ).populate('values')
-    dropOffLocation.name = dropOffLocation.values.filter(
-      (value) => value.language === user.language,
-    )[0].value
+    const pickupLocation = await Location.findById(booking.pickupLocation).populate('values')
+    pickupLocation.name = pickupLocation.values.filter((value) => value.language === user.language)[0].value
+    const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
+    dropOffLocation.name = dropOffLocation.values.filter((value) => value.language === user.language)[0].value
 
     const mailOptions = {
       from: SMTP_FROM,
@@ -173,10 +154,7 @@ export const book = async (req, res) => {
         strings.HELLO +
         user.fullName +
         ',<br><br>' +
-        (!req.body.payLater
-          ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` +
-            '<br><br>'
-          : '') +
+        (!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : '') +
         `${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}` +
         `${from} ${strings.BOOKING_CONFIRMED_PART6}` +
         `${car.name}${strings.BOOKING_CONFIRMED_PART7}` +
@@ -235,18 +213,7 @@ const notifyDriver = async (booking) => {
     from: SMTP_FROM,
     to: driver.email,
     subject: message,
-    html:
-      '<p>' +
-      strings.HELLO +
-      driver.fullName +
-      ',<br><br>' +
-      message +
-      '<br><br>' +
-      Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`) +
-      '<br><br>' +
-      strings.REGARDS +
-      '<br>' +
-      '</p>',
+    html: '<p>' + strings.HELLO + driver.fullName + ',<br><br>' + message + '<br><br>' + Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
   }
   await Helper.sendMail(mailOptions)
 
@@ -337,23 +304,8 @@ export const update = async (req, res) => {
         }
       }
 
-      const {
-        company,
-        car,
-        driver,
-        pickupLocation,
-        dropOffLocation,
-        from,
-        to,
-        status,
-        cancellation,
-        amendments,
-        theftProtection,
-        collisionDamageWaiver,
-        fullInsurance,
-        additionalDriver,
-        price,
-      } = req.body.booking
+      const { company, car, driver, pickupLocation, dropOffLocation, from, to, status, cancellation, amendments, theftProtection, collisionDamageWaiver, fullInsurance, additionalDriver, price } =
+        req.body.booking
 
       const previousStatus = booking.status
 
@@ -412,10 +364,7 @@ export const updateStatus = async (req, res) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(
-      `[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`,
-      err,
-    )
+    console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -430,17 +379,12 @@ export const deleteBookings = async (req, res) => {
     })
 
     await Booking.deleteMany({ _id: { $in: ids } })
-    const additionalDivers = bookings.map(
-      (booking) => new mongoose.Types.ObjectId(booking._additionalDriver),
-    )
+    const additionalDivers = bookings.map((booking) => new mongoose.Types.ObjectId(booking._additionalDriver))
     await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(
-      `[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`,
-      err,
-    )
+    console.error(`[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -488,12 +432,8 @@ export const getBooking = async (req, res) => {
         booking.car.company = { _id, fullName, avatar, payLater }
       }
 
-      booking.pickupLocation.name = booking.pickupLocation.values.filter(
-        (value) => value.language === language,
-      )[0].value
-      booking.dropOffLocation.name = booking.dropOffLocation.values.filter(
-        (value) => value.language === language,
-      )[0].value
+      booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
+      booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value
 
       return res.json(booking)
     } else {
@@ -510,32 +450,19 @@ export const getBookings = async (req, res) => {
   try {
     const page = parseInt(req.params.page) + 1
     const size = parseInt(req.params.size)
-    const companies = req.body.companies.map(
-      (id) => new mongoose.Types.ObjectId(id),
-    )
+    const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const statuses = req.body.statuses
     const user = req.body.user
     const car = req.body.car
-    const from =
-      (req.body.filter &&
-        req.body.filter.from &&
-        new Date(req.body.filter.from)) ||
-      null
-    const to =
-      (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) ||
-      null
-    const pickupLocation =
-      (req.body.filter && req.body.filter.pickupLocation) || null
-    const dropOffLocation =
-      (req.body.filter && req.body.filter.dropOffLocation) || null
+    const from = (req.body.filter && req.body.filter.from && new Date(req.body.filter.from)) || null
+    const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null
+    const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null
+    const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null
     let keyword = (req.body.filter && req.body.filter.keyword) || ''
     const options = 'i'
 
     const $match = {
-      $and: [
-        { 'company._id': { $in: companies } },
-        { status: { $in: statuses } },
-      ],
+      $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
     }
     if (user)
       $match.$and.push({
@@ -568,11 +495,7 @@ export const getBookings = async (req, res) => {
       } else {
         keyword = escapeStringRegexp(keyword)
         $match.$and.push({
-          $or: [
-            { 'company.fullName': { $regex: keyword, $options: options } },
-            { 'driver.fullName': { $regex: keyword, $options: options } },
-            { 'car.name': { $regex: keyword, $options: options } },
-          ],
+          $or: [{ 'company.fullName': { $regex: keyword, $options: options } }, { 'driver.fullName': { $regex: keyword, $options: options } }, { 'car.name': { $regex: keyword, $options: options } }],
         })
       }
     }
@@ -642,10 +565,7 @@ export const getBookings = async (req, res) => {
                 pipeline: [
                   {
                     $match: {
-                      $and: [
-                        { $expr: { $in: ['$_id', '$$values'] } },
-                        { $expr: { $eq: ['$language', language] } },
-                      ],
+                      $and: [{ $expr: { $in: ['$_id', '$$values'] } }, { $expr: { $eq: ['$language', language] } }],
                     },
                   },
                 ],
@@ -679,10 +599,7 @@ export const getBookings = async (req, res) => {
                 pipeline: [
                   {
                     $match: {
-                      $and: [
-                        { $expr: { $in: ['$_id', '$$values'] } },
-                        { $expr: { $eq: ['$language', language] } },
-                      ],
+                      $and: [{ $expr: { $in: ['$_id', '$$values'] } }, { $expr: { $eq: ['$language', language] } }],
                     },
                   },
                 ],
@@ -707,11 +624,7 @@ export const getBookings = async (req, res) => {
       },
       {
         $facet: {
-          resultData: [
-            { $sort: { createdAt: -1 } },
-            { $skip: (page - 1) * size },
-            { $limit: size },
-          ],
+          resultData: [{ $sort: { createdAt: -1 } }, { $skip: (page - 1) * size }, { $limit: size }],
           pageInfo: [
             {
               $count: 'totalRecords',
@@ -761,10 +674,7 @@ export const bookingsMinDate = async (req, res) => {
   const { driver } = req.params
 
   try {
-    const booking = await Booking.findOne(
-      { driver: new mongoose.Types.ObjectId(driver) },
-      { from: 1 },
-    ).sort({
+    const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(driver) }, { from: 1 }).sort({
       from: 1,
     })
 
@@ -773,10 +683,7 @@ export const bookingsMinDate = async (req, res) => {
     }
     return res.sendStatus(204)
   } catch (err) {
-    console.error(
-      `[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`,
-      err,
-    )
+    console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -785,10 +692,7 @@ export const bookingsMaxDate = async (req, res) => {
   const { driver } = req.params
 
   try {
-    const booking = await Booking.findOne(
-      { driver: new mongoose.Types.ObjectId(req.params.driver) },
-      { to: 1 },
-    ).sort({
+    const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { to: 1 }).sort({
       to: -1,
     })
 
@@ -797,10 +701,7 @@ export const bookingsMaxDate = async (req, res) => {
     }
     return res.sendStatus(204)
   } catch (err) {
-    console.error(
-      `[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`,
-      err,
-    )
+    console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -820,12 +721,7 @@ export const cancelBooking = async (req, res) => {
       await booking.save()
 
       // Notify supplier
-      await notifySupplier(
-        booking.driver,
-        booking,
-        booking.company,
-        strings.CANCEL_BOOKING_NOTIFICATION,
-      )
+      await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
 
       return res.sendStatus(200)
     }
