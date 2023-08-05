@@ -142,7 +142,18 @@ root.render(
   <ThemeProvider theme={theme}>
     <CssBaseline>
       <App />
-      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick pauseOnFocusLoss={false} draggable={false} pauseOnHover={true} icon={true} theme="dark" />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={true}
+        icon={true}
+        theme="dark"
+      />
     </CssBaseline>
   </ThemeProvider>,
 )

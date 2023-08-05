@@ -7,7 +7,16 @@ import { strings } from '../lang/cars'
 import * as CarService from '../services/CarService'
 import * as UserService from '../services/UserService'
 import { Button, Tooltip, Card, CardContent, Typography } from '@mui/material'
-import { LocalGasStation as FuelIcon, AccountTree as GearboxIcon, Person as SeatsIcon, AcUnit as AirconIcon, DirectionsCar as MileageIcon, Check as CheckIcon, Clear as UncheckIcon, Info as InfoIcon } from '@mui/icons-material'
+import {
+  LocalGasStation as FuelIcon,
+  AccountTree as GearboxIcon,
+  Person as SeatsIcon,
+  AcUnit as AirconIcon,
+  DirectionsCar as MileageIcon,
+  Check as CheckIcon,
+  Clear as UncheckIcon,
+  Info as InfoIcon,
+} from '@mui/icons-material'
 import Pager from './Pager'
 
 import DoorsIcon from '../assets/img/car-door.png'
@@ -252,7 +261,10 @@ const CarList = (props) => {
                       </Tooltip>
                     </li>
                     <li>
-                      <Tooltip title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement="left">
+                      <Tooltip
+                        title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                        placement="left"
+                      >
                         <div className="car-info-list-item">
                           {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
                           <span className="car-info-list-text">{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
@@ -294,7 +306,12 @@ const CarList = (props) => {
                 )}
                 {!props.hidePrice && (
                   <div className="action">
-                    <Button type="submit" variant="contained" className="btn-book btn-margin-bottom" href={`/checkout?c=${car._id}&p=${props.pickupLocation}&d=${props.dropOffLocation}&f=${props.from.getTime()}&t=${props.to.getTime()}`}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      className="btn-book btn-margin-bottom"
+                      href={`/checkout?c=${car._id}&p=${props.pickupLocation}&d=${props.dropOffLocation}&f=${props.from.getTime()}&t=${props.to.getTime()}`}
+                    >
                       {strings.BOOK}
                     </Button>
                   </div>
@@ -302,7 +319,9 @@ const CarList = (props) => {
               </article>
             ))}
       </section>
-      {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && <Pager page={page} pageSize={Env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />}
+      {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && (
+        <Pager page={page} pageSize={Env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />
+      )}
     </>
   )
 }

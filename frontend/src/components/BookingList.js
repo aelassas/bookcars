@@ -317,7 +317,9 @@ const BookingList = (props) => {
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{strings.DAYS}</label>
-                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
+                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale: _locale }))} - ${Helper.capitalize(
+                      format(to, _format, { locale: _locale }),
+                    )})`}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>

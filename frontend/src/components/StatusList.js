@@ -32,7 +32,15 @@ const StatusList = (props) => {
       ) : (
         <>
           <InputLabel className={props.required ? 'required' : null}>{props.label}</InputLabel>
-          <Select label={props.label} value={value} onChange={handleChange} variant={props.variant || 'standard'} required={props.required} fullWidth renderValue={(value) => <span className={`bs-s-sv bs-s-${value}`}>{Helper.getBookingStatus(value)}</span>}>
+          <Select
+            label={props.label}
+            value={value}
+            onChange={handleChange}
+            variant={props.variant || 'standard'}
+            required={props.required}
+            fullWidth
+            renderValue={(value) => <span className={`bs-s-sv bs-s-${value}`}>{Helper.getBookingStatus(value)}</span>}
+          >
             <MenuItem value={Env.BOOKING_STATUS.VOID} className="bs-s bs-s-void">
               {commonStrings.BOOKING_STATUS_VOID}
             </MenuItem>

@@ -6,7 +6,28 @@ import { LocationOn as LocationIcon } from '@mui/icons-material'
 
 import '../assets/css/multiple-select.css'
 
-const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selectedOptions, key, required, options, ListboxProps, onFocus, onInputChange, onClear, loading, multiple, freeSolo, type, variant, onOpen, readOnly, hidePopupIcon, customOpen }) => {
+const MultipleSelect = ({
+  label,
+  callbackFromMultipleSelect,
+  reference,
+  selectedOptions,
+  key,
+  required,
+  options,
+  ListboxProps,
+  onFocus,
+  onInputChange,
+  onClear,
+  loading,
+  multiple,
+  freeSolo,
+  type,
+  variant,
+  onOpen,
+  readOnly,
+  hidePopupIcon,
+  customOpen,
+}) => {
   const [init, setInit] = React.useState(selectedOptions.length === 0)
   const [open, setOpen] = React.useState(false)
   const [values, setValues] = useState([])

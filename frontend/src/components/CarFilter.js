@@ -77,7 +77,16 @@ const CarFilter = (props) => {
         </FormControl>
         {!sameLocation && (
           <FormControl fullWidth className="drop-off-location">
-            <LocationSelectList label={commonStrings.DROP_OFF_LOCATION} value={dropOffLocation} hidePopupIcon customOpen hidePopupOnload required variant="standard" onChange={handleDropOffLocationChange} />
+            <LocationSelectList
+              label={commonStrings.DROP_OFF_LOCATION}
+              value={dropOffLocation}
+              hidePopupIcon
+              customOpen
+              hidePopupOnload
+              required
+              variant="standard"
+              onChange={handleDropOffLocationChange}
+            />
           </FormControl>
         )}
         <FormControl fullWidth className="from">

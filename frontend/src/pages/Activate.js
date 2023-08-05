@@ -178,8 +178,18 @@ const Activate = () => {
                 <InputLabel error={confirmPasswordError} className="required">
                   {commonStrings.CONFIRM_PASSWORD}
                 </InputLabel>
-                <Input id="password-confirm" onChange={handleConfirmPasswordChange} onKeyDown={handleOnConfirmPasswordKeyDown} error={confirmPasswordError || passwordLengthError} type="password" value={confirmPassword} required />
-                <FormHelperText error={confirmPasswordError || passwordLengthError}>{confirmPasswordError ? commonStrings.PASSWORDS_DONT_MATCH : passwordLengthError ? commonStrings.PASSWORD_ERROR : ''}</FormHelperText>
+                <Input
+                  id="password-confirm"
+                  onChange={handleConfirmPasswordChange}
+                  onKeyDown={handleOnConfirmPasswordKeyDown}
+                  error={confirmPasswordError || passwordLengthError}
+                  type="password"
+                  value={confirmPassword}
+                  required
+                />
+                <FormHelperText error={confirmPasswordError || passwordLengthError}>
+                  {confirmPasswordError ? commonStrings.PASSWORDS_DONT_MATCH : passwordLengthError ? commonStrings.PASSWORD_ERROR : ''}
+                </FormHelperText>
               </FormControl>
               <div className="buttons">
                 <Button type="submit" className="btn-primary btn-margin btn-margin-bottom" size="small" variant="contained">
