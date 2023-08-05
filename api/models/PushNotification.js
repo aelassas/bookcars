@@ -22,7 +22,10 @@ const pushNotificationSchema = new Schema(
   },
 )
 
-const pushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema)
+const pushNotificationModel = mongoose.model(
+  'PushNotification',
+  pushNotificationSchema,
+)
 
 pushNotificationModel.on('index', (err) => {
   if (err) {

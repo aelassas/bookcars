@@ -59,7 +59,28 @@ export const update = async (req, res) => {
     const car = await Car.findById(_id)
 
     if (car) {
-      const { company, name, minimumAge, available, type, locations, price, deposit, seats, doors, aircon, gearbox, fuelPolicy, mileage, cancellation, amendments, theftProtection, collisionDamageWaiver, fullInsurance, additionalDriver } = req.body
+      const {
+        company,
+        name,
+        minimumAge,
+        available,
+        type,
+        locations,
+        price,
+        deposit,
+        seats,
+        doors,
+        aircon,
+        gearbox,
+        fuelPolicy,
+        mileage,
+        cancellation,
+        amendments,
+        theftProtection,
+        collisionDamageWaiver,
+        fullInsurance,
+        additionalDriver,
+      } = req.body
 
       car.company = company._id
       car.minimumAge = minimumAge
@@ -140,7 +161,9 @@ export const createImage = async (req, res) => {
       await fs.mkdir(CDN_TEMP, { recursive: true })
     }
 
-    const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${uuid()}_${Date.now()}${path.extname(
+      req.file.originalname,
+    )}`
     const filepath = path.join(CDN_TEMP, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
@@ -170,7 +193,9 @@ export const updateImage = async (req, res) => {
         }
       }
 
-      const filename = `${car._id}_${Date.now()}${path.extname(file.originalname)}`
+      const filename = `${car._id}_${Date.now()}${path.extname(
+        file.originalname,
+      )}`
       const filepath = path.join(CDN, filename)
 
       await fs.writeFile(filepath, file.buffer)
@@ -252,7 +277,9 @@ export const getCar = async (req, res) => {
 
       for (let i = 0; i < car.locations.length; i++) {
         const location = car.locations[i]
-        location.name = location.values.filter((value) => value.language === language)[0].value
+        location.name = location.values.filter(
+          (value) => value.language === language,
+        )[0].value
       }
 
       return res.json(car)
@@ -270,7 +297,9 @@ export const getCars = async (req, res) => {
   try {
     const page = parseInt(req.params.page)
     const size = parseInt(req.params.size)
-    const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const companies = req.body.companies.map(
+      (id) => new mongoose.Types.ObjectId(id),
+    )
     const fuel = req.body.fuel
     const gearbox = req.body.gearbox
     const mileage = req.body.mileage
@@ -280,7 +309,10 @@ export const getCars = async (req, res) => {
     const options = 'i'
 
     const $match = {
-      $and: [{ name: { $regex: keyword, $options: options } }, { company: { $in: companies } }],
+      $and: [
+        { name: { $regex: keyword, $options: options } },
+        { company: { $in: companies } },
+      ],
     }
 
     if (fuel) {
@@ -306,9 +338,15 @@ export const getCars = async (req, res) => {
     }
 
     if (availability) {
-      if (availability.length === 1 && availability[0] === Env.AVAILABILITY.AVAILABLE) {
+      if (
+        availability.length === 1 &&
+        availability[0] === Env.AVAILABILITY.AVAILABLE
+      ) {
         $match.$and.push({ available: true })
-      } else if (availability.length === 1 && availability[0] === Env.AVAILABILITY.UNAVAILABLE) {
+      } else if (
+        availability.length === 1 &&
+        availability[0] === Env.AVAILABILITY.UNAVAILABLE
+      ) {
         $match.$and.push({ available: false })
       } else if (availability.length === 0) {
         return res.json([{ resultData: [], pageInfo: [] }])
@@ -349,7 +387,11 @@ export const getCars = async (req, res) => {
         },
         {
           $facet: {
-            resultData: [{ $sort: { name: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              { $sort: { name: 1 } },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -390,7 +432,12 @@ export const getBookingCars = async (req, res) => {
       [
         {
           $match: {
-            $and: [{ company: { $eq: company } }, { locations: pickupLocation }, { available: true }, { name: { $regex: keyword, $options: options } }],
+            $and: [
+              { company: { $eq: company } },
+              { locations: pickupLocation },
+              { available: true },
+              { name: { $regex: keyword, $options: options } },
+            ],
           },
         },
         { $sort: { name: 1 } },
@@ -402,7 +449,10 @@ export const getBookingCars = async (req, res) => {
 
     return res.json(cars)
   } catch (err) {
-    console.error(`[car.getBookingCars] ${strings.DB_ERROR} ${req.query.s}`, err)
+    console.error(
+      `[car.getBookingCars] ${strings.DB_ERROR} ${req.query.s}`,
+      err,
+    )
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -411,7 +461,9 @@ export const getFrontendCars = async (req, res) => {
   try {
     const page = parseInt(req.params.page)
     const size = parseInt(req.params.size)
-    const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const companies = req.body.companies.map(
+      (id) => new mongoose.Types.ObjectId(id),
+    )
     const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
     const fuel = req.body.fuel
     const gearbox = req.body.gearbox
@@ -419,7 +471,13 @@ export const getFrontendCars = async (req, res) => {
     const deposit = req.body.deposit
 
     const $match = {
-      $and: [{ company: { $in: companies } }, { locations: pickupLocation }, { available: true }, { type: { $in: fuel } }, { gearbox: { $in: gearbox } }],
+      $and: [
+        { company: { $in: companies } },
+        { locations: pickupLocation },
+        { available: true },
+        { type: { $in: fuel } },
+        { gearbox: { $in: gearbox } },
+      ],
     }
 
     if (mileage) {
@@ -470,7 +528,11 @@ export const getFrontendCars = async (req, res) => {
         },
         {
           $facet: {
-            resultData: [{ $sort: { name: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              { $sort: { name: 1 } },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -493,7 +555,10 @@ export const getFrontendCars = async (req, res) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getFrontendCars] ${strings.DB_ERROR} ${req.query.s}`, err)
+    console.error(
+      `[car.getFrontendCars] ${strings.DB_ERROR} ${req.query.s}`,
+      err,
+    )
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }

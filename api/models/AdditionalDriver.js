@@ -47,7 +47,10 @@ const additionalDriverSchema = new Schema(
   },
 )
 
-const additionalDriverModel = mongoose.model('AdditionalDriver', additionalDriverSchema)
+const additionalDriverModel = mongoose.model(
+  'AdditionalDriver',
+  additionalDriverSchema,
+)
 
 additionalDriverModel.on('index', (err) => {
   if (err) {
