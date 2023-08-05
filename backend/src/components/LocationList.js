@@ -4,7 +4,23 @@ import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/locations'
 import * as LocationService from '../services/LocationService'
-import { IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Card, CardContent, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar } from '@mui/material'
+import {
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Tooltip,
+  Card,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+} from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, LocationOn as LocationIcon } from '@mui/icons-material'
 import * as Helper from '../common/Helper'
 import Pager from './Pager'

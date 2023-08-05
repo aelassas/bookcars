@@ -473,7 +473,14 @@ const UpdateBooking = () => {
                 <LocationSelectList label={bfStrings.DROP_OFF_LOCATION} required variant="standard" onChange={handleDropOffLocationChange} value={dropOffLocation} />
               </FormControl>
 
-              <CarSelectList label={blStrings.CAR} company={company && company._id} pickupLocation={pickupLocation && pickupLocation._id} onChange={handleCarSelectListChange} required value={car} />
+              <CarSelectList
+                label={blStrings.CAR}
+                company={company && company._id}
+                pickupLocation={pickupLocation && pickupLocation._id}
+                onChange={handleCarSelectListChange}
+                required
+                value={car}
+              />
 
               <FormControl fullWidth margin="dense">
                 <DateTimePicker

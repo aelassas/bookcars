@@ -56,7 +56,15 @@ const Users = () => {
             </div>
           </div>
           <div className="col-2">
-            <UserList user={user} types={types} keyword={keyword} checkboxSelection={!Env.isMobile() && admin} hideDesktopColumns={Env.isMobile()} reload={reload} onLoad={handleUserListLoad} />
+            <UserList
+              user={user}
+              types={types}
+              keyword={keyword}
+              checkboxSelection={!Env.isMobile() && admin}
+              hideDesktopColumns={Env.isMobile()}
+              reload={reload}
+              onLoad={handleUserListLoad}
+            />
           </div>
         </div>
       )}

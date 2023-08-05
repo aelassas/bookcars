@@ -109,7 +109,11 @@ const MultipleSelect = ({
                   startAdornment: (
                     <>
                       <InputAdornment position="start">
-                        {option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" /> : <AccountCircle className="avatar-small suo" color="disabled" />}
+                        {option.image ? (
+                          <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" />
+                        ) : (
+                          <AccountCircle className="avatar-small suo" color="disabled" />
+                        )}
                       </InputAdornment>
                       {params.InputProps.startAdornment}
                     </>

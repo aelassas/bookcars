@@ -5,7 +5,14 @@ import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
-import { AccountCircle, PhotoCamera as PhotoCameraIcon, BrokenImageTwoTone as DeleteIcon, CorporateFare as CompanyIcon, DirectionsCar as CarIcon, Check as VerifiedIcon } from '@mui/icons-material'
+import {
+  AccountCircle,
+  PhotoCamera as PhotoCameraIcon,
+  BrokenImageTwoTone as DeleteIcon,
+  CorporateFare as CompanyIcon,
+  DirectionsCar as CarIcon,
+  Check as VerifiedIcon,
+} from '@mui/icons-material'
 
 const Avatar = (props) => {
   const [error, setError] = useState(false)
