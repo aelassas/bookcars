@@ -18,7 +18,8 @@ export const authHeader = async () => {
 
 export const signup = (data) => axios.post(`${Env.API_HOST}/api/sign-up`, data).then((res) => res.status)
 
-export const checkToken = (userId, email, token) => axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then((res) => res.status)
+export const checkToken = (userId, email, token) =>
+  axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then((res) => res.status)
 
 export const deleteTokens = (userId) => axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then((res) => res.status)
 

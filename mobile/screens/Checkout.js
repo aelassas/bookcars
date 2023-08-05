@@ -847,32 +847,68 @@ const CheckoutScreen = ({ navigation, route }) => {
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.cancellation === -1 || car.cancellation === 0} textStyle={styles.extraSwitch} label={i18n.t('CANCELLATION')} value={cancellation} onValueChange={onCancellationChange} />
+                    <Switch
+                      disabled={car.cancellation === -1 || car.cancellation === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('CANCELLATION')}
+                      value={cancellation}
+                      onValueChange={onCancellationChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.amendments === -1 || car.amendments === 0} textStyle={styles.extraSwitch} label={i18n.t('AMENDMENTS')} value={amendments} onValueChange={onAmendmentsChange} />
+                    <Switch
+                      disabled={car.amendments === -1 || car.amendments === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('AMENDMENTS')}
+                      value={amendments}
+                      onValueChange={onAmendmentsChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0} textStyle={styles.extraSwitch} label={i18n.t('COLLISION_DAMAGE_WAVER')} value={collisionDamageWaiver} onValueChange={onCollisionDamageWaiverChange} />
+                    <Switch
+                      disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('COLLISION_DAMAGE_WAVER')}
+                      value={collisionDamageWaiver}
+                      onValueChange={onCollisionDamageWaiverChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.theftProtection === -1 || car.theftProtection === 0} textStyle={styles.extraSwitch} label={i18n.t('THEFT_PROTECTION')} value={theftProtection} onValueChange={onTheftProtectionChange} />
+                    <Switch
+                      disabled={car.theftProtection === -1 || car.theftProtection === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('THEFT_PROTECTION')}
+                      value={theftProtection}
+                      onValueChange={onTheftProtectionChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.fullInsurance === -1 || car.fullInsurance === 0} textStyle={styles.extraSwitch} label={i18n.t('FULL_INSURANCE')} value={fullInsurance} onValueChange={onFullInsuranceChange} />
+                    <Switch
+                      disabled={car.fullInsurance === -1 || car.fullInsurance === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('FULL_INSURANCE')}
+                      value={fullInsurance}
+                      onValueChange={onFullInsuranceChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
-                    <Switch disabled={car.additionalDriver === -1 || car.additionalDriver === 0} textStyle={styles.extraSwitch} label={i18n.t('ADDITIONAL_DRIVER')} value={additionalDriver} onValueChange={onAdditionalDriverChange} />
+                    <Switch
+                      disabled={car.additionalDriver === -1 || car.additionalDriver === 0}
+                      textStyle={styles.extraSwitch}
+                      label={i18n.t('ADDITIONAL_DRIVER')}
+                      value={additionalDriver}
+                      onValueChange={onAdditionalDriverChange}
+                    />
                     <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
                   </View>
                 </View>
@@ -884,7 +920,9 @@ const CheckoutScreen = ({ navigation, route }) => {
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-                  <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}</Text>
+                  <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(
+                    format(to, _format, { locale }),
+                  )})`}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
                   <Text style={styles.detailText}>{pickupLocation.name}</Text>
@@ -917,7 +955,16 @@ const CheckoutScreen = ({ navigation, route }) => {
                       <Text style={styles.sectionHeaderText}>{i18n.t('DRIVER_DETAILS')}</Text>
                     </View>
 
-                    <TextInput ref={fullNameRef} style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} backgroundColor="#fbfbfb" />
+                    <TextInput
+                      ref={fullNameRef}
+                      style={styles.component}
+                      label={i18n.t('FULL_NAME')}
+                      value={fullName}
+                      error={fullNameRequired}
+                      helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
+                      onChangeText={onChangeFullName}
+                      backgroundColor="#fbfbfb"
+                    />
 
                     <TextInput
                       ref={emailRef}
@@ -925,7 +972,13 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('EMAIL')}
                       value={email}
                       error={emailRequired || !emailValid || emailError}
-                      helperText={(emailInfo && i18n.t('EMAIL_INFO')) || (emailRequired && i18n.t('REQUIRED')) || (!emailValid && i18n.t('EMAIL_NOT_VALID')) || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) || ''}
+                      helperText={
+                        (emailInfo && i18n.t('EMAIL_INFO')) ||
+                        (emailRequired && i18n.t('REQUIRED')) ||
+                        (!emailValid && i18n.t('EMAIL_NOT_VALID')) ||
+                        (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) ||
+                        ''
+                      }
                       onChangeText={onChangeEmail}
                       backgroundColor="#fbfbfb"
                     />
@@ -1073,7 +1126,16 @@ const CheckoutScreen = ({ navigation, route }) => {
 
                     <Image source={require('../assets/secure-payment.png')} style={styles.paymentImage} />
 
-                    <TextInput ref={cardNameRef} style={styles.component} label={i18n.t('CARD_NAME')} value={cardName} error={cardNameRequired} helperText={(cardNameRequired && i18n.t('REQUIRED')) || ''} backgroundColor="#e5efe5" onChangeText={onCardNameChange} />
+                    <TextInput
+                      ref={cardNameRef}
+                      style={styles.component}
+                      label={i18n.t('CARD_NAME')}
+                      value={cardName}
+                      error={cardNameRequired}
+                      helperText={(cardNameRequired && i18n.t('REQUIRED')) || ''}
+                      backgroundColor="#e5efe5"
+                      onChangeText={onCardNameChange}
+                    />
 
                     <TextInput
                       ref={cardNumberRef}

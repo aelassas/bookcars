@@ -150,7 +150,20 @@ const DrawerNavigator = () => {
         screenOptions={{
           drawerActiveTintColor: '#f37022',
         }}
-        drawerContent={(props) => <DrawerContent navigation={navigation} routes={routes} index={index} drawerItems={drawerItems} loggedIn={loggedIn} language={language} activeBackgroundColor="#feeee4" activeTintColor="#f37022" buildLink={buildLink} {...props} />}
+        drawerContent={(props) => (
+          <DrawerContent
+            navigation={navigation}
+            routes={routes}
+            index={index}
+            drawerItems={drawerItems}
+            loggedIn={loggedIn}
+            language={language}
+            activeBackgroundColor="#feeee4"
+            activeTintColor="#f37022"
+            buildLink={buildLink}
+            {...props}
+          />
+        )}
         // useLegacyImplementation
       >
         {drawerItems.map((drawer) => (

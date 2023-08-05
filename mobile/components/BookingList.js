@@ -152,7 +152,15 @@ const BookingList = (props) => {
       <Portal>
         <Dialog style={styles.dialog} visible={openCancelDialog} dismissable={false}>
           <Dialog.Title style={styles.dialogTitleContent}>{(!cancelRequestSent && !cancelRequestProcessing && i18n.t('CONFIRM_TITLE')) || ''}</Dialog.Title>
-          <Dialog.Content style={styles.dialogContent}>{cancelRequestProcessing ? <ActivityIndicator size="large" color="#f37022" /> : cancelRequestSent ? <Paragraph>{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</Paragraph> : <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>}</Dialog.Content>
+          <Dialog.Content style={styles.dialogContent}>
+            {cancelRequestProcessing ? (
+              <ActivityIndicator size="large" color="#f37022" />
+            ) : cancelRequestSent ? (
+              <Paragraph>{i18n.t('CANCEL_BOOKING_REQUEST_SENT')}</Paragraph>
+            ) : (
+              <Paragraph>{i18n.t('CANCEL_BOOKING')}</Paragraph>
+            )}
+          </Dialog.Content>
           <Dialog.Actions style={styles.dialogActions}>
             {!cancelRequestProcessing && (
               <NativeButton

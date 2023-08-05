@@ -310,7 +310,15 @@ const SignUpScreen = ({ navigation, route }) => {
       {language && (
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
           <View style={styles.contentContainer}>
-            <TextInput ref={fullNameRef} style={styles.component} label={i18n.t('FULL_NAME')} value={fullName} error={fullNameRequired} helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''} onChangeText={onChangeFullName} />
+            <TextInput
+              ref={fullNameRef}
+              style={styles.component}
+              label={i18n.t('FULL_NAME')}
+              value={fullName}
+              error={fullNameRequired}
+              helperText={(fullNameRequired && i18n.t('REQUIRED')) || ''}
+              onChangeText={onChangeFullName}
+            />
 
             <TextInput
               ref={emailRef}
@@ -322,7 +330,15 @@ const SignUpScreen = ({ navigation, route }) => {
               onChangeText={onChangeEmail}
             />
 
-            <TextInput ref={phoneRef} style={styles.component} label={i18n.t('PHONE')} value={phone} error={phoneRequired || !phoneValid} helperText={(phoneRequired && i18n.t('REQUIRED')) || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''} onChangeText={onChangePhone} />
+            <TextInput
+              ref={phoneRef}
+              style={styles.component}
+              label={i18n.t('PHONE')}
+              value={phone}
+              error={phoneRequired || !phoneValid}
+              helperText={(phoneRequired && i18n.t('REQUIRED')) || (!phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
+              onChangeText={onChangePhone}
+            />
 
             <DateTimePicker
               mode="date"
