@@ -272,7 +272,16 @@ const SignUp = () => {
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
-                  <OutlinedInput type="text" label={commonStrings.EMAIL} error={!emailValid || emailError} value={email} onBlur={handleEmailBlur} onChange={handleEmailChange} required autoComplete="off" />
+                  <OutlinedInput
+                    type="text"
+                    label={commonStrings.EMAIL}
+                    error={!emailValid || emailError}
+                    value={email}
+                    onBlur={handleEmailBlur}
+                    onChange={handleEmailChange}
+                    required
+                    autoComplete="off"
+                  />
                   <FormHelperText error={!emailValid || emailError}>
                     {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                     {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}

@@ -193,7 +193,15 @@ const Header = (props) => {
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
-    <Menu anchorEl={anchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={menuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMenuOpen} onClose={handleMenuClose}>
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
       <MenuItem onClick={handleOnSettingsClick}>
         <SettingsIcon className="header-action" />
         {strings.SETTINGS}
@@ -207,7 +215,15 @@ const Header = (props) => {
 
   const mobileMenuId = 'mobile-menu'
   const renderMobileMenu = (
-    <Menu anchorEl={mobileMoreAnchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={mobileMenuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isMobileMenuOpen} onClose={handleMobileMenuClose}>
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
       <MenuItem onClick={handleOnSettingsClick}>
         <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
@@ -229,7 +245,15 @@ const Header = (props) => {
 
   const languageMenuId = 'language-menu'
   const renderLanguageMenu = (
-    <Menu anchorEl={langAnchorEl} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} id={languageMenuId} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={isLangMenuOpen} onClose={handleLangMenuClose}>
+    <Menu
+      anchorEl={langAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={languageMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isLangMenuOpen}
+      onClose={handleLangMenuClose}
+    >
       <MenuItem onClick={handleLangMenuClose} data-code="fr">
         {strings.LANGUAGE_FR}
       </MenuItem>

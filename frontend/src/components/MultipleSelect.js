@@ -20,7 +20,28 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   )
 })
 
-const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selectedOptions, key, required, options, ListboxProps, onFocus, onInputChange, onClear, loading, multiple, freeSolo, type, variant, onOpen, readOnly, hidePopupIcon, customOpen }) => {
+const MultipleSelect = ({
+  label,
+  callbackFromMultipleSelect,
+  reference,
+  selectedOptions,
+  key,
+  required,
+  options,
+  ListboxProps,
+  onFocus,
+  onInputChange,
+  onClear,
+  loading,
+  multiple,
+  freeSolo,
+  type,
+  variant,
+  onOpen,
+  readOnly,
+  hidePopupIcon,
+  customOpen,
+}) => {
   const [init, setInit] = React.useState(selectedOptions.length === 0)
   const [open, setOpen] = React.useState(false)
   const [values, setValues] = useState([])

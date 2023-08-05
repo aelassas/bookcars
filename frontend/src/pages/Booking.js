@@ -269,7 +269,15 @@ const Booking = () => {
                 <LocationSelectList label={bfStrings.DROP_OFF_LOCATION} required variant="standard" onChange={handleDropOffLocationChange} value={dropOffLocation} init readOnly={!edit} />
               </FormControl>
 
-              <CarSelectList label={blStrings.CAR} company={company && company._id} pickupLocation={pickupLocation && pickupLocation._id} onChange={handleCarSelectListChange} required value={car} readOnly={!edit} />
+              <CarSelectList
+                label={blStrings.CAR}
+                company={company && company._id}
+                pickupLocation={pickupLocation && pickupLocation._id}
+                onChange={handleCarSelectListChange}
+                required
+                value={car}
+                readOnly={!edit}
+              />
 
               <FormControl fullWidth margin="dense">
                 <DateTimePicker
@@ -338,11 +346,21 @@ const Booking = () => {
               </div>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.cancellation === -1 || booking.car.cancellation === 0} control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />} label={csStrings.CANCELLATION} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.cancellation === -1 || booking.car.cancellation === 0}
+                  control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
+                  label={csStrings.CANCELLATION}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.amendments === -1 || booking.car.amendments === 0} control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />} label={csStrings.AMENDMENTS} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.amendments === -1 || booking.car.amendments === 0}
+                  control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
+                  label={csStrings.AMENDMENTS}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
@@ -355,15 +373,30 @@ const Booking = () => {
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.theftProtection === -1 || booking.car.theftProtection === 0} control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />} label={csStrings.THEFT_PROTECTION} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.theftProtection === -1 || booking.car.theftProtection === 0}
+                  control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
+                  label={csStrings.THEFT_PROTECTION}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.fullInsurance === -1 || booking.car.fullInsurance === 0} control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />} label={csStrings.FULL_INSURANCE} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.fullInsurance === -1 || booking.car.fullInsurance === 0}
+                  control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
+                  label={csStrings.FULL_INSURANCE}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel disabled={!edit || booking.car.additionalDriver === -1 || booking.car.additionalDriver === 0} control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />} label={csStrings.ADDITIONAL_DRIVER} className="checkbox-fcl" />
+                <FormControlLabel
+                  disabled={!edit || booking.car.additionalDriver === -1 || booking.car.additionalDriver === 0}
+                  control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
+                  label={csStrings.ADDITIONAL_DRIVER}
+                  className="checkbox-fcl"
+                />
               </FormControl>
 
               <div>

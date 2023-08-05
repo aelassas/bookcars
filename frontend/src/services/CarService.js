@@ -6,4 +6,5 @@ export const getCars = (data, page, size) => axios.post(`${Env.API_HOST}/api/fro
 
 export const getCar = (id) => axios.get(`${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`).then((res) => res.data)
 
-export const getBookingCars = (keyword, data, page, size) => axios.post(`${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader() }).then((res) => res.data)
+export const getBookingCars = (keyword, data, page, size) =>
+  axios.post(`${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`, data, { headers: UserService.authHeader() }).then((res) => res.data)
