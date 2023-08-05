@@ -282,7 +282,15 @@ const CreateCar = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel className="required">{strings.MINIMUM_AGE}</InputLabel>
-              <Input type="text" required error={!minimumAgeValid} value={minimumAge} autoComplete="off" onChange={handleMinimumAgeChange} inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }} />
+              <Input
+                type="text"
+                required
+                error={!minimumAgeValid}
+                value={minimumAge}
+                autoComplete="off"
+                onChange={handleMinimumAgeChange}
+                inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
+              />
               <FormHelperText error={!minimumAgeValid}>{(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}</FormHelperText>
             </FormControl>
 

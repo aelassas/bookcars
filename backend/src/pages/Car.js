@@ -256,7 +256,10 @@ const Car = () => {
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement="left">
+                    <Tooltip
+                      title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                      placement="left"
+                    >
                       <div className="car-info-list-item">
                         {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
                         <span className="car-info-list-text">{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>

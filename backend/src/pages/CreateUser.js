@@ -296,7 +296,17 @@ const CreateUser = () => {
           <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
             <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
             <form onSubmit={handleSubmit}>
-              <Avatar type={type} mode="create" record={null} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
+              <Avatar
+                type={type}
+                mode="create"
+                record={null}
+                size="large"
+                readonly={false}
+                onBeforeUpload={onBeforeUpload}
+                onChange={onAvatarChange}
+                color="disabled"
+                className="avatar-ctn"
+              />
 
               {company && (
                 <div className="info">

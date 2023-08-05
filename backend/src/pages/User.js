@@ -116,7 +116,8 @@ const User = () => {
     }
   }
 
-  const edit = loggedUser && user && (loggedUser.type === Env.RECORD_TYPE.ADMIN || loggedUser._id === user._id || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company))
+  const edit =
+    loggedUser && user && (loggedUser.type === Env.RECORD_TYPE.ADMIN || loggedUser._id === user._id || (loggedUser.type === Env.RECORD_TYPE.COMPANY && loggedUser._id === user.company))
   const company = user && user.type === Env.RECORD_TYPE.COMPANY
 
   return (

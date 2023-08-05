@@ -342,7 +342,9 @@ const CarList = (props) => {
                         </li>
                         <li>
                           <Tooltip
-                            title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                            title={
+                              props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)
+                            }
                             placement="left"
                           >
                             <div className="car-info-list-item">
@@ -352,7 +354,10 @@ const CarList = (props) => {
                           </Tooltip>
                         </li>
                         <li>
-                          <Tooltip title={props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)} placement="left">
+                          <Tooltip
+                            title={props.booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : Helper.getTheftProtection(car.theftProtection, fr)}
+                            placement="left"
+                          >
                             <div className="car-info-list-item">
                               {getExtraIcon('theftProtection', car.theftProtection)}
                               <span className="car-info-list-text">{Helper.getTheftProtection(car.theftProtection, fr)}</span>
