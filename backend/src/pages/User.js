@@ -125,7 +125,19 @@ const User = () => {
         <div className="user">
           <div className="col-1">
             <section className="user-avatar-sec">
-              <Avatar record={user} type={user.type} mode="update" size="large" hideDelete onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className={company ? 'company-avatar' : 'user-avatar'} readonly verified />
+              <Avatar
+                record={user}
+                type={user.type}
+                mode="update"
+                size="large"
+                hideDelete
+                onBeforeUpload={onBeforeUpload}
+                onChange={onAvatarChange}
+                color="disabled"
+                className={company ? 'company-avatar' : 'user-avatar'}
+                readonly
+                verified
+              />
             </section>
             <Typography variant="h4" className="user-name">
               {user.fullName}
@@ -164,7 +176,17 @@ const User = () => {
           </div>
           <div className="col-2">
             {(edit || !company) && (
-              <BookingList containerClassName="user" offset={offset} loggedUser={loggedUser} user={company ? undefined : user} companies={company ? [user._id] : companies} statuses={statuses} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} hideCompanyColumn={company} />
+              <BookingList
+                containerClassName="user"
+                offset={offset}
+                loggedUser={loggedUser}
+                user={company ? undefined : user}
+                companies={company ? [user._id] : companies}
+                statuses={statuses}
+                hideDates={Env.isMobile()}
+                checkboxSelection={!Env.isMobile()}
+                hideCompanyColumn={company}
+              />
             )}
           </div>
         </div>

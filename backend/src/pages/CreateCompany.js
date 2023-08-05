@@ -232,7 +232,17 @@ const CreateCompany = () => {
         <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
           <h1 className="company-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
           <form onSubmit={handleSubmit}>
-            <Avatar type={Env.RECORD_TYPE.COMPANY} mode="create" record={null} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
+            <Avatar
+              type={Env.RECORD_TYPE.COMPANY}
+              mode="create"
+              record={null}
+              size="large"
+              readonly={false}
+              onBeforeUpload={onBeforeUpload}
+              onChange={onAvatarChange}
+              color="disabled"
+              className="avatar-ctn"
+            />
 
             <div className="info">
               <InfoIcon />

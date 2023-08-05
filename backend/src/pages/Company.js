@@ -128,7 +128,18 @@ const Company = () => {
           <div className="col-1">
             <section className="company-avatar-sec">
               {edit ? (
-                <Avatar record={company} type={Env.RECORD_TYPE.COMPANY} mode="update" size="large" hideDelete onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} readonly={!edit} color="disabled" className="company-avatar" />
+                <Avatar
+                  record={company}
+                  type={Env.RECORD_TYPE.COMPANY}
+                  mode="update"
+                  size="large"
+                  hideDelete
+                  onBeforeUpload={onBeforeUpload}
+                  onChange={onAvatarChange}
+                  readonly={!edit}
+                  color="disabled"
+                  className="company-avatar"
+                />
               ) : (
                 <div className="car-company">
                   <span className="car-company-logo">
@@ -177,7 +188,17 @@ const Company = () => {
             {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
           </div>
           <div className="col-2">
-            <CarList containerClassName={Env.isMobile() ? 'company' : null} offset={offset} user={user} companies={companies} keyword="" reload={false} onLoad={handleCarListLoad} onDelete={handleCarDelete} hideCompany />
+            <CarList
+              containerClassName={Env.isMobile() ? 'company' : null}
+              offset={offset}
+              user={user}
+              companies={companies}
+              keyword=""
+              reload={false}
+              onLoad={handleCarListLoad}
+              onDelete={handleCarDelete}
+              hideCompany
+            />
           </div>
         </div>
       )}

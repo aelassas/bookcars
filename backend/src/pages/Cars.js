@@ -122,7 +122,22 @@ const Cars = () => {
             </div>
           </div>
           <div className="col-2">
-            <CarList containerClassName="cars" offset={offset} user={user} companies={companies} fuel={fuel} gearbox={gearbox} mileage={mileage} deposit={deposit} availability={availability} keyword={keyword} reload={reload} loading={loading} onLoad={handleCarListLoad} onDelete={handleCarDelete} />
+            <CarList
+              containerClassName="cars"
+              offset={offset}
+              user={user}
+              companies={companies}
+              fuel={fuel}
+              gearbox={gearbox}
+              mileage={mileage}
+              deposit={deposit}
+              availability={availability}
+              keyword={keyword}
+              reload={reload}
+              loading={loading}
+              onLoad={handleCarListLoad}
+              onDelete={handleCarDelete}
+            />
           </div>
         </div>
       )}

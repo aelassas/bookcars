@@ -540,27 +540,57 @@ const UpdateBooking = () => {
               </div>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />} label={csStrings.CANCELLATION} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'cancellation')} />
+                <FormControlLabel
+                  control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
+                  label={csStrings.CANCELLATION}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'cancellation')}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />} label={csStrings.AMENDMENTS} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'amendments')} />
+                <FormControlLabel
+                  control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
+                  label={csStrings.AMENDMENTS}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'amendments')}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />} label={csStrings.THEFT_PROTECTION} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'theftProtection')} />
+                <FormControlLabel
+                  control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
+                  label={csStrings.THEFT_PROTECTION}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />} label={csStrings.COLLISION_DAMAGE_WAVER} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')} />
+                <FormControlLabel
+                  control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
+                  label={csStrings.COLLISION_DAMAGE_WAVER}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />} label={csStrings.FULL_INSURANCE} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'fullInsurance')} />
+                <FormControlLabel
+                  control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
+                  label={csStrings.FULL_INSURANCE}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
-                <FormControlLabel control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />} label={csStrings.ADDITIONAL_DRIVER} className="checkbox-fcl" disabled={!Helper.carOptionAvailable(car, 'additionalDriver')} />
+                <FormControlLabel
+                  control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
+                  label={csStrings.ADDITIONAL_DRIVER}
+                  className="checkbox-fcl"
+                  disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
+                />
               </FormControl>
 
               {Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (

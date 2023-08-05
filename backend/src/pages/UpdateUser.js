@@ -316,7 +316,18 @@ const UpdateUser = () => {
           <Paper className="user-form user-form-wrapper" elevation={10}>
             <h1 className="user-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
             <form onSubmit={handleSubmit}>
-              <Avatar type={type} mode="update" record={user} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" hideDelete={type === Env.RECORD_TYPE.COMPANY} />
+              <Avatar
+                type={type}
+                mode="update"
+                record={user}
+                size="large"
+                readonly={false}
+                onBeforeUpload={onBeforeUpload}
+                onChange={onAvatarChange}
+                color="disabled"
+                className="avatar-ctn"
+                hideDelete={type === Env.RECORD_TYPE.COMPANY}
+              />
 
               {company && (
                 <div className="info">

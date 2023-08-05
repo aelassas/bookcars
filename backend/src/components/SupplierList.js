@@ -213,7 +213,9 @@ const SupplierList = (props) => {
           </DialogActions>
         </Dialog>
       </section>
-      {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && <Pager page={page} pageSize={Env.PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />}
+      {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && (
+        <Pager page={page} pageSize={Env.PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />
+      )}
     </>
   )
 }

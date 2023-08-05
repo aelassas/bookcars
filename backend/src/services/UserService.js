@@ -15,7 +15,8 @@ export const create = (data) => axios.post(`${Env.API_HOST}/api/create-user`, da
 
 export const signup = (data) => axios.post(`${Env.API_HOST}/api/admin-sign-up/ `, data).then((res) => res.status)
 
-export const checkToken = (userId, email, token) => axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then((res) => res.status)
+export const checkToken = (userId, email, token) =>
+  axios.get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`).then((res) => res.status)
 
 export const deleteTokens = (userId) => axios.delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`).then((res) => res.status)
 
@@ -129,7 +130,8 @@ export const getDrivers = (keyword, page, size) => {
   return axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, payload, { headers: authHeader() }).then((res) => res.data)
 }
 
-export const getUsers = (payload, keyword, page, size) => axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, payload, { headers: authHeader() }).then((res) => res.data)
+export const getUsers = (payload, keyword, page, size) =>
+  axios.post(`${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`, payload, { headers: authHeader() }).then((res) => res.data)
 
 export const updateUser = (data) => axios.post(`${Env.API_HOST}/api/update-user`, data, { headers: authHeader() }).then((res) => res.status)
 

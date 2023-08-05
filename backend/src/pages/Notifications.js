@@ -4,7 +4,14 @@ import { strings } from '../lang/notifications'
 import Master from '../components/Master'
 import * as NotificationService from '../services/NotificationService'
 import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material'
-import { Visibility as ViewIcon, Drafts as MarkReadIcon, Markunread as MarkUnreadIcon, Delete as DeleteIcon, ArrowBackIos as PreviousPageIcon, ArrowForwardIos as NextPageIcon } from '@mui/icons-material'
+import {
+  Visibility as ViewIcon,
+  Drafts as MarkReadIcon,
+  Markunread as MarkUnreadIcon,
+  Delete as DeleteIcon,
+  ArrowBackIos as PreviousPageIcon,
+  ArrowForwardIos as NextPageIcon,
+} from '@mui/icons-material'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import Backdrop from '../components/SimpleBackdrop'
