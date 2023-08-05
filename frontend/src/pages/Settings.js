@@ -157,7 +157,17 @@ const Settings = () => {
         <div className="settings">
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
             <form onSubmit={handleSubmit}>
-              <Avatar type={user.type} loggedUser={user} user={user} size="large" readonly={false} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
+              <Avatar
+                type={user.type}
+                loggedUser={user}
+                user={user}
+                size="large"
+                readonly={false}
+                onBeforeUpload={onBeforeUpload}
+                onChange={onAvatarChange}
+                color="disabled"
+                className="avatar-ctn"
+              />
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                 <Input id="full-name" type="text" required onChange={handleOnChangeFullName} autoComplete="off" value={fullName} />

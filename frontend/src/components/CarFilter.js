@@ -73,7 +73,16 @@ const CarFilter = (props) => {
     <div className={`${props.className ? `${props.className} ` : ''}car-filter`}>
       <form onSubmit={handleSubmit} className="home-search-form">
         <FormControl fullWidth className="pickup-location">
-          <LocationSelectList label={commonStrings.PICKUP_LOCATION} hidePopupIcon customOpen hidePopupOnload required variant="standard" value={pickupLocation} onChange={handlePickupLocationChange} />
+          <LocationSelectList
+            label={commonStrings.PICKUP_LOCATION}
+            hidePopupIcon
+            customOpen
+            hidePopupOnload
+            required
+            variant="standard"
+            value={pickupLocation}
+            onChange={handlePickupLocationChange}
+          />
         </FormControl>
         {!sameLocation && (
           <FormControl fullWidth className="drop-off-location">

@@ -2,7 +2,8 @@ import axios from 'axios'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
 
-export const getNotificationCounter = (userId) => axios.get(`${Env.API_HOST}/api/notification-counter/${encodeURIComponent(userId)}`, { headers: UserService.authHeader() }).then((res) => res.data)
+export const getNotificationCounter = (userId) =>
+  axios.get(`${Env.API_HOST}/api/notification-counter/${encodeURIComponent(userId)}`, { headers: UserService.authHeader() }).then((res) => res.data)
 
 export const notify = (data) =>
   axios

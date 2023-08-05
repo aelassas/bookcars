@@ -145,7 +145,8 @@ export const updateEmailNotifications = (data) =>
       return res.status
     })
 
-export const checkPassword = (id, pass) => axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: authHeader() }).then((res) => res.status)
+export const checkPassword = (id, pass) =>
+  axios.get(`${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`, { headers: authHeader() }).then((res) => res.status)
 
 export const changePassword = (data) =>
   axios

@@ -289,7 +289,16 @@ const SignUp = () => {
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
-                  <OutlinedInput type="text" label={commonStrings.PHONE} error={!phoneValid} value={phone} onBlur={handlePhoneBlur} onChange={handlePhoneChange} required autoComplete="off" />
+                  <OutlinedInput
+                    type="text"
+                    label={commonStrings.PHONE}
+                    error={!phoneValid}
+                    value={phone}
+                    onBlur={handlePhoneBlur}
+                    onChange={handlePhoneChange}
+                    required
+                    autoComplete="off"
+                  />
                   <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
