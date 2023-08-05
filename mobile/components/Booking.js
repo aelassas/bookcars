@@ -30,7 +30,9 @@ const Booking = ({ booking, locale, fr, onCancel }) => {
         <BookingStatus style={styles.status} status={booking.status} />
 
         <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-        <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(format(to, _format, { locale }))})`}</Text>
+        <Text style={styles.detailText}>{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(format(from, _format, { locale }))} - ${Helper.capitalize(
+          format(to, _format, { locale }),
+        )})`}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
         <Text style={styles.detailText}>{booking.pickupLocation.name}</Text>

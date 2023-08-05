@@ -100,7 +100,9 @@ const CarList = (props) => {
           contentContainerStyle={styles.contentContainer}
           style={styles.flatList}
           data={rows}
-          renderItem={({ item: car }) => <Car car={car} fr={fr} from={props.from} to={props.to} pickupLocation={props.pickupLocation} dropOffLocation={props.dropOffLocation} navigation={props.navigation} />}
+          renderItem={({ item: car }) => (
+            <Car car={car} fr={fr} from={props.from} to={props.to} pickupLocation={props.pickupLocation} dropOffLocation={props.dropOffLocation} navigation={props.navigation} />
+          )}
           keyExtractor={(item) => item._id}
           onEndReached={() => setOnScrollEnd(true)}
           onMomentumScrollEnd={() => {

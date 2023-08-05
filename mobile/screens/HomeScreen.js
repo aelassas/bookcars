@@ -170,11 +170,29 @@ const HomeScreen = ({ navigation, route }) => {
               blur={blur}
             />
 
-            <DateTimePicker mode="date" locale={language} style={styles.component} label={i18n.t('FROM_DATE')} value={fromDate} minimumDate={_fromDate} onChange={(date) => setFromDate(date)} onPress={blurLocations} />
+            <DateTimePicker
+              mode="date"
+              locale={language}
+              style={styles.component}
+              label={i18n.t('FROM_DATE')}
+              value={fromDate}
+              minimumDate={_fromDate}
+              onChange={(date) => setFromDate(date)}
+              onPress={blurLocations}
+            />
 
             <DateTimePicker mode="time" locale={language} style={styles.component} label={i18n.t('FROM_TIME')} value={fromTime} onChange={(time) => setFromTime(time)} onPress={blurLocations} />
 
-            <DateTimePicker mode="date" locale={language} style={styles.component} label={i18n.t('TO_DATE')} value={toDate} minimumDate={fromDate} onChange={(date) => setToDate(date)} onPress={blurLocations} />
+            <DateTimePicker
+              mode="date"
+              locale={language}
+              style={styles.component}
+              label={i18n.t('TO_DATE')}
+              value={toDate}
+              minimumDate={fromDate}
+              onChange={(date) => setToDate(date)}
+              onPress={blurLocations}
+            />
 
             <DateTimePicker mode="time" locale={language} style={styles.component} label={i18n.t('TO_TIME')} value={toTime} onChange={(time) => setToTime(time)} onPress={blurLocations} />
 
