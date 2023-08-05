@@ -63,7 +63,18 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
     from: SMTP_FROM,
     to: company.email,
     subject: message,
-    html: '<p>' + strings.HELLO + company.fullName + ',<br><br>' + message + '<br><br>' + Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
+    html:
+      '<p>' +
+      strings.HELLO +
+      company.fullName +
+      ',<br><br>' +
+      message +
+      '<br><br>' +
+      Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`) +
+      '<br><br>' +
+      strings.REGARDS +
+      '<br>' +
+      '</p>',
   }
 
   await Helper.sendMail(mailOptions)
@@ -213,7 +224,18 @@ const notifyDriver = async (booking) => {
     from: SMTP_FROM,
     to: driver.email,
     subject: message,
-    html: '<p>' + strings.HELLO + driver.fullName + ',<br><br>' + message + '<br><br>' + Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`) + '<br><br>' + strings.REGARDS + '<br>' + '</p>',
+    html:
+      '<p>' +
+      strings.HELLO +
+      driver.fullName +
+      ',<br><br>' +
+      message +
+      '<br><br>' +
+      Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`) +
+      '<br><br>' +
+      strings.REGARDS +
+      '<br>' +
+      '</p>',
   }
   await Helper.sendMail(mailOptions)
 
@@ -304,8 +326,23 @@ export const update = async (req, res) => {
         }
       }
 
-      const { company, car, driver, pickupLocation, dropOffLocation, from, to, status, cancellation, amendments, theftProtection, collisionDamageWaiver, fullInsurance, additionalDriver, price } =
-        req.body.booking
+      const {
+        company,
+        car,
+        driver,
+        pickupLocation,
+        dropOffLocation,
+        from,
+        to,
+        status,
+        cancellation,
+        amendments,
+        theftProtection,
+        collisionDamageWaiver,
+        fullInsurance,
+        additionalDriver,
+        price,
+      } = req.body.booking
 
       const previousStatus = booking.status
 
@@ -495,7 +532,11 @@ export const getBookings = async (req, res) => {
       } else {
         keyword = escapeStringRegexp(keyword)
         $match.$and.push({
-          $or: [{ 'company.fullName': { $regex: keyword, $options: options } }, { 'driver.fullName': { $regex: keyword, $options: options } }, { 'car.name': { $regex: keyword, $options: options } }],
+          $or: [
+            { 'company.fullName': { $regex: keyword, $options: options } },
+            { 'driver.fullName': { $regex: keyword, $options: options } },
+            { 'car.name': { $regex: keyword, $options: options } },
+          ],
         })
       }
     }
