@@ -58,7 +58,9 @@ export const update = async (req, res) => {
       const names = req.body
       for (let i = 0; i < names.length; i++) {
         const name = names[i]
-        const locationValue = location.values.filter((value) => value.language === name.language)[0]
+        const locationValue = location.values.filter(
+          (value) => value.language === name.language,
+        )[0]
         if (locationValue) {
           locationValue.value = name.name
           await locationValue.save()
@@ -103,7 +105,9 @@ export const getLocation = async (req, res) => {
     const location = await Location.findById(id).populate('values').lean()
 
     if (location) {
-      location.name = location.values.filter((value) => value.language === req.params.language)[0].value
+      location.name = location.values.filter(
+        (value) => value.language === req.params.language,
+      )[0].value
       return res.json(location)
     } else {
       console.error('[location.getLocation] Location not found:', id)
@@ -155,7 +159,11 @@ export const getLocations = async (req, res) => {
         { $addFields: { name: '$value.value' } },
         {
           $facet: {
-            resultData: [{ $sort: { name: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
+            resultData: [
+              { $sort: { name: 1 } },
+              { $skip: (page - 1) * size },
+              { $limit: size },
+            ],
             pageInfo: [
               {
                 $count: 'totalRecords',
@@ -169,7 +177,10 @@ export const getLocations = async (req, res) => {
 
     return res.json(locations)
   } catch (err) {
-    console.error(`[location.getLocations] ${strings.DB_ERROR} ${req.query.s}`, err)
+    console.error(
+      `[location.getLocations] ${strings.DB_ERROR} ${req.query.s}`,
+      err,
+    )
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }

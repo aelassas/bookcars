@@ -24,7 +24,11 @@ const DB_USERNAME = process.env.BC_DB_USERNAME
 const DB_PASSWORD = process.env.BC_DB_PASSWORD
 const DB_APP_NAME = process.env.BC_DB_APP_NAME
 const DB_NAME = process.env.BC_DB_NAME
-const DB_URI = `mongodb://${encodeURIComponent(DB_USERNAME)}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=${DB_AUTH_SOURCE}&appName=${DB_APP_NAME}`
+const DB_URI = `mongodb://${encodeURIComponent(
+  DB_USERNAME,
+)}:${encodeURIComponent(
+  DB_PASSWORD,
+)}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=${DB_AUTH_SOURCE}&appName=${DB_APP_NAME}`
 
 let options = {}
 if (DB_SSL) {
