@@ -181,7 +181,15 @@ const HomeScreen = ({ navigation, route }) => {
               onPress={blurLocations}
             />
 
-            <DateTimePicker mode="time" locale={language} style={styles.component} label={i18n.t('FROM_TIME')} value={fromTime} onChange={(time) => setFromTime(time)} onPress={blurLocations} />
+            <DateTimePicker
+              mode="time"
+              locale={language}
+              style={styles.component}
+              label={i18n.t('FROM_TIME')}
+              value={fromTime}
+              onChange={(time) => setFromTime(time)}
+              onPress={blurLocations}
+            />
 
             <DateTimePicker
               mode="date"
