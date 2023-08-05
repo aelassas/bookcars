@@ -1,8 +1,4 @@
-*.key
 **/*.key
-*.crt
 **/*.crt
-*.pem
 **/*.pem
-*.pem-chain
 **/*.pem-chain
