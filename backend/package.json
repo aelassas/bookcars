@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.2",
-    "@mui/x-data-grid": "^6.10.2",
+    "@mui/x-data-grid": "^6.11.0",
     "@mui/x-date-pickers": "^6.11.0",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
