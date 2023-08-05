@@ -23,8 +23,7 @@ const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
 const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 
-const getStatusMessage = (lang, msg) =>
-  `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
+const getStatusMessage = (lang, msg) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
 
 export const signup = async (req, res) => {
   const { body } = req
@@ -224,10 +223,7 @@ export const create = async (req, res) => {
         ',<br><br>' +
         strings.ACCOUNT_ACTIVATION_LINK +
         '<br><br>' +
-        Helper.joinURL(
-          user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
-          'activate',
-        ) +
+        Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate') +
         '/?u=' +
         encodeURIComponent(user._id) +
         '&e=' +
@@ -259,13 +255,9 @@ export const checkToken = async (req, res) => {
 
     if (user) {
       if (
-        ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(
-          req.params.type,
-        ) ||
-        (req.params.type === Env.APP_TYPE.BACKEND &&
-          user.type === Env.USER_TYPE.USER) ||
-        (req.params.type === Env.APP_TYPE.FRONTEND &&
-          user.type !== Env.USER_TYPE.USER) ||
+        ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type) ||
+        (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER) ||
+        (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER) ||
         user.active
       ) {
         return res.sendStatus(403)
@@ -317,13 +309,9 @@ export const resend = async (req, res) => {
 
     if (user) {
       if (
-        ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(
-          req.params.type,
-        ) ||
-        (req.params.type === Env.APP_TYPE.BACKEND &&
-          user.type === Env.USER_TYPE.USER) ||
-        (req.params.type === Env.APP_TYPE.FRONTEND &&
-          user.type !== Env.USER_TYPE.USER)
+        ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type) ||
+        (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER) ||
+        (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
       ) {
         return res.sendStatus(403)
       } else {
@@ -342,22 +330,15 @@ export const resend = async (req, res) => {
         const mailOptions = {
           from: SMTP_FROM,
           to: user.email,
-          subject: reset
-            ? strings.PASSWORD_RESET_SUBJECT
-            : strings.ACCOUNT_ACTIVATION_SUBJECT,
+          subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
           html:
             '<p>' +
             strings.HELLO +
             user.fullName +
             ',<br><br>' +
-            (reset
-              ? strings.PASSWORD_RESET_LINK
-              : strings.ACCOUNT_ACTIVATION_LINK) +
+            (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) +
             '<br><br>' +
-            Helper.joinURL(
-              user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
-              reset ? 'reset-password' : 'activate',
-            ) +
+            Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, reset ? 'reset-password' : 'activate') +
             '/?u=' +
             encodeURIComponent(user._id) +
             '&e=' +
@@ -422,20 +403,13 @@ export const signin = async (req, res) => {
       !req.body.password ||
       !user ||
       !user.password ||
-      ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(
-        req.params.type,
-      ) ||
-      (req.params.type === Env.APP_TYPE.BACKEND &&
-        user.type === Env.USER_TYPE.USER) ||
-      (req.params.type === Env.APP_TYPE.FRONTEND &&
-        user.type !== Env.USER_TYPE.USER)
+      ![Env.APP_TYPE.FRONTEND, Env.APP_TYPE.BACKEND].includes(req.params.type) ||
+      (req.params.type === Env.APP_TYPE.BACKEND && user.type === Env.USER_TYPE.USER) ||
+      (req.params.type === Env.APP_TYPE.FRONTEND && user.type !== Env.USER_TYPE.USER)
     ) {
       res.sendStatus(204)
     } else {
-      const passwordMatch = await bcrypt.compare(
-        req.body.password,
-        user.password,
-      )
+      const passwordMatch = await bcrypt.compare(req.body.password, user.password)
 
       if (passwordMatch) {
         const payload = { id: user._id }
@@ -544,39 +518,18 @@ export const confirmEmail = async (req, res) => {
     // token is not found into database i.e. token may have expired
     if (!token) {
       console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
-      return res
-        .status(400)
-        .send(
-          getStatusMessage(
-            user.language,
-            strings.ACCOUNT_ACTIVATION_LINK_EXPIRED,
-          ),
-        )
+      return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
     }
     // if token is found then check valid user
     else {
       // not valid user
       if (!user) {
         console.error('[user.confirmEmail] User not found', req.params)
-        return res
-          .status(401)
-          .send(
-            getStatusMessage(
-              user.language,
-              strings.ACCOUNT_ACTIVATION_LINK_ERROR,
-            ),
-          )
+        return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_ERROR))
       }
       // user is already verified
       else if (user.verified) {
-        return res
-          .status(200)
-          .send(
-            getStatusMessage(
-              user.language,
-              strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED,
-            ),
-          )
+        return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
       }
       // verify user
       else {
@@ -584,11 +537,7 @@ export const confirmEmail = async (req, res) => {
         user.verified = true
         user.verifiedAt = Date.now()
         await user.save()
-        return res
-          .status(200)
-          .send(
-            getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS),
-          )
+        return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS))
       }
     }
   } catch (err) {
@@ -606,25 +555,11 @@ export const resendLink = async (req, res) => {
     // user is not found into database
     if (!user) {
       console.error('[user.resendLink] User not found:', req.params)
-      return res
-        .status(400)
-        .send(
-          getStatusMessage(
-            DEFAULT_LANGUAGE,
-            strings.ACCOUNT_ACTIVATION_RESEND_ERROR,
-          ),
-        )
+      return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
     }
     // user has been already verified
     else if (user.verified) {
-      return res
-        .status(200)
-        .send(
-          getStatusMessage(
-            user.language,
-            strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED,
-          ),
-        )
+      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
     }
     // send verification link
     else {
@@ -659,16 +594,7 @@ export const resendLink = async (req, res) => {
       }
 
       await Helper.sendMail(mailOptions)
-      return res
-        .status(200)
-        .send(
-          getStatusMessage(
-            user.language,
-            strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 +
-              user.email +
-              strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2,
-          ),
-        )
+      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
     }
   } catch (err) {
     console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
@@ -684,24 +610,14 @@ export const update = async (req, res) => {
       console.error('[user.update] User not found:', req.body.email)
       return res.sendStatus(204)
     } else {
-      const {
-        fullName,
-        phone,
-        bio,
-        location,
-        type,
-        birthDate,
-        enableEmailNotifications,
-        payLater,
-      } = req.body
+      const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body
       if (fullName) user.fullName = fullName
       user.phone = phone
       user.location = location
       user.bio = bio
       user.birthDate = birthDate
       if (type) user.type = type
-      if (typeof enableEmailNotifications !== 'undefined')
-        user.enableEmailNotifications = enableEmailNotifications
+      if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications
       if (typeof payLater !== 'undefined') user.payLater = payLater
 
       await user.save()
@@ -726,10 +642,7 @@ export const updateEmailNotifications = async (req, res) => {
       return res.sendStatus(200)
     }
   } catch (err) {
-    console.error(
-      `[user.updateEmailNotifications] ${strings.DB_ERROR} ${req.body}`,
-      err,
-    )
+    console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
@@ -790,18 +703,13 @@ export const createAvatar = async (req, res) => {
       await fs.mkdir(CDN_TEMP, { recursive: true })
     }
 
-    const filename = `${uuid()}_${Date.now()}${path.extname(
-      req.file.originalname,
-    )}`
+    const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(CDN_TEMP, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(
-      `[user.createAvatar] ${strings.DB_ERROR} ${req.file.originalname}`,
-      err,
-    )
+    console.error(`[user.createAvatar] ${strings.DB_ERROR} ${req.file.originalname}`, err)
     return res.status(400).send(strings.ERROR + err)
   }
 }
@@ -825,9 +733,7 @@ export const updateAvatar = async (req, res) => {
         }
       }
 
-      const filename = `${user._id}_${Date.now()}${path.extname(
-        req.file.originalname,
-      )}`
+      const filename = `${user._id}_${Date.now()}${path.extname(req.file.originalname)}`
       const filepath = path.join(CDN, filename)
 
       await fs.writeFile(filepath, req.file.buffer)
@@ -991,11 +897,7 @@ export const getUsers = async (req, res) => {
         },
         {
           $facet: {
-            resultData: [
-              { $sort: { fullName: 1 } },
-              { $skip: (page - 1) * size },
-              { $limit: size },
-            ],
+            resultData: [{ $sort: { fullName: 1 } }, { $skip: (page - 1) * size }, { $limit: size }],
             pageInfo: [
               {
                 $count: 'totalRecords',
