@@ -12,7 +12,16 @@ import Avatar from '../components/Avatar'
 import BookingList from '../components/BookingList'
 import * as Helper from '../common/Helper'
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
-import { LocalGasStation as FuelIcon, AccountTree as GearboxIcon, Person as SeatsIcon, AcUnit as AirconIcon, DirectionsCar as MileageIcon, Check as CheckIcon, Clear as UncheckIcon, LocationOn as LocationIcon } from '@mui/icons-material'
+import {
+  LocalGasStation as FuelIcon,
+  AccountTree as GearboxIcon,
+  Person as SeatsIcon,
+  AcUnit as AirconIcon,
+  DirectionsCar as MileageIcon,
+  Check as CheckIcon,
+  Clear as UncheckIcon,
+  LocationOn as LocationIcon,
+} from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
 import DoorsIcon from '../assets/img/car-door.png'
@@ -133,7 +142,18 @@ const Car = () => {
                 <h2>{car.name}</h2>
               </div>
               <div className="car-img">
-                <Avatar type={Env.RECORD_TYPE.CAR} mode="update" record={car} size="large" readonly={!edit} hideDelete={true} onBeforeUpload={handleBeforeUpload} onChange={handleImageChange} color="disabled" className="avatar-ctn" />
+                <Avatar
+                  type={Env.RECORD_TYPE.CAR}
+                  mode="update"
+                  record={car}
+                  size="large"
+                  readonly={!edit}
+                  hideDelete={true}
+                  onBeforeUpload={handleBeforeUpload}
+                  onChange={handleImageChange}
+                  color="disabled"
+                  className="avatar-ctn"
+                />
                 <div className="car-company">
                   <span className="car-company-logo">
                     <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
@@ -284,7 +304,18 @@ const Car = () => {
             )}
           </div>
           <div className="col-2">
-            <BookingList containerClassName="car" offset={offset} loggedUser={user} companies={companies} statuses={statuses} car={car._id} hideCompanyColumn={true} hideCarColumn={true} hideDates={Env.isMobile()} checkboxSelection={!Env.isMobile()} />
+            <BookingList
+              containerClassName="car"
+              offset={offset}
+              loggedUser={user}
+              companies={companies}
+              statuses={statuses}
+              car={car._id}
+              hideCompanyColumn={true}
+              hideCarColumn={true}
+              hideDates={Env.isMobile()}
+              checkboxSelection={!Env.isMobile()}
+            />
           </div>
         </div>
       )}

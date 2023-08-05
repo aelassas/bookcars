@@ -242,7 +242,18 @@ const UpdateCompany = () => {
         <div className="update-company">
           <Paper className="company-form-update company-form-wrapper" elevation={10}>
             <form onSubmit={handleSubmit}>
-              <Avatar type={Env.RECORD_TYPE.COMPANY} mode="update" record={company} size="large" readonly={false} hideDelete={true} onBeforeUpload={onBeforeUpload} onChange={onAvatarChange} color="disabled" className="avatar-ctn" />
+              <Avatar
+                type={Env.RECORD_TYPE.COMPANY}
+                mode="update"
+                record={company}
+                size="large"
+                readonly={false}
+                hideDelete={true}
+                onBeforeUpload={onBeforeUpload}
+                onChange={onAvatarChange}
+                color="disabled"
+                className="avatar-ctn"
+              />
 
               <div className="info">
                 <InfoIcon />

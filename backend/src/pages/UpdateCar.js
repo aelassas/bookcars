@@ -315,7 +315,19 @@ const UpdateCar = () => {
         <div className="update-car">
           <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
             <form onSubmit={handleSubmit}>
-              <Avatar type={Env.RECORD_TYPE.CAR} mode="update" record={car} hideDelete={true} size="large" readonly={false} onBeforeUpload={handleBeforeUpload} onChange={handleImageChange} onValidate={handleImageValidate} color="disabled" className="avatar-ctn" />
+              <Avatar
+                type={Env.RECORD_TYPE.CAR}
+                mode="update"
+                record={car}
+                hideDelete={true}
+                size="large"
+                readonly={false}
+                onBeforeUpload={handleBeforeUpload}
+                onChange={handleImageChange}
+                onValidate={handleImageValidate}
+                color="disabled"
+                className="avatar-ctn"
+              />
 
               <div className="info">
                 <InfoIcon />
@@ -335,7 +347,15 @@ const UpdateCar = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{strings.MINIMUM_AGE}</InputLabel>
-                <Input type="text" required error={!minimumAgeValid} value={minimumAge} autoComplete="off" onChange={handleMinimumAgeChange} inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }} />
+                <Input
+                  type="text"
+                  required
+                  error={!minimumAgeValid}
+                  value={minimumAge}
+                  autoComplete="off"
+                  onChange={handleMinimumAgeChange}
+                  inputProps={{ inputMode: 'numeric', pattern: '^\\d{2}$' }}
+                />
                 <FormHelperText error={!minimumAgeValid}>{(!minimumAgeValid && strings.MINIMUM_AGE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
 

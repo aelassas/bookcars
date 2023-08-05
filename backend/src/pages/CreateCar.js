@@ -251,7 +251,18 @@ const CreateCar = () => {
         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? null : { display: 'none' }}>
           <h1 className="car-form-title"> {strings.NEW_CAR_HEADING} </h1>
           <form onSubmit={handleSubmit}>
-            <Avatar type={Env.RECORD_TYPE.CAR} mode="create" record={null} size="large" readonly={false} onBeforeUpload={handleBeforeUpload} onChange={handleImageChange} onValidate={handleImageValidate} color="disabled" className="avatar-ctn" />
+            <Avatar
+              type={Env.RECORD_TYPE.CAR}
+              mode="create"
+              record={null}
+              size="large"
+              readonly={false}
+              onBeforeUpload={handleBeforeUpload}
+              onChange={handleImageChange}
+              onValidate={handleImageValidate}
+              color="disabled"
+              className="avatar-ctn"
+            />
 
             <div className="info">
               <InfoIcon />

@@ -21,7 +21,25 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   )
 })
 
-const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selectedOptions, key, required, options, ListboxProps, onFocus, onInputChange, onClear, loading, multiple, type, variant, onOpen, readOnly }) => {
+const MultipleSelect = ({
+  label,
+  callbackFromMultipleSelect,
+  reference,
+  selectedOptions,
+  key,
+  required,
+  options,
+  ListboxProps,
+  onFocus,
+  onInputChange,
+  onClear,
+  loading,
+  multiple,
+  type,
+  variant,
+  onOpen,
+  readOnly,
+}) => {
   const [values, setValues] = useState([])
   const [inputValue, setInputValue] = useState('')
 
@@ -90,7 +108,9 @@ const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selected
                   ...params.InputProps,
                   startAdornment: (
                     <>
-                      <InputAdornment position="start">{option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" /> : <AccountCircle className="avatar-small suo" color="disabled" />}</InputAdornment>
+                      <InputAdornment position="start">
+                        {option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" /> : <AccountCircle className="avatar-small suo" color="disabled" />}
+                      </InputAdornment>
                       {params.InputProps.startAdornment}
                     </>
                   ),
@@ -188,7 +208,9 @@ const MultipleSelect = ({ label, callbackFromMultipleSelect, reference, selected
           if (type === Env.RECORD_TYPE.USER) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className="option-image">{option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}</span>
+                <span className="option-image">
+                  {option.image ? <Avatar src={Helper.joinURL(Env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}
+                </span>
                 <span className="option-name">{option.name}</span>
               </li>
             )

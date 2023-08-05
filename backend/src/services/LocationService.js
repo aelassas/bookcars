@@ -32,7 +32,8 @@ export const deleteLocation = (id) =>
 
 export const getLocation = (id) => axios.get(`${Env.API_HOST}/api/location/${encodeURIComponent(id)}/${UserService.getLanguage()}`, { headers: UserService.authHeader() }).then((res) => res.data)
 
-export const getLocations = (keyword, page, size) => axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/${UserService.getLanguage()}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then((res) => res.data)
+export const getLocations = (keyword, page, size) =>
+  axios.get(`${Env.API_HOST}/api/locations/${page}/${size}/${UserService.getLanguage()}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then((res) => res.data)
 
 export const check = (id) =>
   axios

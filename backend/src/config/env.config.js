@@ -73,7 +73,10 @@ const Env = {
   // If you choose CLASSIC, you will get a classic pagination with next and previous buttons on desktop and infinite scroll on mobile.
   // If you choose INFINITE_SCROLL, you will get infinite scroll on desktop and mobile.
   // Defaults to CLASSIC
-  PAGINATION_MODE: (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL ? Const.PAGINATION_MODE.INFINITE_SCROLL : Const.PAGINATION_MODE.CLASSIC,
+  PAGINATION_MODE:
+    (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
+      ? Const.PAGINATION_MODE.INFINITE_SCROLL
+      : Const.PAGINATION_MODE.CLASSIC,
 }
 
 export default Env

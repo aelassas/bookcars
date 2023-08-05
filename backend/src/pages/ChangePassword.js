@@ -133,13 +133,23 @@ const ChangePassword = () => {
                 {strings.NEW_PASSWORD}
               </InputLabel>
               <Input id="password-new" onChange={handleNewPasswordChange} type="password" value={newPassword} error={newPasswordError || passwordLengthError} required />
-              <FormHelperText error={newPasswordError || passwordLengthError}>{(newPasswordError && strings.NEW_PASSWORD_ERROR) || (passwordLengthError && commonStrings.PASSWORD_ERROR) || ''}</FormHelperText>
+              <FormHelperText error={newPasswordError || passwordLengthError}>
+                {(newPasswordError && strings.NEW_PASSWORD_ERROR) || (passwordLengthError && commonStrings.PASSWORD_ERROR) || ''}
+              </FormHelperText>
             </FormControl>
             <FormControl fullWidth margin="dense" error={confirmPasswordError}>
               <InputLabel error={confirmPasswordError} className="required">
                 {commonStrings.CONFIRM_PASSWORD}
               </InputLabel>
-              <Input id="password-confirm" onChange={handleConfirmPasswordChange} onKeyDown={handleOnConfirmPasswordKeyDown} error={confirmPasswordError} type="password" value={confirmPassword} required />
+              <Input
+                id="password-confirm"
+                onChange={handleConfirmPasswordChange}
+                onKeyDown={handleOnConfirmPasswordKeyDown}
+                error={confirmPasswordError}
+                type="password"
+                value={confirmPassword}
+                required
+              />
               <FormHelperText error={confirmPasswordError}>{confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH}</FormHelperText>
             </FormControl>
             <div className="buttons">

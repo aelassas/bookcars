@@ -85,7 +85,12 @@ const CompanyFilter = (props) => {
 
   return (
     suppliers.length > 1 && (
-      <Accordion title={commonStrings.SUPPLIER} collapse={props.collapse} offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)} className={`${props.className ? `${props.className} ` : ''}company-filter`}>
+      <Accordion
+        title={commonStrings.SUPPLIER}
+        collapse={props.collapse}
+        offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
+        className={`${props.className ? `${props.className} ` : ''}company-filter`}
+      >
         <ul className="company-list">
           {suppliers.map((supplier, index) => (
             <li key={supplier._id}>

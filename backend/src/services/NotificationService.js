@@ -11,10 +11,14 @@ export const notify = (data) =>
     })
     .then((res) => res.status)
 
-export const markAsRead = (userId, ids) => axios.post(`${Env.API_HOST}/api/mark-notifications-as-read/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
+export const markAsRead = (userId, ids) =>
+  axios.post(`${Env.API_HOST}/api/mark-notifications-as-read/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
 
-export const markAsUnread = (userId, ids) => axios.post(`${Env.API_HOST}/api/mark-notifications-as-unread/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
+export const markAsUnread = (userId, ids) =>
+  axios.post(`${Env.API_HOST}/api/mark-notifications-as-unread/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
 
-export const deleteNotifications = (userId, ids) => axios.post(`${Env.API_HOST}/api/delete-notifications/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
+export const deleteNotifications = (userId, ids) =>
+  axios.post(`${Env.API_HOST}/api/delete-notifications/${encodeURIComponent(userId)}`, { ids }, { headers: UserService.authHeader() }).then((res) => res.status)
 
-export const getNotifications = (userId, page) => axios.get(`${Env.API_HOST}/api/notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`, { headers: UserService.authHeader() }).then((res) => res.data)
+export const getNotifications = (userId, page) =>
+  axios.get(`${Env.API_HOST}/api/notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`, { headers: UserService.authHeader() }).then((res) => res.data)

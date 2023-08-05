@@ -6,7 +6,19 @@ import { strings } from '../lang/cars'
 import * as Helper from '../common/Helper'
 import * as CarService from '../services/CarService'
 import { IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Card, CardContent, Typography } from '@mui/material'
-import { LocalGasStation as FuelIcon, AccountTree as GearboxIcon, Person as SeatsIcon, AcUnit as AirconIcon, DirectionsCar as MileageIcon, Check as CheckIcon, Clear as UncheckIcon, Visibility as ViewIcon, Edit as EditIcon, Delete as DeleteIcon, Info as InfoIcon } from '@mui/icons-material'
+import {
+  LocalGasStation as FuelIcon,
+  AccountTree as GearboxIcon,
+  Person as SeatsIcon,
+  AcUnit as AirconIcon,
+  DirectionsCar as MileageIcon,
+  Check as CheckIcon,
+  Clear as UncheckIcon,
+  Visibility as ViewIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Info as InfoIcon,
+} from '@mui/icons-material'
 import Pager from './Pager'
 
 import DoorsIcon from '../assets/img/car-door.png'
@@ -329,7 +341,10 @@ const CarList = (props) => {
                           </Tooltip>
                         </li>
                         <li>
-                          <Tooltip title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)} placement="left">
+                          <Tooltip
+                            title={props.booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                            placement="left"
+                          >
                             <div className="car-info-list-item">
                               {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
                               <span className="car-info-list-text">{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
@@ -410,7 +425,9 @@ const CarList = (props) => {
             </DialogActions>
           </Dialog>
         </section>
-        {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && <Pager page={page} pageSize={Env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />}
+        {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && (
+          <Pager page={page} pageSize={Env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />
+        )}
       </>
     )
   )
