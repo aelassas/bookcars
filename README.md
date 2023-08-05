@@ -13,7 +13,7 @@ From the backend, admin users can create and manage suppliers, cars, locations, 
 
 When an admin user creates a new supplier, the supplier will receive an automatic email for creating his account to access the backend so he can manage his car fleet and bookings.
 
-From the frontend and the mobile app, users can sign up, search for available cars depending on pickup and drop-off locations, dates and time booking, choose a car and checkout.
+From the frontend and the mobile app, users can sign up, search for available cars depending on pickup and drop-off points and time, choose a car and checkout.
 
 <img src="https://bookcars.github.io/content/docker.png" alt="" width="220" />
 
@@ -49,7 +49,7 @@ In this section, you'll see the main pages of the frontend, the backend and the 
 
 From the frontend, the user can search for available cars, choose a car and checkout.
 
-Below is the main page of the frontend where the user can choose a pickup and drop-off locations, dates and time booking, and search for available cars.
+Below is the main page of the frontend where the user can choose pickup and drop-off points and time, and search for available cars.
 
 ![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-1.png?raw=true)
 
@@ -87,7 +87,7 @@ From the mobile app, the user can search for available cars, choose a car and ch
 
 The user can also receive push notifications, if the status of his booking is updated.
 
-Below is the main page of the mobile app where the user can choose pickup and drop-off locations, dates and time booking, and search for available cars.
+Below is the main page of the mobile app where the user can choose pickup and drop-off points and time, and search for available cars.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-1.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-2.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
