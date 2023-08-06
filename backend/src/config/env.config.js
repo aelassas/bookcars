@@ -5,7 +5,7 @@ const Env = {
 
   APP_TYPE: process.env.REACT_APP_BC_APP_TYPE || 'backend',
   API_HOST: process.env.REACT_APP_BC_API_HOST,
-  LANGUAGES: ['fr', 'en'],
+  LANGUAGES: ['fr', 'en'], // ISO 639-1 language codes
   _LANGUAGES: [
     {
       code: 'fr',
