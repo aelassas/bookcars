@@ -96,7 +96,7 @@ export const getLanguage = async () => {
     return user.language
   } else {
     let lang = await AsyncStorage.getString('bc-language')
-    
+
     if (lang && lang.length === 2) {
       return lang
     }
