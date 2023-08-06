@@ -91,11 +91,13 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [_birthDateRequired, set_BirthDateRequired] = useState(false)
   const [_birthDateValid, set_BirthDateValid] = useState(true)
 
+  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [adFullName, setAdFullName] = useState(false)
   const [adEmail, setAdEmail] = useState(false)
   const [adPhone, setAdPhone] = useState(false)
   const [adBirthDate, setAdBirthDate] = useState(false)
-  const adRequired = adFullName || adEmail || adPhone || adBirthDate
+
+  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
 
   const adValidate = (val) => !!val
 
@@ -677,6 +679,8 @@ const CheckoutScreen = ({ navigation, route }) => {
     const price = Helper.price(car, from, to, options)
     setAdditionalDriver(checked)
     setPrice(price)
+
+    setAdManuallyChecked(checked)
   }
 
   const _error = (err) => {
