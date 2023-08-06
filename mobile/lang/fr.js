@@ -1,7 +1,7 @@
 import Env from '../config/env.config'
 import { COPYRIGHT, REGISTERED } from './copyright'
 
-const fr = {
+export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",
   CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
   UPDATED: 'Modifications effectuées avec succès.',

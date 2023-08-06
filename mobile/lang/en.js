@@ -1,7 +1,7 @@
 import Env from '../config/env.config'
 import { COPYRIGHT, REGISTERED } from './copyright'
 
-const en = {
+export const en = {
   GENERIC_ERROR: 'An unhandled error occurred.',
   CHANGE_LANGUAGE_ERROR: 'An error occurred while changing language.',
   UPDATED: 'Changes made successfully.',
@@ -211,5 +211,3 @@ const en = {
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
 }
-
-export default en
