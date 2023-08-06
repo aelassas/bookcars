@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     SIGN_UP_HEADING: 'Inscription',
     TOS_SIGN_UP: "J'ai lu et j'accepte les conditions générales d'utilisation.",
@@ -19,3 +19,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

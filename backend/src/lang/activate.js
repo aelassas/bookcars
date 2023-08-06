@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     ACTIVATE_HEADING: 'Activation du compte',
     TOKEN_EXPIRED: "Votre lien d'activation du compte a expiré.",
@@ -15,3 +15,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

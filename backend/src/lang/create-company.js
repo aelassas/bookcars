@@ -2,7 +2,7 @@ import LocalizedStrings from 'react-localization'
 import Env from '../config/env.config'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     CREATE_COMPANY_HEADING: 'Nouveau fournisseur',
     INVALID_COMPANY_NAME: 'Ce fournisseur existe déjà.',
@@ -18,3 +18,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

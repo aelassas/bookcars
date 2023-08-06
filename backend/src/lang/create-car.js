@@ -2,7 +2,7 @@ import LocalizedStrings from 'react-localization'
 import Env from '../config/env.config'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     NEW_CAR_HEADING: 'Nouvelle voiture',
     NAME: 'Nom',
@@ -40,3 +40,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

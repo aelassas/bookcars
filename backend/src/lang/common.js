@@ -2,7 +2,7 @@ import LocalizedStrings from 'react-localization'
 import Env from '../config/env.config'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     GENERIC_ERROR: "Une erreur non gérée s'est produite.",
     CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite lors du changement de langue.",
@@ -154,3 +154,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }
