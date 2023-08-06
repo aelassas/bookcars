@@ -3,6 +3,7 @@ import Env from '../config/env.config'
 import * as AsyncStorage from '../common/AsyncStorage'
 import * as AxiosHelper from '../common/AxiosHelper'
 import { Platform } from 'react-native'
+import * as Localization from 'expo-localization'
 
 AxiosHelper.init(axios)
 
@@ -94,11 +95,14 @@ export const getLanguage = async () => {
   if (user && user.language) {
     return user.language
   } else {
-    const lang = await AsyncStorage.getString('bc-language')
+    let lang = await AsyncStorage.getString('bc-language')
+    
     if (lang && lang.length === 2) {
       return lang
     }
-    return Env.DEFAULT_LANGUAGE
+
+    lang = Localization.locale.indexOf(Env.LANGUAGE.FR) > -1 ? Env.LANGUAGE.FR : Env.DEFAULT_LANGUAGE
+    return lang
   }
 }
 
