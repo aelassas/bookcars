@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     SETTINGS_UPDATED: 'Paramètres modifiés avec succès.',
     NETWORK_SETTINGS: 'Paramètres Réseau',
@@ -15,3 +15,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

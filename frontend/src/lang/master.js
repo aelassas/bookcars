@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     VALIDATE_EMAIL: "Un e-mail de validation a été envoyé à votre adresse e-mail. Veuillez vérifier votre boîte aux lettres et valider votre compte en cliquant sur le lien dans l'e-mail. Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
     RESEND: 'Renvoyer',
@@ -17,3 +17,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

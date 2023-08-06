@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     SIGN_IN_HEADING: 'Connexion',
     SIGN_IN: 'Se connecter',
@@ -21,3 +21,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

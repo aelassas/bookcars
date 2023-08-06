@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     EMPTY_LIST: 'Pas de notifications',
     VIEW: 'Consulter',
@@ -27,3 +27,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

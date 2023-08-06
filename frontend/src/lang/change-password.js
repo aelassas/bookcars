@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     CHANGE_PASSWORD_HEADING: 'Modification du mot de passe',
     CURRENT_PASSWORD: 'Mot de passe actuel',
@@ -23,3 +23,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

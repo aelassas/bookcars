@@ -3,7 +3,7 @@ import * as LangHelper from '../common/LangHelper'
 
 const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     DROP_OFF: 'Restituer au même endroit',
     COPYRIGHT_PART1: COPYRIGHT_PART1,
@@ -19,3 +19,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }

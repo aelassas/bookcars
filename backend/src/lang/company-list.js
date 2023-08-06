@@ -1,7 +1,7 @@
 import LocalizedStrings from 'react-localization'
 import * as LangHelper from '../common/LangHelper'
 
-export const strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   fr: {
     EMPTY_LIST: 'Pas de fournisseurs.',
     VIEW_COMPANY: 'Voir le profil de ce fournisseur',
@@ -15,3 +15,4 @@ export const strings = new LocalizedStrings({
 })
 
 LangHelper.setLanguage(strings)
+export { strings }
