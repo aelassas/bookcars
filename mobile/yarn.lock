@@ -59,7 +59,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.12.9, @babel/core@npm:^7.13.16, @babel/core@npm:^7.20.0":
+"@babel/core@npm:^7.13.16, @babel/core@npm:^7.20.0, @babel/core@npm:^7.22.9":
   version: 7.22.9
   resolution: "@babel/core@npm:7.22.9"
   dependencies:
@@ -3380,7 +3380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios-retry@npm:^3.5.1":
+"axios-retry@npm:^3.6.0":
   version: 3.6.0
   resolution: "axios-retry@npm:3.6.0"
   dependencies:
@@ -3572,6 +3572,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:*":
+  version: 9.1.1
+  resolution: "bignumber.js@npm:9.1.1"
+  checksum: ad243b7e2f9120b112d670bb3d674128f0bd2ca1745b0a6c9df0433bd2c0252c43e6315d944c2ac07b4c639e7496b425e46842773cf89c6a2dcd4f31e5c4b11e
+  languageName: node
+  linkType: hard
+
 "bl@npm:^4.1.0":
   version: 4.1.0
   resolution: "bl@npm:4.1.0"
@@ -3614,17 +3621,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bookcars@workspace:."
   dependencies:
-    "@babel/core": ^7.12.9
+    "@babel/core": ^7.22.9
     "@react-native-async-storage/async-storage": 1.18.2
     "@react-native-community/datetimepicker": 7.2.0
     "@react-navigation/drawer": ^6.6.3
     "@react-navigation/native": ^6.1.7
     "@react-navigation/native-stack": ^6.9.13
     axios: ^1.4.0
-    axios-retry: ^3.5.1
+    axios-retry: ^3.6.0
     date-fns: ^2.30.0
     eslint: latest
-    eslint-config-prettier: ^8.10.0
+    eslint-config-prettier: ^9.0.0
     eslint-plugin-prettier: ^5.0.0
     eslint-plugin-react: latest
     eslint-plugin-react-hooks: ^4.6.0
@@ -3638,7 +3645,7 @@ __metadata:
     expo-splash-screen: ~0.20.5
     expo-status-bar: ~1.6.0
     expo-updates: ~0.18.11
-    i18n-js: ^3.9.2
+    i18n-js: 4.3.0
     lodash.debounce: ^4.0.8
     mime: ^3.0.0
     prettier: ^3.0.1
@@ -3646,16 +3653,16 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.72.3
-    react-native-dotenv: ^3.3.1
-    react-native-gesture-handler: ~2.12.0
-    react-native-paper: ^5.9.1
+    react-native-dotenv: ^3.4.9
+    react-native-gesture-handler: 2.12.1
+    react-native-paper: ^5.10.0
     react-native-reanimated: ~3.3.0
-    react-native-root-toast: ^3.4.0
+    react-native-root-toast: ^3.4.1
     react-native-safe-area-context: 4.6.3
     react-native-screens: ~3.22.0
     react-native-size-matters: ^0.4.0
-    react-native-web: ~0.19.6
-    validator: ^13.9.0
+    react-native-web: ~0.19.7
+    validator: ^13.11.0
   languageName: unknown
   linkType: soft
 
@@ -4892,14 +4899,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^8.10.0":
-  version: 8.10.0
-  resolution: "eslint-config-prettier@npm:8.10.0"
+"eslint-config-prettier@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "eslint-config-prettier@npm:9.0.0"
   peerDependencies:
     eslint: ">=7.0.0"
   bin:
     eslint-config-prettier: bin/cli.js
-  checksum: 153266badd477e49b0759816246b2132f1dbdb6c7f313ca60a9af5822fd1071c2bc5684a3720d78b725452bbac04bb130878b2513aea5e72b1b792de5a69fec8
+  checksum: 362e991b6cb343f79362bada2d97c202e5303e6865888918a7445c555fb75e4c078b01278e90be98aa98ae22f8597d8e93d48314bec6824f540f7efcab3ce451
   languageName: node
   linkType: hard
 
@@ -6275,10 +6282,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18n-js@npm:^3.9.2":
-  version: 3.9.2
-  resolution: "i18n-js@npm:3.9.2"
-  checksum: b405ad0861dbd57a8757811dcee791e8526a705d67c4a4353e27c924fa2c3422130fba16a21875bd89be871c86ef82f26212b002ba527c09956ff230c47e5026
+"i18n-js@npm:4.3.0":
+  version: 4.3.0
+  resolution: "i18n-js@npm:4.3.0"
+  dependencies:
+    bignumber.js: "*"
+    make-plural: "*"
+  checksum: 085f6f55b4ec87d326f96ea8664417c9305f7b0a7519073a2d23bca4b8da595c014ffa13c522e90b0ce1e0b5b3d04f4e23920732829a0a1837b1486a0a14aee2
   languageName: node
   linkType: hard
 
@@ -7485,6 +7495,13 @@ __metadata:
     socks-proxy-agent: ^7.0.0
     ssri: ^10.0.0
   checksum: 7268bf274a0f6dcf0343829489a4506603ff34bd0649c12058753900b0eb29191dce5dba12680719a5d0a983d3e57810f594a12f3c18494e93a1fbc6348a4540
+  languageName: node
+  linkType: hard
+
+"make-plural@npm:*":
+  version: 7.3.0
+  resolution: "make-plural@npm:7.3.0"
+  checksum: bb39b4b77533f0d5fb94eec128340b54dda8c1707d6b0a98c148e5d7bc23094e123f88275a61573fa31dc2f5d7352215cee0df523cd69b5d8fcb3969a2bcf8f8
   languageName: node
   linkType: hard
 
@@ -9191,7 +9208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-dotenv@npm:^3.3.1":
+"react-native-dotenv@npm:^3.4.9":
   version: 3.4.9
   resolution: "react-native-dotenv@npm:3.4.9"
   dependencies:
@@ -9202,7 +9219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:~2.12.0":
+"react-native-gesture-handler@npm:2.12.1":
   version: 2.12.1
   resolution: "react-native-gesture-handler@npm:2.12.1"
   dependencies:
@@ -9218,7 +9235,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-paper@npm:^5.9.1":
+"react-native-paper@npm:^5.10.0":
   version: 5.10.0
   resolution: "react-native-paper@npm:5.10.0"
   dependencies:
@@ -9262,7 +9279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-root-toast@npm:^3.4.0":
+"react-native-root-toast@npm:^3.4.1":
   version: 3.4.1
   resolution: "react-native-root-toast@npm:3.4.1"
   dependencies:
@@ -9307,7 +9324,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-web@npm:~0.19.6":
+"react-native-web@npm:~0.19.7":
   version: 0.19.7
   resolution: "react-native-web@npm:0.19.7"
   dependencies:
@@ -11116,10 +11133,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validator@npm:^13.9.0":
-  version: 13.9.0
-  resolution: "validator@npm:13.9.0"
-  checksum: e2c936f041f61faa42bafd17c6faddf939498666cd82e88d733621c286893730b008959f4cb12ab3e236148a4f3805c30b85e3dcf5e0efd8b0cbcd36c02bfc0c
+"validator@npm:^13.11.0":
+  version: 13.11.0
+  resolution: "validator@npm:13.11.0"
+  checksum: d1e0c27022681420756da25bc03eb08d5f0c66fb008f8ff02ebc95812b77c6be6e03d3bd05cf80ca702e23eeb73dadd66b4b3683173ea2a0bc7cc72820bee131
   languageName: node
   linkType: hard
 

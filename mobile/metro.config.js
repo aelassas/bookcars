@@ -1,4 +1,7 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
+// Learn more https://docs.expo.io/guides/cust  omizing-metro
 const { getDefaultConfig } = require('expo/metro-config')
 
-module.exports = getDefaultConfig(__dirname)
+const config = getDefaultConfig(__dirname)
+config.resolver.sourceExts.push('mjs')
+
+module.exports = config
