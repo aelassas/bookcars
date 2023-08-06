@@ -75,11 +75,12 @@ const Checkout = () => {
   const [_birthDateValid, set_BirthDateValid] = useState(true)
   const [payLater, setPayLater] = useState(false)
 
+  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [adFullName, setAdFullName] = useState(false)
   const [adEmail, setAdEmail] = useState(false)
   const [adPhone, setAdPhone] = useState(false)
   const [adBirthDate, setAdBirthDate] = useState(false)
-  const adRequired = adFullName || adEmail || adPhone || adBirthDate
+  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
 
   const adValidate = (val) => !!val
 
@@ -193,6 +194,7 @@ const Checkout = () => {
 
     setAdditionalDriver(additionalDriver)
     setPrice(price)
+    setAdManuallyChecked(additionalDriver)
   }
 
   const handleOnChangeFullName = (e) => {

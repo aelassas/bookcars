@@ -679,7 +679,6 @@ const CheckoutScreen = ({ navigation, route }) => {
     const price = Helper.price(car, from, to, options)
     setAdditionalDriver(checked)
     setPrice(price)
-
     setAdManuallyChecked(checked)
   }
 
