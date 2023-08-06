@@ -4,4 +4,5 @@ import fr from './fr'
 
 const i18n = new I18n({ en, fr })
 i18n.enableFallback = true
+
 export default i18n
