@@ -1,6 +1,4 @@
 **/.git
-**/.svn
-**/.hg
 **/node_modules
 lang/en.js
 lang/fr.js
