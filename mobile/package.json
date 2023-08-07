@@ -16,7 +16,8 @@
     "eas:config": "eas build:configure",
     "optimize": "npx expo-optimize --save",
     "lint": "eslint --ext .js,.jsx .",
-    "prettier": "prettier --write ."
+    "prettier:check": "prettier --check .",
+    "prettier:format": "prettier --write ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
