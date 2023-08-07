@@ -2,4 +2,5 @@
 **/.svn
 **/.hg
 **/node_modules
-lang/
+lang/en.js
+lang/fr.js
