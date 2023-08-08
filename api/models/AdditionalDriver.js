@@ -1,7 +1,7 @@
-import validator from 'validator';
-import mongoose from 'mongoose';
+import validator from 'validator'
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const additionalDriverSchema = new Schema(
   {
@@ -25,11 +25,11 @@ const additionalDriverSchema = new Schema(
         validator: (value) => {
           // Check if value is empty then return true.
           if (!value) {
-            return true;
+            return true
           }
 
           // If value is empty will not validate for mobile phone.
-          return validator.isMobilePhone(value);
+          return validator.isMobilePhone(value)
         },
         message: '{VALUE} is not valid',
       },
@@ -45,16 +45,16 @@ const additionalDriverSchema = new Schema(
     strict: true,
     collection: 'AdditionalDriver',
   },
-);
+)
 
-const additionalDriverModel = mongoose.model('AdditionalDriver', additionalDriverSchema);
+const additionalDriverModel = mongoose.model('AdditionalDriver', additionalDriverSchema)
 
 additionalDriverModel.on('index', (err) => {
   if (err) {
-    console.error('AdditionalDriver index error: %s', err);
+    console.error('AdditionalDriver index error: %s', err)
   } else {
-    console.info('AdditionalDriver indexing complete');
+    console.info('AdditionalDriver indexing complete')
   }
-});
+})
 
-export default additionalDriverModel;
+export default additionalDriverModel

@@ -5,4 +5,4 @@ export default {
   getSupplier: '/api/supplier/:id',
   getSuppliers: '/api/suppliers/:page/:size',
   getAllSuppliers: '/api/all-suppliers',
-};
+}

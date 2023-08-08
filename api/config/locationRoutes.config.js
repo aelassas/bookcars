@@ -6,4 +6,4 @@ export default {
   getLocation: '/api/location/:id/:language',
   getLocations: '/api/locations/:page/:size/:language',
   checkLocation: '/api/check-location/:id',
-};
+}

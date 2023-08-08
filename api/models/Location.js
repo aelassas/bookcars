@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const locationSchema = new Schema(
   {
@@ -15,16 +15,16 @@ const locationSchema = new Schema(
     strict: true,
     collection: 'Location',
   },
-);
+)
 
-const locationModel = mongoose.model('Location', locationSchema);
+const locationModel = mongoose.model('Location', locationSchema)
 
 locationModel.on('index', (err) => {
   if (err) {
-    console.error('Location index error: %s', err);
+    console.error('Location index error: %s', err)
   } else {
-    console.info('Location indexing complete');
+    console.info('Location indexing complete')
   }
-});
+})
 
-export default locationModel;
+export default locationModel
