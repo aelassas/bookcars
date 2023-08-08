@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
-import Env from '../config/env.config.js'
+import mongoose from 'mongoose';
+import Env from '../config/env.config.js';
 
-const MINIMUM_AGE = parseInt(process.env.BC_MINIMUM_AGE)
+const MINIMUM_AGE = parseInt(process.env.BC_MINIMUM_AGE);
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const carSchema = new Schema(
   {
@@ -114,16 +114,16 @@ const carSchema = new Schema(
     strict: true,
     collection: 'Car',
   },
-)
+);
 
-const carModel = mongoose.model('Car', carSchema)
+const carModel = mongoose.model('Car', carSchema);
 
 carModel.on('index', (err) => {
   if (err) {
-    console.error('Car index error: %s', err)
+    console.error('Car index error: %s', err);
   } else {
-    console.info('Car indexing complete')
+    console.info('Car indexing complete');
   }
-})
+});
 
-export default carModel
+export default carModel;

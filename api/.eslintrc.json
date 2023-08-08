@@ -10,6 +10,7 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "semi": ["warn", "always"],
     "prettier/prettier": "warn"
   }
 }

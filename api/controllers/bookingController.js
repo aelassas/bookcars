@@ -1,63 +1,63 @@
-import strings from '../config/app.config.js'
-import Booking from '../models/Booking.js'
-import User from '../models/User.js'
-import Token from '../models/Token.js'
-import Car from '../models/Car.js'
-import Location from '../models/Location.js'
-import Notification from '../models/Notification.js'
-import NotificationCounter from '../models/NotificationCounter.js'
-import PushNotification from '../models/PushNotification.js'
-import AdditionalDriver from '../models/AdditionalDriver.js'
-import mongoose from 'mongoose'
-import escapeStringRegexp from 'escape-string-regexp'
-import { v1 as uuid } from 'uuid'
-import { Expo } from 'expo-server-sdk'
-import * as Helper from '../common/Helper.js'
+import strings from '../config/app.config.js';
+import Booking from '../models/Booking.js';
+import User from '../models/User.js';
+import Token from '../models/Token.js';
+import Car from '../models/Car.js';
+import Location from '../models/Location.js';
+import Notification from '../models/Notification.js';
+import NotificationCounter from '../models/NotificationCounter.js';
+import PushNotification from '../models/PushNotification.js';
+import AdditionalDriver from '../models/AdditionalDriver.js';
+import mongoose from 'mongoose';
+import escapeStringRegexp from 'escape-string-regexp';
+import { v1 as uuid } from 'uuid';
+import { Expo } from 'expo-server-sdk';
+import * as Helper from '../common/Helper.js';
 
-const SMTP_FROM = process.env.BC_SMTP_FROM
-const BACKEND_HOST = process.env.BC_BACKEND_HOST
-const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
-const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN
+const SMTP_FROM = process.env.BC_SMTP_FROM;
+const BACKEND_HOST = process.env.BC_BACKEND_HOST;
+const FRONTEND_HOST = process.env.BC_FRONTEND_HOST;
+const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN;
 
 export const create = async (req, res) => {
   try {
     if (req.body.booking.additionalDriver) {
-      const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
-      await additionalDriver.save()
-      req.body.booking._additionalDriver = additionalDriver._id
+      const additionalDriver = new AdditionalDriver(req.body.additionalDriver);
+      await additionalDriver.save();
+      req.body.booking._additionalDriver = additionalDriver._id;
     }
 
-    const booking = new Booking(req.body.booking)
+    const booking = new Booking(req.body.booking);
 
-    await booking.save()
-    return res.json(booking)
+    await booking.save();
+    return res.json(booking);
   } catch (err) {
-    console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 const notifySupplier = async (user, booking, company, notificationMessage) => {
   // notification
-  const message = `${user.fullName} ${notificationMessage} ${booking._id}.`
+  const message = `${user.fullName} ${notificationMessage} ${booking._id}.`;
   const notification = new Notification({
     user: company._id,
     message,
     booking: booking._id,
-  })
+  });
 
-  await notification.save()
-  let counter = await NotificationCounter.findOne({ user: company._id })
+  await notification.save();
+  let counter = await NotificationCounter.findOne({ user: company._id });
   if (counter) {
-    counter.count++
-    await counter.save()
+    counter.count++;
+    await counter.save();
   } else {
-    counter = new NotificationCounter({ user: company._id, count: 1 })
-    await counter.save()
+    counter = new NotificationCounter({ user: company._id, count: 1 });
+    await counter.save();
   }
 
   // mail
-  strings.setLanguage(company.language)
+  strings.setLanguage(company.language);
 
   const mailOptions = {
     from: SMTP_FROM,
@@ -75,27 +75,27 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
       strings.REGARDS +
       '<br>' +
       '</p>',
-  }
+  };
 
-  await Helper.sendMail(mailOptions)
-}
+  await Helper.sendMail(mailOptions);
+};
 
 export const book = async (req, res) => {
   try {
-    let user
-    const { driver } = req.body
+    let user;
+    const { driver } = req.body;
 
     if (driver) {
-      driver.verified = false
-      driver.blacklisted = false
+      driver.verified = false;
+      driver.blacklisted = false;
 
-      user = new User(driver)
-      await user.save()
+      user = new User(driver);
+      await user.save();
 
-      const token = new Token({ user: user._id, token: uuid() })
-      await token.save()
+      const token = new Token({ user: user._id, token: uuid() });
+      await token.save();
 
-      strings.setLanguage(user.language)
+      strings.setLanguage(user.language);
 
       const mailOptions = {
         from: SMTP_FROM,
@@ -119,27 +119,27 @@ export const book = async (req, res) => {
           strings.REGARDS +
           '<br>' +
           '</p>',
-      }
-      await Helper.sendMail(mailOptions)
+      };
+      await Helper.sendMail(mailOptions);
 
-      req.body.booking.driver = user._id
+      req.body.booking.driver = user._id;
     } else {
-      user = await User.findById(req.body.booking.driver)
-      strings.setLanguage(user.language)
+      user = await User.findById(req.body.booking.driver);
+      strings.setLanguage(user.language);
     }
 
     // additionalDriver
     if (req.body.booking.additionalDriver && req.body.additionalDriver) {
-      const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
-      await additionalDriver.save()
-      req.body.booking._additionalDriver = additionalDriver._id
+      const additionalDriver = new AdditionalDriver(req.body.additionalDriver);
+      await additionalDriver.save();
+      req.body.booking._additionalDriver = additionalDriver._id;
     }
 
-    const booking = new Booking(req.body.booking)
+    const booking = new Booking(req.body.booking);
 
-    await booking.save()
+    await booking.save();
 
-    const locale = user.language === 'fr' ? 'fr-FR' : 'en-US'
+    const locale = user.language === 'fr' ? 'fr-FR' : 'en-US';
     const options = {
       weekday: 'long',
       month: 'long',
@@ -147,14 +147,14 @@ export const book = async (req, res) => {
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-    }
-    const from = booking.from.toLocaleString(locale, options)
-    const to = booking.to.toLocaleString(locale, options)
-    const car = await Car.findById(booking.car).populate('company')
-    const pickupLocation = await Location.findById(booking.pickupLocation).populate('values')
-    pickupLocation.name = pickupLocation.values.filter((value) => value.language === user.language)[0].value
-    const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values')
-    dropOffLocation.name = dropOffLocation.values.filter((value) => value.language === user.language)[0].value
+    };
+    const from = booking.from.toLocaleString(locale, options);
+    const to = booking.to.toLocaleString(locale, options);
+    const car = await Car.findById(booking.car).populate('company');
+    const pickupLocation = await Location.findById(booking.pickupLocation).populate('values');
+    pickupLocation.name = pickupLocation.values.filter((value) => value.language === user.language)[0].value;
+    const dropOffLocation = await Location.findById(booking.dropOffLocation).populate('values');
+    dropOffLocation.name = dropOffLocation.values.filter((value) => value.language === user.language)[0].value;
 
     const mailOptions = {
       from: SMTP_FROM,
@@ -183,40 +183,40 @@ export const book = async (req, res) => {
         strings.REGARDS +
         '<br>' +
         '</p>',
-    }
-    await Helper.sendMail(mailOptions)
+    };
+    await Helper.sendMail(mailOptions);
 
     // Notify company
-    const company = await User.findById(booking.company)
-    strings.setLanguage(company.language)
-    await notifySupplier(user, booking, company, strings.BOOKING_NOTIFICATION)
+    const company = await User.findById(booking.company);
+    strings.setLanguage(company.language);
+    await notifySupplier(user, booking, company, strings.BOOKING_NOTIFICATION);
 
-    return res.sendStatus(200)
+    return res.sendStatus(200);
   } catch (err) {
-    console.error(`[booking.book]  ${strings.ERROR}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[booking.book]  ${strings.ERROR}`, err);
+    return res.status(400).send(strings.ERROR + err);
   }
-}
+};
 
 const notifyDriver = async (booking) => {
-  const driver = await User.findById(booking.driver)
-  strings.setLanguage(driver.language)
+  const driver = await User.findById(booking.driver);
+  strings.setLanguage(driver.language);
 
-  const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`
+  const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`;
   const notification = new Notification({
     user: driver._id,
     message,
     booking: booking._id,
-  })
-  await notification.save()
+  });
+  await notification.save();
 
-  let counter = await NotificationCounter.findOne({ user: driver._id })
+  let counter = await NotificationCounter.findOne({ user: driver._id });
   if (counter) {
-    counter.count++
-    await counter.save()
+    counter.count++;
+    await counter.save();
   } else {
-    counter = new NotificationCounter({ user: driver._id, count: 1 })
-    await counter.save()
+    counter = new NotificationCounter({ user: driver._id, count: 1 });
+    await counter.save();
   }
 
   // mail
@@ -236,18 +236,18 @@ const notifyDriver = async (booking) => {
       strings.REGARDS +
       '<br>' +
       '</p>',
-  }
-  await Helper.sendMail(mailOptions)
+  };
+  await Helper.sendMail(mailOptions);
 
   // push notification
-  const pushNotification = await PushNotification.findOne({ user: driver._id })
+  const pushNotification = await PushNotification.findOne({ user: driver._id });
   if (pushNotification) {
-    const pushToken = pushNotification.token
-    let expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
+    const pushToken = pushNotification.token;
+    let expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN });
 
     if (!Expo.isExpoPushToken(pushToken)) {
-      console.log(`Push token ${pushToken} is not a valid Expo push token.`)
-      return
+      console.log(`Push token ${pushToken} is not a valid Expo push token.`);
+      return;
     }
 
     const messages = [
@@ -261,68 +261,68 @@ const notifyDriver = async (booking) => {
           booking: booking._id,
         },
       },
-    ]
+    ];
 
     // The Expo push notification service accepts batches of notifications so
     // that you don't need to send 1000 requests to send 1000 notifications. We
     // recommend you batch your notifications to reduce the number of requests
     // and to compress them (notifications with similar content will get
     // compressed).
-    let chunks = expo.chunkPushNotifications(messages)
-    let tickets = []
+    let chunks = expo.chunkPushNotifications(messages);
+    let tickets = [];
 
-    ;(async () => {
+    (async () => {
       // Send the chunks to the Expo push notification service. There are
       // different strategies you could use. A simple one is to send one chunk at a
       // time, which nicely spreads the load out over time:
       for (let chunk of chunks) {
         try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk)
+          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
 
-          tickets.push(...ticketChunk)
+          tickets.push(...ticketChunk);
           // NOTE: If a ticket contains an error code in ticket.details.error, you
           // must handle it appropriately. The error codes are listed in the Expo
           // documentation:
           // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       }
-    })()
+    })();
   }
-}
+};
 
 export const update = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.body.booking._id)
+    const booking = await Booking.findById(req.body.booking._id);
 
     if (booking) {
       if (!req.body.booking.additionalDriver && booking._additionalDriver) {
-        await AdditionalDriver.deleteOne({ _id: booking._additionalDriver })
+        await AdditionalDriver.deleteOne({ _id: booking._additionalDriver });
       }
 
       if (req.body.additionalDriver) {
-        const { fullName, email, phone, birthDate } = req.body.additionalDriver
+        const { fullName, email, phone, birthDate } = req.body.additionalDriver;
 
         if (booking._additionalDriver) {
           const additionalDriver = await AdditionalDriver.findOne({
             _id: booking._additionalDriver,
-          })
-          additionalDriver.fullName = fullName
-          additionalDriver.email = email
-          additionalDriver.phone = phone
-          additionalDriver.birthDate = birthDate
-          await additionalDriver.save()
+          });
+          additionalDriver.fullName = fullName;
+          additionalDriver.email = email;
+          additionalDriver.phone = phone;
+          additionalDriver.birthDate = birthDate;
+          await additionalDriver.save();
         } else {
           const additionalDriver = new AdditionalDriver({
             fullName: fullName,
             email: email,
             phone: phone,
             birthDate: birthDate,
-          })
+          });
 
-          await additionalDriver.save()
-          booking._additionalDriver = additionalDriver._id
+          await additionalDriver.save();
+          booking._additionalDriver = additionalDriver._id;
         }
       }
 
@@ -342,92 +342,92 @@ export const update = async (req, res) => {
         fullInsurance,
         additionalDriver,
         price,
-      } = req.body.booking
+      } = req.body.booking;
 
-      const previousStatus = booking.status
+      const previousStatus = booking.status;
 
-      booking.company = company
-      booking.car = car
-      booking.driver = driver
-      booking.pickupLocation = pickupLocation
-      booking.dropOffLocation = dropOffLocation
-      booking.from = from
-      booking.to = to
-      booking.status = status
-      booking.cancellation = cancellation
-      booking.amendments = amendments
-      booking.theftProtection = theftProtection
-      booking.collisionDamageWaiver = collisionDamageWaiver
-      booking.fullInsurance = fullInsurance
-      booking.additionalDriver = additionalDriver
-      booking.price = price
+      booking.company = company;
+      booking.car = car;
+      booking.driver = driver;
+      booking.pickupLocation = pickupLocation;
+      booking.dropOffLocation = dropOffLocation;
+      booking.from = from;
+      booking.to = to;
+      booking.status = status;
+      booking.cancellation = cancellation;
+      booking.amendments = amendments;
+      booking.theftProtection = theftProtection;
+      booking.collisionDamageWaiver = collisionDamageWaiver;
+      booking.fullInsurance = fullInsurance;
+      booking.additionalDriver = additionalDriver;
+      booking.price = price;
 
       if (!additionalDriver && booking._additionalDriver) {
-        booking._additionalDriver = null
+        booking._additionalDriver = null;
       }
 
-      await booking.save()
+      await booking.save();
 
       if (previousStatus !== status) {
         // notify driver
-        await notifyDriver(booking)
+        await notifyDriver(booking);
       }
 
-      return res.sendStatus(200)
+      return res.sendStatus(200);
     } else {
-      console.error('[booking.update] Booking not found:', req.body._id)
-      return res.sendStatus(204)
+      console.error('[booking.update] Booking not found:', req.body._id);
+      return res.sendStatus(204);
     }
   } catch (err) {
-    console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const updateStatus = async (req, res) => {
   try {
     const { ids: _ids, status } = req.body,
-      ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
-    const bulk = Booking.collection.initializeOrderedBulkOp()
-    const bookings = await Booking.find({ _id: { $in: ids } })
+      ids = _ids.map((id) => new mongoose.Types.ObjectId(id));
+    const bulk = Booking.collection.initializeOrderedBulkOp();
+    const bookings = await Booking.find({ _id: { $in: ids } });
 
-    bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } })
-    await bulk.execute()
+    bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } });
+    await bulk.execute();
     bookings.forEach(async (booking) => {
       if (booking.status !== status) {
-        await notifyDriver(booking)
+        await notifyDriver(booking);
       }
-    })
+    });
 
-    return res.sendStatus(200)
+    return res.sendStatus(200);
   } catch (err) {
-    console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const deleteBookings = async (req, res) => {
   try {
-    const ids = req.body.map((id) => new mongoose.Types.ObjectId(id))
+    const ids = req.body.map((id) => new mongoose.Types.ObjectId(id));
     const bookings = await Booking.find({
       _id: { $in: ids },
       additionalDriver: true,
       _additionalDriver: { $ne: null },
-    })
+    });
 
-    await Booking.deleteMany({ _id: { $in: ids } })
-    const additionalDivers = bookings.map((booking) => new mongoose.Types.ObjectId(booking._additionalDriver))
-    await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } })
+    await Booking.deleteMany({ _id: { $in: ids } });
+    const additionalDivers = bookings.map((booking) => new mongoose.Types.ObjectId(booking._additionalDriver));
+    await AdditionalDriver.deleteMany({ _id: { $in: additionalDivers } });
 
-    return res.sendStatus(200)
+    return res.sendStatus(200);
   } catch (err) {
-    console.error(`[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const getBooking = async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   try {
     const booking = await Booking.findById(id)
@@ -455,93 +455,93 @@ export const getBooking = async (req, res) => {
         },
       })
       .populate('_additionalDriver')
-      .lean()
+      .lean();
 
     if (booking) {
-      const language = req.params.language
+      const language = req.params.language;
 
       if (booking.company) {
-        const { _id, fullName, avatar, payLater } = booking.company
-        booking.company = { _id, fullName, avatar, payLater }
+        const { _id, fullName, avatar, payLater } = booking.company;
+        booking.company = { _id, fullName, avatar, payLater };
       }
       if (booking.car.company) {
-        const { _id, fullName, avatar, payLater } = booking.car.company
-        booking.car.company = { _id, fullName, avatar, payLater }
+        const { _id, fullName, avatar, payLater } = booking.car.company;
+        booking.car.company = { _id, fullName, avatar, payLater };
       }
 
-      booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
-      booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value
+      booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value;
+      booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value;
 
-      return res.json(booking)
+      return res.json(booking);
     } else {
-      console.error('[booking.getBooking] Car not found:', id)
-      return res.sendStatus(204)
+      console.error('[booking.getBooking] Car not found:', id);
+      return res.sendStatus(204);
     }
   } catch (err) {
-    console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const getBookings = async (req, res) => {
   try {
-    const page = parseInt(req.params.page) + 1
-    const size = parseInt(req.params.size)
-    const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
-    const statuses = req.body.statuses
-    const user = req.body.user
-    const car = req.body.car
-    const from = (req.body.filter && req.body.filter.from && new Date(req.body.filter.from)) || null
-    const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null
-    const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null
-    const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null
-    let keyword = (req.body.filter && req.body.filter.keyword) || ''
-    const options = 'i'
+    const page = parseInt(req.params.page) + 1;
+    const size = parseInt(req.params.size);
+    const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id));
+    const statuses = req.body.statuses;
+    const user = req.body.user;
+    const car = req.body.car;
+    const from = (req.body.filter && req.body.filter.from && new Date(req.body.filter.from)) || null;
+    const to = (req.body.filter && req.body.filter.to && new Date(req.body.filter.to)) || null;
+    const pickupLocation = (req.body.filter && req.body.filter.pickupLocation) || null;
+    const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null;
+    let keyword = (req.body.filter && req.body.filter.keyword) || '';
+    const options = 'i';
 
     const $match = {
       $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
-    }
+    };
     if (user)
       $match.$and.push({
         'driver._id': { $eq: new mongoose.Types.ObjectId(user) },
-      })
+      });
     if (car)
       $match.$and.push({
         'car._id': { $eq: new mongoose.Types.ObjectId(car) },
-      })
-    if (from) $match.$and.push({ from: { $gte: from } }) // $from > from
-    if (to) $match.$and.push({ to: { $lte: to } }) // $to < to
+      });
+    if (from) $match.$and.push({ from: { $gte: from } }); // $from > from
+    if (to) $match.$and.push({ to: { $lte: to } }); // $to < to
     if (pickupLocation)
       $match.$and.push({
         'pickupLocation._id': {
           $eq: new mongoose.Types.ObjectId(pickupLocation),
         },
-      })
+      });
     if (dropOffLocation)
       $match.$and.push({
         'dropOffLocation._id': {
           $eq: new mongoose.Types.ObjectId(dropOffLocation),
         },
-      })
+      });
     if (keyword) {
-      const isObjectId = mongoose.isValidObjectId(keyword)
+      const isObjectId = mongoose.isValidObjectId(keyword);
       if (isObjectId) {
         $match.$and.push({
           _id: { $eq: new mongoose.Types.ObjectId(keyword) },
-        })
+        });
       } else {
-        keyword = escapeStringRegexp(keyword)
+        keyword = escapeStringRegexp(keyword);
         $match.$and.push({
           $or: [
             { 'company.fullName': { $regex: keyword, $options: options } },
             { 'driver.fullName': { $regex: keyword, $options: options } },
             { 'car.name': { $regex: keyword, $options: options } },
           ],
-        })
+        });
       }
     }
 
-    const language = req.params.language
+    const language = req.params.language;
 
     const data = await Booking.aggregate([
       {
@@ -673,103 +673,103 @@ export const getBookings = async (req, res) => {
           ],
         },
       },
-    ])
+    ]);
 
     if (data.length > 0) {
-      const bookings = data[0].resultData
+      const bookings = data[0].resultData;
 
       for (const booking of bookings) {
-        const { _id, fullName, avatar } = booking.company
-        booking.company = { _id, fullName, avatar }
+        const { _id, fullName, avatar } = booking.company;
+        booking.company = { _id, fullName, avatar };
       }
     }
 
-    return res.json(data)
+    return res.json(data);
   } catch (err) {
-    console.error(`[booking.getBookings] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.getBookings] ${strings.DB_ERROR} ${req.body}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const hasBookings = async (req, res) => {
-  const { driver } = req.params
+  const { driver } = req.params;
 
   try {
     const count = await Booking.find({
       driver: new mongoose.Types.ObjectId(driver),
     })
       .limit(1)
-      .count()
+      .count();
 
     if (count === 1) {
-      return res.sendStatus(200)
+      return res.sendStatus(200);
     }
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   } catch (err) {
-    console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${driver}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${driver}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const bookingsMinDate = async (req, res) => {
-  const { driver } = req.params
+  const { driver } = req.params;
 
   try {
     const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(driver) }, { from: 1 }).sort({
       from: 1,
-    })
+    });
 
     if (booking) {
-      return res.json(new Date(booking.from).getTime())
+      return res.json(new Date(booking.from).getTime());
     }
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   } catch (err) {
-    console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const bookingsMaxDate = async (req, res) => {
-  const { driver } = req.params
+  const { driver } = req.params;
 
   try {
     const booking = await Booking.findOne({ driver: new mongoose.Types.ObjectId(req.params.driver) }, { to: 1 }).sort({
       to: -1,
-    })
+    });
 
     if (booking) {
-      return res.json(new Date(booking.to).getTime())
+      return res.json(new Date(booking.to).getTime());
     }
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   } catch (err) {
-    console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
 
 export const cancelBooking = async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   try {
     const booking = await Booking.findOne({
       _id: new mongoose.Types.ObjectId(id),
     })
       .populate('company')
-      .populate('driver')
+      .populate('driver');
 
     if (booking && booking.cancellation && !booking.cancelRequest) {
-      booking.cancelRequest = true
-      await booking.save()
+      booking.cancelRequest = true;
+      await booking.save();
 
       // Notify supplier
-      await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
+      await notifySupplier(booking.driver, booking, booking.company, strings.CANCEL_BOOKING_NOTIFICATION);
 
-      return res.sendStatus(200)
+      return res.sendStatus(200);
     }
 
-    return res.sendStatus(204)
+    return res.sendStatus(204);
   } catch (err) {
-    console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${id}`, err);
+    return res.status(400).send(strings.DB_ERROR + err);
   }
-}
+};
