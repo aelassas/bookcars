@@ -1,214 +1,214 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings as ccStrings } from '../lang/create-company';
-import * as SupplierService from '../services/SupplierService';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Error from '../components/Error';
-import Backdrop from '../components/SimpleBackdrop';
-import NoMatch from './NoMatch';
-import Avatar from '../components/Avatar';
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link, FormControlLabel, Switch } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
-import validator from 'validator';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as ccStrings } from '../lang/create-company'
+import * as SupplierService from '../services/SupplierService'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Avatar from '../components/Avatar'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link, FormControlLabel, Switch } from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import validator from 'validator'
 
-import '../assets/css/update-company.css';
+import '../assets/css/update-company.css'
 
 const UpdateCompany = () => {
-  const [user, setUser] = useState();
-  const [company, setCompany] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState('');
-  const [bio, setBio] = useState('');
-  const [error, setError] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [fullNameError, setFullNameError] = useState(false);
-  const [noMatch, setNoMatch] = useState(false);
-  const [avatar, setAvatar] = useState();
-  const [avatarError, setAvatarError] = useState(false);
-  const [email, setEmail] = useState('');
-  const [phoneValid, setPhoneValid] = useState(true);
-  const [payLater, setPayLater] = useState(true);
+  const [user, setUser] = useState()
+  const [company, setCompany] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [location, setLocation] = useState('')
+  const [bio, setBio] = useState('')
+  const [error, setError] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [fullNameError, setFullNameError] = useState(false)
+  const [noMatch, setNoMatch] = useState(false)
+  const [avatar, setAvatar] = useState()
+  const [avatarError, setAvatarError] = useState(false)
+  const [email, setEmail] = useState('')
+  const [phoneValid, setPhoneValid] = useState(true)
+  const [payLater, setPayLater] = useState(true)
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value);
+    setFullName(e.target.value)
 
     if (!e.target.value) {
-      setFullNameError(false);
+      setFullNameError(false)
     }
-  };
+  }
 
   const validateFullName = async (fullName) => {
     if (fullName) {
       if (company.fullName !== fullName) {
         try {
-          const status = await SupplierService.validate({ fullName });
+          const status = await SupplierService.validate({ fullName })
 
           if (status === 200) {
-            setFullNameError(false);
-            return true;
+            setFullNameError(false)
+            return true
           } else {
-            setFullNameError(true);
-            setAvatarError(false);
-            setError(false);
-            return false;
+            setFullNameError(true)
+            setAvatarError(false)
+            setError(false)
+            return false
           }
         } catch (err) {
-          Helper.error(err);
+          Helper.error(err)
         }
       } else {
-        setFullNameError(false);
-        setAvatarError(false);
-        setError(false);
-        return true;
+        setFullNameError(false)
+        setAvatarError(false)
+        setError(false)
+        return true
       }
     } else {
-      setFullNameError(true);
-      setAvatarError(false);
-      setError(false);
-      return false;
+      setFullNameError(true)
+      setAvatarError(false)
+      setError(false)
+      return false
     }
-  };
+  }
 
   const handleFullNameOnBlur = async (e) => {
-    await validateFullName(e.target.value);
-  };
+    await validateFullName(e.target.value)
+  }
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
+    setPhone(e.target.value)
 
     if (!e.target.value) {
-      setPhoneValid(true);
+      setPhoneValid(true)
     }
-  };
+  }
 
   const validatePhone = (phone) => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone);
-      setPhoneValid(phoneValid);
+      const phoneValid = validator.isMobilePhone(phone)
+      setPhoneValid(phoneValid)
 
-      return phoneValid;
+      return phoneValid
     } else {
-      setPhoneValid(true);
+      setPhoneValid(true)
 
-      return true;
+      return true
     }
-  };
+  }
 
   const handlePhoneBlur = (e) => {
-    validatePhone(e.target.value);
-  };
+    validatePhone(e.target.value)
+  }
 
   const handleOnChangeLocation = (e) => {
-    setLocation(e.target.value);
-  };
+    setLocation(e.target.value)
+  }
 
   const handleOnChangeBio = (e) => {
-    setBio(e.target.value);
-  };
+    setBio(e.target.value)
+  }
 
   const onBeforeUpload = () => {
-    setLoading(true);
-  };
+    setLoading(true)
+  }
 
   const onAvatarChange = (avatar) => {
-    const _company = Helper.clone(company);
-    _company.avatar = avatar;
+    const _company = Helper.clone(company)
+    _company.avatar = avatar
 
     if (user._id === company._id) {
-      const _user = Helper.clone(user);
-      _user.avatar = avatar;
-      setUser(_user);
+      const _user = Helper.clone(user)
+      _user.avatar = avatar
+      setUser(_user)
     }
 
-    setLoading(false);
-    setCompany(_company);
+    setLoading(false)
+    setCompany(_company)
 
     if (avatar) {
-      setAvatarError(false);
+      setAvatarError(false)
     }
-  };
+  }
 
   const handleResendActivationLink = async () => {
     try {
-      const status = await UserService.resend(company.email, false, Env.APP_TYPE);
+      const status = await UserService.resend(company.email, false, Env.APP_TYPE)
 
       if (status === 200) {
-        Helper.info(commonStrings.ACTIVATION_EMAIL_SENT);
+        Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
       } else {
-        Helper.error();
+        Helper.error()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const onLoad = async (user) => {
     if (user && user.verified) {
-      setLoading(true);
-      setUser(user);
+      setLoading(true)
+      setUser(user)
 
-      const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search)
       if (params.has('c')) {
-        const id = params.get('c');
+        const id = params.get('c')
         if (id && id !== '') {
           try {
-            const company = await SupplierService.getCompany(id);
+            const company = await SupplierService.getCompany(id)
 
             if (company) {
-              setCompany(company);
-              setEmail(company.email);
-              setAvatar(company.avatar);
-              setFullName(company.fullName);
-              setPhone(company.phone);
-              setLocation(company.location);
-              setBio(company.bio);
-              setPayLater(company.payLater);
-              setVisible(true);
-              setLoading(false);
+              setCompany(company)
+              setEmail(company.email)
+              setAvatar(company.avatar)
+              setFullName(company.fullName)
+              setPhone(company.phone)
+              setLocation(company.location)
+              setBio(company.bio)
+              setPayLater(company.payLater)
+              setVisible(true)
+              setLoading(false)
             } else {
-              setLoading(false);
-              setNoMatch(true);
+              setLoading(false)
+              setNoMatch(true)
             }
           } catch (err) {
-            Helper.error(err);
-            setLoading(false);
-            setError(true);
-            setVisible(false);
+            Helper.error(err)
+            setLoading(false)
+            setError(true)
+            setVisible(false)
           }
         } else {
-          setLoading(false);
-          setNoMatch(true);
+          setLoading(false)
+          setNoMatch(true)
         }
       } else {
-        setLoading(false);
-        setNoMatch(true);
+        setLoading(false)
+        setNoMatch(true)
       }
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const fullNameValid = await validateFullName(fullName);
+      const fullNameValid = await validateFullName(fullName)
       if (!fullNameValid) {
-        return;
+        return
       }
 
-      const phoneValid = validatePhone(phone);
+      const phoneValid = validatePhone(phone)
       if (!phoneValid) {
-        return;
+        return
       }
 
       if (!avatar) {
-        setAvatarError(true);
-        setError(false);
-        return;
+        setAvatarError(true)
+        setError(false)
+        return
       }
 
       const data = {
@@ -218,23 +218,23 @@ const UpdateCompany = () => {
         location,
         bio,
         payLater,
-      };
+      }
 
-      const status = await SupplierService.update(data);
+      const status = await SupplierService.update(data)
 
       if (status === 200) {
-        company.fullName = fullName;
-        setCompany(Helper.clone(company));
-        Helper.info(commonStrings.UPDATED);
+        company.fullName = fullName
+        setCompany(Helper.clone(company))
+        Helper.info(commonStrings.UPDATED)
       } else {
-        Helper.error();
+        Helper.error()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
-  const admin = Helper.admin(user);
+  const admin = Helper.admin(user)
 
   return (
     <Master onLoad={onLoad} strict={true} user={user}>
@@ -277,7 +277,7 @@ const UpdateCompany = () => {
                     <Switch
                       checked={payLater}
                       onChange={(e) => {
-                        setPayLater(e.target.checked);
+                        setPayLater(e.target.checked)
                       }}
                       color="primary"
                     />
@@ -332,7 +332,7 @@ const UpdateCompany = () => {
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {noMatch && <NoMatch hideHeader />}
     </Master>
-  );
-};
+  )
+}
 
-export default UpdateCompany;
+export default UpdateCompany

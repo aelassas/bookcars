@@ -1,58 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import MultipleSelect from './MultipleSelect';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import MultipleSelect from './MultipleSelect'
 
 const UserSelectList = (props) => {
-  const [init, setInit] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [drivers, setDrivers] = useState([]);
-  const [fetch, setFetch] = useState(false);
-  const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState('');
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [init, setInit] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [drivers, setDrivers] = useState([])
+  const [fetch, setFetch] = useState(false)
+  const [page, setPage] = useState(1)
+  const [keyword, setKeyword] = useState('')
+  const [selectedOptions, setSelectedOptions] = useState([])
 
   useEffect(() => {
-    const _value = props.multiple ? props.value : [props.value];
+    const _value = props.multiple ? props.value : [props.value]
     if (props.value && !Helper.arrayEqual(selectedOptions, _value)) {
-      setSelectedOptions(_value);
+      setSelectedOptions(_value)
     }
-  }, [props.multiple, props.value, selectedOptions]);
+  }, [props.multiple, props.value, selectedOptions])
 
   const getDrivers = (users) =>
     users.map((user) => {
-      const { _id, fullName, avatar } = user;
-      return { _id, name: fullName, image: avatar };
-    });
+      const { _id, fullName, avatar } = user
+      return { _id, name: fullName, image: avatar }
+    })
 
   const _fetch = async (page, keyword, onFetch) => {
     try {
-      setLoading(true);
+      setLoading(true)
 
-      const data = await UserService.getDrivers(keyword, page, Env.PAGE_SIZE);
+      const data = await UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
 
-      const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : [];
-      const _drivers = page === 1 ? _data : [...drivers, ..._data];
+      const _data = Array.isArray(data) && data.length > 0 ? getDrivers(data[0].resultData) : []
+      const _drivers = page === 1 ? _data : [...drivers, ..._data]
 
-      setDrivers(_drivers);
-      setFetch(_data.length > 0);
+      setDrivers(_drivers)
+      setFetch(_data.length > 0)
 
       if (onFetch) {
-        onFetch();
+        onFetch()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleChange = (values) => {
     if (props.onChange) {
-      props.onChange(values);
+      props.onChange(values)
     }
-  };
+  }
 
   return (
     <MultipleSelect
@@ -67,44 +67,44 @@ const UserSelectList = (props) => {
       variant={props.variant || 'standard'}
       ListboxProps={{
         onScroll: (event) => {
-          const listboxNode = event.currentTarget;
+          const listboxNode = event.currentTarget
           if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
-            const p = page + 1;
-            setPage(p);
-            _fetch(p, keyword);
+            const p = page + 1
+            setPage(p)
+            _fetch(p, keyword)
           }
         },
       }}
       onFocus={() => {
         if (!init) {
-          const p = 1;
-          setPage(p);
-          setDrivers([]);
+          const p = 1
+          setPage(p)
+          setDrivers([])
           _fetch(p, keyword, () => {
-            setInit(true);
-          });
+            setInit(true)
+          })
         }
       }}
       onInputChange={(event) => {
-        const value = (event && event.target ? event.target.value : null) || '';
+        const value = (event && event.target ? event.target.value : null) || ''
 
         //if (event.target.type === 'text' && value !== keyword) {
         if (value !== keyword) {
-          setDrivers([]);
-          setPage(1);
-          setKeyword(value);
-          _fetch(1, value);
+          setDrivers([])
+          setPage(1)
+          setKeyword(value)
+          _fetch(1, value)
         }
       }}
       onClear={() => {
-        setDrivers([]);
-        setPage(1);
-        setKeyword('');
-        setFetch(true);
-        _fetch(1, '');
+        setDrivers([])
+        setPage(1)
+        setKeyword('')
+        setFetch(true)
+        _fetch(1, '')
       }}
     />
-  );
-};
+  )
+}
 
-export default UserSelectList;
+export default UserSelectList

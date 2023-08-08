@@ -1,156 +1,156 @@
-import React, { useState } from 'react';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/sign-up';
-import * as UserService from '../services/UserService';
-import Master from '../components/Master';
-import Error from '../components/Error';
-import Backdrop from '../components/SimpleBackdrop';
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material';
-import validator from 'validator';
-import * as Helper from '../common/Helper';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/sign-up'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
+import validator from 'validator'
+import * as Helper from '../common/Helper'
+import { useNavigate } from 'react-router-dom'
 
-import '../assets/css/signup.css';
+import '../assets/css/signup.css'
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [emailValid, setEmailValid] = useState(true);
+  const navigate = useNavigate()
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [emailValid, setEmailValid] = useState(true)
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value);
-  };
+    setFullName(e.target.value)
+  }
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmail(e.target.value)
 
     if (!e.target.value) {
-      setEmailError(false);
-      setEmailValid(true);
+      setEmailError(false)
+      setEmailValid(true)
     }
-  };
+  }
 
   const handleOnChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
+    setPassword(e.target.value)
+  }
 
   const handleOnChangeConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
+    setConfirmPassword(e.target.value)
+  }
 
   const validateEmail = async (email) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email });
+          const status = await UserService.validateEmail({ email })
           if (status === 200) {
-            setEmailError(false);
-            setEmailValid(true);
-            return true;
+            setEmailError(false)
+            setEmailValid(true)
+            return true
           } else {
-            setEmailError(true);
-            setEmailValid(true);
-            setError(false);
-            return false;
+            setEmailError(true)
+            setEmailValid(true)
+            setError(false)
+            return false
           }
         } catch (err) {
-          Helper.error(err);
-          setEmailError(false);
-          setEmailValid(true);
-          return false;
+          Helper.error(err)
+          setEmailError(false)
+          setEmailValid(true)
+          return false
         }
       } else {
-        setEmailError(false);
-        setEmailValid(false);
-        return false;
+        setEmailError(false)
+        setEmailValid(false)
+        return false
       }
     } else {
-      setEmailError(false);
-      setEmailValid(true);
-      return false;
+      setEmailError(false)
+      setEmailValid(true)
+      return false
     }
-  };
+  }
 
   const handleOnBlur = async (e) => {
-    await validateEmail(e.target.value);
-  };
+    await validateEmail(e.target.value)
+  }
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const emailValid = await validateEmail(email);
+      const emailValid = await validateEmail(email)
       if (!emailValid) {
-        return;
+        return
       }
 
       if (password.length < 6) {
-        setPasswordError(true);
-        setPasswordsDontMatch(false);
-        setError(false);
-        return;
+        setPasswordError(true)
+        setPasswordsDontMatch(false)
+        setError(false)
+        return
       }
 
       if (password !== confirmPassword) {
-        setPasswordError(false);
-        setPasswordsDontMatch(true);
-        setError(false);
-        return;
+        setPasswordError(false)
+        setPasswordsDontMatch(true)
+        setError(false)
+        return
       }
 
-      setLoading(true);
+      setLoading(true)
 
       const data = {
         email: email,
         password: password,
         fullName: fullName,
         language: UserService.getLanguage(),
-      };
+      }
 
-      const status = await UserService.signup(data);
+      const status = await UserService.signup(data)
 
       if (status === 200) {
         const signInResult = await UserService.signin({
           email: email,
           password: password,
-        });
+        })
 
         if (signInResult.status === 200) {
-          navigate(`/${window.location.search}`);
+          navigate(`/${window.location.search}`)
         } else {
-          setPasswordError(false);
-          setPasswordsDontMatch(false);
-          setError(true);
+          setPasswordError(false)
+          setPasswordsDontMatch(false)
+          setError(true)
         }
       } else {
-        setPasswordError(false);
+        setPasswordError(false)
       }
 
-      setPasswordsDontMatch(false);
+      setPasswordsDontMatch(false)
     } catch (err) {
-      Helper.error(err);
-      setPasswordError(false);
-      setPasswordsDontMatch(false);
-      setError(true);
+      Helper.error(err)
+      setPasswordError(false)
+      setPasswordsDontMatch(false)
+      setError(true)
     }
-  };
+  }
 
   const onLoad = (user) => {
     if (user) {
-      navigate('/');
+      navigate('/')
     } else {
-      setVisible(true);
+      setVisible(true)
     }
-  };
+  }
 
   return (
     <Master strict={false} onLoad={onLoad}>
@@ -224,7 +224,7 @@ const SignUp = () => {
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

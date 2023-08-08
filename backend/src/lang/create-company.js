@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import Env from '../config/env.config';
-import * as LangHelper from '../common/LangHelper';
+import LocalizedStrings from 'react-localization'
+import Env from '../config/env.config'
+import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -15,7 +15,7 @@ const strings = new LocalizedStrings({
     COMPANY_IMAGE_SIZE_ERROR: `The image must be in the format ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
     RECOMMENDED_IMAGE_SIZE: `Recommended image size: ${Env.COMPANY_IMAGE_WIDTH}x${Env.COMPANY_IMAGE_HEIGHT}`,
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }

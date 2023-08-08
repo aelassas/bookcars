@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from '@mui/material';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/no-match';
-import Master from '../components/Master';
+import React from 'react'
+import { Link } from '@mui/material'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/no-match'
+import Master from '../components/Master'
 
 const NoMatch = (props) => {
   const noMatch = () => (
@@ -12,9 +12,9 @@ const NoMatch = (props) => {
         <Link href="/">{commonStrings.GO_TO_HOME}</Link>
       </p>
     </div>
-  );
+  )
 
-  return props.hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>;
-};
+  return props.hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>
+}
 
-export default NoMatch;
+export default NoMatch

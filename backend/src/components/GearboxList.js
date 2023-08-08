@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import { InputLabel, Select, MenuItem } from '@mui/material';
-import { strings } from '../lang/cars';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import { InputLabel, Select, MenuItem } from '@mui/material'
+import { strings } from '../lang/cars'
 
 const GearboxList = (props) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
 
   useEffect(() => {
-    setValue(props.value || '');
-  }, [props.value]);
+    setValue(props.value || '')
+  }, [props.value])
 
   const handleChange = (e) => {
-    const value = e.target.value || '';
-    setValue(value);
+    const value = e.target.value || ''
+    setValue(value)
 
     if (props.onChange) {
-      props.onChange(value);
+      props.onChange(value)
     }
-  };
+  }
 
   return (
     <div>
@@ -27,7 +27,7 @@ const GearboxList = (props) => {
         <MenuItem value={Env.GEARBOX_TYPE.MANUAL}>{strings.GEARBOX_MANUAL}</MenuItem>
       </Select>
     </div>
-  );
-};
+  )
+}
 
-export default GearboxList;
+export default GearboxList

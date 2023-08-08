@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import * as LangHelper from '../common/LangHelper';
-import { strings as commonStrings } from '../lang/common';
+import LocalizedStrings from 'react-localization'
+import * as LangHelper from '../common/LangHelper'
+import { strings as commonStrings } from '../lang/common'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -127,7 +127,7 @@ const strings = new LocalizedStrings({
     PRICE_DAYS_PART_2: 'day',
     PRICE_PER_DAY: 'Price per day:',
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }

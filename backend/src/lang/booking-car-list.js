@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization';
-import * as LangHelper from '../common/LangHelper';
+import LocalizedStrings from 'react-localization'
+import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -10,7 +10,7 @@ const strings = new LocalizedStrings({
     REQUIRED_FIELD: 'Please fill in the field: ',
     REQUIRED_FIELDS: 'Please fill in the fields: ',
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }
