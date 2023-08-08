@@ -10,4 +10,4 @@ export default {
   bookingsMinDate: '/api/bookings-min-date/:driver',
   bookingsMaxDate: '/api/bookings-max-date/:driver',
   cancelBooking: '/api/cancel-booking/:id',
-};
+}

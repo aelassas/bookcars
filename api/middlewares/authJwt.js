@@ -1,23 +1,23 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.BC_JWT_SECRET;
+const JWT_SECRET = process.env.BC_JWT_SECRET
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['x-access-token'];
+  const token = req.headers['x-access-token']
 
   if (!token) {
-    return res.status(403).send({ message: 'No token provided!' });
+    return res.status(403).send({ message: 'No token provided!' })
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      console.log(err);
-      return res.status(401).send({ message: 'Unauthorized!' });
+      console.log(err)
+      return res.status(401).send({ message: 'Unauthorized!' })
     }
 
-    req.userId = decoded.id;
-    next();
-  });
-};
+    req.userId = decoded.id
+    next()
+  })
+}
 
-export default { verifyToken };
+export default { verifyToken }
