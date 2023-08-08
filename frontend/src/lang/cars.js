@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
-import { strings as commonStrings } from '../lang/common'
+import LocalizedStrings from 'react-localization';
+import * as LangHelper from '../common/LangHelper';
+import { strings as commonStrings } from '../lang/common';
 
 const strings = new LocalizedStrings({
   fr: {
@@ -123,7 +123,7 @@ const strings = new LocalizedStrings({
     LESS_THAN_5000: 'Less than 5000 DH',
     LESS_THAN_7500: 'Less than 7500 DH',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

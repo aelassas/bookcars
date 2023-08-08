@@ -1,155 +1,155 @@
-import React, { useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as csStrings } from '../lang/cars'
-import * as Helper from '../common/Helper'
-import Master from '../components/Master'
-import * as UserService from '../services/UserService'
-import * as BookingService from '../services/BookingService'
-import * as CarService from '../services/CarService'
-import Backdrop from '../components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Error from './Error'
-import CarList from '../components/CarList'
-import SupplierSelectList from '../components/SupplierSelectList'
-import LocationSelectList from '../components/LocationSelectList'
-import CarSelectList from '../components/CarSelectList'
-import StatusList from '../components/StatusList'
-import DateTimePicker from '../components/DateTimePicker'
-import { FormControl, FormControlLabel, Switch, Button } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
+import React, { useState } from 'react';
+import { strings as commonStrings } from '../lang/common';
+import { strings as blStrings } from '../lang/booking-list';
+import { strings as bfStrings } from '../lang/booking-filter';
+import { strings as csStrings } from '../lang/cars';
+import * as Helper from '../common/Helper';
+import Master from '../components/Master';
+import * as UserService from '../services/UserService';
+import * as BookingService from '../services/BookingService';
+import * as CarService from '../services/CarService';
+import Backdrop from '../components/SimpleBackdrop';
+import NoMatch from './NoMatch';
+import Error from './Error';
+import CarList from '../components/CarList';
+import SupplierSelectList from '../components/SupplierSelectList';
+import LocationSelectList from '../components/LocationSelectList';
+import CarSelectList from '../components/CarSelectList';
+import StatusList from '../components/StatusList';
+import DateTimePicker from '../components/DateTimePicker';
+import { FormControl, FormControlLabel, Switch, Button } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
 
-import '../assets/css/booking.css'
+import '../assets/css/booking.css';
 
 const Booking = () => {
-  const [user, setUser] = useState()
-  const [loading, setLoading] = useState(false)
-  const [noMatch, setNoMatch] = useState(false)
-  const [error, setError] = useState(false)
-  const [booking, setBooking] = useState()
-  const [visible, setVisible] = useState(false)
-  const [company, setCompany] = useState()
-  const [car, setCar] = useState()
-  const [price, setPrice] = useState()
-  const [driver, setDriver] = useState()
-  const [pickupLocation, setPickupLocation] = useState()
-  const [dropOffLocation, setDropOffLocation] = useState()
-  const [from, setFrom] = useState()
-  const [to, setTo] = useState()
-  const [status, setStatus] = useState()
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState()
-  const edit = false
+  const [user, setUser] = useState();
+  const [loading, setLoading] = useState(false);
+  const [noMatch, setNoMatch] = useState(false);
+  const [error, setError] = useState(false);
+  const [booking, setBooking] = useState();
+  const [visible, setVisible] = useState(false);
+  const [company, setCompany] = useState();
+  const [car, setCar] = useState();
+  const [price, setPrice] = useState();
+  const [driver, setDriver] = useState();
+  const [pickupLocation, setPickupLocation] = useState();
+  const [dropOffLocation, setDropOffLocation] = useState();
+  const [from, setFrom] = useState();
+  const [to, setTo] = useState();
+  const [status, setStatus] = useState();
+  const [cancellation, setCancellation] = useState(false);
+  const [amendments, setAmendments] = useState(false);
+  const [theftProtection, setTheftProtection] = useState(false);
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
+  const [fullInsurance, setFullInsurance] = useState(false);
+  const [additionalDriver, setAdditionalDriver] = useState(false);
+  const [minDate, setMinDate] = useState();
+  const edit = false;
 
   const handleCompanyChange = (values) => {
-    setCompany(values.length > 0 ? values[0] : null)
-  }
+    setCompany(values.length > 0 ? values[0] : null);
+  };
 
   const handlePickupLocationChange = (values) => {
-    setPickupLocation(values.length > 0 ? values[0] : null)
-  }
+    setPickupLocation(values.length > 0 ? values[0] : null);
+  };
 
   const handleDropOffLocationChange = (values) => {
-    setDropOffLocation(values.length > 0 ? values[0] : null)
-  }
+    setDropOffLocation(values.length > 0 ? values[0] : null);
+  };
 
   const handleCarSelectListChange = async (values) => {
     try {
-      const newCar = values.length > 0 ? values[0] : null
+      const newCar = values.length > 0 ? values[0] : null;
 
       if ((car === null && newCar !== null) || (car && newCar && car._id !== newCar._id)) {
         // car changed
-        const car = await CarService.getCar(newCar._id)
+        const car = await CarService.getCar(newCar._id);
 
         if (car) {
-          const _booking = Helper.clone(booking)
-          _booking.car = car
-          const price = Helper.price(car, from, to, _booking)
+          const _booking = Helper.clone(booking);
+          _booking.car = car;
+          const price = Helper.price(car, from, to, _booking);
 
-          setBooking(_booking)
-          setPrice(price)
-          setCar(newCar)
+          setBooking(_booking);
+          setPrice(price);
+          setCar(newCar);
         } else {
-          Helper.error()
+          Helper.error();
         }
       } else if (!newCar) {
-        setPrice(0)
-        setCar(newCar)
+        setPrice(0);
+        setCar(newCar);
       } else {
-        setCar(newCar)
+        setCar(newCar);
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const handleStatusChange = (value) => {
-    setStatus(value)
-  }
+    setStatus(value);
+  };
 
   const handleCancellationChange = (e) => {
-    booking.cancellation = e.target.checked
+    booking.cancellation = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setCancellation(booking.cancellation)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setCancellation(booking.cancellation);
+  };
 
   const handleAmendmentsChange = (e) => {
-    booking.amendments = e.target.checked
+    booking.amendments = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setAmendments(booking.amendments)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setAmendments(booking.amendments);
+  };
 
   const handleCollisionDamageWaiverChange = (e) => {
-    booking.collisionDamageWaiver = e.target.checked
+    booking.collisionDamageWaiver = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setCollisionDamageWaiver(booking.collisionDamageWaiver)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setCollisionDamageWaiver(booking.collisionDamageWaiver);
+  };
 
   const handleTheftProtectionChange = (e) => {
-    booking.theftProtection = e.target.checked
+    booking.theftProtection = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setTheftProtection(booking.theftProtection)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setTheftProtection(booking.theftProtection);
+  };
 
   const handleFullInsuranceChange = (e) => {
-    booking.fullInsurance = e.target.checked
+    booking.fullInsurance = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setFullInsurance(booking.fullInsurance)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setFullInsurance(booking.fullInsurance);
+  };
 
   const handleAdditionalDriverChange = (e) => {
-    booking.additionalDriver = e.target.checked
+    booking.additionalDriver = e.target.checked;
 
-    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking)
-    setBooking(booking)
-    setPrice(price)
-    setAdditionalDriver(booking.additionalDriver)
-  }
+    const price = Helper.price(booking.car, new Date(booking.from), new Date(booking.to), booking);
+    setBooking(booking);
+    setPrice(price);
+    setAdditionalDriver(booking.additionalDriver);
+  };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
       const data = {
         _id: booking._id,
@@ -168,88 +168,88 @@ const Booking = () => {
         fullInsurance,
         additionalDriver,
         price,
-      }
+      };
 
-      const status = await BookingService.update(data)
+      const status = await BookingService.update(data);
 
       if (status === 200) {
-        Helper.info(commonStrings.UPDATED)
+        Helper.info(commonStrings.UPDATED);
       } else {
-        Helper.error()
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onLoad = async (user) => {
-    setUser(user)
-    setLoading(true)
+    setUser(user);
+    setLoading(true);
 
-    const params = new URLSearchParams(window.location.search)
+    const params = new URLSearchParams(window.location.search);
     if (params.has('b')) {
-      const id = params.get('b')
+      const id = params.get('b');
       if (id && id !== '') {
         try {
-          const booking = await BookingService.getBooking(id)
+          const booking = await BookingService.getBooking(id);
           if (booking) {
-            setBooking(booking)
-            setPrice(booking.price)
-            setLoading(false)
-            setVisible(true)
+            setBooking(booking);
+            setPrice(booking.price);
+            setLoading(false);
+            setVisible(true);
             setCompany({
               _id: booking.company._id,
               name: booking.company.fullName,
               image: booking.company.avatar,
-            })
+            });
             setCar({
               _id: booking.car._id,
               name: booking.car.name,
               image: booking.car.image,
-            })
+            });
             setDriver({
               _id: booking.driver._id,
               name: booking.driver.fullName,
               image: booking.driver.avatar,
-            })
+            });
             setPickupLocation({
               _id: booking.pickupLocation._id,
               name: booking.pickupLocation.name,
-            })
+            });
             setDropOffLocation({
               _id: booking.dropOffLocation._id,
               name: booking.dropOffLocation.name,
-            })
-            setFrom(new Date(booking.from))
-            setMinDate(new Date(booking.from))
-            setTo(new Date(booking.to))
-            setStatus(booking.status)
-            setCancellation(booking.cancellation)
-            setAmendments(booking.amendments)
-            setTheftProtection(booking.theftProtection)
-            setCollisionDamageWaiver(booking.collisionDamageWaiver)
-            setFullInsurance(booking.fullInsurance)
-            setAdditionalDriver(booking.additionalDriver)
+            });
+            setFrom(new Date(booking.from));
+            setMinDate(new Date(booking.from));
+            setTo(new Date(booking.to));
+            setStatus(booking.status);
+            setCancellation(booking.cancellation);
+            setAmendments(booking.amendments);
+            setTheftProtection(booking.theftProtection);
+            setCollisionDamageWaiver(booking.collisionDamageWaiver);
+            setFullInsurance(booking.fullInsurance);
+            setAdditionalDriver(booking.additionalDriver);
           } else {
-            setLoading(false)
-            setNoMatch(true)
+            setLoading(false);
+            setNoMatch(true);
           }
         } catch (err) {
-          setLoading(false)
-          setError(true)
-          setVisible(false)
+          setLoading(false);
+          setError(true);
+          setVisible(false);
         }
       } else {
-        setLoading(false)
-        setNoMatch(true)
+        setLoading(false);
+        setNoMatch(true);
       }
     } else {
-      setLoading(false)
-      setNoMatch(true)
+      setLoading(false);
+      setNoMatch(true);
     }
-  }
+  };
 
-  const days = Helper.days(from, to)
+  const days = Helper.days(from, to);
 
   return (
     <Master onLoad={onLoad} strict={true}>
@@ -287,21 +287,21 @@ const Booking = () => {
                   readOnly={!edit}
                   onChange={(from) => {
                     if (from) {
-                      booking.from = from
+                      booking.from = from;
 
                       Helper.price(
                         booking,
                         booking.car,
                         (price) => {
-                          setBooking(booking)
-                          setPrice(price)
-                          setFrom(from)
-                          setMinDate(from)
+                          setBooking(booking);
+                          setPrice(price);
+                          setFrom(from);
+                          setMinDate(from);
                         },
                         (err) => {
-                          Helper.error(err)
+                          Helper.error(err);
                         },
-                      )
+                      );
                     }
                   }}
                   language={UserService.getLanguage()}
@@ -316,20 +316,20 @@ const Booking = () => {
                   readOnly={!edit}
                   onChange={(to) => {
                     if (to) {
-                      booking.to = to
+                      booking.to = to;
 
                       Helper.price(
                         booking,
                         booking.car,
                         (price) => {
-                          setBooking(booking)
-                          setPrice(price)
-                          setTo(to)
+                          setBooking(booking);
+                          setPrice(price);
+                          setTo(to);
                         },
                         (err) => {
-                          Helper.error(err)
+                          Helper.error(err);
                         },
-                      )
+                      );
                     }
                   }}
                   language={UserService.getLanguage()}
@@ -427,7 +427,7 @@ const Booking = () => {
       {noMatch && <NoMatch hideHeader />}
       {error && <Error />}
     </Master>
-  )
-}
+  );
+};
 
-export default Booking
+export default Booking;

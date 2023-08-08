@@ -1,4 +1,4 @@
-import Const from './const'
+import Const from './const';
 
 const Env = {
   isMobile: () => window.innerWidth <= 960,
@@ -63,6 +63,6 @@ const Env = {
     (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
-}
+};
 
-export default Env
+export default Env;

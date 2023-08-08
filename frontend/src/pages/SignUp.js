@@ -1,210 +1,210 @@
-import React, { useState } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-up'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
-import ReCAPTCHA from 'react-google-recaptcha'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
-import DatePicker from '../components/DatePicker'
-import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link } from '@mui/material'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
-import * as Helper from '../common/Helper'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/sign-up';
+import * as UserService from '../services/UserService';
+import Master from '../components/Master';
+import ReCAPTCHA from 'react-google-recaptcha';
+import Error from '../components/Error';
+import Backdrop from '../components/SimpleBackdrop';
+import DatePicker from '../components/DatePicker';
+import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link } from '@mui/material';
+import validator from 'validator';
+import { intervalToDuration } from 'date-fns';
+import * as Helper from '../common/Helper';
+import { useNavigate } from 'react-router-dom';
 
-import '../assets/css/signup.css'
+import '../assets/css/signup.css';
 
 const SignUp = () => {
-  const navigate = useNavigate()
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [birthDate, setBirthDate] = useState()
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [reCaptchaToken, setReCaptchaToken] = useState('')
-  const [error, setError] = useState(false)
-  const [recaptchaError, setRecaptchaError] = useState(false)
-  const [passwordError, setPasswordError] = useState(false)
-  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false)
-  const [emailError, setEmailError] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [emailValid, setEmailValid] = useState(true)
-  const [tosChecked, setTosChecked] = useState(false)
-  const [tosError, setTosError] = useState(false)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [phone, setPhone] = useState('')
-  const [birthDateValid, setBirthDateValid] = useState(true)
+  const navigate = useNavigate();
+  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthDate, setBirthDate] = useState();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [reCaptchaToken, setReCaptchaToken] = useState('');
+  const [error, setError] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [emailValid, setEmailValid] = useState(true);
+  const [tosChecked, setTosChecked] = useState(false);
+  const [tosError, setTosError] = useState(false);
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [birthDateValid, setBirthDateValid] = useState(true);
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value)
-  }
+    setFullName(e.target.value);
+  };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
 
     if (!e.target.value) {
-      setEmailError(false)
-      setEmailValid(true)
+      setEmailError(false);
+      setEmailValid(true);
     }
-  }
+  };
 
   const validateEmail = async (email) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email });
           if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
+            setEmailError(false);
+            setEmailValid(true);
+            return true;
           } else {
-            setEmailError(true)
-            setEmailValid(true)
-            setError(false)
-            return false
+            setEmailError(true);
+            setEmailValid(true);
+            setError(false);
+            return false;
           }
         } catch (err) {
-          Helper.error(err)
-          setEmailError(false)
-          setEmailValid(true)
-          return false
+          Helper.error(err);
+          setEmailError(false);
+          setEmailValid(true);
+          return false;
         }
       } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
+        setEmailError(false);
+        setEmailValid(false);
+        return false;
       }
     } else {
-      setEmailError(false)
-      setEmailValid(true)
-      return false
+      setEmailError(false);
+      setEmailValid(true);
+      return false;
     }
-  }
+  };
 
   const handleEmailBlur = async (e) => {
-    await validateEmail(e.target.value)
-  }
+    await validateEmail(e.target.value);
+  };
 
   const validatePhone = (phone) => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+      const phoneValid = validator.isMobilePhone(phone);
+      setPhoneValid(phoneValid);
 
-      return phoneValid
+      return phoneValid;
     } else {
-      setPhoneValid(true)
+      setPhoneValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value)
+    setPhone(e.target.value);
 
     if (!e.target.value) {
-      setPhoneValid(true)
+      setPhoneValid(true);
     }
-  }
+  };
 
   const handlePhoneBlur = (e) => {
-    validatePhone(e.target.value)
-  }
+    validatePhone(e.target.value);
+  };
 
   const validateBirthDate = (date) => {
     if (Helper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const now = new Date();
+      const sub = intervalToDuration({ start: date, end: now }).years;
+      const birthDateValid = sub >= Env.MINIMUM_AGE;
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
+      setBirthDateValid(birthDateValid);
+      return birthDateValid;
     } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(true);
+      return true;
     }
-  }
+  };
 
   const handleOnChangePassword = (e) => {
-    setPassword(e.target.value)
-  }
+    setPassword(e.target.value);
+  };
 
   const handleOnChangeConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value)
-  }
+    setConfirmPassword(e.target.value);
+  };
 
   const handleOnRecaptchaVerify = (token) => {
-    setReCaptchaToken(token)
-    setRecaptchaError(!token)
-  }
+    setReCaptchaToken(token);
+    setRecaptchaError(!token);
+  };
 
   const handleTosChange = (event) => {
-    setTosChecked(event.target.checked)
+    setTosChecked(event.target.checked);
 
     if (event.target.checked) {
-      setTosError(false)
+      setTosError(false);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
-      const emailValid = await validateEmail(email)
+      const emailValid = await validateEmail(email);
       if (!emailValid) {
-        return
+        return;
       }
 
-      const phoneValid = validatePhone(phone)
+      const phoneValid = validatePhone(phone);
       if (!phoneValid) {
-        return
+        return;
       }
 
-      const birthDateValid = validateBirthDate(birthDate)
+      const birthDateValid = validateBirthDate(birthDate);
       if (!birthDateValid) {
-        return
+        return;
       }
 
       if (password.length < 6) {
-        setPasswordError(true)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(false)
-        setTosError(false)
-        return
+        setPasswordError(true);
+        setRecaptchaError(false);
+        setPasswordsDontMatch(false);
+        setError(false);
+        setTosError(false);
+        return;
       }
 
       if (password !== confirmPassword) {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(true)
-        setError(false)
-        setTosError(false)
-        return
+        setPasswordError(false);
+        setRecaptchaError(false);
+        setPasswordsDontMatch(true);
+        setError(false);
+        setTosError(false);
+        return;
       }
 
       if (Env.RECAPTCHA_ENABLED && !reCaptchaToken) {
-        setPasswordError(false)
-        setRecaptchaError(true)
-        setPasswordsDontMatch(false)
-        setError(false)
-        setTosError(false)
-        return
+        setPasswordError(false);
+        setRecaptchaError(true);
+        setPasswordsDontMatch(false);
+        setError(false);
+        setTosError(false);
+        return;
       }
 
       if (!tosChecked) {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(false)
-        setTosError(true)
-        return
+        setPasswordError(false);
+        setRecaptchaError(false);
+        setPasswordsDontMatch(false);
+        setError(false);
+        setTosError(true);
+        return;
       }
 
-      setLoading(true)
+      setLoading(true);
 
       const data = {
         email: email,
@@ -213,50 +213,50 @@ const SignUp = () => {
         fullName: fullName,
         birthDate: birthDate,
         language: UserService.getLanguage(),
-      }
+      };
 
-      const status = await UserService.signup(data)
+      const status = await UserService.signup(data);
 
       if (status === 200) {
         const signInResult = await UserService.signin({
           email: email,
           password: password,
-        })
+        });
 
         if (signInResult.status === 200) {
-          navigate(`/${window.location.search}`)
+          navigate(`/${window.location.search}`);
         } else {
-          setPasswordError(false)
-          setRecaptchaError(false)
-          setPasswordsDontMatch(false)
-          setError(true)
-          setTosError(false)
+          setPasswordError(false);
+          setRecaptchaError(false);
+          setPasswordsDontMatch(false);
+          setError(true);
+          setTosError(false);
         }
       } else {
-        setPasswordError(false)
-        setRecaptchaError(false)
-        setPasswordsDontMatch(false)
-        setError(true)
-        setTosError(false)
+        setPasswordError(false);
+        setRecaptchaError(false);
+        setPasswordsDontMatch(false);
+        setError(true);
+        setTosError(false);
       }
     } catch (err) {
-      Helper.error(err)
-      setPasswordError(false)
-      setRecaptchaError(false)
-      setPasswordsDontMatch(false)
-      setError(true)
-      setTosError(false)
+      Helper.error(err);
+      setPasswordError(false);
+      setRecaptchaError(false);
+      setPasswordsDontMatch(false);
+      setError(true);
+      setTosError(false);
     }
-  }
+  };
 
   const onLoad = (user) => {
     if (user) {
-      navigate('/')
+      navigate('/');
     } else {
-      setLanguage(UserService.getLanguage())
-      setVisible(true)
+      setLanguage(UserService.getLanguage());
+      setVisible(true);
     }
-  }
+  };
 
   return (
     <Master strict={false} onLoad={onLoad}>
@@ -309,10 +309,10 @@ const SignUp = () => {
                     error={!birthDateValid}
                     required
                     onChange={(birthDate) => {
-                      const birthDateValid = validateBirthDate(birthDate)
+                      const birthDateValid = validateBirthDate(birthDate);
 
-                      setBirthDate(birthDate)
-                      setBirthDateValid(birthDateValid)
+                      setBirthDate(birthDate);
+                      setBirthDateValid(birthDateValid);
                     }}
                     language={language}
                   />
@@ -396,7 +396,7 @@ const SignUp = () => {
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;

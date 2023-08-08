@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import Const from '../config/const'
-import * as Helper from '../common/Helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as CarService from '../services/CarService'
-import * as UserService from '../services/UserService'
-import { Button, Tooltip, Card, CardContent, Typography } from '@mui/material'
+import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
+import Const from '../config/const';
+import * as Helper from '../common/Helper';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/cars';
+import * as CarService from '../services/CarService';
+import * as UserService from '../services/UserService';
+import { Button, Tooltip, Card, CardContent, Typography } from '@mui/material';
 import {
   LocalGasStation as FuelIcon,
   AccountTree as GearboxIcon,
@@ -16,50 +16,50 @@ import {
   Check as CheckIcon,
   Clear as UncheckIcon,
   Info as InfoIcon,
-} from '@mui/icons-material'
-import Pager from './Pager'
+} from '@mui/icons-material';
+import Pager from './Pager';
 
-import DoorsIcon from '../assets/img/car-door.png'
+import DoorsIcon from '../assets/img/car-door.png';
 
-import '../assets/css/car-list.css'
+import '../assets/css/car-list.css';
 
 const CarList = (props) => {
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-  const [loading, setLoading] = useState(true)
-  const [fetch, setFetch] = useState(false)
-  const [rows, setRows] = useState([])
-  const [rowCount, setRowCount] = useState(0)
-  const [totalRecords, setTotalRecords] = useState(0)
-  const [page, setPage] = useState(1)
-  const [days, setDays] = useState(0)
+  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+  const [loading, setLoading] = useState(true);
+  const [fetch, setFetch] = useState(false);
+  const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [page, setPage] = useState(1);
+  const [days, setDays] = useState(0);
 
   useEffect(() => {
-    setLanguage(UserService.getLanguage())
-  }, [])
+    setLanguage(UserService.getLanguage());
+  }, []);
 
   useEffect(() => {
     if (props.from && props.to) {
-      setDays(Helper.days(props.from, props.to))
+      setDays(Helper.days(props.from, props.to));
     }
-  }, [props.from, props.to])
+  }, [props.from, props.to]);
 
   useEffect(() => {
     if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-      const element = document.querySelector('body')
+      const element = document.querySelector('body');
 
       if (element) {
         element.onscroll = () => {
           if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-            setPage(page + 1)
+            setPage(page + 1);
           }
-        }
+        };
       }
     }
-  }, [fetch, loading, page])
+  }, [fetch, loading, page]);
 
   const _fetch = async (page, companies, pickupLocation, fuel, gearbox, mileage, deposit) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const payload = {
         companies,
         pickupLocation,
@@ -67,91 +67,91 @@ const CarList = (props) => {
         gearbox,
         mileage,
         deposit,
-      }
+      };
 
-      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
-      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE);
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
+      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
 
-      let _rows = []
+      let _rows = [];
       if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
       } else {
-        _rows = _data.resultData
+        _rows = _data.resultData;
       }
 
-      setRows(_rows)
-      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
-      setTotalRecords(totalRecords)
-      setFetch(_data.resultData.length > 0)
+      setRows(_rows);
+      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length);
+      setTotalRecords(totalRecords);
+      setFetch(_data.resultData.length > 0);
 
       if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
       }
 
       if (props.onLoad) {
-        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (props.companies) {
       if (props.companies.length > 0) {
-        _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit)
+        _fetch(page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit);
       } else {
-        setRows([])
-        setFetch(false)
+        setRows([]);
+        setFetch(false);
         if (props.onLoad) {
-          props.onLoad({ rows: [], rowCount: 0 })
+          props.onLoad({ rows: [], rowCount: 0 });
         }
-        setLoading(false)
+        setLoading(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to])
+  }, [page, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]);
 
   useEffect(() => {
     if (props.cars) {
-      setRows(props.cars)
-      setFetch(false)
+      setRows(props.cars);
+      setFetch(false);
       if (props.onLoad) {
-        props.onLoad({ rows: props.cars, rowCount: props.cars.length })
+        props.onLoad({ rows: props.cars, rowCount: props.cars.length });
       }
-      setLoading(false)
+      setLoading(false);
     }
-  }, [props.cars]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.cars]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setPage(1)
-  }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to])
+    setPage(1);
+  }, [props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.from, props.to]);
 
   useEffect(() => {
     if (props.reload) {
-      setPage(1)
-      _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
+      setPage(1);
+      _fetch(1, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability);
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit])
+  }, [props.reload, props.companies, props.pickupLocation, props.fuel, props.gearbox, props.mileage, props.deposit]);
 
   const getExtraIcon = (option, extra) => {
-    let available = false
+    let available = false;
     if (props.booking) {
-      if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true
-      if (option === 'amendments' && props.booking.amendments && extra > 0) available = true
-      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true
-      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true
-      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true
-      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true
+      if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true;
+      if (option === 'amendments' && props.booking.amendments && extra > 0) available = true;
+      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true;
+      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true;
+      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true;
+      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true;
     }
 
-    return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />
-  }
+    return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />;
+  };
 
-  const fr = language === 'fr'
+  const fr = language === 'fr';
 
   return (
     <>
@@ -323,7 +323,7 @@ const CarList = (props) => {
         <Pager page={page} pageSize={Env.CARS_PAGE_SIZE} rowCount={rowCount} totalRecords={totalRecords} onNext={() => setPage(page + 1)} onPrevious={() => setPage(page - 1)} />
       )}
     </>
-  )
-}
+  );
+};
 
-export default CarList
+export default CarList;

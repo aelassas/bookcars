@@ -1,7 +1,7 @@
-import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
+import LocalizedStrings from 'react-localization';
+import * as LangHelper from '../common/LangHelper';
 
-const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`
+const COPYRIGHT_PART1 = `Copyright © ${new Date().getFullYear()} BookCars.ma`;
 
 const strings = new LocalizedStrings({
   fr: {
@@ -16,7 +16,7 @@ const strings = new LocalizedStrings({
     COPYRIGHT_PART2: '®',
     COPYRIGHT_PART3: '. All rights reserved.',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

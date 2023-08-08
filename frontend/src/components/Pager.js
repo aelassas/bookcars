@@ -1,9 +1,9 @@
-import React from 'react'
-import { IconButton } from '@mui/material'
-import { ArrowBackIos as PreviousPageIcon, ArrowForwardIos as NextPageIcon } from '@mui/icons-material'
-import { strings as commonStrings } from '../lang/common'
+import React from 'react';
+import { IconButton } from '@mui/material';
+import { ArrowBackIos as PreviousPageIcon, ArrowForwardIos as NextPageIcon } from '@mui/icons-material';
+import { strings as commonStrings } from '../lang/common';
 
-import '../assets/css/pager.css'
+import '../assets/css/pager.css';
 
 const Pager = ({ page, pageSize, totalRecords, rowCount, onNext, onPrevious }) => {
   return (
@@ -24,7 +24,7 @@ const Pager = ({ page, pageSize, totalRecords, rowCount, onNext, onPrevious }) =
         </div>
       </div>
     )
-  )
-}
+  );
+};
 
-export default Pager
+export default Pager;
