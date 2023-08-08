@@ -1,4 +1,4 @@
-import LocalizedStrings from 'localized-strings'
+import LocalizedStrings from 'localized-strings';
 
 export default new LocalizedStrings.default({
   fr: {
@@ -87,4 +87,4 @@ export default new LocalizedStrings.default({
     BOOKING_UPDATED_NOTIFICATION_PART1: 'The status of the booking',
     BOOKING_UPDATED_NOTIFICATION_PART2: 'was updated.',
   },
-})
+});
