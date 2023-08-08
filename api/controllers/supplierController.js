@@ -78,7 +78,6 @@ export const deleteSupplier = async (req, res) => {
           const image = path.join(CDN_CARS, car.image);
           if (await Helper.exists(image)) {
             await fs.unlink(image);
-            console.log('file deleted');
           }
         }
       }
