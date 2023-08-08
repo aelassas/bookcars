@@ -179,7 +179,7 @@ export const checkLocation = async (req, res) => {
 
   try {
     const _id = new mongoose.Types.ObjectId(id);
-
+    
     const count = await Car.find({ locations: _id }).limit(1).count();
 
     if (count === 1) {
