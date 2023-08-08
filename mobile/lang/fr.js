@@ -1,5 +1,5 @@
-import Env from '../config/env.config'
-import { COPYRIGHT, REGISTERED } from './copyright'
+import Env from '../config/env.config';
+import { COPYRIGHT, REGISTERED } from './copyright';
 
 export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",
@@ -85,8 +85,7 @@ export const fr = {
   DROP_OFF_LOCATION_EMPTY: 'Veuillez saisir un lieu de restitution.',
   HOME: 'Accueil',
   ABOUT: 'À propos',
-  VALIDATE_EMAIL:
-    "Un e-mail de validation a été envoyé à votre adresse e-mail. Veuillez vérifier votre boîte aux lettres et valider votre compte en cliquant sur le lien dans l'e-mail. Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
+  VALIDATE_EMAIL: "Un e-mail de validation a été envoyé à votre adresse e-mail. Veuillez vérifier votre boîte aux lettres et valider votre compte en cliquant sur le lien dans l'e-mail. Il expirera au bout d'un jour. Si vous n'avez pas reçu d'e-mail de validation, cliquez sur renvoyer.",
   RESEND: 'Renvoyer',
   VALIDATION_EMAIL_SENT: 'E-mail de validation envoyé.',
   VALIDATION_EMAIL_ERROR: "Une erreur s'est produite lors de l'envoi de l'e-mail de validation.",
@@ -209,6 +208,6 @@ export const fr = {
   PAY_ONLINE: 'Payer en ligne',
   PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
   PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-}
+};
 
-export default fr
+export default fr;

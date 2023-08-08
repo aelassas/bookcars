@@ -1,61 +1,61 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import i18n from '../lang/i18n'
-import * as BookingService from '../services/BookingService'
-import Accordion from './Accordion'
-import Button from './Button'
-import DateTimePicker from './DateTimePicker'
-import LocationSelectList from './LocationSelectList'
-import TextInput from './TextInput'
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import i18n from '../lang/i18n';
+import * as BookingService from '../services/BookingService';
+import Accordion from './Accordion';
+import Button from './Button';
+import DateTimePicker from './DateTimePicker';
+import LocationSelectList from './LocationSelectList';
+import TextInput from './TextInput';
 
 const BookingFilter = (props) => {
-  const [init, setInit] = useState(false)
-  const [from, setFrom] = useState(null)
-  const [to, setTo] = useState(null)
-  const [blur, setBlur] = useState(false)
-  const [closePickupLocation, setClosePickupLocation] = useState(false)
-  const [closeDropOffLocation, setCloseDropOffLocation] = useState(false)
-  const [pickupLocation, setPickupLocation] = useState(null)
-  const [dropOffLocation, setDropOffLocation] = useState(null)
-  const [keyword, setKeyword] = useState('')
-  const searchRef = useRef(null)
+  const [init, setInit] = useState(false);
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
+  const [blur, setBlur] = useState(false);
+  const [closePickupLocation, setClosePickupLocation] = useState(false);
+  const [closeDropOffLocation, setCloseDropOffLocation] = useState(false);
+  const [pickupLocation, setPickupLocation] = useState(null);
+  const [dropOffLocation, setDropOffLocation] = useState(null);
+  const [keyword, setKeyword] = useState('');
+  const searchRef = useRef(null);
 
   const _init = async () => {
-    setInit(false)
-    const minDate = await BookingService.minDate(props.driver)
-    setFrom(new Date(minDate))
-    const maxDate = await BookingService.maxDate(props.driver)
-    setTo(new Date(maxDate))
-    setKeyword('')
-    setPickupLocation(null)
-    setDropOffLocation(null)
-    if (searchRef.current) searchRef.current.clear()
-    setInit(true)
-  }
+    setInit(false);
+    const minDate = await BookingService.minDate(props.driver);
+    setFrom(new Date(minDate));
+    const maxDate = await BookingService.maxDate(props.driver);
+    setTo(new Date(maxDate));
+    setKeyword('');
+    setPickupLocation(null);
+    setDropOffLocation(null);
+    if (searchRef.current) searchRef.current.clear();
+    setInit(true);
+  };
 
   useEffect(() => {
-    _init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    _init();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const blurLocations = () => {
-    setBlur(true)
-    setClosePickupLocation(true)
-    setCloseDropOffLocation(true)
-  }
+    setBlur(true);
+    setClosePickupLocation(true);
+    setCloseDropOffLocation(true);
+  };
 
   const handlePickupLocationSelect = (pickupLocation) => {
-    setPickupLocation(pickupLocation)
-  }
+    setPickupLocation(pickupLocation);
+  };
 
   const handleDropOffLocationSelect = (dropOffLocation) => {
-    setDropOffLocation(dropOffLocation)
-  }
+    setDropOffLocation(dropOffLocation);
+  };
 
   const onPressSearch = () => {
-    const filter = { from, to, pickupLocation, dropOffLocation, keyword }
+    const filter = { from, to, pickupLocation, dropOffLocation, keyword };
 
-    if (props.onSubmit) props.onSubmit(filter)
-  }
+    if (props.onSubmit) props.onSubmit(filter);
+  };
 
   return (
     init &&
@@ -95,11 +95,11 @@ const BookingFilter = (props) => {
             onSelectItem={handlePickupLocationSelect}
             selectedItem={pickupLocation}
             onFetch={() => {
-              setClosePickupLocation(false)
+              setClosePickupLocation(false);
             }}
             onFocus={() => {
-              setBlur(false)
-              setCloseDropOffLocation(true)
+              setBlur(false);
+              setCloseDropOffLocation(true);
             }}
             close={closePickupLocation}
             blur={blur}
@@ -113,11 +113,11 @@ const BookingFilter = (props) => {
             onSelectItem={handleDropOffLocationSelect}
             selectedItem={dropOffLocation}
             onFetch={() => {
-              setCloseDropOffLocation(false)
+              setCloseDropOffLocation(false);
             }}
             onFocus={() => {
-              setBlur(false)
-              setClosePickupLocation(true)
+              setBlur(false);
+              setClosePickupLocation(true);
             }}
             close={closeDropOffLocation}
             blur={blur}
@@ -129,8 +129,8 @@ const BookingFilter = (props) => {
         </Accordion>
       </View>
     )
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -145,6 +145,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     margin: 10,
   },
-})
+});
 
-export default BookingFilter
+export default BookingFilter;
