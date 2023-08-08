@@ -1,181 +1,181 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import validator from 'validator';
-import TextInput from '../components/TextInput';
-import Button from '../components/Button';
-import Link from '../components/Link';
-import i18n from '../lang/i18n';
-import Error from '../components/Error';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Switch from '../components/Switch';
-import Header from '../components/Header';
+import React, { useEffect, useRef, useState } from 'react'
+import { StyleSheet, ScrollView, View } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import validator from 'validator'
+import TextInput from '../components/TextInput'
+import Button from '../components/Button'
+import Link from '../components/Link'
+import i18n from '../lang/i18n'
+import Error from '../components/Error'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Switch from '../components/Switch'
+import Header from '../components/Header'
 
 const SignInScreen = ({ navigation, route }) => {
-  const isFocused = useIsFocused();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [stayConnected, setStayConnected] = useState(false);
+  const isFocused = useIsFocused()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [stayConnected, setStayConnected] = useState(false)
 
-  const [emailRequired, setEmailRequired] = useState(false);
-  const [emailValid, setEmailValid] = useState(true);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordRequired, setPasswordRequired] = useState(false);
-  const [passwordLengthError, setPasswordLengthError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [blacklisted, setBlacklisted] = useState(false);
+  const [emailRequired, setEmailRequired] = useState(false)
+  const [emailValid, setEmailValid] = useState(true)
+  const [emailError, setEmailError] = useState(false)
+  const [passwordRequired, setPasswordRequired] = useState(false)
+  const [passwordLengthError, setPasswordLengthError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [blacklisted, setBlacklisted] = useState(false)
 
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
 
   const clear = () => {
-    setEmail('');
-    setPassword('');
-    setStayConnected(false);
+    setEmail('')
+    setPassword('')
+    setStayConnected(false)
 
-    setEmailRequired(false);
-    setEmailValid(true);
-    setEmailError(false);
-    setPasswordRequired(false);
-    setPasswordLengthError(false);
-    setPasswordError(false);
-    setBlacklisted(false);
+    setEmailRequired(false)
+    setEmailValid(true)
+    setEmailError(false)
+    setPasswordRequired(false)
+    setPasswordLengthError(false)
+    setPasswordError(false)
+    setBlacklisted(false)
 
-    if (emailRef.current) emailRef.current.clear();
-    if (passwordRef.current) passwordRef.current.clear();
-  };
+    if (emailRef.current) emailRef.current.clear()
+    if (passwordRef.current) passwordRef.current.clear()
+  }
 
   const _init = async () => {
-    const language = await UserService.getLanguage();
-    i18n.locale = language;
+    const language = await UserService.getLanguage()
+    i18n.locale = language
 
-    clear();
-  };
+    clear()
+  }
 
   useEffect(() => {
     if (isFocused) {
-      _init();
+      _init()
     }
-  }, [route.params, isFocused]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const validateEmail = async () => {
     if (email) {
-      setEmailRequired(false);
+      setEmailRequired(false)
 
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email });
+          const status = await UserService.validateEmail({ email })
           if (status === 204) {
-            setEmailError(false);
-            setEmailValid(true);
-            return true;
+            setEmailError(false)
+            setEmailValid(true)
+            return true
           } else {
-            setEmailError(true);
-            setEmailValid(true);
-            return false;
+            setEmailError(true)
+            setEmailValid(true)
+            return false
           }
         } catch (err) {
-          Helper.error(err);
-          setEmailError(false);
-          setEmailValid(true);
-          return false;
+          Helper.error(err)
+          setEmailError(false)
+          setEmailValid(true)
+          return false
         }
       } else {
-        setEmailError(false);
-        setEmailValid(false);
-        return false;
+        setEmailError(false)
+        setEmailValid(false)
+        return false
       }
     } else {
-      setEmailError(false);
-      setEmailValid(true);
-      setEmailRequired(true);
-      return false;
+      setEmailError(false)
+      setEmailValid(true)
+      setEmailRequired(true)
+      return false
     }
-  };
+  }
 
   const onChangeEmail = (text) => {
-    setEmail(text);
-    setEmailRequired(false);
-    setEmailValid(true);
-    setEmailError(false);
-    setPasswordRequired(false);
-    setPasswordLengthError(false);
-    setPasswordError(false);
-  };
+    setEmail(text)
+    setEmailRequired(false)
+    setEmailValid(true)
+    setEmailError(false)
+    setPasswordRequired(false)
+    setPasswordLengthError(false)
+    setPasswordError(false)
+  }
 
   const validatePassword = () => {
     if (!password) {
-      setPasswordRequired(true);
-      setPasswordLengthError(false);
-      return false;
+      setPasswordRequired(true)
+      setPasswordLengthError(false)
+      return false
     }
 
     if (password.length < 6) {
-      setPasswordLengthError(true);
-      setPasswordRequired(false);
-      return false;
+      setPasswordLengthError(true)
+      setPasswordRequired(false)
+      return false
     }
 
-    return true;
-  };
+    return true
+  }
 
   const onChangePassword = (text) => {
-    setPassword(text);
-    setPasswordRequired(false);
-    setPasswordLengthError(false);
-    setPasswordError(false);
-  };
+    setPassword(text)
+    setPasswordRequired(false)
+    setPasswordLengthError(false)
+    setPasswordError(false)
+  }
 
   const onChangeStayConnected = (checked) => {
-    setStayConnected(checked);
-  };
+    setStayConnected(checked)
+  }
 
   const onPressSignIn = async () => {
-    const emailValid = await validateEmail();
+    const emailValid = await validateEmail()
     if (!emailValid) {
-      return;
+      return
     }
 
-    const passwordValid = validatePassword();
+    const passwordValid = validatePassword()
     if (!passwordValid) {
-      return;
+      return
     }
 
-    const data = { email, password, stayConnected };
+    const data = { email, password, stayConnected }
 
-    const res = await UserService.signin(data);
+    const res = await UserService.signin(data)
 
     try {
       if (res.status === 200) {
         if (res.data.blacklisted) {
-          await UserService.signout(navigation, false);
-          setPasswordError(false);
-          setBlacklisted(true);
+          await UserService.signout(navigation, false)
+          setPasswordError(false)
+          setBlacklisted(true)
         } else {
-          await Helper.registerPushToken(res.data.id);
+          await Helper.registerPushToken(res.data.id)
 
-          setPasswordError(false);
-          setBlacklisted(false);
-          clear();
-          navigation.navigate('Home', { d: new Date().getTime() });
+          setPasswordError(false)
+          setBlacklisted(false)
+          clear()
+          navigation.navigate('Home', { d: new Date().getTime() })
         }
       } else {
-        setPasswordError(true);
-        setBlacklisted(false);
+        setPasswordError(true)
+        setBlacklisted(false)
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const onPressSignUp = () => {
-    navigation.navigate('SignUp');
-  };
+    navigation.navigate('SignUp')
+  }
 
   const onPressForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
-  };
+    navigation.navigate('ForgotPassword')
+  }
 
   return (
     <View style={styles.master}>
@@ -217,8 +217,8 @@ const SignInScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   master: {
@@ -253,6 +253,6 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 15,
   },
-});
+})
 
-export default SignInScreen;
+export default SignInScreen

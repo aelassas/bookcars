@@ -1,111 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-native';
-import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper';
-import { enUS, fr } from 'date-fns/locale';
+import React, { useState, useEffect } from 'react'
+import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-native'
+import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
+import { enUS, fr } from 'date-fns/locale'
 
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import * as Helper from '../common/Helper';
-import * as BookingService from '../services/BookingService';
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import * as Helper from '../common/Helper'
+import * as BookingService from '../services/BookingService'
 
-import Booking from './Booking';
+import Booking from './Booking'
 
 const BookingList = (props) => {
-  const [firstLoad, setFirstLoad] = useState(true);
-  const [onScrollEnd, setOnScrollEnd] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [fetch, setFetch] = useState(false);
-  const [page, setPage] = useState(0);
-  const [rows, setRows] = useState([]);
-  const [selectedId, setSelectedId] = useState('');
-  const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false);
-  const [cancelRequestSent, setCancelRequestSent] = useState(false);
-  const [deleted, setDeleted] = useState(false);
-  const [locale, setLoacle] = useState(fr);
+  const [firstLoad, setFirstLoad] = useState(true)
+  const [onScrollEnd, setOnScrollEnd] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [fetch, setFetch] = useState(false)
+  const [page, setPage] = useState(0)
+  const [rows, setRows] = useState([])
+  const [selectedId, setSelectedId] = useState('')
+  const [openCancelDialog, setOpenCancelDialog] = useState(false)
+  const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
+  const [cancelRequestSent, setCancelRequestSent] = useState(false)
+  const [deleted, setDeleted] = useState(false)
+  const [locale, setLoacle] = useState(fr)
 
   const _fetch = async (reset = false) => {
     try {
       if (props.companies.length > 0 && props.statuses.length > 0) {
-        let _page = page;
+        let _page = page
         if (reset) {
-          _page = 0;
-          setPage(0);
+          _page = 0
+          setPage(0)
         }
         const payload = {
           companies: props.companies,
           statuses: props.statuses,
           filter: props.filter,
           user: props.user,
-        };
-        setLoading(true);
-        setFetch(true);
-        const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE);
-        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
-        const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData];
-        setRows(_rows);
-        setFetch(_data.resultData.length > 0);
-        setLoading(false);
+        }
+        setLoading(true)
+        setFetch(true)
+        const data = await BookingService.getBookings(payload, _page, Env.BOOKINGS_PAGE_SIZE)
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+        const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
+        setRows(_rows)
+        setFetch(_data.resultData.length > 0)
+        setLoading(false)
       } else {
-        setRows([]);
-        setFetch(false);
+        setRows([])
+        setFetch(false)
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   useEffect(() => {
-    setLoacle(props.language === Env.LANGUAGE.FR ? fr : enUS);
-  }, [props.language]);
+    setLoacle(props.language === Env.LANGUAGE.FR ? fr : enUS)
+  }, [props.language])
 
   useEffect(() => {
     if (page > 0) {
-      _fetch();
+      _fetch()
     }
-  }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    (async function () {
+    ;(async function () {
       if (firstLoad && props.companies && props.companies.length > 0 && props.statuses && props.statuses.length > 0) {
-        await _fetch();
-        setFirstLoad(false);
+        await _fetch()
+        setFirstLoad(false)
       }
-    })();
-  }, [firstLoad, props.companies, props.statuses]); // eslint-disable-line react-hooks/exhaustive-deps
+    })()
+  }, [firstLoad, props.companies, props.statuses]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!firstLoad) {
       if (props.companies && props.statuses) {
         if (page > 0) {
-          _fetch(true);
+          _fetch(true)
         } else {
-          _fetch();
+          _fetch()
         }
       }
     }
-  }, [props.companies, props.statuses, props.filter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.companies, props.statuses, props.filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     async function init() {
       try {
-        setLoading(true);
-        setFetch(true);
-        const booking = await BookingService.getBooking(props.booking);
-        setRows(booking ? [booking] : []);
-        if (!booking) setDeleted(true);
-        setFetch(false);
-        setLoading(false);
+        setLoading(true)
+        setFetch(true)
+        const booking = await BookingService.getBooking(props.booking)
+        setRows(booking ? [booking] : [])
+        if (!booking) setDeleted(true)
+        setFetch(false)
+        setLoading(false)
       } catch (err) {
-        Helper.error(err);
+        Helper.error(err)
       }
     }
 
-    if (props.booking) init();
-  }, [props.booking]);
+    if (props.booking) init()
+  }, [props.booking])
 
-  const _fr = props.language === Env.LANGUAGE.FR;
-  const numToRender = Math.floor(Env.BOOKINGS_PAGE_SIZE / 2);
+  const _fr = props.language === Env.LANGUAGE.FR
+  const numToRender = Math.floor(Env.BOOKINGS_PAGE_SIZE / 2)
 
   return (
     <View style={styles.container}>
@@ -124,8 +124,8 @@ const BookingList = (props) => {
             locale={locale}
             fr={_fr}
             onCancel={() => {
-              setSelectedId(booking._id);
-              setOpenCancelDialog(true);
+              setSelectedId(booking._id)
+              setOpenCancelDialog(true)
             }}
           />
         )}
@@ -133,9 +133,9 @@ const BookingList = (props) => {
         onEndReached={() => setOnScrollEnd(true)}
         onMomentumScrollEnd={() => {
           if (onScrollEnd && fetch && props.companies) {
-            setPage(page + 1);
+            setPage(page + 1)
           }
-          setOnScrollEnd(false);
+          setOnScrollEnd(false)
         }}
         ListHeaderComponent={props.header}
         ListFooterComponent={fetch && !openCancelDialog && <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />}
@@ -166,11 +166,11 @@ const BookingList = (props) => {
               <NativeButton
                 // color='#f37022'
                 onPress={() => {
-                  setOpenCancelDialog(false);
+                  setOpenCancelDialog(false)
                   if (cancelRequestSent) {
                     setTimeout(() => {
-                      setCancelRequestSent(false);
-                    }, 500);
+                      setCancelRequestSent(false)
+                    }, 500)
                   }
                 }}
               >
@@ -182,26 +182,26 @@ const BookingList = (props) => {
                 // color='#f37022'
                 onPress={async () => {
                   try {
-                    setCancelRequestProcessing(true);
-                    const status = await BookingService.cancel(selectedId);
+                    setCancelRequestProcessing(true)
+                    const status = await BookingService.cancel(selectedId)
 
                     if (status === 200) {
-                      const row = rows.find((r) => r._id === selectedId);
-                      row.cancelRequest = true;
+                      const row = rows.find((r) => r._id === selectedId)
+                      row.cancelRequest = true
 
-                      setCancelRequestSent(true);
-                      setRows(rows);
-                      setSelectedId('');
-                      setCancelRequestProcessing(false);
+                      setCancelRequestSent(true)
+                      setRows(rows)
+                      setSelectedId('')
+                      setCancelRequestProcessing(false)
                     } else {
-                      Helper.error();
-                      setCancelRequestProcessing(false);
-                      setOpenCancelDialog(false);
+                      Helper.error()
+                      setCancelRequestProcessing(false)
+                      setOpenCancelDialog(false)
                     }
                   } catch (err) {
-                    Helper.error(err);
-                    setCancelRequestProcessing(false);
-                    setOpenCancelDialog(false);
+                    Helper.error(err)
+                    setCancelRequestProcessing(false)
+                    setOpenCancelDialog(false)
                   }
                 }}
               >
@@ -212,8 +212,8 @@ const BookingList = (props) => {
         </Dialog>
       </Portal>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -251,6 +251,6 @@ const styles = StyleSheet.create({
   dialogActions: {
     height: 75,
   },
-});
+})
 
-export default BookingList;
+export default BookingList

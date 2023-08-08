@@ -1,5 +1,5 @@
-import Env from '../config/env.config';
-import { COPYRIGHT, REGISTERED } from './copyright';
+import Env from '../config/env.config'
+import { COPYRIGHT, REGISTERED } from './copyright'
 
 export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",
@@ -208,6 +208,6 @@ export const fr = {
   PAY_ONLINE: 'Payer en ligne',
   PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
   PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-};
+}
 
-export default fr;
+export default fr

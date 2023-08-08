@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
 const BookingStatus = ({ style, status }) => (
   <View
@@ -26,7 +26,7 @@ const BookingStatus = ({ style, status }) => (
   >
     <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
   </View>
-);
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '400',
   },
-});
+})
 
-export default BookingStatus;
+export default BookingStatus

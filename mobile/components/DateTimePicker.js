@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Pressable, Text } from 'react-native';
-import ReactDateTimePicker from '@react-native-community/datetimepicker';
-import { format } from 'date-fns';
-import { enUS, fr } from 'date-fns/locale';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, View, Pressable, Text } from 'react-native'
+import ReactDateTimePicker from '@react-native-community/datetimepicker'
+import { format } from 'date-fns'
+import { enUS, fr } from 'date-fns/locale'
 
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
 const DateTimePicker = (props) => {
-  const [label, setLabel] = useState('');
-  const [value, setValue] = useState(props.value);
-  const [show, setShow] = useState(false);
-  const [locale, setLoacle] = useState(props.locale === Env.LANGUAGE.FR ? fr : enUS);
-  const _format = props.mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm';
-  const now = new Date();
-  const small = props.size === 'small';
+  const [label, setLabel] = useState('')
+  const [value, setValue] = useState(props.value)
+  const [show, setShow] = useState(false)
+  const [locale, setLoacle] = useState(props.locale === Env.LANGUAGE.FR ? fr : enUS)
+  const _format = props.mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm'
+  const now = new Date()
+  const small = props.size === 'small'
 
   useEffect(() => {
-    const _locale = props.locale === Env.LANGUAGE.FR ? fr : enUS;
-    setLoacle(_locale);
-    setLabel((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || props.label);
-  }, [props.locale]); // eslint-disable-line react-hooks/exhaustive-deps
+    const _locale = props.locale === Env.LANGUAGE.FR ? fr : enUS
+    setLoacle(_locale)
+    setLabel((value && Helper.capitalize(format(value, _format, { locale: _locale }))) || props.label)
+  }, [props.locale]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setValue(props.value);
-    setLabel((value && Helper.capitalize(format(value, _format, { locale }))) || props.label);
-  }, [props.value]); // eslint-disable-line react-hooks/exhaustive-deps
+    setValue(props.value)
+    setLabel((value && Helper.capitalize(format(value, _format, { locale }))) || props.label)
+  }, [props.value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const styles = StyleSheet.create({
     container: {
@@ -71,7 +71,7 @@ const DateTimePicker = (props) => {
       fontWeight: '400',
       paddingLeft: 5,
     },
-  });
+  })
 
   return (
     <View style={{ ...props.style, ...styles.container }}>
@@ -80,8 +80,8 @@ const DateTimePicker = (props) => {
         <Pressable
           style={styles.dateButton}
           onPress={() => {
-            setShow(true);
-            if (props.onPress) props.onPress();
+            setShow(true)
+            if (props.onPress) props.onPress()
           }}
         >
           <Text
@@ -100,17 +100,17 @@ const DateTimePicker = (props) => {
             value={value ?? now}
             minimumDate={props.minimumDate}
             onChange={(event, date) => {
-              setShow(false);
+              setShow(false)
               if (date.getTime() !== now.getTime()) {
-                setValue(date);
-                if (props.onChange) props.onChange(date);
+                setValue(date)
+                if (props.onChange) props.onChange(date)
               }
             }}
           />
         )}
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default DateTimePicker;
+export default DateTimePicker

@@ -1,601 +1,601 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons';
-import validator from 'validator';
-import { format, intervalToDuration } from 'date-fns';
-import { enUS, fr } from 'date-fns/locale';
-import Master from './Master';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import TextInput from '../components/TextInput';
-import DateTimePicker from '../components/DateTimePicker';
-import Switch from '../components/Switch';
-import Link from '../components/Link';
-import * as Helper from '../common/Helper';
-import Error from '../components/Error';
-import Button from '../components/Button';
-import RadioButton from '../components/RadioButton';
-import * as CarService from '../services/CarService';
-import * as LocationService from '../services/LocationService';
-import * as BookingService from '../services/BookingService';
-import Env from '../config/env.config';
-import Backdrop from '../components/Backdrop';
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+import validator from 'validator'
+import { format, intervalToDuration } from 'date-fns'
+import { enUS, fr } from 'date-fns/locale'
+import Master from './Master'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import TextInput from '../components/TextInput'
+import DateTimePicker from '../components/DateTimePicker'
+import Switch from '../components/Switch'
+import Link from '../components/Link'
+import * as Helper from '../common/Helper'
+import Error from '../components/Error'
+import Button from '../components/Button'
+import RadioButton from '../components/RadioButton'
+import * as CarService from '../services/CarService'
+import * as LocationService from '../services/LocationService'
+import * as BookingService from '../services/BookingService'
+import Env from '../config/env.config'
+import Backdrop from '../components/Backdrop'
 
 const CheckoutScreen = ({ navigation, route }) => {
-  const isFocused = useIsFocused();
-  const [reload, setReload] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [language, setLanguage] = useState(null);
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [birthDate, setBirthDate] = useState(null);
-  const [tosChecked, setTosChecked] = useState(false);
-  const [cardName, setCardName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardMonth, setCardMonth] = useState('');
-  const [cardYear, setCardYear] = useState('');
-  const [cvv, setCardCvv] = useState('');
-  const [car, setCar] = useState(null);
-  const [pickupLocation, setPickupLocation] = useState(null);
-  const [dropOffLocation, setDropOffLocation] = useState(null);
-  const [from, setFrom] = useState(null);
-  const [to, setTo] = useState(null);
-  const [price, setPrice] = useState(0);
-  const [cancellation, setCancellation] = useState(false);
-  const [amendments, setAmendments] = useState(false);
-  const [theftProtection, setTheftProtection] = useState(false);
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
-  const [fullInsurance, setFullInsurance] = useState(false);
-  const [additionalDriver, setAdditionalDriver] = useState(false);
-  const [_fullName, set_FullName] = useState('');
-  const [_email, set_Email] = useState('');
-  const [_phone, set_Phone] = useState('');
-  const [_birthDate, set_BirthDate] = useState(null);
-  const [payLater, setPayLater] = useState(false);
+  const isFocused = useIsFocused()
+  const [reload, setReload] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
+  const [user, setUser] = useState(null)
+  const [language, setLanguage] = useState(null)
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [birthDate, setBirthDate] = useState(null)
+  const [tosChecked, setTosChecked] = useState(false)
+  const [cardName, setCardName] = useState('')
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardMonth, setCardMonth] = useState('')
+  const [cardYear, setCardYear] = useState('')
+  const [cvv, setCardCvv] = useState('')
+  const [car, setCar] = useState(null)
+  const [pickupLocation, setPickupLocation] = useState(null)
+  const [dropOffLocation, setDropOffLocation] = useState(null)
+  const [from, setFrom] = useState(null)
+  const [to, setTo] = useState(null)
+  const [price, setPrice] = useState(0)
+  const [cancellation, setCancellation] = useState(false)
+  const [amendments, setAmendments] = useState(false)
+  const [theftProtection, setTheftProtection] = useState(false)
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
+  const [fullInsurance, setFullInsurance] = useState(false)
+  const [additionalDriver, setAdditionalDriver] = useState(false)
+  const [_fullName, set_FullName] = useState('')
+  const [_email, set_Email] = useState('')
+  const [_phone, set_Phone] = useState('')
+  const [_birthDate, set_BirthDate] = useState(null)
+  const [payLater, setPayLater] = useState(false)
 
-  const [fullNameRequired, setFullNameRequired] = useState(false);
-  const [emailInfo, setEmailInfo] = useState(true);
-  const [emailError, setEmailError] = useState(false);
-  const [emailValid, setEmailValid] = useState(true);
-  const [emailRequired, setEmailRequired] = useState(false);
-  const [phoneInfo, setPhoneInfo] = useState(true);
-  const [phoneValid, setPhoneValid] = useState(true);
-  const [phoneRequired, setPhoneRequired] = useState(false);
-  const [birthDateRequired, setBirthDateRequired] = useState(false);
-  const [birthDateValid, setBirthDateValid] = useState(true);
-  const [tosError, setTosError] = useState(false);
-  const [cardNameRequired, setCardNameRequired] = useState(false);
-  const [cardNumberRequired, setCardNumberRequired] = useState(false);
-  const [cardNumberValid, setCardNumberValid] = useState(true);
-  const [cardMonthRequired, setCardMonthRequired] = useState(false);
-  const [cardMonthValid, setCardMonthValid] = useState(true);
-  const [cardYearRequired, setCardYearRequired] = useState(false);
-  const [cardYearValid, setCardYearValid] = useState(true);
-  const [cvvRequired, setCardCvvRequired] = useState(false);
-  const [cvvValid, setCardCvvValid] = useState(true);
-  const [cardDateError, setCardDateError] = useState(false);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(true);
-  const [locale, setLoacle] = useState(fr);
-  const [_fullNameRequired, set_FullNameRequired] = useState(false);
-  const [_emailRequired, set_EmailRequired] = useState(false);
-  const [_emailValid, set_EmailValid] = useState(true);
-  const [_phoneRequired, set_PhoneRequired] = useState(false);
-  const [_phoneValid, set_PhoneValid] = useState(true);
-  const [_birthDateRequired, set_BirthDateRequired] = useState(false);
-  const [_birthDateValid, set_BirthDateValid] = useState(true);
+  const [fullNameRequired, setFullNameRequired] = useState(false)
+  const [emailInfo, setEmailInfo] = useState(true)
+  const [emailError, setEmailError] = useState(false)
+  const [emailValid, setEmailValid] = useState(true)
+  const [emailRequired, setEmailRequired] = useState(false)
+  const [phoneInfo, setPhoneInfo] = useState(true)
+  const [phoneValid, setPhoneValid] = useState(true)
+  const [phoneRequired, setPhoneRequired] = useState(false)
+  const [birthDateRequired, setBirthDateRequired] = useState(false)
+  const [birthDateValid, setBirthDateValid] = useState(true)
+  const [tosError, setTosError] = useState(false)
+  const [cardNameRequired, setCardNameRequired] = useState(false)
+  const [cardNumberRequired, setCardNumberRequired] = useState(false)
+  const [cardNumberValid, setCardNumberValid] = useState(true)
+  const [cardMonthRequired, setCardMonthRequired] = useState(false)
+  const [cardMonthValid, setCardMonthValid] = useState(true)
+  const [cardYearRequired, setCardYearRequired] = useState(false)
+  const [cardYearValid, setCardYearValid] = useState(true)
+  const [cvvRequired, setCardCvvRequired] = useState(false)
+  const [cvvValid, setCardCvvValid] = useState(true)
+  const [cardDateError, setCardDateError] = useState(false)
+  const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(true)
+  const [locale, setLoacle] = useState(fr)
+  const [_fullNameRequired, set_FullNameRequired] = useState(false)
+  const [_emailRequired, set_EmailRequired] = useState(false)
+  const [_emailValid, set_EmailValid] = useState(true)
+  const [_phoneRequired, set_PhoneRequired] = useState(false)
+  const [_phoneValid, set_PhoneValid] = useState(true)
+  const [_birthDateRequired, set_BirthDateRequired] = useState(false)
+  const [_birthDateValid, set_BirthDateValid] = useState(true)
 
-  const [adManuallyChecked, setAdManuallyChecked] = useState(false);
-  const [adFullName, setAdFullName] = useState(false);
-  const [adEmail, setAdEmail] = useState(false);
-  const [adPhone, setAdPhone] = useState(false);
-  const [adBirthDate, setAdBirthDate] = useState(false);
+  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
+  const [adFullName, setAdFullName] = useState(false)
+  const [adEmail, setAdEmail] = useState(false)
+  const [adPhone, setAdPhone] = useState(false)
+  const [adBirthDate, setAdBirthDate] = useState(false)
 
-  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate;
+  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
 
-  const adValidate = (val) => !!val;
-
-  useEffect(() => {
-    setAdFullName(adValidate(_fullName));
-  }, [_fullName]);
+  const adValidate = (val) => !!val
 
   useEffect(() => {
-    setAdEmail(adValidate(_email));
-  }, [_email]);
+    setAdFullName(adValidate(_fullName))
+  }, [_fullName])
 
   useEffect(() => {
-    setAdPhone(adValidate(_phone));
-  }, [_phone]);
+    setAdEmail(adValidate(_email))
+  }, [_email])
 
   useEffect(() => {
-    setAdBirthDate(adValidate(_birthDate));
-  }, [_birthDate]);
+    setAdPhone(adValidate(_phone))
+  }, [_phone])
+
+  useEffect(() => {
+    setAdBirthDate(adValidate(_birthDate))
+  }, [_birthDate])
 
   // TODO adRequired
 
-  const fullNameRef = useRef(null);
-  const emailRef = useRef(null);
-  const phoneRef = useRef(null);
-  const cardNameRef = useRef(null);
-  const cardNumberRef = useRef(null);
-  const cardMonthRef = useRef(null);
-  const cardYearRef = useRef(null);
-  const cvvRef = useRef(null);
-  const _fullNameRef = useRef(null);
-  const _emailRef = useRef(null);
-  const _phoneRef = useRef(null);
+  const fullNameRef = useRef(null)
+  const emailRef = useRef(null)
+  const phoneRef = useRef(null)
+  const cardNameRef = useRef(null)
+  const cardNumberRef = useRef(null)
+  const cardMonthRef = useRef(null)
+  const cardYearRef = useRef(null)
+  const cvvRef = useRef(null)
+  const _fullNameRef = useRef(null)
+  const _emailRef = useRef(null)
+  const _phoneRef = useRef(null)
 
   const _init = async () => {
     try {
-      setVisible(false);
-      setFormVisible(false);
+      setVisible(false)
+      setFormVisible(false)
 
-      const language = await UserService.getLanguage();
-      i18n.locale = language;
-      setLanguage(language);
-      setLoacle(language === Env.LANGUAGE.FR ? fr : enUS);
+      const language = await UserService.getLanguage()
+      i18n.locale = language
+      setLanguage(language)
+      setLoacle(language === Env.LANGUAGE.FR ? fr : enUS)
 
-      setAuthenticated(false);
-      setUser(null);
+      setAuthenticated(false)
+      setUser(null)
 
-      let authenticated = false;
-      let user = null;
-      const currentUser = await UserService.getCurrentUser();
+      let authenticated = false
+      let user = null
+      const currentUser = await UserService.getCurrentUser()
 
       if (currentUser) {
-        let status;
+        let status
         try {
-          status = await UserService.validateAccessToken();
+          status = await UserService.validateAccessToken()
         } catch (err) {
-          status = 403;
+          status = 403
         }
 
         if (status === 200) {
-          const _user = await UserService.getUser(currentUser.id);
+          const _user = await UserService.getUser(currentUser.id)
 
           if (_user) {
-            authenticated = true;
-            user = _user;
+            authenticated = true
+            user = _user
           }
         }
       }
 
-      setAuthenticated(authenticated);
-      setUser(user);
+      setAuthenticated(authenticated)
+      setUser(user)
 
       if (!authenticated) {
-        setFullName('');
-        setEmail('');
-        setPhone('');
-        setBirthDate(null);
-        setTosChecked(false);
+        setFullName('')
+        setEmail('')
+        setPhone('')
+        setBirthDate(null)
+        setTosChecked(false)
 
-        if (fullNameRef.current) fullNameRef.current.clear();
-        if (emailRef.current) emailRef.current.clear();
-        if (phoneRef.current) phoneRef.current.clear();
+        if (fullNameRef.current) fullNameRef.current.clear()
+        if (emailRef.current) emailRef.current.clear()
+        if (phoneRef.current) phoneRef.current.clear()
       }
 
-      set_FullName('');
-      set_Email('');
-      set_Phone('');
-      set_BirthDate(null);
-      if (_fullNameRef.current) _fullNameRef.current.clear();
-      if (_emailRef.current) _emailRef.current.clear();
-      if (_phoneRef.current) _phoneRef.current.clear();
+      set_FullName('')
+      set_Email('')
+      set_Phone('')
+      set_BirthDate(null)
+      if (_fullNameRef.current) _fullNameRef.current.clear()
+      if (_emailRef.current) _emailRef.current.clear()
+      if (_phoneRef.current) _phoneRef.current.clear()
 
-      setCardName('');
-      setCardNumber('');
-      setCardMonth('');
-      setCardYear('');
-      setCardCvv('');
+      setCardName('')
+      setCardNumber('')
+      setCardMonth('')
+      setCardYear('')
+      setCardCvv('')
 
-      setFullNameRequired(false);
-      setEmailRequired(false);
-      setEmailValid(true);
-      setEmailError(false);
-      setPhoneRequired(false);
-      setPhoneValid(true);
-      setBirthDateRequired(false);
-      setBirthDateValid(true);
-      setBirthDateRequired(false);
-      setTosError(false);
-      setError(false);
-      setCardNameRequired(false);
-      setCardNumberRequired(false);
-      setCardNumberValid(true);
-      setCardYearRequired(false);
-      setCardYearValid(true);
-      setCardMonthRequired(false);
-      setCardMonthValid(true);
-      setCardCvvRequired(false);
-      setCardCvvValid(true);
-      setPayLater(false);
-      setSuccess(false);
+      setFullNameRequired(false)
+      setEmailRequired(false)
+      setEmailValid(true)
+      setEmailError(false)
+      setPhoneRequired(false)
+      setPhoneValid(true)
+      setBirthDateRequired(false)
+      setBirthDateValid(true)
+      setBirthDateRequired(false)
+      setTosError(false)
+      setError(false)
+      setCardNameRequired(false)
+      setCardNumberRequired(false)
+      setCardNumberValid(true)
+      setCardYearRequired(false)
+      setCardYearValid(true)
+      setCardMonthRequired(false)
+      setCardMonthValid(true)
+      setCardCvvRequired(false)
+      setCardCvvValid(true)
+      setPayLater(false)
+      setSuccess(false)
 
-      if (cardNameRef.current) cardNameRef.current.clear();
-      if (cardNumberRef.current) cardNumber.current.clear();
-      if (cardMonthRef.current) cardMonthRef.current.clear();
-      if (cardYearRef.current) cardYearRef.current.clear();
-      if (cvvRef.current) cvvRef.current.clear();
+      if (cardNameRef.current) cardNameRef.current.clear()
+      if (cardNumberRef.current) cardNumber.current.clear()
+      if (cardMonthRef.current) cardMonthRef.current.clear()
+      if (cardYearRef.current) cardYearRef.current.clear()
+      if (cvvRef.current) cvvRef.current.clear()
 
       if (!route.params || !route.params.car || !route.params.pickupLocation || !route.params.dropOffLocation || !route.params.from || !route.params.to) {
-        await UserService.signout(navigation);
-        return;
+        await UserService.signout(navigation)
+        return
       }
 
-      const car = await CarService.getCar(route.params.car);
-      setCar(car);
+      const car = await CarService.getCar(route.params.car)
+      setCar(car)
 
-      const pickupLocation = await LocationService.getLocation(route.params.pickupLocation);
-      setPickupLocation(pickupLocation);
+      const pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
+      setPickupLocation(pickupLocation)
 
       if (route.params.dropOffLocation !== route.params.pickupLocation) {
-        const dropOffLocation = await LocationService.getLocation(route.params.dropOffLocation);
-        setDropOffLocation(dropOffLocation);
+        const dropOffLocation = await LocationService.getLocation(route.params.dropOffLocation)
+        setDropOffLocation(dropOffLocation)
       } else {
-        setDropOffLocation(pickupLocation);
+        setDropOffLocation(pickupLocation)
       }
 
-      const _from = new Date(route.params.from);
-      setFrom(_from);
+      const _from = new Date(route.params.from)
+      setFrom(_from)
 
-      const _to = new Date(route.params.to);
-      setTo(_to);
+      const _to = new Date(route.params.to)
+      setTo(_to)
 
-      const _price = Helper.price(car, _from, _to);
-      setPrice(_price);
+      const _price = Helper.price(car, _from, _to)
+      setPrice(_price)
 
-      const included = (val) => val === 0;
+      const included = (val) => val === 0
 
-      setCancellation(included(car.cancellation));
-      setAmendments(included(car.amendments));
-      setCollisionDamageWaiver(included(car.collisionDamageWaiver));
-      setTheftProtection(included(car.theftProtection));
-      setFullInsurance(included(car.fullInsurance));
-      setAdditionalDriver(included(car.additionalDriver));
+      setCancellation(included(car.cancellation))
+      setAmendments(included(car.amendments))
+      setCollisionDamageWaiver(included(car.collisionDamageWaiver))
+      setTheftProtection(included(car.theftProtection))
+      setFullInsurance(included(car.fullInsurance))
+      setAdditionalDriver(included(car.additionalDriver))
 
-      setVisible(true);
-      setFormVisible(true);
+      setVisible(true)
+      setFormVisible(true)
     } catch (err) {
-      await UserService.signout(navigation);
+      await UserService.signout(navigation)
     }
-  };
+  }
 
   useEffect(() => {
     if (isFocused) {
-      _init();
-      setReload(true);
+      _init()
+      setReload(true)
     } else {
-      setVisible(false);
+      setVisible(false)
     }
-  }, [route.params, isFocused]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onLoad = () => {
-    setReload(false);
-  };
+    setReload(false)
+  }
 
   const validateFullName = () => {
-    const valid = fullName !== '';
-    setFullNameRequired(!valid);
-    setError(!valid);
-    return valid;
-  };
+    const valid = fullName !== ''
+    setFullNameRequired(!valid)
+    setError(!valid)
+    return valid
+  }
 
   const _validateFullName = () => {
-    const valid = _fullName !== '';
-    set_FullNameRequired(!valid);
-    setError(!valid);
-    return valid;
-  };
+    const valid = _fullName !== ''
+    set_FullNameRequired(!valid)
+    setError(!valid)
+    return valid
+  }
 
   const onChangeFullName = (text) => {
-    setFullName(text);
-    setFullNameRequired(false);
-    setError(false);
-  };
+    setFullName(text)
+    setFullNameRequired(false)
+    setError(false)
+  }
 
   const validateEmail = async () => {
     if (email) {
-      setEmailRequired(false);
+      setEmailRequired(false)
 
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email });
+          const status = await UserService.validateEmail({ email })
           if (status === 200) {
-            setEmailInfo(true);
-            setEmailError(false);
-            setEmailValid(true);
-            setError(false);
-            return true;
+            setEmailInfo(true)
+            setEmailError(false)
+            setEmailValid(true)
+            setError(false)
+            return true
           } else {
-            setEmailInfo(false);
-            setEmailError(true);
-            setEmailValid(true);
-            setError(true);
-            return false;
+            setEmailInfo(false)
+            setEmailError(true)
+            setEmailValid(true)
+            setError(true)
+            return false
           }
         } catch (err) {
-          Helper.error(err);
-          setEmailInfo(true);
-          setEmailError(false);
-          setEmailValid(true);
-          setError(false);
-          return false;
+          Helper.error(err)
+          setEmailInfo(true)
+          setEmailError(false)
+          setEmailValid(true)
+          setError(false)
+          return false
         }
       } else {
-        setEmailError(false);
-        setEmailValid(false);
-        setError(true);
-        return false;
+        setEmailError(false)
+        setEmailValid(false)
+        setError(true)
+        return false
       }
     } else {
-      setEmailInfo(false);
-      setEmailRequired(true);
-      setEmailError(false);
-      setEmailValid(true);
-      setError(true);
-      return false;
+      setEmailInfo(false)
+      setEmailRequired(true)
+      setEmailError(false)
+      setEmailValid(true)
+      setError(true)
+      return false
     }
-  };
+  }
 
   const _validateEmail = () => {
     if (_email) {
-      set_EmailRequired(false);
+      set_EmailRequired(false)
 
       if (validator.isEmail(_email)) {
-        set_EmailValid(true);
-        setError(false);
-        return true;
+        set_EmailValid(true)
+        setError(false)
+        return true
       } else {
-        set_EmailValid(false);
-        setError(true);
-        return false;
+        set_EmailValid(false)
+        setError(true)
+        return false
       }
     } else {
-      set_EmailRequired(true);
-      set_EmailValid(true);
-      setError(true);
-      return false;
+      set_EmailRequired(true)
+      set_EmailValid(true)
+      setError(true)
+      return false
     }
-  };
+  }
 
   const onChangeEmail = (text) => {
-    setEmail(text);
-    setEmailInfo(true);
-    setEmailRequired(false);
-    setEmailValid(true);
-    setEmailError(false);
-    setError(false);
-  };
+    setEmail(text)
+    setEmailInfo(true)
+    setEmailRequired(false)
+    setEmailValid(true)
+    setEmailError(false)
+    setError(false)
+  }
 
   const validatePhone = () => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone);
-      setPhoneInfo(phoneValid);
-      setPhoneRequired(false);
-      setPhoneValid(phoneValid);
-      setError(!phoneValid);
+      const phoneValid = validator.isMobilePhone(phone)
+      setPhoneInfo(phoneValid)
+      setPhoneRequired(false)
+      setPhoneValid(phoneValid)
+      setError(!phoneValid)
 
-      return phoneValid;
+      return phoneValid
     } else {
-      setPhoneInfo(false);
-      setPhoneRequired(true);
-      setPhoneValid(true);
-      setError(true);
+      setPhoneInfo(false)
+      setPhoneRequired(true)
+      setPhoneValid(true)
+      setError(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const _validatePhone = () => {
     if (_phone) {
-      const phoneValid = validator.isMobilePhone(_phone);
-      set_PhoneRequired(false);
-      set_PhoneValid(phoneValid);
-      setError(!phoneValid);
+      const phoneValid = validator.isMobilePhone(_phone)
+      set_PhoneRequired(false)
+      set_PhoneValid(phoneValid)
+      setError(!phoneValid)
 
-      return phoneValid;
+      return phoneValid
     } else {
-      set_PhoneRequired(true);
-      set_PhoneValid(true);
-      setError(true);
+      set_PhoneRequired(true)
+      set_PhoneValid(true)
+      setError(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onChangePhone = (text) => {
-    setPhone(text);
-    setPhoneInfo(true);
-    setPhoneRequired(false);
-    setPhoneValid(true);
-    setError(false);
-  };
+    setPhone(text)
+    setPhoneInfo(true)
+    setPhoneRequired(false)
+    setPhoneValid(true)
+    setError(false)
+  }
 
   const validateBirthDate = () => {
     if (birthDate) {
-      setBirthDateRequired(false);
+      setBirthDateRequired(false)
 
       const sub = intervalToDuration({
         start: birthDate,
         end: new Date(),
-      }).years;
-      const birthDateValid = sub >= Env.MINIMUM_AGE;
+      }).years
+      const birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid);
-      setError(!birthDateValid);
-      return birthDateValid;
+      setBirthDateValid(birthDateValid)
+      setError(!birthDateValid)
+      return birthDateValid
     } else {
-      setBirthDateRequired(true);
-      setBirthDateValid(true);
-      setError(true);
+      setBirthDateRequired(true)
+      setBirthDateValid(true)
+      setError(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const _validateBirthDate = () => {
     if (_birthDate) {
-      set_BirthDateRequired(false);
+      set_BirthDateRequired(false)
 
       const sub = intervalToDuration({
         start: _birthDate,
         end: new Date(),
-      }).years;
-      const birthDateValid = sub >= Env.MINIMUM_AGE;
+      }).years
+      const birthDateValid = sub >= Env.MINIMUM_AGE
 
-      set_BirthDateValid(birthDateValid);
-      setError(!birthDateValid);
-      return birthDateValid;
+      set_BirthDateValid(birthDateValid)
+      setError(!birthDateValid)
+      return birthDateValid
     } else {
-      set_BirthDateRequired(true);
-      set_BirthDateValid(true);
-      setError(true);
+      set_BirthDateRequired(true)
+      set_BirthDateValid(true)
+      setError(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onChangeBirthDate = (date) => {
-    setBirthDate(date);
-    setBirthDateRequired(false);
-    setBirthDateValid(true);
-    setError(false);
-  };
+    setBirthDate(date)
+    setBirthDateRequired(false)
+    setBirthDateValid(true)
+    setError(false)
+  }
 
   const onChangeToS = (checked) => {
-    setTosChecked(checked);
-    if (checked) setTosError(false);
-  };
+    setTosChecked(checked)
+    if (checked) setTosError(false)
+  }
 
   const validateCardName = () => {
     if (cardName) {
-      setCardNameRequired(false);
-      return true;
+      setCardNameRequired(false)
+      return true
     } else {
-      setCardNameRequired(true);
-      return false;
+      setCardNameRequired(true)
+      return false
     }
-  };
+  }
 
   const onCardNameChange = (text) => {
-    setCardName(text);
-    setCardNameRequired(false);
-  };
+    setCardName(text)
+    setCardNameRequired(false)
+  }
 
   const validateCardNumber = () => {
     if (cardNumber) {
-      const cardNumberValid = validator.isCreditCard(cardNumber);
-      setCardNumberRequired(false);
-      setCardNumberValid(cardNumberValid);
+      const cardNumberValid = validator.isCreditCard(cardNumber)
+      setCardNumberRequired(false)
+      setCardNumberValid(cardNumberValid)
 
-      return cardNumberValid;
+      return cardNumberValid
     } else {
-      setCardNumberRequired(true);
-      setCardNumberValid(true);
+      setCardNumberRequired(true)
+      setCardNumberValid(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onCardNumberChange = (text) => {
-    setCardNumber(text);
-    setCardNumberRequired(false);
-    setCardNumberValid(true);
-  };
+    setCardNumber(text)
+    setCardNumberRequired(false)
+    setCardNumberValid(true)
+  }
 
   const validateCardMonth = () => {
     if (cardMonth) {
-      const month = parseInt(cardMonth);
-      const cardMonthValid = month >= 1 && month <= 12;
+      const month = parseInt(cardMonth)
+      const cardMonthValid = month >= 1 && month <= 12
 
-      setCardMonthRequired(false);
-      setCardMonthValid(cardMonthValid);
-      setCardDateError(false);
+      setCardMonthRequired(false)
+      setCardMonthValid(cardMonthValid)
+      setCardDateError(false)
 
-      return cardMonthValid;
+      return cardMonthValid
     } else {
-      setCardMonthRequired(true);
-      setCardMonthValid(true);
-      setCardDateError(false);
+      setCardMonthRequired(true)
+      setCardMonthValid(true)
+      setCardDateError(false)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onCardMonthChange = (text) => {
-    setCardMonth(text);
-    setCardMonthRequired(false);
-    setCardMonthValid(true);
-  };
+    setCardMonth(text)
+    setCardMonthRequired(false)
+    setCardMonthValid(true)
+  }
 
   const validateCardYear = () => {
     if (cardYear) {
-      const year = parseInt(cardYear);
-      const currentYear = parseInt(String(new Date().getFullYear()).slice(2));
-      const cardYearValid = year >= currentYear;
+      const year = parseInt(cardYear)
+      const currentYear = parseInt(String(new Date().getFullYear()).slice(2))
+      const cardYearValid = year >= currentYear
 
-      setCardYearRequired(false);
-      setCardYearValid(cardYearValid);
-      setCardDateError(false);
+      setCardYearRequired(false)
+      setCardYearValid(cardYearValid)
+      setCardDateError(false)
 
-      return cardYearValid;
+      return cardYearValid
     } else {
-      setCardYearRequired(true);
-      setCardYearValid(true);
-      setCardDateError(false);
+      setCardYearRequired(true)
+      setCardYearValid(true)
+      setCardDateError(false)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onCardYearChange = (text) => {
-    setCardYear(text);
-    setCardYearRequired(false);
-    setCardYearValid(true);
-  };
+    setCardYear(text)
+    setCardYearRequired(false)
+    setCardYearValid(true)
+  }
 
   const validateCvv = () => {
     if (cvv) {
-      const cvvValid = Helper.isCvv(cvv);
-      setCardCvvRequired(false);
-      setCardCvvValid(cvvValid);
+      const cvvValid = Helper.isCvv(cvv)
+      setCardCvvRequired(false)
+      setCardCvvValid(cvvValid)
 
-      return cvvValid;
+      return cvvValid
     } else {
-      setCardCvvRequired(true);
-      setCardCvvValid(true);
+      setCardCvvRequired(true)
+      setCardCvvValid(true)
 
-      return false;
+      return false
     }
-  };
+  }
 
   const onCardCvvChange = (text) => {
-    setCardCvv(text);
-    setCardCvvRequired(false);
-    setCardCvvValid(true);
-  };
+    setCardCvv(text)
+    setCardCvvRequired(false)
+    setCardCvvValid(true)
+  }
 
   const validateCardDate = (cardMonth, cardYear) => {
     const today = new Date(),
-      cardDate = new Date();
-    const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100;
-    const year = y + parseInt(cardYear);
-    const month = parseInt(cardMonth);
-    cardDate.setFullYear(year, month - 1, 1);
+      cardDate = new Date()
+    const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100
+    const year = y + parseInt(cardYear)
+    const month = parseInt(cardMonth)
+    cardDate.setFullYear(year, month - 1, 1)
 
     if (cardDate < today) {
-      return false;
+      return false
     }
 
-    return true;
-  };
+    return true
+  }
 
   const onCancellationChange = (checked) => {
     const options = {
@@ -605,11 +605,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection,
       fullInsurance,
       additionalDriver,
-    };
-    const price = Helper.price(car, from, to, options);
-    setCancellation(checked);
-    setPrice(price);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setCancellation(checked)
+    setPrice(price)
+  }
 
   const onAmendmentsChange = (checked) => {
     const options = {
@@ -619,11 +619,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection,
       fullInsurance,
       additionalDriver,
-    };
-    const price = Helper.price(car, from, to, options);
-    setAmendments(checked);
-    setPrice(price);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setAmendments(checked)
+    setPrice(price)
+  }
 
   const onCollisionDamageWaiverChange = (checked) => {
     const options = {
@@ -633,11 +633,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection,
       fullInsurance,
       additionalDriver,
-    };
-    const price = Helper.price(car, from, to, options);
-    setCollisionDamageWaiver(checked);
-    setPrice(price);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setCollisionDamageWaiver(checked)
+    setPrice(price)
+  }
 
   const onTheftProtectionChange = (checked) => {
     const options = {
@@ -647,11 +647,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection: checked,
       fullInsurance,
       additionalDriver,
-    };
-    const price = Helper.price(car, from, to, options);
-    setTheftProtection(checked);
-    setPrice(price);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setTheftProtection(checked)
+    setPrice(price)
+  }
 
   const onFullInsuranceChange = (checked) => {
     const options = {
@@ -661,11 +661,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection,
       fullInsurance: checked,
       additionalDriver,
-    };
-    const price = Helper.price(car, from, to, options);
-    setFullInsurance(checked);
-    setPrice(price);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setFullInsurance(checked)
+    setPrice(price)
+  }
 
   const onAdditionalDriverChange = (checked) => {
     const options = {
@@ -675,111 +675,111 @@ const CheckoutScreen = ({ navigation, route }) => {
       theftProtection,
       fullInsurance,
       additionalDriver: checked,
-    };
-    const price = Helper.price(car, from, to, options);
-    setAdditionalDriver(checked);
-    setPrice(price);
-    setAdManuallyChecked(checked);
-  };
+    }
+    const price = Helper.price(car, from, to, options)
+    setAdditionalDriver(checked)
+    setPrice(price)
+    setAdManuallyChecked(checked)
+  }
 
   const _error = (err) => {
-    Helper.error(err);
-    setLoading(false);
-  };
+    Helper.error(err)
+    setLoading(false)
+  }
 
   const onPressBook = async () => {
     try {
       if (!authenticated) {
-        fullNameRef.current.blur();
-        emailRef.current.blur();
-        phoneRef.current.blur();
+        fullNameRef.current.blur()
+        emailRef.current.blur()
+        phoneRef.current.blur()
 
-        const fullNameValid = validateFullName();
+        const fullNameValid = validateFullName()
         if (!fullNameValid) {
-          return;
+          return
         }
 
-        const emailValid = await validateEmail();
+        const emailValid = await validateEmail()
         if (!emailValid) {
-          return;
+          return
         }
 
-        const phoneValid = validatePhone();
+        const phoneValid = validatePhone()
         if (!phoneValid) {
-          return;
+          return
         }
 
-        const birthDateValid = validateBirthDate();
+        const birthDateValid = validateBirthDate()
         if (!birthDateValid) {
-          return;
+          return
         }
 
         if (!tosChecked) {
-          return setTosError(true);
+          return setTosError(true)
         }
       }
 
       if (adRequired && additionalDriver) {
-        const fullNameValid = _validateFullName();
+        const fullNameValid = _validateFullName()
         if (!fullNameValid) {
-          return;
+          return
         }
 
-        const emailValid = _validateEmail();
+        const emailValid = _validateEmail()
         if (!emailValid) {
-          return;
+          return
         }
 
-        const phoneValid = _validatePhone();
+        const phoneValid = _validatePhone()
         if (!phoneValid) {
-          return;
+          return
         }
 
-        const birthDateValid = _validateBirthDate();
+        const birthDateValid = _validateBirthDate()
         if (!birthDateValid) {
-          return;
+          return
         }
       }
 
       if (!payLater) {
-        const cardNameValid = validateCardName();
+        const cardNameValid = validateCardName()
         if (!cardNameValid) {
-          return;
+          return
         }
 
-        const cardNumberValid = validateCardNumber();
+        const cardNumberValid = validateCardNumber()
         if (!cardNumberValid) {
-          return;
+          return
         }
 
-        const cardMonthValid = validateCardMonth();
+        const cardMonthValid = validateCardMonth()
         if (!cardMonthValid) {
-          return;
+          return
         }
 
-        const cardYearValid = validateCardYear();
+        const cardYearValid = validateCardYear()
         if (!cardYearValid) {
-          return;
+          return
         }
 
-        const cvvValid = validateCvv();
+        const cvvValid = validateCvv()
         if (!cvvValid) {
-          return;
+          return
         }
 
-        const cardDateValid = validateCardDate(cardMonth, cardYear);
+        const cardDateValid = validateCardDate(cardMonth, cardYear)
         if (!cardDateValid) {
-          return setCardDateError(true);
+          return setCardDateError(true)
         }
       }
 
-      setLoading(true);
+      setLoading(true)
 
-      let booking, driver, _additionalDriver;
+      let booking, driver, _additionalDriver
 
       if (!authenticated) {
-        const language = await UserService.getLanguage();
-        driver = { email, phone, fullName, birthDate, language };
+        const language = await UserService.getLanguage()
+        driver = { email, phone, fullName, birthDate, language }
       }
 
       booking = {
@@ -798,7 +798,7 @@ const CheckoutScreen = ({ navigation, route }) => {
         fullInsurance,
         additionalDriver,
         price,
-      };
+      }
 
       if (adRequired && additionalDriver) {
         _additionalDriver = {
@@ -806,7 +806,7 @@ const CheckoutScreen = ({ navigation, route }) => {
           email: _email,
           phone: _phone,
           birthDate: _birthDate,
-        };
+        }
       }
 
       const payload = {
@@ -814,27 +814,27 @@ const CheckoutScreen = ({ navigation, route }) => {
         booking,
         additionalDriver: _additionalDriver,
         payLater,
-      };
+      }
 
-      const status = await BookingService.book(payload);
+      const status = await BookingService.book(payload)
 
       if (status === 200) {
-        setLoading(false);
-        setFormVisible(false);
-        setSuccess(true);
+        setLoading(false)
+        setFormVisible(false)
+        setSuccess(true)
       } else {
-        _error();
+        _error()
       }
     } catch (err) {
-      _error(err);
+      _error(err)
     }
-  };
+  }
 
-  const iconSize = 18;
-  const iconColor = '#000';
-  const _format = 'eee d LLLL yyyy kk:mm';
-  const _fr = language === Env.LANGUAGE.FR;
-  const days = Helper.days(from, to);
+  const iconSize = 18
+  const iconColor = '#000'
+  const _format = 'eee d LLLL yyyy kk:mm'
+  const _fr = language === Env.LANGUAGE.FR
+  const days = Helper.days(from, to)
 
   return (
     <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
@@ -1028,9 +1028,9 @@ const CheckoutScreen = ({ navigation, route }) => {
                       error={adRequired && _fullNameRequired}
                       helperText={(adRequired && _fullNameRequired && i18n.t('REQUIRED')) || ''}
                       onChangeText={(text) => {
-                        set_FullName(text);
-                        set_FullNameRequired(false);
-                        setError(false);
+                        set_FullName(text)
+                        set_FullNameRequired(false)
+                        setError(false)
                       }}
                       backgroundColor="#fbfbfb"
                     />
@@ -1043,10 +1043,10 @@ const CheckoutScreen = ({ navigation, route }) => {
                       error={adRequired && (_emailRequired || !_emailValid)}
                       helperText={(adRequired && _emailRequired && i18n.t('REQUIRED')) || (adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
                       onChangeText={(text) => {
-                        set_Email(text);
-                        set_EmailRequired(false);
-                        set_EmailValid(true);
-                        setError(false);
+                        set_Email(text)
+                        set_EmailRequired(false)
+                        set_EmailValid(true)
+                        setError(false)
                       }}
                       backgroundColor="#fbfbfb"
                     />
@@ -1059,10 +1059,10 @@ const CheckoutScreen = ({ navigation, route }) => {
                       error={adRequired && (_phoneRequired || !_phoneValid)}
                       helperText={(adRequired && _phoneRequired && i18n.t('REQUIRED')) || (adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
                       onChangeText={(text) => {
-                        set_Phone(text);
-                        set_PhoneRequired(false);
-                        set_PhoneValid(true);
-                        setError(false);
+                        set_Phone(text)
+                        set_PhoneRequired(false)
+                        set_PhoneValid(true)
+                        setError(false)
                       }}
                       backgroundColor="#fbfbfb"
                     />
@@ -1076,10 +1076,10 @@ const CheckoutScreen = ({ navigation, route }) => {
                       error={adRequired && (_birthDateRequired || !_birthDateValid)}
                       helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={(date) => {
-                        set_BirthDate(date);
-                        set_BirthDateRequired(false);
-                        set_BirthDateValid(true);
-                        setError(false);
+                        set_BirthDate(date)
+                        set_BirthDateRequired(false)
+                        set_BirthDateValid(true)
+                        setError(false)
                       }}
                       backgroundColor="#fbfbfb"
                     />
@@ -1097,7 +1097,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('PAY_LATER')}
                       checked={payLater}
                       onValueChange={(checked) => {
-                        setPayLater(checked);
+                        setPayLater(checked)
                       }}
                     />
                     <Text style={styles.paymentInfo}>{i18n.t('PAY_LATER_INFO')}</Text>
@@ -1106,7 +1106,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                       label={i18n.t('PAY_ONLINE')}
                       checked={!payLater}
                       onValueChange={(checked) => {
-                        setPayLater(!checked);
+                        setPayLater(!checked)
                       }}
                     />
                     <Text style={styles.paymentInfo}>{i18n.t('PAY_ONLINE_INFO')}</Text>
@@ -1217,7 +1217,7 @@ const CheckoutScreen = ({ navigation, route }) => {
                 style={styles.sucessLink}
                 label={i18n.t('GO_TO_HOME')}
                 onPress={() => {
-                  navigation.navigate('Home');
+                  navigation.navigate('Home')
                 }}
               />
             </View>
@@ -1226,8 +1226,8 @@ const CheckoutScreen = ({ navigation, route }) => {
         </>
       )}
     </Master>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   master: {
@@ -1400,6 +1400,6 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 10,
   },
-});
+})
 
-export default CheckoutScreen;
+export default CheckoutScreen

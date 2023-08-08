@@ -1,119 +1,119 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper';
-import { format } from 'date-fns';
-import { enUS, fr } from 'date-fns/locale';
-import i18n from '../lang/i18n';
-import * as UserService from '../services/UserService';
-import Master from './Master';
-import * as NotificationService from '../services/NotificationService';
-import Env from '../config/env.config';
-import * as Helper from '../common/Helper';
-import Checkbox from '../components/Checkbox';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
+import { format } from 'date-fns'
+import { enUS, fr } from 'date-fns/locale'
+import i18n from '../lang/i18n'
+import * as UserService from '../services/UserService'
+import Master from './Master'
+import * as NotificationService from '../services/NotificationService'
+import Env from '../config/env.config'
+import * as Helper from '../common/Helper'
+import Checkbox from '../components/Checkbox'
 
 const NotificationsScreen = ({ navigation, route }) => {
-  const isFocused = useIsFocused();
-  const [reload, setReload] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [user, setUser] = useState(null);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [rows, setRows] = useState([]);
-  const [totalRecords, setTotalRecords] = useState(-1);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [rowCount, setRowCount] = useState(-1);
-  const [locale, setLoacle] = useState(fr);
-  const notificationsListRef = useRef(null);
+  const isFocused = useIsFocused()
+  const [reload, setReload] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [user, setUser] = useState(null)
+  const [notificationCount, setNotificationCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [rows, setRows] = useState([])
+  const [totalRecords, setTotalRecords] = useState(-1)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [selectedRows, setSelectedRows] = useState([])
+  const [rowCount, setRowCount] = useState(-1)
+  const [locale, setLoacle] = useState(fr)
+  const notificationsListRef = useRef(null)
 
   const _init = async () => {
-    setVisible(false);
-    const language = await UserService.getLanguage();
-    i18n.locale = language;
-    setLoacle(language === Env.LANGUAGE.FR ? fr : enUS);
+    setVisible(false)
+    const language = await UserService.getLanguage()
+    i18n.locale = language
+    setLoacle(language === Env.LANGUAGE.FR ? fr : enUS)
 
-    const currentUser = await UserService.getCurrentUser();
+    const currentUser = await UserService.getCurrentUser()
 
     if (!currentUser) {
-      await UserService.signout(navigation, false, true);
-      return;
+      await UserService.signout(navigation, false, true)
+      return
     }
 
-    const user = await UserService.getUser(currentUser.id);
+    const user = await UserService.getUser(currentUser.id)
 
     if (!user) {
-      await UserService.signout(navigation, false, true);
-      return;
+      await UserService.signout(navigation, false, true)
+      return
     }
 
-    setUser(user);
-    setVisible(true);
-  };
+    setUser(user)
+    setVisible(true)
+  }
 
   useEffect(() => {
     if (isFocused) {
-      _init();
-      setReload(true);
+      _init()
+      setReload(true)
     } else {
-      setVisible(false);
+      setVisible(false)
     }
-  }, [route.params, isFocused]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onLoad = () => {
-    setReload(false);
-  };
+    setReload(false)
+  }
 
   const fetch = useCallback(async () => {
     if (user) {
       try {
-        setRows([]);
-        setLoading(true);
-        const data = await NotificationService.getNotifications(user._id, page);
-        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
+        setRows([])
+        setLoading(true)
+        const data = await NotificationService.getNotifications(user._id, page)
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
         const _rows = _data.resultData.map((row) => ({
           checked: false,
           ...row,
-        }));
-        const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-        setRows(_rows);
-        setTotalRecords(_totalRecords);
-        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length);
-        if (notificationsListRef.current) notificationsListRef.current.scrollTo({ x: 0, y: 0, animated: false });
-        setLoading(false);
+        }))
+        const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+        setRows(_rows)
+        setTotalRecords(_totalRecords)
+        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
+        if (notificationsListRef.current) notificationsListRef.current.scrollTo({ x: 0, y: 0, animated: false })
+        setLoading(false)
       } catch (err) {
-        Helper.error(err);
+        Helper.error(err)
       }
     }
-  }, [user, page]);
+  }, [user, page])
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetch()
+  }, [fetch])
 
   useEffect(() => {
     if (user) {
       const _init = async () => {
-        const notificationCounter = await NotificationService.getNotificationCounter(user._id);
-        const _notificationCount = notificationCounter.count;
-        setNotificationCount(_notificationCount);
-      };
+        const notificationCounter = await NotificationService.getNotificationCounter(user._id)
+        const _notificationCount = notificationCounter.count
+        setNotificationCount(_notificationCount)
+      }
 
-      _init();
+      _init()
     }
-  }, [user]);
+  }, [user])
 
-  const _format = 'eee d LLLL, kk:mm';
-  const iconColor = 'rgba(0, 0, 0, 0.54)';
-  const disabledIconColor = '#c6c6c6';
+  const _format = 'eee d LLLL, kk:mm'
+  const iconColor = 'rgba(0, 0, 0, 0.54)'
+  const disabledIconColor = '#c6c6c6'
 
-  const checkedRows = rows.filter((row) => row.checked);
-  const allChecked = rows.length > 0 && checkedRows.length === rows.length;
-  const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length;
-  const previousPageDisabled = page === 1;
-  const nextPageDisabled = (page - 1) * Env.PAGE_SIZE + rows.length >= totalRecords;
+  const checkedRows = rows.filter((row) => row.checked)
+  const allChecked = rows.length > 0 && checkedRows.length === rows.length
+  const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length
+  const previousPageDisabled = page === 1
+  const nextPageDisabled = (page - 1) * Env.PAGE_SIZE + rows.length >= totalRecords
 
   return (
     <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} notificationCount={notificationCount} strict>
@@ -135,14 +135,14 @@ const NotificationsScreen = ({ navigation, route }) => {
                     onChange={(checked) => {
                       if (indeterminate) {
                         rows.forEach((row) => {
-                          row.checked = false;
-                        });
+                          row.checked = false
+                        })
                       } else {
                         rows.forEach((row) => {
-                          row.checked = checked;
-                        });
+                          row.checked = checked
+                        })
                       }
-                      setRows(Helper.clone(rows));
+                      setRows(Helper.clone(rows))
                     }}
                   />
                   {checkedRows.length > 0 && (
@@ -152,21 +152,21 @@ const NotificationsScreen = ({ navigation, route }) => {
                           style={styles.action}
                           onPress={async () => {
                             try {
-                              const _rows = checkedRows.filter((row) => !row.isRead);
-                              const ids = _rows.map((row) => row._id);
-                              const status = await NotificationService.markAsRead(user._id, ids);
+                              const _rows = checkedRows.filter((row) => !row.isRead)
+                              const ids = _rows.map((row) => row._id)
+                              const status = await NotificationService.markAsRead(user._id, ids)
 
                               if (status === 200) {
                                 _rows.forEach((row) => {
-                                  row.isRead = true;
-                                });
-                                setRows(Helper.clone(rows));
-                                setNotificationCount(notificationCount - _rows.length);
+                                  row.isRead = true
+                                })
+                                setRows(Helper.clone(rows))
+                                setNotificationCount(notificationCount - _rows.length)
                               } else {
-                                Helper.error();
+                                Helper.error()
                               }
                             } catch (err) {
-                              await UserService.signout(navigation);
+                              await UserService.signout(navigation)
                             }
                           }}
                         >
@@ -178,21 +178,21 @@ const NotificationsScreen = ({ navigation, route }) => {
                           style={styles.action}
                           onPress={async () => {
                             try {
-                              const _rows = checkedRows.filter((row) => row.isRead);
-                              const ids = _rows.map((row) => row._id);
-                              const status = await NotificationService.markAsUnread(user._id, ids);
+                              const _rows = checkedRows.filter((row) => row.isRead)
+                              const ids = _rows.map((row) => row._id)
+                              const status = await NotificationService.markAsUnread(user._id, ids)
 
                               if (status === 200) {
                                 _rows.forEach((row) => {
-                                  row.isRead = false;
-                                });
-                                setRows(Helper.clone(rows));
-                                setNotificationCount(notificationCount + _rows.length);
+                                  row.isRead = false
+                                })
+                                setRows(Helper.clone(rows))
+                                setNotificationCount(notificationCount + _rows.length)
                               } else {
-                                Helper.error();
+                                Helper.error()
                               }
                             } catch (err) {
-                              Helper.error(err);
+                              Helper.error(err)
                             }
                           }}
                         >
@@ -202,8 +202,8 @@ const NotificationsScreen = ({ navigation, route }) => {
                       <Pressable
                         style={styles.action}
                         onPress={() => {
-                          setSelectedRows(checkedRows);
-                          setOpenDeleteDialog(true);
+                          setSelectedRows(checkedRows)
+                          setOpenDeleteDialog(true)
                         }}
                       >
                         <MaterialIcons name="delete" size={24} color={iconColor} />
@@ -220,8 +220,8 @@ const NotificationsScreen = ({ navigation, route }) => {
                       <Checkbox
                         checked={row.checked}
                         onChange={(checked) => {
-                          row.checked = checked;
-                          setRows(Helper.clone(rows));
+                          row.checked = checked
+                          setRows(Helper.clone(rows))
                         }}
                       />
                     </View>
@@ -252,24 +252,24 @@ const NotificationsScreen = ({ navigation, route }) => {
                                   const navigate = () =>
                                     navigation.navigate('Booking', {
                                       id: row.booking,
-                                    });
+                                    })
 
                                   if (!row.isRead) {
-                                    const status = await NotificationService.markAsRead(user._id, [row._id]);
+                                    const status = await NotificationService.markAsRead(user._id, [row._id])
 
                                     if (status === 200) {
-                                      row.isRead = true;
-                                      setRows(Helper.clone(rows));
-                                      setNotificationCount(notificationCount - 1);
-                                      navigate();
+                                      row.isRead = true
+                                      setRows(Helper.clone(rows))
+                                      setNotificationCount(notificationCount - 1)
+                                      navigate()
                                     } else {
-                                      Helper.error();
+                                      Helper.error()
                                     }
                                   } else {
-                                    navigate();
+                                    navigate()
                                   }
                                 } catch (err) {
-                                  await UserService.signout(navigation);
+                                  await UserService.signout(navigation)
                                 }
                               }}
                             >
@@ -281,17 +281,17 @@ const NotificationsScreen = ({ navigation, route }) => {
                               style={styles.action}
                               onPress={async () => {
                                 try {
-                                  const status = await NotificationService.markAsRead(user._id, [row._id]);
+                                  const status = await NotificationService.markAsRead(user._id, [row._id])
 
                                   if (status === 200) {
-                                    row.isRead = true;
-                                    setRows(Helper.clone(rows));
-                                    setNotificationCount(notificationCount - 1);
+                                    row.isRead = true
+                                    setRows(Helper.clone(rows))
+                                    setNotificationCount(notificationCount - 1)
                                   } else {
-                                    Helper.error();
+                                    Helper.error()
                                   }
                                 } catch (err) {
-                                  Helper.error(err);
+                                  Helper.error(err)
                                 }
                               }}
                             >
@@ -302,17 +302,17 @@ const NotificationsScreen = ({ navigation, route }) => {
                               style={styles.action}
                               onPress={async () => {
                                 try {
-                                  const status = await NotificationService.markAsUnread(user._id, [row._id]);
+                                  const status = await NotificationService.markAsUnread(user._id, [row._id])
 
                                   if (status === 200) {
-                                    row.isRead = false;
-                                    setRows(Helper.clone(rows));
-                                    setNotificationCount(notificationCount + 1);
+                                    row.isRead = false
+                                    setRows(Helper.clone(rows))
+                                    setNotificationCount(notificationCount + 1)
                                   } else {
-                                    Helper.error();
+                                    Helper.error()
                                   }
                                 } catch (err) {
-                                  await UserService.signout(navigation);
+                                  await UserService.signout(navigation)
                                 }
                               }}
                             >
@@ -322,8 +322,8 @@ const NotificationsScreen = ({ navigation, route }) => {
                           <Pressable
                             style={styles.action}
                             onPress={() => {
-                              setSelectedRows([row]);
-                              setOpenDeleteDialog(true);
+                              setSelectedRows([row])
+                              setOpenDeleteDialog(true)
                             }}
                           >
                             <MaterialIcons name="delete" size={24} color={iconColor} />
@@ -341,9 +341,9 @@ const NotificationsScreen = ({ navigation, route }) => {
                     style={styles.action}
                     disabled={previousPageDisabled}
                     onPress={() => {
-                      const _page = page - 1;
-                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords);
-                      setPage(_page);
+                      const _page = page - 1
+                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                      setPage(_page)
                     }}
                   >
                     <MaterialIcons name="arrow-back-ios" size={24} color={previousPageDisabled ? disabledIconColor : iconColor} />
@@ -352,9 +352,9 @@ const NotificationsScreen = ({ navigation, route }) => {
                     style={styles.action}
                     disabled={nextPageDisabled}
                     onPress={() => {
-                      const _page = page + 1;
-                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords);
-                      setPage(_page);
+                      const _page = page + 1
+                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                      setPage(_page)
                     }}
                   >
                     <MaterialIcons name="arrow-forward-ios" size={24} color={nextPageDisabled ? disabledIconColor : iconColor} />
@@ -372,7 +372,7 @@ const NotificationsScreen = ({ navigation, route }) => {
                     <NativeButton
                       // color='#f37022'
                       onPress={() => {
-                        setOpenDeleteDialog(false);
+                        setOpenDeleteDialog(false)
                       }}
                     >
                       {i18n.t('CANCEL')}
@@ -381,38 +381,38 @@ const NotificationsScreen = ({ navigation, route }) => {
                       // color='#f37022'
                       onPress={async () => {
                         try {
-                          const ids = selectedRows.map((row) => row._id);
-                          const status = await NotificationService.deleteNotifications(user._id, ids);
+                          const ids = selectedRows.map((row) => row._id)
+                          const status = await NotificationService.deleteNotifications(user._id, ids)
 
                           if (status === 200) {
                             if (selectedRows.length === rows.length) {
-                              const _page = 1;
-                              const _totalRecords = totalRecords - selectedRows.length;
-                              setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords);
+                              const _page = 1
+                              const _totalRecords = totalRecords - selectedRows.length
+                              setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords)
 
                               if (page > 1) {
-                                setPage(1);
+                                setPage(1)
                               } else {
-                                fetch();
+                                fetch()
                               }
                             } else {
                               selectedRows.forEach((row) => {
                                 rows.splice(
                                   rows.findIndex((_row) => _row._id === row._id),
                                   1,
-                                );
-                              });
-                              setRows(Helper.clone(rows));
-                              setRowCount(rowCount - selectedRows.length);
-                              setTotalRecords(totalRecords - selectedRows.length);
+                                )
+                              })
+                              setRows(Helper.clone(rows))
+                              setRowCount(rowCount - selectedRows.length)
+                              setTotalRecords(totalRecords - selectedRows.length)
                             }
-                            setNotificationCount(notificationCount - selectedRows.length);
-                            setOpenDeleteDialog(false);
+                            setNotificationCount(notificationCount - selectedRows.length)
+                            setOpenDeleteDialog(false)
                           } else {
-                            Helper.error();
+                            Helper.error()
                           }
                         } catch (err) {
-                          Helper.error(err);
+                          Helper.error(err)
                         }
                       }}
                     >
@@ -426,8 +426,8 @@ const NotificationsScreen = ({ navigation, route }) => {
         </>
       )}
     </Master>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   master: {
@@ -548,6 +548,6 @@ const styles = StyleSheet.create({
   footerActions: {
     flexDirection: 'row',
   },
-});
+})
 
-export default NotificationsScreen;
+export default NotificationsScreen

@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { Avatar, Badge } from 'react-native-paper';
-import * as UserService from '../services/UserService';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { Avatar, Badge } from 'react-native-paper'
+import * as UserService from '../services/UserService'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
 
 const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar }) => {
-  const navigation = useNavigation();
-  const [avatar, setAvatar] = useState(null);
+  const navigation = useNavigation()
+  const [avatar, setAvatar] = useState(null)
 
   useEffect(() => {
     async function init() {
-      const currentUser = await UserService.getCurrentUser();
+      const currentUser = await UserService.getCurrentUser()
       if (currentUser) {
-        const user = await UserService.getUser(currentUser.id);
+        const user = await UserService.getUser(currentUser.id)
         if (user.avatar) {
-          setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar));
+          setAvatar(Helper.joinURL(Env.CDN_USERS, user.avatar))
         } else {
-          setAvatar(null);
+          setAvatar(null)
         }
       }
     }
 
-    init();
-  }, [reload]);
+    init()
+  }, [reload])
 
   useEffect(() => {
-    setAvatar(_avatar);
-  }, [_avatar]);
+    setAvatar(_avatar)
+  }, [_avatar])
 
   return (
     <View style={styles.container}>
@@ -57,8 +57,8 @@ const Header = ({ title, hideTitle, loggedIn, notificationCount, reload, _avatar
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -102,6 +102,6 @@ const styles = StyleSheet.create({
   badgeIcon: {
     zIndex: 1,
   },
-});
+})
 
-export default Header;
+export default Header
