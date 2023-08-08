@@ -1,115 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import * as Helper from '../common/Helper';
-import { strings as commonStrings } from '../lang/common';
-import * as UserService from '../services/UserService';
-import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { AccountCircle, PhotoCamera as PhotoCameraIcon, BrokenImageTwoTone as DeleteIcon } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import * as Helper from '../common/Helper'
+import { strings as commonStrings } from '../lang/common'
+import * as UserService from '../services/UserService'
+import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
+import { AccountCircle, PhotoCamera as PhotoCameraIcon, BrokenImageTwoTone as DeleteIcon } from '@mui/icons-material'
 
 const Avatar = (props) => {
-  const [error, setError] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [error, setError] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [user, setUser] = useState(null)
 
   const handleChange = (e) => {
     if (props.onBeforeUpload) {
-      props.onBeforeUpload();
+      props.onBeforeUpload()
     }
 
-    const { _id } = user;
-    const reader = new FileReader();
-    const file = e.target.files[0];
+    const { _id } = user
+    const reader = new FileReader()
+    const file = e.target.files[0]
 
     reader.onloadend = async () => {
       try {
-        const status = await UserService.updateAvatar(_id, file);
+        const status = await UserService.updateAvatar(_id, file)
 
         if (status === 200) {
-          const user = await UserService.getUser(_id);
+          const user = await UserService.getUser(_id)
 
           if (user) {
-            setUser(user);
+            setUser(user)
           } else {
-            Helper.error();
+            Helper.error()
           }
         } else {
-          Helper.error();
+          Helper.error()
         }
       } catch (err) {
-        Helper.error(err);
+        Helper.error(err)
       } finally {
         if (props.onChange) {
-          props.onChange(user);
+          props.onChange(user)
         }
       }
-    };
+    }
 
-    reader.readAsDataURL(file);
-  };
+    reader.readAsDataURL(file)
+  }
 
   const handleUpload = (e) => {
-    const upload = document.getElementById('upload');
-    upload.value = '';
+    const upload = document.getElementById('upload')
+    upload.value = ''
     setTimeout(() => {
-      upload.click(e);
-    }, 0);
-  };
+      upload.click(e)
+    }, 0)
+  }
 
   const openDialog = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDeleteAvatar = (e) => {
-    e.preventDefault();
-    openDialog();
-  };
+    e.preventDefault()
+    openDialog()
+  }
 
   const closeDialog = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleCancelDelete = () => {
-    closeDialog();
-  };
+    closeDialog()
+  }
 
   const handleDelete = async () => {
     try {
-      const { _id } = user;
-      const status = await UserService.deleteAvatar(_id);
+      const { _id } = user
+      const status = await UserService.deleteAvatar(_id)
 
       if (status === 200) {
-        const user = await UserService.getUser(_id);
+        const user = await UserService.getUser(_id)
 
         if (user) {
-          setUser(user);
+          setUser(user)
           if (props.onChange) {
-            props.onChange(user);
+            props.onChange(user)
           }
-          closeDialog();
+          closeDialog()
         } else {
-          Helper.error();
+          Helper.error()
         }
       } else {
-        Helper.error();
+        Helper.error()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   useEffect(() => {
-    const language = UserService.getLanguage();
-    commonStrings.setLanguage(language);
+    const language = UserService.getLanguage()
+    commonStrings.setLanguage(language)
 
-    const currentUser = UserService.getCurrentUser();
+    const currentUser = UserService.getCurrentUser()
     if (currentUser) {
-      setUser(props.user);
+      setUser(props.user)
     } else {
-      setError(true);
+      setError(true)
     }
-  }, [props.user]);
+  }, [props.user])
 
-  const { loggedUser, size, readonly, className } = props;
+  const { loggedUser, size, readonly, className } = props
   return !error && loggedUser && user ? (
     <div className={className}>
       {loggedUser._id === user._id && !readonly ? (
@@ -182,7 +182,7 @@ const Avatar = (props) => {
         </DialogActions>
       </Dialog>
     </div>
-  ) : null;
-};
+  ) : null
+}
 
-export default Avatar;
+export default Avatar

@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization';
-import * as LangHelper from '../common/LangHelper';
+import LocalizedStrings from 'react-localization'
+import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -16,7 +16,7 @@ const strings = new LocalizedStrings({
     RESET: 'Reset',
     EMAIL_SENT: 'Password reset email sent.',
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }

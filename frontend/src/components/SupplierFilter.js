@@ -1,87 +1,87 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import * as Helper from '../common/Helper';
-import Accordion from './Accordion';
+import React, { useEffect, useRef, useState } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import * as Helper from '../common/Helper'
+import Accordion from './Accordion'
 
-import '../assets/css/company-filter.css';
+import '../assets/css/company-filter.css'
 
 const SupplierFilter = (props) => {
-  const [suppliers, setSuppliers] = useState([]);
-  const [checkedSuppliers, setCheckedSuppliers] = useState([]);
-  const [allChecked, setAllChecked] = useState(true);
-  const refs = useRef([]);
+  const [suppliers, setSuppliers] = useState([])
+  const [checkedSuppliers, setCheckedSuppliers] = useState([])
+  const [allChecked, setAllChecked] = useState(true)
+  const refs = useRef([])
 
   useEffect(() => {
-    setSuppliers(props.companies);
-    setCheckedSuppliers(Helper.flattenCompanies(props.companies));
-  }, [props.companies]);
+    setSuppliers(props.companies)
+    setCheckedSuppliers(Helper.flattenCompanies(props.companies))
+  }, [props.companies])
 
   useEffect(() => {
     if (suppliers.length > 0) {
       refs.current.forEach((checkbox) => {
-        checkbox.checked = true;
-      });
+        checkbox.checked = true
+      })
     }
-  }, [suppliers]);
+  }, [suppliers])
 
   const handleCompanyClick = (e) => {
-    const checkbox = e.currentTarget.previousSibling;
-    checkbox.checked = !checkbox.checked;
-    const event = e;
-    event.currentTarget = checkbox;
-    handleCheckCompanyChange(event);
-  };
+    const checkbox = e.currentTarget.previousSibling
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckCompanyChange(event)
+  }
 
   const handleCheckCompanyChange = (e) => {
-    const companyId = e.currentTarget.getAttribute('data-id');
+    const companyId = e.currentTarget.getAttribute('data-id')
 
     if (e.currentTarget.checked) {
-      checkedSuppliers.push(companyId);
+      checkedSuppliers.push(companyId)
 
       if (checkedSuppliers.length === suppliers.length) {
-        setAllChecked(true);
+        setAllChecked(true)
       }
     } else {
-      const index = checkedSuppliers.indexOf(companyId);
-      checkedSuppliers.splice(index, 1);
+      const index = checkedSuppliers.indexOf(companyId)
+      checkedSuppliers.splice(index, 1)
 
       if (checkedSuppliers.length === 0) {
-        setAllChecked(false);
+        setAllChecked(false)
       }
     }
 
-    setCheckedSuppliers(checkedSuppliers);
+    setCheckedSuppliers(checkedSuppliers)
 
     if (props.onChange) {
-      props.onChange(checkedSuppliers);
+      props.onChange(checkedSuppliers)
     }
-  };
+  }
 
   const handleUncheckAllChange = () => {
     if (allChecked) {
       // uncheck all
       refs.current.forEach((checkbox) => {
-        checkbox.checked = false;
-      });
+        checkbox.checked = false
+      })
 
-      setAllChecked(false);
-      setCheckedSuppliers([]);
+      setAllChecked(false)
+      setCheckedSuppliers([])
     } else {
       // check all
       refs.current.forEach((checkbox) => {
-        checkbox.checked = true;
-      });
+        checkbox.checked = true
+      })
 
-      const companyIds = Helper.flattenCompanies(suppliers);
-      setAllChecked(true);
-      setCheckedSuppliers(companyIds);
+      const companyIds = Helper.flattenCompanies(suppliers)
+      setAllChecked(true)
+      setCheckedSuppliers(companyIds)
 
       if (props.onChange) {
-        props.onChange(companyIds);
+        props.onChange(companyIds)
       }
     }
-  };
+  }
 
   return (
     suppliers.length > 1 && (
@@ -108,7 +108,7 @@ const SupplierFilter = (props) => {
         </div>
       </Accordion>
     )
-  );
-};
+  )
+}
 
-export default SupplierFilter;
+export default SupplierFilter
