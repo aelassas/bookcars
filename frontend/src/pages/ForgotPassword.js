@@ -1,108 +1,108 @@
-import React, { useState } from 'react';
-import * as UserService from '../services/UserService';
-import Master from '../components/Master';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/reset-password';
-import NoMatch from './NoMatch';
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material';
-import validator from 'validator';
-import * as Helper from '../common/Helper';
+import React, { useState } from 'react'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/reset-password'
+import NoMatch from './NoMatch'
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material'
+import validator from 'validator'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/forgot-password.css';
+import '../assets/css/forgot-password.css'
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState();
-  const [visible, setVisible] = useState(false);
-  const [error, setError] = useState(false);
-  const [emailValid, setEmailValid] = useState(true);
-  const [noMatch, setNoMatch] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState()
+  const [visible, setVisible] = useState(false)
+  const [error, setError] = useState(false)
+  const [emailValid, setEmailValid] = useState(true)
+  const [noMatch, setNoMatch] = useState(false)
+  const [sent, setSent] = useState(false)
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmail(e.target.value)
 
     if (!e.target.value) {
-      setError(false);
-      setEmailValid(true);
+      setError(false)
+      setEmailValid(true)
     }
-  };
+  }
 
   const handleEmailKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit(e);
+      handleSubmit(e)
     }
-  };
+  }
 
   const validateEmail = async (email) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email });
+          const status = await UserService.validateEmail({ email })
 
           if (status === 200) {
             // user not found (error)
-            setError(true);
-            setEmailValid(true);
-            return false;
+            setError(true)
+            setEmailValid(true)
+            return false
           } else {
-            setError(false);
-            setEmailValid(true);
-            return true;
+            setError(false)
+            setEmailValid(true)
+            return true
           }
         } catch (err) {
-          Helper.error(err);
-          setError(false);
-          setEmailValid(true);
-          return false;
+          Helper.error(err)
+          setError(false)
+          setEmailValid(true)
+          return false
         }
       } else {
-        setError(false);
-        setEmailValid(false);
-        return false;
+        setError(false)
+        setEmailValid(false)
+        return false
       }
     } else {
-      setError(false);
-      setEmailValid(true);
-      return false;
+      setError(false)
+      setEmailValid(true)
+      return false
     }
-  };
+  }
 
   const handleEmailBlur = async (e) => {
-    await validateEmail(e.target.value);
-  };
+    await validateEmail(e.target.value)
+  }
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const emailValid = await validateEmail(email);
+      const emailValid = await validateEmail(email)
       if (!emailValid) {
-        return;
+        return
       }
 
-      const status = await UserService.resend(email, true);
+      const status = await UserService.resend(email, true)
 
       if (status === 200) {
-        setError(false);
-        setEmailValid(true);
-        setSent(true);
+        setError(false)
+        setEmailValid(true)
+        setSent(true)
       } else {
-        setError(true);
-        setEmailValid(true);
+        setError(true)
+        setEmailValid(true)
       }
     } catch {
-      setError(true);
-      setEmailValid(true);
+      setError(true)
+      setEmailValid(true)
     }
-  };
+  }
 
   const onLoad = (user) => {
     if (user) {
-      setNoMatch(true);
+      setNoMatch(true)
     } else {
-      setVisible(true);
+      setVisible(true)
     }
-  };
+  }
 
   return (
     <Master onLoad={onLoad} strict={false}>
@@ -145,7 +145,7 @@ const ForgotPassword = () => {
       )}
       {noMatch && <NoMatch hideHeader />}
     </Master>
-  );
-};
+  )
+}
 
-export default ForgotPassword;
+export default ForgotPassword

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Backdrop, CircularProgress, Typography } from '@mui/material';
+import React from 'react'
+import { Backdrop, CircularProgress, Typography } from '@mui/material'
 
 const SimpleBackdrop = ({ progress, text }) => (
   <div>
@@ -8,6 +8,6 @@ const SimpleBackdrop = ({ progress, text }) => (
       <Typography color="inherit">{text}</Typography>
     </Backdrop>
   </div>
-);
+)
 
-export default SimpleBackdrop;
+export default SimpleBackdrop

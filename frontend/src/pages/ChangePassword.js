@@ -1,70 +1,70 @@
-import React, { useState } from 'react';
-import Master from '../components/Master';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/change-password';
-import * as UserService from '../services/UserService';
-import Backdrop from '../components/SimpleBackdrop';
-import { Paper, Input, InputLabel, FormControl, FormHelperText, Button } from '@mui/material';
-import * as Helper from '../common/Helper';
+import React, { useState } from 'react'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/change-password'
+import * as UserService from '../services/UserService'
+import Backdrop from '../components/SimpleBackdrop'
+import { Paper, Input, InputLabel, FormControl, FormHelperText, Button } from '@mui/material'
+import * as Helper from '../common/Helper'
 
-import '../assets/css/change-password.css';
+import '../assets/css/change-password.css'
 
 const ChangePassword = () => {
-  const [user, setUser] = useState();
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [newPasswordError, setNewPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [passwordLengthError, setPasswordLengthError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [visible, setVisible] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [currentPasswordError, setCurrentPasswordError] = useState(false);
+  const [user, setUser] = useState()
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [newPasswordError, setNewPasswordError] = useState(false)
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false)
+  const [passwordLengthError, setPasswordLengthError] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [visible, setVisible] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [currentPasswordError, setCurrentPasswordError] = useState(false)
 
   const handleNewPasswordChange = (e) => {
-    setNewPassword(e.target.value);
-  };
+    setNewPassword(e.target.value)
+  }
 
   const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
+    setConfirmPassword(e.target.value)
+  }
 
   const handleOnConfirmPasswordKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit(e);
+      handleSubmit(e)
     }
-  };
+  }
 
   const handleCurrentPasswordChange = (e) => {
-    setCurrentPassword(e.target.value);
-  };
+    setCurrentPassword(e.target.value)
+  }
 
   const err = () => {
-    Helper.error(null, strings.PASSWORD_UPDATE_ERROR);
-  };
+    Helper.error(null, strings.PASSWORD_UPDATE_ERROR)
+  }
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
       const submit = async () => {
         if (newPassword.length < 6) {
-          setPasswordLengthError(true);
-          setConfirmPasswordError(false);
-          setNewPasswordError(false);
-          return;
+          setPasswordLengthError(true)
+          setConfirmPasswordError(false)
+          setNewPasswordError(false)
+          return
         } else {
-          setPasswordLengthError(false);
-          setNewPasswordError(false);
+          setPasswordLengthError(false)
+          setNewPasswordError(false)
         }
 
         if (newPassword !== confirmPassword) {
-          setConfirmPasswordError(true);
-          setNewPasswordError(false);
-          return;
+          setConfirmPasswordError(true)
+          setNewPasswordError(false)
+          return
         } else {
-          setConfirmPasswordError(false);
-          setNewPasswordError(false);
+          setConfirmPasswordError(false)
+          setNewPasswordError(false)
         }
 
         const data = {
@@ -72,48 +72,48 @@ const ChangePassword = () => {
           password: currentPassword,
           newPassword,
           strict: true,
-        };
+        }
 
-        const status = await UserService.changePassword(data);
+        const status = await UserService.changePassword(data)
 
         if (status === 200) {
-          const _user = UserService.getUser(user._id);
+          const _user = UserService.getUser(user._id)
 
           if (_user) {
-            setUser(_user);
-            setNewPasswordError(false);
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-            Helper.info(strings.PASSWORD_UPDATE);
+            setUser(_user)
+            setNewPasswordError(false)
+            setCurrentPassword('')
+            setNewPassword('')
+            setConfirmPassword('')
+            Helper.info(strings.PASSWORD_UPDATE)
           } else {
-            err();
+            err()
           }
         } else {
-          err();
+          err()
         }
-      };
+      }
 
-      const status = await UserService.checkPassword(user._id, currentPassword);
+      const status = await UserService.checkPassword(user._id, currentPassword)
 
-      setCurrentPasswordError(status !== 200);
-      setNewPasswordError(false);
-      setPasswordLengthError(false);
-      setConfirmPasswordError(false);
+      setCurrentPasswordError(status !== 200)
+      setNewPasswordError(false)
+      setPasswordLengthError(false)
+      setConfirmPasswordError(false)
 
       if (status === 200) {
-        submit();
+        submit()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const onLoad = (user) => {
-    setUser(user);
-    setLoading(false);
-    setVisible(true);
-  };
+    setUser(user)
+    setLoading(false)
+    setVisible(true)
+  }
 
   return (
     <Master onLoad={onLoad} strict={true}>
@@ -165,7 +165,7 @@ const ChangePassword = () => {
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  );
-};
+  )
+}
 
-export default ChangePassword;
+export default ChangePassword

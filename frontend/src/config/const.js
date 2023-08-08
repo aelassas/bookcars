@@ -3,6 +3,6 @@ const Const = {
     CLASSIC: 'CLASSIC',
     INFINITE_SCROLL: 'INFINITE_SCROLL',
   },
-};
+}
 
-export default Const;
+export default Const

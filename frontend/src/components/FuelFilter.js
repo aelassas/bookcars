@@ -1,114 +1,114 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/cars';
-import Accordion from './Accordion';
+import React, { useState, useEffect, useRef } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import Accordion from './Accordion'
 
-import '../assets/css/fuel-filter.css';
+import '../assets/css/fuel-filter.css'
 
 const FuelFilter = (props) => {
-  const [allChecked, setAllChecked] = useState(true);
-  const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]);
+  const [allChecked, setAllChecked] = useState(true)
+  const [values, setValues] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
 
-  const dieselRef = useRef();
-  const gasolineRef = useRef();
+  const dieselRef = useRef()
+  const gasolineRef = useRef()
 
   useEffect(() => {
     if (allChecked && dieselRef.current && gasolineRef.current) {
-      dieselRef.current.checked = true;
-      gasolineRef.current.checked = true;
+      dieselRef.current.checked = true
+      gasolineRef.current.checked = true
     }
-  }, [allChecked]);
+  }, [allChecked])
 
   const handleCheckDieselChange = (e) => {
     if (e.currentTarget.checked) {
-      values.push(Env.CAR_TYPE.DIESEL);
+      values.push(Env.CAR_TYPE.DIESEL)
 
       if (values.length === 2) {
-        setAllChecked(true);
+        setAllChecked(true)
       }
     } else {
       values.splice(
         values.findIndex((v) => v === Env.CAR_TYPE.DIESEL),
         1,
-      );
+      )
 
       if (values.length === 0) {
-        setAllChecked(false);
+        setAllChecked(false)
       }
     }
 
-    setValues(values);
+    setValues(values)
 
     if (props.onChange) {
-      props.onChange(values);
+      props.onChange(values)
     }
-  };
+  }
 
   const handleDieselClick = (e) => {
-    const checkbox = e.currentTarget.previousSibling;
-    checkbox.checked = !checkbox.checked;
-    const event = e;
-    event.currentTarget = checkbox;
-    handleCheckDieselChange(event);
-  };
+    const checkbox = e.currentTarget.previousSibling
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckDieselChange(event)
+  }
 
   const handleCheckGasolineChange = (e) => {
     if (e.currentTarget.checked) {
-      values.push(Env.CAR_TYPE.GASOLINE);
+      values.push(Env.CAR_TYPE.GASOLINE)
 
       if (values.length === 2) {
-        setAllChecked(true);
+        setAllChecked(true)
       }
     } else {
       values.splice(
         values.findIndex((v) => v === Env.CAR_TYPE.GASOLINE),
         1,
-      );
+      )
 
       if (values.length === 0) {
-        setAllChecked(false);
+        setAllChecked(false)
       }
     }
 
-    setValues(values);
+    setValues(values)
 
     if (props.onChange) {
-      props.onChange(values);
+      props.onChange(values)
     }
-  };
+  }
 
   const handleGasolineClick = (e) => {
-    const checkbox = e.currentTarget.previousSibling;
-    checkbox.checked = !checkbox.checked;
-    const event = e;
-    event.currentTarget = checkbox;
-    handleCheckGasolineChange(event);
-  };
+    const checkbox = e.currentTarget.previousSibling
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckGasolineChange(event)
+  }
 
   const handleUncheckAllChange = () => {
     if (allChecked) {
       // uncheck all
-      dieselRef.current.checked = false;
-      gasolineRef.current.checked = false;
+      dieselRef.current.checked = false
+      gasolineRef.current.checked = false
 
-      setAllChecked(false);
-      setValues([]);
+      setAllChecked(false)
+      setValues([])
     } else {
       // check all
-      dieselRef.current.checked = true;
-      gasolineRef.current.checked = true;
+      dieselRef.current.checked = true
+      gasolineRef.current.checked = true
 
-      const values = [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE];
+      const values = [Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]
 
-      setAllChecked(true);
-      setValues(values);
+      setAllChecked(true)
+      setValues(values)
 
       if (props.onChange) {
-        props.onChange(values);
+        props.onChange(values)
       }
     }
-  };
+  }
 
   return (
     <Accordion title={strings.ENGINE} className={`${props.className ? `${props.className} ` : ''}fuel-filter`}>
@@ -128,7 +128,7 @@ const FuelFilter = (props) => {
         </span>
       </div>
     </Accordion>
-  );
-};
+  )
+}
 
-export default FuelFilter;
+export default FuelFilter
