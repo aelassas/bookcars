@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/notifications'
-import Master from '../components/Master'
-import * as NotificationService from '../services/NotificationService'
-import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/notifications';
+import Master from '../components/Master';
+import * as NotificationService from '../services/NotificationService';
+import { Button, Card, CardContent, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
 import {
   Visibility as ViewIcon,
   Drafts as MarkReadIcon,
@@ -11,78 +11,78 @@ import {
   Delete as DeleteIcon,
   ArrowBackIos as PreviousPageIcon,
   ArrowForwardIos as NextPageIcon,
-} from '@mui/icons-material'
-import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
-import Backdrop from '../components/SimpleBackdrop'
-import { format } from 'date-fns'
-import { fr, enUS } from 'date-fns/locale'
-import { useNavigate } from 'react-router-dom'
+} from '@mui/icons-material';
+import * as Helper from '../common/Helper';
+import Env from '../config/env.config';
+import Backdrop from '../components/SimpleBackdrop';
+import { format } from 'date-fns';
+import { fr, enUS } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
-import '../assets/css/notifications.css'
+import '../assets/css/notifications.css';
 
 const Notifications = () => {
-  const navigate = useNavigate()
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [rows, setRows] = useState([])
-  const [rowCount, setRowCount] = useState(-1)
-  const [totalRecords, setTotalRecords] = useState(-1)
-  const [notificationCount, setNotificationCount] = useState(-1)
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [selectedRows, setSelectedRows] = useState([])
-  const notificationsListRef = useRef(null)
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(-1);
+  const [totalRecords, setTotalRecords] = useState(-1);
+  const [notificationCount, setNotificationCount] = useState(-1);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const notificationsListRef = useRef(null);
 
-  const _fr = user && user.language === 'fr'
-  const _locale = _fr ? fr : enUS
-  const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
+  const _fr = user && user.language === 'fr';
+  const _locale = _fr ? fr : enUS;
+  const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm';
 
   const fetch = useCallback(async () => {
     if (user) {
       try {
-        setLoading(true)
-        const data = await NotificationService.getNotifications(user._id, page)
-        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+        setLoading(true);
+        const data = await NotificationService.getNotifications(user._id, page);
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
         const _rows = _data.resultData.map((row) => ({
           checked: false,
           ...row,
-        }))
-        const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-        setTotalRecords(_totalRecords)
-        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
-        setRows(_rows)
-        if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0)
-        setLoading(false)
+        }));
+        const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
+        setTotalRecords(_totalRecords);
+        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length);
+        setRows(_rows);
+        if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0);
+        setLoading(false);
       } catch (err) {
-        Helper.error(err)
+        Helper.error(err);
       }
     }
-  }, [user, page])
+  }, [user, page]);
 
   useEffect(() => {
-    fetch()
-  }, [fetch])
+    fetch();
+  }, [fetch]);
 
   useEffect(() => {
     if (user) {
       const _init = async () => {
-        const notificationCounter = await NotificationService.getNotificationCounter(user._id)
-        const _notificationCount = notificationCounter.count
-        setNotificationCount(_notificationCount)
-      }
+        const notificationCounter = await NotificationService.getNotificationCounter(user._id);
+        const _notificationCount = notificationCounter.count;
+        setNotificationCount(_notificationCount);
+      };
 
-      _init()
+      _init();
     }
-  }, [user])
+  }, [user]);
 
   const onLoad = async (user) => {
-    setUser(user)
-  }
+    setUser(user);
+  };
 
-  const checkedRows = rows.filter((row) => row.checked)
-  const allChecked = rows.length > 0 && checkedRows.length === rows.length
-  const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length
+  const checkedRows = rows.filter((row) => row.checked);
+  const allChecked = rows.length > 0 && checkedRows.length === rows.length;
+  const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length;
 
   return (
     <Master onLoad={onLoad} notificationCount={notificationCount} strict>
@@ -106,14 +106,14 @@ const Notifications = () => {
                     onChange={(event) => {
                       if (indeterminate) {
                         rows.forEach((row) => {
-                          row.checked = false
-                        })
+                          row.checked = false;
+                        });
                       } else {
                         rows.forEach((row) => {
-                          row.checked = event.target.checked
-                        })
+                          row.checked = event.target.checked;
+                        });
                       }
-                      setRows(Helper.clone(rows))
+                      setRows(Helper.clone(rows));
                     }}
                   />
                 </div>
@@ -124,21 +124,21 @@ const Notifications = () => {
                         <IconButton
                           onClick={async () => {
                             try {
-                              const _rows = checkedRows.filter((row) => !row.isRead)
-                              const ids = _rows.map((row) => row._id)
-                              const status = await NotificationService.markAsRead(user._id, ids)
+                              const _rows = checkedRows.filter((row) => !row.isRead);
+                              const ids = _rows.map((row) => row._id);
+                              const status = await NotificationService.markAsRead(user._id, ids);
 
                               if (status === 200) {
                                 _rows.forEach((row) => {
-                                  row.isRead = true
-                                })
-                                setRows(Helper.clone(rows))
-                                setNotificationCount(notificationCount - _rows.length)
+                                  row.isRead = true;
+                                });
+                                setRows(Helper.clone(rows));
+                                setNotificationCount(notificationCount - _rows.length);
                               } else {
-                                Helper.error()
+                                Helper.error();
                               }
                             } catch (err) {
-                              Helper.error(err)
+                              Helper.error(err);
                             }
                           }}
                         >
@@ -151,21 +151,21 @@ const Notifications = () => {
                         <IconButton
                           onClick={async () => {
                             try {
-                              const _rows = checkedRows.filter((row) => row.isRead)
-                              const ids = _rows.map((row) => row._id)
-                              const status = await NotificationService.markAsUnread(user._id, ids)
+                              const _rows = checkedRows.filter((row) => row.isRead);
+                              const ids = _rows.map((row) => row._id);
+                              const status = await NotificationService.markAsUnread(user._id, ids);
 
                               if (status === 200) {
                                 _rows.forEach((row) => {
-                                  row.isRead = false
-                                })
-                                setRows(Helper.clone(rows))
-                                setNotificationCount(notificationCount + _rows.length)
+                                  row.isRead = false;
+                                });
+                                setRows(Helper.clone(rows));
+                                setNotificationCount(notificationCount + _rows.length);
                               } else {
-                                Helper.error()
+                                Helper.error();
                               }
                             } catch (err) {
-                              Helper.error(err)
+                              Helper.error(err);
                             }
                           }}
                         >
@@ -176,8 +176,8 @@ const Notifications = () => {
                     <Tooltip title={strings.DELETE_ALL}>
                       <IconButton
                         onClick={() => {
-                          setSelectedRows(checkedRows)
-                          setOpenDeleteDialog(true)
+                          setSelectedRows(checkedRows);
+                          setOpenDeleteDialog(true);
                         }}
                       >
                         <DeleteIcon />
@@ -194,8 +194,8 @@ const Notifications = () => {
                     <Checkbox
                       checked={row.checked}
                       onChange={(event) => {
-                        row.checked = event.target.checked
-                        setRows(Helper.clone(rows))
+                        row.checked = event.target.checked;
+                        setRows(Helper.clone(rows));
                       }}
                     />
                   </div>
@@ -216,25 +216,25 @@ const Notifications = () => {
                               onClick={async () => {
                                 try {
                                   const __navigate__ = () => {
-                                    navigate(`/update-booking?b=${row.booking}`)
-                                  }
+                                    navigate(`/update-booking?b=${row.booking}`);
+                                  };
 
                                   if (!row.isRead) {
-                                    const status = await NotificationService.markAsRead(user._id, [row._id])
+                                    const status = await NotificationService.markAsRead(user._id, [row._id]);
 
                                     if (status === 200) {
-                                      row.isRead = true
-                                      setRows(Helper.clone(rows))
-                                      setNotificationCount(notificationCount - 1)
-                                      __navigate__()
+                                      row.isRead = true;
+                                      setRows(Helper.clone(rows));
+                                      setNotificationCount(notificationCount - 1);
+                                      __navigate__();
                                     } else {
-                                      Helper.error()
+                                      Helper.error();
                                     }
                                   } else {
-                                    __navigate__()
+                                    __navigate__();
                                   }
                                 } catch (err) {
-                                  Helper.error(err)
+                                  Helper.error(err);
                                 }
                               }}
                             >
@@ -247,17 +247,17 @@ const Notifications = () => {
                             <IconButton
                               onClick={async () => {
                                 try {
-                                  const status = await NotificationService.markAsRead(user._id, [row._id])
+                                  const status = await NotificationService.markAsRead(user._id, [row._id]);
 
                                   if (status === 200) {
-                                    row.isRead = true
-                                    setRows(Helper.clone(rows))
-                                    setNotificationCount(notificationCount - 1)
+                                    row.isRead = true;
+                                    setRows(Helper.clone(rows));
+                                    setNotificationCount(notificationCount - 1);
                                   } else {
-                                    Helper.error()
+                                    Helper.error();
                                   }
                                 } catch (err) {
-                                  Helper.error(err)
+                                  Helper.error(err);
                                 }
                               }}
                             >
@@ -269,17 +269,17 @@ const Notifications = () => {
                             <IconButton
                               onClick={async () => {
                                 try {
-                                  const status = await NotificationService.markAsUnread(user._id, [row._id])
+                                  const status = await NotificationService.markAsUnread(user._id, [row._id]);
 
                                   if (status === 200) {
-                                    row.isRead = false
-                                    setRows(Helper.clone(rows))
-                                    setNotificationCount(notificationCount + 1)
+                                    row.isRead = false;
+                                    setRows(Helper.clone(rows));
+                                    setNotificationCount(notificationCount + 1);
                                   } else {
-                                    Helper.error()
+                                    Helper.error();
                                   }
                                 } catch (err) {
-                                  Helper.error(err)
+                                  Helper.error(err);
                                 }
                               }}
                             >
@@ -290,8 +290,8 @@ const Notifications = () => {
                         <Tooltip title={commonStrings.DELETE}>
                           <IconButton
                             onClick={() => {
-                              setSelectedRows([row])
-                              setOpenDeleteDialog(true)
+                              setSelectedRows([row]);
+                              setOpenDeleteDialog(true);
                             }}
                           >
                             <DeleteIcon />
@@ -310,9 +310,9 @@ const Notifications = () => {
                 <IconButton
                   disabled={page === 1}
                   onClick={() => {
-                    const _page = page - 1
-                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
-                    setPage(_page)
+                    const _page = page - 1;
+                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords);
+                    setPage(_page);
                   }}
                 >
                   <PreviousPageIcon className="icon" />
@@ -320,9 +320,9 @@ const Notifications = () => {
                 <IconButton
                   disabled={(page - 1) * Env.PAGE_SIZE + rows.length >= totalRecords}
                   onClick={() => {
-                    const _page = page + 1
-                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
-                    setPage(_page)
+                    const _page = page + 1;
+                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords);
+                    setPage(_page);
                   }}
                 >
                   <NextPageIcon className="icon" />
@@ -336,7 +336,7 @@ const Notifications = () => {
               <DialogActions className="dialog-actions">
                 <Button
                   onClick={() => {
-                    setOpenDeleteDialog(false)
+                    setOpenDeleteDialog(false);
                   }}
                   variant="contained"
                   className="btn-secondary"
@@ -346,38 +346,38 @@ const Notifications = () => {
                 <Button
                   onClick={async () => {
                     try {
-                      const ids = selectedRows.map((row) => row._id)
-                      const status = await NotificationService.deleteNotifications(user._id, ids)
+                      const ids = selectedRows.map((row) => row._id);
+                      const status = await NotificationService.deleteNotifications(user._id, ids);
 
                       if (status === 200) {
                         if (selectedRows.length === rows.length) {
-                          const _page = 1
-                          const _totalRecords = totalRecords - selectedRows.length
-                          setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords)
+                          const _page = 1;
+                          const _totalRecords = totalRecords - selectedRows.length;
+                          setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords);
 
                           if (page > 1) {
-                            setPage(1)
+                            setPage(1);
                           } else {
-                            fetch()
+                            fetch();
                           }
                         } else {
                           selectedRows.forEach((row) => {
                             rows.splice(
                               rows.findIndex((_row) => _row._id === row._id),
                               1,
-                            )
-                          })
-                          setRows(Helper.clone(rows))
-                          setRowCount(rowCount - selectedRows.length)
-                          setTotalRecords(totalRecords - selectedRows.length)
+                            );
+                          });
+                          setRows(Helper.clone(rows));
+                          setRowCount(rowCount - selectedRows.length);
+                          setTotalRecords(totalRecords - selectedRows.length);
                         }
-                        setNotificationCount(notificationCount - selectedRows.length)
-                        setOpenDeleteDialog(false)
+                        setNotificationCount(notificationCount - selectedRows.length);
+                        setOpenDeleteDialog(false);
                       } else {
-                        Helper.error()
+                        Helper.error();
                       }
                     } catch (err) {
-                      Helper.error(err)
+                      Helper.error(err);
                     }
                   }}
                   variant="contained"
@@ -392,7 +392,7 @@ const Notifications = () => {
       </div>
       {loading && <Backdrop text={commonStrings.LOADING} />}
     </Master>
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;

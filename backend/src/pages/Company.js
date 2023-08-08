@@ -1,125 +1,125 @@
-import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as clStrings } from '../lang/company-list'
-import * as SupplierService from '../services/SupplierService'
-import * as Helper from '../common/Helper'
-import Master from '../components/Master'
-import Backdrop from '../components/SimpleBackdrop'
-import Avatar from '../components/Avatar'
-import CarList from '../components/CarList'
-import InfoBox from '../components/InfoBox'
-import Error from './Error'
-import NoMatch from './NoMatch'
-import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as clStrings } from '../lang/company-list';
+import * as SupplierService from '../services/SupplierService';
+import * as Helper from '../common/Helper';
+import Master from '../components/Master';
+import Backdrop from '../components/SimpleBackdrop';
+import Avatar from '../components/Avatar';
+import CarList from '../components/CarList';
+import InfoBox from '../components/InfoBox';
+import Error from './Error';
+import NoMatch from './NoMatch';
+import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material';
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-import '../assets/css/company.css'
+import '../assets/css/company.css';
 
 const Company = () => {
-  const navigate = useNavigate()
-  const [user, setUser] = useState()
-  const [company, setCompany] = useState()
-  const [companies, setCompanies] = useState([])
-  const [error, setError] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [noMatch, setNoMatch] = useState(false)
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [rowCount, setRowCount] = useState(-1)
-  const [offset, setOffset] = useState(0)
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
+  const [company, setCompany] = useState();
+  const [companies, setCompanies] = useState([]);
+  const [error, setError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [noMatch, setNoMatch] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [rowCount, setRowCount] = useState(-1);
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     if (visible) {
-      setOffset(document.querySelector('.col-1').clientHeight)
+      setOffset(document.querySelector('.col-1').clientHeight);
     }
-  }, [visible])
+  }, [visible]);
 
   const onBeforeUpload = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const onAvatarChange = (avatar) => {
     if (user._id === company._id) {
-      const _user = Helper.clone(user)
-      _user.avatar = avatar
+      const _user = Helper.clone(user);
+      _user.avatar = avatar;
 
-      setUser(_user)
+      setUser(_user);
     }
 
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const handleDelete = () => {
-    setOpenDeleteDialog(true)
-  }
+    setOpenDeleteDialog(true);
+  };
 
   const handleConfirmDelete = async () => {
     try {
-      setOpenDeleteDialog(false)
+      setOpenDeleteDialog(false);
 
-      const status = await SupplierService.deleteCompany(company._id)
+      const status = await SupplierService.deleteCompany(company._id);
 
       if (status === 200) {
-        navigate('/suppliers')
+        navigate('/suppliers');
       } else {
-        Helper.error()
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const handleCancelDelete = () => {
-    setOpenDeleteDialog(false)
-  }
+    setOpenDeleteDialog(false);
+  };
 
   const handleCarListLoad = (data) => {
-    setRowCount(data.rowCount)
-  }
+    setRowCount(data.rowCount);
+  };
 
   const handleCarDelete = (rowCount) => {
-    setRowCount(rowCount)
-  }
+    setRowCount(rowCount);
+  };
 
   const onLoad = async (user) => {
-    setUser(user)
+    setUser(user);
 
     if (user && user.verified) {
-      const params = new URLSearchParams(window.location.search)
+      const params = new URLSearchParams(window.location.search);
       if (params.has('c')) {
-        const id = params.get('c')
+        const id = params.get('c');
         if (id && id !== '') {
           try {
-            const company = await SupplierService.getCompany(id)
+            const company = await SupplierService.getCompany(id);
 
             if (company) {
-              setCompany(company)
-              setCompanies([company._id])
-              setVisible(true)
-              setLoading(false)
+              setCompany(company);
+              setCompanies([company._id]);
+              setVisible(true);
+              setLoading(false);
             } else {
-              setLoading(false)
-              setNoMatch(true)
+              setLoading(false);
+              setNoMatch(true);
             }
           } catch {
-            setLoading(false)
-            setError(true)
-            setVisible(false)
+            setLoading(false);
+            setError(true);
+            setVisible(false);
           }
         } else {
-          setLoading(false)
-          setNoMatch(true)
+          setLoading(false);
+          setNoMatch(true);
         }
       } else {
-        setLoading(false)
-        setNoMatch(true)
+        setLoading(false);
+        setNoMatch(true);
       }
     }
-  }
+  };
 
-  const edit = user && company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id)
+  const edit = user && company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === company._id);
 
   return (
     <Master onLoad={onLoad} user={user} strict={true}>
@@ -218,7 +218,7 @@ const Company = () => {
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
     </Master>
-  )
-}
+  );
+};
 
-export default Company
+export default Company;

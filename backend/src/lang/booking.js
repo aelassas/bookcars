@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
+import LocalizedStrings from 'react-localization';
+import * as LangHelper from '../common/LangHelper';
 
 const strings = new LocalizedStrings({
   fr: {
@@ -10,7 +10,7 @@ const strings = new LocalizedStrings({
     TOTAL: 'Total:',
     DELETE_BOOKING: 'Are you sure you want to delete this booking?',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

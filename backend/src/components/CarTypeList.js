@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { InputLabel, Select, MenuItem } from '@mui/material'
-import { strings } from '../lang/cars'
+import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
+import { InputLabel, Select, MenuItem } from '@mui/material';
+import { strings } from '../lang/cars';
 
 const CarTypeList = (props) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
 
   useEffect(() => {
-    setValue(props.value || '')
-  }, [props.value])
+    setValue(props.value || '');
+  }, [props.value]);
 
   const handleChange = (e) => {
-    const value = e.target.value || ''
-    setValue(value)
+    const value = e.target.value || '';
+    setValue(value);
 
     if (props.onChange) {
-      props.onChange(value)
+      props.onChange(value);
     }
-  }
+  };
 
   return (
     <div>
@@ -27,7 +27,7 @@ const CarTypeList = (props) => {
         <MenuItem value={Env.CAR_TYPE.GASOLINE}>{strings.GASOLINE}</MenuItem>
       </Select>
     </div>
-  )
-}
+  );
+};
 
-export default CarTypeList
+export default CarTypeList;

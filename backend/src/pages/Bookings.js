@@ -1,68 +1,68 @@
-import React, { useState, useEffect } from 'react'
-import Master from '../components/Master'
-import Env from '../config/env.config'
-import { strings } from '../lang/bookings'
-import * as Helper from '../common/Helper'
-import BookingList from '../components/BookingList'
-import SupplierFilter from '../components/SupplierFilter'
-import StatusFilter from '../components/StatusFilter'
-import BookingFilter from '../components/BookingFilter'
-import { Button } from '@mui/material'
-import * as SupplierService from '../services/SupplierService'
+import React, { useState, useEffect } from 'react';
+import Master from '../components/Master';
+import Env from '../config/env.config';
+import { strings } from '../lang/bookings';
+import * as Helper from '../common/Helper';
+import BookingList from '../components/BookingList';
+import SupplierFilter from '../components/SupplierFilter';
+import StatusFilter from '../components/StatusFilter';
+import BookingFilter from '../components/BookingFilter';
+import { Button } from '@mui/material';
+import * as SupplierService from '../services/SupplierService';
 
-import '../assets/css/bookings.css'
+import '../assets/css/bookings.css';
 
 const Bookings = () => {
-  const [user, setUser] = useState()
-  const [leftPanel, setLeftPanel] = useState(false)
-  const [admin, setAdmin] = useState(false)
-  const [allCompanies, setAllCompanies] = useState([])
-  const [companies, setCompanies] = useState([])
-  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
-  const [filter, setFilter] = useState(null)
-  const [reload, setReload] = useState(false)
-  const [loadingCompanies, setLoadingCompanies] = useState(true)
-  const [offset, setOffset] = useState(0)
+  const [user, setUser] = useState();
+  const [leftPanel, setLeftPanel] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const [allCompanies, setAllCompanies] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value));
+  const [filter, setFilter] = useState(null);
+  const [reload, setReload] = useState(false);
+  const [loadingCompanies, setLoadingCompanies] = useState(true);
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     if (user && user.verified) {
-      setOffset(document.querySelector('div.col-1').clientHeight)
+      setOffset(document.querySelector('div.col-1').clientHeight);
     }
-  }, [user])
+  }, [user]);
 
   const handleSupplierFilterChange = (newCompanies) => {
-    setCompanies(newCompanies)
-    setReload(Helper.arrayEqual(companies, newCompanies))
-  }
+    setCompanies(newCompanies);
+    setReload(Helper.arrayEqual(companies, newCompanies));
+  };
 
   const handleStatusFilterChange = (newStatuses) => {
-    setStatuses(newStatuses)
-    setReload(Helper.arrayEqual(statuses, newStatuses))
-  }
+    setStatuses(newStatuses);
+    setReload(Helper.arrayEqual(statuses, newStatuses));
+  };
 
   const handleBookingFilterSubmit = (newFilter) => {
-    setFilter(newFilter)
-    setReload(Helper.filterEqual(filter, newFilter))
-  }
+    setFilter(newFilter);
+    setReload(Helper.filterEqual(filter, newFilter));
+  };
 
   const handleBookingListLoad = () => {
-    setReload(false)
-  }
+    setReload(false);
+  };
 
   const onLoad = async (user) => {
-    const admin = Helper.admin(user)
-    setUser(user)
-    setAdmin(admin)
-    setLeftPanel(!admin)
-    setLoadingCompanies(admin)
+    const admin = Helper.admin(user);
+    setUser(user);
+    setAdmin(admin);
+    setLeftPanel(!admin);
+    setLoadingCompanies(admin);
 
-    const allCompanies = admin ? await SupplierService.getAllCompanies() : []
-    const companies = admin ? Helper.flattenCompanies(allCompanies) : [user._id]
-    setAllCompanies(allCompanies)
-    setCompanies(companies)
-    setLeftPanel(true)
-    setLoadingCompanies(false)
-  }
+    const allCompanies = admin ? await SupplierService.getAllCompanies() : [];
+    const companies = admin ? Helper.flattenCompanies(allCompanies) : [user._id];
+    setAllCompanies(allCompanies);
+    setCompanies(companies);
+    setLeftPanel(true);
+    setLoadingCompanies(false);
+  };
 
   return (
     <Master onLoad={onLoad} strict={true}>
@@ -99,7 +99,7 @@ const Bookings = () => {
         </div>
       )}
     </Master>
-  )
-}
+  );
+};
 
-export default Bookings
+export default Bookings;
