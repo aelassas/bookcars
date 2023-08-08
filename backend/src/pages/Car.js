@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Master from '../components/Master';
-import Env from '../config/env.config';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/cars';
-import * as CarService from '../services/CarService';
-import * as SupplierService from '../services/SupplierService';
-import Backdrop from '../components/SimpleBackdrop';
-import NoMatch from './NoMatch';
-import Error from './Error';
-import Avatar from '../components/Avatar';
-import BookingList from '../components/BookingList';
-import * as Helper from '../common/Helper';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material';
+import React, { useState, useEffect } from 'react'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as CarService from '../services/CarService'
+import * as SupplierService from '../services/SupplierService'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import Avatar from '../components/Avatar'
+import BookingList from '../components/BookingList'
+import * as Helper from '../common/Helper'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
 import {
   LocalGasStation as FuelIcon,
   AccountTree as GearboxIcon,
@@ -21,116 +21,116 @@ import {
   Check as CheckIcon,
   Clear as UncheckIcon,
   LocationOn as LocationIcon,
-} from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+} from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
-import DoorsIcon from '../assets/img/car-door.png';
-import '../assets/css/car.css';
+import DoorsIcon from '../assets/img/car-door.png'
+import '../assets/css/car.css'
 
 const Car = () => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState();
-  const [car, setCar] = useState();
-  const [error, setError] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [noMatch, setNoMatch] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [companies, setCompanies] = useState([]);
-  const [offset, setOffset] = useState(0);
+  const navigate = useNavigate()
+  const [user, setUser] = useState()
+  const [car, setCar] = useState()
+  const [error, setError] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [noMatch, setNoMatch] = useState(false)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [companies, setCompanies] = useState([])
+  const [offset, setOffset] = useState(0)
 
   useEffect(() => {
     if (visible) {
-      setOffset(document.querySelector('.col-1').clientHeight);
+      setOffset(document.querySelector('.col-1').clientHeight)
     }
-  }, [visible]);
+  }, [visible])
   const handleBeforeUpload = () => {
-    setLoading(true);
-  };
+    setLoading(true)
+  }
 
   const handleImageChange = () => {
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const handleDelete = () => {
-    setOpenDeleteDialog(true);
-  };
+    setOpenDeleteDialog(true)
+  }
 
   const handleCancelDelete = () => {
-    setOpenDeleteDialog(false);
-  };
+    setOpenDeleteDialog(false)
+  }
 
   const handleConfirmDelete = async () => {
     try {
-      setOpenDeleteDialog(false);
+      setOpenDeleteDialog(false)
 
-      const status = await CarService.deleteCar(car._id);
+      const status = await CarService.deleteCar(car._id)
 
       if (status === 200) {
-        navigate('/cars');
+        navigate('/cars')
       } else {
-        Helper.error();
-        setLoading(false);
+        Helper.error()
+        setLoading(false)
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const onLoad = async (user) => {
-    setLoading(true);
-    setUser(user);
+    setLoading(true)
+    setUser(user)
 
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search)
     if (user && user.verified && params.has('cr')) {
-      const id = params.get('cr');
+      const id = params.get('cr')
       if (id && id !== '') {
         try {
-          const car = await CarService.getCar(id);
+          const car = await CarService.getCar(id)
 
           if (car) {
             if (user.type === Env.RECORD_TYPE.ADMIN) {
               try {
-                const companies = await SupplierService.getAllCompanies();
-                const companyIds = Helper.flattenCompanies(companies);
-                setCompanies(companyIds);
-                setCar(car);
-                setVisible(true);
-                setLoading(false);
+                const companies = await SupplierService.getAllCompanies()
+                const companyIds = Helper.flattenCompanies(companies)
+                setCompanies(companyIds)
+                setCar(car)
+                setVisible(true)
+                setLoading(false)
               } catch (err) {
-                Helper.error(err);
+                Helper.error(err)
               }
             } else if (car.company._id === user._id) {
-              setCompanies([user._id]);
-              setCar(car);
-              setVisible(true);
-              setLoading(false);
+              setCompanies([user._id])
+              setCar(car)
+              setVisible(true)
+              setLoading(false)
             } else {
-              setLoading(false);
-              setNoMatch(true);
+              setLoading(false)
+              setNoMatch(true)
             }
           } else {
-            setLoading(false);
-            setNoMatch(true);
+            setLoading(false)
+            setNoMatch(true)
           }
         } catch {
-          setLoading(false);
-          setError(true);
-          setVisible(false);
+          setLoading(false)
+          setError(true)
+          setVisible(false)
         }
       } else {
-        setLoading(false);
-        setNoMatch(true);
+        setLoading(false)
+        setNoMatch(true)
       }
     } else {
-      setLoading(false);
-      setNoMatch(true);
+      setLoading(false)
+      setNoMatch(true)
     }
-  };
+  }
 
-  const edit = user && car && car.company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id);
-  const statuses = Helper.getBookingStatuses().map((status) => status.value);
-  const fr = user && user.language === 'fr';
+  const edit = user && car && car.company && (user.type === Env.RECORD_TYPE.ADMIN || user._id === car.company._id)
+  const statuses = Helper.getBookingStatuses().map((status) => status.value)
+  const fr = user && user.language === 'fr'
 
   return (
     <Master onLoad={onLoad} strict={true}>
@@ -338,7 +338,7 @@ const Car = () => {
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
     </Master>
-  );
-};
+  )
+}
 
-export default Car;
+export default Car

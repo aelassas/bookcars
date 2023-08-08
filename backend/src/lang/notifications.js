@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization';
-import * as LangHelper from '../common/LangHelper';
+import LocalizedStrings from 'react-localization'
+import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -24,7 +24,7 @@ const strings = new LocalizedStrings({
     DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
     DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }

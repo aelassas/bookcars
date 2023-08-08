@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import Env from '../config/env.config';
-import Const from '../config/const';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/cars';
-import * as Helper from '../common/Helper';
-import * as CarService from '../services/CarService';
-import { IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Card, CardContent, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react'
+import Env from '../config/env.config'
+import Const from '../config/const'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as Helper from '../common/Helper'
+import * as CarService from '../services/CarService'
+import { IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Card, CardContent, Typography } from '@mui/material'
 import {
   LocalGasStation as FuelIcon,
   AccountTree as GearboxIcon,
@@ -18,43 +18,43 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Info as InfoIcon,
-} from '@mui/icons-material';
-import Pager from './Pager';
+} from '@mui/icons-material'
+import Pager from './Pager'
 
-import DoorsIcon from '../assets/img/car-door.png';
+import DoorsIcon from '../assets/img/car-door.png'
 
-import '../assets/css/car-list.css';
+import '../assets/css/car-list.css'
 
 const CarList = (props) => {
-  const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
-  const [fetch, setFetch] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(1);
-  const [rowCount, setRowCount] = useState(0);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [carId, setCarId] = useState('');
-  const [carIndex, setCarIndex] = useState(-1);
-  const [openInfoDialog, setOpenInfoDialog] = useState(false);
+  const [user, setUser] = useState()
+  const [loading, setLoading] = useState(true)
+  const [fetch, setFetch] = useState(false)
+  const [rows, setRows] = useState([])
+  const [page, setPage] = useState(1)
+  const [rowCount, setRowCount] = useState(0)
+  const [totalRecords, setTotalRecords] = useState(0)
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [carId, setCarId] = useState('')
+  const [carIndex, setCarIndex] = useState(-1)
+  const [openInfoDialog, setOpenInfoDialog] = useState(false)
 
   useEffect(() => {
     if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-      const element = document.querySelector('body');
+      const element = document.querySelector('body')
 
       if (element) {
         element.onscroll = () => {
           if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-            setPage(page + 1);
+            setPage(page + 1)
           }
-        };
+        }
       }
     }
-  }, [fetch, loading, page]);
+  }, [fetch, loading, page])
 
   const _fetch = async (page, companies, keyword, fuel, gearbox, mileage, deposit, availability) => {
     try {
-      setLoading(true);
+      setLoading(true)
       const payload = {
         companies,
         fuel,
@@ -62,163 +62,163 @@ const CarList = (props) => {
         mileage,
         deposit,
         availability,
-      };
-
-      const data = await CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE);
-      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
-
-      let _rows = [];
-      if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData];
-      } else {
-        _rows = _data.resultData;
       }
 
-      setRows(_rows);
-      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length);
-      setTotalRecords(totalRecords);
-      setFetch(_data.resultData.length > 0);
+      const data = await CarService.getCars(keyword, payload, page, Env.CARS_PAGE_SIZE)
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
+      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+
+      let _rows = []
+      if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+      } else {
+        _rows = _data.resultData
+      }
+
+      setRows(_rows)
+      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
+      setTotalRecords(totalRecords)
+      setFetch(_data.resultData.length > 0)
 
       if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0)
       }
 
       if (props.onLoad) {
-        props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
+        props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (props.companies) {
       if (props.companies.length > 0) {
-        _fetch(page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability);
+        _fetch(page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
       } else {
-        setRows([]);
-        setRowCount(0);
-        setFetch(false);
+        setRows([])
+        setRowCount(0)
+        setFetch(false)
         if (props.onLoad) {
-          props.onLoad({ rows: [], rowCount: 0 });
+          props.onLoad({ rows: [], rowCount: 0 })
         }
         // setLoading(false)
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]);
+  }, [page, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability])
 
   useEffect(() => {
     if (props.cars) {
-      setRows(props.cars);
-      setRowCount(props.cars.length);
-      setFetch(false);
+      setRows(props.cars)
+      setRowCount(props.cars.length)
+      setFetch(false)
       if (props.onLoad) {
-        props.onLoad({ rows: props.cars, rowCount: props.cars.length });
+        props.onLoad({ rows: props.cars, rowCount: props.cars.length })
       }
       // setLoading(false)
     }
-  }, [props.cars]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.cars]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setPage(1);
-  }, [props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]);
+    setPage(1)
+  }, [props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability])
 
   useEffect(() => {
     if (props.reload) {
-      setPage(1);
-      _fetch(1, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability);
+      setPage(1)
+      _fetch(1, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability)
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.reload, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability]);
+  }, [props.reload, props.companies, props.keyword, props.fuel, props.gearbox, props.mileage, props.deposit, props.availability])
 
   useEffect(() => {
-    setUser(props.user);
-  }, [props.user]);
+    setUser(props.user)
+  }, [props.user])
 
   const handleDelete = async (e) => {
     try {
-      const carId = e.currentTarget.getAttribute('data-id');
-      const carIndex = e.currentTarget.getAttribute('data-index');
+      const carId = e.currentTarget.getAttribute('data-id')
+      const carIndex = e.currentTarget.getAttribute('data-index')
 
-      const status = await CarService.check(carId);
+      const status = await CarService.check(carId)
 
       if (status === 200) {
-        setOpenInfoDialog(true);
+        setOpenInfoDialog(true)
       } else if (status === 204) {
-        setOpenDeleteDialog(true);
-        setCarId(carId);
-        setCarIndex(carIndex);
+        setOpenDeleteDialog(true)
+        setCarId(carId)
+        setCarIndex(carIndex)
       } else {
-        Helper.error();
+        Helper.error()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const handleCloseInfo = () => {
-    setOpenInfoDialog(false);
-  };
+    setOpenInfoDialog(false)
+  }
 
   const handleConfirmDelete = async () => {
     try {
       if (carId !== '' && carIndex > -1) {
-        setOpenDeleteDialog(false);
+        setOpenDeleteDialog(false)
 
-        const status = await CarService.deleteCar(carId);
+        const status = await CarService.deleteCar(carId)
 
         if (status === 200) {
-          const _rowCount = rowCount - 1;
-          rows.splice(carIndex, 1);
-          setRows(rows);
-          setRowCount(_rowCount);
-          setTotalRecords(totalRecords - 1);
-          setCarId('');
-          setCarIndex(-1);
+          const _rowCount = rowCount - 1
+          rows.splice(carIndex, 1)
+          setRows(rows)
+          setRowCount(_rowCount)
+          setTotalRecords(totalRecords - 1)
+          setCarId('')
+          setCarIndex(-1)
           if (props.onDelete) {
-            props.onDelete(_rowCount);
+            props.onDelete(_rowCount)
           }
-          setLoading(false);
+          setLoading(false)
         } else {
-          Helper.error();
-          setCarId('');
-          setCarIndex(-1);
-          setLoading(false);
+          Helper.error()
+          setCarId('')
+          setCarIndex(-1)
+          setLoading(false)
         }
       } else {
-        Helper.error();
-        setCarId('');
-        setCarIndex(-1);
-        setOpenDeleteDialog(false);
+        Helper.error()
+        setCarId('')
+        setCarIndex(-1)
+        setOpenDeleteDialog(false)
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     }
-  };
+  }
 
   const handleCancelDelete = () => {
-    setOpenDeleteDialog(false);
-    setCarId('');
-  };
+    setOpenDeleteDialog(false)
+    setCarId('')
+  }
 
   const getExtraIcon = (option, extra) => {
-    let available = false;
+    let available = false
     if (props.booking) {
-      if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true;
-      if (option === 'amendments' && props.booking.amendments && extra > 0) available = true;
-      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true;
-      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true;
-      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true;
-      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true;
+      if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true
+      if (option === 'amendments' && props.booking.amendments && extra > 0) available = true
+      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true
+      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true
+      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true
+      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true
     }
 
-    return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />;
-  };
+    return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />
+  }
 
-  const admin = Helper.admin(user);
-  const fr = user && user.language === 'fr';
+  const admin = Helper.admin(user)
+  const fr = user && user.language === 'fr'
 
   return (
     user && (
@@ -234,7 +234,7 @@ const CarList = (props) => {
                 </Card>
               )
             : rows.map((car, index) => {
-                const edit = admin || car.company._id === user._id;
+                const edit = admin || car.company._id === user._id
                 return (
                   <article key={car._id}>
                     <div className="name">
@@ -405,7 +405,7 @@ const CarList = (props) => {
                       )}
                     </div>
                   </article>
-                );
+                )
               })}
           <Dialog disableEscapeKeyDown maxWidth="xs" open={openInfoDialog}>
             <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
@@ -435,7 +435,7 @@ const CarList = (props) => {
         )}
       </>
     )
-  );
-};
+  )
+}
 
-export default CarList;
+export default CarList

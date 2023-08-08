@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization';
-import Env from '../config/env.config';
-import * as LangHelper from '../common/LangHelper';
+import LocalizedStrings from 'react-localization'
+import Env from '../config/env.config'
+import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -151,7 +151,7 @@ const strings = new LocalizedStrings({
     BIRTH_DATE_NOT_VALID_PART2: 'years old.',
     PAY_LATER: 'Authorize payment later',
   },
-});
+})
 
-LangHelper.setLanguage(strings);
-export { strings };
+LangHelper.setLanguage(strings)
+export { strings }

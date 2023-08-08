@@ -1,105 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { strings as commonStrings } from '../lang/common';
-import { strings } from '../lang/sign-in';
-import * as UserService from '../services/UserService';
-import Header from '../components/Header';
-import Error from '../components/Error';
-import { Paper, FormControl, InputLabel, Input, Button, Link } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import * as LangHelper from '../common/LangHelper';
+import React, { useState, useEffect } from 'react'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/sign-in'
+import * as UserService from '../services/UserService'
+import Header from '../components/Header'
+import Error from '../components/Error'
+import { Paper, FormControl, InputLabel, Input, Button, Link } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import * as LangHelper from '../common/LangHelper'
 
-import '../assets/css/signin.css';
+import '../assets/css/signin.css'
 
 const SignIn = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [blacklisted, setBlacklisted] = useState(false);
-  const [stayConnected, setStayConnected] = useState(false);
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [blacklisted, setBlacklisted] = useState(false)
+  const [stayConnected, setStayConnected] = useState(false)
 
   const handleOnChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
+    setEmail(e.target.value)
+  }
 
   const handleOnChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
+    setPassword(e.target.value)
+  }
 
   const handleOnPasswordKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit(e);
+      handleSubmit(e)
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const data = { email, password, stayConnected };
+      const data = { email, password, stayConnected }
 
-      const res = await UserService.signin(data);
+      const res = await UserService.signin(data)
 
       if (res.status === 200) {
         if (res.data.blacklisted) {
-          UserService.signout(false);
-          setError(false);
-          setBlacklisted(true);
+          UserService.signout(false)
+          setError(false)
+          setBlacklisted(true)
         } else {
-          setError(false);
+          setError(false)
 
-          const params = new URLSearchParams(window.location.search);
+          const params = new URLSearchParams(window.location.search)
 
           if (params.has('u')) {
-            navigate(`/user${window.location.search}`);
+            navigate(`/user${window.location.search}`)
           } else if (params.has('c')) {
-            navigate(`/supplier${window.location.search}`);
+            navigate(`/supplier${window.location.search}`)
           } else if (params.has('cr')) {
-            navigate(`/car${window.location.search}`);
+            navigate(`/car${window.location.search}`)
           } else if (params.has('b')) {
-            navigate(`/update-booking${window.location.search}`);
+            navigate(`/update-booking${window.location.search}`)
           } else {
-            navigate('/');
+            navigate('/')
           }
         }
       } else {
-        setError(true);
-        setBlacklisted(false);
+        setError(true)
+        setBlacklisted(false)
       }
     } catch {
-      setError(true);
-      setBlacklisted(false);
+      setError(true)
+      setBlacklisted(false)
     }
-  };
+  }
 
   useEffect(() => {
-    (async function () {
+    ;(async function () {
       try {
-        LangHelper.setLanguage(strings);
+        LangHelper.setLanguage(strings)
 
-        const currentUser = UserService.getCurrentUser();
+        const currentUser = UserService.getCurrentUser()
 
         if (currentUser) {
-          const status = await UserService.validateAccessToken();
+          const status = await UserService.validateAccessToken()
 
           if (status === 200) {
-            const user = await UserService.getUser(currentUser.id);
+            const user = await UserService.getUser(currentUser.id)
 
             if (user) {
-              navigate(`/${window.location.search}`);
+              navigate(`/${window.location.search}`)
             } else {
-              UserService.signout();
+              UserService.signout()
             }
           }
         } else {
-          setVisible(true);
+          setVisible(true)
         }
       } catch {
-        UserService.signout();
+        UserService.signout()
       }
-    })();
-  }, [navigate]);
+    })()
+  }, [navigate])
 
   return (
     <div>
@@ -122,15 +122,15 @@ const SignIn = () => {
                 <input
                   type="checkbox"
                   onChange={(e) => {
-                    setStayConnected(e.currentTarget.checked);
+                    setStayConnected(e.currentTarget.checked)
                   }}
                 />
                 <label
                   onClick={(e) => {
-                    const checkbox = e.currentTarget.previousSibling;
-                    const checked = !checkbox.checked;
-                    checkbox.checked = checked;
-                    setStayConnected(checked);
+                    const checkbox = e.currentTarget.previousSibling
+                    const checked = !checkbox.checked
+                    checkbox.checked = checked
+                    setStayConnected(checked)
                   }}
                 >
                   {strings.STAY_CONNECTED}
@@ -155,7 +155,7 @@ const SignIn = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn
