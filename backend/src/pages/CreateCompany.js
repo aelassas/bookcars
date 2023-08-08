@@ -1,205 +1,205 @@
-import React, { useState } from 'react'
-import Master from '../components/Master'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/create-company'
-import * as UserService from '../services/UserService'
-import * as SupplierService from '../services/SupplierService'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
-import Avatar from '../components/Avatar'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, FormControlLabel, Switch } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
-import { useNavigate } from 'react-router-dom'
-import * as Helper from '../common/Helper'
+import React, { useState } from 'react';
+import Master from '../components/Master';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/create-company';
+import * as UserService from '../services/UserService';
+import * as SupplierService from '../services/SupplierService';
+import Error from '../components/Error';
+import Backdrop from '../components/SimpleBackdrop';
+import Avatar from '../components/Avatar';
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, FormControlLabel, Switch } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
+import validator from 'validator';
+import { useNavigate } from 'react-router-dom';
+import * as Helper from '../common/Helper';
 
-import '../assets/css/create-company.css'
+import '../assets/css/create-company.css';
 
 const CreateCompany = () => {
-  const navigate = useNavigate()
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
-  const [error, setError] = useState(false)
-  const [emailError, setEmailError] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [fullNameError, setFullNameError] = useState(false)
-  const [avatar, setAvatar] = useState()
-  const [avatarError, setAvatarError] = useState(false)
-  const [emailValid, setEmailValid] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [payLater, setPayLater] = useState(true)
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
+  const [bio, setBio] = useState('');
+  const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fullNameError, setFullNameError] = useState(false);
+  const [avatar, setAvatar] = useState();
+  const [avatarError, setAvatarError] = useState(false);
+  const [emailValid, setEmailValid] = useState(true);
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [payLater, setPayLater] = useState(true);
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value)
+    setFullName(e.target.value);
 
     if (!e.target.value) {
-      setFullNameError(false)
+      setFullNameError(false);
     }
-  }
+  };
 
   const validateFullName = async (fullName) => {
     if (fullName) {
       try {
-        const status = await SupplierService.validate({ fullName })
+        const status = await SupplierService.validate({ fullName });
 
         if (status === 200) {
-          setFullNameError(false)
-          return true
+          setFullNameError(false);
+          return true;
         } else {
-          setFullNameError(true)
-          return false
+          setFullNameError(true);
+          return false;
         }
       } catch (err) {
-        Helper.error(err)
+        Helper.error(err);
       }
     } else {
-      setFullNameError(false)
-      return false
+      setFullNameError(false);
+      return false;
     }
-  }
+  };
 
   const handleFullNameOnBlur = async (e) => {
-    await validateFullName(e.target.value)
-  }
+    await validateFullName(e.target.value);
+  };
 
   const handleOnChangeEmail = (e) => {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
 
     if (!e.target.value) {
-      setEmailError(false)
-      setEmailValid(true)
+      setEmailError(false);
+      setEmailValid(true);
     }
-  }
+  };
 
   const validateEmail = async (email) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email });
 
           if (status === 200) {
-            setEmailError(false)
-            setEmailValid(true)
-            return true
+            setEmailError(false);
+            setEmailValid(true);
+            return true;
           } else {
-            setEmailError(true)
-            setEmailValid(true)
-            return false
+            setEmailError(true);
+            setEmailValid(true);
+            return false;
           }
         } catch (err) {
-          Helper.error(err)
+          Helper.error(err);
         }
       } else {
-        setEmailError(false)
-        setEmailValid(false)
-        return false
+        setEmailError(false);
+        setEmailValid(false);
+        return false;
       }
     } else {
-      setEmailError(false)
-      setEmailValid(true)
-      return false
+      setEmailError(false);
+      setEmailValid(true);
+      return false;
     }
-  }
+  };
 
   const handleEmailOnBlur = async (e) => {
-    await validateEmail(e.target.value)
-  }
+    await validateEmail(e.target.value);
+  };
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value)
+    setPhone(e.target.value);
 
     if (!e.target.value) {
-      setPhoneValid(true)
+      setPhoneValid(true);
     }
-  }
+  };
 
   const validatePhone = (phone) => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+      const phoneValid = validator.isMobilePhone(phone);
+      setPhoneValid(phoneValid);
 
-      return phoneValid
+      return phoneValid;
     } else {
-      setPhoneValid(true)
+      setPhoneValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handlePhoneBlur = (e) => {
-    validatePhone(e.target.value)
-  }
+    validatePhone(e.target.value);
+  };
 
   const handleOnChangeLocation = (e) => {
-    setLocation(e.target.value)
-  }
+    setLocation(e.target.value);
+  };
 
   const handleOnChangeBio = (e) => {
-    setBio(e.target.value)
-  }
+    setBio(e.target.value);
+  };
 
   const onBeforeUpload = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const onAvatarChange = (avatar) => {
-    setLoading(false)
-    setAvatar(avatar)
+    setLoading(false);
+    setAvatar(avatar);
 
     if (avatar !== null) {
-      setAvatarError(false)
+      setAvatarError(false);
     }
-  }
+  };
 
   const handleCancel = async () => {
     try {
       if (avatar) {
-        setLoading(true)
+        setLoading(true);
 
-        await UserService.deleteTempAvatar(avatar)
-        navigate('/suppliers')
+        await UserService.deleteTempAvatar(avatar);
+        navigate('/suppliers');
       } else {
-        navigate('/suppliers')
+        navigate('/suppliers');
       }
     } catch {
-      navigate('/suppliers')
+      navigate('/suppliers');
     }
-  }
+  };
 
   const onLoad = (user) => {
     if (user && user.verified) {
-      setVisible(true)
+      setVisible(true);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
-      const emailValid = await validateEmail(email)
+      const emailValid = await validateEmail(email);
       if (!emailValid) {
-        return
+        return;
       }
 
-      const fullNameValid = await validateFullName(fullName)
+      const fullNameValid = await validateFullName(fullName);
       if (!fullNameValid) {
-        return
+        return;
       }
 
-      const phoneValid = validatePhone(phone)
+      const phoneValid = validatePhone(phone);
       if (!phoneValid) {
-        return
+        return;
       }
 
       if (!avatar) {
-        setAvatarError(true)
-        setError(false)
-        return
+        setAvatarError(true);
+        setError(false);
+        return;
       }
 
       const data = {
@@ -212,19 +212,19 @@ const CreateCompany = () => {
         type: Env.RECORD_TYPE.COMPANY,
         avatar,
         payLater,
-      }
+      };
 
-      const status = await UserService.create(data)
+      const status = await UserService.create(data);
 
       if (status === 200) {
-        navigate('/suppliers')
+        navigate('/suppliers');
       } else {
-        setError(true)
+        setError(true);
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   return (
     <Master onLoad={onLoad} strict={true} admin={true}>
@@ -270,7 +270,7 @@ const CreateCompany = () => {
                   <Switch
                     checked={payLater}
                     onChange={(e) => {
-                      setPayLater(e.target.checked)
+                      setPayLater(e.target.checked);
                     }}
                     color="primary"
                   />
@@ -318,7 +318,7 @@ const CreateCompany = () => {
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  )
-}
+  );
+};
 
-export default CreateCompany
+export default CreateCompany;

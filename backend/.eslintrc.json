@@ -11,9 +11,10 @@
   },
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
-    "react/prop-types": 0,
+    "semi": ["warn", "always"],
+    "react/prop-types": "off",
     "prettier/prettier": "off",
-    "no-extra-semi": 0,
+    "no-extra-semi": "warn",
     "react-hooks/exhaustive-deps": "warn"
   },
   "settings": {

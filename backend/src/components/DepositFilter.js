@@ -1,113 +1,113 @@
-import React, { useEffect, useRef } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import Accordion from './Accordion'
+import React, { useEffect, useRef } from 'react';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/cars';
+import Accordion from './Accordion';
 
-import '../assets/css/deposit-filter.css'
+import '../assets/css/deposit-filter.css';
 
 const DepositFilter = (props) => {
-  const deposit2500Ref = useRef()
-  const deposit5000Ref = useRef()
-  const deposit7500Ref = useRef()
-  const depositAllRef = useRef()
+  const deposit2500Ref = useRef();
+  const deposit5000Ref = useRef();
+  const deposit7500Ref = useRef();
+  const depositAllRef = useRef();
 
   useEffect(() => {
     if (depositAllRef.current) {
-      depositAllRef.current.checked = true
+      depositAllRef.current.checked = true;
     }
-  }, [])
+  }, []);
 
   const handleAllDepositClick = (e) => {
-    const checkbox = e.currentTarget.previousSibling
+    const checkbox = e.currentTarget.previousSibling;
     if (!checkbox.checked) {
-      checkbox.checked = !checkbox.checked
-      const event = e
-      event.currentTarget = checkbox
-      handleAllDepositChange(event)
+      checkbox.checked = !checkbox.checked;
+      const event = e;
+      event.currentTarget = checkbox;
+      handleAllDepositChange(event);
     }
-  }
+  };
 
   const handleAllDepositChange = (e) => {
     if (e.currentTarget.checked) {
-      const value = -1
-      deposit2500Ref.current.checked = false
-      deposit5000Ref.current.checked = false
-      deposit7500Ref.current.checked = false
+      const value = -1;
+      deposit2500Ref.current.checked = false;
+      deposit5000Ref.current.checked = false;
+      deposit7500Ref.current.checked = false;
 
       if (props.onChange) {
-        props.onChange(value)
+        props.onChange(value);
       }
     }
-  }
+  };
 
   const handleDepositLessThan2500Click = (e) => {
-    const checkbox = e.currentTarget.previousSibling
+    const checkbox = e.currentTarget.previousSibling;
     if (!checkbox.checked) {
-      checkbox.checked = !checkbox.checked
-      const event = e
-      event.currentTarget = checkbox
-      handleDepositLessThan2500Change(event)
+      checkbox.checked = !checkbox.checked;
+      const event = e;
+      event.currentTarget = checkbox;
+      handleDepositLessThan2500Change(event);
     }
-  }
+  };
 
   const handleDepositLessThan2500Change = (e) => {
     if (e.currentTarget.checked) {
-      const value = 2500
-      depositAllRef.current.checked = false
-      deposit5000Ref.current.checked = false
-      deposit7500Ref.current.checked = false
+      const value = 2500;
+      depositAllRef.current.checked = false;
+      deposit5000Ref.current.checked = false;
+      deposit7500Ref.current.checked = false;
 
       if (props.onChange) {
-        props.onChange(value)
+        props.onChange(value);
       }
     }
-  }
+  };
 
   const handleDepositLessThan5000Click = (e) => {
-    const checkbox = e.currentTarget.previousSibling
+    const checkbox = e.currentTarget.previousSibling;
     if (!checkbox.checked) {
-      checkbox.checked = !checkbox.checked
-      const event = e
-      event.currentTarget = checkbox
-      handleDepositLessThan5000Change(event)
+      checkbox.checked = !checkbox.checked;
+      const event = e;
+      event.currentTarget = checkbox;
+      handleDepositLessThan5000Change(event);
     }
-  }
+  };
 
   const handleDepositLessThan5000Change = (e) => {
     if (e.currentTarget.checked) {
-      const value = 5000
-      depositAllRef.current.checked = false
-      deposit2500Ref.current.checked = false
-      deposit7500Ref.current.checked = false
+      const value = 5000;
+      depositAllRef.current.checked = false;
+      deposit2500Ref.current.checked = false;
+      deposit7500Ref.current.checked = false;
 
       if (props.onChange) {
-        props.onChange(value)
+        props.onChange(value);
       }
     }
-  }
+  };
 
   const handleDepositLessThan7500Click = (e) => {
-    const checkbox = e.currentTarget.previousSibling
+    const checkbox = e.currentTarget.previousSibling;
     if (!checkbox.checked) {
-      checkbox.checked = !checkbox.checked
-      const event = e
-      event.currentTarget = checkbox
-      handleDepositLessThan7500Change(event)
+      checkbox.checked = !checkbox.checked;
+      const event = e;
+      event.currentTarget = checkbox;
+      handleDepositLessThan7500Change(event);
     }
-  }
+  };
 
   const handleDepositLessThan7500Change = (e) => {
     if (e.currentTarget.checked) {
-      const value = 7500
-      depositAllRef.current.checked = false
-      deposit2500Ref.current.checked = false
-      deposit5000Ref.current.checked = false
+      const value = 7500;
+      depositAllRef.current.checked = false;
+      deposit2500Ref.current.checked = false;
+      deposit5000Ref.current.checked = false;
 
       if (props.onChange) {
-        props.onChange(value)
+        props.onChange(value);
       }
     }
-  }
+  };
 
   return (
     <Accordion title={strings.DEPOSIT} className={`${props.className ? `${props.className} ` : ''}deposit-filter`}>
@@ -130,7 +130,7 @@ const DepositFilter = (props) => {
         </div>
       </div>
     </Accordion>
-  )
-}
+  );
+};
 
-export default DepositFilter
+export default DepositFilter;

@@ -1,102 +1,102 @@
-import React, { useState } from 'react'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/settings'
-import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
-import Avatar from '../components/Avatar'
-import { Input, InputLabel, FormHelperText, FormControl, FormControlLabel, Switch, Button, Paper } from '@mui/material'
-import validator from 'validator'
-import * as Helper from '../common/Helper'
+import React, { useState } from 'react';
+import Master from '../components/Master';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/settings';
+import * as UserService from '../services/UserService';
+import Backdrop from '../components/SimpleBackdrop';
+import Avatar from '../components/Avatar';
+import { Input, InputLabel, FormHelperText, FormControl, FormControlLabel, Switch, Button, Paper } from '@mui/material';
+import validator from 'validator';
+import * as Helper from '../common/Helper';
 
-import '../assets/css/settings.css'
+import '../assets/css/settings.css';
 
 const Settings = () => {
-  const [user, setUser] = useState()
-  const [admin, setAdmin] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [location, setLocation] = useState('')
-  const [bio, setBio] = useState('')
-  const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
+  const [user, setUser] = useState();
+  const [admin, setAdmin] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
+  const [bio, setBio] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [enableEmailNotifications, setEnableEmailNotifications] = useState(false);
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value)
-  }
+    setFullName(e.target.value);
+  };
 
   const validatePhone = (phone) => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+      const phoneValid = validator.isMobilePhone(phone);
+      setPhoneValid(phoneValid);
 
-      return phoneValid
+      return phoneValid;
     } else {
-      setPhoneValid(true)
+      setPhoneValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value)
+    setPhone(e.target.value);
 
     if (!e.target.value) {
-      setPhoneValid(true)
+      setPhoneValid(true);
     }
-  }
+  };
 
   const handleOnChangeLocation = (e) => {
-    setLocation(e.target.value)
-  }
+    setLocation(e.target.value);
+  };
 
   const handleOnChangeBio = (e) => {
-    setBio(e.target.value)
-  }
+    setBio(e.target.value);
+  };
 
   const handleEmailNotificationsChange = async (e) => {
     try {
-      setEnableEmailNotifications(e.target.checked)
+      setEnableEmailNotifications(e.target.checked);
 
-      user.enableEmailNotifications = e.target.checked
+      user.enableEmailNotifications = e.target.checked;
 
-      const status = await UserService.updateEmailNotifications(user)
+      const status = await UserService.updateEmailNotifications(user);
 
       if (status === 200) {
-        setUser(user)
-        Helper.info(strings.SETTINGS_UPDATED)
+        setUser(user);
+        Helper.info(strings.SETTINGS_UPDATED);
       } else {
-        Helper.error()
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onBeforeUpload = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const onAvatarChange = (avatar) => {
-    const _user = Helper.clone(user)
-    _user.avatar = avatar
-    setUser(_user)
-    setLoading(false)
-  }
+    const _user = Helper.clone(user);
+    _user.avatar = avatar;
+    setUser(_user);
+    setLoading(false);
+  };
 
   const onError = () => {
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
-      const phoneValid = validatePhone(phone)
+      const phoneValid = validatePhone(phone);
       if (!phoneValid) {
-        return
+        return;
       }
 
       const data = {
@@ -105,31 +105,31 @@ const Settings = () => {
         phone,
         location,
         bio,
-      }
+      };
 
-      const status = await UserService.updateUser(data)
+      const status = await UserService.updateUser(data);
 
       if (status === 200) {
-        Helper.info(strings.SETTINGS_UPDATED)
+        Helper.info(strings.SETTINGS_UPDATED);
       } else {
-        Helper.error()
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onLoad = (user) => {
-    setUser(user)
-    setAdmin(Helper.admin(user))
-    setFullName(user.fullName)
-    setPhone(user.phone || '')
-    setLocation(user.location || '')
-    setBio(user.bio || '')
-    setEnableEmailNotifications(user.enableEmailNotifications)
-    setVisible(true)
-    setLoading(false)
-  }
+    setUser(user);
+    setAdmin(Helper.admin(user));
+    setFullName(user.fullName);
+    setPhone(user.phone || '');
+    setLocation(user.location || '');
+    setBio(user.bio || '');
+    setEnableEmailNotifications(user.enableEmailNotifications);
+    setVisible(true);
+    setLoading(false);
+  };
 
   return (
     <Master onLoad={onLoad} onError={onError} strict={true} user={user}>
@@ -193,7 +193,7 @@ const Settings = () => {
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;

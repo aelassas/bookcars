@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
-import * as UserService from '../services/UserService'
-import * as CarService from '../services/CarService'
-import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import * as Helper from '../common/Helper';
+import * as UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
+import { Button, Avatar as MaterialAvatar, Badge, Box, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material';
 import {
   AccountCircle,
   PhotoCamera as PhotoCameraIcon,
@@ -12,298 +12,298 @@ import {
   CorporateFare as CompanyIcon,
   DirectionsCar as CarIcon,
   Check as VerifiedIcon,
-} from '@mui/icons-material'
+} from '@mui/icons-material';
 
 const Avatar = (props) => {
-  const [error, setError] = useState(false)
-  const [open, setOpen] = useState(false)
-  const [openTypeDialog, setOpenTypeDialog] = useState(false)
-  const [record, setRecord] = useState(null)
-  const [avatar, setAvatar] = useState(null)
-  const [loading, setIsLoading] = useState(true)
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openTypeDialog, setOpenTypeDialog] = useState(false);
+  const [record, setRecord] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [loading, setIsLoading] = useState(true);
 
   const validate = async (file, onValid) => {
     if (props.width && props.height) {
-      const _URL = window.URL || window.webkitURL
-      const img = new Image()
-      const objectUrl = _URL.createObjectURL(file)
+      const _URL = window.URL || window.webkitURL;
+      const img = new Image();
+      const objectUrl = _URL.createObjectURL(file);
       img.onload = async () => {
         if (props.width !== img.width || props.height !== img.height) {
           if (props.onValidate) {
-            props.onValidate(false)
+            props.onValidate(false);
           }
         } else {
           if (props.onValidate) {
-            props.onValidate(true)
+            props.onValidate(true);
           }
           if (onValid) {
-            await onValid()
+            await onValid();
           }
         }
-        _URL.revokeObjectURL(objectUrl)
-      }
-      img.src = objectUrl
+        _URL.revokeObjectURL(objectUrl);
+      };
+      img.src = objectUrl;
     } else {
       if (onValid) {
-        onValid()
+        onValid();
       }
     }
-  }
+  };
 
   const handleChange = (e) => {
     if (props.onBeforeUpload) {
-      props.onBeforeUpload()
+      props.onBeforeUpload();
     }
 
-    const reader = new FileReader()
-    const file = e.target.files[0]
+    const reader = new FileReader();
+    const file = e.target.files[0];
 
     reader.onloadend = async () => {
       if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
         if (props.mode === 'create') {
           const createAvatar = async () => {
             try {
-              const data = await UserService.createAvatar(file)
+              const data = await UserService.createAvatar(file);
 
-              setAvatar(data)
+              setAvatar(data);
 
               if (props.onChange) {
-                props.onChange(data)
+                props.onChange(data);
               }
             } catch (err) {
-              Helper.error(err)
+              Helper.error(err);
             }
-          }
+          };
 
-          await validate(file, createAvatar)
+          await validate(file, createAvatar);
         } else if (record && props.mode === 'update') {
           const updateAvatar = async () => {
             try {
-              const { _id } = record
+              const { _id } = record;
 
-              const status = await UserService.updateAvatar(_id, file)
+              const status = await UserService.updateAvatar(_id, file);
 
               if (status === 200) {
-                const user = await UserService.getUser(_id)
+                const user = await UserService.getUser(_id);
 
                 if (user) {
-                  setRecord(user)
-                  setAvatar(user.avatar)
+                  setRecord(user);
+                  setAvatar(user.avatar);
 
                   if (props.onChange) {
-                    props.onChange(user.avatar)
+                    props.onChange(user.avatar);
                   }
                 } else {
-                  Helper.error()
+                  Helper.error();
                 }
               } else {
-                Helper.error()
+                Helper.error();
               }
             } catch (err) {
-              Helper.error(err)
+              Helper.error(err);
             }
-          }
+          };
 
-          await validate(file, updateAvatar)
+          await validate(file, updateAvatar);
         }
       } else if (props.type === Env.RECORD_TYPE.CAR) {
         if (props.mode === 'create') {
           const createAvatar = async () => {
             try {
-              const data = await CarService.createImage(file)
-              setAvatar(data)
+              const data = await CarService.createImage(file);
+              setAvatar(data);
 
               if (props.onChange) {
-                props.onChange(data)
+                props.onChange(data);
               }
             } catch (err) {
-              Helper.error(err)
+              Helper.error(err);
             }
-          }
+          };
 
-          await validate(file, createAvatar)
+          await validate(file, createAvatar);
         } else if (props.mode === 'update') {
           const updateAvatar = async () => {
             try {
-              const { _id } = record
+              const { _id } = record;
 
-              const status = await CarService.updateImage(_id, file)
+              const status = await CarService.updateImage(_id, file);
 
               if (status === 200) {
-                const car = await CarService.getCar(_id)
+                const car = await CarService.getCar(_id);
 
                 if (car) {
-                  setRecord(car)
-                  setAvatar(car.image)
+                  setRecord(car);
+                  setAvatar(car.image);
 
                   if (props.onChange) {
-                    props.onChange(car)
+                    props.onChange(car);
                   }
                 } else {
-                  Helper.error()
+                  Helper.error();
                 }
               } else {
-                Helper.error()
+                Helper.error();
               }
             } catch (err) {
-              Helper.error(err)
+              Helper.error(err);
             }
-          }
+          };
 
-          await validate(file, updateAvatar)
+          await validate(file, updateAvatar);
         }
       }
-    }
+    };
 
-    reader.readAsDataURL(file)
-  }
+    reader.readAsDataURL(file);
+  };
 
   const handleUpload = (e) => {
-    if (!props.type) return setOpenTypeDialog(true)
-    const upload = document.getElementById('upload')
-    upload.value = ''
+    if (!props.type) return setOpenTypeDialog(true);
+    const upload = document.getElementById('upload');
+    upload.value = '';
     setTimeout(() => {
-      upload.click(e)
-    }, 0)
-  }
+      upload.click(e);
+    }, 0);
+  };
 
   const handleCloseDialog = () => {
-    setOpenTypeDialog(false)
-  }
+    setOpenTypeDialog(false);
+  };
 
   const openDialog = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleDeleteAvatar = (e) => {
-    e.preventDefault()
-    openDialog()
-  }
+    e.preventDefault();
+    openDialog();
+  };
 
   const closeDialog = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleCancelDelete = () => {
-    closeDialog()
-  }
+    closeDialog();
+  };
 
   const handleDelete = async () => {
     try {
       if (props.type === Env.RECORD_TYPE.ADMIN || props.type === Env.RECORD_TYPE.COMPANY || props.type === Env.RECORD_TYPE.USER) {
         if (record && props.mode === 'update') {
-          const { _id } = record
-          const status = await UserService.deleteAvatar(_id)
+          const { _id } = record;
+          const status = await UserService.deleteAvatar(_id);
 
           if (status === 200) {
-            const user = await UserService.getUser(_id)
+            const user = await UserService.getUser(_id);
 
             if (user) {
-              setRecord(user)
-              setAvatar(null)
+              setRecord(user);
+              setAvatar(null);
 
               if (props.onChange) {
-                props.onChange(null)
+                props.onChange(null);
               }
-              closeDialog()
+              closeDialog();
             } else {
-              Helper.error()
+              Helper.error();
             }
           } else {
-            Helper.error()
+            Helper.error();
           }
         } else if (!record && props.mode === 'create') {
-          const status = await UserService.deleteTempAvatar(avatar)
+          const status = await UserService.deleteTempAvatar(avatar);
 
           if (status === 200) {
-            setAvatar(null)
+            setAvatar(null);
             if (props.onChange) {
-              props.onChange(null)
+              props.onChange(null);
             }
-            closeDialog()
+            closeDialog();
           } else {
-            Helper.error()
+            Helper.error();
           }
         }
       } else if (props.type === Env.RECORD_TYPE.CAR) {
         if (!record && props.mode === 'create') {
-          const status = await CarService.deleteTempImage(avatar)
+          const status = await CarService.deleteTempImage(avatar);
 
           if (status === 200) {
-            setAvatar(null)
+            setAvatar(null);
             if (props.onChange) {
-              props.onChange(null)
+              props.onChange(null);
             }
-            closeDialog()
+            closeDialog();
           } else {
-            Helper.error()
+            Helper.error();
           }
         } else if (record && props.mode === 'update') {
-          const { _id } = record
-          const status = await CarService.deleteImage(_id)
+          const { _id } = record;
+          const status = await CarService.deleteImage(_id);
 
           if (status === 200) {
-            const car = await UserService.getUser(_id)
+            const car = await UserService.getUser(_id);
 
             if (car) {
-              setRecord(car)
-              setAvatar(null)
+              setRecord(car);
+              setAvatar(null);
               if (props.onChange) {
-                props.onChange(null)
+                props.onChange(null);
               }
-              closeDialog()
+              closeDialog();
             } else {
-              Helper.error()
+              Helper.error();
             }
           } else {
-            Helper.error()
+            Helper.error();
           }
         }
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const cdn = () => {
     if (props.type === Env.RECORD_TYPE.CAR) {
-      return props.mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS
+      return props.mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS;
     }
-    return props.mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS
-  }
+    return props.mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS;
+  };
 
   useEffect(() => {
-    const language = UserService.getLanguage()
-    commonStrings.setLanguage(language)
+    const language = UserService.getLanguage();
+    commonStrings.setLanguage(language);
 
-    const currentUser = UserService.getCurrentUser()
+    const currentUser = UserService.getCurrentUser();
     if (currentUser) {
       if (props.record) {
-        setRecord(props.record)
+        setRecord(props.record);
         if (props.type === Env.RECORD_TYPE.CAR) {
-          setAvatar(props.record.image)
+          setAvatar(props.record.image);
         } else {
-          setAvatar(props.record.avatar)
+          setAvatar(props.record.avatar);
         }
-        setIsLoading(false)
+        setIsLoading(false);
       } else if (props.mode === 'create') {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } else {
-      setError(true)
-      Helper.error()
+      setError(true);
+      Helper.error();
     }
-  }, [props.record, props.type, props.mode])
+  }, [props.record, props.type, props.mode]);
 
-  const { size, readonly, className } = props
+  const { size, readonly, className } = props;
 
-  const companyImageStyle = { width: Env.COMPANY_IMAGE_WIDTH }
+  const companyImageStyle = { width: Env.COMPANY_IMAGE_WIDTH };
 
-  const carImageStyle = { width: Env.CAR_IMAGE_WIDTH }
+  const carImageStyle = { width: Env.CAR_IMAGE_WIDTH };
 
-  const userAvatar = avatar ? <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} /> : <></>
+  const userAvatar = avatar ? <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} /> : <></>;
 
-  const emptyAvatar = <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />
+  const emptyAvatar = <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={props.color || 'inherit'} />;
 
   return !error && !loading ? (
     <div className={className}>
@@ -464,7 +464,7 @@ const Avatar = (props) => {
       </Dialog>
       {!readonly && <input id="upload" type="file" hidden onChange={handleChange} />}
     </div>
-  ) : null
-}
+  ) : null;
+};
 
-export default Avatar
+export default Avatar;

@@ -1,58 +1,58 @@
-import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/booking-list'
-import * as Helper from '../common/Helper'
-import * as BookingService from '../services/BookingService'
-import StatusList from './StatusList'
-import { DataGrid, frFR, enUS } from '@mui/x-data-grid'
-import { Tooltip, IconButton, Link, Dialog, DialogTitle, DialogContent, DialogActions, Button, Card, CardContent, Typography } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material'
-import { format } from 'date-fns'
-import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
+import React, { useState, useEffect } from 'react';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as csStrings } from '../lang/cars';
+import { strings } from '../lang/booking-list';
+import * as Helper from '../common/Helper';
+import * as BookingService from '../services/BookingService';
+import StatusList from './StatusList';
+import { DataGrid, frFR, enUS } from '@mui/x-data-grid';
+import { Tooltip, IconButton, Link, Dialog, DialogTitle, DialogContent, DialogActions, Button, Card, CardContent, Typography } from '@mui/material';
+import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui/icons-material';
+import { format } from 'date-fns';
+import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale';
 
-import '../assets/css/booking-list.css'
+import '../assets/css/booking-list.css';
 
 const BookingList = (props) => {
-  const [loggedUser, setLoggedUser] = useState()
-  const [user, setUser] = useState()
-  const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE)
-  const [columns, setColumns] = useState([])
-  const [rows, setRows] = useState([])
-  const [rowCount, setRowCount] = useState(0)
-  const [fetch, setFetch] = useState(false)
-  const [selectedId, setSelectedId] = useState()
-  const [selectedIds, setSelectedIds] = useState([])
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [companies, setCompanies] = useState(props.companies)
-  const [statuses, setStatuses] = useState(props.statuses)
-  const [status, setStatus] = useState()
-  const [filter, setFilter] = useState(props.filter)
-  const [reload, setReload] = useState(props.reload)
-  const [car, setCar] = useState(props.car)
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
-  const [openDeleteDialog, setopenDeleteDialog] = useState(false)
-  const [offset, setOffset] = useState(0)
+  const [loggedUser, setLoggedUser] = useState();
+  const [user, setUser] = useState();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE);
+  const [columns, setColumns] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [fetch, setFetch] = useState(false);
+  const [selectedId, setSelectedId] = useState();
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [companies, setCompanies] = useState(props.companies);
+  const [statuses, setStatuses] = useState(props.statuses);
+  const [status, setStatus] = useState();
+  const [filter, setFilter] = useState(props.filter);
+  const [reload, setReload] = useState(props.reload);
+  const [car, setCar] = useState(props.car);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [openDeleteDialog, setopenDeleteDialog] = useState(false);
+  const [offset, setOffset] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: Env.BOOKINGS_PAGE_SIZE,
     page: 0,
-  })
-  const [load, setLoad] = useState(false)
-  const [loading, setLoading] = useState(true)
+  });
+  const [load, setLoad] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setPage(paginationModel.page)
-    setPageSize(paginationModel.pageSize)
-  }, [paginationModel])
+    setPage(paginationModel.page);
+    setPageSize(paginationModel.pageSize);
+  }, [paginationModel]);
 
   const _fetch = async (page, user) => {
     try {
-      const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+      const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize;
 
       if (companies.length > 0) {
-        setLoading(true)
+        setLoading(true);
 
         const data = await BookingService.getBookings(
           {
@@ -64,115 +64,115 @@ const BookingList = (props) => {
           },
           page,
           _pageSize,
-        )
-        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
-        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+        );
+        const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
+        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0;
 
         if (Env.isMobile()) {
-          const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData]
-          setRows(_rows)
-          setRowCount(totalRecords)
-          setFetch(_data.resultData.length > 0)
+          const _rows = page === 0 ? _data.resultData : [...rows, ..._data.resultData];
+          setRows(_rows);
+          setRowCount(totalRecords);
+          setFetch(_data.resultData.length > 0);
           if (props.onLoad) {
-            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
           }
         } else {
-          setRows(_data.resultData)
-          setRowCount(totalRecords)
+          setRows(_data.resultData);
+          setRowCount(totalRecords);
           if (props.onLoad) {
-            props.onLoad({ rows: _data.resultData, rowCount: totalRecords })
+            props.onLoad({ rows: _data.resultData, rowCount: totalRecords });
           }
         }
       } else {
-        setRows([])
-        setRowCount(0)
+        setRows([]);
+        setRowCount(0);
         if (props.onLoad) {
-          props.onLoad({ rows: [], rowCount: 0 })
+          props.onLoad({ rows: [], rowCount: 0 });
         }
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     } finally {
-      setLoading(false)
-      setLoad(false)
+      setLoading(false);
+      setLoad(false);
     }
-  }
+  };
 
   useEffect(() => {
-    setCompanies(props.companies || [])
-  }, [props.companies])
+    setCompanies(props.companies || []);
+  }, [props.companies]);
 
   useEffect(() => {
-    setStatuses(props.statuses || [])
-  }, [props.statuses])
+    setStatuses(props.statuses || []);
+  }, [props.statuses]);
 
   useEffect(() => {
-    setFilter(props.filter || null)
-  }, [props.filter])
+    setFilter(props.filter || null);
+  }, [props.filter]);
 
   useEffect(() => {
-    setCar(props.car || null)
-  }, [props.car])
+    setCar(props.car || null);
+  }, [props.car]);
 
   useEffect(() => {
-    setOffset(props.offset || 0)
-  }, [props.offset])
+    setOffset(props.offset || 0);
+  }, [props.offset]);
 
   useEffect(() => {
-    setReload(props.reload || false)
-  }, [props.reload])
+    setReload(props.reload || false);
+  }, [props.reload]);
 
   useEffect(() => {
     if (reload) {
-      setPage(0)
-      _fetch(0, user)
+      setPage(0);
+      _fetch(0, user);
     }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reload]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (load) {
-      _fetch(page, user)
-      setLoad(false)
+      _fetch(page, user);
+      setLoad(false);
     }
-  }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [load]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (companies.length > 0 && statuses.length > 0) {
-      const columns = getColumns()
-      setColumns(columns)
-      setUser(props.user || null)
-      setLoad(true)
+      const columns = getColumns();
+      setColumns(columns);
+      setUser(props.user || null);
+      setLoad(true);
     }
-  }, [props.user, page, pageSize, companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.user, page, pageSize, companies, statuses, filter]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const columns = getColumns()
-    setColumns(columns)
-  }, [selectedIds]) // eslint-disable-line react-hooks/exhaustive-deps
+    const columns = getColumns();
+    setColumns(columns);
+  }, [selectedIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setLoggedUser(props.loggedUser || null)
-  }, [props.loggedUser])
+    setLoggedUser(props.loggedUser || null);
+  }, [props.loggedUser]);
 
   useEffect(() => {
     if (Env.isMobile()) {
-      const element = props.containerClassName ? document.querySelector(`.${props.containerClassName}`) : document.querySelector('div.bookings')
+      const element = props.containerClassName ? document.querySelector(`.${props.containerClassName}`) : document.querySelector('div.bookings');
 
       if (element) {
         element.onscroll = (event) => {
           if (fetch && !loading && event.target.scrollTop > 0 && event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-            const p = page + 1
-            setPage(p)
+            const p = page + 1;
+            setPage(p);
           }
-        }
+        };
       }
     }
-  }, [props.containerClassName, page, fetch, loading, offset]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.containerClassName, page, fetch, loading, offset]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getDate = (date) => {
-    const d = new Date(date)
-    return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
-  }
+    const d = new Date(date);
+    return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`;
+  };
 
   const getColumns = () => {
     const columns = [
@@ -216,10 +216,10 @@ const BookingList = (props) => {
         disableColumnMenu: true,
         renderCell: (params) => {
           const handleDelete = (e) => {
-            e.stopPropagation() // don't select this row after clicking
-            setSelectedId(params.row._id)
-            setopenDeleteDialog(true)
-          }
+            e.stopPropagation(); // don't select this row after clicking
+            setSelectedId(params.row._id);
+            setopenDeleteDialog(true);
+          };
 
           return (
             <div>
@@ -234,7 +234,7 @@ const BookingList = (props) => {
                 </IconButton>
               </Tooltip>
             </div>
-          )
+          );
         },
         renderHeader: () => {
           return selectedIds.length > 0 ? (
@@ -242,7 +242,7 @@ const BookingList = (props) => {
               <Tooltip title={strings.UPDATE_SELECTION}>
                 <IconButton
                   onClick={() => {
-                    setOpenUpdateDialog(true)
+                    setOpenUpdateDialog(true);
                   }}
                 >
                   <EditIcon />
@@ -251,7 +251,7 @@ const BookingList = (props) => {
               <Tooltip title={strings.DELETE_SELECTION}>
                 <IconButton
                   onClick={() => {
-                    setopenDeleteDialog(true)
+                    setopenDeleteDialog(true);
                   }}
                 >
                   <DeleteIcon />
@@ -260,12 +260,12 @@ const BookingList = (props) => {
             </div>
           ) : (
             <></>
-          )
+          );
         },
       },
-    ]
+    ];
 
-    if (props.hideDates) columns.splice(1, 2)
+    if (props.hideDates) columns.splice(1, 2);
 
     if (!props.hideCarColumn) {
       columns.unshift({
@@ -274,7 +274,7 @@ const BookingList = (props) => {
         flex: 1,
         renderCell: (params) => <Link href={`/car?cr=${params.row.car._id}`}>{params.value}</Link>,
         valueGetter: (params) => params.value.name,
-      })
+      });
     }
 
     if (Helper.admin(loggedUser) && !props.hideCompanyColumn) {
@@ -288,102 +288,102 @@ const BookingList = (props) => {
           </Link>
         ),
         valueGetter: (params) => params.value.fullName,
-      })
+      });
     }
 
-    return columns
-  }
+    return columns;
+  };
 
   const handleCancelUpdate = () => {
-    setOpenUpdateDialog(false)
-  }
+    setOpenUpdateDialog(false);
+  };
 
   const handleStatusChange = (status) => {
-    setStatus(status)
-  }
+    setStatus(status);
+  };
 
   const handleConfirmUpdate = async () => {
     try {
-      const data = { ids: selectedIds, status }
+      const data = { ids: selectedIds, status };
 
-      const _status = await BookingService.updateStatus(data)
+      const _status = await BookingService.updateStatus(data);
 
       if (_status === 200) {
         rows.forEach((row) => {
           if (selectedIds.includes(row._id)) {
-            row.status = status
+            row.status = status;
           }
-        })
-        setRows(Helper.clone(rows))
+        });
+        setRows(Helper.clone(rows));
       } else {
-        Helper.error()
+        Helper.error();
       }
 
-      setOpenUpdateDialog(false)
+      setOpenUpdateDialog(false);
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const handleDelete = (e) => {
-    const selectedId = e.currentTarget.getAttribute('data-id')
-    const selectedIndex = e.currentTarget.getAttribute('data-index')
+    const selectedId = e.currentTarget.getAttribute('data-id');
+    const selectedIndex = e.currentTarget.getAttribute('data-index');
 
-    setSelectedId(selectedId)
-    setSelectedIndex(selectedIndex)
-    setopenDeleteDialog(true)
-    setSelectedId(selectedId)
-    setSelectedIndex(selectedIndex)
-  }
+    setSelectedId(selectedId);
+    setSelectedIndex(selectedIndex);
+    setopenDeleteDialog(true);
+    setSelectedId(selectedId);
+    setSelectedIndex(selectedIndex);
+  };
 
   const handleCancelDelete = () => {
-    setopenDeleteDialog(false)
-    setSelectedId('')
-  }
+    setopenDeleteDialog(false);
+    setSelectedId('');
+  };
 
   const handleConfirmDelete = async () => {
     try {
       if (Env.isMobile()) {
-        const ids = [selectedId]
+        const ids = [selectedId];
 
-        const status = await BookingService.deleteBookings(ids)
+        const status = await BookingService.deleteBookings(ids);
 
         if (status === 200) {
-          rows.splice(selectedIndex, 1)
-          setRows(rows)
-          setSelectedId('')
-          setSelectedIndex(-1)
+          rows.splice(selectedIndex, 1);
+          setRows(rows);
+          setSelectedId('');
+          setSelectedIndex(-1);
         } else {
-          Helper.error()
+          Helper.error();
         }
 
-        setopenDeleteDialog(false)
+        setopenDeleteDialog(false);
       } else {
-        const ids = selectedIds.length > 0 ? selectedIds : [selectedId]
+        const ids = selectedIds.length > 0 ? selectedIds : [selectedId];
 
-        const status = await BookingService.deleteBookings(ids)
+        const status = await BookingService.deleteBookings(ids);
 
         if (status === 200) {
           if (selectedIds.length > 0) {
-            setRows(rows.filter((row) => !selectedIds.includes(row._id)))
+            setRows(rows.filter((row) => !selectedIds.includes(row._id)));
           } else {
-            setRows(rows.filter((row) => row._id !== selectedId))
+            setRows(rows.filter((row) => row._id !== selectedId));
           }
         } else {
-          Helper.error()
+          Helper.error();
         }
 
-        setopenDeleteDialog(false)
+        setopenDeleteDialog(false);
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
-  const _fr = props.language === 'fr'
-  const _locale = _fr ? dfnsFR : dfnsENUS
-  const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
+  const _fr = props.language === 'fr';
+  const _locale = _fr ? dfnsFR : dfnsENUS;
+  const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
+  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
 
   return (
     <div className="bs-list">
@@ -400,9 +400,9 @@ const BookingList = (props) => {
         ) : Env.isMobile() ? (
           <>
             {rows.map((booking, index) => {
-              const from = new Date(booking.from)
-              const to = new Date(booking.to)
-              const days = Helper.days(from, to)
+              const from = new Date(booking.from);
+              const to = new Date(booking.to);
+              const days = Helper.days(from, to);
 
               return (
                 <div key={booking._id} className="booking-details">
@@ -514,7 +514,7 @@ const BookingList = (props) => {
                     </Button>
                   </div>
                 </div>
-              )
+              );
             })}
           </>
         ) : (
@@ -540,7 +540,7 @@ const BookingList = (props) => {
               noRowsOverlay: () => '',
             }}
             onRowSelectionModelChange={(selectedIds) => {
-              setSelectedIds(selectedIds)
+              setSelectedIds(selectedIds);
             }}
             disableRowSelectionOnClick
           />
@@ -573,7 +573,7 @@ const BookingList = (props) => {
         </DialogActions>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default BookingList
+export default BookingList;

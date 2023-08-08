@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { InputLabel, Select, MenuItem } from '@mui/material'
+import React, { useState, useEffect } from 'react';
+import { InputLabel, Select, MenuItem } from '@mui/material';
 
 const DoorsList = (props) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
 
   useEffect(() => {
-    setValue(props.value || '')
-  }, [props.value])
+    setValue(props.value || '');
+  }, [props.value]);
 
   const handleChange = (e) => {
-    const value = e.target.value || ''
-    setValue(value)
+    const value = e.target.value || '';
+    setValue(value);
 
     if (props.onChange) {
-      props.onChange(value)
+      props.onChange(value);
     }
-  }
+  };
 
   return (
     <div>
@@ -27,7 +27,7 @@ const DoorsList = (props) => {
         <MenuItem value={5}>5</MenuItem>
       </Select>
     </div>
-  )
-}
+  );
+};
 
-export default DoorsList
+export default DoorsList;

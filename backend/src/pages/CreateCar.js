@@ -1,201 +1,201 @@
-import React, { useState } from 'react'
-import Master from '../components/Master'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/create-car'
-import * as CarService from '../services/CarService'
-import * as Helper from '../common/Helper'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
-import Avatar from '../components/Avatar'
-import SupplierSelectList from '../components/SupplierSelectList'
-import LocationSelectList from '../components/LocationSelectList'
-import CarTypeList from '../components/CarTypeList'
-import GearboxList from '../components/GearboxList'
-import SeatsList from '../components/SeatsList'
-import DoorsList from '../components/DoorsList'
-import FuelPolicyList from '../components/FuelPolicyList'
-import { Input, InputLabel, FormControl, Button, Paper, FormControlLabel, Switch, TextField, FormHelperText } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import Master from '../components/Master';
+import Env from '../config/env.config';
+import { strings as commonStrings } from '../lang/common';
+import { strings as csStrings } from '../lang/cars';
+import { strings } from '../lang/create-car';
+import * as CarService from '../services/CarService';
+import * as Helper from '../common/Helper';
+import Error from '../components/Error';
+import Backdrop from '../components/SimpleBackdrop';
+import Avatar from '../components/Avatar';
+import SupplierSelectList from '../components/SupplierSelectList';
+import LocationSelectList from '../components/LocationSelectList';
+import CarTypeList from '../components/CarTypeList';
+import GearboxList from '../components/GearboxList';
+import SeatsList from '../components/SeatsList';
+import DoorsList from '../components/DoorsList';
+import FuelPolicyList from '../components/FuelPolicyList';
+import { Input, InputLabel, FormControl, Button, Paper, FormControlLabel, Switch, TextField, FormHelperText } from '@mui/material';
+import { Info as InfoIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-import '../assets/css/create-car.css'
+import '../assets/css/create-car.css';
 
 const CreateCar = () => {
-  const navigate = useNavigate()
-  const [isCompany, setIsCompany] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [imageError, setImageError] = useState(false)
-  const [imageSizeError, setImageSizeError] = useState(false)
-  const [image, setImage] = useState()
-  const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
-  const [locations, setLocations] = useState([])
-  const [available, setAvailable] = useState(false)
-  const [type, setType] = useState('')
-  const [gearbox, setGearbox] = useState('')
-  const [price, setPrice] = useState('')
-  const [seats, setSeats] = useState('')
-  const [doors, setDoors] = useState('')
-  const [aircon, setAircon] = useState(false)
-  const [mileage, setMileage] = useState('')
-  const [fuelPolicy, setFuelPolicy] = useState('')
-  const [cancellation, setCancellation] = useState('')
-  const [amendments, setAmendments] = useState('')
-  const [theftProtection, setTheftProtection] = useState('')
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
-  const [fullInsurance, setFullInsurance] = useState('')
-  const [additionalDriver, setAdditionalDriver] = useState('')
-  const [minimumAge, setMinimumAge] = useState(String(Env.MINIMUM_AGE))
-  const [minimumAgeValid, setMinimumAgeValid] = useState(true)
-  const [formError, setFormError] = useState(false)
-  const [deposit, setDeposit] = useState('')
+  const navigate = useNavigate();
+  const [isCompany, setIsCompany] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageSizeError, setImageSizeError] = useState(false);
+  const [image, setImage] = useState();
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [locations, setLocations] = useState([]);
+  const [available, setAvailable] = useState(false);
+  const [type, setType] = useState('');
+  const [gearbox, setGearbox] = useState('');
+  const [price, setPrice] = useState('');
+  const [seats, setSeats] = useState('');
+  const [doors, setDoors] = useState('');
+  const [aircon, setAircon] = useState(false);
+  const [mileage, setMileage] = useState('');
+  const [fuelPolicy, setFuelPolicy] = useState('');
+  const [cancellation, setCancellation] = useState('');
+  const [amendments, setAmendments] = useState('');
+  const [theftProtection, setTheftProtection] = useState('');
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('');
+  const [fullInsurance, setFullInsurance] = useState('');
+  const [additionalDriver, setAdditionalDriver] = useState('');
+  const [minimumAge, setMinimumAge] = useState(String(Env.MINIMUM_AGE));
+  const [minimumAgeValid, setMinimumAgeValid] = useState(true);
+  const [formError, setFormError] = useState(false);
+  const [deposit, setDeposit] = useState('');
 
   const handleBeforeUpload = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const handleImageChange = (image) => {
-    setLoading(false)
-    setImage(image)
+    setLoading(false);
+    setImage(image);
 
     if (image !== null) {
-      setImageError(false)
+      setImageError(false);
     }
-  }
+  };
 
   const handleImageValidate = (valid) => {
     if (!valid) {
-      setImageSizeError(true)
-      setImageError(false)
-      setFormError(false)
-      setLoading(false)
+      setImageSizeError(true);
+      setImageError(false);
+      setFormError(false);
+      setLoading(false);
     } else {
-      setImageSizeError(false)
-      setImageError(false)
-      setFormError(false)
+      setImageSizeError(false);
+      setImageError(false);
+      setFormError(false);
     }
-  }
+  };
 
   const handleNameChange = (e) => {
-    setName(e.target.value)
-  }
+    setName(e.target.value);
+  };
 
   const handleCompanyChange = (values) => {
-    setCompany(values.length > 0 ? values[0]._id : null)
-  }
+    setCompany(values.length > 0 ? values[0]._id : null);
+  };
 
   const validateMinimumAge = (age, updateState = true) => {
     if (age) {
-      const _age = parseInt(age)
-      const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
-      if (updateState) setMinimumAgeValid(minimumAgeValid)
-      if (minimumAgeValid) setFormError(false)
-      return minimumAgeValid
+      const _age = parseInt(age);
+      const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99;
+      if (updateState) setMinimumAgeValid(minimumAgeValid);
+      if (minimumAgeValid) setFormError(false);
+      return minimumAgeValid;
     } else {
-      setMinimumAgeValid(true)
-      setFormError(false)
-      return true
+      setMinimumAgeValid(true);
+      setFormError(false);
+      return true;
     }
-  }
+  };
 
   const handleMinimumAgeChange = (e) => {
-    setMinimumAge(e.target.value)
+    setMinimumAge(e.target.value);
 
-    const minimumAgeValid = validateMinimumAge(e.target.value, false)
+    const minimumAgeValid = validateMinimumAge(e.target.value, false);
     if (minimumAgeValid) {
-      setMinimumAgeValid(true)
-      setFormError(false)
+      setMinimumAgeValid(true);
+      setFormError(false);
     }
-  }
+  };
 
   const handleLocationsChange = (locations) => {
-    setLocations(locations)
-  }
+    setLocations(locations);
+  };
 
   const handleAvailableChange = (e) => {
-    setAvailable(e.target.checked)
-  }
+    setAvailable(e.target.checked);
+  };
 
   const handleCarTypeChange = (value) => {
-    setType(value)
-  }
+    setType(value);
+  };
 
   const handleGearboxChange = (value) => {
-    setGearbox(value)
-  }
+    setGearbox(value);
+  };
 
   const handleAirconChange = (e) => {
-    setAircon(e.target.checked)
-  }
+    setAircon(e.target.checked);
+  };
 
   const handlePriceChange = (e) => {
-    setPrice(e.target.value)
-  }
+    setPrice(e.target.value);
+  };
 
   const handleDepositChange = (e) => {
-    setDeposit(e.target.value)
-  }
+    setDeposit(e.target.value);
+  };
 
   const handleSeatsChange = (value) => {
-    setSeats(value)
-  }
+    setSeats(value);
+  };
 
   const handleDoorsChange = (value) => {
-    setDoors(value)
-  }
+    setDoors(value);
+  };
 
   const handleMileageChange = (e) => {
-    setMileage(e.target.value)
-  }
+    setMileage(e.target.value);
+  };
 
   const handleFuelPolicyChange = (value) => {
-    setFuelPolicy(value)
-  }
+    setFuelPolicy(value);
+  };
 
   const handleCancellationChange = (e) => {
-    setCancellation(e.target.value)
-  }
+    setCancellation(e.target.value);
+  };
 
   const handleAmendmentsChange = (e) => {
-    setAmendments(e.target.value)
-  }
+    setAmendments(e.target.value);
+  };
 
   const handleTheftProtectionChange = (e) => {
-    setTheftProtection(e.target.value)
-  }
+    setTheftProtection(e.target.value);
+  };
 
   const handleCollisionDamageWaiverChange = (e) => {
-    setCollisionDamageWaiver(e.target.value)
-  }
+    setCollisionDamageWaiver(e.target.value);
+  };
 
   const handleFullinsuranceChange = (e) => {
-    setFullInsurance(e.target.value)
-  }
+    setFullInsurance(e.target.value);
+  };
 
   const handleAdditionalDriverChange = (e) => {
-    setAdditionalDriver(e.target.value)
-  }
+    setAdditionalDriver(e.target.value);
+  };
 
-  const extraToNumber = (extra) => (extra === '' ? -1 : Number(extra))
+  const extraToNumber = (extra) => (extra === '' ? -1 : Number(extra));
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
-      const minimumAgeValid = validateMinimumAge(minimumAge)
+      const minimumAgeValid = validateMinimumAge(minimumAge);
       if (!minimumAgeValid) {
-        setFormError(true)
-        setImageError(false)
-        return
+        setFormError(true);
+        setImageError(false);
+        return;
       }
 
       if (!image) {
-        setImageError(true)
-        setImageSizeError(false)
-        return
+        setImageError(true);
+        setImageSizeError(false);
+        return;
       }
 
       const data = {
@@ -220,30 +220,30 @@ const CreateCar = () => {
         collisionDamageWaiver: extraToNumber(collisionDamageWaiver),
         fullInsurance: extraToNumber(fullInsurance),
         additionalDriver: extraToNumber(additionalDriver),
-      }
+      };
 
-      const car = await CarService.create(data)
+      const car = await CarService.create(data);
 
       if (car && car._id) {
-        navigate('/cars')
+        navigate('/cars');
       } else {
-        Helper.error()
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onLoad = (user) => {
     if (user && user.verified) {
-      setVisible(true)
+      setVisible(true);
 
       if (user.type === Env.RECORD_TYPE.COMPANY) {
-        setCompany(user._id)
-        setIsCompany(true)
+        setCompany(user._id);
+        setIsCompany(true);
       }
     }
-  }
+  };
 
   return (
     <Master onLoad={onLoad} strict={true}>
@@ -451,8 +451,8 @@ const CreateCar = () => {
                 size="small"
                 onClick={async () => {
                   if (image) {
-                    await CarService.deleteTempImage(image)
-                    navigate('/cars')
+                    await CarService.deleteTempImage(image);
+                    navigate('/cars');
                   }
                 }}
               >
@@ -470,7 +470,7 @@ const CreateCar = () => {
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  )
-}
+  );
+};
 
-export default CreateCar
+export default CreateCar;
