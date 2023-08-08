@@ -1,20 +1,20 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Text, TextInput as ReactTextInput, Platform } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const TextInputComponent = (props, ref) => {
-  const [value, setValue] = useState('')
-  const _ref = useRef(null)
-  const small = props.size === 'small'
+  const [value, setValue] = useState('');
+  const _ref = useRef(null);
+  const small = props.size === 'small';
 
   useEffect(() => {
-    setValue(props.value ?? '')
-  }, [props.value])
+    setValue(props.value ?? '');
+  }, [props.value]);
 
   const onChangeText = (text) => {
-    setValue(text)
-    if (props.onChangeText) props.onChangeText(text)
-  }
+    setValue(text);
+    if (props.onChangeText) props.onChangeText(text);
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -59,7 +59,7 @@ const TextInputComponent = (props, ref) => {
       right: 10,
       top: small ? 7 : 17,
     },
-  })
+  });
 
   return (
     <View style={{ ...props.style, ...styles.container }}>
@@ -67,8 +67,8 @@ const TextInputComponent = (props, ref) => {
       <View style={styles.inputContainer}>
         <ReactTextInput
           ref={(r) => {
-            if (ref) ref.current = r
-            _ref.current = r
+            if (ref) ref.current = r;
+            _ref.current = r;
           }}
           secureTextEntry={props.secureTextEntry}
           placeholder={props.label}
@@ -93,17 +93,17 @@ const TextInputComponent = (props, ref) => {
             size={22}
             color="rgba(0, 0, 0, 0.28)"
             onPress={() => {
-              onChangeText('')
-              if (_ref && _ref.current) _ref.current.focus()
+              onChangeText('');
+              if (_ref && _ref.current) _ref.current.focus();
             }}
           />
         )}
       </View>
       <Text style={styles.helperText}>{props.helperText}</Text>
     </View>
-  )
-}
+  );
+};
 
-const TextInput = forwardRef(TextInputComponent)
+const TextInput = forwardRef(TextInputComponent);
 
-export default TextInput
+export default TextInput;

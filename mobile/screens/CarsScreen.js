@@ -1,71 +1,71 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import Master from './Master'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import CarList from '../components/CarList'
-import CompanyFilter from '../components/CompanyFilter'
-import FuelFilter from '../components/FuelFilter'
-import Env from '../config/env.config'
-import GearboxFilter from '../components/GearboxFilter'
-import MileageFilter from '../components/MileageFilter'
-import DepositFilter from '../components/DepositFilter'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import Master from './Master';
+import i18n from '../lang/i18n';
+import * as UserService from '../services/UserService';
+import CarList from '../components/CarList';
+import CompanyFilter from '../components/CompanyFilter';
+import FuelFilter from '../components/FuelFilter';
+import Env from '../config/env.config';
+import GearboxFilter from '../components/GearboxFilter';
+import MileageFilter from '../components/MileageFilter';
+import DepositFilter from '../components/DepositFilter';
 
 export default function CarsScreen({ navigation, route }) {
-  const isFocused = useIsFocused()
-  const [reload, setReload] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [companies, setCompanies] = useState([])
-  const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE])
-  const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL])
-  const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED])
-  const [deposit, setDeposit] = useState(-1)
+  const isFocused = useIsFocused();
+  const [reload, setReload] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [companies, setCompanies] = useState([]);
+  const [fuel, setFuel] = useState([Env.CAR_TYPE.DIESEL, Env.CAR_TYPE.GASOLINE]);
+  const [gearbox, setGearbox] = useState([Env.GEARBOX_TYPE.AUTOMATIC, Env.GEARBOX_TYPE.MANUAL]);
+  const [mileage, setMileage] = useState([Env.MILEAGE.LIMITED, Env.MILEAGE.UNLIMITED]);
+  const [deposit, setDeposit] = useState(-1);
 
   const _init = async () => {
-    const language = await UserService.getLanguage()
-    i18n.locale = language
-    setVisible(true)
-  }
+    const language = await UserService.getLanguage();
+    i18n.locale = language;
+    setVisible(true);
+  };
 
   useEffect(() => {
     if (isFocused) {
-      _init()
-      setReload(true)
+      _init();
+      setReload(true);
     } else {
-      setVisible(false)
+      setVisible(false);
     }
-  }, [route.params, isFocused])
+  }, [route.params, isFocused]);
 
   const onLoad = () => {
-    setReload(false)
-  }
+    setReload(false);
+  };
 
   const onLoadCompanies = (companies) => {
-    setCompanies(companies)
-    setLoaded(true)
-  }
+    setCompanies(companies);
+    setLoaded(true);
+  };
 
   const onChangeCompanies = (companies) => {
-    setCompanies(companies)
-  }
+    setCompanies(companies);
+  };
 
   const onChangeFuel = (fuel) => {
-    setFuel(fuel)
-  }
+    setFuel(fuel);
+  };
 
   const onChangeGearbox = (gearbox) => {
-    setGearbox(gearbox)
-  }
+    setGearbox(gearbox);
+  };
 
   const onChangeMileage = (mileage) => {
-    setMileage(mileage)
-  }
+    setMileage(mileage);
+  };
 
   const onChangeDeposit = (deposit) => {
-    setDeposit(deposit)
-  }
+    setDeposit(deposit);
+  };
 
   return (
     <Master style={styles.master} onLoad={onLoad} reload={reload} navigation={navigation} route={route}>
@@ -93,7 +93,7 @@ export default function CarsScreen({ navigation, route }) {
         />
       )}
     </Master>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 7,
   },
-})
+});

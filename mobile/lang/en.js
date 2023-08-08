@@ -1,5 +1,5 @@
-import Env from '../config/env.config'
-import { COPYRIGHT, REGISTERED } from './copyright'
+import Env from '../config/env.config';
+import { COPYRIGHT, REGISTERED } from './copyright';
 
 export const en = {
   GENERIC_ERROR: 'An unhandled error occurred.',
@@ -86,8 +86,7 @@ export const en = {
   DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.',
   HOME: 'Home',
   ABOUT: 'About',
-  VALIDATE_EMAIL:
-    "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
+  VALIDATE_EMAIL: "A validation email has been sent to your email address. Please check your mailbox and validate your account by clicking the link in the email. It will be expire after one day. If you didn't receive the validation email click on resend.",
   RESEND: 'Resend',
   VALIDATION_EMAIL_SENT: 'Validation email sent.',
   VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
@@ -210,4 +209,4 @@ export const en = {
   PAY_ONLINE: 'Pay online',
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
-}
+};

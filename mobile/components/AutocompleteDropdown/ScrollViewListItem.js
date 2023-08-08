@@ -1,5 +1,5 @@
-import React, { memo } from 'react'
-import { StyleSheet, Text, Pressable, View } from 'react-native'
+import React, { memo } from 'react';
+import { StyleSheet, Text, Pressable, View } from 'react-native';
 
 const ScrollViewListItemComponent = ({ titleHighlighted, titleStart, titleEnd, style, onPress, numberOfLines = 2 }) => {
   return (
@@ -18,10 +18,10 @@ const ScrollViewListItemComponent = ({ titleHighlighted, titleStart, titleEnd, s
         </Text>
       </View>
     </Pressable>
-  )
-}
+  );
+};
 
-export const ScrollViewListItem = memo(ScrollViewListItemComponent)
+export const ScrollViewListItem = memo(ScrollViewListItemComponent);
 
 const styles = StyleSheet.create({
   container: {
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 0,
   },
-})
+});

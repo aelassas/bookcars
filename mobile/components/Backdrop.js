@@ -1,7 +1,7 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-const Backdrop = (props) => <View style={styles.container}>{props.message && <Text style={styles.text}>{props.message}</Text>}</View>
+const Backdrop = (props) => <View style={styles.container}>{props.message && <Text style={styles.text}>{props.message}</Text>}</View>;
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#fff',
   },
-})
+});
 
-export default Backdrop
+export default Backdrop;

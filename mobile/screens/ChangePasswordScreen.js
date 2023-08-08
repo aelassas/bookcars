@@ -1,154 +1,154 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
-import { useIsFocused } from '@react-navigation/native'
-import Master from './Master'
-import i18n from '../lang/i18n'
-import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
-import TextInput from '../components/TextInput'
-import Button from '../components/Button'
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import Master from './Master';
+import i18n from '../lang/i18n';
+import * as UserService from '../services/UserService';
+import * as Helper from '../common/Helper';
+import TextInput from '../components/TextInput';
+import Button from '../components/Button';
 
 const ChangePasswordScreen = ({ navigation, route }) => {
-  const isFocused = useIsFocused()
-  const [reload, setReload] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const [user, setUser] = useState(null)
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const isFocused = useIsFocused();
+  const [reload, setReload] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [user, setUser] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false)
-  const [currentPasswordError, setCurrentPasswordError] = useState(false)
-  const [passwordRequired, setPasswordRequired] = useState(false)
-  const [confirmPasswordRequired, setConfirmPasswordRequired] = useState(false)
-  const [passwordLengthError, setPasswordLengthError] = useState(false)
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false)
+  const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
+  const [currentPasswordError, setCurrentPasswordError] = useState(false);
+  const [passwordRequired, setPasswordRequired] = useState(false);
+  const [confirmPasswordRequired, setConfirmPasswordRequired] = useState(false);
+  const [passwordLengthError, setPasswordLengthError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
-  const currentPasswordRef = useRef(null)
-  const passwordRef = useRef(null)
-  const confirmPasswordRef = useRef(null)
+  const currentPasswordRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
 
   const clear = () => {
-    setCurrentPassword('')
-    setPassword('')
-    setConfirmPassword('')
+    setCurrentPassword('');
+    setPassword('');
+    setConfirmPassword('');
 
-    if (currentPasswordRef.current) currentPasswordRef.current.clear()
-    if (passwordRef.current) passwordRef.current.clear()
-    if (confirmPasswordRef.current) confirmPasswordRef.current.clear()
-  }
+    if (currentPasswordRef.current) currentPasswordRef.current.clear();
+    if (passwordRef.current) passwordRef.current.clear();
+    if (confirmPasswordRef.current) confirmPasswordRef.current.clear();
+  };
 
   const _init = async () => {
     try {
-      const language = await UserService.getLanguage()
-      i18n.locale = language
+      const language = await UserService.getLanguage();
+      i18n.locale = language;
 
-      clear()
+      clear();
 
-      const currentUser = await UserService.getCurrentUser()
+      const currentUser = await UserService.getCurrentUser();
 
       if (!currentUser) {
-        await UserService.signout(navigation, false, true)
-        return
+        await UserService.signout(navigation, false, true);
+        return;
       }
 
-      const user = await UserService.getUser(currentUser.id)
+      const user = await UserService.getUser(currentUser.id);
 
       if (!user) {
-        await UserService.signout(navigation, false, true)
-        return
+        await UserService.signout(navigation, false, true);
+        return;
       }
 
-      setUser(user)
-      setVisible(true)
+      setUser(user);
+      setVisible(true);
     } catch (err) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(navigation, false, true);
     }
-  }
+  };
 
   useEffect(() => {
     if (isFocused) {
-      _init()
-      setReload(true)
+      _init();
+      setReload(true);
     } else {
-      setVisible(false)
+      setVisible(false);
     }
-  }, [route.params, isFocused]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [route.params, isFocused]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onLoad = () => {
-    setReload(false)
-  }
+    setReload(false);
+  };
 
   const validatePassword = async () => {
     try {
       if (!currentPassword) {
-        setCurrentPasswordRequired(true)
-        setCurrentPasswordError(false)
-        return false
+        setCurrentPasswordRequired(true);
+        setCurrentPasswordError(false);
+        return false;
       }
 
-      const status = await UserService.checkPassword(user._id, currentPassword)
+      const status = await UserService.checkPassword(user._id, currentPassword);
 
       if (status !== 200) {
-        setCurrentPasswordRequired(false)
-        setCurrentPasswordError(true)
-        return false
+        setCurrentPasswordRequired(false);
+        setCurrentPasswordError(true);
+        return false;
       }
 
       if (!password) {
-        setPasswordRequired(true)
-        setPasswordLengthError(false)
-        return false
+        setPasswordRequired(true);
+        setPasswordLengthError(false);
+        return false;
       }
 
       if (password.length < 6) {
-        setPasswordLengthError(true)
-        setPasswordRequired(false)
-        return false
+        setPasswordLengthError(true);
+        setPasswordRequired(false);
+        return false;
       }
 
       if (!confirmPassword) {
-        setConfirmPasswordRequired(true)
-        setConfirmPasswordError(false)
-        return false
+        setConfirmPasswordRequired(true);
+        setConfirmPasswordError(false);
+        return false;
       }
 
       if (password !== confirmPassword) {
-        setConfirmPasswordError(true)
-        setConfirmPasswordRequired(false)
-        return false
+        setConfirmPasswordError(true);
+        setConfirmPasswordRequired(false);
+        return false;
       }
 
-      return true
+      return true;
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onChangeCurrentPassword = (text) => {
-    setCurrentPassword(text)
-    setCurrentPasswordRequired(false)
-    setCurrentPasswordError(false)
-  }
+    setCurrentPassword(text);
+    setCurrentPasswordRequired(false);
+    setCurrentPasswordError(false);
+  };
 
   const onChangePassword = (text) => {
-    setPassword(text)
-    setPasswordRequired(false)
-    setPasswordLengthError(false)
-  }
+    setPassword(text);
+    setPasswordRequired(false);
+    setPasswordLengthError(false);
+  };
 
   const onChangeConfirmPassword = (text) => {
-    setConfirmPassword(text)
-    setConfirmPasswordRequired(false)
-    setConfirmPasswordError(false)
-  }
+    setConfirmPassword(text);
+    setConfirmPasswordRequired(false);
+    setConfirmPasswordError(false);
+  };
 
   const onPressUpdate = async () => {
     try {
-      const passwordValid = await validatePassword()
+      const passwordValid = await validatePassword();
 
       if (!passwordValid) {
-        return
+        return;
       }
 
       const data = {
@@ -156,20 +156,20 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         password: currentPassword,
         newPassword: password,
         strict: true,
-      }
+      };
 
-      const status = await UserService.changePassword(data)
+      const status = await UserService.changePassword(data);
 
       if (status === 200) {
-        clear()
-        Helper.toast(i18n.t('PASSWORD_UPDATE'))
+        clear();
+        Helper.toast(i18n.t('PASSWORD_UPDATE'));
       } else {
-        Helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
+        Helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'));
       }
     } catch (err) {
-      await UserService.signout(navigation, false, true)
+      await UserService.signout(navigation, false, true);
     }
-  }
+  };
 
   return (
     <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
@@ -214,8 +214,8 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         </ScrollView>
       )}
     </Master>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   master: {
@@ -237,6 +237,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     margin: 10,
   },
-})
+});
 
-export default ChangePasswordScreen
+export default ChangePasswordScreen;

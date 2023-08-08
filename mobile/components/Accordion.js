@@ -1,15 +1,15 @@
-import React, { useRef, useState } from 'react'
-import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+import React, { useRef, useState } from 'react';
+import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Accordion = (props) => {
-  const [open, setOpen] = useState(false)
-  const animatedController = useRef(new Animated.Value(0)).current
+  const [open, setOpen] = useState(false);
+  const animatedController = useRef(new Animated.Value(0)).current;
 
   const arrowAngle = animatedController.interpolate({
     inputRange: [0, 1],
     outputRange: ['0rad', `${Math.PI}rad`],
-  })
+  });
 
   const styles = StyleSheet.create({
     container: {
@@ -66,7 +66,7 @@ const Accordion = (props) => {
       height: open ? 'auto' : 0,
       width: open ? 'auto' : 0,
     },
-  })
+  });
 
   return (
     <View style={{ ...styles.container, ...props.style }}>
@@ -80,16 +80,16 @@ const Accordion = (props) => {
                 toValue: 0,
                 easing: Easing.bezier(0.4, 0.0, 0.2, 1),
                 useNativeDriver: true,
-              }).start()
+              }).start();
             } else {
               Animated.timing(animatedController, {
                 duration: 300,
                 toValue: 1,
                 easing: Easing.bezier(0.4, 0.0, 0.2, 1),
                 useNativeDriver: true,
-              }).start()
+              }).start();
             }
-            setOpen(!open)
+            setOpen(!open);
           }}
         >
           <View style={styles.titleContainer}>
@@ -104,7 +104,7 @@ const Accordion = (props) => {
       </View>
       <View style={styles.bodyContainer}>{props.children}</View>
     </View>
-  )
-}
+  );
+};
 
-export default Accordion
+export default Accordion;

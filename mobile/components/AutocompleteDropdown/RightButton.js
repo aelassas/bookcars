@@ -1,11 +1,11 @@
-import React, { memo, useEffect, useRef } from 'react'
-import { ActivityIndicator, Animated, Easing, StyleSheet, Pressable, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
-import Feather from 'react-native-vector-icons/Feather'
-Feather.loadFont()
+import React, { memo, useEffect, useRef } from 'react';
+import { ActivityIndicator, Animated, Easing, StyleSheet, Pressable, View } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import Feather from 'react-native-vector-icons/Feather';
+Feather.loadFont();
 
 const RightButtonComponent = ({ inputHeight, onClearPress, onChevronPress, isOpened, showChevron, showClear, loading, buttonsContainerStyle, ChevronIconComponent, ClearIconComponent }) => {
-  const isOpenedAnimationValue = useRef(new Animated.Value(0)).current
+  const isOpenedAnimationValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(isOpenedAnimationValue, {
@@ -13,13 +13,13 @@ const RightButtonComponent = ({ inputHeight, onClearPress, onChevronPress, isOpe
       toValue: isOpened ? 1 : 0,
       useNativeDriver: true,
       easing: Easing.bezier(0.3, 0.58, 0.25, 0.99),
-    }).start()
-  }, [isOpened]) // eslint-disable-line react-hooks/exhaustive-deps
+    }).start();
+  }, [isOpened]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chevronSpin = isOpenedAnimationValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
-  })
+  });
 
   return (
     <View
@@ -43,10 +43,10 @@ const RightButtonComponent = ({ inputHeight, onClearPress, onChevronPress, isOpe
         </Animated.View>
       )}
     </View>
-  )
-}
+  );
+};
 
-export const RightButton = memo(RightButtonComponent)
+export const RightButton = memo(RightButtonComponent);
 
 const styles = StyleSheet.create({
   container: {
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
   },
-})
+});

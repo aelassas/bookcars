@@ -1,38 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
-import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
-import i18n from '../lang/i18n'
-import * as SupplierService from '../services/SupplierService'
-import Link from './Link'
-import Switch from './Switch'
-import Accordion from './Accordion'
+import * as Helper from '../common/Helper';
+import Env from '../config/env.config';
+import i18n from '../lang/i18n';
+import * as SupplierService from '../services/SupplierService';
+import Link from './Link';
+import Switch from './Switch';
+import Accordion from './Accordion';
 
 const CompanyFilter = (props) => {
-  const [suppliers, setSuppliers] = useState([])
-  const [checkedSuppliers, setCheckedSuppliers] = useState([])
-  const [allChecked, setAllChecked] = useState(true)
+  const [suppliers, setSuppliers] = useState([]);
+  const [checkedSuppliers, setCheckedSuppliers] = useState([]);
+  const [allChecked, setAllChecked] = useState(true);
 
   const init = async () => {
     try {
-      const allSuppliers = await SupplierService.getAllSuppliers()
+      const allSuppliers = await SupplierService.getAllSuppliers();
       const suppliers = allSuppliers.map((supplier) => ({
         ...supplier,
         checked: true,
-      }))
-      const checkedCompanies = Helper.flattenCompanies(suppliers)
-      setSuppliers(suppliers)
-      setCheckedSuppliers(checkedCompanies)
-      if (props.onLoad) props.onLoad(checkedCompanies)
+      }));
+      const checkedCompanies = Helper.flattenCompanies(suppliers);
+      setSuppliers(suppliers);
+      setCheckedSuppliers(checkedCompanies);
+      if (props.onLoad) props.onLoad(checkedCompanies);
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   useEffect(() => {
-    init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    init();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     suppliers.length > 0 &&
@@ -46,26 +46,26 @@ const CompanyFilter = (props) => {
                   value={supplier.checked}
                   onValueChange={(checked) => {
                     if (checked) {
-                      supplier.checked = true
-                      setSuppliers(Helper.clone(suppliers))
-                      checkedSuppliers.push(supplier._id)
+                      supplier.checked = true;
+                      setSuppliers(Helper.clone(suppliers));
+                      checkedSuppliers.push(supplier._id);
 
                       if (checkedSuppliers.length === suppliers.length) {
-                        setAllChecked(true)
+                        setAllChecked(true);
                       }
                     } else {
-                      supplier.checked = false
-                      setSuppliers(Helper.clone(suppliers))
-                      const index = checkedSuppliers.indexOf(supplier._id)
-                      checkedSuppliers.splice(index, 1)
+                      supplier.checked = false;
+                      setSuppliers(Helper.clone(suppliers));
+                      const index = checkedSuppliers.indexOf(supplier._id);
+                      checkedSuppliers.splice(index, 1);
 
                       if (checkedSuppliers.length === 0) {
-                        setAllChecked(false)
+                        setAllChecked(false);
                       }
                     }
 
                     if (props.onChange) {
-                      props.onChange(Helper.clone(checkedSuppliers))
+                      props.onChange(Helper.clone(checkedSuppliers));
                     }
                   }}
                 >
@@ -84,25 +84,25 @@ const CompanyFilter = (props) => {
             textStyle={styles.linkText}
             label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')}
             onPress={() => {
-              let _checkedSuppliers = []
+              let _checkedSuppliers = [];
               if (allChecked) {
                 suppliers.forEach((supplier) => {
-                  supplier.checked = false
-                })
-                setAllChecked(false)
-                setSuppliers(Helper.clone(suppliers))
-                setCheckedSuppliers(_checkedSuppliers)
+                  supplier.checked = false;
+                });
+                setAllChecked(false);
+                setSuppliers(Helper.clone(suppliers));
+                setCheckedSuppliers(_checkedSuppliers);
               } else {
                 suppliers.forEach((supplier) => {
-                  supplier.checked = true
-                })
-                setAllChecked(true)
-                setSuppliers(Helper.clone(suppliers))
-                _checkedSuppliers = Helper.clone(Helper.flattenCompanies(suppliers))
-                setCheckedSuppliers(_checkedSuppliers)
+                  supplier.checked = true;
+                });
+                setAllChecked(true);
+                setSuppliers(Helper.clone(suppliers));
+                _checkedSuppliers = Helper.clone(Helper.flattenCompanies(suppliers));
+                setCheckedSuppliers(_checkedSuppliers);
 
                 if (props.onChange) {
-                  props.onChange(_checkedSuppliers)
+                  props.onChange(_checkedSuppliers);
                 }
               }
             }}
@@ -110,8 +110,8 @@ const CompanyFilter = (props) => {
         </Accordion>
       </View>
     )
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -143,6 +143,6 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 12,
   },
-})
+});
 
-export default CompanyFilter
+export default CompanyFilter;
