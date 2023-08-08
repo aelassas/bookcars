@@ -1,107 +1,107 @@
-import React, { useEffect, useState } from 'react'
-import Env from '../config/env.config'
-import * as BookingService from '../services/BookingService'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/checkout'
-import * as Helper from '../common/Helper'
-import * as UserService from '../services/UserService'
-import * as CarService from '../services/CarService'
-import * as LocationService from '../services/LocationService'
-import Master from '../components/Master'
-import Error from '../components/Error'
-import DatePicker from '../components/DatePicker'
-import Backdrop from '../components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Info from './Info'
-import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link, FormControlLabel, Switch, RadioGroup, Radio } from '@mui/material'
-import { DirectionsCar as CarIcon, Lock as LockIcon, Person as DriverIcon, EventSeat as BookingIcon, Settings as PaymentOptionsIcon } from '@mui/icons-material'
-import validator from 'validator'
-import { format, intervalToDuration } from 'date-fns'
-import { fr, enUS } from 'date-fns/locale'
+import React, { useEffect, useState } from 'react';
+import Env from '../config/env.config';
+import * as BookingService from '../services/BookingService';
+import { strings as commonStrings } from '../lang/common';
+import { strings as csStrings } from '../lang/cars';
+import { strings } from '../lang/checkout';
+import * as Helper from '../common/Helper';
+import * as UserService from '../services/UserService';
+import * as CarService from '../services/CarService';
+import * as LocationService from '../services/LocationService';
+import Master from '../components/Master';
+import Error from '../components/Error';
+import DatePicker from '../components/DatePicker';
+import Backdrop from '../components/SimpleBackdrop';
+import NoMatch from './NoMatch';
+import Info from './Info';
+import { OutlinedInput, InputLabel, FormControl, FormHelperText, Button, Paper, Checkbox, Link, FormControlLabel, Switch, RadioGroup, Radio } from '@mui/material';
+import { DirectionsCar as CarIcon, Lock as LockIcon, Person as DriverIcon, EventSeat as BookingIcon, Settings as PaymentOptionsIcon } from '@mui/icons-material';
+import validator from 'validator';
+import { format, intervalToDuration } from 'date-fns';
+import { fr, enUS } from 'date-fns/locale';
 
-import SecurePayment from '../assets/img/secure-payment.png'
-import '../assets/css/checkout.css'
+import SecurePayment from '../assets/img/secure-payment.png';
+import '../assets/css/checkout.css';
 
 const Checkout = () => {
-  const [user, setUser] = useState()
-  const [car, setCar] = useState()
-  const [pickupLocation, setPickupLocation] = useState()
-  const [dropOffLocation, setDropOffLocation] = useState()
-  const [from, setFrom] = useState()
-  const [to, setTo] = useState()
-  const [visible, setVisible] = useState(false)
-  const [authenticated, setAuthenticated] = useState(false)
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-  const [noMatch, setNoMatch] = useState(false)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [birthDate, setBirthDate] = useState()
-  const [birthDateValid, setBirthDateValid] = useState(true)
-  const [emailValid, setEmailValid] = useState(true)
-  const [emailRegitered, setEmailRegitered] = useState(false)
-  const [phoneValid, setPhoneValid] = useState(true)
-  const [tosChecked, setTosChecked] = useState(false)
-  const [tosError, setTosError] = useState(false)
-  const [error, setError] = useState(false)
-  const [cardName, setCardName] = useState('')
-  const [cardNumber, setCardNumber] = useState('')
-  const [cardNumberValid, setCardNumberValid] = useState(true)
-  const [cardMonth, setCardMonth] = useState('')
-  const [cardMonthValid, setCardMonthValid] = useState(true)
-  const [cardYear, setcardYear] = useState('')
-  const [cardYearValid, setCardYearValid] = useState(true)
-  const [cvv, setCvv] = useState('')
-  const [cvvValid, setCvvValid] = useState(true)
-  const [price, setPrice] = useState(0)
-  const [emailInfo, setEmailInfo] = useState(true)
-  const [phoneInfo, setPhoneInfo] = useState(true)
-  const [cancellation, setCancellation] = useState(false)
-  const [amendments, setAmendments] = useState(false)
-  const [theftProtection, setTheftProtection] = useState(false)
-  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
-  const [fullInsurance, setFullInsurance] = useState(false)
-  const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [cardDateError, setCardDateError] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [_fullName, set_FullName] = useState('')
-  const [_email, set_Email] = useState('')
-  const [_phone, set_Phone] = useState('')
-  const [_birthDate, set_BirthDate] = useState()
-  const [_emailValid, set_EmailValid] = useState(true)
-  const [_phoneValid, set_PhoneValid] = useState(true)
-  const [_birthDateValid, set_BirthDateValid] = useState(true)
-  const [payLater, setPayLater] = useState(false)
+  const [user, setUser] = useState();
+  const [car, setCar] = useState();
+  const [pickupLocation, setPickupLocation] = useState();
+  const [dropOffLocation, setDropOffLocation] = useState();
+  const [from, setFrom] = useState();
+  const [to, setTo] = useState();
+  const [visible, setVisible] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE);
+  const [noMatch, setNoMatch] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [birthDate, setBirthDate] = useState();
+  const [birthDateValid, setBirthDateValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [emailRegitered, setEmailRegitered] = useState(false);
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [tosChecked, setTosChecked] = useState(false);
+  const [tosError, setTosError] = useState(false);
+  const [error, setError] = useState(false);
+  const [cardName, setCardName] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardNumberValid, setCardNumberValid] = useState(true);
+  const [cardMonth, setCardMonth] = useState('');
+  const [cardMonthValid, setCardMonthValid] = useState(true);
+  const [cardYear, setcardYear] = useState('');
+  const [cardYearValid, setCardYearValid] = useState(true);
+  const [cvv, setCvv] = useState('');
+  const [cvvValid, setCvvValid] = useState(true);
+  const [price, setPrice] = useState(0);
+  const [emailInfo, setEmailInfo] = useState(true);
+  const [phoneInfo, setPhoneInfo] = useState(true);
+  const [cancellation, setCancellation] = useState(false);
+  const [amendments, setAmendments] = useState(false);
+  const [theftProtection, setTheftProtection] = useState(false);
+  const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false);
+  const [fullInsurance, setFullInsurance] = useState(false);
+  const [additionalDriver, setAdditionalDriver] = useState(false);
+  const [cardDateError, setCardDateError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [_fullName, set_FullName] = useState('');
+  const [_email, set_Email] = useState('');
+  const [_phone, set_Phone] = useState('');
+  const [_birthDate, set_BirthDate] = useState();
+  const [_emailValid, set_EmailValid] = useState(true);
+  const [_phoneValid, set_PhoneValid] = useState(true);
+  const [_birthDateValid, set_BirthDateValid] = useState(true);
+  const [payLater, setPayLater] = useState(false);
 
-  const [adManuallyChecked, setAdManuallyChecked] = useState(false)
-  const [adFullName, setAdFullName] = useState(false)
-  const [adEmail, setAdEmail] = useState(false)
-  const [adPhone, setAdPhone] = useState(false)
-  const [adBirthDate, setAdBirthDate] = useState(false)
-  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
+  const [adManuallyChecked, setAdManuallyChecked] = useState(false);
+  const [adFullName, setAdFullName] = useState(false);
+  const [adEmail, setAdEmail] = useState(false);
+  const [adPhone, setAdPhone] = useState(false);
+  const [adBirthDate, setAdBirthDate] = useState(false);
+  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate;
 
-  const adValidate = (val) => !!val
-
-  useEffect(() => {
-    setAdFullName(adValidate(_fullName))
-  }, [_fullName])
+  const adValidate = (val) => !!val;
 
   useEffect(() => {
-    setAdEmail(adValidate(_email))
-  }, [_email])
+    setAdFullName(adValidate(_fullName));
+  }, [_fullName]);
 
   useEffect(() => {
-    setAdPhone(adValidate(_phone))
-  }, [_phone])
+    setAdEmail(adValidate(_email));
+  }, [_email]);
 
   useEffect(() => {
-    setAdBirthDate(adValidate(_birthDate))
-  }, [_birthDate])
+    setAdPhone(adValidate(_phone));
+  }, [_phone]);
+
+  useEffect(() => {
+    setAdBirthDate(adValidate(_birthDate));
+  }, [_birthDate]);
 
   const handleCancellationChange = (e) => {
-    const cancellation = e.target.checked
+    const cancellation = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -109,15 +109,15 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setCancellation(cancellation)
-    setPrice(price)
-  }
+    setCancellation(cancellation);
+    setPrice(price);
+  };
 
   const handleAmendmentsChange = (e) => {
-    const amendments = e.target.checked
+    const amendments = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -125,15 +125,15 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setAmendments(amendments)
-    setPrice(price)
-  }
+    setAmendments(amendments);
+    setPrice(price);
+  };
 
   const handleTheftProtectionChange = (e) => {
-    const theftProtection = e.target.checked
+    const theftProtection = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -141,15 +141,15 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setTheftProtection(theftProtection)
-    setPrice(price)
-  }
+    setTheftProtection(theftProtection);
+    setPrice(price);
+  };
 
   const handleCollisionDamageWaiverChange = (e) => {
-    const collisionDamageWaiver = e.target.checked
+    const collisionDamageWaiver = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -157,15 +157,15 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setCollisionDamageWaiver(collisionDamageWaiver)
-    setPrice(price)
-  }
+    setCollisionDamageWaiver(collisionDamageWaiver);
+    setPrice(price);
+  };
 
   const handleFullInsuranceChange = (e) => {
-    const fullInsurance = e.target.checked
+    const fullInsurance = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -173,15 +173,15 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setFullInsurance(fullInsurance)
-    setPrice(price)
-  }
+    setFullInsurance(fullInsurance);
+    setPrice(price);
+  };
 
   const handleAdditionalDriverChange = (e) => {
-    const additionalDriver = e.target.checked
+    const additionalDriver = e.target.checked;
     const options = {
       cancellation,
       amendments,
@@ -189,381 +189,381 @@ const Checkout = () => {
       collisionDamageWaiver,
       fullInsurance,
       additionalDriver,
-    }
-    const price = Helper.price(car, from, to, options)
+    };
+    const price = Helper.price(car, from, to, options);
 
-    setAdditionalDriver(additionalDriver)
-    setPrice(price)
-    setAdManuallyChecked(additionalDriver)
-  }
+    setAdditionalDriver(additionalDriver);
+    setPrice(price);
+    setAdManuallyChecked(additionalDriver);
+  };
 
   const handleOnChangeFullName = (e) => {
-    setFullName(e.target.value)
-  }
+    setFullName(e.target.value);
+  };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
 
     if (!e.target.value) {
-      setEmailRegitered(false)
-      setEmailValid(true)
+      setEmailRegitered(false);
+      setEmailValid(true);
     }
-  }
+  };
 
   const validateEmail = async (email) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email });
           if (status === 200) {
-            setEmailRegitered(false)
-            setEmailValid(true)
-            setEmailInfo(true)
-            return true
+            setEmailRegitered(false);
+            setEmailValid(true);
+            setEmailInfo(true);
+            return true;
           } else {
-            setEmailRegitered(true)
-            setEmailValid(true)
-            setError(false)
-            setEmailInfo(false)
-            return false
+            setEmailRegitered(true);
+            setEmailValid(true);
+            setError(false);
+            setEmailInfo(false);
+            return false;
           }
         } catch (err) {
-          Helper.error(err)
-          setEmailRegitered(false)
-          setEmailValid(true)
-          setEmailInfo(true)
-          return false
+          Helper.error(err);
+          setEmailRegitered(false);
+          setEmailValid(true);
+          setEmailInfo(true);
+          return false;
         }
       } else {
-        setEmailRegitered(false)
-        setEmailValid(false)
-        setEmailInfo(true)
-        return false
+        setEmailRegitered(false);
+        setEmailValid(false);
+        setEmailInfo(true);
+        return false;
       }
     } else {
-      setEmailRegitered(false)
-      setEmailValid(true)
-      setEmailInfo(true)
-      return false
+      setEmailRegitered(false);
+      setEmailValid(true);
+      setEmailInfo(true);
+      return false;
     }
-  }
+  };
 
   // additionalDriver
   const _validateEmail = (email) => {
     if (email) {
       if (validator.isEmail(email)) {
-        set_EmailValid(true)
-        return true
+        set_EmailValid(true);
+        return true;
       } else {
-        set_EmailValid(false)
-        return false
+        set_EmailValid(false);
+        return false;
       }
     } else {
-      set_EmailValid(true)
-      return false
+      set_EmailValid(true);
+      return false;
     }
-  }
+  };
 
   const handleEmailBlur = async (e) => {
-    await validateEmail(e.target.value)
-  }
+    await validateEmail(e.target.value);
+  };
 
   const handlePhoneChange = (e) => {
-    setPhone(e.target.value)
+    setPhone(e.target.value);
 
     if (!e.target.value) {
-      setPhoneValid(true)
+      setPhoneValid(true);
     }
-  }
+  };
 
   const validatePhone = (phone) => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
-      setPhoneInfo(phoneValid)
+      const phoneValid = validator.isMobilePhone(phone);
+      setPhoneValid(phoneValid);
+      setPhoneInfo(phoneValid);
 
-      return phoneValid
+      return phoneValid;
     } else {
-      setPhoneValid(true)
-      setPhoneInfo(true)
+      setPhoneValid(true);
+      setPhoneInfo(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   // additionalDriver
   const _validatePhone = (phone) => {
     if (phone) {
-      const _phoneValid = validator.isMobilePhone(phone)
-      set_PhoneValid(_phoneValid)
+      const _phoneValid = validator.isMobilePhone(phone);
+      set_PhoneValid(_phoneValid);
 
-      return _phoneValid
+      return _phoneValid;
     } else {
-      set_PhoneValid(true)
+      set_PhoneValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handlePhoneBlur = (e) => {
-    validatePhone(e.target.value)
-  }
+    validatePhone(e.target.value);
+  };
 
   const validateBirthDate = (date) => {
     if (Helper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years
-      const birthDateValid = sub >= car.minimumAge
+      const now = new Date();
+      const sub = intervalToDuration({ start: date, end: now }).years;
+      const birthDateValid = sub >= car.minimumAge;
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
+      setBirthDateValid(birthDateValid);
+      return birthDateValid;
     } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(true);
+      return true;
     }
-  }
+  };
 
   // additionalDriver
   const _validateBirthDate = (date) => {
     if (Helper.isDate(date)) {
-      const now = new Date()
-      const sub = intervalToDuration({ start: date, end: now }).years
-      const _birthDateValid = sub >= car.minimumAge
+      const now = new Date();
+      const sub = intervalToDuration({ start: date, end: now }).years;
+      const _birthDateValid = sub >= car.minimumAge;
 
-      set_BirthDateValid(_birthDateValid)
-      return _birthDateValid
+      set_BirthDateValid(_birthDateValid);
+      return _birthDateValid;
     } else {
-      set_BirthDateValid(true)
-      return true
+      set_BirthDateValid(true);
+      return true;
     }
-  }
+  };
 
   const handleTosChange = (event) => {
-    setTosChecked(event.target.checked)
+    setTosChecked(event.target.checked);
 
     if (event.target.checked) {
-      setTosError(false)
+      setTosError(false);
     }
-  }
+  };
 
   const validateCardNumber = (cardNumber) => {
     if (cardNumber) {
-      const cardNumberValid = validator.isCreditCard(cardNumber)
-      setCardNumberValid(cardNumberValid)
+      const cardNumberValid = validator.isCreditCard(cardNumber);
+      setCardNumberValid(cardNumberValid);
 
-      return cardNumberValid
+      return cardNumberValid;
     } else {
-      setCardNumberValid(true)
+      setCardNumberValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handleCardNumberBlur = (e) => {
-    validateCardNumber(e.target.value)
-  }
+    validateCardNumber(e.target.value);
+  };
 
   const handleCardNumberChange = (e) => {
-    setCardNumber(e.target.value)
+    setCardNumber(e.target.value);
 
     if (!e.target.value) {
-      setCardNumberValid(true)
+      setCardNumberValid(true);
     }
-  }
+  };
 
   const validateCardMonth = (cardMonth) => {
     if (cardMonth) {
       if (Helper.isInteger(cardMonth)) {
-        const month = parseInt(cardMonth)
-        const cardMonthValid = month >= 1 && month <= 12
+        const month = parseInt(cardMonth);
+        const cardMonthValid = month >= 1 && month <= 12;
 
-        setCardMonthValid(cardMonthValid)
-        setCardDateError(false)
+        setCardMonthValid(cardMonthValid);
+        setCardDateError(false);
 
-        return cardMonthValid
+        return cardMonthValid;
       } else {
-        setCardMonthValid(false)
-        setCardDateError(false)
+        setCardMonthValid(false);
+        setCardDateError(false);
 
-        return false
+        return false;
       }
     } else {
-      setCardMonthValid(true)
-      setCardDateError(false)
+      setCardMonthValid(true);
+      setCardDateError(false);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handleCardMonthBlur = (e) => {
-    validateCardMonth(e.target.value)
-  }
+    validateCardMonth(e.target.value);
+  };
 
   const handleCardMonthChange = (e) => {
-    setCardMonth(e.target.value)
+    setCardMonth(e.target.value);
 
     if (!e.target.value) {
-      setCardMonthValid(true)
-      setCardDateError(false)
+      setCardMonthValid(true);
+      setCardDateError(false);
     }
-  }
+  };
 
   const validateCardYear = (cardYear) => {
     if (cardYear) {
       if (Helper.isYear(cardYear)) {
-        const year = parseInt(cardYear)
-        const currentYear = parseInt(String(new Date().getFullYear()).slice(2))
-        const cardYearValid = year >= currentYear
+        const year = parseInt(cardYear);
+        const currentYear = parseInt(String(new Date().getFullYear()).slice(2));
+        const cardYearValid = year >= currentYear;
 
-        setCardYearValid(cardYearValid)
-        setCardDateError(false)
+        setCardYearValid(cardYearValid);
+        setCardDateError(false);
 
-        return cardYearValid
+        return cardYearValid;
       } else {
-        setCardYearValid(false)
-        setCardDateError(false)
+        setCardYearValid(false);
+        setCardDateError(false);
 
-        return false
+        return false;
       }
     } else {
-      setCardYearValid(true)
-      setCardDateError(false)
+      setCardYearValid(true);
+      setCardDateError(false);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handleCardYearBlur = (e) => {
-    validateCardYear(e.target.value)
-  }
+    validateCardYear(e.target.value);
+  };
 
   const handleCardYearChange = (e) => {
-    setcardYear(e.target.value)
+    setcardYear(e.target.value);
 
     if (!e.target.value) {
-      setCardYearValid(true)
-      setCardDateError(false)
+      setCardYearValid(true);
+      setCardDateError(false);
     }
-  }
+  };
 
   const validateCvv = (cvv) => {
     if (cvv) {
-      const cvvValid = Helper.isCvv(cvv)
-      setCvvValid(cvvValid)
+      const cvvValid = Helper.isCvv(cvv);
+      setCvvValid(cvvValid);
 
-      return cvvValid
+      return cvvValid;
     } else {
-      setCvvValid(true)
+      setCvvValid(true);
 
-      return true
+      return true;
     }
-  }
+  };
 
   const handleCvvBlur = (e) => {
-    validateCvv(e.target.value)
-  }
+    validateCvv(e.target.value);
+  };
 
   const handleCvvChange = (e) => {
-    setCvv(e.target.value)
+    setCvv(e.target.value);
 
     if (!e.target.value) {
-      setCvvValid(true)
+      setCvvValid(true);
     }
-  }
+  };
 
   const validateCardDate = (cardMonth, cardYear) => {
     const today = new Date(),
-      cardDate = new Date()
-    const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100
-    const year = y + parseInt(cardYear)
-    const month = parseInt(cardMonth)
-    cardDate.setFullYear(year, month - 1, 1)
+      cardDate = new Date();
+    const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100;
+    const year = y + parseInt(cardYear);
+    const month = parseInt(cardMonth);
+    cardDate.setFullYear(year, month - 1, 1);
 
     if (cardDate < today) {
-      return false
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
 
       if (!authenticated) {
-        const emailValid = await validateEmail(email)
+        const emailValid = await validateEmail(email);
         if (!emailValid) {
-          return
+          return;
         }
 
-        const phoneValid = validatePhone(phone)
+        const phoneValid = validatePhone(phone);
         if (!phoneValid) {
-          return
+          return;
         }
 
-        const birthDateValid = validateBirthDate(birthDate)
+        const birthDateValid = validateBirthDate(birthDate);
         if (!birthDateValid) {
-          return
+          return;
         }
 
         if (!tosChecked) {
-          setTosError(true)
-          return
+          setTosError(true);
+          return;
         }
       }
 
       if (!payLater) {
         if (cardName && cardName.length < 1) {
-          return
+          return;
         }
 
-        const cardNumberValid = validateCardNumber(cardNumber)
+        const cardNumberValid = validateCardNumber(cardNumber);
         if (!cardNumberValid) {
-          return
+          return;
         }
 
-        const cardMonthValid = validateCardMonth(cardMonth)
+        const cardMonthValid = validateCardMonth(cardMonth);
         if (!cardMonthValid) {
-          return
+          return;
         }
 
-        const cardYearValid = validateCardYear(cardYear)
+        const cardYearValid = validateCardYear(cardYear);
         if (!cardYearValid) {
-          return
+          return;
         }
 
-        const cvvValid = validateCvv(cvv)
+        const cvvValid = validateCvv(cvv);
         if (!cvvValid) {
-          return
+          return;
         }
 
-        const cardDateValid = validateCardDate(cardMonth, cardYear)
+        const cardDateValid = validateCardDate(cardMonth, cardYear);
         if (!cardDateValid) {
-          setCardDateError(true)
-          return
+          setCardDateError(true);
+          return;
         }
       }
 
       if (adRequired && additionalDriver) {
-        const emailValid = _validateEmail(_email)
+        const emailValid = _validateEmail(_email);
         if (!emailValid) {
-          return
+          return;
         }
 
-        const phoneValid = _validatePhone(_phone)
+        const phoneValid = _validatePhone(_phone);
         if (!phoneValid) {
-          return
+          return;
         }
 
-        const birthDateValid = _validateBirthDate(_birthDate)
+        const birthDateValid = _validateBirthDate(_birthDate);
         if (!birthDateValid) {
-          return
+          return;
         }
       }
 
-      setLoading(true)
+      setLoading(true);
 
-      let booking, driver, _additionalDriver
+      let booking, driver, _additionalDriver;
 
       if (!authenticated)
         driver = {
@@ -572,7 +572,7 @@ const Checkout = () => {
           fullName,
           birthDate,
           language: UserService.getLanguage(),
-        }
+        };
 
       booking = {
         company: car.company._id,
@@ -590,7 +590,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
         price,
-      }
+      };
 
       if (adRequired && additionalDriver) {
         _additionalDriver = {
@@ -598,7 +598,7 @@ const Checkout = () => {
           email: _email,
           phone: _phone,
           birthDate: _birthDate,
-        }
+        };
       }
 
       const payload = {
@@ -606,101 +606,101 @@ const Checkout = () => {
         booking,
         additionalDriver: _additionalDriver,
         payLater,
-      }
+      };
 
-      const status = await BookingService.book(payload)
+      const status = await BookingService.book(payload);
 
       if (status === 200) {
-        window.history.replaceState({}, window.document.title, '/checkout')
+        window.history.replaceState({}, window.document.title, '/checkout');
 
-        setLoading(false)
-        setVisible(false)
-        setSuccess(true)
+        setLoading(false);
+        setVisible(false);
+        setSuccess(true);
       } else {
-        setLoading(false)
-        Helper.error()
+        setLoading(false);
+        Helper.error();
       }
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
   const onLoad = async (user) => {
-    setUser(user)
-    setAuthenticated(user !== undefined)
-    setLanguage(UserService.getLanguage())
+    setUser(user);
+    setAuthenticated(user !== undefined);
+    setLanguage(UserService.getLanguage());
 
-    let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('c')) carId = params.get('c')
-    if (params.has('p')) pickupLocationId = params.get('p')
-    if (params.has('d')) dropOffLocationId = params.get('d')
+    let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('c')) carId = params.get('c');
+    if (params.has('p')) pickupLocationId = params.get('p');
+    if (params.has('d')) dropOffLocationId = params.get('d');
     if (params.has('f')) {
-      const val = params.get('f')
-      from = Helper.isInteger(val) && new Date(parseInt(val))
+      const val = params.get('f');
+      from = Helper.isInteger(val) && new Date(parseInt(val));
     }
     if (params.has('t')) {
-      const val = params.get('t')
-      to = Helper.isInteger(val) && new Date(parseInt(val))
+      const val = params.get('t');
+      to = Helper.isInteger(val) && new Date(parseInt(val));
     }
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
-      setNoMatch(true)
-      return
+      setNoMatch(true);
+      return;
     }
 
     try {
-      car = await CarService.getCar(carId)
+      car = await CarService.getCar(carId);
       if (!car) {
-        setNoMatch(true)
-        return
+        setNoMatch(true);
+        return;
       }
 
-      pickupLocation = await LocationService.getLocation(pickupLocationId)
+      pickupLocation = await LocationService.getLocation(pickupLocationId);
 
       if (!pickupLocation) {
-        setNoMatch(true)
-        return
+        setNoMatch(true);
+        return;
       }
 
       if (dropOffLocationId !== pickupLocationId) {
-        dropOffLocation = await LocationService.getLocation(dropOffLocationId)
+        dropOffLocation = await LocationService.getLocation(dropOffLocationId);
       } else {
-        dropOffLocation = pickupLocation
+        dropOffLocation = pickupLocation;
       }
 
       if (!dropOffLocation) {
-        setNoMatch(true)
-        return
+        setNoMatch(true);
+        return;
       }
 
-      const price = Helper.price(car, from, to)
+      const price = Helper.price(car, from, to);
 
-      const included = (val) => val === 0
+      const included = (val) => val === 0;
 
-      setCar(car)
-      setPrice(price)
-      setPickupLocation(pickupLocation)
-      setDropOffLocation(dropOffLocation)
-      setFrom(from)
-      setTo(to)
-      setCancellation(included(car.cancellation))
-      setAmendments(included(car.amendments))
-      setTheftProtection(included(car.theftProtection))
-      setCollisionDamageWaiver(included(car.collisionDamageWaiver))
-      setFullInsurance(included(car.fullInsurance))
-      setAdditionalDriver(included(car.additionalDriver))
-      setVisible(true)
+      setCar(car);
+      setPrice(price);
+      setPickupLocation(pickupLocation);
+      setDropOffLocation(dropOffLocation);
+      setFrom(from);
+      setTo(to);
+      setCancellation(included(car.cancellation));
+      setAmendments(included(car.amendments));
+      setTheftProtection(included(car.theftProtection));
+      setCollisionDamageWaiver(included(car.collisionDamageWaiver));
+      setFullInsurance(included(car.fullInsurance));
+      setAdditionalDriver(included(car.additionalDriver));
+      setVisible(true);
     } catch (err) {
-      Helper.error(err)
+      Helper.error(err);
     }
-  }
+  };
 
-  const _fr = language === 'fr'
-  const _locale = _fr ? fr : enUS
-  const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
-  const days = Helper.days(from, to)
+  const _fr = language === 'fr';
+  const _locale = _fr ? fr : enUS;
+  const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm';
+  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10;
+  const days = Helper.days(from, to);
 
   return (
     <Master onLoad={onLoad} strict={false}>
@@ -885,10 +885,10 @@ const Checkout = () => {
                           error={!birthDateValid}
                           required
                           onChange={(birthDate) => {
-                            const birthDateValid = validateBirthDate(birthDate)
+                            const birthDateValid = validateBirthDate(birthDate);
 
-                            setBirthDate(birthDate)
-                            setBirthDateValid(birthDateValid)
+                            setBirthDate(birthDate);
+                            setBirthDateValid(birthDateValid);
                           }}
                           language={language}
                         />
@@ -927,7 +927,7 @@ const Checkout = () => {
                           label={commonStrings.FULL_NAME}
                           required={adRequired}
                           onChange={(e) => {
-                            set_FullName(e.target.value)
+                            set_FullName(e.target.value);
                           }}
                           autoComplete="off"
                         />
@@ -939,13 +939,13 @@ const Checkout = () => {
                           label={commonStrings.EMAIL}
                           error={!_emailValid}
                           onBlur={(e) => {
-                            _validateEmail(e.target.value)
+                            _validateEmail(e.target.value);
                           }}
                           onChange={(e) => {
-                            set_Email(e.target.value)
+                            set_Email(e.target.value);
 
                             if (!e.target.value) {
-                              set_EmailValid(true)
+                              set_EmailValid(true);
                             }
                           }}
                           required={adRequired}
@@ -960,13 +960,13 @@ const Checkout = () => {
                           label={commonStrings.PHONE}
                           error={!_phoneValid}
                           onBlur={(e) => {
-                            _validatePhone(e.target.value)
+                            _validatePhone(e.target.value);
                           }}
                           onChange={(e) => {
-                            set_Phone(e.target.value)
+                            set_Phone(e.target.value);
 
                             if (!e.target.value) {
-                              set_PhoneValid(true)
+                              set_PhoneValid(true);
                             }
                           }}
                           required={adRequired}
@@ -981,10 +981,10 @@ const Checkout = () => {
                           error={!_birthDateValid}
                           required={adRequired}
                           onChange={(_birthDate) => {
-                            const _birthDateValid = _validateBirthDate(_birthDate)
+                            const _birthDateValid = _validateBirthDate(_birthDate);
 
-                            set_BirthDate(_birthDate)
-                            set_BirthDateValid(_birthDateValid)
+                            set_BirthDate(_birthDate);
+                            set_BirthDateValid(_birthDateValid);
                           }}
                           language={language}
                         />
@@ -1005,7 +1005,7 @@ const Checkout = () => {
                         <RadioGroup
                           defaultValue="payOnline"
                           onChange={(event) => {
-                            setPayLater(event.target.value === 'payLater')
+                            setPayLater(event.target.value === 'payLater');
                           }}
                         >
                           <FormControlLabel
@@ -1058,7 +1058,7 @@ const Checkout = () => {
                           type="text"
                           label={strings.CARD_NAME}
                           onChange={(e) => {
-                            setCardName(e.target.value)
+                            setCardName(e.target.value);
                           }}
                           required
                           autoComplete="off"
@@ -1151,7 +1151,7 @@ const Checkout = () => {
       {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
-  )
-}
+  );
+};
 
-export default Checkout
+export default Checkout;

@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
+import LocalizedStrings from 'react-localization';
+import * as LangHelper from '../common/LangHelper';
 
 const strings = new LocalizedStrings({
   fr: {
@@ -68,7 +68,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE: 'Pay online',
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

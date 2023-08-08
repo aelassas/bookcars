@@ -1,78 +1,78 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
-import Accordion from '../components/Accordion'
+import React, { useEffect, useRef, useState } from 'react';
+import { strings as commonStrings } from '../lang/common';
+import * as Helper from '../common/Helper';
+import Accordion from '../components/Accordion';
 
-import '../assets/css/status-filter.css'
+import '../assets/css/status-filter.css';
 
 const StatusFilter = (props) => {
-  const statuses = Helper.getBookingStatuses()
-  const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
-  const [allChecked, setAllChecked] = useState(true)
-  const refs = useRef([])
+  const statuses = Helper.getBookingStatuses();
+  const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value));
+  const [allChecked, setAllChecked] = useState(true);
+  const refs = useRef([]);
 
   useEffect(() => {
     refs.current.forEach((checkbox) => {
-      checkbox.checked = true
-    })
-  }, [])
+      checkbox.checked = true;
+    });
+  }, []);
 
   const handleStatusClick = (e) => {
-    const checkbox = e.currentTarget.previousSibling
-    checkbox.checked = !checkbox.checked
-    const event = e
-    event.currentTarget = checkbox
-    handleCheckStatusChange(event)
-  }
+    const checkbox = e.currentTarget.previousSibling;
+    checkbox.checked = !checkbox.checked;
+    const event = e;
+    event.currentTarget = checkbox;
+    handleCheckStatusChange(event);
+  };
 
   const handleCheckStatusChange = (e) => {
-    const status = e.currentTarget.getAttribute('data-value')
+    const status = e.currentTarget.getAttribute('data-value');
 
     if (e.currentTarget.checked) {
-      checkedStatuses.push(status)
+      checkedStatuses.push(status);
 
       if (checkedStatuses.length === statuses.length) {
-        setAllChecked(true)
+        setAllChecked(true);
       }
     } else {
-      const index = checkedStatuses.findIndex((s) => s === status)
-      checkedStatuses.splice(index, 1)
+      const index = checkedStatuses.findIndex((s) => s === status);
+      checkedStatuses.splice(index, 1);
 
       if (checkedStatuses.length === 0) {
-        setAllChecked(false)
+        setAllChecked(false);
       }
     }
 
-    setCheckedStatuses(checkedStatuses)
+    setCheckedStatuses(checkedStatuses);
     if (props.onChange) {
-      props.onChange(checkedStatuses)
+      props.onChange(checkedStatuses);
     }
-  }
+  };
 
   const handleUncheckAllChange = () => {
     if (allChecked) {
       // uncheck all
       refs.current.forEach((checkbox) => {
-        checkbox.checked = false
-      })
+        checkbox.checked = false;
+      });
 
-      setAllChecked(false)
-      setCheckedStatuses([])
+      setAllChecked(false);
+      setCheckedStatuses([]);
     } else {
       // check all
       refs.current.forEach((checkbox) => {
-        checkbox.checked = true
-      })
+        checkbox.checked = true;
+      });
 
-      const allStatuses = statuses.map((status) => status.value)
-      setAllChecked(true)
-      setCheckedStatuses(allStatuses)
+      const allStatuses = statuses.map((status) => status.value);
+      setAllChecked(true);
+      setCheckedStatuses(allStatuses);
 
       if (props.onChange) {
-        props.onChange(allStatuses)
+        props.onChange(allStatuses);
       }
     }
-  }
+  };
 
   return (
     statuses.length > 0 && (
@@ -94,7 +94,7 @@ const StatusFilter = (props) => {
         </div>
       </Accordion>
     )
-  )
-}
+  );
+};
 
-export default StatusFilter
+export default StatusFilter;

@@ -1,6 +1,6 @@
-import LocalizedStrings from 'react-localization'
-import Env from '../config/env.config'
-import * as LangHelper from '../common/LangHelper'
+import LocalizedStrings from 'react-localization';
+import Env from '../config/env.config';
+import * as LangHelper from '../common/LangHelper';
 
 const strings = new LocalizedStrings({
   fr: {
@@ -155,7 +155,7 @@ const strings = new LocalizedStrings({
     VIEW: 'View',
     OF: 'of',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

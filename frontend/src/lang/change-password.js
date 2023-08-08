@@ -1,5 +1,5 @@
-import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
+import LocalizedStrings from 'react-localization';
+import * as LangHelper from '../common/LangHelper';
 
 const strings = new LocalizedStrings({
   fr: {
@@ -20,7 +20,7 @@ const strings = new LocalizedStrings({
     PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
     PASSWORD_UPDATE: 'Password changed successfully.',
   },
-})
+});
 
-LangHelper.setLanguage(strings)
-export { strings }
+LangHelper.setLanguage(strings);
+export { strings };

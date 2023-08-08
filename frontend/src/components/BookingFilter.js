@@ -1,48 +1,48 @@
-import React, { useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/booking-filter'
-import LocationSelectList from './LocationSelectList'
-import DatePicker from './DatePicker'
-import { FormControl, TextField, Button, IconButton } from '@mui/material'
-import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
-import Accordion from '../components/Accordion'
+import React, { useState } from 'react';
+import { strings as commonStrings } from '../lang/common';
+import { strings } from '../lang/booking-filter';
+import LocationSelectList from './LocationSelectList';
+import DatePicker from './DatePicker';
+import { FormControl, TextField, Button, IconButton } from '@mui/material';
+import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
+import Accordion from '../components/Accordion';
 
-import '../assets/css/booking-filter.css'
+import '../assets/css/booking-filter.css';
 
 const BookingFilter = (props) => {
-  const [from, setFrom] = useState(null)
-  const [to, setTo] = useState(null)
-  const [pickupLocation, setPickupLocation] = useState(null)
-  const [dropOffLocation, setDropOffLocation] = useState(null)
-  const [keyword, setKeyword] = useState('')
-  const [minDate, setMinDate] = useState(null)
+  const [from, setFrom] = useState(null);
+  const [to, setTo] = useState(null);
+  const [pickupLocation, setPickupLocation] = useState(null);
+  const [dropOffLocation, setDropOffLocation] = useState(null);
+  const [keyword, setKeyword] = useState('');
+  const [minDate, setMinDate] = useState(null);
 
   const handleSearchChange = (e) => {
-    setKeyword(e.target.value)
-  }
+    setKeyword(e.target.value);
+  };
 
   const handleSearchKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSubmit(e)
+      handleSubmit(e);
     }
-  }
+  };
 
   const handlePickupLocationChange = (locations) => {
-    setPickupLocation(locations.length > 0 ? locations[0]._id : null)
-  }
+    setPickupLocation(locations.length > 0 ? locations[0]._id : null);
+  };
 
   const handleDropOffLocationChange = (locations) => {
-    setDropOffLocation(locations.length > 0 ? locations[0]._id : null)
-  }
+    setDropOffLocation(locations.length > 0 ? locations[0]._id : null);
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    let filter = { from, to, pickupLocation, dropOffLocation, keyword }
+    let filter = { from, to, pickupLocation, dropOffLocation, keyword };
 
-    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) filter = null
-    if (props.onSubmit) props.onSubmit(filter)
-  }
+    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) filter = null;
+    if (props.onSubmit) props.onSubmit(filter);
+  };
 
   return (
     <Accordion title={commonStrings.SEARCH} collapse={props.collapse} className={`${props.className ? `${props.className} ` : ''}booking-filter`}>
@@ -51,8 +51,8 @@ const BookingFilter = (props) => {
           <DatePicker
             label={commonStrings.FROM}
             onChange={(from) => {
-              setFrom(from)
-              setMinDate(from)
+              setFrom(from);
+              setMinDate(from);
             }}
             language={props.language}
             variant="standard"
@@ -63,7 +63,7 @@ const BookingFilter = (props) => {
             label={commonStrings.TO}
             minDate={minDate}
             onChange={(to) => {
-              setTo(to)
+              setTo(to);
             }}
             language={props.language}
             variant="standard"
@@ -87,7 +87,7 @@ const BookingFilter = (props) => {
                 <IconButton
                   size="small"
                   onClick={() => {
-                    setKeyword('')
+                    setKeyword('');
                   }}
                 >
                   <ClearIcon className="d-adornment-icon" />
@@ -105,7 +105,7 @@ const BookingFilter = (props) => {
         </Button>
       </form>
     </Accordion>
-  )
-}
+  );
+};
 
-export default BookingFilter
+export default BookingFilter;
