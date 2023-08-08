@@ -69,18 +69,18 @@ export const deleteSupplier = async (req, res) => {
           await fs.unlink(avatar);
         }
         await Notification.deleteMany({ user: id });
-        const _additionalDrivers = await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _additionalDriver: 1 });
-        const additionalDrivers = _additionalDrivers.map((b) => new new mongoose.Types.ObjectId(b._additionalDriver)());
+        const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver);
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } });
-        await Booking.deleteMany({ supplier: id });
-        const cars = await Car.find({ supplier: id });
-        await Car.deleteMany({ supplier: id });
-        cars.forEach(async (car) => {
+        await Booking.deleteMany({ company: id });
+        const cars = await Car.find({ company: id });
+        await Car.deleteMany({ company: id });
+        for (const car of cars) {
           const image = path.join(CDN_CARS, car.image);
           if (await Helper.exists(image)) {
             await fs.unlink(image);
+            console.log('file deleted');
           }
-        });
+        }
       }
     } else {
       return res.sendStatus(404);
