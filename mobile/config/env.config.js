@@ -12,10 +12,10 @@ import {
   BC_CAR_IMAGE_WIDTH,
   BC_CAR_IMAGE_HEIGHT,
   BC_MINIMUM_AGE,
-} from '@env';
+} from '@env'
 
-const EN = 'en'; // English ISO 639-1 language code
-const FR = 'fr'; // French ISO 639-1 language code
+const EN = 'en' // English ISO 639-1 language code
+const FR = 'fr' // French ISO 639-1 language code
 
 const Env = {
   APP_TYPE: BC_APP_TYPE || 'frontend',
@@ -78,6 +78,6 @@ const Env = {
     PORTRAIT: 'portrait',
     LANDSCAPE: 'landscape',
   },
-};
+}
 
-export default Env;
+export default Env

@@ -1,5 +1,5 @@
-import Env from '../config/env.config';
-import { COPYRIGHT, REGISTERED } from './copyright';
+import Env from '../config/env.config'
+import { COPYRIGHT, REGISTERED } from './copyright'
 
 export const en = {
   GENERIC_ERROR: 'An unhandled error occurred.',
@@ -209,4 +209,4 @@ export const en = {
   PAY_ONLINE: 'Pay online',
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
-};
+}

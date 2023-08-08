@@ -1,55 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import Env from '../config/env.config';
-import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown';
-import { MaterialIcons } from '@expo/vector-icons';
-import * as LocationService from '../services/LocationService';
-import * as Helper from '../common/Helper';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, View, Text } from 'react-native'
+import Env from '../config/env.config'
+import { AutocompleteDropdown } from './AutocompleteDropdown/AutocompleteDropdown'
+import { MaterialIcons } from '@expo/vector-icons'
+import * as LocationService from '../services/LocationService'
+import * as Helper from '../common/Helper'
 
 const LocationSelectList = (props) => {
-  const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [loading, setLoading] = useState(false)
+  const [rows, setRows] = useState([])
+  const [selectedItem, setSelectedItem] = useState([])
 
   useEffect(() => {
-    setSelectedItem(props.selectedItem);
-  }, [props.selectedItem]);
+    setSelectedItem(props.selectedItem)
+  }, [props.selectedItem])
 
   const _setSelectedItem = (selectedItem) => {
-    setSelectedItem(selectedItem);
+    setSelectedItem(selectedItem)
 
     if (props.onSelectItem) {
-      props.onSelectItem(selectedItem);
+      props.onSelectItem(selectedItem)
     }
-  };
+  }
 
   const onChangeText = (text) => {
-    _fetch(text);
-  };
+    _fetch(text)
+  }
 
   const _fetch = async (text) => {
     try {
-      setLoading(true);
+      setLoading(true)
 
-      const data = await LocationService.getLocations(text, 1, Env.PAGE_SIZE);
-      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] };
+      const data = await LocationService.getLocations(text, 1, Env.PAGE_SIZE)
+      const _data = Array.isArray(data) && data.length > 0 ? data[0] : { resultData: [] }
 
       const _rows = _data.resultData.map((location) => ({
         id: location._id,
         title: location.name,
-      }));
-      setRows(_rows);
+      }))
+      setRows(_rows)
       if (props.onFetch) {
-        props.onFetch();
+        props.onFetch()
       }
     } catch (err) {
-      Helper.error(err);
+      Helper.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const small = props.size === 'small';
+  const small = props.size === 'small'
 
   return (
     <View style={{ ...props.style, ...styles.container }}>
@@ -77,17 +77,17 @@ const LocationSelectList = (props) => {
         useFilter={false} // set false to prevent rerender twice
         dataSet={rows}
         onSelectItem={(item) => {
-          item && _setSelectedItem(item.id);
+          item && _setSelectedItem(item.id)
         }}
         onChangeText={(text) => {
-          onChangeText(text);
-          if (props.onChangeText) props.onChangeText(text);
+          onChangeText(text)
+          if (props.onChangeText) props.onChangeText(text)
         }}
         onClear={() => {
-          _setSelectedItem(null);
+          _setSelectedItem(null)
         }}
         onFocus={() => {
-          if (props.onFocus) props.onFocus();
+          if (props.onFocus) props.onFocus()
         }}
         textInputProps={{
           placeholder: props.label || '',
@@ -139,13 +139,13 @@ const LocationSelectList = (props) => {
         EmptyResultComponent={<></>}
       />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     maxWidth: 480,
   },
-});
+})
 
-export default LocationSelectList;
+export default LocationSelectList

@@ -1,12 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, Pressable } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, Pressable } from 'react-native'
 
 const Button = (props) => {
-  const small = props.size === 'small';
+  const small = props.size === 'small'
 
   const onPress = () => {
-    if (props.onPress) props.onPress();
-  };
+    if (props.onPress) props.onPress()
+  }
 
   const styles = StyleSheet.create({
     button: {
@@ -23,13 +23,13 @@ const Button = (props) => {
       fontSize: small ? 14 : 17,
       fontWeight: '600',
     },
-  });
+  })
 
   return (
     <Pressable style={{ ...props.style, ...styles.button }} onPress={onPress}>
       <Text style={styles.text}>{props.label}</Text>
     </Pressable>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button

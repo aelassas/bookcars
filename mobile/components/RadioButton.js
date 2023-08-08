@@ -1,11 +1,11 @@
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
 
 const RadioButton = (props) => {
   const onPress = () => {
-    if (props.onValueChange) props.onValueChange(!props.checked);
-  };
+    if (props.onValueChange) props.onValueChange(!props.checked)
+  }
 
   return (
     <View style={{ ...styles.container, ...props.style }}>
@@ -14,8 +14,8 @@ const RadioButton = (props) => {
         <Text style={{ ...styles.text, ...props.textStyle }}>{props.label}</Text>
       </Pressable>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, .7)',
     padding: 5,
   },
-});
+})
 
-export default RadioButton;
+export default RadioButton

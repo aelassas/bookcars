@@ -1,23 +1,23 @@
-import React, { memo } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
-import BookingStatus from './BookingStatus';
-import Button from './Button';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { format } from 'date-fns';
+import React, { memo } from 'react'
+import { MaterialIcons } from '@expo/vector-icons'
+import BookingStatus from './BookingStatus'
+import Button from './Button'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import { StyleSheet, Text, View, Image } from 'react-native'
+import { format } from 'date-fns'
 
-const _format = 'eee d LLLL yyyy kk:mm';
-const iconSize = 24;
-const iconColor = '#000';
-const extraIconColor = '#1f9201';
-const extraIconSize = 16;
+const _format = 'eee d LLLL yyyy kk:mm'
+const iconSize = 24
+const iconColor = '#000'
+const extraIconColor = '#1f9201'
+const extraIconSize = 16
 
 const Booking = ({ booking, locale, fr, onCancel }) => {
-  const from = new Date(booking.from);
-  const to = new Date(booking.to);
-  const days = Helper.days(from, to);
+  const from = new Date(booking.from)
+  const to = new Date(booking.to)
+  const days = Helper.days(from, to)
 
   return (
     <View key={booking._id} style={styles.bookingContainer}>
@@ -120,15 +120,15 @@ const Booking = ({ booking, locale, fr, onCancel }) => {
             label={i18n.t('CANCEL_BOOKING_BTN')}
             onPress={() => {
               if (onCancel) {
-                onCancel();
+                onCancel()
               }
             }}
           />
         )}
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   bookingContainer: {
@@ -224,6 +224,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 15,
   },
-});
+})
 
-export default memo(Booking);
+export default memo(Booking)

@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
-import * as Helper from '../common/Helper';
-import i18n from '../lang/i18n';
-import Accordion from './Accordion';
-import BookingStatus from './BookingStatus';
-import Link from './Link';
-import Switch from './Switch';
+import * as Helper from '../common/Helper'
+import i18n from '../lang/i18n'
+import Accordion from './Accordion'
+import BookingStatus from './BookingStatus'
+import Link from './Link'
+import Switch from './Switch'
 
 const StatusFilter = (props) => {
-  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => ({ ...status, checked: true })));
-  const [checkedStatuses, setCheckedStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value));
-  const [allChecked, setAllChecked] = useState(true);
+  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => ({ ...status, checked: true })))
+  const [checkedStatuses, setCheckedStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
+  const [allChecked, setAllChecked] = useState(true)
 
   useEffect(() => {
     if (props.onLoad) {
-      props.onLoad(checkedStatuses);
+      props.onLoad(checkedStatuses)
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     props.visible && (
@@ -30,26 +30,26 @@ const StatusFilter = (props) => {
                   value={status.checked}
                   onValueChange={(checked) => {
                     if (checked) {
-                      status.checked = true;
-                      setStatuses(Helper.clone(statuses));
-                      checkedStatuses.push(status.value);
+                      status.checked = true
+                      setStatuses(Helper.clone(statuses))
+                      checkedStatuses.push(status.value)
 
                       if (checkedStatuses.length === statuses.length) {
-                        setAllChecked(true);
+                        setAllChecked(true)
                       }
                     } else {
-                      status.checked = false;
-                      setStatuses(Helper.clone(statuses));
-                      const index = checkedStatuses.indexOf(status.value);
-                      checkedStatuses.splice(index, 1);
+                      status.checked = false
+                      setStatuses(Helper.clone(statuses))
+                      const index = checkedStatuses.indexOf(status.value)
+                      checkedStatuses.splice(index, 1)
 
                       if (checkedStatuses.length === 0) {
-                        setAllChecked(false);
+                        setAllChecked(false)
                       }
                     }
 
                     if (props.onChange) {
-                      props.onChange(Helper.clone(checkedStatuses));
+                      props.onChange(Helper.clone(checkedStatuses))
                     }
                   }}
                 >
@@ -63,25 +63,25 @@ const StatusFilter = (props) => {
               textStyle={styles.linkText}
               label={allChecked ? i18n.t('UNCHECK_ALL') : i18n.t('CHECK_ALL')}
               onPress={() => {
-                let _checkedStatuses = [];
+                let _checkedStatuses = []
                 if (allChecked) {
                   statuses.forEach((status) => {
-                    status.checked = false;
-                  });
-                  setAllChecked(false);
-                  setStatuses(Helper.clone(statuses));
-                  setCheckedStatuses(_checkedStatuses);
+                    status.checked = false
+                  })
+                  setAllChecked(false)
+                  setStatuses(Helper.clone(statuses))
+                  setCheckedStatuses(_checkedStatuses)
                 } else {
                   statuses.forEach((status) => {
-                    status.checked = true;
-                  });
-                  setAllChecked(true);
-                  setStatuses(Helper.clone(statuses));
-                  _checkedStatuses = Helper.clone(statuses.map((status) => status.value));
-                  setCheckedStatuses(_checkedStatuses);
+                    status.checked = true
+                  })
+                  setAllChecked(true)
+                  setStatuses(Helper.clone(statuses))
+                  _checkedStatuses = Helper.clone(statuses.map((status) => status.value))
+                  setCheckedStatuses(_checkedStatuses)
 
                   if (props.onChange) {
-                    props.onChange(_checkedStatuses);
+                    props.onChange(_checkedStatuses)
                   }
                 }
               }}
@@ -90,8 +90,8 @@ const StatusFilter = (props) => {
         </Accordion>
       </View>
     )
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -123,6 +123,6 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 12,
   },
-});
+})
 
-export default StatusFilter;
+export default StatusFilter

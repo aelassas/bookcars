@@ -1,17 +1,17 @@
-import React, { memo } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
-import Button from './Button';
-import * as Helper from '../common/Helper';
-import Env from '../config/env.config';
-import i18n from '../lang/i18n';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { memo } from 'react'
+import { MaterialIcons } from '@expo/vector-icons'
+import Button from './Button'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
+import i18n from '../lang/i18n'
+import { StyleSheet, Text, View, Image } from 'react-native'
 
-const iconSize = 24;
-const iconColor = '#000';
+const iconSize = 24
+const iconColor = '#000'
 
-const getExtraIcon = (extra) => (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info');
+const getExtraIcon = (extra) => (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info')
 
-const getExtraColor = (extra) => (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)');
+const getExtraColor = (extra) => (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
 const Car = ({ car, fr, from, to, pickupLocation, dropOffLocation, navigation }) => (
   <View key={car._id} style={styles.carContainer}>
@@ -117,14 +117,14 @@ const Car = ({ car, fr, from, to, pickupLocation, dropOffLocation, navigation })
               dropOffLocation: dropOffLocation,
               from: from.getTime(),
               to: to.getTime(),
-            };
-            navigation.navigate('Checkout', params);
+            }
+            navigation.navigate('Checkout', params)
           }}
         />
       </View>
     </View>
   </View>
-);
+)
 
 const styles = StyleSheet.create({
   carContainer: {
@@ -238,6 +238,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 10,
   },
-});
+})
 
-export default memo(Car);
+export default memo(Car)
