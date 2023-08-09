@@ -24,7 +24,9 @@ const CompanyFilter = (props) => {
       const checkedCompanies = Helper.flattenCompanies(suppliers)
       setSuppliers(suppliers)
       setCheckedSuppliers(checkedCompanies)
-      if (props.onLoad) props.onLoad(checkedCompanies)
+      if (props.onLoad) {
+        props.onLoad(checkedCompanies)
+      }
     } catch (err) {
       Helper.error(err)
     }

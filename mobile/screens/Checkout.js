@@ -176,18 +176,30 @@ const CheckoutScreen = ({ navigation, route }) => {
         setBirthDate(null)
         setTosChecked(false)
 
-        if (fullNameRef.current) fullNameRef.current.clear()
-        if (emailRef.current) emailRef.current.clear()
-        if (phoneRef.current) phoneRef.current.clear()
+        if (fullNameRef.current) {
+          fullNameRef.current.clear()
+        }
+        if (emailRef.current) {
+          emailRef.current.clear()
+        }
+        if (phoneRef.current) {
+          phoneRef.current.clear()
+        }
       }
 
       set_FullName('')
       set_Email('')
       set_Phone('')
       set_BirthDate(null)
-      if (_fullNameRef.current) _fullNameRef.current.clear()
-      if (_emailRef.current) _emailRef.current.clear()
-      if (_phoneRef.current) _phoneRef.current.clear()
+      if (_fullNameRef.current) {
+        _fullNameRef.current.clear()
+      }
+      if (_emailRef.current) {
+        _emailRef.current.clear()
+      }
+      if (_phoneRef.current) {
+        _phoneRef.current.clear()
+      }
 
       setCardName('')
       setCardNumber('')
@@ -218,11 +230,21 @@ const CheckoutScreen = ({ navigation, route }) => {
       setPayLater(false)
       setSuccess(false)
 
-      if (cardNameRef.current) cardNameRef.current.clear()
-      if (cardNumberRef.current) cardNumber.current.clear()
-      if (cardMonthRef.current) cardMonthRef.current.clear()
-      if (cardYearRef.current) cardYearRef.current.clear()
-      if (cvvRef.current) cvvRef.current.clear()
+      if (cardNameRef.current) {
+        cardNameRef.current.clear()
+      }
+      if (cardNumberRef.current) {
+        cardNumber.current.clear()
+      }
+      if (cardMonthRef.current) {
+        cardMonthRef.current.clear()
+      }
+      if (cardYearRef.current) {
+        cardYearRef.current.clear()
+      }
+      if (cvvRef.current) {
+        cvvRef.current.clear()
+      }
 
       if (!route.params || !route.params.car || !route.params.pickupLocation || !route.params.dropOffLocation || !route.params.from || !route.params.to) {
         await UserService.signout(navigation)
@@ -471,7 +493,9 @@ const CheckoutScreen = ({ navigation, route }) => {
 
   const onChangeToS = (checked) => {
     setTosChecked(checked)
-    if (checked) setTosError(false)
+    if (checked) {
+      setTosError(false)
+    }
   }
 
   const validateCardName = () => {

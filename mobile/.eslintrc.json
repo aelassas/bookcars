@@ -11,12 +11,15 @@
   },
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
-    "semi": ["off", "always"],
     "react/prop-types": "off",
     "prettier/prettier": "warn",
     "no-extra-semi": "off",
     "no-dupe-keys": "off",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "off",
+    "semi": ["error", "never"],
+    "brace-style": ["error", "1tbs"],
+    "curly": "error"
   },
   "settings": {
     "react": {

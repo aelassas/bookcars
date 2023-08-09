@@ -4,7 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 const RadioButton = (props) => {
   const onPress = () => {
-    if (props.onValueChange) props.onValueChange(!props.checked)
+    if (props.onValueChange) {
+      props.onValueChange(!props.checked)
+    }
   }
 
   return (

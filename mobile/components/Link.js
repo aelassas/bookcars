@@ -3,7 +3,9 @@ import { StyleSheet, Text, Pressable } from 'react-native'
 
 const Link = (props) => {
   const onPress = () => {
-    if (props.onPress) props.onPress()
+    if (props.onPress) {
+      props.onPress()
+    }
   }
 
   return (

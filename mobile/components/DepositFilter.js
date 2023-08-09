@@ -18,7 +18,9 @@ const DepositFilter = (props) => {
       setDeposit_7500(false)
       setDeposit_all(false)
 
-      if (props.onChange) props.onChange(value)
+      if (props.onChange) {
+        props.onChange(value)
+      }
     }
   }
 
@@ -30,7 +32,9 @@ const DepositFilter = (props) => {
       setDeposit_7500(false)
       setDeposit_all(false)
 
-      if (props.onChange) props.onChange(value)
+      if (props.onChange) {
+        props.onChange(value)
+      }
     }
   }
 
@@ -42,7 +46,9 @@ const DepositFilter = (props) => {
       setDeposit_7500(true)
       setDeposit_all(false)
 
-      if (props.onChange) props.onChange(value)
+      if (props.onChange) {
+        props.onChange(value)
+      }
     }
   }
 
@@ -54,7 +60,9 @@ const DepositFilter = (props) => {
       setDeposit_7500(false)
       setDeposit_all(true)
 
-      if (props.onChange) props.onChange(value)
+      if (props.onChange) {
+        props.onChange(value)
+      }
     }
   }
 

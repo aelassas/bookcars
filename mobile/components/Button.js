@@ -5,7 +5,9 @@ const Button = (props) => {
   const small = props.size === 'small'
 
   const onPress = () => {
-    if (props.onPress) props.onPress()
+    if (props.onPress) {
+      props.onPress()
+    }
   }
 
   const styles = StyleSheet.create({

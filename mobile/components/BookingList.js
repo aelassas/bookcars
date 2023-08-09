@@ -93,7 +93,9 @@ const BookingList = (props) => {
         setFetch(true)
         const booking = await BookingService.getBooking(props.booking)
         setRows(booking ? [booking] : [])
-        if (!booking) setDeleted(true)
+        if (!booking) {
+          setDeleted(true)
+        }
         setFetch(false)
         setLoading(false)
       } catch (err) {
@@ -101,7 +103,9 @@ const BookingList = (props) => {
       }
     }
 
-    if (props.booking) init()
+    if (props.booking) {
+      init()
+    }
   }, [props.booking])
 
   const _fr = props.language === Env.LANGUAGE.FR

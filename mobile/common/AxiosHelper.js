@@ -10,7 +10,9 @@ export const init = (axios) => {
     },
     retryCondition: (err) => {
       // if retry condition is not specified, by default idempotent requests are retried
-      if (err?.request?._response) console.log(err?.request?._response)
+      if (err?.request?._response) {
+        console.log(err?.request?._response)
+      }
       return true
     },
   })

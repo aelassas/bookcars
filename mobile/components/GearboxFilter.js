@@ -33,7 +33,9 @@ const GearboxFilter = (props) => {
 
     setAutomatic(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   const onValueChangeManual = (checked) => {
@@ -56,7 +58,9 @@ const GearboxFilter = (props) => {
 
     setManual(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   return (
@@ -83,7 +87,9 @@ const GearboxFilter = (props) => {
                 setManual(true)
                 setAllChecked(true)
                 setValues(_values)
-                if (props.onChange) props.onChange(Helper.clone(_values))
+                if (props.onChange) {
+                  props.onChange(Helper.clone(_values))
+                }
               }
             }}
           />

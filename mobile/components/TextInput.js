@@ -13,7 +13,9 @@ const TextInputComponent = (props, ref) => {
 
   const onChangeText = (text) => {
     setValue(text)
-    if (props.onChangeText) props.onChangeText(text)
+    if (props.onChangeText) {
+      props.onChangeText(text)
+    }
   }
 
   const styles = StyleSheet.create({
@@ -67,7 +69,9 @@ const TextInputComponent = (props, ref) => {
       <View style={styles.inputContainer}>
         <ReactTextInput
           ref={(r) => {
-            if (ref) ref.current = r
+            if (ref) {
+              ref.current = r
+            }
             _ref.current = r
           }}
           secureTextEntry={props.secureTextEntry}
@@ -94,7 +98,9 @@ const TextInputComponent = (props, ref) => {
             color="rgba(0, 0, 0, 0.28)"
             onPress={() => {
               onChangeText('')
-              if (_ref && _ref.current) _ref.current.focus()
+              if (_ref && _ref.current) {
+                _ref.current.focus()
+              }
             }}
           />
         )}

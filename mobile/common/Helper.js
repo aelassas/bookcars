@@ -78,9 +78,15 @@ export const registerPushToken = async (userId) => {
 }
 
 export const arrayEqual = (a, b) => {
-  if (a === b) return true
-  if (a == null || b == null) return false
-  if (a.length !== b.length) return false
+  if (a === b) {
+    return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
+  if (a.length !== b.length) {
+    return false
+  }
 
   // If you don't care about the order of the elements inside
   // the array, you should sort both arrays here.
@@ -88,7 +94,9 @@ export const arrayEqual = (a, b) => {
   // you might want to clone your array first.
 
   for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
+    if (a[i] !== b[i]) {
+      return false
+    }
   }
   return true
 }
@@ -111,9 +119,15 @@ export const dateTime = (date, time) => {
 }
 
 export const error = (err, __toast__ = true) => {
-  if (err) console.log(err)
-  if (err?.request?._response) console.log(err?.request?._response)
-  if (__toast__) toast(i18n.t('GENERIC_ERROR'))
+  if (err) {
+    console.log(err)
+  }
+  if (err?.request?._response) {
+    console.log(err?.request?._response)
+  }
+  if (__toast__) {
+    toast(i18n.t('GENERIC_ERROR'))
+  }
 }
 
 export const joinURL = (part1, part2) => {
@@ -248,12 +262,24 @@ export const price = (car, from, to, options) => {
 
   let price = car.price * _days
   if (options) {
-    if (options.cancellation && car.cancellation > 0) price += car.cancellation
-    if (options.amendments && car.amendments > 0) price += car.amendments
-    if (options.theftProtection && car.theftProtection > 0) price += car.theftProtection * _days
-    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * _days
-    if (options.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * _days
-    if (options.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * _days
+    if (options.cancellation && car.cancellation > 0) {
+      price += car.cancellation
+    }
+    if (options.amendments && car.amendments > 0) {
+      price += car.amendments
+    }
+    if (options.theftProtection && car.theftProtection > 0) {
+      price += car.theftProtection * _days
+    }
+    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
+      price += car.collisionDamageWaiver * _days
+    }
+    if (options.fullInsurance && car.fullInsurance > 0) {
+      price += car.fullInsurance * _days
+    }
+    if (options.additionalDriver && car.additionalDriver > 0) {
+      price += car.additionalDriver * _days
+    }
   }
 
   return price

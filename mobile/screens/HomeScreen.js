@@ -81,7 +81,9 @@ const HomeScreen = ({ navigation, route }) => {
 
   const handlePickupLocationSelect = (pickupLocation) => {
     setPickupLocation(pickupLocation)
-    if (sameLocation) setDropOffLocation(pickupLocation)
+    if (sameLocation) {
+      setDropOffLocation(pickupLocation)
+    }
   }
 
   const handleDropOffLocationSelect = (dropOffLocation) => {

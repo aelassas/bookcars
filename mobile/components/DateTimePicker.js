@@ -81,7 +81,9 @@ const DateTimePicker = (props) => {
           style={styles.dateButton}
           onPress={() => {
             setShow(true)
-            if (props.onPress) props.onPress()
+            if (props.onPress) {
+              props.onPress()
+            }
           }}
         >
           <Text
@@ -103,7 +105,9 @@ const DateTimePicker = (props) => {
               setShow(false)
               if (date.getTime() !== now.getTime()) {
                 setValue(date)
-                if (props.onChange) props.onChange(date)
+                if (props.onChange) {
+                  props.onChange(date)
+                }
               }
             }}
           />
