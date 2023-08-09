@@ -206,7 +206,9 @@ const MultipleSelect = ({
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue)
-          if (onInputChange) onInputChange(event)
+          if (onInputChange) {
+            onInputChange(event)
+          }
         }}
         renderOption={(props, option) => {
           if (type === Env.RECORD_TYPE.USER) {

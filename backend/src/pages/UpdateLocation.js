@@ -55,14 +55,18 @@ const UpdateLocation = () => {
 
       let isValid = true
 
-      for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false
+      for (let i = 0; i < nameErrors.length; i++) {
+        nameErrors[i] = false
+      }
 
       for (let i = 0; i < names.length; i++) {
         const name = names[i]
         if (name.name !== location.values[i].value) {
           const _isValid = (await LocationService.validate(name)) === 200
           isValid = isValid && _isValid
-          if (!_isValid) nameErrors[i] = true
+          if (!_isValid) {
+            nameErrors[i] = true
+          }
         }
       }
 
