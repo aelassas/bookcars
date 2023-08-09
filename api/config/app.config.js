@@ -1,8 +1,6 @@
 import LocalizedStrings from 'localized-strings'
 
-const LocalizedStringsDefault = LocalizedStrings.default
-
-export default new LocalizedStringsDefault({
+export default new LocalizedStrings.default({
   fr: {
     ERROR: 'Erreur interne : ',
     DB_ERROR: 'Échec de la requête dans la base de données : ',
