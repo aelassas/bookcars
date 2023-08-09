@@ -23,7 +23,9 @@ const DateTimePicker = (props) => {
         readOnly={props.readOnly}
         onChange={(value) => {
           setValue(value)
-          if (props.onChange) props.onChange(value)
+          if (props.onChange) {
+            props.onChange(value)
+          }
         }}
         minDate={props.minDate}
         defaultCalendarMonth={props.minDate}

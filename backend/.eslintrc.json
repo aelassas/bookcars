@@ -17,7 +17,7 @@
     "react-hooks/exhaustive-deps": "warn",
     "no-console": "off",
     "semi": ["error", "never"],
-    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "brace-style": ["error", "1tbs"],
     "curly": "error"
   },
   "settings": {

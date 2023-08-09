@@ -40,8 +40,12 @@ const BookingFilter = (props) => {
 
     let filter = { from, to, pickupLocation, dropOffLocation, keyword }
 
-    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) filter = null
-    if (props.onSubmit) props.onSubmit(filter)
+    if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) {
+      filter = null
+    }
+    if (props.onSubmit) {
+      props.onSubmit(filter)
+    }
   }
 
   return (

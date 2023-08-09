@@ -52,7 +52,9 @@ const Notifications = () => {
         setTotalRecords(_totalRecords)
         setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
         setRows(_rows)
-        if (notificationsListRef.current) notificationsListRef.current.scrollTo(0, 0)
+        if (notificationsListRef.current) {
+          notificationsListRef.current.scrollTo(0, 0)
+        }
         setLoading(false)
       } catch (err) {
         Helper.error(err)
