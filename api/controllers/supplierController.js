@@ -1,3 +1,7 @@
+import path from 'node:path'
+import fs from 'node:fs/promises'
+import process from 'node:process'
+import escapeStringRegexp from 'escape-string-regexp'
 import strings from '../config/app.config.js'
 import Env from '../config/env.config.js'
 import User from '../models/User.js'
@@ -5,15 +9,12 @@ import Notification from '../models/Notification.js'
 import AdditionalDriver from '../models/AdditionalDriver.js'
 import Booking from '../models/Booking.js'
 import Car from '../models/Car.js'
-import escapeStringRegexp from 'escape-string-regexp'
-import path from 'path'
-import fs from 'fs/promises'
 import * as Helper from '../common/Helper.js'
 
 const CDN = process.env.BC_CDN_USERS
 const CDN_CARS = process.env.BC_CDN_CARS
 
-export const validate = async (req, res) => {
+export async function validate(req, res) {
   const { fullName } = req.body
 
   try {
@@ -30,7 +31,7 @@ export const validate = async (req, res) => {
   }
 }
 
-export const update = async (req, res) => {
+export async function update(req, res) {
   const { _id } = req.body
 
   try {
@@ -56,7 +57,7 @@ export const update = async (req, res) => {
   }
 }
 
-export const deleteSupplier = async (req, res) => {
+export async function deleteSupplier(req, res) {
   const { id } = req.params
 
   try {
@@ -67,6 +68,7 @@ export const deleteSupplier = async (req, res) => {
         if (await Helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
+
         await Notification.deleteMany({ user: id })
         const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
@@ -90,7 +92,7 @@ export const deleteSupplier = async (req, res) => {
   }
 }
 
-export const getSupplier = async (req, res) => {
+export async function getSupplier(req, res) {
   const { id } = req.params
 
   try {
@@ -118,10 +120,10 @@ export const getSupplier = async (req, res) => {
   }
 }
 
-export const getSuppliers = async (req, res) => {
+export async function getSuppliers(req, res) {
   try {
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
     const keyword = escapeStringRegexp(req.query.s || '')
     const options = 'i'
 
@@ -161,7 +163,7 @@ export const getSuppliers = async (req, res) => {
   }
 }
 
-export const getAllSuppliers = async (req, res) => {
+export async function getAllSuppliers(req, res) {
   try {
     let data = await User.aggregate([{ $match: { type: Env.USER_TYPE.COMPANY } }, { $sort: { fullName: 1 } }], {
       collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 },

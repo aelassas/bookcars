@@ -1,18 +1,19 @@
-import Env from '../config/env.config.js'
-import strings from '../config/app.config.js'
-import Car from '../models/Car.js'
-import Booking from '../models/Booking.js'
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import process from 'node:process'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
+import Booking from '../models/Booking.js'
+import Car from '../models/Car.js'
+import strings from '../config/app.config.js'
+import Env from '../config/env.config.js'
 import * as Helper from '../common/Helper.js'
 
 const CDN = process.env.BC_CDN_CARS
 const CDN_TEMP = process.env.BC_CDN_TEMP_CARS
 
-export const create = async (req, res) => {
+export async function create(req, res) {
   const { body } = req
 
   try {
@@ -52,7 +53,7 @@ export const create = async (req, res) => {
   }
 }
 
-export const update = async (req, res) => {
+export async function update(req, res) {
   const { _id } = req.body
 
   try {
@@ -115,7 +116,7 @@ export const update = async (req, res) => {
   }
 }
 
-export const checkCar = async (req, res) => {
+export async function checkCar(req, res) {
   const { id } = req.params
 
   try {
@@ -125,6 +126,7 @@ export const checkCar = async (req, res) => {
     if (count === 1) {
       return res.sendStatus(200)
     }
+
     return res.sendStatus(204)
   } catch (err) {
     console.error(`[car.check] ${strings.DB_ERROR} ${id}`, err)
@@ -132,7 +134,7 @@ export const checkCar = async (req, res) => {
   }
 }
 
-export const deleteCar = async (req, res) => {
+export async function deleteCar(req, res) {
   const { id } = req.params
 
   try {
@@ -155,7 +157,7 @@ export const deleteCar = async (req, res) => {
   }
 }
 
-export const createImage = async (req, res) => {
+export async function createImage(req, res) {
   try {
     if (!(await Helper.exists(CDN_TEMP))) {
       await fs.mkdir(CDN_TEMP, { recursive: true })
@@ -172,7 +174,7 @@ export const createImage = async (req, res) => {
   }
 }
 
-export const updateImage = async (req, res) => {
+export async function updateImage(req, res) {
   const { id } = req.params
   const { file } = req
 
@@ -208,7 +210,7 @@ export const updateImage = async (req, res) => {
   }
 }
 
-export const deleteImage = async (req, res) => {
+export async function deleteImage(req, res) {
   const { id } = req.params
 
   try {
@@ -235,7 +237,7 @@ export const deleteImage = async (req, res) => {
   }
 }
 
-export const deleteTempImage = async (req, res) => {
+export async function deleteTempImage(req, res) {
   const { image } = req.params
 
   try {
@@ -243,6 +245,7 @@ export const deleteTempImage = async (req, res) => {
     if (await Helper.exists(imageFile)) {
       await fs.unlink(imageFile)
     }
+
     res.sendStatus(200)
   } catch (err) {
     console.error(`[car.deleteTempImage] ${strings.DB_ERROR} ${image}`, err)
@@ -250,7 +253,7 @@ export const deleteTempImage = async (req, res) => {
   }
 }
 
-export const getCar = async (req, res) => {
+export async function getCar(req, res) {
   const { id, language } = req.params
 
   try {
@@ -287,10 +290,10 @@ export const getCar = async (req, res) => {
   }
 }
 
-export const getCars = async (req, res) => {
+export async function getCars(req, res) {
   try {
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
     const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const fuel = req.body.fuel
     const gearbox = req.body.gearbox
@@ -398,14 +401,14 @@ export const getCars = async (req, res) => {
   }
 }
 
-export const getBookingCars = async (req, res) => {
+export async function getBookingCars(req, res) {
   try {
     const company = new mongoose.Types.ObjectId(req.body.company)
     const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
     const keyword = escapeStringRegexp(req.query.s || '')
     const options = 'i'
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
 
     const cars = await Car.aggregate(
       [
@@ -428,10 +431,10 @@ export const getBookingCars = async (req, res) => {
   }
 }
 
-export const getFrontendCars = async (req, res) => {
+export async function getFrontendCars(req, res) {
   try {
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
     const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const pickupLocation = new mongoose.Types.ObjectId(req.body.pickupLocation)
     const fuel = req.body.fuel

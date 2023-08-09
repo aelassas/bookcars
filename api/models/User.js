@@ -1,3 +1,4 @@
+import process from 'node:process'
 import validator from 'validator'
 import mongoose from 'mongoose'
 import Env from '../config/env.config.js'

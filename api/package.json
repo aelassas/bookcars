@@ -3,17 +3,18 @@
   "type": "module",
   "version": "1.0.0",
   "description": "BookCars API",
+  "author": "Akram El Assas",
+  "license": "ISC",
   "main": "app.js",
   "scripts": {
     "start": "node -r dotenv/config app.js",
     "dev": "nodemon -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js .",
+    "lint:fix": "eslint --ext .js . --fix",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write ."
   },
-  "author": "Akram El Assas",
-  "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",

@@ -1,3 +1,4 @@
+import process from 'node:process'
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
@@ -38,7 +39,7 @@ if (DB_SSL) {
 }
 
 mongoose.set('debug', DB_DEBUG)
-mongoose.Promise = global.Promise
+mongoose.Promise = globalThis.Promise
 try {
   await mongoose.connect(DB_URI, options)
   console.log('Database is connected')

@@ -1,7 +1,8 @@
+import process from 'node:process'
 import mongoose from 'mongoose'
 import Env from '../config/env.config.js'
 
-const MINIMUM_AGE = parseInt(process.env.BC_MINIMUM_AGE)
+const MINIMUM_AGE = Number.parseInt(process.env.BC_MINIMUM_AGE)
 
 const Schema = mongoose.Schema
 

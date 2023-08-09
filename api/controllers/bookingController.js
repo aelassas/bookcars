@@ -1,3 +1,8 @@
+import process from 'node:process'
+import mongoose from 'mongoose'
+import escapeStringRegexp from 'escape-string-regexp'
+import { v1 as uuid } from 'uuid'
+import { Expo } from 'expo-server-sdk'
 import strings from '../config/app.config.js'
 import Booking from '../models/Booking.js'
 import User from '../models/User.js'
@@ -8,10 +13,6 @@ import Notification from '../models/Notification.js'
 import NotificationCounter from '../models/NotificationCounter.js'
 import PushNotification from '../models/PushNotification.js'
 import AdditionalDriver from '../models/AdditionalDriver.js'
-import mongoose from 'mongoose'
-import escapeStringRegexp from 'escape-string-regexp'
-import { v1 as uuid } from 'uuid'
-import { Expo } from 'expo-server-sdk'
 import * as Helper from '../common/Helper.js'
 
 const SMTP_FROM = process.env.BC_SMTP_FROM
@@ -19,7 +20,7 @@ const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 const EXPO_ACCESS_TOKEN = process.env.BC_EXPO_ACCESS_TOKEN
 
-export const create = async (req, res) => {
+export async function create(req, res) {
   try {
     if (req.body.booking.additionalDriver) {
       const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
@@ -37,7 +38,7 @@ export const create = async (req, res) => {
   }
 }
 
-const notifySupplier = async (user, booking, company, notificationMessage) => {
+async function notifySupplier(user, booking, company, notificationMessage) {
   // notification
   const message = `${user.fullName} ${notificationMessage} ${booking._id}.`
   const notification = new Notification({
@@ -63,24 +64,13 @@ const notifySupplier = async (user, booking, company, notificationMessage) => {
     from: SMTP_FROM,
     to: company.email,
     subject: message,
-    html:
-      '<p>' +
-      strings.HELLO +
-      company.fullName +
-      ',<br><br>' +
-      message +
-      '<br><br>' +
-      Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`) +
-      '<br><br>' +
-      strings.REGARDS +
-      '<br>' +
-      '</p>',
+    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)}<br><br>${strings.REGARDS}<br>` + '</p>',
   }
 
   await Helper.sendMail(mailOptions)
 }
 
-export const book = async (req, res) => {
+export async function book(req, res) {
   try {
     let user
     const { driver } = req.body
@@ -102,23 +92,9 @@ export const book = async (req, res) => {
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
         html:
-          '<p>' +
-          strings.HELLO +
-          user.fullName +
-          ',<br><br>' +
-          strings.ACCOUNT_ACTIVATION_LINK +
-          '<br><br>' +
-          Helper.joinURL(FRONTEND_HOST, 'activate') +
-          '/?u=' +
-          encodeURIComponent(user._id) +
-          '&e=' +
-          encodeURIComponent(user.email) +
-          '&t=' +
-          encodeURIComponent(token.token) +
-          '<br><br>' +
-          strings.REGARDS +
-          '<br>' +
-          '</p>',
+          `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(
+            user._id,
+          )}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
       }
       await Helper.sendMail(mailOptions)
 
@@ -161,27 +137,15 @@ export const book = async (req, res) => {
       to: user.email,
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
-        '<p>' +
-        strings.HELLO +
-        user.fullName +
-        ',<br><br>' +
-        (!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : '') +
-        `${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}` +
+        `<p>${strings.HELLO}${user.fullName},<br><br>${!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}${
+          strings.BOOKING_CONFIRMED_PART3
+        }${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}` +
         `${from} ${strings.BOOKING_CONFIRMED_PART6}` +
         `${car.name}${strings.BOOKING_CONFIRMED_PART7}` +
-        '<br><br>' +
-        strings.BOOKING_CONFIRMED_PART8 +
-        '<br><br>' +
+        `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>` +
         `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocation.name}${strings.BOOKING_CONFIRMED_PART11}` +
         `${to} ${strings.BOOKING_CONFIRMED_PART12}` +
-        '<br><br>' +
-        strings.BOOKING_CONFIRMED_PART13 +
-        '<br><br>' +
-        strings.BOOKING_CONFIRMED_PART14 +
-        FRONTEND_HOST +
-        '<br><br>' +
-        strings.REGARDS +
-        '<br>' +
+        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${FRONTEND_HOST}<br><br>${strings.REGARDS}<br>` +
         '</p>',
     }
     await Helper.sendMail(mailOptions)
@@ -198,7 +162,7 @@ export const book = async (req, res) => {
   }
 }
 
-const notifyDriver = async (booking) => {
+async function notifyDriver(booking) {
   const driver = await User.findById(booking.driver)
   strings.setLanguage(driver.language)
 
@@ -224,18 +188,7 @@ const notifyDriver = async (booking) => {
     from: SMTP_FROM,
     to: driver.email,
     subject: message,
-    html:
-      '<p>' +
-      strings.HELLO +
-      driver.fullName +
-      ',<br><br>' +
-      message +
-      '<br><br>' +
-      Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`) +
-      '<br><br>' +
-      strings.REGARDS +
-      '<br>' +
-      '</p>',
+    html: `<p>${strings.HELLO}${driver.fullName},<br><br>${message}<br><br>${Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>${strings.REGARDS}<br>` + '</p>',
   }
   await Helper.sendMail(mailOptions)
 
@@ -243,7 +196,7 @@ const notifyDriver = async (booking) => {
   const pushNotification = await PushNotification.findOne({ user: driver._id })
   if (pushNotification) {
     const pushToken = pushNotification.token
-    let expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
+    const expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
 
     if (!Expo.isExpoPushToken(pushToken)) {
       console.log(`Push token ${pushToken} is not a valid Expo push token.`)
@@ -268,16 +221,16 @@ const notifyDriver = async (booking) => {
     // recommend you batch your notifications to reduce the number of requests
     // and to compress them (notifications with similar content will get
     // compressed).
-    let chunks = expo.chunkPushNotifications(messages)
-    let tickets = []
+    const chunks = expo.chunkPushNotifications(messages)
+    const tickets = []
 
     ;(async () => {
       // Send the chunks to the Expo push notification service. There are
       // different strategies you could use. A simple one is to send one chunk at a
       // time, which nicely spreads the load out over time:
-      for (let chunk of chunks) {
+      for (const chunk of chunks) {
         try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk)
+          const ticketChunk = await expo.sendPushNotificationsAsync(chunk)
 
           tickets.push(...ticketChunk)
           // NOTE: If a ticket contains an error code in ticket.details.error, you
@@ -292,7 +245,7 @@ const notifyDriver = async (booking) => {
   }
 }
 
-export const update = async (req, res) => {
+export async function update(req, res) {
   try {
     const booking = await Booking.findById(req.body.booking._id)
 
@@ -315,10 +268,10 @@ export const update = async (req, res) => {
           await additionalDriver.save()
         } else {
           const additionalDriver = new AdditionalDriver({
-            fullName: fullName,
-            email: email,
-            phone: phone,
-            birthDate: birthDate,
+            fullName,
+            email,
+            phone,
+            birthDate,
           })
 
           await additionalDriver.save()
@@ -384,14 +337,14 @@ export const update = async (req, res) => {
   }
 }
 
-export const updateStatus = async (req, res) => {
+export async function updateStatus(req, res) {
   try {
-    const { ids: _ids, status } = req.body,
-      ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
+    const { ids: _ids, status } = req.body
+    const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const bulk = Booking.collection.initializeOrderedBulkOp()
     const bookings = await Booking.find({ _id: { $in: ids } })
 
-    bulk.find({ _id: { $in: ids } }).update({ $set: { status: status } })
+    bulk.find({ _id: { $in: ids } }).update({ $set: { status } })
     await bulk.execute()
     bookings.forEach(async (booking) => {
       if (booking.status !== status) {
@@ -406,7 +359,7 @@ export const updateStatus = async (req, res) => {
   }
 }
 
-export const deleteBookings = async (req, res) => {
+export async function deleteBookings(req, res) {
   try {
     const ids = req.body.map((id) => new mongoose.Types.ObjectId(id))
     const bookings = await Booking.find({
@@ -426,7 +379,7 @@ export const deleteBookings = async (req, res) => {
   }
 }
 
-export const getBooking = async (req, res) => {
+export async function getBooking(req, res) {
   const { id } = req.params
 
   try {
@@ -483,10 +436,10 @@ export const getBooking = async (req, res) => {
   }
 }
 
-export const getBookings = async (req, res) => {
+export async function getBookings(req, res) {
   try {
-    const page = parseInt(req.params.page) + 1
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page) + 1
+    const size = Number.parseInt(req.params.size)
     const companies = req.body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const statuses = req.body.statuses
     const user = req.body.user
@@ -501,28 +454,36 @@ export const getBookings = async (req, res) => {
     const $match = {
       $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
     }
-    if (user)
+    if (user) {
       $match.$and.push({
         'driver._id': { $eq: new mongoose.Types.ObjectId(user) },
       })
-    if (car)
+    }
+    if (car) {
       $match.$and.push({
         'car._id': { $eq: new mongoose.Types.ObjectId(car) },
       })
-    if (from) $match.$and.push({ from: { $gte: from } }) // $from > from
-    if (to) $match.$and.push({ to: { $lte: to } }) // $to < to
-    if (pickupLocation)
+    }
+    if (from) {
+      $match.$and.push({ from: { $gte: from } })
+    } // $from > from
+    if (to) {
+      $match.$and.push({ to: { $lte: to } })
+    } // $to < to
+    if (pickupLocation) {
       $match.$and.push({
         'pickupLocation._id': {
           $eq: new mongoose.Types.ObjectId(pickupLocation),
         },
       })
-    if (dropOffLocation)
+    }
+    if (dropOffLocation) {
       $match.$and.push({
         'dropOffLocation._id': {
           $eq: new mongoose.Types.ObjectId(dropOffLocation),
         },
       })
+    }
     if (keyword) {
       const isObjectId = mongoose.isValidObjectId(keyword)
       if (isObjectId) {
@@ -691,7 +652,7 @@ export const getBookings = async (req, res) => {
   }
 }
 
-export const hasBookings = async (req, res) => {
+export async function hasBookings(req, res) {
   const { driver } = req.params
 
   try {
@@ -704,6 +665,7 @@ export const hasBookings = async (req, res) => {
     if (count === 1) {
       return res.sendStatus(200)
     }
+
     return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${driver}`, err)
@@ -711,7 +673,7 @@ export const hasBookings = async (req, res) => {
   }
 }
 
-export const bookingsMinDate = async (req, res) => {
+export async function bookingsMinDate(req, res) {
   const { driver } = req.params
 
   try {
@@ -722,6 +684,7 @@ export const bookingsMinDate = async (req, res) => {
     if (booking) {
       return res.json(new Date(booking.from).getTime())
     }
+
     return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.bookingsMinDate] ${strings.DB_ERROR} ${driver}`, err)
@@ -729,7 +692,7 @@ export const bookingsMinDate = async (req, res) => {
   }
 }
 
-export const bookingsMaxDate = async (req, res) => {
+export async function bookingsMaxDate(req, res) {
   const { driver } = req.params
 
   try {
@@ -740,6 +703,7 @@ export const bookingsMaxDate = async (req, res) => {
     if (booking) {
       return res.json(new Date(booking.to).getTime())
     }
+
     return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.bookingsMaxDate] ${strings.DB_ERROR} ${driver}`, err)
@@ -747,7 +711,7 @@ export const bookingsMaxDate = async (req, res) => {
   }
 }
 
-export const cancelBooking = async (req, res) => {
+export async function cancelBooking(req, res) {
   const { id } = req.params
 
   try {

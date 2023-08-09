@@ -1,8 +1,9 @@
+import process from 'node:process'
 import jwt from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.BC_JWT_SECRET
 
-const verifyToken = (req, res, next) => {
+function verifyToken(req, res, next) {
   const token = req.headers['x-access-token']
 
   if (!token) {
