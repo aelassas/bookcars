@@ -286,7 +286,9 @@ const UpdateUser = () => {
         birthDate,
       }
 
-      if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
+      if (type === Env.RECORD_TYPE.COMPANY) {
+        data.payLater = payLater
+      }
 
       const status = await UserService.updateUser(data)
 

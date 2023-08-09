@@ -19,7 +19,9 @@ const Search = (props) => {
   }
 
   const handleSearch = () => {
-    if (props.onSubmit) props.onSubmit(keyword)
+    if (props.onSubmit) {
+      props.onSubmit(keyword)
+    }
   }
 
   return (

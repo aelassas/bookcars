@@ -265,7 +265,9 @@ const BookingList = (props) => {
       },
     ]
 
-    if (props.hideDates) columns.splice(1, 2)
+    if (props.hideDates) {
+      columns.splice(1, 2)
+    }
 
     if (!props.hideCarColumn) {
       columns.unshift({

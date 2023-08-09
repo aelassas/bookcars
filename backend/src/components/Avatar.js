@@ -159,7 +159,9 @@ const Avatar = (props) => {
   }
 
   const handleUpload = (e) => {
-    if (!props.type) return setOpenTypeDialog(true)
+    if (!props.type) {
+      return setOpenTypeDialog(true)
+    }
     const upload = document.getElementById('upload')
     upload.value = ''
     setTimeout(() => {

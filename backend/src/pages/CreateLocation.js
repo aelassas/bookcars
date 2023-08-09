@@ -20,13 +20,17 @@ const CreateLocation = () => {
     try {
       let isValid = true
 
-      for (let i = 0; i < nameErrors.length; i++) nameErrors[i] = false
+      for (let i = 0; i < nameErrors.length; i++) {
+        nameErrors[i] = false
+      }
 
       for (let i = 0; i < names.length; i++) {
         const name = names[i]
         const _isValid = (await LocationService.validate(name)) === 200
         isValid = isValid && _isValid
-        if (!_isValid) nameErrors[i] = true
+        if (!_isValid) {
+          nameErrors[i] = true
+        }
       }
 
       setNameErrors(Helper.cloneArray(nameErrors))
@@ -35,7 +39,9 @@ const CreateLocation = () => {
         const status = await LocationService.create(names)
 
         if (status === 200) {
-          for (let i = 0; i < names.length; i++) names[i].name = ''
+          for (let i = 0; i < names.length; i++) {
+            names[i].name = ''
+          }
           setNames(Helper.cloneArray(names))
           Helper.info(strings.LOCATION_CREATED)
         } else {

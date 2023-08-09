@@ -272,7 +272,9 @@ const CreateUser = () => {
         company,
       }
 
-      if (type === Env.RECORD_TYPE.COMPANY) data.payLater = payLater
+      if (type === Env.RECORD_TYPE.COMPANY) {
+        data.payLater = payLater
+      }
 
       const status = await UserService.create(data)
 

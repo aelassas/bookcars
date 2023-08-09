@@ -94,8 +94,12 @@ const UpdateCar = () => {
     if (age) {
       const _age = parseInt(age)
       const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
-      if (updateState) setMinimumAgeValid(minimumAgeValid)
-      if (minimumAgeValid) setFormError(false)
+      if (updateState) {
+        setMinimumAgeValid(minimumAgeValid)
+      }
+      if (minimumAgeValid) {
+        setFormError(false)
+      }
       return minimumAgeValid
     } else {
       setMinimumAgeValid(true)
