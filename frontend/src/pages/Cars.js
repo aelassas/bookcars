@@ -78,8 +78,12 @@ const Cars = () => {
   const onLoad = async (user) => {
     let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to
     const params = new URLSearchParams(window.location.search)
-    if (params.has('p')) pickupLocationId = params.get('p')
-    if (params.has('d')) dropOffLocationId = params.get('d')
+    if (params.has('p')) {
+      pickupLocationId = params.get('p')
+    }
+    if (params.has('d')) {
+      dropOffLocationId = params.get('d')
+    }
     if (params.has('f')) {
       const val = params.get('f')
       from = Helper.isInteger(val) && new Date(parseInt(val))
@@ -126,7 +130,9 @@ const Cars = () => {
       setAllCompanies(allCompanies)
       setCompanies(companies)
       setLoading(false)
-      if (!user || (user && user.verified)) setVisible(true)
+      if (!user || (user && user.verified)) {
+        setVisible(true)
+      }
     } catch (err) {
       Helper.error(err)
     }

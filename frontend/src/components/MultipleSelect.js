@@ -74,16 +74,22 @@ const MultipleSelect = ({
             }
 
             if (value.length === 0) {
-              if (open) setOpen(false)
+              if (open) {
+                setOpen(false)
+              }
             } else {
-              if (!open) setOpen(true)
+              if (!open) {
+                setOpen(true)
+              }
             }
           } else {
             setInit(true)
           }
 
           setInputValue(value)
-          if (onInputChange) onInputChange(event)
+          if (onInputChange) {
+            onInputChange(event)
+          }
         }}
         onClose={() => {
           setOpen(false)

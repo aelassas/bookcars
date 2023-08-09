@@ -140,12 +140,24 @@ const CarList = (props) => {
   const getExtraIcon = (option, extra) => {
     let available = false
     if (props.booking) {
-      if (option === 'cancellation' && props.booking.cancellation && extra > 0) available = true
-      if (option === 'amendments' && props.booking.amendments && extra > 0) available = true
-      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) available = true
-      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) available = true
-      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) available = true
-      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) available = true
+      if (option === 'cancellation' && props.booking.cancellation && extra > 0) {
+        available = true
+      }
+      if (option === 'amendments' && props.booking.amendments && extra > 0) {
+        available = true
+      }
+      if (option === 'collisionDamageWaiver' && props.booking.collisionDamageWaiver && extra > 0) {
+        available = true
+      }
+      if (option === 'theftProtection' && props.booking.theftProtection && extra > 0) {
+        available = true
+      }
+      if (option === 'fullInsurance' && props.booking.fullInsurance && extra > 0) {
+        available = true
+      }
+      if (option === 'additionalDriver' && props.booking.additionalDriver && extra > 0) {
+        available = true
+      }
     }
 
     return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />

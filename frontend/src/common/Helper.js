@@ -29,7 +29,9 @@ export const info = (message) => {
 }
 
 export const error = (err, message) => {
-  if (err && console && console.error) console.error(err)
+  if (err && console && console.error) {
+    console.error(err)
+  }
   if (message) {
     toast(message, { type: 'error' })
   } else {
@@ -277,9 +279,15 @@ export const getBookingStatus = (status) => {
 }
 
 export const arrayEqual = (a, b) => {
-  if (a === b) return true
-  if (a == null || b == null) return false
-  if (a.length !== b.length) return false
+  if (a === b) {
+    return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
+  if (a.length !== b.length) {
+    return false
+  }
 
   // If you don't care about the order of the elements inside
   // the array, you should sort both arrays here.
@@ -287,15 +295,23 @@ export const arrayEqual = (a, b) => {
   // you might want to clone your array first.
 
   for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
+    if (a[i] !== b[i]) {
+      return false
+    }
   }
   return true
 }
 
 export const carsEqual = (a, b) => {
-  if (a === b) return true
-  if (a == null || b == null) return false
-  if (a.length !== b.length) return false
+  if (a === b) {
+    return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
+  if (a.length !== b.length) {
+    return false
+  }
 
   // If you don't care about the order of the elements inside
   // the array, you should sort both arrays here.
@@ -304,7 +320,9 @@ export const carsEqual = (a, b) => {
 
   for (let i = 0; i < a.length; i++) {
     const car = a[i]
-    if (b.filter((c) => c._id === car._id).length === 0) return false
+    if (b.filter((c) => c._id === car._id).length === 0) {
+      return false
+    }
   }
   return true
 }
@@ -314,20 +332,38 @@ export const clone = (obj) => {
 }
 
 export const cloneArray = (arr) => {
-  if (typeof arr === 'undefined') return undefined
-  if (arr == null) return null
+  if (typeof arr === 'undefined') {
+    return undefined
+  }
+  if (arr == null) {
+    return null
+  }
   return [...arr]
 }
 
 export const filterEqual = (a, b) => {
-  if (a === b) return true
-  if (a == null || b == null) return false
+  if (a === b) {
+    return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
 
-  if (a.from !== b.from) return false
-  if (a.to !== b.to) return false
-  if (a.pickupLocation !== b.pickupLocation) return false
-  if (a.dropOffLocation !== b.dropOffLocation) return false
-  if (a.keyword !== b.keyword) return false
+  if (a.from !== b.from) {
+    return false
+  }
+  if (a.to !== b.to) {
+    return false
+  }
+  if (a.pickupLocation !== b.pickupLocation) {
+    return false
+  }
+  if (a.dropOffLocation !== b.dropOffLocation) {
+    return false
+  }
+  if (a.keyword !== b.keyword) {
+    return false
+  }
 
   return true
 }
@@ -370,12 +406,24 @@ export const price = (car, from, to, options) => {
 
   let price = car.price * _days
   if (options) {
-    if (options.cancellation && car.cancellation > 0) price += car.cancellation
-    if (options.amendments && car.amendments > 0) price += car.amendments
-    if (options.theftProtection && car.theftProtection > 0) price += car.theftProtection * _days
-    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) price += car.collisionDamageWaiver * _days
-    if (options.fullInsurance && car.fullInsurance > 0) price += car.fullInsurance * _days
-    if (options.additionalDriver && car.additionalDriver > 0) price += car.additionalDriver * _days
+    if (options.cancellation && car.cancellation > 0) {
+      price += car.cancellation
+    }
+    if (options.amendments && car.amendments > 0) {
+      price += car.amendments
+    }
+    if (options.theftProtection && car.theftProtection > 0) {
+      price += car.theftProtection * _days
+    }
+    if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
+      price += car.collisionDamageWaiver * _days
+    }
+    if (options.fullInsurance && car.fullInsurance > 0) {
+      price += car.fullInsurance * _days
+    }
+    if (options.additionalDriver && car.additionalDriver > 0) {
+      price += car.additionalDriver * _days
+    }
   }
 
   return price

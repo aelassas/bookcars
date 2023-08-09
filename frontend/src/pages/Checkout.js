@@ -565,7 +565,7 @@ const Checkout = () => {
 
       let booking, driver, _additionalDriver
 
-      if (!authenticated)
+      if (!authenticated) {
         driver = {
           email,
           phone,
@@ -573,6 +573,7 @@ const Checkout = () => {
           birthDate,
           language: UserService.getLanguage(),
         }
+      }
 
       booking = {
         company: car.company._id,
@@ -632,9 +633,15 @@ const Checkout = () => {
 
     let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to
     const params = new URLSearchParams(window.location.search)
-    if (params.has('c')) carId = params.get('c')
-    if (params.has('p')) pickupLocationId = params.get('p')
-    if (params.has('d')) dropOffLocationId = params.get('d')
+    if (params.has('c')) {
+      carId = params.get('c')
+    }
+    if (params.has('p')) {
+      pickupLocationId = params.get('p')
+    }
+    if (params.has('d')) {
+      dropOffLocationId = params.get('d')
+    }
     if (params.has('f')) {
       const val = params.get('f')
       from = Helper.isInteger(val) && new Date(parseInt(val))
