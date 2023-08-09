@@ -1,7 +1,7 @@
 import express from 'express'
+import multer from 'multer'
 import routeNames from '../config/carRoutes.config.js'
 import authJwt from '../middlewares/authJwt.js'
-import multer from 'multer'
 import * as carController from '../controllers/carController.js'
 
 const routes = express.Router()

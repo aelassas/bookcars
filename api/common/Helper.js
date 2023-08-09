@@ -1,17 +1,20 @@
-import fs from 'fs/promises'
+import fs from 'node:fs/promises'
+import process from 'node:process'
 import nodemailer from 'nodemailer'
 
-export const joinURL = (part1, part2) => {
+export function joinURL(part1, part2) {
   if (part1.charAt(part1.length - 1) === '/') {
     part1 = part1.substr(0, part1.length - 1)
   }
+
   if (part2.charAt(0) === '/') {
     part2 = part2.substr(1)
   }
-  return part1 + '/' + part2
+
+  return `${part1}/${part2}`
 }
 
-export const exists = async (path) => {
+export async function exists(path) {
   try {
     await fs.access(path)
     return true
@@ -20,7 +23,7 @@ export const exists = async (path) => {
   }
 }
 
-export const sendMail = (mailOptions) => {
+export function sendMail(mailOptions) {
   const SMTP_HOST = process.env.BC_SMTP_HOST
   const SMTP_PORT = process.env.BC_SMTP_PORT
   const SMTP_USER = process.env.BC_SMTP_USER

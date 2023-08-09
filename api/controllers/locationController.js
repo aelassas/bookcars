@@ -1,12 +1,12 @@
+import escapeStringRegexp from 'escape-string-regexp'
+import mongoose from 'mongoose'
 import Env from '../config/env.config.js'
 import strings from '../config/app.config.js'
 import Location from '../models/Location.js'
 import LocationValue from '../models/LocationValue.js'
 import Car from '../models/Car.js'
-import escapeStringRegexp from 'escape-string-regexp'
-import mongoose from 'mongoose'
 
-export const validate = async (req, res) => {
+export async function validate(req, res) {
   const { language, name } = req.body
 
   try {
@@ -24,7 +24,7 @@ export const validate = async (req, res) => {
   }
 }
 
-export const create = async (req, res) => {
+export async function create(req, res) {
   const names = req.body
 
   try {
@@ -48,7 +48,7 @@ export const create = async (req, res) => {
   }
 }
 
-export const update = async (req, res) => {
+export async function update(req, res) {
   const { id } = req.params
 
   try {
@@ -83,7 +83,7 @@ export const update = async (req, res) => {
   }
 }
 
-export const deleteLocation = async (req, res) => {
+export async function deleteLocation(req, res) {
   const { id } = req.params
 
   try {
@@ -96,7 +96,7 @@ export const deleteLocation = async (req, res) => {
   }
 }
 
-export const getLocation = async (req, res) => {
+export async function getLocation(req, res) {
   const { id } = req.params
 
   try {
@@ -115,10 +115,10 @@ export const getLocation = async (req, res) => {
   }
 }
 
-export const getLocations = async (req, res) => {
+export async function getLocations(req, res) {
   try {
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
     const language = req.params.language
     const keyword = escapeStringRegexp(req.query.s || '')
     const options = 'i'
@@ -174,7 +174,7 @@ export const getLocations = async (req, res) => {
   }
 }
 
-export const checkLocation = async (req, res) => {
+export async function checkLocation(req, res) {
   const { id } = req.params
 
   try {

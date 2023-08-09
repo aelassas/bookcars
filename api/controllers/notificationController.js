@@ -1,15 +1,16 @@
+import process from 'node:process'
+import mongoose from 'mongoose'
 import strings from '../config/app.config.js'
 import Notification from '../models/Notification.js'
 import NotificationCounter from '../models/NotificationCounter.js'
 import User from '../models/User.js'
-import mongoose from 'mongoose'
 import * as Helper from '../common/Helper.js'
 
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
 const APP_HOST = process.env.BC_FRONTEND_HOST
 const SMTP_FROM = process.env.BC_SMTP_FROM
 
-export const notificationCounter = async (req, res) => {
+export async function notificationCounter(req, res) {
   const { userId } = req.params
   try {
     const counter = await NotificationCounter.findOne({ user: userId })
@@ -27,7 +28,7 @@ export const notificationCounter = async (req, res) => {
   }
 }
 
-export const notify = async (req, res) => {
+export async function notify(req, res) {
   try {
     const notification = new Notification(req.body)
     await notification.save()
@@ -47,29 +48,12 @@ export const notify = async (req, res) => {
           to: user.email,
           subject: strings.NOTIFICATION_SUBJECT,
           html:
-            '<p>' +
-            strings.HELLO +
-            user.fullName +
-            ',<br><br>' +
-            strings.NOTIFICATION_BODY +
-            '<br><br>' +
-            '---<br>' +
-            notification.message +
-            '<br><br>' +
-            (notification.isLink ? '<a href="' + notification.link + '">' + strings.NOTIFICATION_LINK + '</a>' + '<br>' : '') +
-            '<a href="' +
-            'http' +
-            (HTTPS ? 's' : '') +
-            '://' +
-            APP_HOST +
-            '/notifications' +
-            '">' +
-            strings.NOTIFICATIONS_LINK +
-            '</a>' +
+            `<p>${strings.HELLO}${user.fullName},<br><br>${strings.NOTIFICATION_BODY}<br><br>` +
+            `---<br>${notification.message}<br><br>${notification.isLink ? `<a href="${notification.link}">${strings.NOTIFICATION_LINK}</a>` + '<br>' : ''}<a href="` +
+            `http${HTTPS ? 's' : ''}://${APP_HOST}/notifications` +
+            `">${strings.NOTIFICATIONS_LINK}</a>` +
             '<br>---' +
-            '<br><br>' +
-            strings.REGARDS +
-            '<br>' +
+            `<br><br>${strings.REGARDS}<br>` +
             '</p>',
         }
 
@@ -98,13 +82,13 @@ export const notify = async (req, res) => {
   }
 }
 
-export const getNotifications = async (req, res) => {
+export async function getNotifications(req, res) {
   const { userId: _userId, page: _page, size: _size } = req.params
 
   try {
     const userId = new mongoose.Types.ObjectId(_userId)
-    const page = parseInt(_page)
-    const size = parseInt(_size)
+    const page = Number.parseInt(_page)
+    const size = Number.parseInt(_size)
 
     const notifications = await Notification.aggregate([
       { $match: { user: userId } },
@@ -127,12 +111,12 @@ export const getNotifications = async (req, res) => {
   }
 }
 
-export const markAsRead = async (req, res) => {
+export async function markAsRead(req, res) {
   try {
-    const { ids: _ids } = req.body,
-      ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
-    const { userId: _userId } = req.params,
-      userId = new mongoose.Types.ObjectId(_userId)
+    const { ids: _ids } = req.body
+    const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
+    const { userId: _userId } = req.params
+    const userId = new mongoose.Types.ObjectId(_userId)
 
     const bulk = Notification.collection.initializeOrderedBulkOp()
     const notifications = await Notification.find({
@@ -159,12 +143,12 @@ export const markAsRead = async (req, res) => {
   }
 }
 
-export const markAsUnRead = async (req, res) => {
+export async function markAsUnRead(req, res) {
   try {
-    const { ids: _ids } = req.body,
-      ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
-    const { userId: _userId } = req.params,
-      userId = new mongoose.Types.ObjectId(_userId)
+    const { ids: _ids } = req.body
+    const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
+    const { userId: _userId } = req.params
+    const userId = new mongoose.Types.ObjectId(_userId)
 
     const bulk = Notification.collection.initializeOrderedBulkOp()
     const notifications = await Notification.find({
@@ -191,12 +175,12 @@ export const markAsUnRead = async (req, res) => {
   }
 }
 
-export const deleteNotifications = async (req, res) => {
+export async function deleteNotifications(req, res) {
   try {
-    const { ids: _ids } = req.body,
-      ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
-    const { userId: _userId } = req.params,
-      userId = new mongoose.Types.ObjectId(_userId)
+    const { ids: _ids } = req.body
+    const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
+    const { userId: _userId } = req.params
+    const userId = new mongoose.Types.ObjectId(_userId)
 
     const count = await Notification.find({
       _id: { $in: ids },

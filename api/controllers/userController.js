@@ -1,22 +1,23 @@
+import path from 'node:path'
+import fs from 'node:fs/promises'
+import process from 'node:process'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import path from 'path'
-import fs from 'fs/promises'
 import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
+import mongoose from 'mongoose'
 import strings from '../config/app.config.js'
 import Env from '../config/env.config.js'
 import User from '../models/User.js'
 import Booking from '../models/Booking.js'
 import Token from '../models/Token.js'
 import PushNotification from '../models/PushNotification.js'
-import mongoose from 'mongoose'
 import * as Helper from '../common/Helper.js'
 
 const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
 const JWT_SECRET = process.env.BC_JWT_SECRET
-const JWT_EXPIRE_AT = parseInt(process.env.BC_JWT_EXPIRE_AT)
+const JWT_EXPIRE_AT = Number.parseInt(process.env.BC_JWT_EXPIRE_AT)
 const SMTP_FROM = process.env.BC_SMTP_FROM
 const CDN = process.env.BC_CDN_USERS
 const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
@@ -25,7 +26,7 @@ const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 
 const getStatusMessage = (lang, msg) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
 
-export const signup = async (req, res) => {
+export async function signup(req, res) {
   const { body } = req
 
   try {
@@ -67,23 +68,9 @@ export const signup = async (req, res) => {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        '<p>' +
-        strings.HELLO +
-        user.fullName +
-        ',<br><br>' +
-        strings.ACCOUNT_ACTIVATION_LINK +
-        '<br><br>http' +
-        (HTTPS ? 's' : '') +
-        '://' +
-        req.headers.host +
-        '/api/confirm-email/' +
-        user.email +
-        '/' +
-        token.token +
-        '<br><br>' +
-        strings.REGARDS +
-        '<br>' +
-        '</p>',
+        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
+          token.token
+        }<br><br>${strings.REGARDS}<br>` + '</p>',
     }
     await Helper.sendMail(mailOptions)
     return res.sendStatus(200)
@@ -93,7 +80,7 @@ export const signup = async (req, res) => {
   }
 }
 
-export const adminSignup = async (req, res) => {
+export async function adminSignup(req, res) {
   const { body } = req
 
   try {
@@ -139,23 +126,9 @@ export const adminSignup = async (req, res) => {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        '<p>' +
-        strings.HELLO +
-        user.fullName +
-        ',<br><br>' +
-        strings.ACCOUNT_ACTIVATION_LINK +
-        '<br><br>http' +
-        (HTTPS ? 's' : '') +
-        '://' +
-        req.headers.host +
-        '/api/confirm-email/' +
-        user.email +
-        '/' +
-        token.token +
-        '<br><br>' +
-        strings.REGARDS +
-        '<br>' +
-        '</p>',
+        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
+          token.token
+        }<br><br>${strings.REGARDS}<br>` + '</p>',
     }
 
     await Helper.sendMail(mailOptions)
@@ -166,7 +139,7 @@ export const adminSignup = async (req, res) => {
   }
 }
 
-export const create = async (req, res) => {
+export async function create(req, res) {
   const { body } = req
 
   try {
@@ -217,23 +190,10 @@ export const create = async (req, res) => {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        '<p>' +
-        strings.HELLO +
-        user.fullName +
-        ',<br><br>' +
-        strings.ACCOUNT_ACTIVATION_LINK +
-        '<br><br>' +
-        Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, 'activate') +
-        '/?u=' +
-        encodeURIComponent(user._id) +
-        '&e=' +
-        encodeURIComponent(user.email) +
-        '&t=' +
-        encodeURIComponent(token.token) +
-        '<br><br>' +
-        strings.REGARDS +
-        '<br>' +
-        '</p>',
+        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(
+          user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
+          'activate',
+        )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
     }
 
     await Helper.sendMail(mailOptions)
@@ -244,13 +204,13 @@ export const create = async (req, res) => {
   }
 }
 
-export const checkToken = async (req, res) => {
+export async function checkToken(req, res) {
   const { userId, email } = req.params
 
   try {
     const user = await User.findOne({
       _id: new mongoose.Types.ObjectId(userId),
-      email: email,
+      email,
     })
 
     if (user) {
@@ -282,7 +242,7 @@ export const checkToken = async (req, res) => {
   }
 }
 
-export const deleteTokens = async (req, res) => {
+export async function deleteTokens(req, res) {
   const { userId } = req.params
 
   try {
@@ -301,11 +261,11 @@ export const deleteTokens = async (req, res) => {
   }
 }
 
-export const resend = async (req, res) => {
+export async function resend(req, res) {
   const { email } = req.params
 
   try {
-    const user = await User.findOne({ email: email })
+    const user = await User.findOne({ email })
 
     if (user) {
       if (
@@ -332,23 +292,10 @@ export const resend = async (req, res) => {
           to: user.email,
           subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
           html:
-            '<p>' +
-            strings.HELLO +
-            user.fullName +
-            ',<br><br>' +
-            (reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK) +
-            '<br><br>' +
-            Helper.joinURL(user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST, reset ? 'reset-password' : 'activate') +
-            '/?u=' +
-            encodeURIComponent(user._id) +
-            '&e=' +
-            encodeURIComponent(user.email) +
-            '&t=' +
-            encodeURIComponent(token.token) +
-            '<br><br>' +
-            strings.REGARDS +
-            '<br>' +
-            '</p>',
+            `<p>${strings.HELLO}${user.fullName},<br><br>${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(
+              user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
+              reset ? 'reset-password' : 'activate',
+            )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
         }
 
         await Helper.sendMail(mailOptions)
@@ -363,7 +310,7 @@ export const resend = async (req, res) => {
   }
 }
 
-export const activate = async (req, res) => {
+export async function activate(req, res) {
   const { userId } = req.body
 
   try {
@@ -393,11 +340,11 @@ export const activate = async (req, res) => {
   }
 }
 
-export const signin = async (req, res) => {
+export async function signin(req, res) {
   const { email } = req.body
 
   try {
-    const user = await User.findOne({ email: email })
+    const user = await User.findOne({ email })
 
     if (
       !req.body.password ||
@@ -415,7 +362,9 @@ export const signin = async (req, res) => {
         const payload = { id: user._id }
 
         let options = { expiresIn: JWT_EXPIRE_AT }
-        if (req.body.stayConnected) options = {}
+        if (req.body.stayConnected) {
+          options = {}
+        }
 
         const token = jwt.sign(payload, JWT_SECRET, options)
 
@@ -439,7 +388,7 @@ export const signin = async (req, res) => {
   }
 }
 
-export const pushToken = async (req, res) => {
+export async function pushToken(req, res) {
   const { userId } = req.params
 
   try {
@@ -455,7 +404,7 @@ export const pushToken = async (req, res) => {
   }
 }
 
-export const createPushToken = async (req, res) => {
+export async function createPushToken(req, res) {
   const { userId, token } = req.params
 
   try {
@@ -464,7 +413,7 @@ export const createPushToken = async (req, res) => {
     if (!exist) {
       const pushNotification = new PushNotification({
         user: userId,
-        token: token,
+        token,
       })
       await pushNotification.save()
       return res.sendStatus(200)
@@ -477,7 +426,7 @@ export const createPushToken = async (req, res) => {
   }
 }
 
-export const deletePushToken = async (req, res) => {
+export async function deletePushToken(req, res) {
   const { userId } = req.params
 
   try {
@@ -489,11 +438,11 @@ export const deletePushToken = async (req, res) => {
   }
 }
 
-export const validateEmail = async (req, res) => {
+export async function validateEmail(req, res) {
   const { email } = req.body
 
   try {
-    const exists = await User.exists({ email: email })
+    const exists = await User.exists({ email })
 
     if (exists) {
       return res.sendStatus(204)
@@ -509,7 +458,7 @@ export const validateEmail = async (req, res) => {
 
 export const validateAccessToken = (req, res) => res.sendStatus(200)
 
-export const confirmEmail = async (req, res) => {
+export async function confirmEmail(req, res) {
   try {
     const { token: _token, email: _email } = req.params
     const token = await Token.findOne({ token: _token })
@@ -519,20 +468,17 @@ export const confirmEmail = async (req, res) => {
     if (!token) {
       console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
       return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
-    }
-    // if token is found then check valid user
-    else {
+    } else {
+      // if token is found then check valid user
       // not valid user
       if (!user) {
         console.error('[user.confirmEmail] User not found', req.params)
         return res.status(401).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_ERROR))
-      }
-      // user is already verified
-      else if (user.verified) {
+      } else if (user.verified) {
+        // user is already verified
         return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
-      }
-      // verify user
-      else {
+      } else {
+        // verify user
         // change verified to true
         user.verified = true
         user.verifiedAt = Date.now()
@@ -546,23 +492,21 @@ export const confirmEmail = async (req, res) => {
   }
 }
 
-export const resendLink = async (req, res) => {
+export async function resendLink(req, res) {
   const { email } = req.body
 
   try {
-    const user = await User.findOne({ email: email })
+    const user = await User.findOne({ email })
 
     // user is not found into database
     if (!user) {
       console.error('[user.resendLink] User not found:', req.params)
       return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
-    }
-    // user has been already verified
-    else if (user.verified) {
+    } else if (user.verified) {
+      // user has been already verified
       return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
-    }
-    // send verification link
-    else {
+    } else {
+      // send verification link
       // generate token and save
       const token = new Token({ user: user._id, token: uuid() })
       await token.save()
@@ -574,23 +518,9 @@ export const resendLink = async (req, res) => {
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
         html:
-          '<p>' +
-          strings.HELLO +
-          user.fullName +
-          ',<br> <br>' +
-          strings.ACCOUNT_ACTIVATION_LINK +
-          '<br><br>http' +
-          (HTTPS ? 's' : '') +
-          '://' +
-          req.headers.host +
-          '/api/confirm-email/' +
-          user.email +
-          '/' +
-          token.token +
-          '<br><br>' +
-          strings.REGARDS +
-          '<br>' +
-          '</p>',
+          `<p>${strings.HELLO}${user.fullName},<br> <br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
+            token.token
+          }<br><br>${strings.REGARDS}<br>` + '</p>',
       }
 
       await Helper.sendMail(mailOptions)
@@ -602,7 +532,7 @@ export const resendLink = async (req, res) => {
   }
 }
 
-export const update = async (req, res) => {
+export async function update(req, res) {
   try {
     const { _id } = req.body
     const user = await User.findById(_id)
@@ -611,14 +541,22 @@ export const update = async (req, res) => {
       return res.sendStatus(204)
     } else {
       const { fullName, phone, bio, location, type, birthDate, enableEmailNotifications, payLater } = req.body
-      if (fullName) user.fullName = fullName
+      if (fullName) {
+        user.fullName = fullName
+      }
       user.phone = phone
       user.location = location
       user.bio = bio
       user.birthDate = birthDate
-      if (type) user.type = type
-      if (typeof enableEmailNotifications !== 'undefined') user.enableEmailNotifications = enableEmailNotifications
-      if (typeof payLater !== 'undefined') user.payLater = payLater
+      if (type) {
+        user.type = type
+      }
+      if (typeof enableEmailNotifications !== 'undefined') {
+        user.enableEmailNotifications = enableEmailNotifications
+      }
+      if (typeof payLater !== 'undefined') {
+        user.payLater = payLater
+      }
 
       await user.save()
       return res.sendStatus(200)
@@ -629,7 +567,7 @@ export const update = async (req, res) => {
   }
 }
 
-export const updateEmailNotifications = async (req, res) => {
+export async function updateEmailNotifications(req, res) {
   try {
     const { _id } = req.body
     const user = await User.findById(_id)
@@ -647,7 +585,7 @@ export const updateEmailNotifications = async (req, res) => {
   }
 }
 
-export const updateLanguage = async (req, res) => {
+export async function updateLanguage(req, res) {
   try {
     const { id, language } = req.body
     const user = await User.findById(id)
@@ -665,7 +603,7 @@ export const updateLanguage = async (req, res) => {
   }
 }
 
-export const getUser = async (req, res) => {
+export async function getUser(req, res) {
   const { id } = req.params
   try {
     const user = await User.findById(id, {
@@ -697,7 +635,7 @@ export const getUser = async (req, res) => {
   }
 }
 
-export const createAvatar = async (req, res) => {
+export async function createAvatar(req, res) {
   try {
     if (!(await Helper.exists(CDN_TEMP))) {
       await fs.mkdir(CDN_TEMP, { recursive: true })
@@ -714,7 +652,7 @@ export const createAvatar = async (req, res) => {
   }
 }
 
-export const updateAvatar = async (req, res) => {
+export async function updateAvatar(req, res) {
   const { userId } = req.params
 
   try {
@@ -750,7 +688,7 @@ export const updateAvatar = async (req, res) => {
   }
 }
 
-export const deleteAvatar = async (req, res) => {
+export async function deleteAvatar(req, res) {
   const { userId } = req.params
 
   try {
@@ -777,7 +715,7 @@ export const deleteAvatar = async (req, res) => {
   }
 }
 
-export const deleteTempAvatar = async (req, res) => {
+export async function deleteTempAvatar(req, res) {
   const { avatar } = req.params
 
   try {
@@ -785,6 +723,7 @@ export const deleteTempAvatar = async (req, res) => {
     if (await Helper.exists(avatarFile)) {
       await fs.unlink(avatarFile)
     }
+
     return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.deleteTempAvatar] ${strings.DB_ERROR} ${avatar}`, err)
@@ -792,11 +731,11 @@ export const deleteTempAvatar = async (req, res) => {
   }
 }
 
-export const changePassword = async (req, res) => {
+export async function changePassword(req, res) {
   const { _id, password: currentPassword, newPassword, strict } = req.body
 
   try {
-    const user = await User.findOne({ _id: _id })
+    const user = await User.findOne({ _id })
     if (!user) {
       console.error('[user.changePassword] User not found:', _id)
       return res.sendStatus(204)
@@ -827,7 +766,7 @@ export const changePassword = async (req, res) => {
   }
 }
 
-export const checkPassword = async (req, res) => {
+export async function checkPassword(req, res) {
   const { id, password } = req.params
 
   try {
@@ -849,12 +788,12 @@ export const checkPassword = async (req, res) => {
   }
 }
 
-export const getUsers = async (req, res) => {
+export async function getUsers(req, res) {
   try {
     const keyword = escapeStringRegexp(req.query.s || '')
     const options = 'i'
-    const page = parseInt(req.params.page)
-    const size = parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page)
+    const size = Number.parseInt(req.params.size)
     const types = req.body.types
     const userId = req.body.user
 
@@ -916,7 +855,7 @@ export const getUsers = async (req, res) => {
   }
 }
 
-export const deleteUsers = async (req, res) => {
+export async function deleteUsers(req, res) {
   try {
     const ids = req.body.map((id) => new mongoose.Types.ObjectId(id))
 

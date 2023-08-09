@@ -1,6 +1,6 @@
 import express from 'express'
-import routeNames from '../config/userRoutes.config.js'
 import multer from 'multer'
+import routeNames from '../config/userRoutes.config.js'
 import authJwt from '../middlewares/authJwt.js'
 import * as userController from '../controllers/userController.js'
 
