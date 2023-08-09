@@ -89,7 +89,7 @@ const CreateCar = () => {
 
   const validateMinimumAge = (age, updateState = true) => {
     if (age) {
-      const _age = parseInt(age)
+      const _age = Number.parseInt(age)
       const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
       if (updateState) {
         setMinimumAgeValid(minimumAgeValid)
@@ -205,7 +205,7 @@ const CreateCar = () => {
       const data = {
         name,
         company,
-        minimumAge: parseInt(minimumAge),
+        minimumAge: Number.parseInt(minimumAge),
         locations: locations.map((l) => l._id),
         price: Number(price),
         deposit: Number(deposit),
@@ -214,8 +214,8 @@ const CreateCar = () => {
         gearbox,
         aircon,
         image,
-        seats: parseInt(seats),
-        doors: parseInt(doors),
+        seats: Number.parseInt(seats),
+        doors: Number.parseInt(doors),
         fuelPolicy,
         mileage: extraToNumber(mileage),
         cancellation: extraToNumber(cancellation),

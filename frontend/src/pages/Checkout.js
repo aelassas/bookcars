@@ -374,7 +374,7 @@ const Checkout = () => {
   const validateCardMonth = (cardMonth) => {
     if (cardMonth) {
       if (Helper.isInteger(cardMonth)) {
-        const month = parseInt(cardMonth)
+        const month = Number.parseInt(cardMonth)
         const cardMonthValid = month >= 1 && month <= 12
 
         setCardMonthValid(cardMonthValid)
@@ -411,8 +411,8 @@ const Checkout = () => {
   const validateCardYear = (cardYear) => {
     if (cardYear) {
       if (Helper.isYear(cardYear)) {
-        const year = parseInt(cardYear)
-        const currentYear = parseInt(String(new Date().getFullYear()).slice(2))
+        const year = Number.parseInt(cardYear)
+        const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2))
         const cardYearValid = year >= currentYear
 
         setCardYearValid(cardYearValid)
@@ -474,9 +474,9 @@ const Checkout = () => {
   const validateCardDate = (cardMonth, cardYear) => {
     const today = new Date(),
       cardDate = new Date()
-    const y = parseInt(String(today.getFullYear()).slice(0, 2)) * 100
-    const year = y + parseInt(cardYear)
-    const month = parseInt(cardMonth)
+    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2)) * 100
+    const year = y + Number.parseInt(cardYear)
+    const month = Number.parseInt(cardMonth)
     cardDate.setFullYear(year, month - 1, 1)
 
     if (cardDate < today) {
@@ -644,11 +644,11 @@ const Checkout = () => {
     }
     if (params.has('f')) {
       const val = params.get('f')
-      from = Helper.isInteger(val) && new Date(parseInt(val))
+      from = Helper.isInteger(val) && new Date(Number.parseInt(val))
     }
     if (params.has('t')) {
       const val = params.get('t')
-      to = Helper.isInteger(val) && new Date(parseInt(val))
+      to = Helper.isInteger(val) && new Date(Number.parseInt(val))
     }
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
