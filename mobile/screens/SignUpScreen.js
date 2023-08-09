@@ -74,11 +74,21 @@ const SignUpScreen = ({ navigation, route }) => {
     setConfirmPasswordError(false)
     setTosError(false)
 
-    if (fullNameRef.current) fullNameRef.current.clear()
-    if (emailRef.current) emailRef.current.clear()
-    if (phoneRef.current) phoneRef.current.clear()
-    if (passwordRef.current) passwordRef.current.clear()
-    if (confirmPasswordRef.current) confirmPasswordRef.current.clear()
+    if (fullNameRef.current) {
+      fullNameRef.current.clear()
+    }
+    if (emailRef.current) {
+      emailRef.current.clear()
+    }
+    if (phoneRef.current) {
+      phoneRef.current.clear()
+    }
+    if (passwordRef.current) {
+      passwordRef.current.clear()
+    }
+    if (confirmPasswordRef.current) {
+      confirmPasswordRef.current.clear()
+    }
   }
 
   useEffect(() => {
@@ -229,7 +239,9 @@ const SignUpScreen = ({ navigation, route }) => {
 
   const onChangeToS = (checked) => {
     setTosChecked(checked)
-    if (checked) setTosError(false)
+    if (checked) {
+      setTosError(false)
+    }
   }
 
   const error = (err) => {

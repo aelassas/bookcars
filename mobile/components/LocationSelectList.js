@@ -81,13 +81,17 @@ const LocationSelectList = (props) => {
         }}
         onChangeText={(text) => {
           onChangeText(text)
-          if (props.onChangeText) props.onChangeText(text)
+          if (props.onChangeText) {
+            props.onChangeText(text)
+          }
         }}
         onClear={() => {
           _setSelectedItem(null)
         }}
         onFocus={() => {
-          if (props.onFocus) props.onFocus()
+          if (props.onFocus) {
+            props.onFocus()
+          }
         }}
         textInputProps={{
           placeholder: props.label || '',

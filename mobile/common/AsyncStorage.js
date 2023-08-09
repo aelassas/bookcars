@@ -3,7 +3,9 @@ import Toast from 'react-native-root-toast'
 import i18n from '../lang/i18n'
 
 export const error = (err) => {
-  if (err) console.log(err)
+  if (err) {
+    console.log(err)
+  }
   Toast.show(i18n.t('GENERIC_ERROR'), {
     duration: Toast.durations.LONG,
   })

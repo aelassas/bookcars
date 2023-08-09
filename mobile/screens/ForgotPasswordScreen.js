@@ -27,7 +27,9 @@ const ForgotPasswordScreen = ({ navigation, route }) => {
     setEmailValid(true)
     setEmailError(false)
     setSent(false)
-    if (ref.current) ref.current.clear()
+    if (ref.current) {
+      ref.current.clear()
+    }
   }
 
   useEffect(() => {

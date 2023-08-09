@@ -33,7 +33,9 @@ const MileageFilter = (props) => {
 
     setLimited(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   const onValueChangeUnlimited = (checked) => {
@@ -56,7 +58,9 @@ const MileageFilter = (props) => {
 
     setUnlimited(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   return (
@@ -83,7 +87,9 @@ const MileageFilter = (props) => {
                 setUnlimited(true)
                 setAllChecked(true)
                 setValues(_values)
-                if (props.onChange) props.onChange(Helper.clone(_values))
+                if (props.onChange) {
+                  props.onChange(Helper.clone(_values))
+                }
               }
             }}
           />

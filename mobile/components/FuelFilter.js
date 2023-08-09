@@ -33,7 +33,9 @@ const FuelFilter = (props) => {
 
     setDiesel(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   const onValueChangeGasoline = (checked) => {
@@ -56,7 +58,9 @@ const FuelFilter = (props) => {
 
     setGasoline(checked)
     setValues(values)
-    if (props.onChange) props.onChange(Helper.clone(values))
+    if (props.onChange) {
+      props.onChange(Helper.clone(values))
+    }
   }
 
   return (
@@ -83,7 +87,9 @@ const FuelFilter = (props) => {
                 setGasoline(true)
                 setAllChecked(true)
                 setValues(_values)
-                if (props.onChange) props.onChange(Helper.clone(_values))
+                if (props.onChange) {
+                  props.onChange(Helper.clone(_values))
+                }
               }
             }}
           />

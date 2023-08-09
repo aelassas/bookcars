@@ -29,7 +29,9 @@ const BookingFilter = (props) => {
     setKeyword('')
     setPickupLocation(null)
     setDropOffLocation(null)
-    if (searchRef.current) searchRef.current.clear()
+    if (searchRef.current) {
+      searchRef.current.clear()
+    }
     setInit(true)
   }
 
@@ -54,7 +56,9 @@ const BookingFilter = (props) => {
   const onPressSearch = () => {
     const filter = { from, to, pickupLocation, dropOffLocation, keyword }
 
-    if (props.onSubmit) props.onSubmit(filter)
+    if (props.onSubmit) {
+      props.onSubmit(filter)
+    }
   }
 
   return (

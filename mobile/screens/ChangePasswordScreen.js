@@ -33,9 +33,15 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     setPassword('')
     setConfirmPassword('')
 
-    if (currentPasswordRef.current) currentPasswordRef.current.clear()
-    if (passwordRef.current) passwordRef.current.clear()
-    if (confirmPasswordRef.current) confirmPasswordRef.current.clear()
+    if (currentPasswordRef.current) {
+      currentPasswordRef.current.clear()
+    }
+    if (passwordRef.current) {
+      passwordRef.current.clear()
+    }
+    if (confirmPasswordRef.current) {
+      confirmPasswordRef.current.clear()
+    }
   }
 
   const _init = async () => {

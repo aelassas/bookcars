@@ -16,6 +16,7 @@
     "eas:config": "eas build:configure",
     "optimize": "npx expo-optimize --save",
     "lint": "eslint --ext .js,.jsx .",
+    "lint:fix": "eslint --ext .js,.jsx . --fix",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write ."
   },

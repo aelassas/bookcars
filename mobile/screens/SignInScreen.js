@@ -42,8 +42,12 @@ const SignInScreen = ({ navigation, route }) => {
     setPasswordError(false)
     setBlacklisted(false)
 
-    if (emailRef.current) emailRef.current.clear()
-    if (passwordRef.current) passwordRef.current.clear()
+    if (emailRef.current) {
+      emailRef.current.clear()
+    }
+    if (passwordRef.current) {
+      passwordRef.current.clear()
+    }
   }
 
   const _init = async () => {

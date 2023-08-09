@@ -81,7 +81,9 @@ const NotificationsScreen = ({ navigation, route }) => {
         setRows(_rows)
         setTotalRecords(_totalRecords)
         setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
-        if (notificationsListRef.current) notificationsListRef.current.scrollTo({ x: 0, y: 0, animated: false })
+        if (notificationsListRef.current) {
+          notificationsListRef.current.scrollTo({ x: 0, y: 0, animated: false })
+        }
         setLoading(false)
       } catch (err) {
         Helper.error(err)

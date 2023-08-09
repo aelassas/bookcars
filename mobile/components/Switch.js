@@ -10,11 +10,15 @@ const Switch = (props) => {
 
   const onValueChange = (value) => {
     setValue(value)
-    if (props.onValueChange) props.onValueChange(value)
+    if (props.onValueChange) {
+      props.onValueChange(value)
+    }
   }
 
   const onPress = () => {
-    if (!props.disabled) onValueChange(!value)
+    if (!props.disabled) {
+      onValueChange(!value)
+    }
   }
 
   return (

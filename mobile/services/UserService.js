@@ -218,7 +218,9 @@ export const loggedIn = async () => {
     const status = await validateAccessToken()
     if (status === 200) {
       const user = await getUser(currentUser.id)
-      if (user) return true
+      if (user) {
+        return true
+      }
     }
   }
 
