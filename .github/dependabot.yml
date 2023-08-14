@@ -3,15 +3,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "./api"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 25
+      interval: "monthly"
+    open-pull-requests-limit: 45
   - package-ecosystem: "npm"
     directory: "./backend"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 25
+      interval: "monthly"
+    open-pull-requests-limit: 45
   - package-ecosystem: "npm"
     directory: "./frontend"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 25
+      interval: "monthly"
+    open-pull-requests-limit: 45
