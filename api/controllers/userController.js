@@ -13,6 +13,9 @@ import Booking from '../models/Booking.js'
 import Token from '../models/Token.js'
 import PushNotification from '../models/PushNotification.js'
 import * as Helper from '../common/Helper.js'
+import Notification from '../models/Notification.js'
+import Car from '../models/Car.js'
+import AdditionalDriver from '../models/AdditionalDriver.js'
 
 const DEFAULT_LANGUAGE = process.env.BC_DEFAULT_LANGUAGE
 const HTTPS = process.env.BC_HTTPS.toLowerCase() === 'true'
@@ -21,6 +24,7 @@ const JWT_EXPIRE_AT = Number.parseInt(process.env.BC_JWT_EXPIRE_AT)
 const SMTP_FROM = process.env.BC_SMTP_FROM
 const CDN = process.env.BC_CDN_USERS
 const CDN_TEMP = process.env.BC_CDN_TEMP_USERS
+const CDN_CARS = process.env.BC_CDN_CARS
 const BACKEND_HOST = process.env.BC_BACKEND_HOST
 const FRONTEND_HOST = process.env.BC_FRONTEND_HOST
 
@@ -876,7 +880,23 @@ export async function deleteUsers(req, res) {
           await fs.unlink(avatar)
         }
       }
-      await Booking.deleteMany({ driver: id })
+
+      if (user.type === Env.USER_TYPE.COMPANY) {
+        const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+        await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
+        await Booking.deleteMany({ company: id })
+        const cars = await Car.find({ company: id })
+        await Car.deleteMany({ company: id })
+        for (const car of cars) {
+          const image = path.join(CDN_CARS, car.image)
+          if (await Helper.exists(image)) {
+            await fs.unlink(image)
+          }
+        }
+      } else if (user.type === Env.USER_TYPE.USER) {
+        await Booking.deleteMany({ driver: id })
+      }
+      await Notification.deleteMany({ user: id })
     }
 
     return res.sendStatus(200)
