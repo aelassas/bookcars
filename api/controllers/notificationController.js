@@ -182,10 +182,7 @@ export async function deleteNotifications(req, res) {
     const { userId: _userId } = req.params
     const userId = new mongoose.Types.ObjectId(_userId)
 
-    const count = await Notification.find({
-      _id: { $in: ids },
-      isRead: false,
-    }).count()
+    const count = await Notification.find({ _id: { $in: ids }, isRead: false }).count()
     await Notification.deleteMany({ _id: { $in: ids } })
 
     const counter = await NotificationCounter.findOne({ user: userId })
