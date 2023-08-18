@@ -146,8 +146,7 @@ export async function book(req, res) {
         `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocation.name}${strings.BOOKING_CONFIRMED_PART11}` +
         `${to} ${strings.BOOKING_CONFIRMED_PART12}` +
         `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${FRONTEND_HOST}<br><br>
-        ${strings.REGARDS}<br>` +
-        '</p>',
+        ${strings.REGARDS}<br></p>`,
     }
     await Helper.sendMail(mailOptions)
 
@@ -189,7 +188,10 @@ async function notifyDriver(booking) {
     from: SMTP_FROM,
     to: driver.email,
     subject: message,
-    html: `<p>${strings.HELLO}${driver.fullName},<br><br>${message}<br><br>${Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>${strings.REGARDS}<br>` + '</p>',
+    html: `<p>${strings.HELLO}${driver.fullName},<br><br>
+    ${message}<br><br>
+    ${Helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
+    ${strings.REGARDS}<br></p>`,
   }
   await Helper.sendMail(mailOptions)
 
