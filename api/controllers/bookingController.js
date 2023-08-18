@@ -64,7 +64,7 @@ async function notifySupplier(user, booking, company, notificationMessage) {
     from: SMTP_FROM,
     to: company.email,
     subject: message,
-    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)}<br><br>${strings.REGARDS}<br>` + '</p>',
+    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${Helper.joinURL(BACKEND_HOST, `booking?b=${booking._id}`)}<br><br>${strings.REGARDS}<br></p>`,
   }
 
   await Helper.sendMail(mailOptions)
@@ -91,10 +91,10 @@ export async function book(req, res) {
         from: SMTP_FROM,
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-        html:
-          `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(
-            user._id,
-          )}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
+        html: `<p>${strings.HELLO}${user.fullName},<br><br>
+        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${Helper.joinURL(FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${strings.REGARDS}<br></p>`,
       }
       await Helper.sendMail(mailOptions)
 
@@ -137,15 +137,16 @@ export async function book(req, res) {
       to: user.email,
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>${!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}${
-          strings.BOOKING_CONFIRMED_PART3
-        }${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}` +
+        `<p>${strings.HELLO}${user.fullName},<br><br>
+        ${!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}
+        ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocation.name}${strings.BOOKING_CONFIRMED_PART5}` +
         `${from} ${strings.BOOKING_CONFIRMED_PART6}` +
         `${car.name}${strings.BOOKING_CONFIRMED_PART7}` +
         `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>` +
         `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocation.name}${strings.BOOKING_CONFIRMED_PART11}` +
         `${to} ${strings.BOOKING_CONFIRMED_PART12}` +
-        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${FRONTEND_HOST}<br><br>${strings.REGARDS}<br>` +
+        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${FRONTEND_HOST}<br><br>
+        ${strings.REGARDS}<br>` +
         '</p>',
     }
     await Helper.sendMail(mailOptions)
@@ -222,9 +223,9 @@ async function notifyDriver(booking) {
     // and to compress them (notifications with similar content will get
     // compressed).
     const chunks = expo.chunkPushNotifications(messages)
-    const tickets = []
+    const tickets = [];
 
-    ;(async () => {
+    (async () => {
       // Send the chunks to the Expo push notification service. There are
       // different strategies you could use. A simple one is to send one chunk at a
       // time, which nicely spreads the load out over time:
