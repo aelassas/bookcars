@@ -68,9 +68,10 @@ export async function signup(req, res) {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
-          token.token
-        }<br><br>${strings.REGARDS}<br>` + '</p>',
+        `<p>${strings.HELLO}${user.fullName},<br><br>
+        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
+        ${strings.REGARDS}<br></p>`,
     }
     await Helper.sendMail(mailOptions)
     return res.sendStatus(200)
@@ -126,9 +127,10 @@ export async function adminSignup(req, res) {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
-          token.token
-        }<br><br>${strings.REGARDS}<br>` + '</p>',
+        `<p>${strings.HELLO}${user.fullName},<br><br>
+        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
+        ${strings.REGARDS}<br></p>`,
     }
 
     await Helper.sendMail(mailOptions)
@@ -190,10 +192,13 @@ export async function create(req, res) {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(
+        `<p>${strings.HELLO}${user.fullName},<br><br>
+        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${Helper.joinURL(
           user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
           'activate',
-        )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
+        )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${strings.REGARDS}<br></p>`,
     }
 
     await Helper.sendMail(mailOptions)
@@ -292,10 +297,13 @@ export async function resend(req, res) {
           to: user.email,
           subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
           html:
-            `<p>${strings.HELLO}${user.fullName},<br><br>${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>${Helper.joinURL(
+            `<p>${strings.HELLO}${user.fullName},<br><br>
+            ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+            ${Helper.joinURL(
               user.type === Env.USER_TYPE.USER ? FRONTEND_HOST : BACKEND_HOST,
               reset ? 'reset-password' : 'activate',
-            )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>${strings.REGARDS}<br>` + '</p>',
+            )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+            ${strings.REGARDS}<br></p>`,
         }
 
         await Helper.sendMail(mailOptions)
@@ -518,9 +526,10 @@ export async function resendLink(req, res) {
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
         html:
-          `<p>${strings.HELLO}${user.fullName},<br> <br>${strings.ACCOUNT_ACTIVATION_LINK}<br><br>http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${
-            token.token
-          }<br><br>${strings.REGARDS}<br>` + '</p>',
+          `<p>${strings.HELLO}${user.fullName},<br><br>
+          ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+          http${HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
+          ${strings.REGARDS}<br></p>`,
       }
 
       await Helper.sendMail(mailOptions)
