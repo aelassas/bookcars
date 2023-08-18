@@ -7,8 +7,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
-    "@mui/x-data-grid": "^6.11.1",
-    "@mui/x-date-pickers": "^6.11.1",
+    "@mui/x-data-grid": "^6.11.2",
+    "@mui/x-date-pickers": "^6.11.2",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",
@@ -54,9 +54,9 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^3.0.1",
+    "prettier": "^3.0.2",
     "webpack-bundle-analyzer": "^4.9.0"
   }
 }
