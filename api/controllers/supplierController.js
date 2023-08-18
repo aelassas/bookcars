@@ -165,9 +165,13 @@ export async function getSuppliers(req, res) {
 
 export async function getAllSuppliers(req, res) {
   try {
-    let data = await User.aggregate([{ $match: { type: Env.USER_TYPE.COMPANY } }, { $sort: { fullName: 1 } }], {
-      collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 },
-    })
+    let data = await User.aggregate(
+      [
+        { $match: { type: Env.USER_TYPE.COMPANY } },
+        { $sort: { fullName: 1 } },
+      ],
+      { collation: { locale: Env.DEFAULT_LANGUAGE, strength: 2 } },
+    )
 
     if (data.length > 0) {
       data = data.map((supplier) => {
