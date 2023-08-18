@@ -3635,7 +3635,7 @@ __metadata:
     eslint-plugin-prettier: ^5.0.0
     eslint-plugin-react: latest
     eslint-plugin-react-hooks: ^4.6.0
-    expo: 49.0.6
+    expo: 49.0.7
     expo-asset: ~8.10.1
     expo-constants: ~14.4.2
     expo-device: ~5.4.0
@@ -5204,7 +5204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-file-system@npm:~15.4.0, expo-file-system@npm:~15.4.2":
+"expo-file-system@npm:~15.4.0":
   version: 15.4.2
   resolution: "expo-file-system@npm:15.4.2"
   dependencies:
@@ -5212,6 +5212,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 2914c28e7f62cc6ed1dc195e0f3bf92294249ba064fb8c59726cca4c1cf667ae8e02b0c9e615f2048b13ba19652e331daa91367bf7c234cd9e4f7185f5837b18
+  languageName: node
+  linkType: hard
+
+"expo-file-system@npm:~15.4.3":
+  version: 15.4.3
+  resolution: "expo-file-system@npm:15.4.3"
+  dependencies:
+    uuid: ^3.4.0
+  peerDependencies:
+    expo: "*"
+  checksum: 43a697089dce00ecaf0d43d684da0d8cec1356ee787bf8aa798a0668930f0f08b2d080f534371bd020b7d8cd4a3ece2760eeb5854febf2e4757142f090db25c0
   languageName: node
   linkType: hard
 
@@ -5384,9 +5395,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:49.0.6":
-  version: 49.0.6
-  resolution: "expo@npm:49.0.6"
+"expo@npm:49.0.7":
+  version: 49.0.7
+  resolution: "expo@npm:49.0.7"
   dependencies:
     "@babel/runtime": ^7.20.0
     "@expo/cli": 0.10.11
@@ -5397,7 +5408,7 @@ __metadata:
     expo-application: ~5.3.0
     expo-asset: ~8.10.1
     expo-constants: ~14.4.2
-    expo-file-system: ~15.4.2
+    expo-file-system: ~15.4.3
     expo-font: ~11.4.0
     expo-keep-awake: ~12.3.0
     expo-modules-autolinking: 1.5.0
@@ -5410,7 +5421,7 @@ __metadata:
     uuid: ^3.4.0
   bin:
     expo: bin/cli
-  checksum: 1e217fa859525bb83cc260de2ef568fb4103328ca0978aa0e0c5c3a451332ca4cd7d5fc244aa27d7aab07635fdf503297927752b3a1264940148d07e3c56ef9f
+  checksum: 3f6cd77bfc1436489345e774a70007e3e98d4dec92a59f4ddb10267d65eacaa324d70feb77490ce60fa8ab89380b556a240f8a89e359e30a5d2cd6402d289a2e
   languageName: node
   linkType: hard
 
