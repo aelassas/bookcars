@@ -1,10 +1,6 @@
 [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml)
 [![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml) [![CodeFactor](https://www.codefactor.io/repository/github/aelassas/bookcars/badge)](https://www.codefactor.io/repository/github/aelassas/bookcars) [![open in vscode](https://img.shields.io/badge/open%20in-vscode-1f425f.svg)](https://vscode.dev/github/aelassas/bookcars)
 
-<p align="center">
-  <img src="https://bookcars.github.io/content/bookcars.drawio.png" alt="" width="380" />
-</p>
-
 BookCars is an open source car rental platform, supplier oriented, with a backend for managing car fleet and bookings, a frontend and a mobile app for car rental.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier too.
