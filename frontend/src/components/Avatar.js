@@ -26,9 +26,13 @@ const Avatar = (props) => {
 
         if (status === 200) {
           const user = await UserService.getUser(_id)
-
+          
           if (user) {
             setUser(user)
+
+            if (props.onChange) {
+              props.onChange(user)
+            }
           } else {
             Helper.error()
           }
@@ -37,10 +41,6 @@ const Avatar = (props) => {
         }
       } catch (err) {
         Helper.error(err)
-      } finally {
-        if (props.onChange) {
-          props.onChange(user)
-        }
       }
     }
 
