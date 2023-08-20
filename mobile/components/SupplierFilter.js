@@ -37,7 +37,7 @@ const SupplierFilter = (props) => {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    suppliers.length > 1 && props.visible && (
+    props.visible && suppliers.length > 1 && (
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
           <View style={styles.companies}>
