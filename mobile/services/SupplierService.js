@@ -8,4 +8,5 @@ AxiosHelper.init(axios)
 export const getAllSuppliers = () => axios.get(`${Env.API_HOST}/api/all-suppliers`).then((res) => res.data)
 
 export const getSuppliers = (keyword, page, size) =>
-  axios.get(`${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() }).then((res) => res.data)
+  axios.get(`${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`, { headers: UserService.authHeader() })
+    .then((res) => res.data)

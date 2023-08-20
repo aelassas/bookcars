@@ -5,7 +5,7 @@ import Master from './Master'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import BookingList from '../components/BookingList'
-import CompanyFilter from '../components/CompanyFilter'
+import SupplierFilter from '../components/SupplierFilter'
 import Env from '../config/env.config'
 import StatusFilter from '../components/StatusFilter'
 import * as BookingService from '../services/BookingService'
@@ -103,7 +103,7 @@ const BookingsScreen = ({ navigation, route }) => {
           filter={filter}
           header={
             <View>
-              <CompanyFilter style={styles.filter} visible={hasBookings} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+              <SupplierFilter style={styles.filter} visible={hasBookings} onLoad={onLoadCompanies} onChange={onChangeCompanies} />
               <StatusFilter style={styles.filter} visible={hasBookings} onLoad={onLoadStatuses} onChange={onChangeStatuses} />
               <BookingFilter style={styles.filter} visible={hasBookings} driver={user._id} onSubmit={onSubmitBookingFilter} />
             </View>

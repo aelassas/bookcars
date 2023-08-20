@@ -9,7 +9,7 @@ import Link from './Link'
 import Switch from './Switch'
 import Accordion from './Accordion'
 
-const CompanyFilter = (props) => {
+const SupplierFilter = (props) => {
   const [suppliers, setSuppliers] = useState([])
   const [checkedSuppliers, setCheckedSuppliers] = useState([])
   const [allChecked, setAllChecked] = useState(true)
@@ -37,8 +37,7 @@ const CompanyFilter = (props) => {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    suppliers.length > 0 &&
-    props.visible && (
+    suppliers.length > 1 && props.visible && (
       <View style={{ ...styles.container, ...props.style }}>
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
           <View style={styles.companies}>
@@ -147,4 +146,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default CompanyFilter
+export default SupplierFilter

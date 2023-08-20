@@ -5,7 +5,7 @@ import Master from './Master'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import CarList from '../components/CarList'
-import CompanyFilter from '../components/CompanyFilter'
+import SupplierFilter from '../components/SupplierFilter'
 import FuelFilter from '../components/FuelFilter'
 import Env from '../config/env.config'
 import GearboxFilter from '../components/GearboxFilter'
@@ -83,7 +83,7 @@ export default function CarsScreen({ navigation, route }) {
           to={new Date(route.params.to)}
           header={
             <View>
-              <CompanyFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+              <SupplierFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
               <FuelFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
               <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
               <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
