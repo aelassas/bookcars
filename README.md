@@ -15,7 +15,7 @@ From the frontend and the mobile app, users can sign up, search for available ca
 
 BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Docker) to walk you through on how to build BookCars Docker image and run it in a Docker container.
 
-# Features
+## Features
 
 * Supplier management
 * Ready for one or multiple suppliers
@@ -29,7 +29,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Native Mobile app for Android and iOS with single code base
 * Push notifications
 
-# Links
+## Links
 
 * [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 * [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
@@ -37,11 +37,11 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
 * [Documentation](https://github.com/aelassas/bookcars/wiki)
 
-# Overview
+## Overview
 
 In this section, you'll see the main pages of the frontend, the backend and the mobile app.
 
-## Frontend
+### Frontend
 
 From the frontend, the user can search for available cars, choose a car and checkout.
 
@@ -65,7 +65,7 @@ Below is the sign up page.
 
 ![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-5.png?raw=true)
 
-Below is page where the user can see and manage his bookings.
+Below is the page where the user can see and manage his bookings.
 
 ![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-6.png?raw=true)
 
@@ -75,7 +75,7 @@ Below is the page where the user can see a booking in detail.
 
 That's it. That's the main pages of the frontend.
 
-## Mobile App
+### Mobile App
 
 <div>
   <p style="float: left; width: 100%"> 
@@ -90,7 +90,7 @@ Below is the main page of the mobile app where the user can choose pickup and d
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-3.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
 
   <p> 
-  Below is the search result of the main page where user can choose a car for rental and checkout pages.
+  Below is the search result of the main page where the user can choose a car for rental and checkout.
   </p>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-4.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-5.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
@@ -121,12 +121,12 @@ Below is the main page of the mobile app where the user can choose pickup and d
 
 That's it for the main pages of the mobile app.
 
-## Backend
+### Backend
 BookCars is supplier oriented. This means that there are three types of users:
 
-* Admin: He has full access to backend. He can do everything.
-* Supplier: He has restricted access to backend. He can only manage his cars and bookings.
-* User: He has only access to frontend and mobile app. He cannot access the backend.
+* Admin: He has full access on the backend. He can do everything.
+* Supplier: He has restricted access on the backend. He can only manage his cars and bookings.
+* User: He has only access to the frontend and the mobile app. He cannot access the backend.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier too.
 
@@ -164,7 +164,7 @@ Below is the page where to edit bookings.
 
 That's it. That's the main pages of the backend.
 
-# Architecture
+## Architecture
 
 This section describes the software architecture of BookCars including the API, the frontend, the mobile app and the backend.
 
@@ -174,7 +174,7 @@ BookCars backend and frontend are built with Node.js, React and MUI.
 
 BookCars mobile app is built with React Native and Expo.
 
-## API
+### API
 
 <p align="center">
   <img src="https://bookcars.github.io/content/bookcars-architecture.drawio.png?raw=true" alt="" width="500" />
@@ -189,9 +189,9 @@ BookCars API exposes all BookCars functions needed for the backend, the frontend
 * *./api/server.js* is the main server where database connection is established and routes are loaded.
 * *./api/app.js* is the main entry point of BookCars API.
 
-## Frontend
+### Frontend
 
-The frontend is a web application built with Node.js, ReactJS and MUI. From the frontend the user can search for available cars depending on pickup and drop-off locations, dates and time booking. He can then select his booking options and finally checkout.
+The frontend is a web application built with Node.js, ReactJS and MUI. From the frontend the user can search for available cars depending on pickup and drop-off points and time. He can then select his booking options and finally checkout.
 
 * *./frontend/assets/* folder contains CSS and images.
 * *./frontend/pages/* folder contains ReactJS pages.
@@ -200,9 +200,9 @@ The frontend is a web application built with Node.js, ReactJS and MUI. From the 
 * *./frontend/App.js* is the main ReactJS App that contains routes.
 * *./frontend/index.js* is the main entry point of the frontend.
 
-## Mobile App
+### Mobile App
 
-BookCars provides a native mobile app for Android and iOS. The mobile app is built with React Native and Expo. Like for the frontend, the mobile app allows the user to search for available cars depending on pickup and drop-off locations, dates and time booking. He can then select his booking options and finally checkout.
+BookCars provides a native mobile app for Android and iOS. The mobile app is built with React Native and Expo. Like for the frontend, the mobile app allows the user to search for available cars depending on pickup and drop-off points and time. He can then select his booking options and finally checkout.
 
 The user receives push notifications when his bookings are updated. Push notifications are built with Node.js, Expo Server SDK and Firebase.
 
@@ -213,9 +213,9 @@ The user receives push notifications when his bookings are updated. Push notific
 * *./mobile/App.js* is the main React Native App.
 * *./mobile/index.js* is the main entry point of the mobile app.
 
-## Backend
+### Backend
 
-The backend is a web application built with Node.js, ReactJS and MUI. From the backend, the admin user can create and manage suppliers, cars, locations, users and bookings. When the admin user creates a new supplier, the supplier will receive an automatic email for creating his account to access the backend so he can manage his car fleet and bookings.
+The backend is a web application built with Node.js, ReactJS and MUI. From the backend, admin users can create and manage suppliers, cars, locations, users and bookings. When an admin user creates a new supplier, the supplier will receive an automatic email for creating his account to access the backend so he can manage his car fleet and bookings.
 
 * *./backend/assets/* folder contains CSS and images.
 * *./backend/pages/* folder contains ReactJS pages.
@@ -223,3 +223,6 @@ The backend is a web application built with Node.js, ReactJS and MUI. From the b
 * *./backend/services/* contains BookCars API client services.
 * *./backend/App.js* is the main ReactJS App that contains routes.
 * *./backend/index.js* is the main entry point of the backend.
+
+# 
+You can find out more about this project on this [CodeProject](https://www.codeproject.com/Articles/5346604/BookCars-Car-Rental-Platform-with-Mobile-App) article.
