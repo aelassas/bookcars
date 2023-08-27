@@ -47,31 +47,31 @@ From the frontend, the user can search for available cars, choose a car and chec
 
 Below is the main page of the frontend where the user can choose pickup and drop-off points and time, and search for available cars.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-1.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-1.png?raw=true)
 
 Below is the search result of the main page where the user can choose a car for rental.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-2.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-2.png?raw=true)
 
 Below is the checkout page where the user can set rental options and checkout. If the user is not registered, he can checkout and register at the same time. He will receive a confirmation and activation email to set his password if he is not registered yet.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-3.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-3.png?raw=true)
 
 Below is the sign in page.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-4.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-4.png?raw=true)
 
 Below is the sign up page.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-5.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-5.png?raw=true)
 
 Below is the page where the user can see and manage his bookings.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-6.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-6.png?raw=true)
 
 Below is the page where the user can see a booking in detail.
 
-![Frontend](https://github.com/aelassas/bookcars/blob/main/screenshots/frontend-7.png?raw=true)
+![Frontend](https://bookcars.github.io/content/screenshots/frontend-7.png?raw=true)
 
 That's it. That's the main pages of the frontend.
 
@@ -85,38 +85,38 @@ The user can also receive push notifications, if the status of his booking is up
 
 Below is the main page of the mobile app where the user can choose pickup and drop-off points and time, and search for available cars.
   </p>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-1.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-2.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-3.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-1.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-2.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-3.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
 
   <p> 
   Below is the search result of the main page where the user can choose a car for rental and checkout.
   </p>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-4.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-5.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-6.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-7.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-4.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-5.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-6.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-7.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <p> 
   Below are sign in and sign up pages.
   </p>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-8.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-9.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-10.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-8.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-9.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-10.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <p style="float: left; width: 100%"> 
   Below are the pages where the user can see and manage his bookings.
   </p>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-11.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-12.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-13.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-14.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-15.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-11.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-12.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-13.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-14.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-15.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
   <p> 
   Below are the pages where the user can update his profile information, change his password and see his notifications.
   </p>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-16.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-17.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-18.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
-  <img src="https://github.com/aelassas/bookcars/blob/main/screenshots/mobileapp-19.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-16.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-17.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-18.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
+  <img src="https://bookcars.github.io/content/screenshots/mobileapp-19.jpg?raw=true" alt="" width="200" style="float: left; margin: 5px"/>
 </div>
 
 That's it for the main pages of the mobile app.
@@ -136,31 +136,31 @@ When the admin user creates a new supplier, the supplier will receive an automa
 
 Below is the sign in page of the backend.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-1.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-1.png?raw=true)
 
 Below is the dashboard page of the backend where admins and suppliers can see and manage bookings.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-2.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-2.png?raw=true)
 
 Below is the page where car fleet is displayed and can be managed.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-3.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-3.png?raw=true)
 
 Below is the page where admins and suppliers can create new cars by providing an image and car info. 
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-4.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-4.png?raw=true)
 
 Below is the page where admins and suppliers can edit cars.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-5.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-5.png?raw=true)
 
 Below is the page where admins can manage platform users.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-6.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-6.png?raw=true)
 
 Below is the page where to edit bookings.
 
-![Backend](https://github.com/aelassas/bookcars/blob/main/screenshots/backend-7.png?raw=true)
+![Backend](https://bookcars.github.io/content/screenshots/backend-7.png?raw=true)
 
 That's it. That's the main pages of the backend.
 
