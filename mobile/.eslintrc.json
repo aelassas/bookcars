@@ -12,7 +12,7 @@
   "plugins": ["react", "react-hooks", "prettier"],
   "rules": {
     "react/prop-types": "off",
-    "prettier/prettier": "warn",
+    "prettier/prettier": "off",
     "no-extra-semi": "off",
     "no-dupe-keys": "off",
     "react-hooks/exhaustive-deps": "warn",
