@@ -48,6 +48,7 @@ const Search = (props) => {
         }}
         autoComplete="off"
         className="sc-search"
+        id="search"
       />
       <IconButton onClick={handleSearch}>
         <SearchIcon />
