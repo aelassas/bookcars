@@ -168,6 +168,10 @@ That's it. That's the main pages of the backend.
 
 ## Architecture
 
+<p align="center">
+  <img src="https://bookcars.github.io/content/bookcars.drawio.png" alt="" width="380" />
+</p>
+
 This section describes the software architecture of BookCars including the API, the frontend, the mobile app and the backend.
 
 BookCars API is built with Node.js, Express and MongoDB.
