@@ -10,7 +10,7 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "warn",
+    "prettier/prettier": "off",
     "no-console": "off",
     "semi": ["error", "never"],
     "brace-style": ["error", "1tbs"],
