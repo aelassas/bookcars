@@ -74,5 +74,5 @@ app.use('/', bookingRoutes)
 app.use('/', notificationRoutes)
 
 strings.setLanguage(process.env.BC_DEFAULT_LANGUAGE)
-
+console.log('BOO:',strings.ACCOUNT_ACTIVATION_SUBJECT)
 export default app
