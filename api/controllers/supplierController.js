@@ -5,6 +5,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import strings from '../config/app.config.js'
 import Env from '../config/env.config.js'
 import User from '../models/User.js'
+import NotificationCounter from '../models/NotificationCounter.js'
 import Notification from '../models/Notification.js'
 import AdditionalDriver from '../models/AdditionalDriver.js'
 import Booking from '../models/Booking.js'
@@ -69,6 +70,7 @@ export async function deleteSupplier(req, res) {
           await fs.unlink(avatar)
         }
 
+        await NotificationCounter.deleteMany({ user: id })
         await Notification.deleteMany({ user: id })
         const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })

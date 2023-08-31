@@ -14,6 +14,7 @@ import Token from '../models/Token.js'
 import PushNotification from '../models/PushNotification.js'
 import * as Helper from '../common/Helper.js'
 import Notification from '../models/Notification.js'
+import NotificationCounter from '../models/NotificationCounter.js'
 import Car from '../models/Car.js'
 import AdditionalDriver from '../models/AdditionalDriver.js'
 
@@ -896,6 +897,7 @@ export async function deleteUsers(req, res) {
       } else if (user.type === Env.USER_TYPE.USER) {
         await Booking.deleteMany({ driver: id })
       }
+      await NotificationCounter.deleteMany({ user: id })
       await Notification.deleteMany({ user: id })
     }
 
