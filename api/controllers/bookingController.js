@@ -39,6 +39,8 @@ export async function create(req, res) {
 }
 
 async function notifySupplier(user, booking, company, notificationMessage) {
+  strings.setLanguage(company.language)
+  
   // notification
   const message = `${user.fullName} ${notificationMessage} ${booking._id}.`
   const notification = new Notification({
@@ -58,8 +60,6 @@ async function notifySupplier(user, booking, company, notificationMessage) {
   }
 
   // mail
-  strings.setLanguage(company.language)
-
   const mailOptions = {
     from: SMTP_FROM,
     to: company.email,
@@ -453,7 +453,7 @@ export async function getBookings(req, res) {
     const dropOffLocation = (req.body.filter && req.body.filter.dropOffLocation) || null
     let keyword = (req.body.filter && req.body.filter.keyword) || ''
     const options = 'i'
-
+    console.log('FROM', from)
     const $match = {
       $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
     }
