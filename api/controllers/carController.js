@@ -83,7 +83,7 @@ export async function update(req, res) {
         additionalDriver,
       } = req.body
 
-      car.company = company._id
+      car.company = company
       car.minimumAge = minimumAge
       car.locations = locations
       car.name = name
