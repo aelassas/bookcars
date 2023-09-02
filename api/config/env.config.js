@@ -1,5 +1,7 @@
+import process from 'node:process'
+
 const Env = {
-  DEFAULT_LANGUAGE: 'en',
+  DEFAULT_LANGUAGE: String(process.env.BC_DEFAULT_LANGUAGE),
   USER_TYPE: {
     ADMIN: 'admin',
     COMPANY: 'company',
