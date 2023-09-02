@@ -35,7 +35,7 @@ const UpdateCar = () => {
   const [imageSizeError, setImageSizeError] = useState(false)
   const [image, setImage] = useState()
   const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
+  const [company, setCompany] = useState()
   const [locations, setLocations] = useState([])
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
