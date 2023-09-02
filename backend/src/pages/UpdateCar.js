@@ -203,7 +203,7 @@ const UpdateCar = () => {
       const data = {
         _id: car._id,
         name,
-        company,
+        company: company._id,
         minimumAge: Number.parseInt(minimumAge),
         locations: locations.map((l) => l._id),
         price: Number(price),
