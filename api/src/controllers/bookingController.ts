@@ -25,7 +25,7 @@ const EXPO_ACCESS_TOKEN = String(process.env.BC_EXPO_ACCESS_TOKEN)
 
 export async function create(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.CreateBookingPayload = req.body
+    const body: bookcarsTypes.UpsertBookingPayload = req.body
     if (body.booking.additionalDriver) {
       const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
       await additionalDriver.save()
@@ -293,7 +293,7 @@ async function notifyDriver(booking: env.Booking) {
 
 export async function update(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpdateBookingPayload = req.body
+    const body: bookcarsTypes.UpsertBookingPayload = req.body
     const booking = await Booking.findById(req.body.booking._id)
 
     if (booking) {
