@@ -11,8 +11,8 @@ services:
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./packages:/bookcars/packages
-      - ./bookcars.key:/etc/ssl/bookcars.key
-      - ./bookcars.crt:/etc/ssl/bookcars.crt
+      # - ./bookcars.key:/etc/ssl/bookcars.key
+      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   mongo:
     image: mongo:latest
