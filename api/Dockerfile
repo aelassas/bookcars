@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM node:18-alpine
-WORKDIR /api
+WORKDIR /bookcars/api
 COPY . .
 RUN mkdir -p /var/www/cdn/bookcars/users
 RUN mkdir -p /var/www/cdn/bookcars/temp/users

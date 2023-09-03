@@ -10,6 +10,7 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - ./packages:/bookcars/packages
 
   mongo:
     image: mongo:latest
@@ -27,6 +28,8 @@ services:
       - api
     ports:
       - 3001:3001
+    volumes:
+      - ./packages:/bookcars/packages  
 
   frontend:
     build: ./frontend
@@ -36,6 +39,7 @@ services:
       - 80:80
     volumes:
       - cdn:/var/www/cdn/bookcars
+      - ./packages:/bookcars/packages
 
 volumes:
   cdn:
