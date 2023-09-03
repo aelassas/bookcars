@@ -62,8 +62,9 @@ export interface Driver {
 }
 
 export interface Booking {
-    company: string
-    car: string
+    _id?: string
+    company: string | User
+    car: string | Car
     driver: string
     pickupLocation: string
     dropOffLocation: string
@@ -76,9 +77,9 @@ export interface Booking {
     collisionDamageWaiver?: boolean
     fullInsurance?: boolean
     additionalDriver?: boolean
-    _additionalDriver?: string
+    _additionalDriver?: string | AdditionalDriver
     cancelRequest?: boolean
-    price: number
+    price?: number
 }
 
 export interface BookPayload {
@@ -110,14 +111,9 @@ export interface AdditionalDriver {
     birthDate: Date
 }
 
-
-export interface CreateBookingPayload {
+export interface UpsertBookingPayload {
     booking: Booking
     additionalDriver?: AdditionalDriver
-}
-
-export interface UpdateBookingPayload extends CreateBookingPayload {
-    _id: string
 }
 
 export interface LocationName {
@@ -322,4 +318,9 @@ export interface Car {
 export interface Data<T> {
     rows: T[]
     rowCount: number
+}
+
+export interface GetBookingCarsPayload {
+    company: string
+    pickupLocation: string
 }

@@ -423,7 +423,7 @@ export async function getCars(req: Request, res: Response) {
 
 export async function getBookingCars(req: Request, res: Response) {
   try {
-    const body: { company: string, pickupLocation: string } = req.body
+    const body: bookcarsTypes.GetBookingCarsPayload = req.body
     const company = new mongoose.Types.ObjectId(body.company)
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
