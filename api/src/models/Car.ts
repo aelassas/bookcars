@@ -1,6 +1,7 @@
 import process from 'node:process'
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
+import * as bookcarsTypes from 'bookcars-types'
 
 const MINIMUM_AGE = Number.parseInt(String(process.env.BC_MINIMUM_AGE), 10)
 
@@ -43,12 +44,12 @@ const carSchema = new Schema<env.Car>(
     },
     type: {
       type: String,
-      enum: [env.CarType.Diesel, env.CarType.Gasoline],
+      enum: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       required: [true, "can't be blank"],
     },
     gearbox: {
       type: String,
-      enum: [env.GearboxType.Manual, env.GearboxType.Automatic],
+      enum: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       required: [true, "can't be blank"],
     },
     aircon: {
@@ -76,7 +77,7 @@ const carSchema = new Schema<env.Car>(
     },
     fuelPolicy: {
       type: String,
-      enum: [env.FuelPolicy.LikeForlike, env.FuelPolicy.FreeTank],
+      enum: [bookcarsTypes.FuelPolicy.LikeForlike, bookcarsTypes.FuelPolicy.FreeTank],
       required: [true, "can't be blank"],
     },
     mileage: {

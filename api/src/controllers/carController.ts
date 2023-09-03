@@ -91,14 +91,14 @@ export async function update(req: Request, res: Response) {
       car.locations = locations.map(l => new mongoose.Types.ObjectId(l))
       car.name = name
       car.available = available
-      car.type = type as env.CarType
+      car.type = type as bookcarsTypes.CarType
       car.price = price
       car.deposit = deposit
       car.seats = seats
       car.doors = doors
       car.aircon = aircon
-      car.gearbox = gearbox as env.GearboxType
-      car.fuelPolicy = fuelPolicy as env.FuelPolicy
+      car.gearbox = gearbox as bookcarsTypes.GearboxType
+      car.fuelPolicy = fuelPolicy as bookcarsTypes.FuelPolicy
       car.mileage = mileage
       car.cancellation = cancellation
       car.amendments = amendments
@@ -335,9 +335,9 @@ export async function getCars(req: Request, res: Response) {
       }
 
       if (mileage) {
-        if (mileage.length === 1 && mileage[0] === env.Mileage.Limited) {
+        if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
           $match.$and.push({ mileage: { $gt: -1 } })
-        } else if (mileage.length === 1 && mileage[0] === env.Mileage.Unlimited) {
+        } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
           $match.$and.push({ mileage: -1 })
         } else if (mileage.length === 0) {
           return res.json([{ resultData: [], pageInfo: [] }])
@@ -349,9 +349,9 @@ export async function getCars(req: Request, res: Response) {
       }
 
       if (availability) {
-        if (availability.length === 1 && availability[0] === env.Availablity.Available) {
+        if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
           $match.$and.push({ available: true })
-        } else if (availability.length === 1 && availability[0] === env.Availablity.Unavailable) {
+        } else if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Unavailable) {
           $match.$and.push({ available: false })
         } else if (availability.length === 0) {
           return res.json([{ resultData: [], pageInfo: [] }])
@@ -479,9 +479,9 @@ export async function getFrontendCars(req: Request, res: Response) {
 
     if ($match.$and) {
       if (mileage) {
-        if (mileage.length === 1 && mileage[0] === env.Mileage.Limited) {
+        if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
           $match.$and.push({ mileage: { $gt: -1 } })
-        } else if (mileage.length === 1 && mileage[0] === env.Mileage.Unlimited) {
+        } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
           $match.$and.push({ mileage: -1 })
         } else if (mileage.length === 0) {
           return res.json([{ resultData: [], pageInfo: [] }])

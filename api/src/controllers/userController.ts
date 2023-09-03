@@ -31,9 +31,8 @@ const CDN_CARS = String(process.env.BC_CDN_CARS)
 const BACKEND_HOST = String(process.env.BC_BACKEND_HOST)
 const FRONTEND_HOST = String(process.env.BC_FRONTEND_HOST)
 
-const getStatusMessage = (lang: string, msg: string) => (
+const getStatusMessage = (lang: string, msg: string) =>
   `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
-)
 
 export async function signup(req: Request, res: Response) {
   const body: bookcarsTypes.FrontendSignUpPayload = req.body
@@ -42,7 +41,7 @@ export async function signup(req: Request, res: Response) {
     body.active = true
     body.verified = false
     body.blacklisted = false
-    body.type = env.UserType.User
+    body.type = bookcarsTypes.UserType.User
 
     const salt = await bcrypt.genSalt(10)
     const password = body.password
@@ -97,7 +96,7 @@ export async function adminSignup(req: Request, res: Response) {
     body.active = true
     body.verified = false
     body.blacklisted = false
-    body.type = env.UserType.Admin
+    body.type = bookcarsTypes.UserType.Admin
 
     const salt = await bcrypt.genSalt(10)
     const password = body.password
@@ -204,7 +203,7 @@ export async function create(req: Request, res: Response) {
         `<p>${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
         ${helper.joinURL(
-          user.type === env.UserType.User ? FRONTEND_HOST : BACKEND_HOST,
+          user.type === bookcarsTypes.UserType.User ? FRONTEND_HOST : BACKEND_HOST,
           'activate',
         )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${strings.REGARDS}<br></p>`,
@@ -228,11 +227,11 @@ export async function checkToken(req: Request, res: Response) {
     })
 
     if (user) {
-      const type = req.params.type as env.AppType
+      const type = req.params.type as bookcarsTypes.AppType
       if (
-        ![env.AppType.Frontend, env.AppType.Backend].includes(type) ||
-        (type === env.AppType.Backend && user.type === env.UserType.User) ||
-        (type === env.AppType.Frontend && user.type !== env.UserType.User) ||
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
+        (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
+        (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User) ||
         user.active
       ) {
         return res.sendStatus(403)
@@ -283,11 +282,11 @@ export async function resend(req: Request, res: Response) {
     const user = await User.findOne({ email })
 
     if (user) {
-      const type = req.params.type as env.AppType
+      const type = req.params.type as bookcarsTypes.AppType
       if (
-        ![env.AppType.Frontend, env.AppType.Backend].includes(type) ||
-        (type === env.AppType.Backend && user.type === env.UserType.User) ||
-        (type === env.AppType.Frontend && user.type !== env.UserType.User)
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
+        (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
+        (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
       ) {
         return res.sendStatus(403)
       } else {
@@ -311,7 +310,7 @@ export async function resend(req: Request, res: Response) {
             `<p>${strings.HELLO}${user.fullName},<br><br>
             ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>
             ${helper.joinURL(
-              user.type === env.UserType.User ? FRONTEND_HOST : BACKEND_HOST,
+              user.type === bookcarsTypes.UserType.User ? FRONTEND_HOST : BACKEND_HOST,
               reset ? 'reset-password' : 'activate',
             )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
             ${strings.REGARDS}<br></p>`,
@@ -330,17 +329,18 @@ export async function resend(req: Request, res: Response) {
 }
 
 export async function activate(req: Request, res: Response) {
-  const { userId } = req.body
+  const body: bookcarsTypes.ActivatePayload = req.body
+  const { userId } = body
 
   try {
     const user = await User.findById(userId)
 
     if (user) {
-      const token = await Token.find({ token: req.body.token })
+      const token = await Token.find({ token: body.token })
 
       if (token) {
         const salt = await bcrypt.genSalt(10)
-        const password = req.body.password
+        const password = body.password
         const passwordHash = await bcrypt.hash(password, salt)
         user.password = passwordHash
 
@@ -360,20 +360,20 @@ export async function activate(req: Request, res: Response) {
 }
 
 export async function signin(req: Request, res: Response) {
-  const body: { email: string, password?: string, stayConnected?: boolean } = req.body
+  const body: bookcarsTypes.SignInPayload = req.body
   const { email, password, stayConnected } = body
 
   try {
     const user = await User.findOne({ email })
-    const type = req.params.type as env.AppType
+    const type = req.params.type as bookcarsTypes.AppType
 
     if (
       !password ||
       !user ||
       !user.password ||
-      ![env.AppType.Frontend, env.AppType.Backend].includes(type) ||
-      (type === env.AppType.Backend && user.type === env.UserType.User) ||
-      (type === env.AppType.Frontend && user.type !== env.UserType.User)
+      ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
+      (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
+      (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
     ) {
       return res.sendStatus(204)
     } else {
@@ -460,7 +460,8 @@ export async function deletePushToken(req: Request, res: Response) {
 }
 
 export async function validateEmail(req: Request, res: Response) {
-  const email: string = req.body.email
+  const body: bookcarsTypes.ValidateEmailPayload = req.body
+  const { email } = body
 
   try {
     const exists = await User.exists({ email })
@@ -518,14 +519,15 @@ export async function confirmEmail(req: Request, res: Response) {
 }
 
 export async function resendLink(req: Request, res: Response) {
-  const email: string = req.body.email
+  const body: bookcarsTypes.ResendLinkPayload = req.body
+  const { email } = body
 
   try {
     const user = await User.findOne({ email })
 
     // user is not found into database
     if (!user) {
-      console.error('[user.resendLink] User not found:', req.params)
+      console.error('[user.resendLink] User not found:', email)
       return res.status(400).send(getStatusMessage(DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
     } else if (user.verified) {
       // user has been already verified
@@ -606,26 +608,30 @@ export async function update(req: Request, res: Response) {
 }
 
 export async function updateEmailNotifications(req: Request, res: Response) {
+  const body: bookcarsTypes.UpdateEmailNotifications = req.body
+
   try {
-    const { _id } = req.body
+    const { _id } = body
     const user = await User.findById(_id)
     if (!user) {
-      console.error('[user.updateEmailNotifications] User not found:', req.body)
+      console.error('[user.updateEmailNotifications] User not found:', body)
       return res.sendStatus(204)
     } else {
-      user.enableEmailNotifications = req.body.enableEmailNotifications
+      user.enableEmailNotifications = body.enableEmailNotifications
       await user.save()
       return res.sendStatus(200)
     }
   } catch (err) {
-    console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${req.body}`, err)
+    console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
 
 export async function updateLanguage(req: Request, res: Response) {
   try {
-    const { id, language } = req.body
+    const body: bookcarsTypes.UpdateLanguage = req.body
+    const { id, language } = body
+
     const user = await User.findById(id)
     if (!user) {
       console.error('[user.updateLanguage] User not found:', id)
@@ -936,7 +942,7 @@ export async function deleteUsers(req: Request, res: Response) {
         }
       }
 
-      if (user.type === env.UserType.Company) {
+      if (user.type === bookcarsTypes.UserType.Company) {
         const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
         await Booking.deleteMany({ company: id })
@@ -950,7 +956,7 @@ export async function deleteUsers(req: Request, res: Response) {
             }
           }
         }
-      } else if (user.type === env.UserType.User) {
+      } else if (user.type === bookcarsTypes.UserType.User) {
         await Booking.deleteMany({ driver: id })
       }
       await NotificationCounter.deleteMany({ user: id })
