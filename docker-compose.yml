@@ -11,6 +11,8 @@ services:
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./packages:/bookcars/packages
+      - ./bookcars.key:/etc/ssl/bookcars.key
+      - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   mongo:
     image: mongo:latest
@@ -29,7 +31,9 @@ services:
     ports:
       - 3001:3001
     volumes:
-      - ./packages:/bookcars/packages  
+      - ./packages:/bookcars/packages
+      # - ./bookcars.key:/etc/ssl/bookcars.key
+      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   frontend:
     build: ./frontend
@@ -37,9 +41,12 @@ services:
       - api
     ports:
       - 80:80
+      # - 443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
       - ./packages:/bookcars/packages
+      # - ./bookcars.key:/etc/ssl/bookcars.key
+      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
 volumes:
   cdn:
