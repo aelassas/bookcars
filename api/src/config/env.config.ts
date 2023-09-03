@@ -1,52 +1,8 @@
 import process from 'node:process'
 import { Document, Types } from 'mongoose'
+import * as bookcarsTypes from 'bookcars-types'
 
 export const DEFAULT_LANGUAGE = String(process.env.BC_DEFAULT_LANGUAGE)
-
-export enum UserType {
-    Admin = 'admin',
-    Company = 'company',
-    User = 'user',
-}
-
-export enum AppType {
-    Backend = 'backend',
-    Frontend = 'frontend',
-}
-
-export enum CarType {
-    Diesel = 'diesel',
-    Gasoline = 'gasoline'
-}
-
-export enum GearboxType {
-    Manual = 'manual',
-    Automatic = 'automatic'
-}
-
-export enum FuelPolicy {
-    LikeForlike = 'likeForlike',
-    FreeTank = 'freeTank'
-}
-
-export enum BookingStatus {
-    Void = 'void',
-    Pending = 'pending',
-    Deposit = 'deposit',
-    Paid = 'paid',
-    Reserved = 'reserved',
-    Cancelled = 'cancelled'
-}
-
-export enum Mileage {
-    Limited = 'limited',
-    Unlimited = 'unlimited'
-}
-
-export enum Availablity {
-    Available = 'available',
-    Unavailable = 'unavailable'
-}
 
 export interface AdditionalDriver {
     fullName: string
@@ -64,7 +20,7 @@ export interface Booking extends Document {
     dropOffLocation: Types.ObjectId
     from: Date
     to: Date
-    status: BookingStatus
+    status: bookcarsTypes.BookingStatus
     cancellation?: boolean
     amendments?: boolean
     theftProtection?: boolean
@@ -85,7 +41,7 @@ export interface BookingInfo {
     dropOffLocation: Types.ObjectId
     from: Date
     to: Date
-    status: BookingStatus
+    status: bookcarsTypes.BookingStatus
     cancellation?: boolean
     amendments?: boolean
     theftProtection?: boolean
@@ -105,13 +61,13 @@ export interface Car extends Document {
     price: number
     deposit: number
     available: boolean
-    type: CarType
-    gearbox: GearboxType
+    type: bookcarsTypes.CarType
+    gearbox: bookcarsTypes.GearboxType
     aircon: boolean
     image: string | null
     seats: number
     doors: number
-    fuelPolicy: FuelPolicy
+    fuelPolicy: bookcarsTypes.FuelPolicy
     mileage: number
     cancellation: number
     amendments: number
@@ -130,13 +86,13 @@ export interface CarInfo {
     price: number
     deposit: number
     available: boolean
-    type: CarType
-    gearbox: GearboxType
+    type: bookcarsTypes.CarType
+    gearbox: bookcarsTypes.GearboxType
     aircon: boolean
     image?: string
     seats: number
     doors: number
-    fuelPolicy: FuelPolicy
+    fuelPolicy: bookcarsTypes.FuelPolicy
     mileage: number
     cancellation: number
     amendments: number
@@ -190,7 +146,7 @@ export interface User extends Document {
     avatar?: string
     bio?: string
     location?: string
-    type?: UserType
+    type?: bookcarsTypes.UserType
     blacklisted?: boolean
     payLater?: boolean
 }

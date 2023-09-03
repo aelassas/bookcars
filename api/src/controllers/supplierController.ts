@@ -18,13 +18,14 @@ const CDN = String(process.env.BC_CDN_USERS)
 const CDN_CARS = String(process.env.BC_CDN_CARS)
 
 export async function validate(req: Request, res: Response) {
-  const fullName: string = req.body.fullName
+  const body: bookcarsTypes.ValidateSupplierPayload = req.body
+  const { fullName } = body
 
   try {
     const keyword = escapeStringRegexp(fullName)
     const options = 'i'
     const user = await User.findOne({
-      type: env.UserType.Company,
+      type: bookcarsTypes.UserType.Company,
       fullName: { $regex: new RegExp(`^${keyword}$`), $options: options },
     })
     return user ? res.sendStatus(204) : res.sendStatus(200)
@@ -138,7 +139,7 @@ export async function getSuppliers(req: Request, res: Response) {
       [
         {
           $match: {
-            type: env.UserType.Company,
+            type: bookcarsTypes.UserType.Company,
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -174,7 +175,7 @@ export async function getAllSuppliers(req: Request, res: Response) {
   try {
     let data = await User.aggregate(
       [
-        { $match: { type: env.UserType.Company } },
+        { $match: { type: bookcarsTypes.UserType.Company } },
         { $sort: { fullName: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },

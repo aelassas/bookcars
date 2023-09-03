@@ -9,7 +9,7 @@ import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
 
 export async function validate(req: Request, res: Response) {
-  const body: { language: string, name: string } = req.body
+  const body: bookcarsTypes.ValidateLocationPayload = req.body
   const { language, name } = body
 
   try {
@@ -59,7 +59,7 @@ export async function update(req: Request, res: Response) {
     const location = await Location.findById(id).populate<{ values: env.LocationValue[] }>('values')
 
     if (location) {
-      const names = req.body
+      const names: bookcarsTypes.LocationName[] = req.body
       for (let i = 0; i < names.length; i++) {
         const name = names[i]
         const locationValue = location.values.filter((value) => value.language === name.language)[0]

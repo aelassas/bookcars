@@ -389,7 +389,7 @@ export async function update(req: Request, res: Response) {
 
 export async function updateStatus(req: Request, res: Response) {
   try {
-    const body: { ids: string[], status: string } = req.body
+    const body: bookcarsTypes.UpdateStatusPayload = req.body
     const { ids: _ids, status } = body
     const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const bulk = Booking.collection.initializeOrderedBulkOp()

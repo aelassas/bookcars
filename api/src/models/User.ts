@@ -2,6 +2,7 @@ import process from 'node:process'
 import validator from 'validator'
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
+import * as bookcarsTypes from 'bookcars-types'
 
 const userSchema = new Schema<env.User>(
   {
@@ -84,8 +85,12 @@ const userSchema = new Schema<env.User>(
     },
     type: {
       type: String,
-      enum: [env.UserType.Admin, env.UserType.Company, env.UserType.User],
-      default: env.UserType.User,
+      enum: [
+        bookcarsTypes.UserType.Admin,
+        bookcarsTypes.UserType.Company,
+        bookcarsTypes.UserType.User
+      ],
+      default: bookcarsTypes.UserType.User,
     },
     blacklisted: {
       type: Boolean,
