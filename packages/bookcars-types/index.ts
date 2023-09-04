@@ -103,7 +103,6 @@ export interface GetBookingsPayload {
     filter?: Filter
 }
 
-
 export interface AdditionalDriver {
     fullName: string
     email: string

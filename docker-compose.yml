@@ -16,6 +16,7 @@ services:
 
   mongo:
     image: mongo:latest
+    command: mongod --quiet --logpath /dev/null
     restart: always
     environment:
       # Provide your credentials here
