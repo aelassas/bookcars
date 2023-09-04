@@ -861,8 +861,9 @@ export async function getUsers(req: Request, res: Response) {
     const options = 'i'
     const page = Number.parseInt(req.params.page)
     const size = Number.parseInt(req.params.size)
-    const types: string[] = req.body.types
-    const userId: string = req.body.user
+    const body: bookcarsTypes.GetUsersBody = req.body
+    const types = body.types
+    const userId = body.user
 
     const $match: mongoose.FilterQuery<any> = {
       $and: [

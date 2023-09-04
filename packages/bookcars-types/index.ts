@@ -65,9 +65,9 @@ export interface Booking {
     _id?: string
     company: string | User
     car: string | Car
-    driver: string
-    pickupLocation: string
-    dropOffLocation: string
+    driver: string | User
+    pickupLocation: string | Location
+    dropOffLocation: string | Location
     from: Date
     to: Date
     status: string
@@ -88,8 +88,8 @@ export interface BookPayload {
 }
 
 export interface Filter {
-    from: Date
-    to: Date
+    from?: Date
+    to?: Date
     keyword?: string
     pickupLocation?: string
     dropOffLocation?: string
@@ -109,6 +109,7 @@ export interface AdditionalDriver {
     phone: string
     birthDate: Date
 }
+
 
 export interface UpsertBookingPayload {
     booking: Booking
@@ -184,25 +185,27 @@ export interface FrontendSignUpPayload extends BackendSignUpPayload {
 }
 
 export interface CreateUserPayload {
-    email: string
+    email?: string
     phone: string
     location: string
     bio: string
     fullName: string
-    type: string
-    avatar: string
-    birthDate: number | Date
-    language: string
-    agency: string
+    type?: string
+    avatar?: string
+    birthDate?: number | Date
+    language?: string
+    agency?: string
     password?: string
     verified?: boolean
     blacklisted?: boolean
+    payLater?: boolean
+    company?: string
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
     _id: string
-    enableEmailNotifications: boolean
-    payLater: boolean
+    enableEmailNotifications?: boolean
+    payLater?: boolean
 }
 
 export interface changePasswordPayload {
@@ -258,7 +261,7 @@ export interface UpdateStatusPayload {
 
 export interface User {
     _id: string
-    company?: User
+    company?: User | string
     fullName: string
     email?: string
     phone?: string
@@ -277,15 +280,22 @@ export interface User {
     payLater?: boolean
 }
 
+export interface Option {
+    _id: string
+    name: string
+    image?: string
+}
+
 export interface LocationValue {
     language: string
-    value: string
+    value?: string
+    name?: string
 }
 
 export interface Location {
     _id: string
     name?: string
-    values: LocationValue[]
+    values?: LocationValue[]
 }
 
 export interface Car {
@@ -322,4 +332,49 @@ export interface Data<T> {
 export interface GetBookingCarsPayload {
     company: string
     pickupLocation: string
+}
+
+export interface Notification {
+    _id: string
+    user: string
+    message: string
+    booking?: string
+    isRead?: boolean
+    checked?: boolean
+    createdAt?: Date
+}
+
+export interface NotificationCounter {
+    _id: string
+    user: string
+    count: number
+}
+
+export interface ResultData<T> {
+    pageInfo: { totalRecords: number }
+    resultData: T[]
+}
+
+export type Result<T> = [ResultData<T>] | [] | undefined | null
+
+export interface Name {
+    name: string
+    language: string
+}
+
+export interface GetUsersBody {
+    user: string
+    types: UserType[]
+}
+
+// 
+// React types
+//
+export type Variant = 'filled' | 'outlined' | 'standard'
+
+export type DataEvent<T> = (data?: Data<T>) => void
+
+export interface StatusFilterItem {
+    value: BookingStatus
+    label: string
 }
