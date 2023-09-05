@@ -22,29 +22,40 @@ export const create = (data: bookcarsTypes.CreateUserPayload): Promise<number> =
 
 export const signup = (data: bookcarsTypes.BackendSignUpPayload): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/admin-sign-up/ `,
+    .post(
+      `${Env.API_HOST}/api/admin-sign-up/ `,
       data
     )
     .then((res) => res.status)
 
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
   axios
-    .get(`${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`)
+    .get(
+      `${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+    )
     .then((res) => res.status)
 
 export const deleteTokens = (userId: string): Promise<number> =>
   axios
-    .delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`)
+    .delete(
+      `${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`
+    )
     .then((res) => res.status)
 
 export const resend = (email?: string, reset = false, appType: string = bookcarsTypes.AppType.Backend): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/resend/${appType}/${encodeURIComponent(email || '')}/${reset}`)
+    .post(
+      `${Env.API_HOST}/api/resend/${appType}/${encodeURIComponent(email || '')}/${reset}`
+    )
     .then((res) => res.status)
 
 export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/activate/ `, data, { headers: authHeader() })
+    .post(
+      `${Env.API_HOST}/api/activate/ `,
+      data,
+      { headers: authHeader() }
+    )
     .then((res) => res.status)
 
 export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise<number> =>
@@ -164,13 +175,13 @@ export const getCurrentUser = () => {
   return null
 }
 
-export const getUser = (id: string): Promise<bookcarsTypes.User> => (
+export const getUser = (id: string): Promise<bookcarsTypes.User> =>
   axios
-    .get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), {
-      headers: authHeader(),
-    })
+    .get(
+      `${Env.API_HOST}/api/user/` + encodeURIComponent(id),
+      { headers: authHeader() }
+    )
     .then((res) => res.data)
-)
 
 export const getDrivers = (keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
   axios
@@ -193,16 +204,17 @@ export const getUsers = (
     )
     .then((res) => res.data)
 
-export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<number> => (
+export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/update-user`,
+    .post(
+      `${Env.API_HOST}/api/update-user`,
       data,
       { headers: authHeader() }
     )
     .then((res) => res.status)
-)
 
-export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifications): Promise<number> => (
+
+export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifications): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/update-email-notifications`,
@@ -217,7 +229,6 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
       }
       return res.status
     })
-)
 
 export const createAvatar = (file: Blob): Promise<string> => {
   const user = getCurrentUser()
@@ -261,7 +272,7 @@ export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
     .then((res) => res.status)
 }
 
-export const deleteAvatar = (userId: string): Promise<number> => (
+export const deleteAvatar = (userId: string): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/delete-avatar/${encodeURIComponent(userId)}`,
@@ -269,7 +280,6 @@ export const deleteAvatar = (userId: string): Promise<number> => (
       { headers: authHeader() }
     )
     .then((res) => res.status)
-)
 
 export const deleteTempAvatar = (avatar: string): Promise<number> => (
   axios
@@ -281,14 +291,13 @@ export const deleteTempAvatar = (avatar: string): Promise<number> => (
     .then((res) => res.status)
 )
 
-export const checkPassword = (id: string, pass: string): Promise<number> => (
+export const checkPassword = (id: string, pass: string): Promise<number> =>
   axios
     .get(
       `${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`,
       { headers: authHeader() }
     )
     .then((res) => res.status)
-)
 
 export const changePassword = (data: bookcarsTypes.changePasswordPayload): Promise<number> =>
   axios
