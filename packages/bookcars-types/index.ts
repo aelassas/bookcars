@@ -1,30 +1,30 @@
-export const enum UserType {
+export enum UserType {
     Admin = 'admin',
     Company = 'company',
     User = 'user',
 }
 
-export const enum AppType {
+export enum AppType {
     Backend = 'backend',
     Frontend = 'frontend',
 }
 
-export const enum CarType {
+export enum CarType {
     Diesel = 'diesel',
     Gasoline = 'gasoline'
 }
 
-export const enum GearboxType {
+export enum GearboxType {
     Manual = 'manual',
     Automatic = 'automatic'
 }
 
-export const enum FuelPolicy {
+export enum FuelPolicy {
     LikeForlike = 'likeForlike',
     FreeTank = 'freeTank'
 }
 
-export const enum BookingStatus {
+export enum BookingStatus {
     Void = 'void',
     Pending = 'pending',
     Deposit = 'deposit',
@@ -33,17 +33,17 @@ export const enum BookingStatus {
     Cancelled = 'cancelled'
 }
 
-export const enum Mileage {
+export enum Mileage {
     Limited = 'limited',
     Unlimited = 'unlimited'
 }
 
-export const enum Availablity {
+export enum Availablity {
     Available = 'available',
     Unavailable = 'unavailable'
 }
 
-export const enum RecordType {
+export enum RecordType {
     Admin = 'admin',
     Company = 'company',
     User = 'user',

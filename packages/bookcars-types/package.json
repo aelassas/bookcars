@@ -2,11 +2,16 @@
   "name": "bookcars-types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf ./index.js ./index.d.ts && tsc"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "rimraf": "^5.0.1",
+    "typescript": "^5.2.2"
+  }
 }
