@@ -25,7 +25,6 @@ const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> =
 
 const MultipleSelect = ({
   label,
-
   reference,
   selectedOptions,
   key,
