@@ -2,7 +2,7 @@ import process from 'node:process'
 import { Document, Types } from 'mongoose'
 import * as bookcarsTypes from 'bookcars-types'
 
-export const DEFAULT_LANGUAGE = String(process.env.BC_DEFAULT_LANGUAGE)
+export const DEFAULT_LANGUAGE = String(process.env.BC_DEFAULT_LANGUAGE || 'en')
 
 export interface AdditionalDriver {
     fullName: string

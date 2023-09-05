@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   api:
-    build: ./api
+    build: 
+      context: .
+      dockerfile: ./api/Dockerfile
     env_file: ./api/.env.docker
     restart: always
     ports:
@@ -10,9 +12,6 @@ services:
       - mongo
     volumes:
       - cdn:/var/www/cdn/bookcars
-      - ./packages:/bookcars/packages
-      # - ./bookcars.key:/etc/ssl/bookcars.key
-      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   mongo:
     image: mongo:latest
@@ -26,28 +25,24 @@ services:
       - 27017:27017
 
   backend:
-    build: ./backend
+    build: 
+      context: .
+      dockerfile: ./backend/Dockerfile
     depends_on:
       - api
     ports:
       - 3001:3001
-    volumes:
-      - ./packages:/bookcars/packages
-      # - ./bookcars.key:/etc/ssl/bookcars.key
-      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
   frontend:
-    build: ./frontend
+    build: 
+      context: .
+      dockerfile: ./frontend/Dockerfile
     depends_on:
       - api
     ports:
       - 80:80
-      # - 443:443
     volumes:
       - cdn:/var/www/cdn/bookcars
-      - ./packages:/bookcars/packages
-      # - ./bookcars.key:/etc/ssl/bookcars.key
-      # - ./bookcars.crt:/etc/ssl/bookcars.crt
 
 volumes:
   cdn:

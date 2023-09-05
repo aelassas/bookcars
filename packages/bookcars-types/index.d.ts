@@ -139,11 +139,11 @@ export interface UpdateCarPayload extends CreateCarPayload {
 }
 export interface GetCarsPayload {
     companies: string[];
-    fuel: string[];
-    gearbox: string[];
-    mileage: string[];
-    deposit: number;
-    availability: string[];
+    fuel?: string[];
+    gearbox?: string[];
+    mileage?: string[];
+    deposit?: number;
+    availability?: string[];
     pickupLocation?: string;
 }
 export interface BackendSignUpPayload {

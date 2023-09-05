@@ -1,0 +1,133 @@
+import React, { useEffect, useRef, useState } from 'react'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import * as Helper from '../common/Helper'
+import Accordion from './Accordion'
+
+import '../assets/css/company-filter.css'
+import * as bookcarsTypes from 'bookcars-types'
+
+const SupplierFilter = (
+  {
+    companies,
+    collapse,
+    className,
+    onChange
+  }: {
+    companies: bookcarsTypes.User[]
+    collapse?: boolean
+    className?: string
+    onChange: (value: string[]) => void
+  }
+) => {
+  const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
+  const [allChecked, setAllChecked] = useState(true)
+  const refs = useRef<(HTMLInputElement | null)[]>([])
+
+  useEffect(() => {
+    setSuppliers(companies)
+    setCheckedSuppliers(Helper.flattenCompanies(companies))
+  }, [companies])
+
+  useEffect(() => {
+    if (suppliers.length > 0) {
+      refs.current.forEach((checkbox) => {
+        if (checkbox) {
+          checkbox.checked = true
+        }
+      })
+    }
+  }, [suppliers])
+
+  const handleCompanyClick = (e: React.MouseEvent<HTMLElement>) => {
+    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckCompanyChange(event)
+  }
+
+  const handleCheckCompanyChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    const companyId = e.currentTarget.getAttribute('data-id') as string
+
+    if ('checked' in e.currentTarget && e.currentTarget.checked) {
+      checkedSuppliers.push(companyId)
+
+      if (checkedSuppliers.length === suppliers.length) {
+        setAllChecked(true)
+      }
+    } else {
+      const index = checkedSuppliers.indexOf(companyId)
+      checkedSuppliers.splice(index, 1)
+
+      if (checkedSuppliers.length === 0) {
+        setAllChecked(false)
+      }
+    }
+
+    setCheckedSuppliers(checkedSuppliers)
+
+    if (onChange) {
+      onChange(checkedSuppliers)
+    }
+  }
+
+  const handleUncheckAllChange = () => {
+    if (allChecked) {
+      // uncheck all
+      refs.current.forEach((checkbox) => {
+        if (checkbox) {
+          checkbox.checked = false
+        }
+      })
+
+      setAllChecked(false)
+      setCheckedSuppliers([])
+    } else {
+      // check all
+      refs.current.forEach((checkbox) => {
+        if (checkbox) {
+          checkbox.checked = true
+        }
+      })
+
+      const companyIds = Helper.flattenCompanies(suppliers)
+      setAllChecked(true)
+      setCheckedSuppliers(companyIds)
+
+      if (onChange) {
+        onChange(companyIds)
+      }
+    }
+  }
+
+  return (
+    (suppliers.length > 1 &&
+      <Accordion
+        title={commonStrings.SUPPLIER}
+        collapse={collapse}
+        offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
+        className={`${className ? `${className} ` : ''}company-filter`}
+      >
+        <ul className="company-list">
+          {suppliers.map((supplier, index) => (
+            <li key={supplier._id}>
+              <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-id={supplier._id} className="company-checkbox" onChange={handleCheckCompanyChange} />
+              <label onClick={handleCompanyClick}>
+                <img src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+              </label>
+            </li>
+          ))}
+        </ul>
+        <div className="filter-actions">
+          <span onClick={handleUncheckAllChange} className="uncheckall">
+            {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
+          </span>
+        </div>
+      </Accordion>
+    ) || <></>
+  )
+}
+
+export default SupplierFilter
