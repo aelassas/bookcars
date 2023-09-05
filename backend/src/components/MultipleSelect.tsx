@@ -235,7 +235,12 @@ const MultipleSelect = ({
             )
           }
 
-          return <TextField {...params} label={label} variant={variant || 'outlined'} required={required && values && values.length === 0} />
+          return <TextField
+            {...params}
+            label={label}
+            variant={variant || 'outlined'}
+            required={required && values && values.length === 0}
+          />
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
