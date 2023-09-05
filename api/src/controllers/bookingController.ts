@@ -1,4 +1,3 @@
-import process from 'node:process'
 import mongoose from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import { v1 as uuid } from 'uuid'
@@ -15,13 +14,9 @@ import NotificationCounter from '../models/NotificationCounter'
 import PushNotification from '../models/PushNotification'
 import AdditionalDriver from '../models/AdditionalDriver'
 import * as helper from '../common/helper'
+import * as mailHelper from '../common/mailHelper'
 import * as env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
-
-const SMTP_FROM = String(process.env.BC_SMTP_FROM)
-const BACKEND_HOST = String(process.env.BC_BACKEND_HOST)
-const FRONTEND_HOST = String(process.env.BC_FRONTEND_HOST)
-const EXPO_ACCESS_TOKEN = String(process.env.BC_EXPO_ACCESS_TOKEN)
 
 export async function create(req: Request, res: Response) {
   try {
@@ -65,13 +60,13 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
 
   // mail
   const mailOptions = {
-    from: SMTP_FROM,
+    from: env.SMTP_FROM,
     to: company.email,
     subject: message,
-    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${helper.joinURL(BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>${strings.REGARDS}<br></p>`,
+    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>${strings.REGARDS}<br></p>`,
   }
 
-  await helper.sendMail(mailOptions)
+  await mailHelper.sendMail(mailOptions)
 }
 
 export async function book(req: Request, res: Response) {
@@ -98,15 +93,15 @@ export async function book(req: Request, res: Response) {
       strings.setLanguage(user.language)
 
       const mailOptions = {
-        from: SMTP_FROM,
+        from: env.SMTP_FROM,
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
         html: `<p>${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-        ${helper.joinURL(FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${strings.REGARDS}<br></p>`,
       }
-      await helper.sendMail(mailOptions)
+      await mailHelper.sendMail(mailOptions)
 
       body.booking.driver = user._id.toString()
     } else {
@@ -166,7 +161,7 @@ export async function book(req: Request, res: Response) {
     const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
 
     const mailOptions = {
-      from: SMTP_FROM,
+      from: env.SMTP_FROM,
       to: user.email,
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
@@ -178,10 +173,10 @@ export async function book(req: Request, res: Response) {
         `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>` +
         `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocationName}${strings.BOOKING_CONFIRMED_PART11}` +
         `${to} ${strings.BOOKING_CONFIRMED_PART12}` +
-        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${FRONTEND_HOST}<br><br>
+        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
         ${strings.REGARDS}<br></p>`,
     }
-    await helper.sendMail(mailOptions)
+    await mailHelper.sendMail(mailOptions)
 
     // Notify company
     const company = await User.findById(booking.company)
@@ -228,21 +223,21 @@ async function notifyDriver(booking: env.Booking) {
 
   // mail
   const mailOptions = {
-    from: SMTP_FROM,
+    from: env.SMTP_FROM,
     to: driver.email,
     subject: message,
     html: `<p>${strings.HELLO}${driver.fullName},<br><br>
     ${message}<br><br>
-    ${helper.joinURL(FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
+    ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
     ${strings.REGARDS}<br></p>`,
   }
-  await helper.sendMail(mailOptions)
+  await mailHelper.sendMail(mailOptions)
 
   // push notification
   const pushNotification = await PushNotification.findOne({ user: driver._id })
   if (pushNotification) {
     const pushToken = pushNotification.token
-    const expo = new Expo({ accessToken: EXPO_ACCESS_TOKEN })
+    const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN })
 
     if (!Expo.isExpoPushToken(pushToken)) {
       console.log(`Push token ${pushToken} is not a valid Expo push token.`)

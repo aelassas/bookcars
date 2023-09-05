@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
 
-const EXPIRE_AT = Number.parseInt(String(process.env.BC_TOKEN_EXPIRE_AT), 10)
+
 
 const tokenSchema = new Schema<env.Token>(
   {
@@ -17,7 +17,7 @@ const tokenSchema = new Schema<env.Token>(
     expireAt: {
       type: Date,
       default: Date.now,
-      index: { expires: EXPIRE_AT },
+      index: { expires: env.TOKEN_EXPIRE_AT },
     },
   },
   {

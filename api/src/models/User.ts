@@ -1,4 +1,3 @@
-import process from 'node:process'
 import validator from 'validator'
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
@@ -62,7 +61,7 @@ const userSchema = new Schema<env.User>(
     language: {
       // ISO 639-1 (alpha-2 code)
       type: String,
-      default: process.env.BC_DEFAULT_LANGUAGE,
+      default: env.DEFAULT_LANGUAGE,
       lowercase: true,
       minlength: 2,
       maxlength: 2,

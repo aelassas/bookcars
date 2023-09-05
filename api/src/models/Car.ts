@@ -1,9 +1,6 @@
-import process from 'node:process'
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
-
-const MINIMUM_AGE = Number.parseInt(String(process.env.BC_MINIMUM_AGE), 10)
 
 const carSchema = new Schema<env.Car>(
   {
@@ -21,7 +18,7 @@ const carSchema = new Schema<env.Car>(
     minimumAge: {
       type: Number,
       required: [true, "can't be blank"],
-      min: MINIMUM_AGE,
+      min: env.MINIMUM_AGE,
       max: 99,
     },
     locations: {

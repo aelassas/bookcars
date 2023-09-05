@@ -1,6 +1,5 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import process from 'node:process'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
 import strings from '../config/app.config'
@@ -13,9 +12,6 @@ import Booking from '../models/Booking'
 import Car from '../models/Car'
 import * as helper from '../common/helper'
 import * as bookcarsTypes from 'bookcars-types'
-
-const CDN = String(process.env.BC_CDN_USERS)
-const CDN_CARS = String(process.env.BC_CDN_CARS)
 
 export async function validate(req: Request, res: Response) {
   const body: bookcarsTypes.ValidateSupplierPayload = req.body
@@ -69,7 +65,7 @@ export async function deleteSupplier(req: Request, res: Response) {
     const supplier = await User.findByIdAndDelete(id)
     if (supplier) {
       if (supplier.avatar) {
-        const avatar = path.join(CDN, supplier.avatar)
+        const avatar = path.join(env.CDN_USERS, supplier.avatar)
         if (await helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
@@ -83,7 +79,7 @@ export async function deleteSupplier(req: Request, res: Response) {
         await Car.deleteMany({ company: id })
         for (const car of cars) {
           if (car.image) {
-            const image = path.join(CDN_CARS, car.image)
+            const image = path.join(env.CDN_CARS, car.image)
             if (await helper.exists(image)) {
               await fs.unlink(image)
             }
