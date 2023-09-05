@@ -17,7 +17,6 @@ const strings = new LocalizedStrings({
     LANGUAGE_EN: 'English',
     SETTINGS: 'Paramètres',
     SIGN_OUT: 'Déconnexion',
-    CHANGE_LANGUAGE_ERROR: "Une erreur s'est produite.",
   },
   en: {
     DASHBOARD: 'Dashboard',
@@ -34,7 +33,6 @@ const strings = new LocalizedStrings({
     LANGUAGE_EN: 'English',
     SETTINGS: 'Settings',
     SIGN_OUT: 'Sign out',
-    CHANGE_LANGUAGE_ERROR: 'An error occured.',
   },
 })
 

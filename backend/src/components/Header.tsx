@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Env from '../config/env.config'
 import { strings } from '../lang/header'
+import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import { toast } from 'react-toastify'
@@ -134,7 +135,7 @@ const Header = (
             refreshPage()
           }
         } else {
-          toast(strings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
+          toast(commonStrings.CHANGE_LANGUAGE_ERROR, { type: 'error' })
         }
       } else {
         UserService.setLanguage(code)
