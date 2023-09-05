@@ -1,0 +1,17 @@
+{
+  "name": "disable-react-devtools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "disable-devtools.js",
+  "type": "module",
+  "scripts": {
+    "build": "rimraf ./disable-devtools.js ./disable-devtools.d.ts && tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rimraf": "^5.0.1",
+    "typescript": "^5.2.2"
+  }
+}

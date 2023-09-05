@@ -488,7 +488,7 @@ export async function getFrontendCars(req: Request, res: Response) {
         }
       }
 
-      if (deposit > -1) {
+      if (deposit && deposit > -1) {
         $match.$and.push({ deposit: { $lte: deposit } })
       }
     }
