@@ -99,7 +99,6 @@ const Master = ({
     e.preventDefault()
 
     try {
-
       if (user) {
         const data = { email: user.email }
 
