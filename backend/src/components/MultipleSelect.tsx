@@ -43,26 +43,26 @@ const MultipleSelect = ({
   onOpen
 }
   : {
-    label?: string,
-    callbackFromMultipleSelect?: (newValue: any, key: string, reference: any) => void,
-    reference?: any,
-    selectedOptions?: any[],
-    key?: string,
-    required?: boolean,
-    options?: any[],
+    label?: string
+    reference?: any
+    selectedOptions?: any[]
+    key?: string
+    required?: boolean
+    options?: any[]
     ListboxProps?: (React.HTMLAttributes<HTMLUListElement> & {
-      sx?: SxProps<Theme> | undefined;
-      ref?: React.Ref<Element> | undefined;
+      sx?: SxProps<Theme> | undefined
+      ref?: React.Ref<Element> | undefined
     }),
-    onFocus?: React.FocusEventHandler<HTMLDivElement>,
-    onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined,
-    onClear?: () => void,
-    loading?: boolean,
-    multiple?: boolean,
-    type: string,
-    variant?: TextFieldVariants,
-    onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined,
-    readOnly?: boolean,
+    loading?: boolean
+    multiple?: boolean
+    type: string
+    variant?: TextFieldVariants
+    readOnly?: boolean
+    callbackFromMultipleSelect?: (newValue: any, key: string, reference: any) => void
+    onFocus?: React.FocusEventHandler<HTMLDivElement>
+    onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
+    onClear?: () => void
+    onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
   }
 ) => {
   const [values, setValues] = useState<any[]>([])
