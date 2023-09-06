@@ -123,8 +123,8 @@ const Header = (
       const currentLang = UserService.getLanguage()
       if (isSignedIn && user) {
         // Update user language
-        const data = {
-          id: user._id,
+        const data: bookcarsTypes.UpdateLanguage = {
+          id: user._id as string,
           language: code,
         }
         const status = await UserService.updateLanguage(data)
@@ -196,12 +196,13 @@ const Header = (
   useEffect(() => {
     if (!hidden) {
       if (user) {
-        NotificationService.getNotificationCounter(user._id).then((notificationCounter) => {
-          setIsSignedIn(true)
-          setNotificationCount(notificationCounter.count)
-          setIsLoading(false)
-          setIsLoaded(true)
-        })
+        NotificationService.getNotificationCounter(user._id as string)
+          .then((notificationCounter) => {
+            setIsSignedIn(true)
+            setNotificationCount(notificationCounter.count)
+            setIsLoading(false)
+            setIsLoaded(true)
+          })
       } else {
         setIsLoading(false)
         setIsLoaded(true)

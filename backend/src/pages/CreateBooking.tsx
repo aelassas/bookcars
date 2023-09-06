@@ -252,7 +252,7 @@ const CreateBooking = () => {
       setVisible(true)
 
       if (user.type === bookcarsTypes.RecordType.Company) {
-        setCompany(user._id)
+        setCompany(user._id as string)
         setIsCompany(true)
       }
     }

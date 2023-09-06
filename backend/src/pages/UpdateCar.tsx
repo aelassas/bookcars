@@ -272,7 +272,7 @@ const UpdateCar = () => {
               }
 
               const company = {
-                _id: car.company._id,
+                _id: car.company._id as string,
                 name: car.company.fullName,
                 image: car.company.avatar,
               }

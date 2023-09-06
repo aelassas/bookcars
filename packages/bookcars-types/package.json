@@ -2,10 +2,10 @@
   "name": "bookcars-types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "types.js",
   "type": "module",
   "scripts": {
-    "build": "rimraf ./index.js ./index.d.ts && tsc"
+    "build": "rimraf ./types.js ./types.d.ts && tsc"
   },
   "keywords": [],
   "author": "",

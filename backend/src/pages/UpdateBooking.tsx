@@ -444,14 +444,14 @@ const UpdateBooking = () => {
               setIsCompany(user.type === bookcarsTypes.RecordType.Company)
               const cmp = booking.company as bookcarsTypes.User
               setCompany({
-                _id: cmp._id,
+                _id: cmp._id as string,
                 name: cmp.fullName,
                 image: cmp.avatar,
               })
               setCar(booking.car as bookcarsTypes.Car)
               const drv = booking.driver as bookcarsTypes.User
               setDriver({
-                _id: drv._id,
+                _id: drv._id as string,
                 name: drv.fullName,
                 image: drv.avatar,
               })

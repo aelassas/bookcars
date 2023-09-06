@@ -41,7 +41,7 @@ const UserSelectList = (
   const getDrivers = (users: bookcarsTypes.User[]): bookcarsTypes.Option[] =>
     users.map((user) => {
       const { _id, fullName, avatar } = user
-      return { _id, name: fullName, image: avatar }
+      return { _id: _id as string, name: fullName, image: avatar }
     })
 
   const _fetch = async (page: number, keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.User>) => {
