@@ -7,7 +7,15 @@ import { strings as rpStrings } from '../lang/reset-password'
 import { strings as mStrings } from '../lang/master'
 import { strings } from '../lang/activate'
 import NoMatch from './NoMatch'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper,
+  Link
+} from '@mui/material'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
