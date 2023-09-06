@@ -1,3 +1,4 @@
+import * as bookcarsTypes from 'bookcars-types';
 export declare function formatNumber(x?: number): string;
 export declare function formatDatePart(n: number): string;
 export declare function capitalize(str: string): string;
@@ -6,3 +7,9 @@ export declare const joinURL: (part1?: string, part2?: string) => string;
 export declare const isInteger: (val: string) => boolean;
 export declare const isYear: (val: string) => boolean;
 export declare const isCvv: (val: string) => boolean;
+export declare const arrayEqual: (a: any, b: any) => boolean;
+export declare const clone: (obj: any) => any;
+export declare function cloneArray<T>(arr: T[]): T[] | undefined | null;
+export declare const filterEqual: (a?: bookcarsTypes.Filter | null, b?: bookcarsTypes.Filter | null) => boolean;
+export declare const flattenCompanies: (companies: bookcarsTypes.User[]) => string[];
+export declare const days: (from?: Date, to?: Date) => number;

@@ -14,6 +14,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import * as SupplierService from '../services/SupplierService'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/user.css'
 
@@ -99,7 +100,7 @@ const User = () => {
               const admin = Helper.admin(loggedUser)
               if (admin) {
                 const companies = await SupplierService.getAllCompanies()
-                const companyIds = Helper.flattenCompanies(companies)
+                const companyIds = bookcarsHelper.flattenCompanies(companies)
                 setState(companyIds)
               } else {
                 setState([loggedUser._id as string])

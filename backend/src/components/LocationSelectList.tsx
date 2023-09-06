@@ -4,6 +4,7 @@ import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { TextFieldVariants } from '@mui/material'
 
 const LocationSelectList = (
@@ -33,7 +34,7 @@ const LocationSelectList = (
 
   useEffect(() => {
     const _value = multiple ? value as bookcarsTypes.Location[] : [value as bookcarsTypes.Location]
-    if (value && !Helper.arrayEqual(selectedOptions, _value)) {
+    if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
     }
   }, [value, multiple, selectedOptions])

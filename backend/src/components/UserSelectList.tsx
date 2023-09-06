@@ -4,6 +4,7 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { TextFieldVariants } from '@mui/material'
 
 const UserSelectList = (
@@ -33,7 +34,7 @@ const UserSelectList = (
 
   useEffect(() => {
     const _value = multiple ? value as bookcarsTypes.Option[] : [value as bookcarsTypes.Option]
-    if (value && !Helper.arrayEqual(selectedOptions, _value)) {
+    if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
     }
   }, [multiple, value, selectedOptions])

@@ -207,10 +207,6 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
   }
 }
 
-export const admin = (user?: bookcarsTypes.User): boolean => {
-  return (user && user.type === bookcarsTypes.RecordType.Admin) ?? false
-}
-
 export const getBookingStatus = (status: string) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
@@ -234,96 +230,6 @@ export const getBookingStatus = (status: string) => {
     default:
       return ''
   }
-}
-
-export const arrayEqual = (a: any, b: any) => {
-  if (a === b) {
-    return true
-  }
-  if (a == null || b == null) {
-    return false
-  }
-  if (a.length !== b.length) {
-    return false
-  }
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
-
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) {
-      return false
-    }
-  }
-  return true
-}
-
-export const carsEqual = (a: bookcarsTypes.Car[], b: bookcarsTypes.Car[]) => {
-  if (a === b) {
-    return true
-  }
-  if (a == null || b == null) {
-    return false
-  }
-  if (a.length !== b.length) {
-    return false
-  }
-
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  // Please note that calling sort on an array will modify that array.
-  // you might want to clone your array first.
-
-  for (let i = 0; i < a.length; i++) {
-    const car = a[i]
-    if (b.filter((c) => c._id === car._id).length === 0) {
-      return false
-    }
-  }
-  return true
-}
-
-export const clone = (obj: any) => {
-  return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
-}
-
-export function cloneArray<T>(arr: T[]): T[] | undefined | null {
-  if (typeof arr === 'undefined') {
-    return undefined
-  }
-  if (arr == null) {
-    return null
-  }
-  return [...arr]
-}
-
-export const filterEqual = (a?: bookcarsTypes.Filter | null, b?: bookcarsTypes.Filter | null) => {
-  if (a === b) {
-    return true
-  }
-  if (a == null || b == null) {
-    return false
-  }
-
-  if (a.from !== b.from) {
-    return false
-  }
-  if (a.to !== b.to) {
-    return false
-  }
-  if (a.pickupLocation !== b.pickupLocation) {
-    return false
-  }
-  if (a.dropOffLocation !== b.dropOffLocation) {
-    return false
-  }
-  if (a.keyword !== b.keyword) {
-    return false
-  }
-
-  return true
 }
 
 export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
@@ -356,7 +262,7 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
 }
 
 export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
-  const _days = days(from, to)
+  const _days = bookcarsHelper.days(from, to)
 
   let price = car.price * _days
   if (options) {
@@ -381,10 +287,6 @@ export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bo
   }
 
   return price
-}
-
-export const flattenCompanies = (companies: bookcarsTypes.User[]): string[] => {
-  return companies.map((company) => company._id ?? '')
 }
 
 export const getUserTypes = () => {
@@ -420,8 +322,6 @@ export const getUserType = (status: string) => {
   }
 }
 
-export const days = (from?: Date, to?: Date) => (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
-
 export const getDays = (days: number) => `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
 
 export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
@@ -442,19 +342,23 @@ export const getAmendmentsOption = (amendments: number, fr: boolean) => {
   }
 }
 
-export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean) => {
-  if (collisionDamageWaiver === -1) {
-    return strings.UNAVAILABLE
-  } else if (collisionDamageWaiver === 0) {
-    return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  }
-}
-
 export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean) => {
   if (theftProtection === -1) {
     return strings.UNAVAILABLE
   } else if (theftProtection === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(theftProtection * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY})`
+  }
+}
+
+export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean) => {
+  if (collisionDamageWaiver === -1) {
+    return strings.UNAVAILABLE
+  } else if (collisionDamageWaiver === 0) {
+    return `${strings.INCLUDED}${fr ? 'e' : ''}`
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(collisionDamageWaiver * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY})`
   }
 }
 
@@ -463,14 +367,18 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
     return strings.UNAVAILABLE
   } else if (fullInsurance === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(fullInsurance * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY})`
   }
 }
 
-export const getAdditionalDriverOption = (additionalDriver: number, days: number, fr: boolean) => {
+export const getAdditionalDriverOption = (additionalDriver: number, days: number) => {
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
   } else if (additionalDriver === 0) {
     return strings.INCLUDED
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(additionalDriver * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY})`
   }
 }
 

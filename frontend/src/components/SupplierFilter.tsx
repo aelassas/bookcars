@@ -28,7 +28,7 @@ const SupplierFilter = (
 
   useEffect(() => {
     setSuppliers(companies)
-    setCheckedSuppliers(Helper.flattenCompanies(companies))
+    setCheckedSuppliers(bookcarsHelper.flattenCompanies(companies))
   }, [companies])
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const SupplierFilter = (
         }
       })
 
-      const companyIds = Helper.flattenCompanies(suppliers)
+      const companyIds = bookcarsHelper.flattenCompanies(suppliers)
       setAllChecked(true)
       setCheckedSuppliers(companyIds)
 

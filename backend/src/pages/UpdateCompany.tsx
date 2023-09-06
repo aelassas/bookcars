@@ -14,6 +14,7 @@ import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link, Fo
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-company.css'
 
@@ -118,11 +119,11 @@ const UpdateCompany = () => {
 
   const onAvatarChange = (avatar: string) => {
     if (company && user) {
-      const _company = Helper.clone(company)
+      const _company = bookcarsHelper.clone(company)
       _company.avatar = avatar
 
       if (user._id === company._id) {
-        const _user = Helper.clone(user)
+        const _user = bookcarsHelper.clone(user)
         _user.avatar = avatar
         setUser(_user)
       }
@@ -236,7 +237,7 @@ const UpdateCompany = () => {
 
       if (status === 200) {
         company.fullName = fullName
-        setCompany(Helper.clone(company))
+        setCompany(bookcarsHelper.clone(company))
         Helper.info(commonStrings.UPDATED)
       } else {
         Helper.error()

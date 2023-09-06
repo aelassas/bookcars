@@ -8,6 +8,7 @@ import Search from '../components/Search'
 import UserList from '../components/UserList'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/users.css'
 
@@ -24,7 +25,7 @@ const Users = () => {
 
   const handleUserTypeFilterChange = (newTypes: bookcarsTypes.UserType[]) => {
     setTypes(newTypes)
-    setReload(Helper.arrayEqual(types, newTypes))
+    setReload(bookcarsHelper.arrayEqual(types, newTypes))
   }
 
   const handleSearch = (newKeyword: string) => {

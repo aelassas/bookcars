@@ -37,7 +37,7 @@ const Company = () => {
 
   const onAvatarChange = (avatar: string) => {
     if (user && company && user._id === company._id) {
-      const _user = Helper.clone(user)
+      const _user = bookcarsHelper.clone(user)
       _user.avatar = avatar
 
       setUser(_user)

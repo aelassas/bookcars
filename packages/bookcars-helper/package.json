@@ -12,6 +12,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "bookcars-types": "file:../bookcars-types",
     "rimraf": "^5.0.1"
   }
 }

@@ -15,6 +15,7 @@ import CarList from '../components/CarList'
 import * as SupplierService from '../services/SupplierService'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/cars.css'
 
@@ -40,7 +41,7 @@ const Cars = () => {
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
     setCompanies(newCompanies)
-    setReload(Helper.arrayEqual(newCompanies, companies))
+    setReload(bookcarsHelper.arrayEqual(newCompanies, companies))
   }
 
   const handleCarListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Car> = (data) => {
@@ -56,17 +57,17 @@ const Cars = () => {
 
   const handleFuelFilterChange = (values: string[]) => {
     setFuel(values)
-    setReload(Helper.arrayEqual(values, fuel))
+    setReload(bookcarsHelper.arrayEqual(values, fuel))
   }
 
   const handleGearboxFilterChange = (values: string[]) => {
     setGearbox(values)
-    setReload(Helper.arrayEqual(values, gearbox))
+    setReload(bookcarsHelper.arrayEqual(values, gearbox))
   }
 
   const handleMileageFilterChange = (values: string[]) => {
     setMileage(values)
-    setReload(Helper.arrayEqual(values, mileage))
+    setReload(bookcarsHelper.arrayEqual(values, mileage))
   }
 
   const handleDepositFilterChange = (value: number) => {
@@ -76,14 +77,14 @@ const Cars = () => {
 
   const handleAvailabilityFilterChange = (values: string[]) => {
     setAvailability(values)
-    setReload(Helper.arrayEqual(values, availability))
+    setReload(bookcarsHelper.arrayEqual(values, availability))
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
     setUser(user)
     setAdmin(Helper.admin(user))
     const allCompanies = await SupplierService.getAllCompanies()
-    const companies = Helper.flattenCompanies(allCompanies)
+    const companies = bookcarsHelper.flattenCompanies(allCompanies)
     setAllCompanies(allCompanies)
     setCompanies(companies)
     setLoading(false)

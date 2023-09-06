@@ -11,6 +11,7 @@ import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-location.css'
 
@@ -81,7 +82,7 @@ const UpdateLocation = () => {
         }
       }
 
-      setNameErrors(Helper.cloneArray(nameErrors) as boolean[])
+      setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])
 
       if (isValid) {
         const status = await LocationService.update(location._id, names)
@@ -92,7 +93,7 @@ const UpdateLocation = () => {
             location.values[i].value = name.name
           }
 
-          setLocation(Helper.clone(location))
+          setLocation(bookcarsHelper.clone(location))
           Helper.info(strings.LOCATION_UPDATED)
         } else {
           err()
@@ -170,7 +171,7 @@ const UpdateLocation = () => {
                       nameErrors[index] = false
                       names[index].name = e.target.value
                       checkName()
-                      setNames(Helper.cloneArray(names) as bookcarsTypes.Name[])
+                      setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
                     }}
                     autoComplete="off"
                   />

@@ -39,7 +39,7 @@ const Cars = () => {
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
     setCompanies(newCompanies)
-    setReload(Helper.arrayEqual(newCompanies, companies))
+    setReload(bookcarsHelper.arrayEqual(newCompanies, companies))
   }
 
   const handleCarFilterSubmit = (filter: bookcarsTypes.CarFilter) => {
@@ -52,17 +52,17 @@ const Cars = () => {
 
   const handleFuelFilterChange = (values: bookcarsTypes.CarType[]) => {
     setFuel(values)
-    setReload(Helper.arrayEqual(values, fuel))
+    setReload(bookcarsHelper.arrayEqual(values, fuel))
   }
 
   const handleGearboxFilterChange = (values: bookcarsTypes.GearboxType[]) => {
     setGearbox(values)
-    setReload(Helper.arrayEqual(values, gearbox))
+    setReload(bookcarsHelper.arrayEqual(values, gearbox))
   }
 
   const handleMileageFilterChange = (values: bookcarsTypes.Mileage[]) => {
     setMileage(values)
-    setReload(Helper.arrayEqual(values, mileage))
+    setReload(bookcarsHelper.arrayEqual(values, mileage))
   }
 
   const handleDepositFilterChange = (value: number) => {
@@ -116,7 +116,7 @@ const Cars = () => {
       }
 
       const allCompanies = await SupplierService.getAllCompanies()
-      const companies = Helper.flattenCompanies(allCompanies)
+      const companies = bookcarsHelper.flattenCompanies(allCompanies)
 
       setPickupLocation(pickupLocation)
       setDropOffLocation(dropOffLocation)
