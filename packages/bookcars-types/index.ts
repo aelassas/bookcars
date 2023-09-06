@@ -51,21 +51,11 @@ export enum RecordType {
     Location = 'location'
 }
 
-export interface Driver {
-    email: string
-    phone: string
-    fullName: string
-    birthDate: string
-    language: string
-    verified: boolean
-    blacklisted: boolean
-}
-
 export interface Booking {
     _id?: string
     company: string | User
     car: string | Car
-    driver: string | User
+    driver?: string | User
     pickupLocation: string | Location
     dropOffLocation: string | Location
     from: Date
@@ -83,8 +73,10 @@ export interface Booking {
 }
 
 export interface BookPayload {
-    driver: Driver
-    booking: Booking
+    driver?: User
+    booking?: Booking
+    additionalDriver?: AdditionalDriver
+    payLater?: boolean
 }
 
 export interface Filter {
@@ -260,7 +252,7 @@ export interface UpdateStatusPayload {
 }
 
 export interface User {
-    _id: string
+    _id?: string
     company?: User | string
     fullName: string
     email?: string
@@ -375,4 +367,22 @@ export type DataEvent<T> = (data?: Data<T>) => void
 export interface StatusFilterItem {
     value: BookingStatus
     label: string
+}
+
+export interface CarFilter {
+    pickupLocation: Location
+    dropOffLocation: Location
+    from: Date
+    to: Date
+}
+
+export type CarFilterSubmitEvent = (filter: CarFilter) => void
+
+export interface CarOptions {
+    cancellation?: boolean
+    amendments?: boolean
+    theftProtection?: boolean
+    collisionDamageWaiver?: boolean
+    fullInsurance?: boolean
+    additionalDriver?: boolean
 }
