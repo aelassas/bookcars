@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker'
 import { fr, enUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
+import { TextFieldVariants } from '@mui/material'
 
 const DatePicker = (
   {
@@ -44,7 +45,7 @@ const DatePicker = (
         defaultCalendarMonth={minDate}
         slotProps={{
           textField: {
-            variant: 'standard',
+            variant: (variant as TextFieldVariants) || 'standard',
             required: required,
           },
           actionBar: {
