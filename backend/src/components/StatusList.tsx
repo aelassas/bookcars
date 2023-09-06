@@ -1,6 +1,6 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { strings as commonStrings } from '../lang/common'
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
+import { InputLabel, Select, MenuItem, SelectChangeEvent, TextFieldVariants } from '@mui/material'
 import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
@@ -18,7 +18,7 @@ const StatusList = ({
   value?: string
   label?: string
   required?: boolean
-  variant?: bookcarsTypes.Variant
+  variant?: TextFieldVariants
   disabled?: boolean
   style?: CSSProperties
   onChange: (value: string) => void

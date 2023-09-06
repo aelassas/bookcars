@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import {
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  TextFieldVariants
+} from '@mui/material'
 
 const DoorsList = ({
   value: doorsListValue,
@@ -12,7 +17,7 @@ const DoorsList = ({
   value?: string
   label?: string
   required?: boolean
-  variant?: bookcarsTypes.Variant
+  variant?: TextFieldVariants
   onChange: (value: string) => void
 }) => {
   const [value, setValue] = useState('')
