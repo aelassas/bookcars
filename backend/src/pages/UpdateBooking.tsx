@@ -21,8 +21,23 @@ import CarSelectList from '../components/CarSelectList'
 import StatusList from '../components/StatusList'
 import DateTimePicker from '../components/DateTimePicker'
 import DatePicker from '../components/DatePicker'
-import { FormControl, FormControlLabel, Switch, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormHelperText, InputLabel, Input } from '@mui/material'
-import { Info as InfoIcon, Person as DriverIcon } from '@mui/icons-material'
+import {
+  FormControl,
+  FormControlLabel,
+  Switch,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormHelperText,
+  InputLabel,
+  Input
+} from '@mui/material'
+import {
+  Info as InfoIcon,
+  Person as DriverIcon
+} from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
@@ -384,7 +399,7 @@ const UpdateBooking = () => {
       } else {
         payload = { booking: _booking }
       }
-      
+
       const _status = await BookingService.update(payload)
 
       if (_status === 200) {
