@@ -746,7 +746,7 @@ const Checkout = () => {
   const _locale = _fr ? fr : enUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
   const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
-  const days = Helper.days(from, to)
+  const days = bookcarsHelper.days(from, to)
 
   return (
     <Master onLoad={onLoad} strict={false}>
@@ -834,7 +834,7 @@ const Checkout = () => {
                         label={
                           <span>
                             <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="booking-option-value">{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</span>
+                            <span className="booking-option-value">{Helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
                           </span>
                         }
                       />
@@ -850,7 +850,7 @@ const Checkout = () => {
                   <div className="booking-details">
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <label className="booking-detail-title">{strings.DAYS}</label>
-                      <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${bookcarsHelper.capitalize(
+                      <div className="booking-detail-value">{`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
                         format(from, _format, { locale: _locale }),
                       )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                     </div>

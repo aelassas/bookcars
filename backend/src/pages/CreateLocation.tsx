@@ -7,6 +7,7 @@ import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/create-location.css'
 
@@ -34,7 +35,7 @@ const CreateLocation = () => {
         }
       }
 
-      setNameErrors(Helper.cloneArray(nameErrors) as boolean[])
+      setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])
 
       if (isValid) {
         const status = await LocationService.create(names)
@@ -43,7 +44,7 @@ const CreateLocation = () => {
           for (let i = 0; i < names.length; i++) {
             names[i].name = ''
           }
-          setNames(Helper.cloneArray(names) as bookcarsTypes.Name[])
+          setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
           Helper.info(strings.LOCATION_CREATED)
         } else {
           Helper.error()
@@ -77,10 +78,10 @@ const CreateLocation = () => {
                       language: language.code,
                       name: e.target.value,
                     }
-                    setNames(Helper.cloneArray(names) as bookcarsTypes.Name[])
+                    setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
 
                     nameErrors[index] = false
-                    setNameErrors(Helper.cloneArray(nameErrors) as boolean[])
+                    setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])
                   }}
                   autoComplete="off"
                 />

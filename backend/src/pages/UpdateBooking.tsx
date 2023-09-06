@@ -106,7 +106,7 @@ const UpdateBooking = () => {
           const car = await CarService.getCar(newCar._id)
 
           if (car) {
-            const _booking = Helper.clone(booking)
+            const _booking = bookcarsHelper.clone(booking)
             _booking.car = car
             Helper.price(
               _booking,
@@ -503,7 +503,7 @@ const UpdateBooking = () => {
     }
   }
 
-  const days = Helper.days(from, to)
+  const days = bookcarsHelper.days(from, to)
 
   return (
     <Master onLoad={onLoad} strict>

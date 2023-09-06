@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
 import Accordion from './Accordion'
+import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/company-filter.css'
-import * as bookcarsTypes from 'bookcars-types'
 
 const SupplierFilter = (
   {
@@ -28,7 +27,7 @@ const SupplierFilter = (
 
   useEffect(() => {
     setSuppliers(companies)
-    setCheckedSuppliers(Helper.flattenCompanies(companies))
+    setCheckedSuppliers(bookcarsHelper.flattenCompanies(companies))
   }, [companies])
 
   useEffect(() => {
@@ -93,7 +92,7 @@ const SupplierFilter = (
         }
       })
 
-      const companyIds = Helper.flattenCompanies(suppliers)
+      const companyIds = bookcarsHelper.flattenCompanies(suppliers)
       setAllChecked(true)
       setCheckedSuppliers(companyIds)
 

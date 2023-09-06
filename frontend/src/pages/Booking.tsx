@@ -73,7 +73,7 @@ const Booking = () => {
         const car = await CarService.getCar(newCar._id)
 
         if (car && from && to) {
-          const _booking = Helper.clone(booking)
+          const _booking = bookcarsHelper.clone(booking)
           _booking.car = car
           const price = Helper.price(car, from, to, _booking)
 
@@ -300,7 +300,7 @@ const Booking = () => {
     }
   }
 
-  const days = Helper.days(from, to)
+  const days = bookcarsHelper.days(from, to)
 
   return (
     <Master onLoad={onLoad} strict>

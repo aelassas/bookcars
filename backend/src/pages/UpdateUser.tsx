@@ -153,13 +153,13 @@ const UpdateUser = () => {
 
   const onAvatarChange = (avatar: string) => {
     if (loggedUser && user && loggedUser._id === user._id) {
-      const _loggedUser = Helper.clone(loggedUser)
+      const _loggedUser = bookcarsHelper.clone(loggedUser)
       _loggedUser.avatar = avatar
 
       setLoggedUser(_loggedUser)
     }
 
-    const _user = Helper.clone(user)
+    const _user = bookcarsHelper.clone(user)
     _user.avatar = avatar
 
     setLoading(false)

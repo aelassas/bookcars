@@ -9,6 +9,7 @@ import { Input, InputLabel, FormHelperText, FormControl, FormControlLabel, Switc
 import validator from 'validator'
 import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/settings.css'
 
@@ -89,7 +90,7 @@ const Settings = () => {
   }
 
   const onAvatarChange = (avatar: string) => {
-    const _user = Helper.clone(user)
+    const _user = bookcarsHelper.clone(user)
     _user.avatar = avatar
     setUser(_user)
     setLoading(false)

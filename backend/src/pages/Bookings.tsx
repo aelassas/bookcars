@@ -10,6 +10,7 @@ import BookingFilter from '../components/BookingFilter'
 import { Button } from '@mui/material'
 import * as SupplierService from '../services/SupplierService'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/bookings.css'
 
@@ -36,17 +37,17 @@ const Bookings = () => {
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
     setCompanies(newCompanies)
-    setReload(Helper.arrayEqual(companies, newCompanies))
+    setReload(bookcarsHelper.arrayEqual(companies, newCompanies))
   }
 
   const handleStatusFilterChange = (newStatuses: bookcarsTypes.BookingStatus[]) => {
     setStatuses(newStatuses)
-    setReload(Helper.arrayEqual(statuses, newStatuses))
+    setReload(bookcarsHelper.arrayEqual(statuses, newStatuses))
   }
 
   const handleBookingFilterSubmit = (newFilter: bookcarsTypes.Filter | null) => {
     setFilter(newFilter)
-    setReload(Helper.filterEqual(filter, newFilter))
+    setReload(bookcarsHelper.filterEqual(filter, newFilter))
   }
 
   const handleBookingListLoad = () => {
@@ -62,7 +63,7 @@ const Bookings = () => {
       setLoadingCompanies(admin)
 
       const allCompanies = admin ? await SupplierService.getAllCompanies() : []
-      const companies = admin ? Helper.flattenCompanies(allCompanies) : [user._id ?? '']
+      const companies = admin ? bookcarsHelper.flattenCompanies(allCompanies) : [user._id ?? '']
       setAllCompanies(allCompanies)
       setCompanies(companies)
       setLeftPanel(true)

@@ -117,7 +117,7 @@ const Car = () => {
             if (user.type === bookcarsTypes.RecordType.Admin) {
               try {
                 const companies = await SupplierService.getAllCompanies()
-                const companyIds = Helper.flattenCompanies(companies)
+                const companyIds = bookcarsHelper.flattenCompanies(companies)
                 setCompanies(companyIds)
                 setCar(car)
                 setVisible(true)

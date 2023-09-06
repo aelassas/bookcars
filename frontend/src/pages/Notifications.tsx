@@ -133,7 +133,7 @@ const Notifications = () => {
                           row.checked = event.target.checked
                         })
                       }
-                      setRows(Helper.clone(rows))
+                      setRows(bookcarsHelper.clone(rows))
                     }}
                   />
                 </div>
@@ -156,7 +156,7 @@ const Notifications = () => {
                                 _rows.forEach((row) => {
                                   row.isRead = true
                                 })
-                                setRows(Helper.clone(rows))
+                                setRows(bookcarsHelper.clone(rows))
                                 setNotificationCount(notificationCount - _rows.length)
                               } else {
                                 Helper.error()
@@ -187,7 +187,7 @@ const Notifications = () => {
                                 _rows.forEach((row) => {
                                   row.isRead = false
                                 })
-                                setRows(Helper.clone(rows))
+                                setRows(bookcarsHelper.clone(rows))
                                 setNotificationCount(notificationCount + _rows.length)
                               } else {
                                 Helper.error()
@@ -223,7 +223,7 @@ const Notifications = () => {
                       checked={row.checked}
                       onChange={(event) => {
                         row.checked = event.target.checked
-                        setRows(Helper.clone(rows))
+                        setRows(bookcarsHelper.clone(rows))
                       }}
                     />
                   </div>
@@ -257,7 +257,7 @@ const Notifications = () => {
 
                                     if (status === 200) {
                                       row.isRead = true
-                                      setRows(Helper.clone(rows))
+                                      setRows(bookcarsHelper.clone(rows))
                                       setNotificationCount(notificationCount - 1)
                                       __navigate__()
                                     } else {
@@ -289,7 +289,7 @@ const Notifications = () => {
 
                                   if (status === 200) {
                                     row.isRead = true
-                                    setRows(Helper.clone(rows))
+                                    setRows(bookcarsHelper.clone(rows))
                                     setNotificationCount(notificationCount - 1)
                                   } else {
                                     Helper.error()
@@ -316,7 +316,7 @@ const Notifications = () => {
 
                                   if (status === 200) {
                                     row.isRead = false
-                                    setRows(Helper.clone(rows))
+                                    setRows(bookcarsHelper.clone(rows))
                                     setNotificationCount(notificationCount + 1)
                                   } else {
                                     Helper.error()
@@ -415,7 +415,7 @@ const Notifications = () => {
                               1,
                             )
                           })
-                          setRows(Helper.clone(rows))
+                          setRows(bookcarsHelper.clone(rows))
                           setRowCount(rowCount - selectedRows.length)
                           setTotalRecords(totalRecords - selectedRows.length)
                         }

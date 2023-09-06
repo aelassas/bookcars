@@ -79,7 +79,7 @@ const CarList = (
 
   useEffect(() => {
     if (from && to) {
-      setDays(Helper.days(from, to))
+      setDays(bookcarsHelper.days(from, to))
     }
   }, [from, to])
 

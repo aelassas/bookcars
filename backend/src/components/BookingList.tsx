@@ -375,7 +375,7 @@ const BookingList = (
             row.status = status
           }
         })
-        setRows(Helper.clone(rows))
+        setRows(bookcarsHelper.clone(rows))
       } else {
         Helper.error()
       }
@@ -463,7 +463,7 @@ const BookingList = (
             {rows.map((booking, index) => {
               const from = new Date(booking.from)
               const to = new Date(booking.to)
-              const days = Helper.days(from, to)
+              const days = bookcarsHelper.days(from, to)
 
               return (
                 <div key={booking._id} className="booking-details">
@@ -484,7 +484,7 @@ const BookingList = (
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{strings.DAYS}</label>
-                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${bookcarsHelper.capitalize(
+                    <div className="booking-detail-value">{`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
                       format(from, _format, { locale: _locale }),
                     )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                   </div>
