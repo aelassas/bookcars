@@ -13,6 +13,7 @@ div.bookings {
 @media only screen and (max-width: 960px) {
   div.bookings {
     top: 56px;
+    overflow-y: auto;
   }
 
   div.bookings div.col-1,
@@ -50,10 +51,6 @@ div.bookings {
     width: calc(100% - 20px);
     max-width: 480px;
     margin: 15px 10px 5px;
-  }
-
-  div.bookings {
-    overflow-y: auto;
   }
 }
 
