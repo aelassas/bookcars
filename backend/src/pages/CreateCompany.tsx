@@ -106,7 +106,7 @@ const CreateCompany = () => {
     }
   }
 
-  const handleEmailOnBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateEmail(e.target.value)
   }
 
@@ -268,7 +268,7 @@ const CreateCompany = () => {
                 id="email"
                 type="text"
                 error={!emailValid || emailError}
-                onBlur={handleEmailOnBlur}
+                onBlur={handleEmailBlur}
                 onChange={handleEmailChange}
                 autoComplete="off"
                 required />

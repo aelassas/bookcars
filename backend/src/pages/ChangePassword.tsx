@@ -37,7 +37,7 @@ const ChangePassword = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const handleOnConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter') {
       handleSubmit(e)
     }
@@ -157,7 +157,7 @@ const ChangePassword = () => {
               <Input
                 id="password-confirm"
                 onChange={handleConfirmPasswordChange}
-                onKeyDown={handleOnConfirmPasswordKeyDown}
+                onKeyDown={handleConfirmPasswordKeyDown}
                 error={confirmPasswordError}
                 type="password"
                 value={confirmPassword}
