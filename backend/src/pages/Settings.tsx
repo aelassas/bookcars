@@ -24,7 +24,7 @@ const Settings = () => {
   const [phoneValid, setPhoneValid] = useState(true)
   const [enableEmailNotifications, setEnableEmailNotifications] = useState(false)
 
-  const handleOnChangeFullName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
   }
 
@@ -49,11 +49,11 @@ const Settings = () => {
     }
   }
 
-  const handleOnChangeLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value)
   }
 
-  const handleOnChangeBio = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value)
   }
 
@@ -163,7 +163,7 @@ const Settings = () => {
               />
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" required onChange={handleOnChangeFullName} autoComplete="off" value={fullName} />
+                <Input id="full-name" type="text" required onChange={handleFullNameChange} autoComplete="off" value={fullName} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
@@ -176,11 +176,11 @@ const Settings = () => {
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" value={location} />
+                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" value={bio} />
+                <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
               <div className="buttons">
                 <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href="/change-password">

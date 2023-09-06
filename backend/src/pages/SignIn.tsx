@@ -19,11 +19,11 @@ const SignIn = () => {
   const [blacklisted, setBlacklisted] = useState(false)
   const [stayConnected, setStayConnected] = useState(false)
 
-  const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   }
 
-  const handleOnChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
   }
 
@@ -111,11 +111,11 @@ const SignIn = () => {
               <h1 className="signin-form-title">{strings.SIGN_IN_HEADING}</h1>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" name="Email" onChange={handleOnChangeEmail} autoComplete="email" required />
+                <Input id="email" type="text" name="Email" onChange={handleEmailChange} autoComplete="email" required />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
-                <Input id="password" name="Password" onChange={handleOnChangePassword} onKeyDown={handleOnPasswordKeyDown} autoComplete="password" type="password" required />
+                <Input id="password" name="Password" onChange={handlePasswordChange} onKeyDown={handleOnPasswordKeyDown} autoComplete="password" type="password" required />
               </FormControl>
 
               <div className="stay-connected">

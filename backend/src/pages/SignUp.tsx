@@ -34,7 +34,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false)
   const [emailValid, setEmailValid] = useState(true)
 
-  const handleOnChangeFullName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
   }
 
@@ -88,7 +88,7 @@ const SignUp = () => {
     }
   }
 
-  const handleOnBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateEmail(e.target.value)
   }
 
@@ -169,11 +169,11 @@ const SignUp = () => {
             <div>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="full-name">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" name="FullName" required onChange={handleOnChangeFullName} autoComplete="off" />
+                <Input id="full-name" type="text" name="FullName" required onChange={handleFullNameChange} autoComplete="off" />
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="email">{commonStrings.EMAIL}</InputLabel>
-                <Input id="email" type="text" error={!emailValid || emailError} name="Email" onBlur={handleOnBlur} onChange={handleEmailChange} required autoComplete="off" />
+                <Input id="email" type="text" error={!emailValid || emailError} name="Email" onBlur={handleBlur} onChange={handleEmailChange} required autoComplete="off" />
                 <FormHelperText error={!emailValid || emailError}>
                   {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                   {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}

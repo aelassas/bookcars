@@ -57,7 +57,7 @@ const UpdateUser = () => {
     }
   }
 
-  const handleOnChangeFullName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
 
     if (!e.target.value) {
@@ -91,7 +91,7 @@ const UpdateUser = () => {
     }
   }
 
-  const handleFullNameOnBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     if (type === bookcarsTypes.RecordType.Company) {
       await validateFullName(e.target.value)
     } else {
@@ -138,11 +138,11 @@ const UpdateUser = () => {
     }
   }
 
-  const handleOnChangeLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value)
   }
 
-  const handleOnChangeBio = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value)
   }
 
@@ -358,7 +358,7 @@ const UpdateUser = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
-                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameOnBlur} onChange={handleOnChangeFullName} autoComplete="off" value={fullName} />
+                <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" value={fullName} />
                 <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
               </FormControl>
 
@@ -415,12 +415,12 @@ const UpdateUser = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.LOCATION}</InputLabel>
-                <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" value={location} />
+                <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" value={location} />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
                 <InputLabel>{commonStrings.BIO}</InputLabel>
-                <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" value={bio} />
+                <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" value={bio} />
               </FormControl>
 
               {activate && (
