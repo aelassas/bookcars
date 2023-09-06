@@ -75,6 +75,11 @@ export async function book(req: Request, res: Response) {
     const body: bookcarsTypes.BookPayload = req.body
     const { driver } = body
 
+    if (!body.booking) {
+      console.log('booking not found', body)
+      return res.sendStatus(400)
+    }
+
     if (driver) {
       driver.verified = false
       driver.blacklisted = false
@@ -120,10 +125,10 @@ export async function book(req: Request, res: Response) {
     }
 
     // additionalDriver
-    if (req.body.booking.additionalDriver && req.body.additionalDriver) {
-      const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
+    if (body.booking.additionalDriver && body.additionalDriver) {
+      const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
-      req.body.booking._additionalDriver = additionalDriver._id
+      body.booking._additionalDriver = additionalDriver._id.toString()
     }
 
     const booking = new Booking(body.booking)
@@ -166,7 +171,7 @@ export async function book(req: Request, res: Response) {
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
         `<p>${strings.HELLO}${user.fullName},<br><br>
-        ${!req.body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}
+        ${!body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}
         ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocationName}${strings.BOOKING_CONFIRMED_PART5}` +
         `${from} ${strings.BOOKING_CONFIRMED_PART6}` +
         `${car.name}${strings.BOOKING_CONFIRMED_PART7}` +
