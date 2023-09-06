@@ -21,13 +21,13 @@ const CarSelectList = (
     onChange
   }:
     {
-      label?: string,
-      required?: boolean,
-      multiple?: boolean,
-      variant?: TextFieldVariants,
-      value?: bookcarsTypes.Car,
-      company: string,
-      pickupLocation: string,
+      label?: string
+      required?: boolean
+      multiple?: boolean
+      variant?: TextFieldVariants
+      value?: bookcarsTypes.Car
+      company: string
+      pickupLocation: string
       onChange?: (values: bookcarsTypes.Car[]) => void
     }
 ) => {
