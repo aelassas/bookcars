@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
 import Accordion from './Accordion'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
