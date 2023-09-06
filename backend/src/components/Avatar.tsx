@@ -214,7 +214,7 @@ const Avatar = (
     reader.readAsDataURL(file)
   }
 
-  const handleUpload = (e: React.MouseEvent<HTMLElement>) => {
+  const handleUpload = () => {
     if (!type) {
       return setOpenTypeDialog(true)
     }
