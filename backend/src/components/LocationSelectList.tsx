@@ -15,11 +15,11 @@ const LocationSelectList = (
     variant,
     onChange
   }: {
-    value?: bookcarsTypes.Location | bookcarsTypes.Location[],
-    multiple?: boolean,
-    label?: string,
-    required?: boolean,
-    variant?: TextFieldVariants,
+    value?: bookcarsTypes.Location | bookcarsTypes.Location[]
+    multiple?: boolean
+    label?: string
+    required?: boolean
+    variant?: TextFieldVariants
     onChange?: (values: bookcarsTypes.Option[]) => void
   }
 ) => {
