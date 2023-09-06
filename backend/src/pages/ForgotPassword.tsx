@@ -4,7 +4,15 @@ import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
 import NoMatch from './NoMatch'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link } from '@mui/material'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper,
+  Link
+} from '@mui/material'
 import validator from 'validator'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
