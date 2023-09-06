@@ -5,7 +5,14 @@ import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper
+} from '@mui/material'
 import validator from 'validator'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
@@ -40,11 +47,11 @@ const SignUp = () => {
     }
   }
 
-  const handleOnChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
   }
 
-  const handleOnChangeConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value)
   }
 
@@ -177,7 +184,7 @@ const SignUp = () => {
                 <Input
                   id="password"
                   name="Password"
-                  onChange={handleOnChangePassword}
+                  onChange={handlePasswordChange}
                   required
                   type="password"
                   inputProps={{
@@ -193,7 +200,7 @@ const SignUp = () => {
                 <Input
                   id="confirm-password"
                   name="ConfirmPassword"
-                  onChange={handleOnChangeConfirmPassword}
+                  onChange={handleConfirmPasswordChange}
                   autoComplete="password"
                   required
                   type="password"
