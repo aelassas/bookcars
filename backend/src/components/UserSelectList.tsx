@@ -4,6 +4,7 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 import * as bookcarsTypes from 'bookcars-types'
+import { TextFieldVariants } from '@mui/material'
 
 const UserSelectList = (
   {
@@ -18,7 +19,7 @@ const UserSelectList = (
     value?: bookcarsTypes.Option | bookcarsTypes.Option[]
     label?: string
     required?: boolean
-    variant?: bookcarsTypes.Variant
+    variant?: TextFieldVariants
     onChange: (values: bookcarsTypes.Option[]) => void
   }
 ) => {

@@ -370,8 +370,6 @@ export interface GetUsersBody {
 // 
 // React types
 //
-export type Variant = 'filled' | 'outlined' | 'standard'
-
 export type DataEvent<T> = (data?: Data<T>) => void
 
 export interface StatusFilterItem {

@@ -4,6 +4,7 @@ import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 import * as bookcarsTypes from 'bookcars-types'
+import { TextFieldVariants } from '@mui/material'
 
 const LocationSelectList = (
   {
@@ -18,7 +19,7 @@ const LocationSelectList = (
     multiple?: boolean,
     label?: string,
     required?: boolean,
-    variant?: bookcarsTypes.Variant,
+    variant?: TextFieldVariants,
     onChange?: (values: bookcarsTypes.Option[]) => void
   }
 ) => {

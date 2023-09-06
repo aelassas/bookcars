@@ -4,7 +4,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
 
 const DateTimePicker = (
   {
@@ -22,7 +21,7 @@ const DateTimePicker = (
       minDate?: Date
       required?: boolean
       language?: string
-      variant?: bookcarsTypes.Variant
+      variant?: TextFieldVariants
       onChange: (value: Date) => void
     }
 ) => {
