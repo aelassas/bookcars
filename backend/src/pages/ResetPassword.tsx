@@ -6,7 +6,14 @@ import { strings as cpStrings } from '../lang/change-password'
 import { strings as rpStrings } from '../lang/reset-password'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper
+} from '@mui/material'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
