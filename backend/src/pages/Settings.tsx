@@ -28,7 +28,7 @@ const Settings = () => {
     setFullName(e.target.value)
   }
 
-  const validatePhone = (phone: string) => {
+  const validatePhone = (phone?: string) => {
     if (phone) {
       const phoneValid = validator.isMobilePhone(phone)
       setPhoneValid(phoneValid)

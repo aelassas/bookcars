@@ -304,7 +304,7 @@ const UpdateBooking = () => {
     }
   }
 
-  const _validatePhone = (phone: string) => {
+  const _validatePhone = (phone?: string) => {
     if (phone) {
       const _phoneValid = validator.isMobilePhone(phone)
       set_PhoneValid(_phoneValid)
