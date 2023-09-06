@@ -125,7 +125,7 @@ const Car = () => {
                 Helper.error(err)
               }
             } else if (car.company._id === user._id) {
-              setCompanies([user._id])
+              setCompanies([user._id as string])
               setCar(car)
               setVisible(true)
               setLoading(false)

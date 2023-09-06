@@ -282,7 +282,7 @@ const UpdateUser = () => {
 
       const language = UserService.getLanguage()
       const data: bookcarsTypes.UpdateUserPayload = {
-        _id: user._id,
+        _id: user._id as string,
         phone,
         location,
         bio,

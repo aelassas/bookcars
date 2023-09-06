@@ -303,7 +303,7 @@ const UserList = (
 
       if (status === 200) {
         if (selectedIds.length > 0) {
-          setRows(rows.filter((row) => !selectedIds.includes(row._id)))
+          setRows(rows.filter((row) => !selectedIds.includes(row._id as string)))
         } else {
           setRows(rows.filter((row) => row._id !== selectedId))
         }
@@ -322,7 +322,7 @@ const UserList = (
       {user && columns.length > 0 && (
         <DataGrid
           checkboxSelection={checkboxSelection}
-          getRowId={(row) => row._id}
+          getRowId={(row) => row._id as string}
           columns={columns}
           rows={rows}
           rowCount={rowCount}

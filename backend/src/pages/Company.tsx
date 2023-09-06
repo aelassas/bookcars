@@ -54,7 +54,7 @@ const Company = () => {
       try {
         setOpenDeleteDialog(false)
 
-        const status = await SupplierService.deleteCompany(company._id)
+        const status = await SupplierService.deleteCompany(company._id as string)
 
         if (status === 200) {
           navigate('/suppliers')
@@ -96,7 +96,7 @@ const Company = () => {
 
             if (company) {
               setCompany(company)
-              setCompanies([company._id])
+              setCompanies([company._id as string])
               setVisible(true)
               setLoading(false)
             } else {

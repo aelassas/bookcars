@@ -132,6 +132,11 @@ const Avatar = (
             try {
               const { _id } = avatarRecord
 
+              if (!_id) {
+                Helper.error()
+                return
+              }
+
               const status = await UserService.updateAvatar(_id, file)
 
               if (status === 200) {
@@ -182,6 +187,11 @@ const Avatar = (
               }
 
               const { _id } = avatarRecord
+
+              if (!_id) {
+                Helper.error()
+                return
+              }
 
               const status = await CarService.updateImage(_id, file)
 
@@ -251,6 +261,12 @@ const Avatar = (
       if (type === bookcarsTypes.RecordType.Admin || type === bookcarsTypes.RecordType.Company || type === bookcarsTypes.RecordType.User) {
         if (avatarRecord && mode === 'update') {
           const { _id } = avatarRecord
+
+          if (!_id) {
+            Helper.error()
+            return
+          }
+
           const status = await UserService.deleteAvatar(_id)
 
           if (status === 200) {
@@ -298,6 +314,12 @@ const Avatar = (
           }
         } else if (avatarRecord && mode === 'update') {
           const { _id } = avatarRecord
+
+          if (!_id) {
+            Helper.error()
+            return
+          }
+
           const status = await CarService.deleteImage(_id)
 
           if (status === 200) {

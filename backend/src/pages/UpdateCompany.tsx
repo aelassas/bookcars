@@ -223,8 +223,8 @@ const UpdateCompany = () => {
         return
       }
 
-      const data = {
-        _id: company._id,
+      const data: bookcarsTypes.UpdateSupplierPayload = {
+        _id: company._id as string,
         fullName,
         phone,
         location,

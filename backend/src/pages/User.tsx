@@ -56,7 +56,7 @@ const User = () => {
       if (user) {
         setOpenDeleteDialog(false)
 
-        const status = await UserService.deleteUsers([user._id])
+        const status = await UserService.deleteUsers([user._id as string])
 
         if (status === 200) {
           navigate('/users')
@@ -102,7 +102,7 @@ const User = () => {
                 const companyIds = Helper.flattenCompanies(companies)
                 setState(companyIds)
               } else {
-                setState([loggedUser._id])
+                setState([loggedUser._id as string])
               }
             } else {
               setLoading(false)
@@ -190,7 +190,7 @@ const User = () => {
                 offset={offset}
                 loggedUser={loggedUser}
                 user={company ? undefined : user}
-                companies={company ? [user._id] : companies}
+                companies={company ? [user._id as string] : companies}
                 statuses={statuses}
                 hideDates={Env.isMobile()}
                 checkboxSelection={!Env.isMobile()}

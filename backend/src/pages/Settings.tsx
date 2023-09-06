@@ -65,7 +65,7 @@ const Settings = () => {
         user.enableEmailNotifications = e.target.checked
 
         const payload: bookcarsTypes.UpdateEmailNotifications = {
-          _id: user._id,
+          _id: user._id as string,
           enableEmailNotifications: user.enableEmailNotifications
         }
         const status = await UserService.updateEmailNotifications(payload)
@@ -110,7 +110,7 @@ const Settings = () => {
       }
 
       const data: bookcarsTypes.UpdateUserPayload = {
-        _id: user._id,
+        _id: user._id as string,
         fullName,
         phone,
         location,

@@ -601,6 +601,7 @@ export async function updateEmailNotifications(req: Request, res: Response) {
 
   try {
     const { _id } = body
+    console.log('BBBBB')
     const user = await User.findById(_id)
     if (!user) {
       console.error('[user.updateEmailNotifications] User not found:', body)

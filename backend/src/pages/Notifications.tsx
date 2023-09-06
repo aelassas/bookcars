@@ -52,7 +52,7 @@ const Notifications = () => {
   const _format = _fr ? 'eee d LLLL, kk:mm' : 'eee, d LLLL, kk:mm'
 
   const fetch = useCallback(async () => {
-    if (user) {
+    if (user && user._id) {
       try {
         setLoading(true)
         const data = await NotificationService.getNotifications(user._id, page)
@@ -86,7 +86,7 @@ const Notifications = () => {
   useEffect(() => {
     if (user) {
       const _init = async () => {
-        const notificationCounter = await NotificationService.getNotificationCounter(user._id)
+        const notificationCounter = await NotificationService.getNotificationCounter(user._id as string)
         const _notificationCount = notificationCounter.count
         setNotificationCount(_notificationCount)
       }
@@ -143,7 +143,7 @@ const Notifications = () => {
                         <IconButton
                           onClick={async () => {
                             try {
-                              if (!user) {
+                              if (!user || !user._id) {
                                 Helper.error()
                                 return
                               }
@@ -174,7 +174,7 @@ const Notifications = () => {
                         <IconButton
                           onClick={async () => {
                             try {
-                              if (!user) {
+                              if (!user || !user._id) {
                                 Helper.error()
                                 return
                               }
@@ -242,7 +242,7 @@ const Notifications = () => {
                             <IconButton
                               onClick={async () => {
                                 try {
-                                  if (!user) {
+                                  if (!user || !user._id) {
                                     Helper.error()
                                     return
                                   }
@@ -279,7 +279,7 @@ const Notifications = () => {
                             <IconButton
                               onClick={async () => {
                                 try {
-                                  if (!user) {
+                                  if (!user || !user._id) {
                                     Helper.error()
                                     return
                                   }
@@ -306,7 +306,7 @@ const Notifications = () => {
                             <IconButton
                               onClick={async () => {
                                 try {
-                                  if (!user) {
+                                  if (!user || !user._id) {
                                     Helper.error()
                                     return
                                   }
@@ -388,7 +388,7 @@ const Notifications = () => {
                 <Button
                   onClick={async () => {
                     try {
-                      if (!user) {
+                      if (!user || !user._id) {
                         Helper.error()
                         return
                       }
