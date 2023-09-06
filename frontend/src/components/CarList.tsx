@@ -213,7 +213,11 @@ const CarList = (
       }
     }
 
-    return extra === -1 ? <UncheckIcon className="unavailable" /> : extra === 0 || available ? <CheckIcon className="available" /> : <InfoIcon className="extra-info" />
+    return extra === -1
+      ? <UncheckIcon className="unavailable" />
+      : extra === 0 || available
+        ? <CheckIcon className="available" />
+        : <InfoIcon className="extra-info" />
   }
 
   const fr = language === 'fr'
