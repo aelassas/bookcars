@@ -19,7 +19,7 @@ const Bookings = () => {
   const [admin, setAdmin] = useState(false)
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>([])
-  const [statuses, setStatuses] = useState<string[]>(Helper.getBookingStatuses().map((status) => status.value))
+  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [reload, setReload] = useState(false)
   const [loadingCompanies, setLoadingCompanies] = useState(true)
@@ -39,7 +39,7 @@ const Bookings = () => {
     setReload(Helper.arrayEqual(companies, newCompanies))
   }
 
-  const handleStatusFilterChange = (newStatuses: string[]) => {
+  const handleStatusFilterChange = (newStatuses: bookcarsTypes.BookingStatus[]) => {
     setStatuses(newStatuses)
     setReload(Helper.arrayEqual(statuses, newStatuses))
   }
