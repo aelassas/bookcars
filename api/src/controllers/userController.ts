@@ -12,8 +12,8 @@ import User from '../models/User'
 import Booking from '../models/Booking'
 import Token from '../models/Token'
 import PushNotification from '../models/PushNotification'
-import * as helper from '../common/helper'
-import * as mailHelper from '../common/mailHelper'
+import * as Helper from '../common/Helper'
+import * as MailHelper from '../common/MailHelper'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import Car from '../models/Car'
@@ -42,7 +42,7 @@ export async function signup(req: Request, res: Response) {
 
     if (body.avatar) {
       const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await helper.exists(avatar)) {
+      if (await Helper.exists(avatar)) {
         const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
         const newPath = path.join(env.CDN_USERS, filename)
 
@@ -70,7 +70,7 @@ export async function signup(req: Request, res: Response) {
         http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
         ${strings.REGARDS}<br></p>`,
     }
-    await mailHelper.sendMail(mailOptions)
+    await MailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.signup] ${strings.DB_ERROR} ${body}`, err)
@@ -97,7 +97,7 @@ export async function adminSignup(req: Request, res: Response) {
 
     if (body.avatar) {
       const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await helper.exists(avatar)) {
+      if (await Helper.exists(avatar)) {
         const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
         const newPath = path.join(env.CDN_USERS, filename)
 
@@ -130,7 +130,7 @@ export async function adminSignup(req: Request, res: Response) {
         ${strings.REGARDS}<br></p>`,
     }
 
-    await mailHelper.sendMail(mailOptions)
+    await MailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.adminSignup] ${strings.DB_ERROR} ${body}`, err)
@@ -158,7 +158,7 @@ export async function create(req: Request, res: Response) {
     // avatar
     if (body.avatar) {
       const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await helper.exists(avatar)) {
+      if (await Helper.exists(avatar)) {
         const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
         const newPath = path.join(env.CDN_USERS, filename)
 
@@ -191,14 +191,14 @@ export async function create(req: Request, res: Response) {
       html:
         `<p>${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-        ${helper.joinURL(
+        ${Helper.joinURL(
           user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
           'activate',
         )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${strings.REGARDS}<br></p>`,
     }
 
-    await mailHelper.sendMail(mailOptions)
+    await MailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.create] ${strings.DB_ERROR} ${body}`, err)
@@ -298,14 +298,14 @@ export async function resend(req: Request, res: Response) {
           html:
             `<p>${strings.HELLO}${user.fullName},<br><br>
             ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-            ${helper.joinURL(
+            ${Helper.joinURL(
               user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
               reset ? 'reset-password' : 'activate',
             )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
             ${strings.REGARDS}<br></p>`,
         }
 
-        await mailHelper.sendMail(mailOptions)
+        await MailHelper.sendMail(mailOptions)
         return res.sendStatus(200)
       }
     } else {
@@ -540,7 +540,7 @@ export async function resendLink(req: Request, res: Response) {
           ${strings.REGARDS}<br></p>`,
       }
 
-      await mailHelper.sendMail(mailOptions)
+      await MailHelper.sendMail(mailOptions)
       return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
     }
   } catch (err) {
@@ -676,7 +676,7 @@ export async function createAvatar(req: Request, res: Response) {
       return res.status(204).send(msg)
     }
 
-    if (!(await helper.exists(env.CDN_TEMP_USERS))) {
+    if (!(await Helper.exists(env.CDN_TEMP_USERS))) {
       await fs.mkdir(env.CDN_TEMP_USERS, { recursive: true })
     }
 
@@ -704,14 +704,14 @@ export async function updateAvatar(req: Request, res: Response) {
     const user = await User.findById(userId)
 
     if (user) {
-      if (!(await helper.exists(env.CDN_USERS))) {
+      if (!(await Helper.exists(env.CDN_USERS))) {
         await fs.mkdir(env.CDN_USERS, { recursive: true })
       }
 
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
 
-        if (await helper.exists(avatar)) {
+        if (await Helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
       }
@@ -742,7 +742,7 @@ export async function deleteAvatar(req: Request, res: Response) {
     if (user) {
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
-        if (await helper.exists(avatar)) {
+        if (await Helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
       }
@@ -765,7 +765,7 @@ export async function deleteTempAvatar(req: Request, res: Response) {
 
   try {
     const avatarFile = path.join(env.CDN_TEMP_USERS, avatar)
-    if (await helper.exists(avatarFile)) {
+    if (await Helper.exists(avatarFile)) {
       await fs.unlink(avatarFile)
     }
 
@@ -927,7 +927,7 @@ export async function deleteUsers(req: Request, res: Response) {
 
       if (user.avatar) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
-        if (await helper.exists(avatar)) {
+        if (await Helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
       }
@@ -941,7 +941,7 @@ export async function deleteUsers(req: Request, res: Response) {
         for (const car of cars) {
           if (car.image) {
             const image = path.join(env.CDN_CARS, car.image)
-            if (await helper.exists(image)) {
+            if (await Helper.exists(image)) {
               await fs.unlink(image)
             }
           }

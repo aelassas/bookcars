@@ -10,7 +10,7 @@ import Notification from '../models/Notification'
 import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
-import * as helper from '../common/helper'
+import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
 export async function validate(req: Request, res: Response) {
@@ -66,7 +66,7 @@ export async function deleteSupplier(req: Request, res: Response) {
     if (supplier) {
       if (supplier.avatar) {
         const avatar = path.join(env.CDN_USERS, supplier.avatar)
-        if (await helper.exists(avatar)) {
+        if (await Helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
 
@@ -80,7 +80,7 @@ export async function deleteSupplier(req: Request, res: Response) {
         for (const car of cars) {
           if (car.image) {
             const image = path.join(env.CDN_CARS, car.image)
-            if (await helper.exists(image)) {
+            if (await Helper.exists(image)) {
               await fs.unlink(image)
             }
           }

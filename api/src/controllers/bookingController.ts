@@ -13,8 +13,8 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import PushNotification from '../models/PushNotification'
 import AdditionalDriver from '../models/AdditionalDriver'
-import * as helper from '../common/helper'
-import * as mailHelper from '../common/mailHelper'
+import * as Helper from '../common/Helper'
+import * as MailHelper from '../common/MailHelper'
 import * as env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
 
@@ -63,10 +63,10 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
     from: env.SMTP_FROM,
     to: company.email,
     subject: message,
-    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>${strings.REGARDS}<br></p>`,
+    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${Helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>${strings.REGARDS}<br></p>`,
   }
 
-  await mailHelper.sendMail(mailOptions)
+  await MailHelper.sendMail(mailOptions)
 }
 
 export async function book(req: Request, res: Response) {
@@ -98,10 +98,10 @@ export async function book(req: Request, res: Response) {
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
         html: `<p>${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${Helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${strings.REGARDS}<br></p>`,
       }
-      await mailHelper.sendMail(mailOptions)
+      await MailHelper.sendMail(mailOptions)
 
       body.booking.driver = user._id.toString()
     } else {
@@ -176,7 +176,7 @@ export async function book(req: Request, res: Response) {
         `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
         ${strings.REGARDS}<br></p>`,
     }
-    await mailHelper.sendMail(mailOptions)
+    await MailHelper.sendMail(mailOptions)
 
     // Notify company
     const company = await User.findById(booking.company)
@@ -228,10 +228,10 @@ async function notifyDriver(booking: env.Booking) {
     subject: message,
     html: `<p>${strings.HELLO}${driver.fullName},<br><br>
     ${message}<br><br>
-    ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
+    ${Helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
     ${strings.REGARDS}<br></p>`,
   }
-  await mailHelper.sendMail(mailOptions)
+  await MailHelper.sendMail(mailOptions)
 
   // push notification
   const pushNotification = await PushNotification.findOne({ user: driver._id })

@@ -1,7 +1,7 @@
 import process from 'node:process'
 import { Document, Types } from 'mongoose'
 import * as bookcarsTypes from 'bookcars-types'
-import * as helper from '../common/helper'
+import * as Helper from '../common/Helper'
 
 const __env__ = (name: string, required?: boolean, defaultValue?: string): string => {
     const value = process.env[name]
@@ -15,15 +15,15 @@ const __env__ = (name: string, required?: boolean, defaultValue?: string): strin
 }
 
 export const PORT = Number.parseInt(__env__('BC_PORT', false, '4003'), 10)
-export const HTTPS = helper.StringToBoolean(__env__('BC_HTTPS'))
+export const HTTPS = Helper.StringToBoolean(__env__('BC_HTTPS'))
 export const PRIVATE_KEY = __env__('BC_PRIVATE_KEY', HTTPS)
 export const CERTIFICATE = __env__('BC_CERTIFICATE', HTTPS)
 
 export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars')
-export const DB_SSL = helper.StringToBoolean(__env__('BC_DB_SSL', false, 'false'))
+export const DB_SSL = Helper.StringToBoolean(__env__('BC_DB_SSL', false, 'false'))
 export const DB_SSL_CERT = __env__('BC_DB_SSL_CERT', DB_SSL)
 export const DB_SSL_CA = __env__('BC_DB_SSL_CA', DB_SSL)
-export const DB_DEBUG = helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
+export const DB_DEBUG = Helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
 
 export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'BookCars')
 export const JWT_EXPIRE_AT = Number.parseInt(__env__('BC_JWT_EXPIRE_AT', false, '86400'), 10) // in seconds (default: 1d)
