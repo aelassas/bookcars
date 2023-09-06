@@ -43,7 +43,7 @@ const ForgotPassword = () => {
     }
   }
 
-  const validateEmail = async (email: string) => {
+  const validateEmail = async (email?: string) => {
     if (email) {
       if (validator.isEmail(email)) {
         try {
