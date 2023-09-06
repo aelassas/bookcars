@@ -3,9 +3,10 @@ import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import * as Helper from '../common/Helper'
 import Accordion from './Accordion'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/company-filter.css'
-import * as bookcarsTypes from 'bookcars-types'
 
 const SupplierFilter = (
   {
@@ -115,7 +116,7 @@ const SupplierFilter = (
             <li key={supplier._id}>
               <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-id={supplier._id} className="company-checkbox" onChange={handleCheckCompanyChange} />
               <label onClick={handleCompanyClick}>
-                <img src={Helper.joinURL(Env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+                <img src={bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
               </label>
             </li>
           ))}

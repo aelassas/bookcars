@@ -24,6 +24,7 @@ import { Edit as EditIcon, Delete as DeleteIcon, Check as CheckIcon } from '@mui
 import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/booking-list.css'
 
@@ -229,7 +230,7 @@ const BookingList = (
 
   const getDate = (date: Date) => {
     const d = new Date(date)
-    return `${Helper.formatDatePart(d.getDate())}-${Helper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
+    return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
   }
 
   const getColumns = () => {
@@ -257,7 +258,7 @@ const BookingList = (
         field: 'price',
         headerName: strings.PRICE,
         flex: 1,
-        valueGetter: (params: any) => `${Helper.formatNumber(params.value)} ${strings.CURRENCY}`,
+        valueGetter: (params: any) => `${bookcarsHelper.formatNumber(params.value)} ${strings.CURRENCY}`,
         renderCell: (params: any) => <span className="bp">{params.value}</span>,
       },
       {
@@ -344,7 +345,7 @@ const BookingList = (
         flex: 1,
         renderCell: (params: any) => (
           <Link href={`/supplier?c=${params.row.company._id}`} className="cell-company">
-            <img src={Helper.joinURL(Env.CDN_USERS, params.row.company.avatar)} alt={params.value} />
+            <img src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.company.avatar)} alt={params.value} />
           </Link>
         ),
         valueGetter: (params: any) => params.value.fullName,
@@ -483,9 +484,9 @@ const BookingList = (
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{strings.DAYS}</label>
-                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(
+                    <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${bookcarsHelper.capitalize(
                       format(from, _format, { locale: _locale }),
-                    )} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
+                    )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>
@@ -499,7 +500,7 @@ const BookingList = (
                     <label className="booking-detail-title">{commonStrings.SUPPLIER}</label>
                     <div className="booking-detail-value">
                       <div className="car-company">
-                        <img src={Helper.joinURL(Env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
+                        <img src={bookcarsHelper.joinURL(Env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
                         <label className="car-company-name">{(booking.company as bookcarsTypes.User).fullName}</label>
                       </div>
                     </div>
@@ -562,7 +563,7 @@ const BookingList = (
 
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <label className="booking-detail-title">{strings.COST}</label>
-                    <div className="booking-detail-value booking-price">{`${Helper.formatNumber(booking.price)} ${commonStrings.CURRENCY}`}</div>
+                    <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(booking.price)} ${commonStrings.CURRENCY}`}</div>
                   </div>
 
                   <div className="bs-buttons">

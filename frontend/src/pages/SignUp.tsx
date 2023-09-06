@@ -23,6 +23,7 @@ import { intervalToDuration } from 'date-fns'
 import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/signup.css'
 
@@ -125,7 +126,7 @@ const SignUp = () => {
   }
 
   const validateBirthDate = (date?: Date) => {
-    if (date && Helper.isDate(date)) {
+    if (date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const birthDateValid = sub >= Env.MINIMUM_AGE

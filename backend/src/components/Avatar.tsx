@@ -24,6 +24,7 @@ import {
   Check as VerifiedIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 const Avatar = (
   {
@@ -379,7 +380,7 @@ const Avatar = (
 
   const carImageStyle = { width: Env.CAR_IMAGE_WIDTH }
 
-  const userAvatar = avatar ? <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} /> : <></>
+  const userAvatar = avatar ? <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} /> : <></>
 
   const emptyAvatar = <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={color || 'inherit'} />
 
@@ -388,10 +389,10 @@ const Avatar = (
       {avatar ? (
         readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
-            <img style={carImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+            <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
           ) : type === bookcarsTypes.RecordType.Company ? (
             <div className="company-avatar-readonly">
-              <img src={Helper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
+              <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
             </div>
           ) : verified && avatarRecord && avatarRecord.verified ? (
             <Badge
@@ -450,12 +451,12 @@ const Avatar = (
             >
               {type === bookcarsTypes.RecordType.Car ? (
                 <div className="car-avatar">
-                  <img src={Helper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
+                  <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
                 </div>
               ) : type === bookcarsTypes.RecordType.Company ? (
-                <img style={companyImageStyle} src={Helper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
+                <img style={companyImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
               ) : (
-                <MaterialAvatar src={Helper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} />
+                <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? 'avatar-' + size : 'avatar'} />
               )}
             </Badge>
           </Badge>

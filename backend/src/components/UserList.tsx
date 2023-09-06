@@ -24,6 +24,7 @@ import {
   AccountCircle, Check as VerifiedIcon
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/user-list.css'
 
@@ -149,9 +150,9 @@ const UserList = (
 
           if (user.avatar) {
             if (user.type === bookcarsTypes.RecordType.Company) {
-              userAvatar = <img src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)} alt={params.row.fullName} />
+              userAvatar = <img src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} alt={params.row.fullName} />
             } else {
-              const avatar = <Avatar src={Helper.joinURL(Env.CDN_USERS, params.row.avatar)} className="avatar-small" />
+              const avatar = <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} className="avatar-small" />
               if (user.verified) {
                 userAvatar = (
                   <Badge

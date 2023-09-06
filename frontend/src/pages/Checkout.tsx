@@ -38,6 +38,7 @@ import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/checkout.css'
@@ -341,7 +342,7 @@ const Checkout = () => {
   }
 
   const validateBirthDate = (date?: Date) => {
-    if (car && date && Helper.isDate(date)) {
+    if (car && date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const birthDateValid = sub >= car.minimumAge
@@ -356,7 +357,7 @@ const Checkout = () => {
 
   // additionalDriver
   const _validateBirthDate = (date?: Date) => {
-    if (car && date && Helper.isDate(date)) {
+    if (car && date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const _birthDateValid = sub >= car.minimumAge
@@ -404,7 +405,7 @@ const Checkout = () => {
 
   const validateCardMonth = (cardMonth?: string) => {
     if (cardMonth) {
-      if (Helper.isInteger(cardMonth)) {
+      if (bookcarsHelper.isInteger(cardMonth)) {
         const month = Number.parseInt(cardMonth)
         const cardMonthValid = month >= 1 && month <= 12
 
@@ -441,7 +442,7 @@ const Checkout = () => {
 
   const validateCardYear = (cardYear?: string) => {
     if (cardYear) {
-      if (Helper.isYear(cardYear)) {
+      if (bookcarsHelper.isYear(cardYear)) {
         const year = Number.parseInt(cardYear)
         const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2))
         const cardYearValid = year >= currentYear
@@ -479,7 +480,7 @@ const Checkout = () => {
 
   const validateCvv = (cvv?: string) => {
     if (cvv) {
-      const cvvValid = Helper.isCvv(cvv)
+      const cvvValid = bookcarsHelper.isCvv(cvv)
       setCvvValid(cvvValid)
 
       return cvvValid
@@ -682,11 +683,11 @@ const Checkout = () => {
     }
     if (params.has('f')) {
       const val = params.get('f')
-      from = val && Helper.isInteger(val) && new Date(Number.parseInt(val))
+      from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
     }
     if (params.has('t')) {
       const val = params.get('t')
-      to = val && Helper.isInteger(val) && new Date(Number.parseInt(val))
+      to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
     }
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
@@ -849,9 +850,9 @@ const Checkout = () => {
                   <div className="booking-details">
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <label className="booking-detail-title">{strings.DAYS}</label>
-                      <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${Helper.capitalize(
+                      <div className="booking-detail-value">{`${Helper.getDaysShort(Helper.days(from, to))} (${bookcarsHelper.capitalize(
                         format(from, _format, { locale: _locale }),
-                      )} - ${Helper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
+                      )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>
@@ -869,14 +870,14 @@ const Checkout = () => {
                       <label className="booking-detail-title">{commonStrings.SUPPLIER}</label>
                       <div className="booking-detail-value">
                         <div className="car-company">
-                          <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
+                          <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
                           <label className="car-company-name">{car.company.fullName}</label>
                         </div>
                       </div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <label className="booking-detail-title">{strings.COST}</label>
-                      <div className="booking-detail-value booking-price">{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
+                      <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
                     </div>
                   </div>
                 </div>
@@ -1086,7 +1087,7 @@ const Checkout = () => {
                       </div>
                       <div className="secure-payment-cost">
                         <label className="cost-title">{strings.COST}</label>
-                        <label className="cost-value">{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
+                        <label className="cost-value">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
                       </div>
                     </div>
 

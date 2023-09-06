@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/validator": "^13.11.1",
     "axios": "^1.5.0",
+    "bookcars-helper": "file:../packages/bookcars-helper",
     "bookcars-types": "file:../packages/bookcars-types",
     "date-fns": "^2.30.0",
     "disable-react-devtools": "file:../packages/disable-react-devtools",

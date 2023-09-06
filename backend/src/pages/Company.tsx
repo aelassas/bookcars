@@ -15,6 +15,7 @@ import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, Dia
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/company.css'
 
@@ -143,7 +144,7 @@ const Company = () => {
               ) : (
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
                   </span>
                   <span className="car-company-info">{company.fullName}</span>
                 </div>

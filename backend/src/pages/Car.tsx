@@ -23,6 +23,7 @@ import {
   LocationOn as LocationIcon,
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car.css'
@@ -180,12 +181,12 @@ const Car = () => {
                 />
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                   </span>
                   <span className="car-company-info">{car.company.fullName}</span>
                 </div>
               </div>
-              <div className="price">{`${Helper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
+              <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
               <div className="car-info">
                 <ul className="car-info-list">
                   <li className="car-type">

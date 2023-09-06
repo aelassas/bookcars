@@ -31,6 +31,7 @@ import { format } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/notifications.css'
 
@@ -228,7 +229,7 @@ const Notifications = () => {
                   </div>
                   <div className={`notification${!row.isRead ? ' unread' : ''}`}>
                     <div className="date">
-                      {row.createdAt && Helper.capitalize(
+                      {row.createdAt && bookcarsHelper.capitalize(
                         format(new Date(row.createdAt), _format, {
                           locale: _locale,
                         }),
