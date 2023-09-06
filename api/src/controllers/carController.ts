@@ -8,7 +8,7 @@ import Booking from '../models/Booking'
 import Car from '../models/Car'
 import strings from '../config/app.config'
 import * as env from '../config/env.config'
-import * as helper from '../common/helper'
+import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
 export async function create(req: Request, res: Response) {
@@ -24,13 +24,13 @@ export async function create(req: Request, res: Response) {
     await car.save()
 
     if (car.image) {
-      if (!(await helper.exists(env.CDN_CARS))) {
+      if (!(await Helper.exists(env.CDN_CARS))) {
         await fs.mkdir(env.CDN_CARS, { recursive: true })
       }
 
       const image = path.join(env.CDN_TEMP_CARS, body.image)
 
-      if (await helper.exists(image)) {
+      if (await Helper.exists(image)) {
         const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
         const newPath = path.join(env.CDN_CARS, filename)
 
@@ -141,7 +141,7 @@ export async function deleteCar(req: Request, res: Response) {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
+        if (await Helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -164,7 +164,7 @@ export async function createImage(req: Request, res: Response) {
       return res.status(400).send(msg)
     }
 
-    if (!(await helper.exists(env.CDN_TEMP_CARS))) {
+    if (!(await Helper.exists(env.CDN_TEMP_CARS))) {
       await fs.mkdir(env.CDN_TEMP_CARS, { recursive: true })
     }
 
@@ -195,13 +195,13 @@ export async function updateImage(req: Request, res: Response) {
     const car = await Car.findById(id)
 
     if (car) {
-      if (!(await helper.exists(env.CDN_CARS))) {
+      if (!(await Helper.exists(env.CDN_CARS))) {
         await fs.mkdir(env.CDN_CARS, { recursive: true })
       }
 
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
+        if (await Helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -232,7 +232,7 @@ export async function deleteImage(req: Request, res: Response) {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await helper.exists(image)) {
+        if (await Helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -255,7 +255,7 @@ export async function deleteTempImage(req: Request, res: Response) {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (await helper.exists(imageFile)) {
+    if (await Helper.exists(imageFile)) {
       await fs.unlink(imageFile)
     }
 
