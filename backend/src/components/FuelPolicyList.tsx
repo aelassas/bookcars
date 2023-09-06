@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
+import {
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  TextFieldVariants
+} from '@mui/material'
 import { strings } from '../lang/cars'
 import * as bookcarsTypes from 'bookcars-types'
 
@@ -14,7 +20,7 @@ const FuelPolicyList = (
     value?: string
     label?: string
     required?: boolean
-    variant: bookcarsTypes.Variant
+    variant: TextFieldVariants
     onChange: (value: string) => void
   }
 ) => {
