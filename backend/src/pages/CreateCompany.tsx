@@ -34,7 +34,7 @@ const CreateCompany = () => {
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
 
-  const handleOnChangeFullName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
 
     if (!e.target.value) {
@@ -63,11 +63,11 @@ const CreateCompany = () => {
     }
   }
 
-  const handleFullNameOnBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     await validateFullName(e.target.value)
   }
 
-  const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
 
     if (!e.target.value) {
@@ -135,11 +135,11 @@ const CreateCompany = () => {
     validatePhone(e.target.value)
   }
 
-  const handleOnChangeLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value)
   }
 
-  const handleOnChangeBio = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value)
   }
 
@@ -256,8 +256,8 @@ const CreateCompany = () => {
                 type="text"
                 error={fullNameError}
                 required
-                onBlur={handleFullNameOnBlur}
-                onChange={handleOnChangeFullName}
+                onBlur={handleFullNameBlur}
+                onChange={handleFullNameChange}
                 autoComplete="off" />
               <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
             </FormControl>
@@ -269,7 +269,7 @@ const CreateCompany = () => {
                 type="text"
                 error={!emailValid || emailError}
                 onBlur={handleEmailOnBlur}
-                onChange={handleOnChangeEmail}
+                onChange={handleEmailChange}
                 autoComplete="off"
                 required />
               <FormHelperText error={!emailValid || emailError}>
@@ -306,12 +306,12 @@ const CreateCompany = () => {
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.LOCATION}</InputLabel>
-              <Input id="location" type="text" onChange={handleOnChangeLocation} autoComplete="off" />
+              <Input id="location" type="text" onChange={handleLocationChange} autoComplete="off" />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
               <InputLabel>{commonStrings.BIO}</InputLabel>
-              <Input id="bio" type="text" onChange={handleOnChangeBio} autoComplete="off" />
+              <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" />
             </FormControl>
 
             <div className="buttons">
