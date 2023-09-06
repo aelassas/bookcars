@@ -1,6 +1,5 @@
 import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import Env from '../config/env.config'
-import * as Helper from '../common/Helper'
 import { Autocomplete, TextField, InputAdornment, Avatar, SxProps, Theme, TextFieldVariants, AutocompleteInputChangeReason } from '@mui/material'
 import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
