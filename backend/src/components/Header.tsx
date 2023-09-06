@@ -163,7 +163,7 @@ const Header = (
     handleMobileMenuClose()
   }
 
-  const handleOnSettingsClick = () => {
+  const handleSettingsClick = () => {
     navigate('/settings')
   }
 
@@ -230,7 +230,7 @@ const Header = (
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleOnSettingsClick}>
+      <MenuItem onClick={handleSettingsClick}>
         <SettingsIcon className="header-action" />
         <Typography>{strings.SETTINGS}</Typography>
       </MenuItem>
@@ -252,7 +252,7 @@ const Header = (
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={handleOnSettingsClick}>
+      <MenuItem onClick={handleSettingsClick}>
         <SettingsIcon className="header-action" />
         <p>{strings.SETTINGS}</p>
       </MenuItem>

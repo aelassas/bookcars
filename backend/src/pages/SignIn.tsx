@@ -27,7 +27,7 @@ const SignIn = () => {
     setPassword(e.target.value)
   }
 
-  const handleOnPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+  const handlePasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter') {
       handleSubmit(e)
     }
@@ -115,7 +115,7 @@ const SignIn = () => {
               </FormControl>
               <FormControl fullWidth margin="dense">
                 <InputLabel htmlFor="password">{commonStrings.PASSWORD}</InputLabel>
-                <Input id="password" name="Password" onChange={handlePasswordChange} onKeyDown={handleOnPasswordKeyDown} autoComplete="password" type="password" required />
+                <Input id="password" name="Password" onChange={handlePasswordChange} onKeyDown={handlePasswordKeyDown} autoComplete="password" type="password" required />
               </FormControl>
 
               <div className="stay-connected">
