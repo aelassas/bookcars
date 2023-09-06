@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material'
 import Pager from './Pager'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
@@ -358,11 +359,11 @@ const CarList = (
                     <h2>{car.name}</h2>
                   </div>
                   <div className="car">
-                    <img src={Helper.joinURL(Env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
+                    <img src={bookcarsHelper.joinURL(Env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                     {!hideCompany && (
                       <div className="car-company">
                         <span className="car-company-logo">
-                          <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                          <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                         </span>
                         <a href={`/supplier?c=${car.company._id}`} className="car-company-info">
                           {car.company.fullName}
@@ -499,7 +500,7 @@ const CarList = (
                       </li>
                     </ul>
                   </div>
-                  {!hidePrice && <div className="price">{`${Helper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>}
+                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>}
                   <div className="action">
                     {edit && (
                       <>

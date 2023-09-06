@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material'
 import Pager from './Pager'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
@@ -235,11 +236,11 @@ const CarList = (
                 <h2>{car.name}</h2>
               </div>
               <div className="car">
-                <img src={Helper.joinURL(Env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
+                <img src={bookcarsHelper.joinURL(Env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                 {!hideCompany && (
                   <div className="car-company">
                     <span className="car-company-logo">
-                      <img src={Helper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                      <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                     </span>
                     <label className="car-company-info">{car.company.fullName}</label>
                   </div>
@@ -364,7 +365,7 @@ const CarList = (
               {!hidePrice && (
                 <div className="price">
                   <label className="price-days">{Helper.getDays(days)}</label>
-                  <label className="price-main">{`${Helper.formatNumber(Helper.price(car, from as Date, to as Date))} ${commonStrings.CURRENCY}`}</label>
+                  <label className="price-main">{`${bookcarsHelper.formatNumber(Helper.price(car, from as Date, to as Date))} ${commonStrings.CURRENCY}`}</label>
                   <label className="price-day">{`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}</label>
                 </div>
               )}

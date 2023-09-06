@@ -9,6 +9,7 @@ import { IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, 
 import { Visibility as ViewIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import Pager from './Pager'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/company-list.css'
 
@@ -191,7 +192,7 @@ const SupplierList = (
               <article key={company._id}>
                 <div className="company-item">
                   <div className="company-item-avatar">
-                    <img src={Helper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} />
+                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} />
                   </div>
                   <span className="company-item-title">{company.fullName}</span>
                 </div>

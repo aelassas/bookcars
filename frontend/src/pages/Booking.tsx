@@ -24,6 +24,7 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/booking.css'
 
@@ -483,7 +484,7 @@ const Booking = () => {
             <div className="col-2-header">
               <div className="price">
                 <label className="price-days">{Helper.getDays(days)}</label>
-                <label className="price-main">{`${Helper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
+                <label className="price-main">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
                 <label className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price || 0) / days)} ${commonStrings.CURRENCY}`}</label>
               </div>
             </div>

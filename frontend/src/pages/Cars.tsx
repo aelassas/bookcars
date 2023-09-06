@@ -13,6 +13,7 @@ import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
 import CarList from '../components/CarList'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/cars.css'
 
@@ -80,11 +81,11 @@ const Cars = () => {
     }
     if (params.has('f')) {
       const val = params.get('f')
-      from = val && Helper.isInteger(val) && new Date(Number.parseInt(val))
+      from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
     }
     if (params.has('t')) {
       const val = params.get('t')
-      to = val && Helper.isInteger(val) && new Date(Number.parseInt(val))
+      to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
     }
 
     if (!pickupLocationId || !dropOffLocationId || !from || !to) {

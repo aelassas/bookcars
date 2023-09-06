@@ -19,6 +19,7 @@ import { intervalToDuration } from 'date-fns'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-user.css'
 
@@ -125,7 +126,7 @@ const UpdateUser = () => {
   }
 
   const validateBirthDate = (date?: Date) => {
-    if (date && Helper.isDate(date) && type === bookcarsTypes.RecordType.User) {
+    if (date && bookcarsHelper.isDate(date) && type === bookcarsTypes.RecordType.User) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const birthDateValid = sub >= Env.MINIMUM_AGE

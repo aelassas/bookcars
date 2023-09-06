@@ -2,27 +2,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import { toast } from 'react-toastify'
 import * as bookcarsTypes from 'bookcars-types'
-
-export function formatNumber(x?: number): string {
-  if (typeof x === 'number') {
-    const parts: string[] = String(x).split('.')
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    return parts.join('.')
-  }
-  return ''
-}
-
-export function formatDatePart(n: number): string {
-  return n > 9 ? String(n) : '0' + n
-}
-
-export function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
-export function isDate(date?: Date): boolean {
-  return date instanceof Date && !isNaN(date.valueOf())
-}
+import * as bookcarsHelper from 'bookcars-helper'
 
 export const info = (message: string) => {
   toast(message, { type: 'info' })
@@ -37,34 +17,6 @@ export const error = (err?: unknown, message?: string) => {
   } else {
     toast(commonStrings.GENERIC_ERROR, { type: 'error' })
   }
-}
-
-export const joinURL = (part1?: string, part2?: string) => {
-  if (!part1 || !part2) {
-    const msg = '[joinURL] part undefined'
-    console.log(msg)
-    throw new Error(msg)
-  }
-
-  if (part1.charAt(part1.length - 1) === '/') {
-    part1 = part1.substr(0, part1.length - 1)
-  }
-  if (part2.charAt(0) === '/') {
-    part2 = part2.substr(1)
-  }
-  return part1 + '/' + part2
-}
-
-export const isInteger = (val: string) => {
-  return /^\d+$/.test(val)
-}
-
-export const isYear = (val: string) => {
-  return /^\d{2}$/.test(val)
-}
-
-export const isCvv = (val: string) => {
-  return /^\d{3,4}$/.test(val)
 }
 
 export const getCarType = (type: string) => {
@@ -183,7 +135,7 @@ export const getMileage = (mileage: number) => {
   if (mileage === -1) {
     return strings.UNLIMITED
   } else {
-    return `${formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
+    return `${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
   }
 }
 
@@ -191,7 +143,7 @@ export const getMileageTooltip = (mileage: number, fr: boolean) => {
   if (mileage === -1) {
     return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
   } else {
-    return `${strings.MILEAGE}${fr ? ' : ' : ': '}${formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
+    return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
   }
 }
 
@@ -201,7 +153,7 @@ export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   } else if (additionalDriver === 0) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
   } else {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
+    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
   }
 }
 
@@ -211,7 +163,7 @@ export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   } else if (fullInsurance === 0) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   } else {
-    return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
+    return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
   }
 }
 
@@ -221,7 +173,7 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: bool
   } else if (collisionDamageWaiver === 0) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   } else {
-    return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
+    return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
   }
 }
 
@@ -231,7 +183,7 @@ export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   } else if (theftProtection === 0) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   } else {
-    return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
+    return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
   }
 }
 
@@ -241,7 +193,7 @@ export const getAmendments = (amendments: number, fr: boolean) => {
   } else if (amendments === 0) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
   } else {
-    return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${formatNumber(amendments)} ${commonStrings.CURRENCY}`
+    return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
   }
 }
 
@@ -251,7 +203,7 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
   } else if (cancellation === 0) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   } else {
-    return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${formatNumber(cancellation)} ${commonStrings.CURRENCY}`
+    return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
   }
 }
 
