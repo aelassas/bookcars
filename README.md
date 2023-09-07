@@ -132,7 +132,7 @@ BookCars is supplier oriented. This means that there are three types of users:
 * Supplier: He has restricted access on the backend. He can only manage his cars and bookings.
 * User: He has only access to the frontend and the mobile app. He cannot access the backend.
 
-BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier too.
+BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
 From the backend, the admin user can create and manage suppliers, cars, locations, users and bookings.
 
