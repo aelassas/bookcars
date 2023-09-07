@@ -123,7 +123,7 @@ const Header = (
       const currentLang = UserService.getLanguage()
       if (isSignedIn && user) {
         // Update user language
-        const data: bookcarsTypes.UpdateLanguage = {
+        const data: bookcarsTypes.UpdateLanguagePayload = {
           id: user._id as string,
           language: code,
         }

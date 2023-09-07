@@ -378,16 +378,17 @@ export async function signin(req: Request, res: Response) {
 
         const token = jwt.sign(payload, env.JWT_SECRET, options)
 
-        return res.status(200).send({
-          id: user._id,
-          email: user.email,
-          fullName: user.fullName,
-          language: user.language,
-          enableEmailNotifications: user.enableEmailNotifications,
-          accessToken: token,
-          blacklisted: user.blacklisted,
-          avatar: user.avatar,
-        })
+        return res.status(200)
+          .send({
+            _id: user._id,
+            email: user.email,
+            fullName: user.fullName,
+            language: user.language,
+            enableEmailNotifications: user.enableEmailNotifications,
+            accessToken: token,
+            blacklisted: user.blacklisted,
+            avatar: user.avatar,
+          })
       } else {
         return res.sendStatus(204)
       }
@@ -597,7 +598,7 @@ export async function update(req: Request, res: Response) {
 }
 
 export async function updateEmailNotifications(req: Request, res: Response) {
-  const body: bookcarsTypes.UpdateEmailNotifications = req.body
+  const body: bookcarsTypes.UpdateEmailNotificationsPayload = req.body
 
   try {
     const { _id } = body
@@ -619,7 +620,7 @@ export async function updateEmailNotifications(req: Request, res: Response) {
 
 export async function updateLanguage(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpdateLanguage = req.body
+    const body: bookcarsTypes.UpdateLanguagePayload = req.body
     const { id, language } = body
 
     const user = await User.findById(id)
@@ -778,7 +779,7 @@ export async function deleteTempAvatar(req: Request, res: Response) {
 }
 
 export async function changePassword(req: Request, res: Response) {
-  const body: bookcarsTypes.changePasswordPayload = req.body
+  const body: bookcarsTypes.ChangePasswordPayload = req.body
   const { _id, password: currentPassword, newPassword, strict } = body
 
   try {

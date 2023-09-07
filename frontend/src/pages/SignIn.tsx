@@ -81,7 +81,7 @@ const SignIn = () => {
           const status = await UserService.validateAccessToken()
 
           if (status === 200) {
-            const user = await UserService.getUser(currentUser.id)
+            const user = await UserService.getUser(currentUser._id)
 
             if (user) {
               const params = new URLSearchParams(window.location.search)

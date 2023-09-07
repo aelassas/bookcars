@@ -145,7 +145,7 @@ export const getQueryLanguage = () => {
   return ''
 }
 
-export const updateLanguage = (data: bookcarsTypes.UpdateLanguage) =>
+export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
   axios
     .post(`${Env.API_HOST}/api/update-language`, data, {
       headers: authHeader(),
@@ -190,7 +190,7 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
     .then((res) => res.status)
 
 
-export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifications): Promise<number> =>
+export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotificationsPayload): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/update-email-notifications`,
@@ -245,7 +245,7 @@ export const checkPassword = (id: string, pass: string): Promise<number> =>
     )
     .then((res) => res.status)
 
-export const changePassword = (data: bookcarsTypes.changePasswordPayload): Promise<number> =>
+export const changePassword = (data: bookcarsTypes.ChangePasswordPayload): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/change-password/ `,

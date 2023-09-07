@@ -80,7 +80,7 @@ const ChangePassword = () => {
           setNewPasswordError(false)
         }
 
-        const data: bookcarsTypes.changePasswordPayload = {
+        const data: bookcarsTypes.ChangePasswordPayload = {
           _id: user._id as string,
           password: currentPassword,
           newPassword,

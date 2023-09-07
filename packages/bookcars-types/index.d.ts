@@ -175,7 +175,7 @@ export interface UpdateUserPayload extends CreateUserPayload {
     enableEmailNotifications?: boolean;
     payLater?: boolean;
 }
-export interface changePasswordPayload {
+export interface ChangePasswordPayload {
     _id: string;
     password: string;
     newPassword: string;
@@ -197,11 +197,11 @@ export interface SignInPayload {
 export interface ResendLinkPayload {
     email?: string;
 }
-export interface UpdateEmailNotifications {
+export interface UpdateEmailNotificationsPayload {
     _id: string;
     enableEmailNotifications: boolean;
 }
-export interface UpdateLanguage {
+export interface UpdateLanguagePayload {
     id: string;
     language: string;
 }
@@ -235,6 +235,7 @@ export interface User {
     type?: string;
     blacklisted?: boolean;
     payLater?: boolean;
+    accessToken?: string;
 }
 export interface Option {
     _id: string;
