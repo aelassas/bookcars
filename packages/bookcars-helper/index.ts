@@ -49,8 +49,6 @@ export const isCvv = (val: string) => {
     return /^\d{3,4}$/.test(val)
 }
 
-// TODO
-
 export const arrayEqual = (a: any, b: any) => {
     if (a === b) {
         return true
