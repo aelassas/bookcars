@@ -175,7 +175,7 @@ const SignUp = () => {
       }
 
       const birthDateValid = validateBirthDate(birthDate)
-      if (!birthDateValid) {
+      if (!birthDate || !birthDateValid) {
         return
       }
 
@@ -217,7 +217,7 @@ const SignUp = () => {
 
       setLoading(true)
 
-      const data = {
+      const data: bookcarsTypes.FrontendSignUpPayload = {
         email: email,
         phone: phone,
         password: password,

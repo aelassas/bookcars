@@ -117,7 +117,7 @@ const SignUp = () => {
 
       setLoading(true)
 
-      const data = {
+      const data: bookcarsTypes.BackendSignUpPayload = {
         email: email,
         password: password,
         fullName: fullName,
