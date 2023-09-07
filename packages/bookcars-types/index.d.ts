@@ -143,6 +143,7 @@ export interface BackendSignUpPayload {
     email: string;
     password: string;
     fullName: string;
+    phone?: string;
     language: string;
     active?: boolean;
     verified?: boolean;
