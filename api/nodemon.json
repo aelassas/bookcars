@@ -1,6 +1,6 @@
 {
     "watch": ["src"],
-    "ext": ".ts",
+    "ext": "ts",
     "ignore": [],
     "exec": "npx ts-node-esm --experimentalSpecifierResolution node ./src"
   }
