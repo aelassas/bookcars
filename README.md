@@ -50,6 +50,3 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 ### License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
-
-# 
-You can find out more about this project on this [article](https://www.codeproject.com/Articles/5346604/BookCars-Car-Rental-Platform-with-Mobile-App).
