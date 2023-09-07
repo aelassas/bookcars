@@ -194,8 +194,8 @@ BookCars API exposes all BookCars functions needed for the backend, the frontend
 * *./api/routes/* folder contains Express routes.
 * *./api/controllers/* folder contains controllers.
 * *./api/middlewares/* folder contains middlewares.
-* *./api/server.js* is the main server where database connection is established and routes are loaded.
-* *./api/app.js* is the main entry point of BookCars API.
+* *./api/server.ts* is the main server where database connection is established and routes are loaded.
+* *./api/index.ts* is the main entry point of BookCars API.
 
 ### Frontend
 
@@ -205,8 +205,8 @@ The frontend is a web application built with Node.js, ReactJS and MUI. From the 
 * *./frontend/pages/* folder contains ReactJS pages.
 * *./frontend/components/* folder contains ReactJS components.
 * *./frontend/services/* contains BookCars API client services.
-* *./frontend/App.js* is the main ReactJS App that contains routes.
-* *./frontend/index.js* is the main entry point of the frontend.
+* *./frontend/App.tsx* is the main ReactJS App that contains routes.
+* *./frontend/index.tsx* is the main entry point of the frontend.
 
 ### Mobile App
 
@@ -229,8 +229,8 @@ The backend is a web application built with Node.js, ReactJS and MUI. From the b
 * *./backend/pages/* folder contains ReactJS pages.
 * *./backend/components/* folder contains ReactJS components.
 * *./backend/services/* contains BookCars API client services.
-* *./backend/App.js* is the main ReactJS App that contains routes.
-* *./backend/index.js* is the main entry point of the backend.
+* *./backend/App.tsx* is the main ReactJS App that contains routes.
+* *./backend/index.tsx* is the main entry point of the backend.
 
 # 
 You can find out more about this project on this [CodeProject](https://www.codeproject.com/Articles/5346604/BookCars-Car-Rental-Platform-with-Mobile-App) article.
