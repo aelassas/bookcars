@@ -30,7 +30,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Multiple language support (English, French)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
 * Responsive backend and frontend
-* Native Mobile app for Android and iOS with single code base
+* Native Mobile app for Android and iOS with single codebase
 * Push notifications
 
 ## Links
