@@ -66,7 +66,7 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
     )
     .then((exist) => exist.status)
 
-export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: any }> =>
+export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
   axios
     .post(`${Env.API_HOST}/api/sign-in/${Env.APP_TYPE}`, data)
     .then((res) => {
