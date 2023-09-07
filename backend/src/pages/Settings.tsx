@@ -65,7 +65,7 @@ const Settings = () => {
 
         user.enableEmailNotifications = e.target.checked
 
-        const payload: bookcarsTypes.UpdateEmailNotifications = {
+        const payload: bookcarsTypes.UpdateEmailNotificationsPayload = {
           _id: user._id as string,
           enableEmailNotifications: user.enableEmailNotifications
         }
