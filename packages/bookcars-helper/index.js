@@ -38,7 +38,6 @@ export const isYear = (val) => {
 export const isCvv = (val) => {
     return /^\d{3,4}$/.test(val);
 };
-// TODO
 export const arrayEqual = (a, b) => {
     if (a === b) {
         return true;
