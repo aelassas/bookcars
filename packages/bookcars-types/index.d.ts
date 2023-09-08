@@ -51,7 +51,7 @@ export interface Booking {
     dropOffLocation: string | Location;
     from: Date;
     to: Date;
-    status: string;
+    status: BookingStatus;
     cancellation?: boolean;
     amendments?: boolean;
     theftProtection?: boolean;
@@ -237,6 +237,7 @@ export interface User {
     blacklisted?: boolean;
     payLater?: boolean;
     accessToken?: string;
+    checked?: boolean;
 }
 export interface Option {
     _id: string;
@@ -317,8 +318,9 @@ export interface GetUsersBody {
 }
 export type DataEvent<T> = (data?: Data<T>) => void;
 export interface StatusFilterItem {
-    value: BookingStatus;
     label: string;
+    value: BookingStatus;
+    checked?: boolean;
 }
 export interface CarFilter {
     pickupLocation: Location;

@@ -78,7 +78,7 @@ const BookingList = (
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [companies, setCompanies] = useState<string[]>(bookingCompanies || [])
   const [statuses, setStatuses] = useState<string[]>(bookingStatuses || [])
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
   const [reload, setReload] = useState(bookingReload)
   const [car, setCar] = useState<string>(bookingCar || '')
@@ -359,13 +359,18 @@ const BookingList = (
     setOpenUpdateDialog(false)
   }
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = (status: bookcarsTypes.BookingStatus) => {
     setStatus(status)
   }
 
   const handleConfirmUpdate = async () => {
     try {
-      const data = { ids: selectedIds, status }
+      if (!status) {
+        Helper.error()
+        return
+      }
+
+      const data: bookcarsTypes.UpdateStatusPayload = { ids: selectedIds, status }
 
       const _status = await BookingService.updateStatus(data)
 
