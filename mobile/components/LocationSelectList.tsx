@@ -86,7 +86,7 @@ const LocationSelectList = (
     <View style={{ ...style, ...styles.container }}>
       <Text
         style={{
-          display: selectedItem !== null ? 'flex' : 'none',
+          display: selectedItem ? 'flex' : 'none',
           backgroundColor: backgroundColor ?? '#fafafa',
           color: 'rgba(0, 0, 0, 0.6)',
           fontSize: 12,
