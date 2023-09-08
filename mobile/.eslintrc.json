@@ -22,6 +22,9 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended"
   ],
+  "ignorePatterns": [
+    "/**/*.js"
+  ],
   "rules": {
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
