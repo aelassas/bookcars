@@ -49,7 +49,7 @@ const CreateBooking = () => {
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
   const [theftProtection, setTheftProtection] = useState(false)
@@ -92,7 +92,7 @@ const CreateBooking = () => {
     }
   }, [])
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: bookcarsTypes.BookingStatus) => {
     setStatus(value)
   }
 
@@ -165,7 +165,7 @@ const CreateBooking = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!car || !from || !to) {
+    if (!car || !from || !to || !status) {
       Helper.error()
       return
     }

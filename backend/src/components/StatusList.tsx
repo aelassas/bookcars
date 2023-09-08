@@ -21,7 +21,7 @@ const StatusList = ({
   variant?: TextFieldVariants
   disabled?: boolean
   style?: CSSProperties
-  onChange: (value: string) => void
+  onChange: (value: bookcarsTypes.BookingStatus) => void
 }) => {
   const [value, setValue] = useState('')
 
@@ -35,7 +35,7 @@ const StatusList = ({
     setValue(e.target.value)
 
     if (onChange) {
-      onChange(e.target.value)
+      onChange(e.target.value as bookcarsTypes.BookingStatus)
     }
   }
 

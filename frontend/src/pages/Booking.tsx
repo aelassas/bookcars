@@ -42,7 +42,7 @@ const Booking = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Option>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
   const [theftProtection, setTheftProtection] = useState(false)
@@ -94,7 +94,7 @@ const Booking = () => {
     }
   }
 
-  const handleStatusChange = (value: string) => {
+  const handleStatusChange = (value: bookcarsTypes.BookingStatus) => {
     setStatus(value)
   }
 
@@ -198,7 +198,7 @@ const Booking = () => {
     try {
       e.preventDefault()
 
-      if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to) {
+      if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
         Helper.error()
         return
       }
