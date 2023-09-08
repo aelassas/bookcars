@@ -255,8 +255,8 @@ const UpdateBooking = () => {
     }
   }
 
-  const toastErr = (hideLoading?: boolean): void => {
-    Helper.error()
+  const toastErr = (err?: unknown, hideLoading?: boolean): void => {
+    Helper.error(err)
     if (hideLoading) {
       setLoading(false)
     }
@@ -576,7 +576,7 @@ const UpdateBooking = () => {
                           setMinDate(from)
                         },
                         (err) => {
-                          toastErr()
+                          toastErr(err)
                         },
                       )
                     }
@@ -603,7 +603,7 @@ const UpdateBooking = () => {
                           setTo(to)
                         },
                         (err) => {
-                          toastErr()
+                          toastErr(err)
                         },
                       )
                     }

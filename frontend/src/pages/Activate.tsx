@@ -59,6 +59,7 @@ const Activate = () => {
         setPasswordLengthError(true)
         setConfirmPasswordError(false)
         setPasswordError(false)
+        return
       } else {
         setPasswordLengthError(false)
         setPasswordError(false)
@@ -67,6 +68,7 @@ const Activate = () => {
       if (password !== confirmPassword) {
         setConfirmPasswordError(true)
         setPasswordError(false)
+        return
       } else {
         setConfirmPasswordError(false)
         setPasswordError(false)

@@ -12,17 +12,14 @@ import '../assets/css/locations.css'
 const Locations = () => {
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
-  const [reload, setReload] = useState(false)
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
-    setReload(newKeyword === keyword)
   }
 
   const handleLocationListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Location> = (data) => {
     if (data) {
       setRowCount(data.rowCount)
-      setReload(false)
     }
   }
 
@@ -30,8 +27,7 @@ const Locations = () => {
     setRowCount(rowCount)
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-  }
+  const onLoad = () => { }
 
   return (
     <Master onLoad={onLoad} strict>
@@ -46,11 +42,19 @@ const Locations = () => {
               </Button>
             )}
 
-            {rowCount > 0 && <InfoBox value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`} className="location-count" />}
+            {rowCount > 0 &&
+              <InfoBox
+                value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`}
+                className="location-count"
+              />}
           </div>
         </div>
         <div className="col-2">
-          <LocationList keyword={keyword} reload={reload} onLoad={handleLocationListLoad} onDelete={handleLocationDelete} />
+          <LocationList
+            keyword={keyword}
+            onLoad={handleLocationListLoad}
+            onDelete={handleLocationDelete}
+          />
         </div>
       </div>
     </Master>

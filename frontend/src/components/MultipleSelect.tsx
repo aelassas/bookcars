@@ -234,7 +234,10 @@ const MultipleSelect = ({
                   startAdornment: (
                     <>
                       <InputAdornment position="start">
-                        <img src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)} alt={option.name} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                        <img
+                          src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)}
+                          alt={option.name}
+                          style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
                       </InputAdornment>
                       {params.InputProps.startAdornment}
                     </>

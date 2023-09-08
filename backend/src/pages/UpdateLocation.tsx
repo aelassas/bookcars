@@ -59,7 +59,7 @@ const UpdateLocation = () => {
         return
       }
 
-      let nameChanged = checkName()
+      const nameChanged = checkName()
 
       if (!nameChanged) {
         return

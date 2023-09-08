@@ -18,7 +18,8 @@ import * as bookcarsTypes from 'bookcars-types'
 import '../assets/css/change-password.css'
 
 const ChangePassword = () => {
-  const [user, setUser] = useState<bookcarsTypes.User>()
+  const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
+  const [userId, setUserId] = useState<string>()
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [newPasswordError, setNewPasswordError] = useState(false)
@@ -55,7 +56,7 @@ const ChangePassword = () => {
     try {
       e.preventDefault()
 
-      if (!user) {
+      if (!userId && !loggedUser) {
         err()
         return
       }
@@ -81,7 +82,7 @@ const ChangePassword = () => {
         }
 
         const data: bookcarsTypes.ChangePasswordPayload = {
-          _id: user._id as string,
+          _id: userId || loggedUser?._id as string,
           password: currentPassword,
           newPassword,
           strict: true,
@@ -90,24 +91,32 @@ const ChangePassword = () => {
         const status = await UserService.changePassword(data)
 
         if (status === 200) {
-          const _user = await UserService.getUser(user._id as string)
+          if (!userId) {
+            const _user = await UserService.getUser(loggedUser?._id as string)
 
-          if (_user) {
-            setUser(_user)
+            if (_user) {
+              setLoggedUser(_user)
+              setNewPasswordError(false)
+              setCurrentPassword('')
+              setNewPassword('')
+              setConfirmPassword('')
+              Helper.info(strings.PASSWORD_UPDATE)
+            } else {
+              err()
+            }
+          } else {
             setNewPasswordError(false)
             setCurrentPassword('')
             setNewPassword('')
             setConfirmPassword('')
             Helper.info(strings.PASSWORD_UPDATE)
-          } else {
-            err()
           }
         } else {
           err()
         }
       }
 
-      const status = await UserService.checkPassword(user._id as string, currentPassword)
+      const status = await UserService.checkPassword(userId || loggedUser?._id as string, currentPassword)
 
       setCurrentPasswordError(status !== 200)
       setNewPasswordError(false)
@@ -123,7 +132,12 @@ const ChangePassword = () => {
   }
 
   const onLoad = (user?: bookcarsTypes.User) => {
-    setUser(user)
+    const params = new URLSearchParams(window.location.search)
+    if (params.has('u')) {
+      const userId = params.get('u') || undefined
+      setUserId(userId)
+    }
+    setLoggedUser(user)
     setLoading(false)
     setVisible(true)
   }

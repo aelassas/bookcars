@@ -48,7 +48,6 @@ const BookingList = (
     car: bookingCar,
     offset: bookingOffset,
     user: bookingUser,
-    loggedUser: bookingLoggedUser,
     loading: bookingLoading,
     containerClassName,
     hideDates,
@@ -65,7 +64,6 @@ const BookingList = (
     car?: string
     offset?: number
     user?: bookcarsTypes.User
-    loggedUser?: bookcarsTypes.User
     containerClassName?: string
     hideDates?: boolean
     hideCarColumn?: boolean

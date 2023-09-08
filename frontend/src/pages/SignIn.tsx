@@ -71,7 +71,7 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    ;(async function () {
+    (async function () {
       try {
         LangHelper.setLanguage(strings)
 

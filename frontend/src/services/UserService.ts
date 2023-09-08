@@ -209,7 +209,7 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
 
 export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
   const user = getCurrentUser()
-  var formData = new FormData()
+  const formData = new FormData()
   formData.append('image', file)
 
   return axios
