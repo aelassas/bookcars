@@ -4,12 +4,12 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "start:clean": "npx expo start -c",
+    "start:clean": "expo start -c",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "build:android": "EAS_NO_VCS=1 eas build --profile production --platform android",
-    "build:android:local": "EAS_NO_VCS=1 eas build --profile production --platform android --local",
-    "build:ios": "EAS_NO_VCS=1 eas build --profile production --platform ios",
+    "build:android": "cross-env EAS_NO_VCS=1 eas build --profile production --platform android",
+    "build:android:local": "cross-env EAS_NO_VCS=1 eas build --profile production --platform android --local",
+    "build:ios": "cross-env EAS_NO_VCS=1 eas build --profile production --platform ios",
     "ts:check": "tsc",
     "lint": "eslint --ext .ts,.tsx ."
   },
