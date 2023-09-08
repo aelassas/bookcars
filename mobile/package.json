@@ -20,8 +20,6 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@react-navigation/stack": "^6.3.17",
-    "@types/axios": "^0.14.0",
-    "@types/date-fns": "^2.6.0",
     "@types/lodash.debounce": "^4.0.7",
     "@types/mime": "^3.0.1",
     "@types/react-native-dotenv": "^0.2.0",
