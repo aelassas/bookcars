@@ -23,7 +23,7 @@
     "plugin:react-hooks/recommended"
   ],
   "ignorePatterns": [
-    "build/**/*.js"
+    "build/**"
   ],
   "rules": {
     "no-empty-function": "off",
