@@ -39,7 +39,7 @@ export const deleteCar = (id: string): Promise<number> =>
 
 export const createImage = (file: Blob): Promise<string> => {
   const user = UserService.getCurrentUser()
-  var formData = new FormData()
+  const formData = new FormData()
   formData.append('image', file)
 
   return axios
@@ -60,7 +60,7 @@ export const createImage = (file: Blob): Promise<string> => {
 
 export const updateImage = (id: string, file: Blob): Promise<number> => {
   const user = UserService.getCurrentUser()
-  var formData = new FormData()
+  const formData = new FormData()
   formData.append('image', file)
 
   return axios

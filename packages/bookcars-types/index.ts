@@ -277,7 +277,7 @@ export interface User {
 
 export interface Option {
     _id: string
-    name: string
+    name?: string
     image?: string
 }
 

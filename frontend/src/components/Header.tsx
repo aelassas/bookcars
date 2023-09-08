@@ -104,7 +104,7 @@ const Header = (
   }
 
   const refreshPage = () => {
-    let params = new URLSearchParams(window.location.search)
+    const params = new URLSearchParams(window.location.search)
 
     if (params.has('l')) {
       params.delete('l')

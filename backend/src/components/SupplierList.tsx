@@ -39,7 +39,7 @@ const SupplierList = (
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [companyId, setCompanyId] = useState('')
   const [companyIndex, setCompanyIndex] = useState(-1)
-
+  
   const _fetch = async (page: number, keyword?: string) => {
     try {
       setLoading(true)

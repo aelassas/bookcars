@@ -53,7 +53,7 @@ const LocationList = (
   const [openInfoDialog, setOpenInfoDialog] = useState(false)
   const [locationId, setLocationId] = useState('')
   const [locationIndex, setLocationIndex] = useState(-1)
-
+  
   const _fetch = async (page: number, keyword?: string) => {
     try {
       setLoading(true)

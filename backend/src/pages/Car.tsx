@@ -61,7 +61,7 @@ const Car = () => {
     setOpenInfoDialog(false)
   }
 
-  const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
+  const handleDelete = async () => {
     try {
       if (car) {
         const status = await CarService.check(car._id)

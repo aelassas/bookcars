@@ -600,7 +600,6 @@ const Checkout = () => {
 
       setLoading(true)
 
-      let booking: bookcarsTypes.Booking
       let driver: bookcarsTypes.User | undefined = undefined
       let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
 
@@ -614,7 +613,7 @@ const Checkout = () => {
         }
       }
 
-      booking = {
+      const booking: bookcarsTypes.Booking = {
         company: car.company._id as string,
         car: car._id,
         driver: authenticated ? user?._id : undefined,
