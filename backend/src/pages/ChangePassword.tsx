@@ -88,32 +88,16 @@ const ChangePassword = () => {
           strict: true,
         }
 
-        let success = false
         const status = await UserService.changePassword(data)
 
         if (status === 200) {
-          if (userId) {
-            success = true
-          } else {
-            const _user = await UserService.getUser(loggedUser?._id as string)
-
-            if (_user) {
-              setLoggedUser(_user)
-              success = true
-            } else {
-              err()
-            }
-          }
-        } else {
-          err()
-        }
-
-        if (success) {
           setNewPasswordError(false)
           setCurrentPassword('')
           setNewPassword('')
           setConfirmPassword('')
           Helper.info(strings.PASSWORD_UPDATE)
+        } else {
+          err()
         }
       }
 
