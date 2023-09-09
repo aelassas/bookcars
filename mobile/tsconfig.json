@@ -4,12 +4,6 @@
     "strict": true,
     "typeRoots": [
       "./types"
-    ],
-    // "baseUrl": "./",
-    // "paths": {
-    //   "*": [
-    //     "types/*"
-    //   ]
-    // }
+    ]
   }
 }
