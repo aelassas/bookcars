@@ -24,7 +24,7 @@
       "package": "com.bookcars"
     },
     "ios": {
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.7.0",
       "supportsTablet": true,
       "icon": "./assets/icon.png",
       "splash": {
