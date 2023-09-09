@@ -3,7 +3,7 @@
 
 [![](https://bookcars.github.io/content/cover.jpg)](https://bookcars.github.io)
 
-I started this project for a friend who runs a car rental company in Casablanca, Morocco, and needed a car rental website and mobile app for Android and iOS, as well as a backend for managing cars, bookings, and customers. I then decided to open source the project and make it available to everyone.
+I started this project for a friend who runs a car rental company, and needed a car rental website and mobile app for Android and iOS, as well as a backend for managing cars, bookings, and customers. I then decided to open source the project and make it available to everyone.
 
 BookCars is an open source car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a native mobile app for Android and iOS with single codebase for renting cars.
 
