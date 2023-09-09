@@ -19,11 +19,11 @@ export async function exists(path: string): Promise<boolean> {
 
 export function joinURL(part1: string, part2: string): string {
     if (part1.charAt(part1.length - 1) === '/') {
-        part1 = part1.substr(0, part1.length - 1)
+        part1 = part1.substring(0, part1.length - 1)
     }
 
     if (part2.charAt(0) === '/') {
-        part2 = part2.substr(1)
+        part2 = part2.substring(1)
     }
 
     return `${part1}/${part2}`
