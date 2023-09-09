@@ -7,7 +7,6 @@ import { withFadeAnimation } from './HOC/withFadeAnimation'
 import { NothingFound } from './NothingFound'
 import { RightButton } from './RightButton'
 import { ScrollViewListItem } from './ScrollViewListItem'
-// import TextInput from '../TextInput'
 
 // TODO Complete rewrite to TypeScript
 
