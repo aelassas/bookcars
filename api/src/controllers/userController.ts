@@ -577,7 +577,7 @@ export async function update(req: Request, res: Response) {
       user.phone = phone
       user.location = location
       user.bio = bio
-      user.birthDate = new Date(birthDate as (Date | number))
+      user.birthDate = birthDate ? new Date(birthDate) : undefined
       if (type) {
         user.type = type as bookcarsTypes.UserType
       }
