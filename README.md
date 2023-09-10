@@ -3,8 +3,6 @@
 
 [![](https://bookcars.github.io/content/cover.jpg)](https://bookcars.github.io)
 
-> I started this project for a friend who runs a car rental company. He needed a car rental website and mobile app for Android and iOS, as well as a backend for managing vehicles, bookings and customers.  I took it a step further by enhancing the project with additional features to make it more generic. Finally, I released it under the terms of the MIT license and made it available to everyone.
-
 BookCars is an open source car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a native mobile app for Android and iOS with single codebase for renting cars.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
@@ -27,7 +25,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Ready for one or multiple suppliers
 * Car fleet management
 * Booking management
-* Client management
+* Customer management
 * Multiple payment methods (Credit Card, Pay Later)
 * Multiple language support (English, French)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
