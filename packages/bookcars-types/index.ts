@@ -187,7 +187,6 @@ export interface CreateUserPayload {
     avatar?: string
     birthDate?: number | Date
     language?: string
-    agency?: string
     password?: string
     verified?: boolean
     blacklisted?: boolean
