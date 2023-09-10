@@ -66,10 +66,10 @@ const UpdateUser = () => {
     }
   }
 
-  const validateFullName = async (_fullName: string) => {
+  const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
 
-    if (__fullName && __fullName !== user?.fullName) {
+    if (__fullName && (strict || (!strict && __fullName !== user?.fullName))) {
       try {
         const status = await SupplierService.validate({ fullName: __fullName })
 
@@ -256,7 +256,7 @@ const UpdateUser = () => {
       }
 
       if (type === bookcarsTypes.RecordType.Company) {
-        const fullNameValid = await validateFullName(fullName)
+        const fullNameValid = await validateFullName(fullName, false)
 
         if (!fullNameValid) {
           return
