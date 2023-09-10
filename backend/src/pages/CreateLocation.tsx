@@ -13,7 +13,7 @@ import '../assets/css/create-location.css'
 
 const CreateLocation = () => {
   const [visible, setVisible] = useState(false)
-  const [names, setNames] = useState<bookcarsTypes.Name[]>([])
+  const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,7 +44,7 @@ const CreateLocation = () => {
           for (let i = 0; i < names.length; i++) {
             names[i].name = ''
           }
-          setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
+          setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
           Helper.info(strings.LOCATION_CREATED)
         } else {
           Helper.error()
@@ -78,7 +78,7 @@ const CreateLocation = () => {
                       language: language.code,
                       name: e.target.value,
                     }
-                    setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
+                    setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
 
                     nameErrors[index] = false
                     setNameErrors(bookcarsHelper.cloneArray(nameErrors) as boolean[])

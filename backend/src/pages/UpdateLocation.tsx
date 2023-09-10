@@ -18,7 +18,7 @@ import '../assets/css/update-location.css'
 const UpdateLocation = () => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [names, setNames] = useState<bookcarsTypes.Name[]>([])
+  const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
@@ -122,7 +122,7 @@ const UpdateLocation = () => {
                 }
               })
 
-              const names: bookcarsTypes.Name[] = location.values.map((value) => ({
+              const names: bookcarsTypes.LocationName[] = location.values.map((value) => ({
                 language: value.language || '',
                 name: value.value || '',
               }))
@@ -171,7 +171,7 @@ const UpdateLocation = () => {
                       nameErrors[index] = false
                       names[index].name = e.target.value
                       checkName()
-                      setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.Name[])
+                      setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
                     }}
                     autoComplete="off"
                   />

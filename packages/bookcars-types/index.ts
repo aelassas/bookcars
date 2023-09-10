@@ -351,11 +351,6 @@ export interface ResultData<T> {
 
 export type Result<T> = [ResultData<T>] | [] | undefined | null
 
-export interface Name {
-    name: string
-    language: string
-}
-
 export interface GetUsersBody {
     user: string
     types: UserType[]
