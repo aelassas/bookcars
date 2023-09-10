@@ -459,7 +459,7 @@ export async function getBooking(req: Request, res: Response) {
           model: 'LocationValue',
         },
       })
-      .populate<{ agency: env.AdditionalDriver }>('_additionalDriver')
+      .populate<{ _additionalDriver: env.AdditionalDriver }>('_additionalDriver')
       .lean()
 
     if (booking) {
