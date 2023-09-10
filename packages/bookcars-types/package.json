@@ -1,17 +1,17 @@
 {
-  "name": "bookcars-types",
+  "name": "bookcars-index",
   "version": "1.0.0",
   "description": "",
-  "main": "types.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rimraf ./types.js ./types.d.ts && tsc"
+    "build": "rimraf ./index.js ./index.d.ts && tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "rimraf": "^5.0.1",
-    "typescript": "^5.2.2"
+    "indexcript": "^5.2.2"
   }
 }
