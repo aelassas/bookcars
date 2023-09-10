@@ -69,7 +69,7 @@ const UpdateUser = () => {
   const validateFullName = async (_fullName: string) => {
     const __fullName = _fullName || fullName
 
-    if (__fullName) {
+    if (__fullName && __fullName !== user?.fullName) {
       try {
         const status = await SupplierService.validate({ fullName: __fullName })
 
