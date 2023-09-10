@@ -569,7 +569,7 @@ export async function update(req: Request, res: Response) {
         birthDate,
         enableEmailNotifications,
         payLater
-      } = req.body
+      } = body
 
       if (fullName) {
         user.fullName = fullName
@@ -577,9 +577,9 @@ export async function update(req: Request, res: Response) {
       user.phone = phone
       user.location = location
       user.bio = bio
-      user.birthDate = birthDate
+      user.birthDate = new Date(birthDate as (Date | number))
       if (type) {
-        user.type = type
+        user.type = type as bookcarsTypes.UserType
       }
       if (typeof enableEmailNotifications !== 'undefined') {
         user.enableEmailNotifications = enableEmailNotifications
