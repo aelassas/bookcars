@@ -16,7 +16,7 @@ const CarTypeList = (
       required?: boolean,
       label?: string
       variant?: 'filled' | 'standard' | 'outlined'
-      onChange: (value: string) => void
+      onChange?: (value: string) => void
     }
 ) => {
   const [value, setValue] = useState('')
