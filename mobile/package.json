@@ -10,6 +10,7 @@
     "build:android": "cross-env EAS_NO_VCS=1 eas build --profile production --platform android",
     "build:android:local": "cross-env EAS_NO_VCS=1 eas build --profile production --platform android --local",
     "build:ios": "cross-env EAS_NO_VCS=1 eas build --profile production --platform ios",
+    "build:ios:local": "cross-env EAS_NO_VCS=1 eas build --profile production --platform ios --local",
     "ts:check": "tsc",
     "lint": "eslint --ext .ts,.tsx ."
   },
