@@ -468,7 +468,6 @@ const BookingList = (
         (rows.length === 0 ? (
           !loading &&
           !bookingLoading &&
-          (companies.length === 0 || statuses.length === 0) &&
           <Card variant="outlined" className="empty-list">
             <CardContent>
               <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
