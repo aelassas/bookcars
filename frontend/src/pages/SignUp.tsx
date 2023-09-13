@@ -242,6 +242,7 @@ const SignUp = () => {
           setPasswordsDontMatch(false)
           setError(true)
           setTosError(false)
+          setLoading(false)
         }
       } else {
         setPasswordError(false)

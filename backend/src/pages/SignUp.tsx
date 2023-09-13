@@ -138,6 +138,7 @@ const SignUp = () => {
           setPasswordError(false)
           setPasswordsDontMatch(false)
           setError(true)
+          setLoading(false)
         }
       } else {
         setPasswordError(false)
