@@ -183,27 +183,49 @@ const BookingList = (
   }, [bookingReload])
 
   useEffect(() => {
-    if (reload) {
-      setPage(0)
-      _fetch(0, user)
-    }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
+    setUser(bookingUser)
+  }, [bookingUser])
 
   useEffect(() => {
+    if (reload) {
+      setPage(0)
+      paginationModel.page = 0
+      setPaginationModel(paginationModel)
+      _fetch(0, user)
+      setLoad(false)
+      setReload(false)
+      return
+    }
     if (load) {
       _fetch(page, user)
       setLoad(false)
+      setReload(false)
     }
-  }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [load, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (bookingUser && companies.length > 0 && statuses.length > 0) {
+    if (companies.length > 0 && statuses.length > 0 && page > 0) {
       const columns = getColumns()
-      setUser(bookingUser)
       setColumns(columns)
       setLoad(true)
     }
-  }, [bookingUser, page, pageSize, companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (companies.length > 0 && statuses.length > 0) {
+      const columns = getColumns()
+      setColumns(columns)
+      setReload(true)
+    }
+  }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (companies.length > 0 && statuses.length > 0) {
+      const columns = getColumns()
+      setColumns(columns)
+      setReload(true)
+    }
+  }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (Env.isMobile()) {

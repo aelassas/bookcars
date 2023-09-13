@@ -49,10 +49,9 @@ const LocationSelectList = (
 
   const _fetch = async (page: number, keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>) => {
     try {
-      if (fetch) {
+      if (fetch || page === 1) {
         setLoading(true)
-
-        const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+        const data = await LocationService.getLocations(keyword, page, 7) // Env.PAGE_SIZE
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           return
@@ -94,7 +93,6 @@ const LocationSelectList = (
       hidePopupIcon={hidePopupIcon}
       customOpen={customOpen}
       readOnly={readOnly}
-
       ListboxProps={{
         onScroll: (event) => {
           const listboxNode = event.currentTarget

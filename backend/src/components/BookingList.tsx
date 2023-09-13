@@ -177,6 +177,10 @@ const BookingList = (
   }, [bookingReload])
 
   useEffect(() => {
+    setUser(bookingUser)
+  }, [bookingUser])
+
+  useEffect(() => {
     if (reload) {
       setPage(0)
       paginationModel.page = 0
@@ -194,13 +198,20 @@ const BookingList = (
   }, [load, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    if (companies.length > 0 && statuses.length > 0 && page > 0) {
+      const columns = getColumns()
+      setColumns(columns)
+      setLoad(true)
+    }
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (companies.length > 0 && statuses.length > 0) {
       const columns = getColumns()
       setColumns(columns)
-      setUser(bookingUser || undefined)
-      setLoad(true)
+      setReload(true)
     }
-  }, [bookingUser, page, pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (companies.length > 0 && statuses.length > 0) {
