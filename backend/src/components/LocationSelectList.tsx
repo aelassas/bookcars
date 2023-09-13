@@ -41,7 +41,7 @@ const LocationSelectList = (
 
   const _fetch = async (page: number, keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>) => {
     try {
-      if (fetch) {
+      if (fetch || page === 1) {
         setLoading(true)
 
         const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
