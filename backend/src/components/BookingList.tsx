@@ -179,16 +179,19 @@ const BookingList = (
   useEffect(() => {
     if (reload) {
       setPage(0)
+      paginationModel.page = 0
+      setPaginationModel(paginationModel)
       _fetch(0, user)
+      setLoad(false)
+      setReload(false)
+      return
     }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     if (load) {
       _fetch(page, user)
       setLoad(false)
+      setReload(false)
     }
-  }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [load, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (companies.length > 0 && statuses.length > 0) {
@@ -197,7 +200,15 @@ const BookingList = (
       setUser(bookingUser || undefined)
       setLoad(true)
     }
-  }, [bookingUser, page, pageSize, companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bookingUser, page, pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (companies.length > 0 && statuses.length > 0) {
+      const columns = getColumns()
+      setColumns(columns)
+      setReload(true)
+    }
+  }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const columns = getColumns()
@@ -456,13 +467,13 @@ const BookingList = (
       {loggedUser &&
         (rows.length === 0 ? (
           !loading &&
-          !bookingLoading && (
-            <Card variant="outlined" className="empty-list">
-              <CardContent>
-                <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
-              </CardContent>
-            </Card>
-          )
+          !bookingLoading &&
+          (companies.length === 0 || statuses.length === 0) &&
+          <Card variant="outlined" className="empty-list">
+            <CardContent>
+              <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
+            </CardContent>
+          </Card>
         ) : Env.isMobile() ? (
           <>
             {rows.map((booking, index) => {
