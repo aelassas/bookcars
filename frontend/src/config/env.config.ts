@@ -1,9 +1,10 @@
 import Const from './const'
+import * as bookcarsTypes from 'bookcars-types'
 
 const Env = {
   isMobile: () => window.innerWidth <= 960,
 
-  APP_TYPE: process.env.REACT_APP_BC_APP_TYPE || 'frontend',
+  APP_TYPE: bookcarsTypes.AppType.Frontend,
   API_HOST: process.env.REACT_APP_BC_API_HOST,
   LANGUAGES: ['fr', 'en'], // ISO 639-1 language codes
   DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'en',
