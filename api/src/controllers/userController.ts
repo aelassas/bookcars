@@ -163,6 +163,9 @@ export async function create(req: Request, res: Response) {
         const newPath = path.join(env.CDN_USERS, filename)
 
         try {
+          if (!await Helper.exists(env.CDN_USERS)) {
+            await fs.mkdir(env.CDN_USERS, { recursive: true })
+          }
           await fs.rename(avatar, newPath)
           user.avatar = filename
           await user.save()
