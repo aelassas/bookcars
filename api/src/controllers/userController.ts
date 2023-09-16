@@ -226,7 +226,7 @@ export async function checkToken(req: Request, res: Response) {
         (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User) ||
         user.active
       ) {
-        return res.sendStatus(403)
+        return res.sendStatus(204)
       } else {
         const token = await Token.findOne({
           user: new mongoose.Types.ObjectId(req.params.userId),
@@ -240,7 +240,7 @@ export async function checkToken(req: Request, res: Response) {
         }
       }
     } else {
-      return res.sendStatus(403)
+      return res.sendStatus(204)
     }
   } catch (err) {
     console.error(`[user.checkToken] ${strings.DB_ERROR} ${req.params}`, err)
