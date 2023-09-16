@@ -30,7 +30,8 @@ const SupplierList = (
 ) => {
   const [keyword, setKeyword] = useState(supplierListKeyword)
   const [reload, setReload] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.User[]>([])
   const [rowCount, setRowCount] = useState(0)
@@ -39,7 +40,7 @@ const SupplierList = (
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [companyId, setCompanyId] = useState('')
   const [companyIndex, setCompanyIndex] = useState(-1)
-  
+
   const _fetch = async (page: number, keyword?: string) => {
     try {
       setLoading(true)
@@ -75,6 +76,7 @@ const SupplierList = (
       Helper.error(err)
     } finally {
       setLoading(false)
+      setInit(false)
     }
   }
 
@@ -104,7 +106,10 @@ const SupplierList = (
 
       if (element) {
         element.onscroll = () => {
-          if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+          if (fetch
+            && !loading
+            && window.scrollY > 0
+            && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
             const p = page + 1
             setPage(p)
             _fetch(p, keyword)
@@ -177,7 +182,9 @@ const SupplierList = (
     <>
       <section className="company-list">
         {rows.length === 0
-          ? !loading && (
+          ? !init
+          && !loading
+          && (
             <Card variant="outlined" className="empty-list">
               <CardContent>
                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
