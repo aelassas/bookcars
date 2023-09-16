@@ -43,9 +43,11 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Docker#ssl)
 5. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
 6. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
-7. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
-8. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
-9. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
+   1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
+   2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
+8. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+9. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
+10. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
 
 ### License
 
