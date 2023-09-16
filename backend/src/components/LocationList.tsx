@@ -110,9 +110,7 @@ const LocationList = (
   }, [locationReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile()) {
-      _fetch(page, keyword)
-    }
+    _fetch(page, keyword)
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -125,18 +123,13 @@ const LocationList = (
             && !loading
             && window.scrollY > 0
             && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
-            const p = page + 1
-            setPage(p)
-            _fetch(p, keyword)
+            setLoading(true)
+            setPage(page + 1)
           }
         }
       }
     }
   }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    _fetch(1, '')
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
     try {
