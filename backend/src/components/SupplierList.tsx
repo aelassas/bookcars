@@ -45,7 +45,7 @@ const SupplierList = (
     try {
       setLoading(true)
       console.log('fetch', page)
-      const data = await SupplierService.getCompanies(keyword || '', page, 4) // Env.PAGE_SIZE
+      const data = await SupplierService.getCompanies(keyword || '', page, Env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
