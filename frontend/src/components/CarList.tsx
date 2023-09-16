@@ -65,7 +65,8 @@ const CarList = (
   }
 ) => {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Car[]>([])
   const [rowCount, setRowCount] = useState(0)
@@ -89,7 +90,11 @@ const CarList = (
 
       if (element) {
         element.onscroll = () => {
-          if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+          if (fetch
+            && !loading
+            && window.scrollY > 0
+            && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
+            setLoading(true)
             setPage(page + 1)
           }
         }
@@ -117,7 +122,7 @@ const CarList = (
         deposit,
       }
 
-      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE) 
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
@@ -149,6 +154,7 @@ const CarList = (
       Helper.error(err)
     } finally {
       setLoading(false)
+      setInit(false)
     }
   }
 
@@ -226,7 +232,11 @@ const CarList = (
     <>
       <section className={`${className ? `${className} ` : ''}car-list`}>
         {rows.length === 0
-          ? !loading && !carListLoading && (
+          ?
+          !init
+          && !loading
+          && !carListLoading
+          && (
             <Card variant="outlined" className="empty-list">
               <CardContent>
                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>

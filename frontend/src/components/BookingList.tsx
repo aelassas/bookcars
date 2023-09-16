@@ -93,7 +93,8 @@ const BookingList = (
     page: 0,
   })
   const [load, setLoad] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [openCancelDialog, setOpenCancelDialog] = useState(false)
   const [cancelRequestSent, setCancelRequestSent] = useState(false)
   const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
@@ -155,6 +156,7 @@ const BookingList = (
     } finally {
       setLoading(false)
       setLoad(false)
+      setInit(false)
     }
   }
 
@@ -239,9 +241,9 @@ const BookingList = (
           if (fetch &&
             !loading &&
             target.scrollTop > 0 &&
-            target.offsetHeight + target.scrollTop >= target.scrollHeight) {
-            const p = page + 1
-            setPage(p)
+            target.offsetHeight + target.scrollTop + Env.INFINITE_SCROLL_OFFSET >= target.scrollHeight) {
+            setLoading(true)
+            setPage(page + 1)
           }
         }
       }
@@ -392,8 +394,10 @@ const BookingList = (
     <div className="bs-list">
       {user &&
         (rows.length === 0 ? (
-          !loading &&
-          !bookingLoading && (
+          !init
+          && !loading
+          && !bookingLoading
+          && (
             <Card variant="outlined" className="empty-list">
               <CardContent>
                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>
