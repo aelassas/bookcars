@@ -15,7 +15,7 @@ const Env = {
   CDN_USERS: process.env.REACT_APP_BC_CDN_USERS,
   CDN_CARS: process.env.REACT_APP_BC_CDN_CARS,
   PAGE_OFFSET: 200,
-  CAR_PAGE_OFFSET: 400,
+  INFINITE_SCROLL_OFFSET: 20,
   COMPANY_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_COMAPANY_IMAGE_WIDTH)) || 60,
   COMPANY_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_COMAPANY_IMAGE_HEIGHT)) || 30,
   CAR_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_CAR_IMAGE_WIDTH)) || 300,

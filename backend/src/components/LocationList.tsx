@@ -43,7 +43,8 @@ const LocationList = (
 ) => {
   const [keyword, setKeyword] = useState(locationKeyword)
   const [reload, setReload] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Location[]>([])
   const [rowCount, setRowCount] = useState(0)
@@ -53,7 +54,7 @@ const LocationList = (
   const [openInfoDialog, setOpenInfoDialog] = useState(false)
   const [locationId, setLocationId] = useState('')
   const [locationIndex, setLocationIndex] = useState(-1)
-  
+
   const _fetch = async (page: number, keyword?: string) => {
     try {
       setLoading(true)
@@ -90,6 +91,7 @@ const LocationList = (
       Helper.error(err)
     } finally {
       setLoading(false)
+      setInit(false)
     }
   }
 
@@ -119,7 +121,10 @@ const LocationList = (
 
       if (element) {
         element.onscroll = () => {
-          if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+          if (fetch
+            && !loading
+            && window.scrollY > 0
+            && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
             const p = page + 1
             setPage(p)
             _fetch(p, keyword)
@@ -208,7 +213,9 @@ const LocationList = (
     <>
       <section className="location-list">
         {rows.length === 0 ? (
-          !loading && (
+          !init
+          && !loading
+          && (
             <Card variant="outlined" className="empty-list">
               <CardContent>
                 <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>

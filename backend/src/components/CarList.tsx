@@ -80,7 +80,8 @@ const CarList = (
 
 ) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Car[]>([])
   const [page, setPage] = useState(1)
@@ -97,7 +98,10 @@ const CarList = (
 
       if (element) {
         element.onscroll = () => {
-          if (fetch && !loading && window.scrollY > 0 && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+          if (fetch
+            && !loading
+            && window.scrollY > 0
+            && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
             setPage(page + 1)
           }
         }
@@ -116,6 +120,10 @@ const CarList = (
     availability?: string[]
   ) => {
     try {
+      if (loading) {
+        return
+      }
+      console.log('fetch', page)
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
         companies: companies ?? [],
@@ -134,7 +142,7 @@ const CarList = (
       }
       const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-      let _rows = []
+      let _rows: bookcarsTypes.Car[] = []
       if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
         _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
@@ -157,6 +165,7 @@ const CarList = (
       Helper.error(err)
     } finally {
       setLoading(false)
+      setInit(false)
     }
   }
 
@@ -347,8 +356,10 @@ const CarList = (
       <>
         <section className={`${className ? `${className} ` : ''}car-list`}>
           {rows.length === 0
-            ? !loading &&
-            !carLoading && (
+            ? !init
+            && !loading
+            && !carLoading
+            && (
               <Card variant="outlined" className="empty-list">
                 <CardContent>
                   <Typography color="textSecondary">{strings.EMPTY_LIST}</Typography>

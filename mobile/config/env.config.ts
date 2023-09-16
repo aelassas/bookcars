@@ -31,7 +31,6 @@ export const BOOKINGS_PAGE_SIZE: number = Number.parseInt(BC_BOOKINGS_PAGE_SIZE)
 export const CDN_USERS: string = BC_CDN_USERS
 export const CDN_CARS: string = BC_CDN_CARS
 export const PAGE_OFFSET: number = 200
-export const CAR_PAGE_OFFSET: number = 400
 export const COMPANY_IMAGE_WIDTH: number = Number.parseInt(BC_COMAPANY_IMAGE_WIDTH) || 60
 export const COMPANY_IMAGE_HEIGHT: number = Number.parseInt(BC_COMAPANY_IMAGE_HEIGHT) || 30
 export const CAR_IMAGE_WIDTH: number = Number.parseInt(BC_CAR_IMAGE_WIDTH) || 300

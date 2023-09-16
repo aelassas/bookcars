@@ -90,7 +90,8 @@ const BookingList = (
     page: 0,
   })
   const [load, setLoad] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [init, setInit] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     setPage(paginationModel.page)
@@ -99,6 +100,9 @@ const BookingList = (
 
   const _fetch = async (page: number, user?: bookcarsTypes.User) => {
     try {
+      if (loading) {
+        return
+      }
       const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
       if (companies.length > 0) {
@@ -149,6 +153,7 @@ const BookingList = (
     } finally {
       setLoading(false)
       setLoad(false)
+      setInit(false)
     }
   }
 
@@ -198,7 +203,7 @@ const BookingList = (
   }, [load, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies.length > 0 && statuses.length > 0 && page > 0) {
+    if (companies.length > 0 && statuses.length > 0) {
       const columns = getColumns()
       setColumns(columns)
       setLoad(true)
@@ -240,7 +245,11 @@ const BookingList = (
         element.onscroll = (event: Event) => {
           if (fetch && !loading) {
             const target = event.target as HTMLDivElement
-            if (target.scrollTop > 0 && target.offsetHeight + target.scrollTop >= target.scrollHeight) {
+
+            if (
+              target.scrollTop > 0
+              && target.offsetHeight + target.scrollTop + Env.INFINITE_SCROLL_OFFSET >= target.scrollHeight
+            ) {
               const p = page + 1
               setPage(p)
             }
@@ -478,6 +487,7 @@ const BookingList = (
       {loggedUser &&
         (rows.length === 0 ? (
           !loading &&
+          !init &&
           !bookingLoading &&
           <Card variant="outlined" className="empty-list">
             <CardContent>
