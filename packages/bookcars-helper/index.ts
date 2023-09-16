@@ -2,7 +2,7 @@ import * as bookcarsTypes from 'bookcars-types'
 
 export function formatNumber(x?: number): string {
     if (typeof x === 'number') {
-        const parts: string[] = String(x).split('.')
+        const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
         return parts.join('.')
     }
