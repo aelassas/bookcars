@@ -102,6 +102,7 @@ const CarList = (
             && !loading
             && window.scrollY > 0
             && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
+            setLoading(true)
             setPage(page + 1)
           }
         }
@@ -120,10 +121,6 @@ const CarList = (
     availability?: string[]
   ) => {
     try {
-      if (loading) {
-        return
-      }
-      console.log('fetch', page)
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
         companies: companies ?? [],

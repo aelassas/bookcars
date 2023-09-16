@@ -100,14 +100,10 @@ const BookingList = (
 
   const _fetch = async (page: number, user?: bookcarsTypes.User) => {
     try {
-      if (loading) {
-        return
-      }
       const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
       if (companies.length > 0) {
         setLoading(true)
-
         const data = await BookingService.getBookings(
           {
             companies,
@@ -250,8 +246,8 @@ const BookingList = (
               target.scrollTop > 0
               && target.offsetHeight + target.scrollTop + Env.INFINITE_SCROLL_OFFSET >= target.scrollHeight
             ) {
-              const p = page + 1
-              setPage(p)
+              setLoading(true)
+              setPage(page + 1)
             }
           }
         }
