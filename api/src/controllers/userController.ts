@@ -219,7 +219,8 @@ export async function checkToken(req: Request, res: Response) {
     })
 
     if (user) {
-      const type = req.params.type as bookcarsTypes.AppType
+      const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
+
       if (
         ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
         (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
@@ -274,7 +275,8 @@ export async function resend(req: Request, res: Response) {
     const user = await User.findOne({ email })
 
     if (user) {
-      const type = req.params.type as bookcarsTypes.AppType
+      const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
+
       if (
         ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
         (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
@@ -357,7 +359,7 @@ export async function signin(req: Request, res: Response) {
 
   try {
     const user = await User.findOne({ email })
-    const type = req.params.type as bookcarsTypes.AppType
+    const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
     if (
       !password ||
