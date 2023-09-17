@@ -6,7 +6,13 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import * as CarService from '../services/CarService'
 import * as UserService from '../services/UserService'
-import { Button, Tooltip, Card, CardContent, Typography } from '@mui/material'
+import {
+  Button,
+  Tooltip,
+  Card,
+  CardContent,
+  Typography
+} from '@mui/material'
 import {
   LocalGasStation as FuelIcon,
   AccountTree as GearboxIcon,
@@ -122,7 +128,7 @@ const CarList = (
         deposit,
       }
 
-      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE) 
+      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
