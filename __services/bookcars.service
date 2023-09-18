@@ -4,7 +4,7 @@ Wants=mongod.service
 After=mongod.service
 
 [Service]
-ExecStart=/usr/bin/node -r dotenv/config app.js
+ExecStart=/usr/bin/npm start
 WorkingDirectory=/opt/bookcars/api
 Type=simple
 Restart=always
