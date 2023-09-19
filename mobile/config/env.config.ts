@@ -7,8 +7,8 @@ import {
   BC_BOOKINGS_PAGE_SIZE,
   BC_CDN_USERS,
   BC_CDN_CARS,
-  BC_COMAPANY_IMAGE_WIDTH,
-  BC_COMAPANY_IMAGE_HEIGHT,
+  BC_COMPANY_IMAGE_WIDTH,
+  BC_COMPANY_IMAGE_HEIGHT,
   BC_CAR_IMAGE_WIDTH,
   BC_CAR_IMAGE_HEIGHT,
   BC_MINIMUM_AGE,
@@ -31,8 +31,8 @@ export const BOOKINGS_PAGE_SIZE: number = Number.parseInt(BC_BOOKINGS_PAGE_SIZE)
 export const CDN_USERS: string = BC_CDN_USERS
 export const CDN_CARS: string = BC_CDN_CARS
 export const PAGE_OFFSET: number = 200
-export const COMPANY_IMAGE_WIDTH: number = Number.parseInt(BC_COMAPANY_IMAGE_WIDTH) || 60
-export const COMPANY_IMAGE_HEIGHT: number = Number.parseInt(BC_COMAPANY_IMAGE_HEIGHT) || 30
+export const COMPANY_IMAGE_WIDTH: number = Number.parseInt(BC_COMPANY_IMAGE_WIDTH) || 60
+export const COMPANY_IMAGE_HEIGHT: number = Number.parseInt(BC_COMPANY_IMAGE_HEIGHT) || 30
 export const CAR_IMAGE_WIDTH: number = Number.parseInt(BC_CAR_IMAGE_WIDTH) || 300
 export const CAR_IMAGE_HEIGHT: number = Number.parseInt(BC_CAR_IMAGE_HEIGHT) || 200
 export const CAR_OPTION_IMAGE_HEIGHT: number = 85
