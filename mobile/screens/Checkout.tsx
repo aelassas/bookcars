@@ -121,8 +121,6 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     setAdBirthDate(adValidate(_birthDate))
   }, [_birthDate])
 
-  // TODO adRequired
-
   const fullNameRef = useRef<ReactTextInput>(null)
   const emailRef = useRef<ReactTextInput>(null)
   const phoneRef = useRef<ReactTextInput>(null)
