@@ -22,7 +22,6 @@ const Bookings = () => {
   const [companies, setCompanies] = useState<string[]>([])
   const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
-  const [reload, setReload] = useState(false)
   const [loadingCompanies, setLoadingCompanies] = useState(true)
   const [offset, setOffset] = useState(0)
 
@@ -36,22 +35,15 @@ const Bookings = () => {
   }, [user])
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
-    setReload(bookcarsHelper.arrayEqual(companies, newCompanies))
+    setCompanies(bookcarsHelper.clone(newCompanies))
   }
 
   const handleStatusFilterChange = (newStatuses: bookcarsTypes.BookingStatus[]) => {
-    setStatuses(newStatuses)
-    setReload(bookcarsHelper.arrayEqual(statuses, newStatuses))
+    setStatuses(bookcarsHelper.clone(newStatuses))
   }
 
   const handleBookingFilterSubmit = (newFilter: bookcarsTypes.Filter | null) => {
-    setFilter(newFilter)
-    setReload(bookcarsHelper.filterEqual(filter, newFilter))
-  }
-
-  const handleBookingListLoad = () => {
-    setReload(false)
+    setFilter(bookcarsHelper.clone(newFilter))
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
@@ -109,8 +101,6 @@ const Bookings = () => {
               statuses={statuses}
               filter={filter}
               loading={loadingCompanies}
-              reload={reload}
-              onLoad={handleBookingListLoad}
               hideDates={Env.isMobile()}
               checkboxSelection={!Env.isMobile()}
             />
