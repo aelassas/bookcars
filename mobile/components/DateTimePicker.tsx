@@ -127,11 +127,11 @@ const DateTimePicker = (
         {show && (
           <ReactDateTimePicker
             mode={mode}
-            value={value ?? now}
+            value={value || now}
             minimumDate={minimumDate}
             onChange={(event, date) => {
               setShow(false)
-              if (date && date.getTime() !== now.getTime()) {
+              if (event.type === 'set' && date) {
                 setValue(date)
                 if (onChange) {
                   onChange(date)
