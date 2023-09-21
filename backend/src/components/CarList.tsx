@@ -122,6 +122,7 @@ const CarList = (
   ) => {
     try {
       setLoading(true)
+
       const payload: bookcarsTypes.GetCarsPayload = {
         companies: companies ?? [],
         fuel: fuel,

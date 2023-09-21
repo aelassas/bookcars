@@ -4,6 +4,7 @@ import { strings } from '../lang/cars'
 import Accordion from './Accordion'
 import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/availability-filter.css'
 
@@ -54,7 +55,7 @@ const AvailabilityFilter = (
       setValues(values)
 
       if (onChange) {
-        onChange(values)
+        onChange(bookcarsHelper.clone(values))
       }
     } else {
       Helper.error()
@@ -91,7 +92,7 @@ const AvailabilityFilter = (
       setValues(values)
 
       if (onChange) {
-        onChange(values)
+        onChange(bookcarsHelper.clone(values))
       }
     } else {
       Helper.error()
@@ -126,7 +127,7 @@ const AvailabilityFilter = (
         setValues(values)
 
         if (onChange) {
-          onChange(values)
+          onChange(bookcarsHelper.clone(values))
         }
       }
     } else {

@@ -3,6 +3,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import Accordion from './Accordion'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/mileage-filter.css'
 
@@ -49,7 +50,7 @@ const MileageFilter = (
     setValues(values)
 
     if (onChange) {
-      onChange(values)
+      onChange(bookcarsHelper.clone(values))
     }
   }
 
@@ -82,7 +83,7 @@ const MileageFilter = (
     setValues(values)
 
     if (onChange) {
-      onChange(values)
+      onChange(bookcarsHelper.clone(values))
     }
   }
 
@@ -121,7 +122,7 @@ const MileageFilter = (
       setValues(values)
 
       if (onChange) {
-        onChange(values)
+        onChange(bookcarsHelper.clone(values))
       }
     }
   }

@@ -104,14 +104,17 @@ const BookingList = (
 
       if (companies && statuses) {
         setLoading(true)
+
+        const payload: bookcarsTypes.GetBookingsPayload = {
+          companies,
+          statuses,
+          filter: filter || undefined,
+          car,
+          user: (user && user._id) || undefined,
+        }
+
         const data = await BookingService.getBookings(
-          {
-            companies,
-            statuses,
-            filter: filter || undefined,
-            car,
-            user: (user && user._id) || undefined,
-          },
+          payload,
           page,
           _pageSize,
         )
