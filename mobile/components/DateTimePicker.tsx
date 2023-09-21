@@ -52,7 +52,7 @@ const DateTimePicker = (
 
   useEffect(() => {
     setValue(dateTimeValue)
-    setLabel((value && bookcarsHelper.capitalize(format(value, _format, { locale }))) || dateTimeLabel)
+    setLabel((dateTimeValue && bookcarsHelper.capitalize(format(dateTimeValue, _format, { locale }))) || dateTimeLabel)
   }, [dateTimeValue]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const styles = StyleSheet.create({

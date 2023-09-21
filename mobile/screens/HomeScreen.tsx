@@ -16,6 +16,8 @@ import DateTimePicker from '../components/DateTimePicker'
 const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
   const isFocused = useIsFocused()
 
+  const dateOffset = 3
+
   const _fromDate = new Date()
   _fromDate.setDate(_fromDate.getDate() + 1)
   _fromDate.setHours(0)
@@ -27,10 +29,13 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   _fromTime.setHours(10)
 
   const _toDate = new Date(_fromDate)
-  _toDate.setDate(_toDate.getDate() + 3)
+  _toDate.setDate(_toDate.getDate() + dateOffset)
 
   const _toTime = new Date(_toDate)
   _toTime.setHours(10)
+
+  const _minimumDate = new Date()
+  _minimumDate.setDate(_minimumDate.getDate() + 2)
 
   const [init, setInit] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -43,6 +48,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [fromTime, setFromTime] = useState(_fromTime)
   const [toTime, setToTime] = useState(_toTime)
   const [toDate, setToDate] = useState(_toDate)
+  const [minimumDate, setMinimumDate] = useState(_minimumDate)
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [blur, setBlur] = useState(false)
   const [reload, setReload] = useState(false)
@@ -117,6 +123,8 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
 
     const from = Helper.dateTime(fromDate, fromTime)
     const to = Helper.dateTime(toDate, toTime)
+    console.log('from', from)
+    console.log('to', to)
 
     if (!pickupLocation) {
       return Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
@@ -181,7 +189,18 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               label={i18n.t('FROM_DATE')}
               value={fromDate}
               minimumDate={_fromDate}
-              onChange={(date: Date) => setFromDate(date)}
+              onChange={(date: Date) => {
+                const minimumDate = new Date(date)
+                minimumDate.setDate(date.getDate() + 1)
+                setMinimumDate(minimumDate)
+
+                if (toDate && toDate.getTime() < date.getTime()) {
+                  const _toDate = new Date(date)
+                  _toDate.setDate(date.getDate() + dateOffset)
+                  setToDate(_toDate)
+                }
+                setFromDate(date)
+              }}
               onPress={blurLocations}
             />
 
@@ -201,7 +220,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('TO_DATE')}
               value={toDate}
-              minimumDate={fromDate}
+              minimumDate={minimumDate}
               onChange={(date: Date) => setToDate(date)}
               onPress={blurLocations}
             />
