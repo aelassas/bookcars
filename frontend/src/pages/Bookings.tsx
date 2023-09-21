@@ -30,16 +30,16 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
+  const handleSupplierFilterChange = (companies: string[]) => {
+    setCompanies(companies)
   }
 
-  const handleStatusFilterChange = (newStatuses: bookcarsTypes.BookingStatus[]) => {
-    setStatuses(newStatuses)
+  const handleStatusFilterChange = (statuses: bookcarsTypes.BookingStatus[]) => {
+    setStatuses(statuses)
   }
 
-  const handleBookingFilterSubmit = (newFilter: bookcarsTypes.Filter | null) => {
-    setFilter(newFilter)
+  const handleBookingFilterSubmit = (filter: bookcarsTypes.Filter | null) => {
+    setFilter(filter)
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
