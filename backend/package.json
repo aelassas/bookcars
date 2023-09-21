@@ -6,11 +6,11 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.9",
+    "@mui/material": "^5.14.10",
     "@mui/x-data-grid": "^6.14.0",
     "@mui/x-date-pickers": "^6.14.0",
-    "@types/node": "^20.6.2",
-    "@types/react": "^18.2.21",
+    "@types/node": "^20.6.3",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
     "@types/validator": "^13.11.1",
     "axios": "^1.5.0",
@@ -55,6 +55,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "npm-check-updates": "^16.14.3"
+    "npm-check-updates": "^16.14.4"
   }
 }
