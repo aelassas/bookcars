@@ -3,6 +3,7 @@ import { strings as commonStrings } from '../lang/common'
 import * as Helper from '../common/Helper'
 import Accordion from '../components/Accordion'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/status-filter.css'
 
@@ -59,7 +60,7 @@ const StatusFilter = (
 
     setCheckedStatuses(checkedStatuses)
     if (onChange) {
-      onChange(checkedStatuses)
+      onChange(bookcarsHelper.clone(checkedStatuses))
     }
   }
 
@@ -87,7 +88,7 @@ const StatusFilter = (
       setCheckedStatuses(allStatuses)
 
       if (onChange) {
-        onChange(allStatuses)
+        onChange(bookcarsHelper.clone(allStatuses))
       }
     }
   }
