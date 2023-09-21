@@ -6,6 +6,7 @@ import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
 import { FormControl, Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/car-filter.css'
 
@@ -82,7 +83,8 @@ const CarFilter = (
     }
 
     if (onSubmit) {
-      onSubmit({ pickupLocation, dropOffLocation, from, to })
+      const filter: bookcarsTypes.CarFilter = { pickupLocation, dropOffLocation, from, to }
+      onSubmit(bookcarsHelper.clone(filter))
     }
   }
 

@@ -26,20 +26,14 @@ const Cars = () => {
   const [to, setTo] = useState<Date>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>([])
-  const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [deposit, setDeposit] = useState(-1)
 
-  const handleCarListLoad = () => {
-    setReload(false)
-  }
-
   const handleSupplierFilterChange = (newCompanies: string[]) => {
     setCompanies(newCompanies)
-    setReload(bookcarsHelper.arrayEqual(newCompanies, companies))
   }
 
   const handleCarFilterSubmit = (filter: bookcarsTypes.CarFilter) => {
@@ -47,27 +41,22 @@ const Cars = () => {
     setDropOffLocation(filter.dropOffLocation)
     setFrom(filter.from)
     setTo(filter.to)
-    setReload((pickupLocation && pickupLocation._id === filter.pickupLocation._id) || false)
   }
 
   const handleFuelFilterChange = (values: bookcarsTypes.CarType[]) => {
     setFuel(values)
-    setReload(bookcarsHelper.arrayEqual(values, fuel))
   }
 
   const handleGearboxFilterChange = (values: bookcarsTypes.GearboxType[]) => {
     setGearbox(values)
-    setReload(bookcarsHelper.arrayEqual(values, gearbox))
   }
 
   const handleMileageFilterChange = (values: bookcarsTypes.Mileage[]) => {
     setMileage(values)
-    setReload(bookcarsHelper.arrayEqual(values, mileage))
   }
 
   const handleDepositFilterChange = (value: number) => {
     setDeposit(value)
-    setReload(value === deposit)
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
@@ -158,11 +147,9 @@ const Cars = () => {
               deposit={deposit}
               pickupLocation={pickupLocation._id}
               dropOffLocation={dropOffLocation._id}
-              reload={reload}
               loading={loading}
               from={from}
               to={to}
-              onLoad={handleCarListLoad}
             />
           </div>
         </div>

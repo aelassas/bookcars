@@ -26,7 +26,6 @@ const Cars = () => {
   const [companies, setCompanies] = useState<string[]>([])
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
-  const [reload, setReload] = useState(false)
   const [loading, setLoading] = useState(true)
   const [gearbox, setGearbox] = useState<string[]>([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [fuel, setFuel] = useState<string[]>([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
@@ -36,17 +35,14 @@ const Cars = () => {
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
-    setReload(newKeyword === keyword)
   }
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
     setCompanies(newCompanies)
-    setReload(bookcarsHelper.arrayEqual(newCompanies, companies))
   }
 
   const handleCarListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Car> = (data) => {
     if (data) {
-      setReload(false)
       setRowCount(data.rowCount)
     }
   }
@@ -57,27 +53,22 @@ const Cars = () => {
 
   const handleFuelFilterChange = (values: string[]) => {
     setFuel(values)
-    setReload(bookcarsHelper.arrayEqual(values, fuel))
   }
 
   const handleGearboxFilterChange = (values: string[]) => {
     setGearbox(values)
-    setReload(bookcarsHelper.arrayEqual(values, gearbox))
   }
 
   const handleMileageFilterChange = (values: string[]) => {
     setMileage(values)
-    setReload(bookcarsHelper.arrayEqual(values, mileage))
   }
 
   const handleDepositFilterChange = (value: number) => {
     setDeposit(value)
-    setReload(value === deposit)
   }
 
   const handleAvailabilityFilterChange = (values: string[]) => {
     setAvailability(values)
-    setReload(bookcarsHelper.arrayEqual(values, availability))
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
@@ -127,7 +118,6 @@ const Cars = () => {
               deposit={deposit}
               availability={availability}
               keyword={keyword}
-              reload={reload}
               loading={loading}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
