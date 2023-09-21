@@ -199,9 +199,9 @@ const BookingList = (
 
   useEffect(() => {
     if (reload) {
-      setPage(0)
-      paginationModel.page = 0
-      setPaginationModel(paginationModel)
+      const _paginationModel = bookcarsHelper.clone(paginationModel)
+      _paginationModel.page = 0
+      setPaginationModel(_paginationModel)
       _fetch(0, user)
       setReload(false)
     }
