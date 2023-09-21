@@ -19,7 +19,7 @@ const Bookings = () => {
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>([])
+  const [companies, setCompanies] = useState<string[]>()
   const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingCompanies, setLoadingCompanies] = useState(true)
@@ -35,15 +35,15 @@ const Bookings = () => {
   }, [user])
 
   const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(bookcarsHelper.clone(newCompanies))
+    setCompanies(newCompanies)
   }
 
   const handleStatusFilterChange = (newStatuses: bookcarsTypes.BookingStatus[]) => {
-    setStatuses(bookcarsHelper.clone(newStatuses))
+    setStatuses(newStatuses)
   }
 
   const handleBookingFilterSubmit = (newFilter: bookcarsTypes.Filter | null) => {
-    setFilter(bookcarsHelper.clone(newFilter))
+    setFilter(newFilter)
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {

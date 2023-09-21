@@ -82,8 +82,8 @@ const BookingList = (
   const [rowCount, setRowCount] = useState(0)
   const [fetch, setFetch] = useState(false)
   const [selectedId, setSelectedId] = useState('')
-  const [companies, setCompanies] = useState<string[]>(bookingCompanies || [])
-  const [statuses, setStatuses] = useState<string[]>(bookingStatuses || [])
+  const [companies, setCompanies] = useState<string[] | undefined>(bookingCompanies)
+  const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
   const [reload, setReload] = useState(bookingReload)
   const [car, setCar] = useState<string>(bookingCar || '')
@@ -108,7 +108,7 @@ const BookingList = (
     try {
       const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-      if (companies.length > 0) {
+      if (companies && statuses) {
         setLoading(true)
 
         const data = await BookingService.getBookings(
@@ -161,15 +161,15 @@ const BookingList = (
   }
 
   useEffect(() => {
-    setCompanies(bookingCompanies || [])
+    setCompanies(bookingCompanies)
   }, [bookingCompanies])
 
   useEffect(() => {
-    setStatuses(bookingStatuses || [])
+    setStatuses(bookingStatuses)
   }, [bookingStatuses])
 
   useEffect(() => {
-    setFilter(bookingFilter || null)
+    setFilter(bookingFilter)
   }, [bookingFilter])
 
   useEffect(() => {
@@ -189,24 +189,24 @@ const BookingList = (
   }, [bookingUser])
 
   useEffect(() => {
+    if (load) {
+      _fetch(page, user)
+      setLoad(false)
+    }
+  }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     if (reload) {
       setPage(0)
       paginationModel.page = 0
       setPaginationModel(paginationModel)
       _fetch(0, user)
-      setLoad(false)
-      setReload(false)
-      return
-    }
-    if (load) {
-      _fetch(page, user)
-      setLoad(false)
       setReload(false)
     }
-  }, [load, reload]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies.length > 0 && statuses.length > 0 && page > 0) {
+    if (companies && statuses && page > 0) {
       const columns = getColumns()
       setColumns(columns)
       setLoad(true)
@@ -214,7 +214,7 @@ const BookingList = (
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies.length > 0 && statuses.length > 0) {
+    if (companies && statuses) {
       const columns = getColumns()
       setColumns(columns)
       setReload(true)
@@ -222,7 +222,7 @@ const BookingList = (
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies.length > 0 && statuses.length > 0) {
+    if (companies && statuses) {
       const columns = getColumns()
       setColumns(columns)
       setReload(true)

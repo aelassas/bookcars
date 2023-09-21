@@ -69,7 +69,7 @@ const SupplierFilter = (
     setCheckedSuppliers(checkedSuppliers)
 
     if (onChange) {
-      onChange(checkedSuppliers)
+      onChange(bookcarsHelper.clone(checkedSuppliers))
     }
   }
 
@@ -97,7 +97,7 @@ const SupplierFilter = (
       setCheckedSuppliers(companyIds)
 
       if (onChange) {
-        onChange(companyIds)
+        onChange(bookcarsHelper.clone(companyIds))
       }
     }
   }
