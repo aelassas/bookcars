@@ -196,10 +196,10 @@ export const fr = {
   PAY_ONLINE: 'Payer en ligne',
   PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
   PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-  FROM_DATE_EMPTY: 'Veuillez saisir la date de prise en charge',
-  FROM_TIME_EMPTY: "Veuillez saisir l'heure de prise en charge",
-  TO_DATE_EMPTY: 'Veuillez saisir la date de restitution',
-  TO_TIME_EMPTY: "Veuillez saisir l'heure de restitution",
+  FROM_DATE_EMPTY: 'Veuillez saisir la date de prise en charge.',
+  FROM_TIME_EMPTY: "Veuillez saisir l'heure de prise en charge.",
+  TO_DATE_EMPTY: 'Veuillez saisir la date de restitution.',
+  TO_TIME_EMPTY: "Veuillez saisir l'heure de restitution.",
 }
 
 export default fr
