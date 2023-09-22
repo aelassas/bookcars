@@ -129,3 +129,5 @@ google-services.json
 
 android/
 ios/
+
+%ProgramData%/
