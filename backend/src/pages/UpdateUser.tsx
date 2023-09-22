@@ -375,11 +375,13 @@ const UpdateUser = () => {
                     label={cuStrings.BIRTH_DATE}
                     value={birthDate}
                     required
-                    onChange={(birthDate: Date) => {
-                      const birthDateValid = validateBirthDate(birthDate)
+                    onChange={(birthDate) => {
+                      if (birthDate) {
+                        const birthDateValid = validateBirthDate(birthDate)
 
-                      setBirthDate(birthDate)
-                      setBirthDateValid(birthDateValid)
+                        setBirthDate(birthDate)
+                        setBirthDateValid(birthDateValid)
+                      }
                     }}
                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
                   />

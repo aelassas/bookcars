@@ -14,9 +14,13 @@ import '../assets/css/home.css'
 
 const Home = () => {
   const navigate = useNavigate()
+
+  const _minDate = new Date()
+  _minDate.setDate(_minDate.getDate() + 1)
+
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropOffLocation, setDropOffLocation] = useState('')
-  const [minDate, setMinDate] = useState<Date>()
+  const [minDate, setMinDate] = useState(_minDate)
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [sameLocation, setSameLocation] = useState(true)
@@ -32,7 +36,10 @@ const Home = () => {
     const to = new Date(from)
     to.setDate(to.getDate() + 3)
 
-    setMinDate(new Date())
+    const minDate = new Date(from)
+    minDate.setDate(minDate.getDate() + 1)
+
+    setMinDate(minDate)
     setFrom(from)
     setTo(to)
   }, [])
@@ -114,8 +121,21 @@ const Home = () => {
                   minDate={new Date()}
                   variant="outlined"
                   required
-                  onChange={(from) => {
-                    setFrom(from)
+                  onChange={(date) => {
+                    if (date) {
+
+                      if (to && to.getTime() <= date.getTime()) {
+                        setTo(undefined)
+                      }
+
+                      const minDate = new Date(date)
+                      minDate.setDate(date.getDate() + 1)
+                      setMinDate(minDate)
+
+                      setFrom(date)
+                    } else {
+                      setMinDate(_minDate)
+                    }
                   }}
                   language={UserService.getLanguage()}
                 />
@@ -127,8 +147,8 @@ const Home = () => {
                   minDate={minDate}
                   variant="outlined"
                   required
-                  onChange={(to) => {
-                    setTo(to)
+                  onChange={(date) => {
+                    setTo(date || undefined)
                   }}
                   language={UserService.getLanguage()}
                 />

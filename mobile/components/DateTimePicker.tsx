@@ -4,6 +4,7 @@ import ReactDateTimePicker from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import * as Env from '../config/env.config'
 
@@ -18,7 +19,9 @@ const DateTimePicker = (
     error,
     style,
     helperText,
-    minimumDate,
+    minDate,
+    readOnly,
+    hideClearButton,
     onPress,
     onChange
   }: {
@@ -31,9 +34,11 @@ const DateTimePicker = (
     error?: boolean
     style?: object
     helperText?: string
-    minimumDate?: Date
+    minDate?: Date
+    readOnly?: boolean
+    hideClearButton?: boolean
     onPress?: () => void
-    onChange?: (date: Date) => void
+    onChange?: (date: Date | undefined) => void
   }
 ) => {
   const [label, setLabel] = useState('')
@@ -99,6 +104,12 @@ const DateTimePicker = (
       fontWeight: '400',
       paddingLeft: 5,
     },
+    clear: {
+      flex: 0,
+      position: 'absolute',
+      right: 10,
+      top: small ? 7 : 17,
+    },
   })
 
   return (
@@ -122,13 +133,28 @@ const DateTimePicker = (
           >
             {label}
           </Text>
+          {!readOnly && value !== undefined && !hideClearButton && (
+            <MaterialIcons
+              style={styles.clear}
+              name="clear"
+              size={22}
+              color="rgba(0, 0, 0, 0.28)"
+              onPress={() => {
+                setLabel(dateTimeLabel)
+                setValue(undefined)
+                if (onChange) {
+                  onChange(undefined)
+                }
+              }}
+            />
+          )}
         </Pressable>
         {helperText && <Text style={styles.helperText}>{helperText}</Text>}
         {show && (
           <ReactDateTimePicker
             mode={mode}
             value={value || now}
-            minimumDate={minimumDate}
+            minimumDate={minDate}
             onChange={(event, date) => {
               setShow(false)
               if (event.type === 'set' && date) {

@@ -562,9 +562,9 @@ const UpdateBooking = () => {
                   label={commonStrings.FROM}
                   value={from}
                   required
-                  onChange={(from: Date) => {
-                    if (from) {
-                      booking.from = from
+                  onChange={(date) => {
+                    if (date) {
+                      booking.from = date
 
                       Helper.price(
                         booking,
@@ -572,8 +572,15 @@ const UpdateBooking = () => {
                         (price) => {
                           setBooking(booking)
                           setPrice(price)
-                          setFrom(from)
-                          setMinDate(from)
+                          setFrom(date)
+                          
+                          const minDate = new Date(date)
+                          minDate.setDate(minDate.getDate() + 1)
+                          setMinDate(minDate)
+
+                          if (to && to.getTime() <= date.getTime()) {
+                            setTo(undefined)
+                          }
                         },
                         (err) => {
                           toastErr(err)
@@ -590,9 +597,9 @@ const UpdateBooking = () => {
                   value={to}
                   minDate={minDate}
                   required
-                  onChange={(to: Date) => {
-                    if (to) {
-                      booking.to = to
+                  onChange={(date) => {
+                    if (date) {
+                      booking.to = date
 
                       Helper.price(
                         booking,
@@ -600,7 +607,7 @@ const UpdateBooking = () => {
                         (price) => {
                           setBooking(booking)
                           setPrice(price)
-                          setTo(to)
+                          setTo(date)
                         },
                         (err) => {
                           toastErr(err)
@@ -740,10 +747,12 @@ const UpdateBooking = () => {
                       label={commonStrings.BIRTH_DATE}
                       value={_birthDate}
                       required
-                      onChange={(_birthDate: Date) => {
-                        const _birthDateValid = _validateBirthDate(_birthDate)
-                        set_BirthDate(_birthDate)
-                        set_BirthDateValid(_birthDateValid)
+                      onChange={(_birthDate) => {
+                        if (_birthDate) {
+                          const _birthDateValid = _validateBirthDate(_birthDate)
+                          set_BirthDate(_birthDate)
+                          set_BirthDateValid(_birthDateValid)
+                        }
                       }}
                       language={UserService.getLanguage()}
                     />

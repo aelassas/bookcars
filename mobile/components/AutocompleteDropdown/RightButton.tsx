@@ -55,7 +55,7 @@ const RightButtonComponent = (
     >
       {!loading && showClear && (
         <Pressable onPress={onClearPress} hitSlop={15} style={styles.clearButton}>
-          {ClearIconComponent ?? <MaterialIcons name="clear" size={20} color="rgba(0, 0, 0, 0.54)" />}
+          {ClearIconComponent ?? <MaterialIcons name="clear" size={20} color="rgba(0, 0, 0, 0.28)" />}
         </Pressable>
       )}
       {loading && <ActivityIndicator color="#999" />}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, View, TextInput as ReactTextInput } from 'react-native'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import i18n from '../lang/i18n'
 import Accordion from './Accordion'
@@ -31,6 +31,8 @@ const BookingFilter = (
   const [pickupLocation, setPickupLocation] = useState<string>()
   const [dropOffLocation, setDropOffLocation] = useState<string>()
   const [keyword, setKeyword] = useState('')
+  const [minDate, setMinDate] = useState<Date>()
+
   const searchRef = useRef<ReactTextInput>(null)
 
   const _init = async () => {
@@ -89,7 +91,22 @@ const BookingFilter = (
             size="small"
             label={i18n.t('FROM')}
             value={from}
-            onChange={(date) => setFrom(date)}
+            onChange={(date) => {
+              if (date) {
+                date.setHours(12, 0, 0, 0)
+
+                if (to && to.getTime() <= date.getTime()) {
+                  setTo(undefined)
+                }
+
+                const minDate = new Date(date)
+                minDate.setDate(date.getDate() + 1)
+                setMinDate(minDate)
+              } else {
+                setMinDate(undefined)
+              }
+              setFrom(date)
+            }}
             onPress={blurLocations}
           />
 
@@ -101,8 +118,13 @@ const BookingFilter = (
             size="small"
             label={i18n.t('TO')}
             value={to}
-            minimumDate={from}
-            onChange={(date) => setTo(date)}
+            minDate={minDate}
+            onChange={(date) => {
+              if (date) {
+                date.setHours(12, 0, 0, 0)
+              }
+              setTo(date)
+            }}
             onPress={blurLocations}
           />
 
