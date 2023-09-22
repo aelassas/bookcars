@@ -196,8 +196,8 @@ export const en = {
   PAY_ONLINE: 'Pay online',
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
-  FROM_DATE_EMPTY: 'Please enter the pickup date',
-  FROM_TIME_EMPTY: 'Please enter the pickup time',
-  TO_DATE_EMPTY: 'Please enter the drop-off date',
-  TO_TIME_EMPTY: 'Please enter the drop-off time',
+  FROM_DATE_EMPTY: 'Please enter the pickup date.',
+  FROM_TIME_EMPTY: 'Please enter the pickup time.',
+  TO_DATE_EMPTY: 'Please enter the drop-off date.',
+  TO_TIME_EMPTY: 'Please enter the drop-off time.',
 }
