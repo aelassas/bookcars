@@ -34,8 +34,8 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const _toTime = new Date(_toDate)
   _toTime.setHours(10)
 
-  const _minimumDate = new Date()
-  _minimumDate.setDate(_minimumDate.getDate() + 2)
+  const _minDate = new Date()
+  _minDate.setDate(_minDate.getDate() + 2)
 
   const [init, setInit] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -44,11 +44,11 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [closePickupLocation, setClosePickupLocation] = useState(false)
   const [closeDropOffLocation, setCloseDropOffLocation] = useState(false)
   const [sameLocation, setSameLocation] = useState(true)
-  const [fromDate, setFromDate] = useState(_fromDate)
-  const [fromTime, setFromTime] = useState(_fromTime)
-  const [toTime, setToTime] = useState(_toTime)
-  const [toDate, setToDate] = useState(_toDate)
-  const [minimumDate, setMinimumDate] = useState(_minimumDate)
+  const [fromDate, setFromDate] = useState<Date | undefined>(_fromDate)
+  const [fromTime, setFromTime] = useState<Date | undefined>(_fromTime)
+  const [toTime, setToTime] = useState<Date | undefined>(_toTime)
+  const [toDate, setToDate] = useState<Date | undefined>(_toDate)
+  const [minDate, setMinDate] = useState(_minDate)
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [blur, setBlur] = useState(false)
   const [reload, setReload] = useState(false)
@@ -121,11 +121,6 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const handleSearch = () => {
     blurLocations()
 
-    const from = Helper.dateTime(fromDate, fromTime)
-    const to = Helper.dateTime(toDate, toTime)
-    console.log('from', from)
-    console.log('to', to)
-
     if (!pickupLocation) {
       return Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
     }
@@ -133,6 +128,25 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     if (!dropOffLocation) {
       return Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
     }
+
+    if (!fromDate) {
+      return Helper.toast(i18n.t('FROM_DATE_EMPTY'))
+    }
+
+    if (!fromTime) {
+      return Helper.toast(i18n.t('FROM_TIME_EMPTY'))
+    }
+
+    if (!toDate) {
+      return Helper.toast(i18n.t('TO_DATE_EMPTY'))
+    }
+
+    if (!toTime) {
+      return Helper.toast(i18n.t('TO_TIME_EMPTY'))
+    }
+
+    const from = Helper.dateTime(fromDate, fromTime)
+    const to = Helper.dateTime(toDate, toTime)
 
     const params = {
       pickupLocation,
@@ -188,17 +202,21 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('FROM_DATE')}
               value={fromDate}
-              minimumDate={_fromDate}
-              onChange={(date: Date) => {
-                const minimumDate = new Date(date)
-                minimumDate.setDate(date.getDate() + 1)
-                setMinimumDate(minimumDate)
+              minDate={_fromDate}
+              onChange={(date) => {
+                if (date) {
 
-                if (toDate && toDate.getTime() < date.getTime()) {
-                  const _toDate = new Date(date)
-                  _toDate.setDate(date.getDate() + dateOffset)
-                  setToDate(_toDate)
+                  if (toDate && toDate.getTime() <= date.getTime()) {
+                    setToDate(undefined)
+                  }
+
+                  const minDate = new Date(date)
+                  minDate.setDate(date.getDate() + 1)
+                  setMinDate(minDate)
+                } else {
+                  setMinDate(_minDate)
                 }
+
                 setFromDate(date)
               }}
               onPress={blurLocations}
@@ -210,7 +228,9 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('FROM_TIME')}
               value={fromTime}
-              onChange={(time: Date) => setFromTime(time)}
+              onChange={(time) => {
+                setFromTime(time)
+              }}
               onPress={blurLocations}
             />
 
@@ -220,8 +240,10 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('TO_DATE')}
               value={toDate}
-              minimumDate={minimumDate}
-              onChange={(date: Date) => setToDate(date)}
+              minDate={minDate}
+              onChange={(date) => {
+                setToDate(date)
+              }}
               onPress={blurLocations}
             />
 
@@ -231,7 +253,9 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('TO_TIME')}
               value={toTime}
-              onChange={(time: Date) => setToTime(time)}
+              onChange={(time) => {
+                setToTime(time)
+              }}
               onPress={blurLocations} />
 
             <Button style={styles.component} label={i18n.t('SEARCH')} onPress={handleSearch} />

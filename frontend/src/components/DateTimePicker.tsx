@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
@@ -24,10 +24,14 @@ const DateTimePicker = (
       language?: string
       variant?: TextFieldVariants
       readOnly?: boolean
-      onChange: (value: Date) => void
+      onChange: (value: Date | null) => void
     }
 ) => {
   const [value, setValue] = useState(dateTimeValue || null)
+
+  useEffect(() => {
+    setValue(dateTimeValue || null)
+  }, [dateTimeValue])
 
   return (
     <LocalizationProvider adapterLocale={language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
@@ -36,11 +40,11 @@ const DateTimePicker = (
         // showToolbar
         value={value}
         readOnly={readOnly}
-        onChange={(value) => {
-          const date = value as Date
-          setValue(date)
+        onAccept={(value) => {
+          setValue(value)
+
           if (onChange) {
-            onChange(date)
+            onChange(value)
           }
         }}
         minDate={minDate}

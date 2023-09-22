@@ -320,10 +320,12 @@ const SignUp = () => {
                     variant="outlined"
                     required
                     onChange={(birthDate) => {
-                      const birthDateValid = validateBirthDate(birthDate)
+                      if (birthDate) {
+                        const birthDateValid = validateBirthDate(birthDate)
 
-                      setBirthDate(birthDate)
-                      setBirthDateValid(birthDateValid)
+                        setBirthDate(birthDate)
+                        setBirthDateValid(birthDateValid)
+                      }
                     }}
                     language={language}
                   />

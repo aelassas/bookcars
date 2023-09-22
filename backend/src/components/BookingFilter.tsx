@@ -67,23 +67,37 @@ const BookingFilter = ({
         <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.FROM}
-            onChange={(from: Date) => {
-              setFrom(from)
-              setMinDate(from)
+            onChange={(date) => {
+              if (date) {
+
+                if (to && to.getTime() <= date.getTime()) {
+                  setTo(undefined)
+                }
+
+                const minDate = new Date(date)
+                minDate.setDate(date.getDate() + 1)
+                setMinDate(minDate)
+
+                setFrom(date)
+              } else {
+                setMinDate(undefined)
+              }
             }}
             language={language}
             variant="standard"
+            value={from}
           />
         </FormControl>
         <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.TO}
             minDate={minDate}
-            onChange={(to: Date) => {
-              setTo(to)
+            onChange={(date) => {
+              setTo(date || undefined)
             }}
             language={language}
             variant="standard"
+            value={to}
           />
         </FormControl>
         <FormControl fullWidth margin="dense">

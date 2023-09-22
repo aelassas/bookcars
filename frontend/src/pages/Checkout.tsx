@@ -929,10 +929,12 @@ const Checkout = () => {
                           variant="outlined"
                           required
                           onChange={(birthDate) => {
-                            const birthDateValid = validateBirthDate(birthDate)
+                            if (birthDate) {
+                              const birthDateValid = validateBirthDate(birthDate)
 
-                            setBirthDate(birthDate)
-                            setBirthDateValid(birthDateValid)
+                              setBirthDate(birthDate)
+                              setBirthDateValid(birthDateValid)
+                            }
                           }}
                           language={language}
                         />
@@ -1024,10 +1026,12 @@ const Checkout = () => {
                           variant="outlined"
                           required={adRequired}
                           onChange={(_birthDate) => {
-                            const _birthDateValid = _validateBirthDate(_birthDate)
+                            if (_birthDate) {
+                              const _birthDateValid = _validateBirthDate(_birthDate)
 
-                            set_BirthDate(_birthDate)
-                            set_BirthDateValid(_birthDateValid)
+                              set_BirthDate(_birthDate)
+                              set_BirthDateValid(_birthDateValid)
+                            }
                           }}
                           language={language}
                         />

@@ -56,7 +56,7 @@ const CreateBooking = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState(new Date())
+  const [minDate, setMinDate] = useState<Date>()
   const [_fullName, set_FullName] = useState('')
   const [_email, set_Email] = useState('')
   const [_phone, set_Phone] = useState('')
@@ -308,14 +308,22 @@ const CreateBooking = () => {
               <DateTimePicker
                 label={commonStrings.FROM}
                 value={from}
-                minDate={new Date()}
                 required
-                onChange={(from: Date) => {
-                  setFrom(from)
+                onChange={(date) => {
+                  if (date) {
 
-                  const minDate = new Date(from)
-                  minDate.setDate(minDate.getDate() + 1)
-                  setMinDate(minDate)
+                    if (to && to.getTime() <= date.getTime()) {
+                      setTo(undefined)
+                    }
+
+                    const minDate = new Date(date)
+                    minDate.setDate(minDate.getDate() + 1)
+                    setMinDate(minDate)
+
+                    setFrom(date)
+                  } else {
+                    setMinDate(undefined)
+                  }
                 }}
                 language={UserService.getLanguage()}
               />
@@ -327,8 +335,8 @@ const CreateBooking = () => {
                 value={to}
                 minDate={minDate}
                 required
-                onChange={(to: Date) => {
-                  setTo(to)
+                onChange={(date) => {
+                  setTo(date||undefined)
                 }}
                 language={UserService.getLanguage()}
               />
@@ -463,11 +471,13 @@ const CreateBooking = () => {
                   <DatePicker
                     label={commonStrings.BIRTH_DATE}
                     required
-                    onChange={(_birthDate: Date) => {
-                      const _birthDateValid = _validateBirthDate(_birthDate)
+                    onChange={(_birthDate) => {
+                      if (_birthDate) {
+                        const _birthDateValid = _validateBirthDate(_birthDate)
 
-                      set_BirthDate(_birthDate)
-                      set_BirthDateValid(_birthDateValid)
+                        set_BirthDate(_birthDate)
+                        set_BirthDateValid(_birthDateValid)
+                      }
                     }}
                     language={UserService.getLanguage()}
                   />

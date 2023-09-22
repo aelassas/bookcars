@@ -83,7 +83,7 @@ export const en = {
   FROM_TIME: 'Pickup time',
   TO_DATE: 'Drop-off date',
   TO_TIME: 'Drop-off time',
-  PICKUP_LOCATION_EMPTY: 'Please enter a pick up location.',
+  PICKUP_LOCATION_EMPTY: 'Please enter a pickup location.',
   DROP_OFF_LOCATION_EMPTY: 'Please enter a drop-off location.',
   HOME: 'Home',
   ABOUT: 'About',
@@ -196,4 +196,8 @@ export const en = {
   PAY_ONLINE: 'Pay online',
   PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
   PAY_LATER_SUCCESS: 'Your booking were successfully done. We have sent you a confirmation email.',
+  FROM_DATE_EMPTY: 'Please enter the pickup date',
+  FROM_TIME_EMPTY: 'Please enter the pickup time',
+  TO_DATE_EMPTY: 'Please enter the drop-off date',
+  TO_TIME_EMPTY: 'Please enter the drop-off time',
 }
