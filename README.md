@@ -33,7 +33,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
 
-## Links
+## Contents
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
