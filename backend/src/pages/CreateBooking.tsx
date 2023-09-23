@@ -319,11 +319,11 @@ const CreateBooking = () => {
                     const minDate = new Date(date)
                     minDate.setDate(minDate.getDate() + 1)
                     setMinDate(minDate)
-
-                    setFrom(date)
                   } else {
                     setMinDate(undefined)
                   }
+
+                  setFrom(date || undefined)
                 }}
                 language={UserService.getLanguage()}
               />
@@ -336,7 +336,7 @@ const CreateBooking = () => {
                 minDate={minDate}
                 required
                 onChange={(date) => {
-                  setTo(date||undefined)
+                  setTo(date || undefined)
                 }}
                 language={UserService.getLanguage()}
               />

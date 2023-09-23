@@ -105,6 +105,7 @@ const BookingFilter = (
               } else {
                 setMinDate(undefined)
               }
+              
               setFrom(date)
             }}
             onPress={blurLocations}

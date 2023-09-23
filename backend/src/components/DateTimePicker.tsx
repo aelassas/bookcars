@@ -27,7 +27,7 @@ const DateTimePicker = (
       onChange: (value: Date | null) => void
     }
 ) => {
-  const [value, setValue] = useState(dateTimeValue || null)
+  const [value, setValue] = useState<Date | null>(null)
 
   useEffect(() => {
     setValue(dateTimeValue || null)
@@ -51,7 +51,7 @@ const DateTimePicker = (
         defaultCalendarMonth={minDate}
         slotProps={{
           textField: {
-            variant: (variant as TextFieldVariants) || 'standard',
+            variant: variant || 'standard',
             required: required,
           },
           actionBar: {
