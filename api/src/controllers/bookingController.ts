@@ -18,6 +18,15 @@ import * as MailHelper from '../common/MailHelper'
 import * as env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Create a Booking.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function create(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.UpsertBookingPayload = req.body
@@ -37,6 +46,16 @@ export async function create(req: Request, res: Response) {
   }
 }
 
+/**
+ * Notify a supplier.
+ *
+ * @async
+ * @param {env.User} user
+ * @param {string} bookingId
+ * @param {env.User} company
+ * @param {string} notificationMessage
+ * @returns {void}
+ */
 async function notifySupplier(user: env.User, bookingId: string, company: env.User, notificationMessage: string) {
   strings.setLanguage(company.language)
 
@@ -69,6 +88,15 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
   await MailHelper.sendMail(mailOptions)
 }
 
+/**
+ * Complete checkout process and create Booking.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function book(req: Request, res: Response) {
   try {
     let user: env.User | null
@@ -199,6 +227,13 @@ export async function book(req: Request, res: Response) {
   }
 }
 
+/**
+ * Notify driver and send push notification.
+ *
+ * @async
+ * @param {env.Booking} booking
+ * @returns {void}
+ */
 async function notifyDriver(booking: env.Booking) {
   const driver = await User.findById(booking.driver)
   if (!driver) {
@@ -291,6 +326,15 @@ async function notifyDriver(booking: env.Booking) {
   }
 }
 
+/**
+ * Update Booking.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function update(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.UpsertBookingPayload = req.body
@@ -387,6 +431,15 @@ export async function update(req: Request, res: Response) {
   }
 }
 
+/**
+ * Update Booking Status.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function updateStatus(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.UpdateStatusPayload = req.body
@@ -410,6 +463,15 @@ export async function updateStatus(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete Bookings.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteBookings(req: Request, res: Response) {
   try {
     const body: string[] = req.body
@@ -431,6 +493,15 @@ export async function deleteBookings(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Booking by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getBooking(req: Request, res: Response) {
   const { id } = req.params
 
@@ -488,6 +559,15 @@ export async function getBooking(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Bookings.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getBookings(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.GetBookingsPayload = req.body
@@ -509,14 +589,10 @@ export async function getBookings(req: Request, res: Response) {
     }
     if ($match.$and) {
       if (user) {
-        $match.$and.push({
-          'driver._id': { $eq: new mongoose.Types.ObjectId(user) },
-        })
+        $match.$and.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
       }
       if (car) {
-        $match.$and.push({
-          'car._id': { $eq: new mongoose.Types.ObjectId(car) },
-        })
+        $match.$and.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
       }
       if (from) {
         $match.$and.push({ from: { $gte: from } })
@@ -525,18 +601,10 @@ export async function getBookings(req: Request, res: Response) {
         $match.$and.push({ to: { $lte: to } })
       } // $to < to
       if (pickupLocation) {
-        $match.$and.push({
-          'pickupLocation._id': {
-            $eq: new mongoose.Types.ObjectId(pickupLocation),
-          },
-        })
+        $match.$and.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
       }
       if (dropOffLocation) {
-        $match.$and.push({
-          'dropOffLocation._id': {
-            $eq: new mongoose.Types.ObjectId(dropOffLocation),
-          },
-        })
+        $match.$and.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
       }
       if (keyword) {
         const isObjectId = mongoose.isValidObjectId(keyword)
@@ -566,9 +634,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { companyId: '$company' },
           pipeline: [
             {
-              $match: {
-                $expr: { $eq: ['$_id', '$$companyId'] },
-              },
+              $match: {$expr: { $eq: ['$_id', '$$companyId'] }},
             },
           ],
           as: 'company',
@@ -581,9 +647,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { carId: '$car' },
           pipeline: [
             {
-              $match: {
-                $expr: { $eq: ['$_id', '$$carId'] },
-              },
+              $match: {$expr: { $eq: ['$_id', '$$carId'] }},
             },
           ],
           as: 'car',
@@ -596,9 +660,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { driverId: '$driver' },
           pipeline: [
             {
-              $match: {
-                $expr: { $eq: ['$_id', '$$driverId'] },
-              },
+              $match: {$expr: { $eq: ['$_id', '$$driverId'] }},
             },
           ],
           as: 'driver',
@@ -611,9 +673,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { pickupLocationId: '$pickupLocation' },
           pipeline: [
             {
-              $match: {
-                $expr: { $eq: ['$_id', '$$pickupLocationId'] },
-              },
+              $match: {$expr: { $eq: ['$_id', '$$pickupLocationId'] }},
             },
             {
               $lookup: {
@@ -645,9 +705,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { dropOffLocationId: '$dropOffLocation' },
           pipeline: [
             {
-              $match: {
-                $expr: { $eq: ['$_id', '$$dropOffLocationId'] },
-              },
+              $match: {$expr: { $eq: ['$_id', '$$dropOffLocationId'] }},
             },
             {
               $lookup: {
@@ -707,6 +765,15 @@ export async function getBookings(req: Request, res: Response) {
   }
 }
 
+/**
+ * Check if a driver has Bookings.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function hasBookings(req: Request, res: Response) {
   const { driver } = req.params
 
@@ -728,6 +795,15 @@ export async function hasBookings(req: Request, res: Response) {
   }
 }
 
+/**
+ * Cancel a Booking.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function cancelBooking(req: Request, res: Response) {
   const { id } = req.params
 
