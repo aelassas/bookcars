@@ -13,6 +13,15 @@ import Car from '../models/Car'
 import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Validate Supplier by fullname.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function validate(req: Request, res: Response) {
   const body: bookcarsTypes.ValidateSupplierPayload = req.body
   const { fullName } = body
@@ -31,6 +40,15 @@ export async function validate(req: Request, res: Response) {
   }
 }
 
+/**
+ * Update Supplier.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function update(req: Request, res: Response) {
   const body: bookcarsTypes.UpdateSupplierPayload = req.body
   const { _id } = body
@@ -58,6 +76,15 @@ export async function update(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete Supplier by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteSupplier(req: Request, res: Response) {
   const { id } = req.params
 
@@ -96,6 +123,15 @@ export async function deleteSupplier(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Supplier by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getSupplier(req: Request, res: Response) {
   const { id } = req.params
 
@@ -124,6 +160,15 @@ export async function getSupplier(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Suppliers.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getSuppliers(req: Request, res: Response) {
   try {
     const page = Number.parseInt(req.params.page)
@@ -167,6 +212,15 @@ export async function getSuppliers(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get all Suppliers.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getAllSuppliers(req: Request, res: Response) {
   try {
     let data = await User.aggregate(
