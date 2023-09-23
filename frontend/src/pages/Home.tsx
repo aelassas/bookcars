@@ -131,11 +131,11 @@ const Home = () => {
                       const minDate = new Date(date)
                       minDate.setDate(date.getDate() + 1)
                       setMinDate(minDate)
-
-                      setFrom(date)
                     } else {
                       setMinDate(_minDate)
                     }
+
+                    setFrom(date || undefined)
                   }}
                   language={UserService.getLanguage()}
                 />

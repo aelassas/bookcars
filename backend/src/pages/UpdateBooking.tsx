@@ -573,7 +573,7 @@ const UpdateBooking = () => {
                           setBooking(booking)
                           setPrice(price)
                           setFrom(date)
-                          
+
                           const minDate = new Date(date)
                           minDate.setDate(minDate.getDate() + 1)
                           setMinDate(minDate)
@@ -586,6 +586,9 @@ const UpdateBooking = () => {
                           toastErr(err)
                         },
                       )
+                    } else {
+                      setMinDate(undefined)
+                      setFrom(undefined)
                     }
                   }}
                   language={UserService.getLanguage()}

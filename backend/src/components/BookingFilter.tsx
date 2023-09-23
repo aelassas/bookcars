@@ -77,11 +77,11 @@ const BookingFilter = ({
                 const minDate = new Date(date)
                 minDate.setDate(date.getDate() + 1)
                 setMinDate(minDate)
-
-                setFrom(date)
               } else {
                 setMinDate(undefined)
               }
+
+              setFrom(date || undefined)
             }}
             language={language}
             variant="standard"
