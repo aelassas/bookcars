@@ -8,6 +8,15 @@ import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
 
+/**
+ * Validate a Location name with language code.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function validate(req: Request, res: Response) {
   const body: bookcarsTypes.ValidateLocationPayload = req.body
   const { language, name } = body
@@ -27,6 +36,15 @@ export async function validate(req: Request, res: Response) {
   }
 }
 
+/**
+ * Create a Location.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function create(req: Request, res: Response) {
   const body: bookcarsTypes.LocationName[] = req.body
   const names = body
@@ -52,6 +70,15 @@ export async function create(req: Request, res: Response) {
   }
 }
 
+/**
+ * Update a Location.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function update(req: Request, res: Response) {
   const { id } = req.params
 
@@ -87,6 +114,15 @@ export async function update(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete a Location.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteLocation(req: Request, res: Response) {
   const { id } = req.params
 
@@ -105,6 +141,15 @@ export async function deleteLocation(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get a Location by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getLocation(req: Request, res: Response) {
   const { id } = req.params
 
@@ -125,6 +170,15 @@ export async function getLocation(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Locations.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getLocations(req: Request, res: Response) {
   try {
     const page = Number.parseInt(req.params.page)
@@ -145,15 +199,7 @@ export async function getLocations(req: Request, res: Response) {
                   $and: [
                     { $expr: { $in: ['$_id', '$$values'] } },
                     { $expr: { $eq: ['$language', language] } },
-                    {
-                      $expr: {
-                        $regexMatch: {
-                          input: '$value',
-                          regex: keyword,
-                          options,
-                        },
-                      },
-                    },
+                    { $expr: { $regexMatch: { input: '$value', regex: keyword, options } } },
                   ],
                 },
               },
@@ -184,6 +230,15 @@ export async function getLocations(req: Request, res: Response) {
   }
 }
 
+/**
+ * Check if a Location is used by a Car.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function checkLocation(req: Request, res: Response) {
   const { id } = req.params
 
