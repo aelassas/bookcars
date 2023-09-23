@@ -203,6 +203,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               label={i18n.t('FROM_DATE')}
               value={fromDate}
               minDate={_fromDate}
+              hideClearButton
               onChange={(date) => {
                 if (date) {
 
@@ -228,6 +229,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('FROM_TIME')}
               value={fromTime}
+              hideClearButton
               onChange={(time) => {
                 setFromTime(time)
               }}
@@ -241,6 +243,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               label={i18n.t('TO_DATE')}
               value={toDate}
               minDate={minDate}
+              hideClearButton
               onChange={(date) => {
                 setToDate(date)
               }}
@@ -253,6 +256,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               style={styles.component}
               label={i18n.t('TO_TIME')}
               value={toTime}
+              hideClearButton
               onChange={(time) => {
                 setToTime(time)
               }}
