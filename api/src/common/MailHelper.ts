@@ -2,6 +2,13 @@ import nodemailer from 'nodemailer'
 import SMTPTransport from 'nodemailer/lib/smtp-transport'
 import * as env from '../config/env.config'
 
+/**
+ * Send an email.
+ *
+ * @export
+ * @param {nodemailer.SendMailOptions} mailOptions
+ * @returns {Promise<unknown>}
+ */
 export function sendMail(mailOptions: nodemailer.SendMailOptions) {
     const transporterOptions: SMTPTransport.Options = {
         host: env.SMTP_HOST,

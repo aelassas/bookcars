@@ -213,7 +213,7 @@ export async function createImage(req: Request, res: Response) {
       await fs.mkdir(env.CDN_TEMP_CARS, { recursive: true })
     }
 
-    const filename = `${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
