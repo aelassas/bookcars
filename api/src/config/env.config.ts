@@ -3,6 +3,14 @@ import { Document, Types } from 'mongoose'
 import * as bookcarsTypes from 'bookcars-types'
 import * as Helper from '../common/Helper'
 
+/**
+ * Get environment variable value. 
+ *
+ * @param {string} name
+ * @param {?boolean} [required]
+ * @param {?string} [defaultValue]
+ * @returns {string}
+ */
 const __env__ = (name: string, required?: boolean, defaultValue?: string): string => {
     const value = process.env[name]
     if (required && !value) {
@@ -14,39 +22,195 @@ const __env__ = (name: string, required?: boolean, defaultValue?: string): strin
     return String(value)
 }
 
-export const PORT = Number.parseInt(__env__('BC_PORT', false, '4003'), 10)
+/**
+ * Server Port. Default is 4002.
+ *
+ * @type {number}
+ */
+export const PORT = Number.parseInt(__env__('BC_PORT', false, '4002'), 10)
+
+/**
+ * Indicate whether HTTPS is enabled or not.
+ *
+ * @type {boolean}
+ */
 export const HTTPS = Helper.StringToBoolean(__env__('BC_HTTPS'))
+
+/**
+ * Private SSL key filepath.
+ *
+ * @type {string}
+ */
 export const PRIVATE_KEY = __env__('BC_PRIVATE_KEY', HTTPS)
+
+/**
+ * Private SSL certificate filepath.
+ *
+ * @type {string}
+ */
 export const CERTIFICATE = __env__('BC_CERTIFICATE', HTTPS)
 
+/**
+ * MongoDB database URI. Default is: mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars
+ *
+ * @type {string}
+ */
 export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/bookcars?authSource=admin&appName=bookcars')
+
+/**
+ * Indicate whether MongoDB SSL is enabled or not.
+ *
+ * @type {boolean}
+ */
 export const DB_SSL = Helper.StringToBoolean(__env__('BC_DB_SSL', false, 'false'))
+
+/**
+ * MongoDB SSL certificate filepath.
+ *
+ * @type {string}
+ */
 export const DB_SSL_CERT = __env__('BC_DB_SSL_CERT', DB_SSL)
+
+/**
+ * MongoDB SSL CA certificate filepath.
+ *
+ * @type {string}
+ */
 export const DB_SSL_CA = __env__('BC_DB_SSL_CA', DB_SSL)
+
+/**
+ * Indicate whether MongoDB debug is enabled or not.
+ *
+ * @type {boolean}
+ */
 export const DB_DEBUG = Helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
 
+/**
+ * JWT secret. It should at least be 32 characters long, but the longer the better.
+ *
+ * @type {string}
+ */
 export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'BookCars')
+
+/**
+ * JWT expiration in seconds. Dedault is 86400 seconds.
+ *
+ * @type {number}
+ */
 export const JWT_EXPIRE_AT = Number.parseInt(__env__('BC_JWT_EXPIRE_AT', false, '86400'), 10) // in seconds (default: 1d)
+
+/**
+ * Validation Token expiration in seconds. Dedault is 86400 seconds.
+ *
+ * @type {number}
+ */
 export const TOKEN_EXPIRE_AT = Number.parseInt(__env__('BC_TOKEN_EXPIRE_AT', false, '86400'), 10) // in seconds (default: 1d)
 
+/**
+ * SMTP host.
+ *
+ * @type {string}
+ */
 export const SMTP_HOST = __env__('BC_SMTP_HOST', true)
+
+/**
+ * SMTP port.
+ *
+ * @type {number}
+ */
 export const SMTP_PORT = Number.parseInt(__env__('BC_SMTP_PORT', true), 10)
+
+/**
+ * SMTP username.
+ *
+ * @type {string}
+ */
 export const SMTP_USER = __env__('BC_SMTP_USER', true)
+
+/**
+ * SMTP password.
+ *
+ * @type {string}
+ */
 export const SMTP_PASS = __env__('BC_SMTP_PASS', true)
+
+/**
+ * SMTP from email.
+ *
+ * @type {string}
+ */
 export const SMTP_FROM = __env__('BC_SMTP_FROM', true)
 
+/**
+ * Users' cdn folder path.
+ *
+ * @type {string}
+ */
 export const CDN_USERS = __env__('BC_CDN_USERS', true)
+
+/**
+ * Users' temp cdn folder path.
+ *
+ * @type {string}
+ */
 export const CDN_TEMP_USERS = __env__('BC_CDN_TEMP_USERS', true)
+
+/**
+ * Cars' cdn folder path.
+ *
+ * @type {string}
+ */
 export const CDN_CARS = __env__('BC_CDN_CARS', true)
+
+/**
+ * Cars' temp cdn folder path.
+ *
+ * @type {string}
+ */
 export const CDN_TEMP_CARS = __env__('BC_CDN_TEMP_CARS', true)
 
+/**
+ * Backend host.
+ *
+ * @type {string}
+ */
 export const BACKEND_HOST = __env__('BC_BACKEND_HOST', true)
+
+/**
+ * Frontend host.
+ *
+ * @type {string}
+ */
 export const FRONTEND_HOST = __env__('BC_FRONTEND_HOST', true)
 
+/**
+ * Default language. Default is en. Available options: en, fr.
+ *
+ * @type {string}
+ */
 export const DEFAULT_LANGUAGE = __env__('BC_DEFAULT_LANGUAGE', false, 'en')
+
+/**
+ * Default Minimum age for rental. Default is 21 years.
+ *
+ * @type {number}
+ */
 export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'), 10)
+
+/**
+ * Expo push access token.
+ *
+ * @type {string}
+ */
 export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
 
+/**
+ * AdditionalDriver.
+ *
+ * @export
+ * @interface AdditionalDriver
+ * @typedef {AdditionalDriver}
+ */
 export interface AdditionalDriver {
     fullName: string
     email: string
@@ -54,6 +218,14 @@ export interface AdditionalDriver {
     birthDate: Date
 }
 
+/**
+ * Booking Document.
+ *
+ * @export
+ * @interface Booking
+ * @typedef {Booking}
+ * @extends {Document}
+ */
 export interface Booking extends Document {
     _id: Types.ObjectId
     company: Types.ObjectId
@@ -75,6 +247,13 @@ export interface Booking extends Document {
     price: number
 }
 
+/**
+ * BookingInfo.
+ *
+ * @export
+ * @interface BookingInfo
+ * @typedef {BookingInfo}
+ */
 export interface BookingInfo {
     _id?: Types.ObjectId
     company: UserInfo
@@ -96,6 +275,14 @@ export interface BookingInfo {
     price: number
 }
 
+/**
+ * Car Document.
+ *
+ * @export
+ * @interface Car
+ * @typedef {Car}
+ * @extends {Document}
+ */
 export interface Car extends Document {
     name: string
     company: Types.ObjectId
@@ -120,6 +307,13 @@ export interface Car extends Document {
     additionalDriver: number
 }
 
+/**
+ * CarInfo.
+ *
+ * @export
+ * @interface CarInfo
+ * @typedef {CarInfo}
+ */
 export interface CarInfo {
     _id?: Types.ObjectId
     name: string
@@ -145,16 +339,39 @@ export interface CarInfo {
     additionalDriver: number
 }
 
+/**
+ * Location Document.
+ *
+ * @export
+ * @interface Location
+ * @typedef {Location}
+ * @extends {Document}
+ */
 export interface Location extends Document {
     values: Types.ObjectId[]
     name?: string
 }
 
+/**
+ * LocationValue Document.
+ *
+ * @export
+ * @interface LocationValue
+ * @typedef {LocationValue}
+ * @extends {Document}
+ */
 export interface LocationValue extends Document {
     language: string
     value: string
 }
 
+/**
+ *LocationInfo.
+ *
+ * @export
+ * @interface LocationInfo
+ * @typedef {LocationInfo}
+ */
 export interface LocationInfo {
     _id?: Types.ObjectId
     name?: string
@@ -162,6 +379,14 @@ export interface LocationInfo {
 }
 
 
+/**
+ * Notification Document.
+ *
+ * @export
+ * @interface Notification
+ * @typedef {Notification}
+ * @extends {Document}
+ */
 export interface Notification extends Document {
     user: Types.ObjectId
     message: string
@@ -169,11 +394,27 @@ export interface Notification extends Document {
     isRead?: boolean
 }
 
+/**
+ * NotificationCounter Document.
+ *
+ * @export
+ * @interface NotificationCounter
+ * @typedef {NotificationCounter}
+ * @extends {Document}
+ */
 export interface NotificationCounter extends Document {
     user: Types.ObjectId
     count?: number
 }
 
+/**
+ * User Document.
+ *
+ * @export
+ * @interface User
+ * @typedef {User}
+ * @extends {Document}
+ */
 export interface User extends Document {
     company?: Types.ObjectId
     fullName: string
@@ -194,6 +435,13 @@ export interface User extends Document {
     payLater?: boolean
 }
 
+/**
+ * UserInfo.
+ *
+ * @export
+ * @interface UserInfo
+ * @typedef {UserInfo}
+ */
 export interface UserInfo {
     _id?: Types.ObjectId
     company?: Types.ObjectId
@@ -215,11 +463,27 @@ export interface UserInfo {
     payLater?: boolean
 }
 
+/**
+ * PushNotification Document.
+ *
+ * @export
+ * @interface PushNotification
+ * @typedef {PushNotification}
+ * @extends {Document}
+ */
 export interface PushNotification extends Document {
     user: Types.ObjectId
     token: string
 }
 
+/**
+ * Token Document.
+ *
+ * @export
+ * @interface Token
+ * @typedef {Token}
+ * @extends {Document}
+ */
 export interface Token extends Document {
     user: Types.ObjectId
     token: string
