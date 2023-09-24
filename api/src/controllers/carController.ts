@@ -11,6 +11,15 @@ import * as env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Create a Car.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function create(req: Request, res: Response) {
   const body: bookcarsTypes.CreateCarPayload = req.body
 
@@ -51,6 +60,15 @@ export async function create(req: Request, res: Response) {
   }
 }
 
+/**
+ * Update a Car.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function update(req: Request, res: Response) {
   const body: bookcarsTypes.UpdateCarPayload = req.body
   const { _id } = body
@@ -115,6 +133,15 @@ export async function update(req: Request, res: Response) {
   }
 }
 
+/**
+ * Check if a Car is related to bookings.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function checkCar(req: Request, res: Response) {
   const { id } = req.params
 
@@ -133,6 +160,15 @@ export async function checkCar(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete a Car by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteCar(req: Request, res: Response) {
   const { id } = req.params
 
@@ -156,6 +192,15 @@ export async function deleteCar(req: Request, res: Response) {
   }
 }
 
+/**
+ * Upload a Car image to temp folder.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function createImage(req: Request, res: Response) {
   try {
     if (!req.file) {
@@ -179,6 +224,15 @@ export async function createImage(req: Request, res: Response) {
   }
 }
 
+/**
+ * Update a Car image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function updateImage(req: Request, res: Response) {
   const { id } = req.params
 
@@ -223,6 +277,15 @@ export async function updateImage(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete a Car image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteImage(req: Request, res: Response) {
   const { id } = req.params
 
@@ -250,6 +313,15 @@ export async function deleteImage(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete a temp Car image.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {*}
+ */
 export async function deleteTempImage(req: Request, res: Response) {
   const { image } = req.params
 
@@ -266,6 +338,15 @@ export async function deleteTempImage(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get a Car by ID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getCar(req: Request, res: Response) {
   const { id, language } = req.params
 
@@ -303,6 +384,15 @@ export async function getCar(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Cars.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getCars(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.GetCarsPayload = req.body
@@ -417,6 +507,15 @@ export async function getCars(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Cars by Supplier and pick-up Location.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getBookingCars(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.GetBookingCarsPayload = req.body
@@ -452,6 +551,15 @@ export async function getBookingCars(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Cars available for rental.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getFrontendCars(req: Request, res: Response) {
   try {
     const body: bookcarsTypes.GetCarsPayload = req.body
