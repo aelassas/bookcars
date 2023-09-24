@@ -4,6 +4,15 @@ import strings from '../config/app.config'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 
+/**
+ * Get NotificationCounter by UserID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function notificationCounter(req: Request, res: Response) {
   const { userId } = req.params
   try {
@@ -22,6 +31,15 @@ export async function notificationCounter(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get Notifications by UserID.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function getNotifications(req: Request, res: Response) {
   const { userId: _userId, page: _page, size: _size } = req.params
 
@@ -51,6 +69,15 @@ export async function getNotifications(req: Request, res: Response) {
   }
 }
 
+/**
+ * Mark Notifications as read.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function markAsRead(req: Request, res: Response) {
   try {
     const body: { ids: string[] } = req.body
@@ -87,6 +114,15 @@ export async function markAsRead(req: Request, res: Response) {
   }
 }
 
+/**
+ * Mark Notifications as unread.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function markAsUnRead(req: Request, res: Response) {
   try {
     const body: { ids: string[] } = req.body
@@ -123,6 +159,15 @@ export async function markAsUnRead(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete Notifications.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
 export async function deleteNotifications(req: Request, res: Response) {
   try {
     const body: { ids: string[] } = req.body
