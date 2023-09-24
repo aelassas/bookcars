@@ -1,3 +1,10 @@
+/**
+ * Format a number.
+ *
+ * @export
+ * @param {?number} [x]
+ * @returns {string}
+ */
 export function formatNumber(x) {
     if (typeof x === 'number') {
         const parts = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.');
@@ -6,15 +13,43 @@ export function formatNumber(x) {
     }
     return '';
 }
+/**
+ * Format a Date number to two digits.
+ *
+ * @export
+ * @param {number} n
+ * @returns {string}
+ */
 export function formatDatePart(n) {
     return n > 9 ? String(n) : '0' + n;
 }
+/**
+ * Capitalize a string.
+ *
+ * @export
+ * @param {string} str
+ * @returns {string}
+ */
 export function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
-export function isDate(date) {
-    return date instanceof Date && !isNaN(date.valueOf());
+/**
+ * Check if a value is a Date.
+ *
+ * @export
+ * @param {?*} [value]
+ * @returns {boolean}
+ */
+export function isDate(value) {
+    return value instanceof Date && !isNaN(value.valueOf());
 }
+/**
+ * Join two url parts.
+ *
+ * @param {?string} [part1]
+ * @param {?string} [part2]
+ * @returns {string}
+ */
 export const joinURL = (part1, part2) => {
     if (!part1 || !part2) {
         const msg = '[joinURL] part undefined';
@@ -29,15 +64,40 @@ export const joinURL = (part1, part2) => {
     }
     return part1 + '/' + part2;
 };
+/**
+ * Check if a string is an integer.
+ *
+ * @param {string} val
+ * @returns {boolean}
+ */
 export const isInteger = (val) => {
     return /^\d+$/.test(val);
 };
+/**
+ * Check if a string is a year.
+ *
+ * @param {string} val
+ * @returns {boolean}
+ */
 export const isYear = (val) => {
     return /^\d{2}$/.test(val);
 };
+/**
+ * Check if a string is a CVV.
+ *
+ * @param {string} val
+ * @returns {boolean}
+ */
 export const isCvv = (val) => {
     return /^\d{3,4}$/.test(val);
 };
+/**
+ * Check if two arrays are equal.
+ *
+ * @param {*} a
+ * @param {*} b
+ * @returns {boolean}
+ */
 export const arrayEqual = (a, b) => {
     if (a === b) {
         return true;
@@ -59,9 +119,23 @@ export const arrayEqual = (a, b) => {
     }
     return true;
 };
+/**
+ * Clone an object or array.
+ *
+ * @param {*} obj
+ * @returns {*}
+ */
 export const clone = (obj) => {
     return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj);
 };
+/**
+ * Clone an array.
+ *
+ * @export
+ * @template T
+ * @param {T[]} arr
+ * @returns {(T[] | undefined | null)}
+ */
 export function cloneArray(arr) {
     if (typeof arr === 'undefined') {
         return undefined;
@@ -71,6 +145,13 @@ export function cloneArray(arr) {
     }
     return [...arr];
 }
+/**
+ * Check if two filters are equal.
+ *
+ * @param {?(bookcarsTypes.Filter | null)} [a]
+ * @param {?(bookcarsTypes.Filter | null)} [b]
+ * @returns {boolean}
+ */
 export const filterEqual = (a, b) => {
     if (a === b) {
         return true;
@@ -95,5 +176,18 @@ export const filterEqual = (a, b) => {
     }
     return true;
 };
+/**
+ * Flatten Supplier array.
+ *
+ * @param {bookcarsTypes.User[]} companies
+ * @returns {string[]}
+ */
 export const flattenCompanies = (companies) => companies.map((company) => company._id ?? '');
+/**
+ * Get number of days between two dates.
+ *
+ * @param {?Date} [from]
+ * @param {?Date} [to]
+ * @returns {*}
+ */
 export const days = (from, to) => (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0;
