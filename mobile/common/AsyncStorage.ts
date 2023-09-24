@@ -1,57 +1,88 @@
 import ReactAsyncStorage from '@react-native-async-storage/async-storage'
-import Toast from 'react-native-root-toast'
-import i18n from '../lang/i18n'
+import * as ToastHelper from './ToastHelper'
 
-export const error = (err: unknown) => {
-  if (err) {
-    console.log(err)
-  }
-  Toast.show(i18n.t('GENERIC_ERROR'), {
-    duration: Toast.durations.LONG,
-  })
-}
-
+/**
+ * Store a string in async-storage.
+ *
+ * @async
+ * @param {string} key
+ * @param {string} value
+ * @returns {void}
+ */
 export const storeString = async (key: string, value: string) => {
   try {
     await ReactAsyncStorage.setItem(key, value)
   } catch (err) {
-    error(err)
+    ToastHelper.error(err)
   }
 }
 
+/**
+ * Get a string by key from async-storage.
+ *
+ * @async
+ * @param {string} key
+ * @returns {unknown}
+ */
 export const getString = async (key: string) => {
   try {
     const value = await ReactAsyncStorage.getItem(key)
     return value
   } catch (err) {
-    error(err)
+    ToastHelper.error(err)
   }
 }
 
+/**
+ * Store an object in async-storage.
+ *
+ * @export
+ * @async
+ * @template T
+ * @param {string} key
+ * @param {T} value
+ * @returns {void}
+ */
 export async function storeObject<T>(key: string, value: T) {
   try {
     const jsonValue = JSON.stringify(value)
     await ReactAsyncStorage.setItem(key, jsonValue)
   } catch (err) {
-    error(err)
+    ToastHelper.error(err)
   }
 }
 
+/**
+ * Get an object by key from async-storage.
+ *
+ * @export
+ * @async
+ * @template T
+ * @param {string} key
+ * @returns {T|null}
+ */
 export async function getObject<T>(key: string) {
   try {
     const value = await ReactAsyncStorage.getItem(key)
     const jsonValue = value != null ? JSON.parse(value) as T : null
     return jsonValue
   } catch (err) {
-    error(err)
+    ToastHelper.error(err)
     return null
   }
 }
 
+/**
+ * Remove an item by key from async-storage.
+ *
+ * @async
+ * @param {string} key
+ * @returns {void}
+ */
 export const removeItem = async (key: string) => {
   try {
     await ReactAsyncStorage.removeItem(key)
   } catch (err) {
-    error(err)
+    ToastHelper.error(err)
   }
 }

@@ -2,6 +2,11 @@ import { AxiosStatic } from 'axios'
 import * as Env from '../config/env.config'
 import axiosRetry from 'axios-retry'
 
+/**
+ * Initialize axios-retry.
+ *
+ * @param {AxiosStatic} axios
+ */
 export const init = (axios: AxiosStatic) => {
   axiosRetry(axios, {
     retries: Env.AXIOS_RETRIES, // number of retries
