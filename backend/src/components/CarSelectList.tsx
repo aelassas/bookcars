@@ -18,7 +18,8 @@ import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 
 const CarSelectList = (
-  { label,
+  {
+    label,
     required,
     multiple,
     variant,
@@ -107,6 +108,10 @@ const CarSelectList = (
 
   const _fetch = async (page: number, keyword: string, company: string, pickupLocation: string) => {
     try {
+      if (!pickupLocation) {
+        return
+      }
+
       const payload: bookcarsTypes.GetBookingCarsPayload = { company, pickupLocation }
 
       if (closeDialog) {
