@@ -7,6 +7,11 @@ declare global {
   }
 }
 
+/**
+ * Disable React Developer Tools.
+ *
+ * @export
+ */
 export function disableDevTools(): void {
   if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__) return
 
