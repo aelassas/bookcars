@@ -45,7 +45,7 @@ const SupplierList = (
     try {
       setLoading(true)
       console.log('fetch', page)
-      const data = await SupplierService.getCompanies(keyword || '', page, Env.PAGE_SIZE)
+      const data = await SupplierService.getSuppliers(keyword || '', page, Env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
@@ -130,7 +130,7 @@ const SupplierList = (
       if (companyId !== '' && companyIndex > -1) {
         setLoading(false)
         setOpenDeleteDialog(false)
-        const status = await SupplierService.deleteCompany(companyId)
+        const status = await SupplierService.deleteSupplier(companyId)
         if (status === 200) {
           const _rowCount = rowCount - 1
           rows.splice(companyIndex, 1)

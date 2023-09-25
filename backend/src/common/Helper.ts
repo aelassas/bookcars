@@ -635,7 +635,7 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
  * @param {number} days
  * @param {boolean} fr
  * @param {boolean} hidePlus
- * @returns {*}
+ * @returns {string}
  */
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, fr: boolean, hidePlus: boolean) => {
   if (additionalDriver === -1) {

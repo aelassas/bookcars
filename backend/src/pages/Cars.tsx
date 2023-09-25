@@ -74,7 +74,7 @@ const Cars = () => {
   const onLoad = async (user?: bookcarsTypes.User) => {
     setUser(user)
     setAdmin(Helper.admin(user))
-    const allCompanies = await SupplierService.getAllCompanies()
+    const allCompanies = await SupplierService.getAllSuppliers()
     const companies = bookcarsHelper.flattenCompanies(allCompanies)
     setAllCompanies(allCompanies)
     setCompanies(companies)

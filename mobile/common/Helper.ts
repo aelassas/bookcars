@@ -42,7 +42,7 @@ export const error = (err?: unknown, __toast__ = true) => {
  * Get filename.
  *
  * @param {string} path
- * @returns {*}
+ * @returns {string}
  */
 export const getFileName = (path: string) => path.replace(/^.*[\\/]/, '')
 
@@ -371,7 +371,7 @@ export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bo
  * @param {number} cancellation
  * @param {boolean} fr
  * @param {?boolean} [hidePlus]
- * @returns {*}
+ * @returns {string}
  */
 export const getCancellationOption = (cancellation: number, fr: boolean, hidePlus?: boolean) => {
   if (cancellation === -1) {
@@ -513,7 +513,7 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
  * Get booking status label.
  *
  * @param {string} status
- * @returns {*}
+ * @returns {string}
  */
 export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
   switch (status) {

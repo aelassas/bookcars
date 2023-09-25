@@ -54,7 +54,7 @@ const Bookings = () => {
       setLeftPanel(!admin)
       setLoadingCompanies(admin)
 
-      const allCompanies = admin ? await SupplierService.getAllCompanies() : []
+      const allCompanies = admin ? await SupplierService.getAllSuppliers() : []
       const companies = admin ? bookcarsHelper.flattenCompanies(allCompanies) : [user._id ?? '']
       setAllCompanies(allCompanies)
       setCompanies(companies)

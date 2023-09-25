@@ -48,7 +48,7 @@ const SupplierSelectList = ({
   const _fetch = async (page: number, keyword: string, onFetch?: (data: { rows: any[], rowCount: number }) => void) => {
     try {
       setLoading(true)
-      const data = await SupplierService.getCompanies(keyword, page, Env.PAGE_SIZE)
+      const data = await SupplierService.getSuppliers(keyword, page, Env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()

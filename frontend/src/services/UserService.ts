@@ -59,7 +59,7 @@ export const deleteTokens = (userId: string): Promise<number> =>
     .then((res) => res.status)
 
 /**
- * Resend validation or activation email.
+ * Resend a forgotten password or activation email.
  *
  * @param {?string} [email]
  * @param {boolean} [reset=false]
@@ -200,7 +200,7 @@ export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<numbe
 /**
  * Get language.
  *
- * @returns {*}
+ * @returns {string}
  */
 export const getLanguage = () => {
   const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
@@ -219,7 +219,7 @@ export const getLanguage = () => {
 /**
  * Get language from query strings.
  *
- * @returns {*}
+ * @returns {string}
  */
 export const getQueryLanguage = () => {
   const params = new URLSearchParams(window.location.search)
@@ -233,7 +233,7 @@ export const getQueryLanguage = () => {
  * Update language.
  *
  * @param {bookcarsTypes.UpdateLanguagePayload} data
- * @returns {*}
+ * @returns {Promise<number>}
  */
 export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
   axios
@@ -262,10 +262,10 @@ export const setLanguage = (lang: string) => {
 /**
  * Get current user.
  *
- * @returns {*}
+ * @returns {bookcarsTypes.User | null}
  */
 export const getCurrentUser = (): bookcarsTypes.User | null => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
+  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null') as bookcarsTypes.User | null
   if (user && user.accessToken) {
     return user
   }
@@ -276,7 +276,7 @@ export const getCurrentUser = (): bookcarsTypes.User | null => {
  * Get User by ID.
  *
  * @param {string} id
- * @returns {Promise<bookcarsTypes.User>}
+ * @returns {Promise<bookcarsTypes.User|null>}
  */
 export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
   if (id) {
