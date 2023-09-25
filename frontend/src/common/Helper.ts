@@ -464,6 +464,8 @@ export const getCancellationOption = (cancellation: number, fr: boolean) => {
     return strings.UNAVAILABLE
   } else if (cancellation === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
   }
 }
 
@@ -479,6 +481,8 @@ export const getAmendmentsOption = (amendments: number, fr: boolean) => {
     return `${strings.UNAVAILABLE}${fr ? 's' : ''}`
   } else if (amendments === 0) {
     return `${strings.INCLUDED}${fr ? 'es' : ''}`
+  } else {
+    return `+ ${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
   }
 }
 
