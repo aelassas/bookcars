@@ -5,6 +5,11 @@ import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
 
 AxiosHelper.init(axios)
 
+/**
+ * Get all suppliers.
+ *
+ * @returns {Promise<bookcarsTypes.User[]>}
+ */
 export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
   axios
     .get(
