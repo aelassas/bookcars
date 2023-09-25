@@ -328,9 +328,9 @@ const CreateUser = () => {
                 <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
                   <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
-                    <MenuItem value={bookcarsTypes.RecordType.Admin}>{Helper.getUserType(bookcarsTypes.RecordType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.Company}>{Helper.getUserType(bookcarsTypes.RecordType.Company)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.User}>{Helper.getUserType(bookcarsTypes.RecordType.User)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Admin}>{Helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Company}>{Helper.getUserType(bookcarsTypes.UserType.Company)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.User}>{Helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
                   </Select>
                 </FormControl>
               )}
