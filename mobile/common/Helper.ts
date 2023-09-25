@@ -12,23 +12,55 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 import * as ToasHelper from './ToastHelper'
 
-const ANDROID = Platform.OS === 'android'
+/**
+ * Indicate whether Platform OS is Android or not.
+ *
+ * @returns {boolean}
+ */
+export const android = () => Platform.OS === 'android'
 
-export const android = () => ANDROID
-
+/**
+ * Toast message.
+ *
+ * @param {string} message
+ */
 export const toast = (message: string) => {
   ToasHelper.toast(message)
 }
 
+/**
+ * Toast error message.
+ *
+ * @param {?unknown} [err]
+ * @param {boolean} [__toast__=true]
+ */
 export const error = (err?: unknown, __toast__ = true) => {
   ToasHelper.error(err, __toast__)
 }
 
-
+/**
+ * Get filename.
+ *
+ * @param {string} path
+ * @returns {*}
+ */
 export const getFileName = (path: string) => path.replace(/^.*[\\/]/, '')
 
+/**
+ * Get MIME type.
+ *
+ * @param {string} fileName
+ * @returns {string|null}
+ */
 export const getMimeType = (fileName: string) => mime.getType(fileName)
 
+/**
+ * Register push token.
+ *
+ * @async
+ * @param {string} userId
+ * @returns {void}
+ */
 export const registerPushToken = async (userId: string) => {
   async function registerForPushNotificationsAsync() {
     let token
@@ -86,6 +118,13 @@ export const registerPushToken = async (userId: string) => {
   }
 }
 
+/**
+ * Add time to date.
+ *
+ * @param {Date} date
+ * @param {Date} time
+ * @returns {Date}
+ */
 export const dateTime = (date: Date, time: Date) => {
   const dateTime = new Date(date)
   dateTime.setHours(time.getHours())
@@ -95,6 +134,12 @@ export const dateTime = (date: Date, time: Date) => {
   return dateTime
 }
 
+/**
+ * Get short car type.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getCarTypeShort = (type: string) => {
   switch (type) {
     case bookcarsTypes.CarType.Diesel:
@@ -108,6 +153,12 @@ export const getCarTypeShort = (type: string) => {
   }
 }
 
+/**
+ * Get short gearbox type.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getGearboxTypeShort = (type: string) => {
   switch (type) {
     case bookcarsTypes.GearboxType.Manual:
@@ -121,6 +172,12 @@ export const getGearboxTypeShort = (type: string) => {
   }
 }
 
+/**
+ * Get mileage label.
+ *
+ * @param {number} mileage
+ * @returns {string}
+ */
 export const getMileage = (mileage: number) => {
   if (mileage === -1) {
     return i18n.t('UNLIMITED')
@@ -129,6 +186,12 @@ export const getMileage = (mileage: number) => {
   }
 }
 
+/**
+ * Get fuel policy label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getFuelPolicy = (type: string) => {
   switch (type) {
     case bookcarsTypes.FuelPolicy.LikeForlike:
@@ -142,6 +205,13 @@ export const getFuelPolicy = (type: string) => {
   }
 }
 
+/**
+ * Get cancellation label.
+ *
+ * @param {number} cancellation
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCancellation = (cancellation: number, fr: boolean) => {
   if (cancellation === -1) {
     return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
@@ -152,6 +222,13 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get amendments label.
+ *
+ * @param {number} amendments
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getAmendments = (amendments: number, fr: boolean) => {
   if (amendments === -1) {
     return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`
@@ -162,6 +239,13 @@ export const getAmendments = (amendments: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get theft protection label.
+ *
+ * @param {number} theftProtection
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   if (theftProtection === -1) {
     return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
@@ -172,6 +256,13 @@ export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get collision damage waiver label.
+ *
+ * @param {number} collisionDamageWaiver
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: boolean) => {
   if (collisionDamageWaiver === -1) {
     return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
@@ -182,6 +273,13 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: bool
   }
 }
 
+/**
+ * Get full insurance label.
+ *
+ * @param {number} fullInsurance
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   if (fullInsurance === -1) {
     return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
@@ -192,6 +290,13 @@ export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get addtional driver label.
+ *
+ * @param {number} additionalDriver
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   if (additionalDriver === -1) {
     return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
@@ -202,15 +307,36 @@ export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get days label?
+ *
+ * @param {number} days
+ * @returns {string}
+ */
 export const getDays = (days: number) => {
   return `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 }
 
+/**
+ * Get short days label.
+ *
+ * @param {number} days
+ * @returns {string}
+ */
 export const getDaysShort = (days: number) => {
   return `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 }
 
 
+/**
+ * Get price.
+ *
+ * @param {bookcarsTypes.Car} car
+ * @param {Date} from
+ * @param {Date} to
+ * @param {?bookcarsTypes.CarOptions} [options]
+ * @returns {number}
+ */
 export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
   const _days = bookcarsHelper.days(from, to)
 
@@ -239,6 +365,14 @@ export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bo
   return price
 }
 
+/**
+ * Get cancellation option label.
+ *
+ * @param {number} cancellation
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {*}
+ */
 export const getCancellationOption = (cancellation: number, fr: boolean, hidePlus?: boolean) => {
   if (cancellation === -1) {
     return i18n.t('UNAVAILABLE')
@@ -249,6 +383,14 @@ export const getCancellationOption = (cancellation: number, fr: boolean, hidePlu
   }
 }
 
+/**
+ * Get amendments option label.
+ *
+ * @param {number} amendments
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {string}
+ */
 export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus?: boolean) => {
   if (amendments === -1) {
     return `${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`
@@ -259,6 +401,15 @@ export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus?: 
   }
 }
 
+/**
+ * Get collision damage waiver option label.
+ *
+ * @param {number} collisionDamageWaiver
+ * @param {number} days
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {string}
+ */
 export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (collisionDamageWaiver === -1) {
     return i18n.t('UNAVAILABLE')
@@ -269,6 +420,15 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
   }
 }
 
+/**
+ * Get theft protection option label.
+ *
+ * @param {number} theftProtection
+ * @param {number} days
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {string}
+ */
 export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (theftProtection === -1) {
     return i18n.t('UNAVAILABLE')
@@ -279,6 +439,15 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
   }
 }
 
+/**
+ * Description placeholder
+ *
+ * @param {number} fullInsurance
+ * @param {number} days
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {string}
+ */
 export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (fullInsurance === -1) {
     return i18n.t('UNAVAILABLE')
@@ -289,6 +458,15 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
   }
 }
 
+/**
+ * Get addional driver option label.
+ *
+ * @param {number} additionalDriver
+ * @param {number} days
+ * @param {boolean} fr
+ * @param {?boolean} [hidePlus]
+ * @returns {string}
+ */
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (additionalDriver === -1) {
     return i18n.t('UNAVAILABLE')
@@ -299,6 +477,11 @@ export const getAdditionalDriverOption = (additionalDriver: number, days: number
   }
 }
 
+/**
+ * Get all booking statuses.
+ *
+ * @returns {bookcarsTypes.StatusFilterItem[]}
+ */
 export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
   {
     value: bookcarsTypes.BookingStatus.Void,
@@ -326,7 +509,13 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
   },
 ]
 
-export const getBookingStatus = (status: string) => {
+/**
+ * Get booking status label.
+ *
+ * @param {string} status
+ * @returns {*}
+ */
+export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
       return i18n.t('BOOKING_STATUS_VOID')
@@ -351,9 +540,21 @@ export const getBookingStatus = (status: string) => {
   }
 }
 
+/**
+ * Get bithdate error message.
+ *
+ * @param {number} minimumAge
+ * @returns {string}
+ */
 export const getBirthDateError = (minimumAge: number) =>
   `${i18n.t('BIRTH_DATE_NOT_VALID_PART1')} ${minimumAge} ${i18n.t('BIRTH_DATE_NOT_VALID_PART2')} `
 
+/**
+ * Navigate to screen.
+ *
+ * @param {RouteProp<StackParams, keyof StackParams>} route
+ * @param {NativeStackNavigationProp<StackParams, keyof StackParams>} navigation
+ */
 export const navigate = (
   route: RouteProp<StackParams, keyof StackParams>,
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
