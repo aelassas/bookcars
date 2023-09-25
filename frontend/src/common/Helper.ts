@@ -4,10 +4,21 @@ import { toast } from 'react-toastify'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 
+/**
+ * Toast info message.
+ *
+ * @param {string} message
+ */
 export const info = (message: string) => {
   toast(message, { type: 'info' })
 }
 
+/**
+ * Toast error message.
+ *
+ * @param {?unknown} [err]
+ * @param {?string} [message]
+ */
 export const error = (err?: unknown, message?: string) => {
   if (err && console && console.error) {
     console.error(err)
@@ -19,6 +30,12 @@ export const error = (err?: unknown, message?: string) => {
   }
 }
 
+/**
+ * Get car type label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getCarType = (type: string) => {
   switch (type) {
     case bookcarsTypes.CarType.Diesel:
@@ -32,6 +49,12 @@ export const getCarType = (type: string) => {
   }
 }
 
+/**
+ * Get short car type label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getCarTypeShort = (type: string) => {
   switch (type) {
     case bookcarsTypes.CarType.Diesel:
@@ -45,6 +68,12 @@ export const getCarTypeShort = (type: string) => {
   }
 }
 
+/**
+ * Get gearbox type label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getGearboxType = (type: string) => {
   switch (type) {
     case bookcarsTypes.GearboxType.Manual:
@@ -58,6 +87,12 @@ export const getGearboxType = (type: string) => {
   }
 }
 
+/**
+ * Get short gearbox type label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getGearboxTypeShort = (type: string) => {
   switch (type) {
     case bookcarsTypes.GearboxType.Manual:
@@ -71,6 +106,12 @@ export const getGearboxTypeShort = (type: string) => {
   }
 }
 
+/**
+ * Get fuel policy label.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getFuelPolicy = (type: string) => {
   switch (type) {
     case bookcarsTypes.FuelPolicy.LikeForlike:
@@ -84,6 +125,12 @@ export const getFuelPolicy = (type: string) => {
   }
 }
 
+/**
+ * Get car type tooltip.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getCarTypeTooltip = (type: string) => {
   switch (type) {
     case bookcarsTypes.CarType.Diesel:
@@ -97,6 +144,12 @@ export const getCarTypeTooltip = (type: string) => {
   }
 }
 
+/**
+ * Get gearbox tooltip.
+ *
+ * @param {string} type
+ * @returns {string}
+ */
 export const getGearboxTooltip = (type: string) => {
   switch (type) {
     case bookcarsTypes.GearboxType.Manual:
@@ -110,14 +163,32 @@ export const getGearboxTooltip = (type: string) => {
   }
 }
 
+/**
+ * Get seats tooltip.
+ *
+ * @param {number} seats
+ * @returns {string}
+ */
 export const getSeatsTooltip = (seats: number) => {
   return `${strings.SEATS_TOOLTIP_1}${seats} ${strings.SEATS_TOOLTIP_2}`
 }
 
+/**
+ * Get doors tooltip.
+ *
+ * @param {number} doors
+ * @returns {string}
+ */
 export const getDoorsTooltip = (doors: number) => {
   return `${strings.DOORS_TOOLTIP_1}${doors} ${strings.DOORS_TOOLTIP_2}`
 }
 
+/**
+ * Get fuel policy tooltip.
+ *
+ * @param {string} fuelPolicy
+ * @returns {string}
+ */
 export const getFuelPolicyTooltip = (fuelPolicy: string) => {
   switch (fuelPolicy) {
     case bookcarsTypes.FuelPolicy.LikeForlike:
@@ -131,6 +202,12 @@ export const getFuelPolicyTooltip = (fuelPolicy: string) => {
   }
 }
 
+/**
+ * Get mileage label.
+ *
+ * @param {number} mileage
+ * @returns {string}
+ */
 export const getMileage = (mileage: number) => {
   if (mileage === -1) {
     return strings.UNLIMITED
@@ -139,6 +216,13 @@ export const getMileage = (mileage: number) => {
   }
 }
 
+/**
+ * Get mileage tooltip.
+ *
+ * @param {number} mileage
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getMileageTooltip = (mileage: number, fr: boolean) => {
   if (mileage === -1) {
     return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
@@ -147,6 +231,13 @@ export const getMileageTooltip = (mileage: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get additional driver label.
+ *
+ * @param {number} additionalDriver
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   if (additionalDriver === -1) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
@@ -157,6 +248,13 @@ export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get full insurance label.
+ *
+ * @param {number} fullInsurance
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   if (fullInsurance === -1) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
@@ -167,6 +265,13 @@ export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get collision damage waiver label.
+ *
+ * @param {number} collisionDamageWaiver
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: boolean) => {
   if (collisionDamageWaiver === -1) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
@@ -177,6 +282,13 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: bool
   }
 }
 
+/**
+ * Get theft protection label.
+ *
+ * @param {number} theftProtection
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   if (theftProtection === -1) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
@@ -187,6 +299,13 @@ export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get amendments label.
+ *
+ * @param {number} amendments
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getAmendments = (amendments: number, fr: boolean) => {
   if (amendments === -1) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}${fr ? 's' : ''}`
@@ -197,6 +316,13 @@ export const getAmendments = (amendments: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get cancellation label.
+ *
+ * @param {number} cancellation
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCancellation = (cancellation: number, fr: boolean) => {
   if (cancellation === -1) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
@@ -207,7 +333,13 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
   }
 }
 
-export const getBookingStatus = (status: string) => {
+/**
+ * Get booking status label.
+ *
+ * @param {string} status
+ * @returns {string}
+ */
+export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
       return commonStrings.BOOKING_STATUS_VOID
@@ -232,6 +364,11 @@ export const getBookingStatus = (status: string) => {
   }
 }
 
+/**
+ * Get all booking statuses.
+ *
+ * @returns {bookcarsTypes.StatusFilterItem[]}
+ */
 export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
   return [
     {
@@ -261,6 +398,15 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
   ]
 }
 
+/**
+ * Get price.
+ *
+ * @param {bookcarsTypes.Car} car
+ * @param {Date} from
+ * @param {Date} to
+ * @param {?bookcarsTypes.CarOptions} [options]
+ * @returns {number}
+ */
 export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
   const _days = bookcarsHelper.days(from, to)
 
@@ -289,43 +435,30 @@ export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bo
   return price
 }
 
-export const getUserTypes = () => {
-  return [
-    {
-      value: bookcarsTypes.UserType.Admin,
-      label: commonStrings.RECORD_TYPE_ADMIN
-    },
-    {
-      value: bookcarsTypes.UserType.Company,
-      label: commonStrings.RECORD_TYPE_COMPANY,
-    },
-    {
-      value: bookcarsTypes.UserType.User,
-      label: commonStrings.RECORD_TYPE_USER
-    },
-  ]
-}
+/**
+ * Get days label
+ *
+ * @param {number} days
+ * @returns {string}
+ */
+export const getDays = (days: number) =>
+  `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
 
-export const getUserType = (status: string) => {
-  switch (status) {
-    case bookcarsTypes.RecordType.Admin:
-      return commonStrings.RECORD_TYPE_ADMIN
-
-    case bookcarsTypes.RecordType.Company:
-      return commonStrings.RECORD_TYPE_COMPANY
-
-    case bookcarsTypes.RecordType.User:
-      return commonStrings.RECORD_TYPE_USER
-
-    default:
-      return ''
-  }
-}
-
-export const getDays = (days: number) => `${strings.PRICE_DAYS_PART_1} ${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
-
+/**
+ * Get short days label.
+ *
+ * @param {number} days
+ * @returns {string}
+ */
 export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART_2}${days > 1 ? 's' : ''}`
 
+/**
+ * Get cancellation option label.
+ *
+ * @param {number} cancellation
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCancellationOption = (cancellation: number, fr: boolean) => {
   if (cancellation === -1) {
     return strings.UNAVAILABLE
@@ -334,6 +467,13 @@ export const getCancellationOption = (cancellation: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get amendments option label.
+ *
+ * @param {number} amendments
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getAmendmentsOption = (amendments: number, fr: boolean) => {
   if (amendments === -1) {
     return `${strings.UNAVAILABLE}${fr ? 's' : ''}`
@@ -342,6 +482,14 @@ export const getAmendmentsOption = (amendments: number, fr: boolean) => {
   }
 }
 
+/**
+ * Get theft protection option label.
+ *
+ * @param {number} theftProtection
+ * @param {number} days
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean) => {
   if (theftProtection === -1) {
     return strings.UNAVAILABLE
@@ -352,6 +500,14 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
   }
 }
 
+/**
+ * Get collision damage waiver option label.
+ *
+ * @param {number} collisionDamageWaiver
+ * @param {number} days
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean) => {
   if (collisionDamageWaiver === -1) {
     return strings.UNAVAILABLE
@@ -362,6 +518,14 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
   }
 }
 
+/**
+ * Get full insurance option label.
+ *
+ * @param {number} fullInsurance
+ * @param {number} days
+ * @param {boolean} fr
+ * @returns {string}
+ */
 export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: boolean) => {
   if (fullInsurance === -1) {
     return strings.UNAVAILABLE
@@ -372,6 +536,13 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
   }
 }
 
+/**
+ * Get additional driver option label.
+ *
+ * @param {number} additionalDriver
+ * @param {number} days
+ * @returns {string}
+ */
 export const getAdditionalDriverOption = (additionalDriver: number, days: number) => {
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
@@ -382,8 +553,21 @@ export const getAdditionalDriverOption = (additionalDriver: number, days: number
   }
 }
 
+/**
+ * Get birthdate error message.
+ *
+ * @param {number} minimumAge
+ * @returns {string}
+ */
 export const getBirthDateError = (minimumAge: number) =>
   `${commonStrings.BIRTH_DATE_NOT_VALID_PART1} ${minimumAge} ${commonStrings.BIRTH_DATE_NOT_VALID_PART2}`
 
+/**
+ * Check whether a car option is available or not.
+ *
+ * @param {(bookcarsTypes.Car | undefined)} car
+ * @param {string} option
+ * @returns {boolean}
+ */
 export const carOptionAvailable = (car: bookcarsTypes.Car | undefined, option: string) =>
   car && option in car && (car[option] as number) > -1
