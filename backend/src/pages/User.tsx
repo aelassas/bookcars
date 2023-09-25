@@ -99,7 +99,7 @@ const User = () => {
 
               const admin = Helper.admin(loggedUser)
               if (admin) {
-                const companies = await SupplierService.getAllCompanies()
+                const companies = await SupplierService.getAllSuppliers()
                 const companyIds = bookcarsHelper.flattenCompanies(companies)
                 setState(companyIds)
               } else {

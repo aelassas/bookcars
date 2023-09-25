@@ -165,7 +165,7 @@ const UpdateCompany = () => {
         const id = params.get('c')
         if (id && id !== '') {
           try {
-            const company = await SupplierService.getCompany(id)
+            const company = await SupplierService.getSupplier(id)
 
             if (company) {
               setCompany(company)

@@ -209,7 +209,7 @@ export const flattenCompanies = (companies: bookcarsTypes.User[]): string[] =>
  *
  * @param {?Date} [from]
  * @param {?Date} [to]
- * @returns {*}
+ * @returns {number}
  */
 export const days = (from?: Date, to?: Date) =>
     (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0

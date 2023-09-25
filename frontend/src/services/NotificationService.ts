@@ -19,7 +19,7 @@ export const getNotificationCounter = (userId: string): Promise<bookcarsTypes.No
 )
 
 /**
- * Mark notifications as read.
+ * Mark Notifications as read.
  *
  * @param {string} userId
  * @param {string[]} ids
@@ -28,7 +28,7 @@ export const getNotificationCounter = (userId: string): Promise<bookcarsTypes.No
 export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
   axios
     .post(
-      `${Env.API_HOST}/api/mark-notifications-as-read/${encodeURIComponent(userId)}`,
+      `${Env.API_HOST}/api/mark-Notifications-as-read/${encodeURIComponent(userId)}`,
       { ids },
       { headers: UserService.authHeader() }
     )
@@ -36,7 +36,7 @@ export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
 )
 
 /**
- * Mark notifications as unread.
+ * Mark Notifications as unread.
  *
  * @param {string} userId
  * @param {string[]} ids
@@ -44,7 +44,7 @@ export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
  */
 export const markAsUnread = (userId: string, ids: string[]): Promise<number> => (
   axios
-    .post(`${Env.API_HOST}/api/mark-notifications-as-unread/${encodeURIComponent(userId)}`,
+    .post(`${Env.API_HOST}/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
       { ids },
       { headers: UserService.authHeader() }
     )
@@ -52,7 +52,7 @@ export const markAsUnread = (userId: string, ids: string[]): Promise<number> => 
 )
 
 /**
- * Delete notifications.
+ * Delete Notifications.
  *
  * @param {string} userId
  * @param {string[]} ids
@@ -61,14 +61,14 @@ export const markAsUnread = (userId: string, ids: string[]): Promise<number> => 
 export const deleteNotifications = (userId: string, ids: string[]): Promise<number> => (
   axios
     .post(
-      `${Env.API_HOST}/api/delete-notifications/${encodeURIComponent(userId)}`,
+      `${Env.API_HOST}/api/delete-Notifications/${encodeURIComponent(userId)}`,
       { ids },
       { headers: UserService.authHeader() })
     .then((res) => res.status)
 )
 
 /**
- * Get notifications.
+ * Get Notifications.
  *
  * @param {string} userId
  * @param {number} page
@@ -77,7 +77,7 @@ export const deleteNotifications = (userId: string, ids: string[]): Promise<numb
 export const getNotifications = (userId: string, page: number): Promise<bookcarsTypes.Result<bookcarsTypes.Notification>> => (
   axios
     .get(
-      `${Env.API_HOST}/api/notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
+      `${Env.API_HOST}/api/Notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
       { headers: UserService.authHeader() }
     )
     .then((res) => res.data)
