@@ -46,7 +46,7 @@ const strings = new LocalizedStrings({
 
     CANCEL: 'Cancel this booking',
     CANCEL_BOOKING: 'Are you sure you want to cancel this booking?',
-    CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request hes been submited. We will contact you to finalize the cancellation procedure.',
+    CANCEL_BOOKING_REQUEST_SENT: 'Your cancel request has been submited. We will contact you to finalize the cancellation procedure.',
   },
 })
 
