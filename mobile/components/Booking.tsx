@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { format } from 'date-fns'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import BookingStatus from './BookingStatus'
@@ -35,6 +35,12 @@ const Booking = (
   const days = bookcarsHelper.days(from, to)
   const car = booking.car as bookcarsTypes.Car
   const supplier = booking.company as bookcarsTypes.User
+
+  const today = new Date()
+  today.setHours(0)
+  today.setMinutes(0)
+  today.setSeconds(0)
+  today.setMilliseconds(0)
 
   return (
     <View key={booking._id} style={styles.bookingContainer}>
@@ -132,7 +138,7 @@ const Booking = (
         {booking.cancellation
           && !booking.cancelRequest
           && booking.status !== bookcarsTypes.BookingStatus.Cancelled
-          && new Date(booking.from) > new Date()
+          && new Date(booking.from) >= today
           && (
             <Button
               size="small"
