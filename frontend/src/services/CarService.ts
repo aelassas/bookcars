@@ -3,6 +3,14 @@ import Env from '../config/env.config'
 import * as UserService from './UserService'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Get cars.
+ *
+ * @param {bookcarsTypes.GetCarsPayload} data
+ * @param {number} page
+ * @param {number} size
+ * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Car>>}
+ */
 export const getCars = (data: bookcarsTypes.GetCarsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Car>> =>
   axios
     .post(
@@ -10,6 +18,12 @@ export const getCars = (data: bookcarsTypes.GetCarsPayload, page: number, size: 
       data
     ).then((res) => res.data)
 
+/**
+ * Get a Car by ID.
+ *
+ * @param {string} id
+ * @returns {Promise<bookcarsTypes.Car>}
+ */
 export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
   axios
     .get(
@@ -17,6 +31,15 @@ export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
     )
     .then((res) => res.data)
 
+/**
+ * Get cars by agency and location.
+ *
+ * @param {string} keyword
+ * @param {bookcarsTypes.GetBookingCarsPayload} data
+ * @param {number} page
+ * @param {number} size
+ * @returns {Promise<bookcarsTypes.Car[]>}
+ */
 export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCarsPayload, page: number, size: number): Promise<bookcarsTypes.Car[]> =>
   axios
     .post(

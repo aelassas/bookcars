@@ -46,7 +46,7 @@ const Bookings = () => {
     setUser(user)
     setLoadingCompanies(true)
 
-    const allCompanies = await SupplierService.getAllCompanies()
+    const allCompanies = await SupplierService.getAllSuppliers()
     const companies = bookcarsHelper.flattenCompanies(allCompanies)
     setAllCompanies(allCompanies)
     setCompanies(companies)

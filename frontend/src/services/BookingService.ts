@@ -3,6 +3,12 @@ import Env from '../config/env.config'
 import * as UserService from './UserService'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Complete the checkout process and create the Booking.
+ *
+ * @param {bookcarsTypes.BookPayload} data
+ * @returns {Promise<number>}
+ */
 export const book = (data: bookcarsTypes.BookPayload): Promise<number> =>
   axios
     .post(
@@ -11,6 +17,12 @@ export const book = (data: bookcarsTypes.BookPayload): Promise<number> =>
     )
     .then((res) => res.status)
 
+/**
+ * Update a Booking.
+ *
+ * @param {bookcarsTypes.UpsertBookingPayload} data
+ * @returns {Promise<number>}
+ */
 export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number> =>
   axios
     .put(`${Env.API_HOST}/api/update-booking`,
@@ -19,6 +31,14 @@ export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number
     )
     .then((res) => res.status)
 
+/**
+ * Get bookings.
+ *
+ * @param {bookcarsTypes.GetBookingsPayload} payload
+ * @param {number} page
+ * @param {number} size
+ * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Booking>>}
+ */
 export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Booking>> =>
   axios
     .post(
@@ -28,6 +48,12 @@ export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: num
     )
     .then((res) => res.data)
 
+/**
+ * Get a Booking by ID.
+ *
+ * @param {string} id
+ * @returns {Promise<bookcarsTypes.Booking>}
+ */
 export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
   axios
     .get(
@@ -36,6 +62,12 @@ export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
     )
     .then((res) => res.data)
 
+/**
+ * Cancel a Booking.
+ *
+ * @param {string} id
+ * @returns {Promise<number>}
+ */
 export const cancel = (id: string): Promise<number> =>
   axios
     .post(
