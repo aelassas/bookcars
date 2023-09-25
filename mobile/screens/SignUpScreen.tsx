@@ -194,7 +194,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
     }
   }
 
-  const onChangeBirthDate = (date: Date) => {
+  const onChangeBirthDate = (date: Date|undefined) => {
     setBirthDate(date)
     setBirthDateRequired(false)
     setBirthDateValid(true)

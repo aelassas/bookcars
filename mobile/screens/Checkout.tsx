@@ -491,7 +491,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     }
   }
 
-  const onChangeBirthDate = (date: Date) => {
+  const onChangeBirthDate = (date: Date | undefined) => {
     setBirthDate(date)
     setBirthDateRequired(false)
     setBirthDateValid(true)
@@ -811,7 +811,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       }
 
       setLoading(true)
-      
+
       let driver: bookcarsTypes.User | undefined = undefined
       let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
 
@@ -1118,7 +1118,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={_birthDate}
                       error={adRequired && (_birthDateRequired || !_birthDateValid)}
                       helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
-                      onChange={(date: Date) => {
+                      onChange={(date: Date | undefined) => {
                         set_BirthDate(date)
                         set_BirthDateRequired(false)
                         set_BirthDateValid(true)
