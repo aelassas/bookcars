@@ -2,6 +2,11 @@ import axios from 'axios'
 import Env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
 
+/**
+ * Get authentication header.
+ *
+ * @returns {unknown}
+ */
 export const authHeader = () => {
   const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
 
@@ -12,6 +17,12 @@ export const authHeader = () => {
   }
 }
 
+/**
+ * Sign up.
+ *
+ * @param {bookcarsTypes.BackendSignUpPayload} data
+ * @returns {Promise<number>}
+ */
 export const signup = (data: bookcarsTypes.BackendSignUpPayload): Promise<number> =>
   axios
     .post(`${Env.API_HOST}/api/sign-up/ `,
@@ -19,6 +30,14 @@ export const signup = (data: bookcarsTypes.BackendSignUpPayload): Promise<number
     )
     .then((res) => res.status)
 
+/**
+ * Check validation token.
+ *
+ * @param {string} userId
+ * @param {string} email
+ * @param {string} token
+ * @returns {Promise<number>}
+ */
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
   axios
     .get(
@@ -26,6 +45,12 @@ export const checkToken = (userId: string, email: string, token: string): Promis
     )
     .then((res) => res.status)
 
+/**
+ * Delete validation tokens.
+ *
+ * @param {string} userId
+ * @returns {Promise<number>}
+ */
 export const deleteTokens = (userId: string): Promise<number> =>
   axios
     .delete(
@@ -33,6 +58,13 @@ export const deleteTokens = (userId: string): Promise<number> =>
     )
     .then((res) => res.status)
 
+/**
+ * Resend validation or activation email.
+ *
+ * @param {?string} [email]
+ * @param {boolean} [reset=false]
+ * @returns {Promise<number>}
+ */
 export const resend = (email?: string, reset = false): Promise<number> =>
   axios
     .post(
@@ -40,6 +72,12 @@ export const resend = (email?: string, reset = false): Promise<number> =>
     )
     .then((res) => res.status)
 
+/**
+ * Activate account.
+ *
+ * @param {bookcarsTypes.ActivatePayload} data
+ * @returns {Promise<number>}
+ */
 export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =>
   axios
     .post(
@@ -49,6 +87,12 @@ export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =
     )
     .then((res) => res.status)
 
+/**
+ * Validate email.
+ *
+ * @param {bookcarsTypes.ValidateEmailPayload} data
+ * @returns {Promise<number>}
+ */
 export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise<number> =>
   axios
     .post(
@@ -57,6 +101,12 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
     )
     .then((exist) => exist.status)
 
+/**
+ * Sign in.
+ *
+ * @param {bookcarsTypes.SignInPayload} data
+ * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
+ */
 export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
   axios.post(
     `${Env.API_HOST}/api/sign-in/frontend`,
@@ -68,6 +118,12 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
       return { status: res.status, data: res.data }
     })
 
+/**
+ * Sign out.
+ *
+ * @param {boolean} [redirect=true]
+ * @param {boolean} [redirectSignin=false]
+ */
 export const signout = (redirect = true, redirectSignin = false) => {
   const _signout = () => {
     const deleteAllCookies = () => {
@@ -96,6 +152,11 @@ export const signout = (redirect = true, redirectSignin = false) => {
   _signout()
 }
 
+/**
+ * Validate authentication access token.
+ *
+ * @returns {Promise<number>}
+ */
 export const validateAccessToken = (): Promise<number> =>
   axios
     .post(
@@ -106,6 +167,13 @@ export const validateAccessToken = (): Promise<number> =>
     .then((res) => res.status)
 
 
+/**
+ * Confirm email.
+ *
+ * @param {string} email
+ * @param {string} token
+ * @returns {Promise<number>}
+ */
 export const confirmEmail = (email: string, token: string): Promise<number> => (
   axios
     .post(
@@ -114,6 +182,12 @@ export const confirmEmail = (email: string, token: string): Promise<number> => (
     .then((res) => res.status)
 )
 
+/**
+ * Resend validation email.
+ *
+ * @param {bookcarsTypes.ResendLinkPayload} data
+ * @returns {Promise<number>}
+ */
 export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<number> =>
   axios
     .post(
@@ -123,6 +197,11 @@ export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<numbe
     )
     .then((res) => res.status)
 
+/**
+ * Get language.
+ *
+ * @returns {*}
+ */
 export const getLanguage = () => {
   const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
 
@@ -137,6 +216,11 @@ export const getLanguage = () => {
   }
 }
 
+/**
+ * Get language from query strings.
+ *
+ * @returns {*}
+ */
 export const getQueryLanguage = () => {
   const params = new URLSearchParams(window.location.search)
   if (params.has('l')) {
@@ -145,6 +229,12 @@ export const getQueryLanguage = () => {
   return ''
 }
 
+/**
+ * Update language.
+ *
+ * @param {bookcarsTypes.UpdateLanguagePayload} data
+ * @returns {*}
+ */
 export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
   axios
     .post(`${Env.API_HOST}/api/update-language`, data, {
@@ -160,11 +250,21 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
     })
 
 
+/**
+ * Set language.
+ *
+ * @param {string} lang
+ */
 export const setLanguage = (lang: string) => {
   localStorage.setItem('bc-language', lang)
 }
 
-export const getCurrentUser = () => {
+/**
+ * Get current user.
+ *
+ * @returns {*}
+ */
+export const getCurrentUser = (): bookcarsTypes.User | null => {
   const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
   if (user && user.accessToken) {
     return user
@@ -172,14 +272,30 @@ export const getCurrentUser = () => {
   return null
 }
 
-export const getUser = (id: string): Promise<bookcarsTypes.User> =>
-  axios
-    .get(
-      `${Env.API_HOST}/api/user/` + encodeURIComponent(id),
-      { headers: authHeader() }
-    )
-    .then((res) => res.data)
-
+/**
+ * Get User by ID.
+ *
+ * @param {string} id
+ * @returns {Promise<bookcarsTypes.User>}
+ */
+export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
+  if (id) {
+    return axios
+      .get(
+        `${Env.API_HOST}/api/user/` + encodeURIComponent(id),
+        { headers: authHeader() }
+      )
+      .then((res) => res.data)
+  } else {
+    return new Promise((resolve) => resolve(null))
+  }
+}
+/**
+ * Update a User.
+ *
+ * @param {bookcarsTypes.UpdateUserPayload} data
+ * @returns {Promise<number>}
+ */
 export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<number> =>
   axios
     .post(
@@ -190,6 +306,12 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
     .then((res) => res.status)
 
 
+/**
+ * Update email notifications flag.
+ *
+ * @param {bookcarsTypes.UpdateEmailNotificationsPayload} data
+ * @returns {Promise<number>}
+ */
 export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotificationsPayload): Promise<number> =>
   axios
     .post(
@@ -200,13 +322,22 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
     .then((res) => {
       if (res.status === 200) {
         const user = getCurrentUser()
-        user.enableEmailNotifications = data.enableEmailNotifications
-        localStorage.setItem('bc-user', JSON.stringify(user))
+        if (user) {
+          user.enableEmailNotifications = data.enableEmailNotifications
+          localStorage.setItem('bc-user', JSON.stringify(user))
+        }
       }
       return res.status
     })
 
 
+/**
+ * Update avatar.
+ *
+ * @param {string} userId
+ * @param {Blob} file
+ * @returns {Promise<number>}
+ */
 export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
   const user = getCurrentUser()
   const formData = new FormData()
@@ -228,6 +359,12 @@ export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
     .then((res) => res.status)
 }
 
+/**
+ * Delete avatar.
+ *
+ * @param {string} userId
+ * @returns {Promise<number>}
+ */
 export const deleteAvatar = (userId: string): Promise<number> =>
   axios
     .post(
@@ -237,6 +374,13 @@ export const deleteAvatar = (userId: string): Promise<number> =>
     )
     .then((res) => res.status)
 
+/**
+ * Check password.
+ *
+ * @param {string} id
+ * @param {string} pass
+ * @returns {Promise<number>}
+ */
 export const checkPassword = (id: string, pass: string): Promise<number> =>
   axios
     .get(
@@ -245,6 +389,12 @@ export const checkPassword = (id: string, pass: string): Promise<number> =>
     )
     .then((res) => res.status)
 
+/**
+ * Change password.
+ *
+ * @param {bookcarsTypes.ChangePasswordPayload} data
+ * @returns {Promise<number>}
+ */
 export const changePassword = (data: bookcarsTypes.ChangePasswordPayload): Promise<number> =>
   axios
     .post(
