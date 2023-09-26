@@ -110,7 +110,7 @@ const BookingList = (
 
       if (companies && statuses) {
         setLoading(true)
-
+        
         const payload: bookcarsTypes.GetBookingsPayload = {
           companies,
           statuses,
@@ -202,13 +202,14 @@ const BookingList = (
       const _paginationModel = bookcarsHelper.clone(paginationModel)
       _paginationModel.page = 0
       setPaginationModel(_paginationModel)
-      _fetch(0, user)
+      setPage(0)
+      setLoad(true)
       setReload(false)
     }
   }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies && statuses && page > 0) {
+    if (companies && statuses) {
       const columns = getColumns()
       setColumns(columns)
       setLoad(true)
