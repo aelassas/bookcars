@@ -107,7 +107,7 @@ const BookingList = (
           car,
           user: (user && user._id) || undefined,
         }
-        console.log('fetch', page)
+
         const data = await BookingService.getBookings(
           payload,
           page,

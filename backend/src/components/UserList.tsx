@@ -32,7 +32,6 @@ const UserList = (
   {
     types: userListTypes,
     keyword: userListKeyword,
-    reload: userListReload,
     user: userListUser,
     hideDesktopColumns,
     checkboxSelection,
@@ -40,11 +39,10 @@ const UserList = (
   }: {
     types?: bookcarsTypes.UserType[]
     keyword?: string
-    reload?: boolean
     user?: bookcarsTypes.User
     hideDesktopColumns?: boolean
     checkboxSelection?: boolean
-    onLoad: bookcarsTypes.DataEvent<bookcarsTypes.User>
+    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
   }) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
@@ -56,9 +54,8 @@ const UserList = (
   const [selectedId, setSelectedId] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [types, setTypes] = useState<bookcarsTypes.UserType[]>(userListTypes || [])
+  const [types, setTypes] = useState<bookcarsTypes.UserType[]>()
   const [keyword, setKeyword] = useState(userListKeyword)
-  const [reload, setReload] = useState(userListReload)
   const [reloadColumns, setReloadColumns] = useState(false)
   const [paginationModel, setPaginationModel] = useState({
     pageSize: Env.PAGE_SIZE,
@@ -72,28 +69,30 @@ const UserList = (
 
   const _fetch = async (page: number, user?: bookcarsTypes.User) => {
     try {
-      setLoading(true)
+      if (user && types) {
+        setLoading(true)
 
-      const payload: bookcarsTypes.GetUsersBody =
-      {
-        user: (user && user._id) || '',
-        types
-      }
+        const payload: bookcarsTypes.GetUsersBody =
+        {
+          user: (user && user._id) || '',
+          types
+        }
 
-      const data = await UserService.getUsers(payload, keyword || '', page + 1, pageSize)
-      const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
-      if (!_data) {
-        Helper.error()
-        return
-      }
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-      const _rows = _data.resultData
+        const data = await UserService.getUsers(payload, keyword || '', page + 1, pageSize)
+        const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
+        if (!_data) {
+          Helper.error()
+          return
+        }
+        const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+        const _rows = _data.resultData
 
-      setRows(_rows)
-      setRowCount(totalRecords)
+        setRows(_rows)
+        setRowCount(totalRecords)
 
-      if (onLoad) {
-        onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        if (onLoad) {
+          onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        }
       }
     } catch (err) {
       Helper.error(err)
@@ -103,7 +102,7 @@ const UserList = (
   }
 
   useEffect(() => {
-    setTypes(userListTypes || [])
+    setTypes(userListTypes)
   }, [userListTypes])
 
   useEffect(() => {
@@ -111,24 +110,38 @@ const UserList = (
   }, [userListKeyword])
 
   useEffect(() => {
-    setReload(userListReload || false)
-  }, [userListReload])
+    if (types) {
+      _fetch(page, user)
+    }
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (userListUser) {
+    if (types) {
+      if (page === 0) {
+        _fetch(0, user)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
+    }
+  }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (userListUser && types) {
+      setUser(userListUser)
       const columns = getColumns(userListUser)
       setColumns(columns)
-      setUser(userListUser)
-      _fetch(page, userListUser)
-    }
-  }, [userListUser, page, pageSize, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (reload) {
-      setPage(0)
-      _fetch(0, user)
+      if (page === 0) {
+        _fetch(0, userListUser)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
     }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userListUser, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (user && reloadColumns) {
@@ -337,9 +350,6 @@ const UserList = (
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-          // slots={{
-          //   noRowsOverlay: () => '',
-          // }}
           onRowSelectionModelChange={(selectedIds) => {
             setSelectedIds(Array.from(new Set(selectedIds)).map(id => id.toString()))
             setReloadColumns(true)

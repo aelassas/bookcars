@@ -8,29 +8,21 @@ import Search from '../components/Search'
 import UserList from '../components/UserList'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/users.css'
 
 const Users = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
-  const [types, setTypes] = useState<bookcarsTypes.UserType[]>([])
+  const [types, setTypes] = useState<bookcarsTypes.UserType[]>()
   const [keyword, setKeyword] = useState('')
-  const [reload, setReload] = useState(false)
-
-  const handleUserListLoad = () => {
-    setReload(false)
-  }
 
   const handleUserTypeFilterChange = (newTypes: bookcarsTypes.UserType[]) => {
     setTypes(newTypes)
-    setReload(bookcarsHelper.arrayEqual(types, newTypes))
   }
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
-    setReload(keyword === newKeyword)
   }
 
   const onLoad = (user?: bookcarsTypes.User) => {
@@ -70,8 +62,6 @@ const Users = () => {
               keyword={keyword}
               checkboxSelection={!Env.isMobile() && admin}
               hideDesktopColumns={Env.isMobile()}
-              reload={reload}
-              onLoad={handleUserListLoad}
             />
           </div>
         </div>
