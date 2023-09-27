@@ -44,7 +44,6 @@ const BookingList = (
     companies: bookingCompanies,
     statuses: bookingStatuses,
     filter: bookingFilter,
-    reload: bookingReload,
     car: bookingCar,
     offset: bookingOffset,
     user: bookingUser,
@@ -60,7 +59,6 @@ const BookingList = (
     companies?: string[]
     statuses?: string[]
     filter?: bookcarsTypes.Filter | null
-    reload?: boolean
     car?: string
     offset?: number
     user?: bookcarsTypes.User
@@ -85,14 +83,12 @@ const BookingList = (
   const [companies, setCompanies] = useState<string[] | undefined>(bookingCompanies)
   const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
-  const [reload, setReload] = useState(bookingReload)
   const [car, setCar] = useState<string>(bookingCar || '')
   const [offset, setOffset] = useState(0)
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: Env.BOOKINGS_PAGE_SIZE,
     page: 0,
   })
-  const [load, setLoad] = useState(false)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
   const [openCancelDialog, setOpenCancelDialog] = useState(false)
@@ -110,7 +106,7 @@ const BookingList = (
 
       if (companies && statuses) {
         setLoading(true)
-        
+
         const payload: bookcarsTypes.GetBookingsPayload = {
           companies,
           statuses,
@@ -157,7 +153,6 @@ const BookingList = (
       Helper.error(err)
     } finally {
       setLoading(false)
-      setLoad(false)
       setInit(false)
     }
   }
@@ -183,44 +178,24 @@ const BookingList = (
   }, [bookingOffset])
 
   useEffect(() => {
-    setReload(bookingReload || false)
-  }, [bookingReload])
-
-  useEffect(() => {
     setUser(bookingUser)
   }, [bookingUser])
 
   useEffect(() => {
-    if (load) {
-      _fetch(page, user)
-      setLoad(false)
-    }
-  }, [load]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (reload) {
-      const _paginationModel = bookcarsHelper.clone(paginationModel)
-      _paginationModel.page = 0
-      setPaginationModel(_paginationModel)
-      setPage(0)
-      setLoad(true)
-      setReload(false)
-    }
-  }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     if (companies && statuses) {
-      const columns = getColumns()
-      setColumns(columns)
-      setLoad(true)
+      _fetch(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (companies && statuses) {
-      const columns = getColumns()
-      setColumns(columns)
-      setReload(true)
+      if (page === 0) {
+        _fetch(0, user)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
     }
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -228,7 +203,14 @@ const BookingList = (
     if (companies && statuses) {
       const columns = getColumns()
       setColumns(columns)
-      setReload(true)
+
+      if (page === 0) {
+        _fetch(0, user)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
     }
   }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
