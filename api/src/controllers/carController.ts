@@ -200,7 +200,7 @@ export async function deleteCar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function createImage(req: Request & { file?: any }, res: Response) {
+export async function createImage(req: Request, res: Response) {
   try {
     if (!req.file) {
       const msg = '[car.createImage] req.file not found'
@@ -232,7 +232,7 @@ export async function createImage(req: Request & { file?: any }, res: Response) 
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateImage(req: Request & { file?: any }, res: Response) {
+export async function updateImage(req: Request, res: Response) {
   const { id } = req.params
 
   try {

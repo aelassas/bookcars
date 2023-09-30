@@ -855,7 +855,7 @@ export async function getUser(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function createAvatar(req: Request & { file?: any }, res: Response) {
+export async function createAvatar(req: Request, res: Response) {
   try {
     if (!req.file) {
       const msg = 'req.file not found'
@@ -887,7 +887,7 @@ export async function createAvatar(req: Request & { file?: any }, res: Response)
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateAvatar(req: Request & { file?: any }, res: Response) {
+export async function updateAvatar(req: Request, res: Response) {
   const { userId } = req.params
 
   try {
