@@ -4,7 +4,7 @@ import * as bookcarsTypes from 'bookcars-types'
 import * as Helper from '../common/Helper'
 
 /**
- * Get environment variable value. 
+ * Get environment variable value.
  *
  * @param {string} name
  * @param {?boolean} [required]
@@ -205,6 +205,62 @@ export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'
 export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
 
 /**
+ * User Document.
+ *
+ * @export
+ * @interface User
+ * @typedef {User}
+ * @extends {Document}
+ */
+export interface User extends Document {
+    company?: Types.ObjectId
+    fullName: string
+    email: string
+    phone?: string
+    password?: string
+    birthDate?: Date
+    verified?: boolean
+    verifiedAt?: Date
+    active?: boolean
+    language: string
+    enableEmailNotifications?: boolean
+    avatar?: string
+    bio?: string
+    location?: string
+    type?: bookcarsTypes.UserType
+    blacklisted?: boolean
+    payLater?: boolean
+}
+
+/**
+ * UserInfo.
+ *
+ * @export
+ * @interface UserInfo
+ * @typedef {UserInfo}
+ */
+export interface UserInfo {
+    _id?: Types.ObjectId
+    company?: Types.ObjectId
+    fullName: string
+    email?: string
+    phone?: string
+    password?: string
+    birthDate?: Date
+    verified?: boolean
+    verifiedAt?: Date
+    active?: boolean
+    language?: string
+    enableEmailNotifications?: boolean
+    avatar?: string
+    bio?: string
+    location?: string
+    type?: string
+    blacklisted?: boolean
+    payLater?: boolean
+}
+
+/**
  * AdditionalDriver.
  *
  * @export
@@ -231,34 +287,6 @@ export interface Booking extends Document {
     company: Types.ObjectId
     car: Types.ObjectId
     driver: Types.ObjectId
-    pickupLocation: Types.ObjectId
-    dropOffLocation: Types.ObjectId
-    from: Date
-    to: Date
-    status: bookcarsTypes.BookingStatus
-    cancellation?: boolean
-    amendments?: boolean
-    theftProtection?: boolean
-    collisionDamageWaiver?: boolean
-    fullInsurance?: boolean
-    additionalDriver?: boolean
-    _additionalDriver?: Types.ObjectId
-    cancelRequest?: boolean
-    price: number
-}
-
-/**
- * BookingInfo.
- *
- * @export
- * @interface BookingInfo
- * @typedef {BookingInfo}
- */
-export interface BookingInfo {
-    _id?: Types.ObjectId
-    company: UserInfo
-    car: Car
-    driver: UserInfo
     pickupLocation: Types.ObjectId
     dropOffLocation: Types.ObjectId
     from: Date
@@ -340,6 +368,34 @@ export interface CarInfo {
 }
 
 /**
+ * BookingInfo.
+ *
+ * @export
+ * @interface BookingInfo
+ * @typedef {BookingInfo}
+ */
+export interface BookingInfo {
+    _id?: Types.ObjectId
+    company: UserInfo
+    car: Car
+    driver: UserInfo
+    pickupLocation: Types.ObjectId
+    dropOffLocation: Types.ObjectId
+    from: Date
+    to: Date
+    status: bookcarsTypes.BookingStatus
+    cancellation?: boolean
+    amendments?: boolean
+    theftProtection?: boolean
+    collisionDamageWaiver?: boolean
+    fullInsurance?: boolean
+    additionalDriver?: boolean
+    _additionalDriver?: Types.ObjectId
+    cancelRequest?: boolean
+    price: number
+}
+
+/**
  * Location Document.
  *
  * @export
@@ -378,7 +434,6 @@ export interface LocationInfo {
     values: LocationValue[]
 }
 
-
 /**
  * Notification Document.
  *
@@ -405,62 +460,6 @@ export interface Notification extends Document {
 export interface NotificationCounter extends Document {
     user: Types.ObjectId
     count?: number
-}
-
-/**
- * User Document.
- *
- * @export
- * @interface User
- * @typedef {User}
- * @extends {Document}
- */
-export interface User extends Document {
-    company?: Types.ObjectId
-    fullName: string
-    email: string
-    phone?: string
-    password?: string
-    birthDate?: Date
-    verified?: boolean
-    verifiedAt?: Date
-    active?: boolean
-    language: string
-    enableEmailNotifications?: boolean
-    avatar?: string
-    bio?: string
-    location?: string
-    type?: bookcarsTypes.UserType
-    blacklisted?: boolean
-    payLater?: boolean
-}
-
-/**
- * UserInfo.
- *
- * @export
- * @interface UserInfo
- * @typedef {UserInfo}
- */
-export interface UserInfo {
-    _id?: Types.ObjectId
-    company?: Types.ObjectId
-    fullName: string
-    email?: string
-    phone?: string
-    password?: string
-    birthDate?: Date
-    verified?: boolean
-    verifiedAt?: Date
-    active?: boolean
-    language?: string
-    enableEmailNotifications?: boolean
-    avatar?: string
-    bio?: string
-    location?: string
-    type?: string
-    blacklisted?: boolean
-    payLater?: boolean
 }
 
 /**

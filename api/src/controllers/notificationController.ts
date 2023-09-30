@@ -20,11 +20,10 @@ export async function notificationCounter(req: Request, res: Response) {
 
     if (counter) {
       return res.json(counter)
-    } else {
-      const cnt = new NotificationCounter({ user: userId })
-      await cnt.save()
-      return res.json(cnt)
     }
+    const cnt = new NotificationCounter({ user: userId })
+    await cnt.save()
+    return res.json(cnt)
   } catch (err) {
     console.error(`[notification.notificationCounter] ${strings.DB_ERROR} ${userId}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -45,8 +44,8 @@ export async function getNotifications(req: Request, res: Response) {
 
   try {
     const userId = new mongoose.Types.ObjectId(_userId)
-    const page = Number.parseInt(_page)
-    const size = Number.parseInt(_size)
+    const page = Number.parseInt(_page, 10)
+    const size = Number.parseInt(_size, 10)
 
     const notifications = await Notification.aggregate([
       { $match: { user: userId } },
@@ -80,7 +79,7 @@ export async function getNotifications(req: Request, res: Response) {
  */
 export async function markAsRead(req: Request, res: Response) {
   try {
-    const body: { ids: string[] } = req.body
+    const { body }: { body: { ids: string[] } } = req
     const { ids: _ids } = body
     const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const { userId: _userId } = req.params
@@ -91,7 +90,7 @@ export async function markAsRead(req: Request, res: Response) {
       _id: { $in: ids },
       isRead: false,
     })
-    const length = notifications.length
+    const { length } = notifications
 
     bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } })
     const result = await bulk.execute()
@@ -125,7 +124,7 @@ export async function markAsRead(req: Request, res: Response) {
  */
 export async function markAsUnRead(req: Request, res: Response) {
   try {
-    const body: { ids: string[] } = req.body
+    const { body }: { body: { ids: string[] } } = req
     const { ids: _ids } = body
     const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const { userId: _userId } = req.params
@@ -136,7 +135,7 @@ export async function markAsUnRead(req: Request, res: Response) {
       _id: { $in: ids },
       isRead: true,
     })
-    const length = notifications.length
+    const { length } = notifications
 
     bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } })
     const result = await bulk.execute()
@@ -170,7 +169,7 @@ export async function markAsUnRead(req: Request, res: Response) {
  */
 export async function deleteNotifications(req: Request, res: Response) {
   try {
-    const body: { ids: string[] } = req.body
+    const { body }: { body: { ids: string[] } } = req
     const { ids: _ids } = body
     const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const { userId: _userId } = req.params
