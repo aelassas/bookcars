@@ -2,6 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
+import * as bookcarsTypes from 'bookcars-types'
 import strings from '../config/app.config'
 import * as env from '../config/env.config'
 import User from '../models/User'
@@ -11,7 +12,6 @@ import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 import * as Helper from '../common/Helper'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Validate Supplier by fullname.
@@ -23,7 +23,7 @@ import * as bookcarsTypes from 'bookcars-types'
  * @returns {unknown}
  */
 export async function validate(req: Request, res: Response) {
-  const body: bookcarsTypes.ValidateSupplierPayload = req.body
+  const { body }: { body: bookcarsTypes.ValidateSupplierPayload } = req
   const { fullName } = body
 
   try {
@@ -50,14 +50,20 @@ export async function validate(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function update(req: Request, res: Response) {
-  const body: bookcarsTypes.UpdateSupplierPayload = req.body
+  const { body }: { body: bookcarsTypes.UpdateSupplierPayload } = req
   const { _id } = body
 
   try {
     const supplier = await User.findById(_id)
 
     if (supplier) {
-      const { fullName, phone, location, bio, payLater } = req.body
+      const {
+        fullName,
+        phone,
+        location,
+        bio,
+        payLater,
+      } = body
       supplier.fullName = fullName
       supplier.phone = phone
       supplier.location = location
@@ -66,10 +72,9 @@ export async function update(req: Request, res: Response) {
 
       await supplier.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[supplier.update] Supplier not found:', _id)
-      return res.sendStatus(204)
     }
+    console.error('[supplier.update] Supplier not found:', _id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[supplier.update] ${strings.DB_ERROR} ${_id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -141,19 +146,28 @@ export async function getSupplier(req: Request, res: Response) {
     if (!user) {
       console.error('[supplier.getSupplier] Supplier not found:', id)
       return res.sendStatus(204)
-    } else {
-      const { _id, email, fullName, avatar, phone, location, bio, payLater } = user
-      return res.json({
-        _id,
-        email,
-        fullName,
-        avatar,
-        phone,
-        location,
-        bio,
-        payLater,
-      })
     }
+    const {
+      _id,
+      email,
+      fullName,
+      avatar,
+      phone,
+      location,
+      bio,
+      payLater,
+    } = user
+
+    return res.json({
+      _id,
+      email,
+      fullName,
+      avatar,
+      phone,
+      location,
+      bio,
+      payLater,
+    })
   } catch (err) {
     console.error(`[supplier.getSupplier] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -171,8 +185,8 @@ export async function getSupplier(req: Request, res: Response) {
  */
 export async function getSuppliers(req: Request, res: Response) {
   try {
-    const page = Number.parseInt(req.params.page)
-    const size = Number.parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page, 10)
+    const size = Number.parseInt(req.params.size, 10)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 

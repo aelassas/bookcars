@@ -3,6 +3,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import { v1 as uuid } from 'uuid'
 import { Expo, ExpoPushMessage } from 'expo-server-sdk'
 import { Request, Response } from 'express'
+import * as bookcarsTypes from 'bookcars-types'
 import strings from '../config/app.config'
 import Booking from '../models/Booking'
 import User from '../models/User'
@@ -16,7 +17,6 @@ import AdditionalDriver from '../models/AdditionalDriver'
 import * as Helper from '../common/Helper'
 import * as MailHelper from '../common/MailHelper'
 import * as env from '../config/env.config'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Create a Booking.
@@ -29,9 +29,9 @@ import * as bookcarsTypes from 'bookcars-types'
  */
 export async function create(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpsertBookingPayload = req.body
+    const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
     if (body.booking.additionalDriver) {
-      const additionalDriver = new AdditionalDriver(req.body.additionalDriver)
+      const additionalDriver = new AdditionalDriver(body.additionalDriver)
       await additionalDriver.save()
       body.booking._additionalDriver = additionalDriver._id.toString()
     }
@@ -70,7 +70,7 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
   await notification.save()
   let counter = await NotificationCounter.findOne({ user: company._id })
   if (counter && typeof counter.count !== 'undefined') {
-    counter.count++
+    counter.count += 1
     await counter.save()
   } else {
     counter = new NotificationCounter({ user: company._id, count: 1 })
@@ -100,7 +100,7 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
 export async function book(req: Request, res: Response) {
   try {
     let user: env.User | null
-    const body: bookcarsTypes.BookPayload = req.body
+    const { body }: { body: bookcarsTypes.BookPayload } = req
     const { driver } = body
 
     if (!body.booking) {
@@ -199,14 +199,15 @@ export async function book(req: Request, res: Response) {
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
         `<p>${strings.HELLO}${user.fullName},<br><br>
-        ${!body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}` + '<br><br>' : ''}
-        ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocationName}${strings.BOOKING_CONFIRMED_PART5}` +
-        `${from} ${strings.BOOKING_CONFIRMED_PART6}` +
-        `${car.name}${strings.BOOKING_CONFIRMED_PART7}` +
-        `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>` +
-        `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocationName}${strings.BOOKING_CONFIRMED_PART11}` +
-        `${to} ${strings.BOOKING_CONFIRMED_PART12}` +
-        `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
+        ${!body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}`
+          + '<br><br>' : ''}
+        ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocationName}${strings.BOOKING_CONFIRMED_PART5}`
+        + `${from} ${strings.BOOKING_CONFIRMED_PART6}`
+        + `${car.name}${strings.BOOKING_CONFIRMED_PART7}`
+        + `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>`
+        + `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocationName}${strings.BOOKING_CONFIRMED_PART11}`
+        + `${to} ${strings.BOOKING_CONFIRMED_PART12}`
+        + `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
         ${strings.REGARDS}<br></p>`,
     }
     await MailHelper.sendMail(mailOptions)
@@ -254,7 +255,7 @@ async function notifyDriver(booking: env.Booking) {
 
   let counter = await NotificationCounter.findOne({ user: driver._id })
   if (counter && typeof counter.count !== 'undefined') {
-    counter.count++
+    counter.count += 1
     await counter.save()
   } else {
     counter = new NotificationCounter({ user: driver._id, count: 1 })
@@ -337,16 +338,21 @@ async function notifyDriver(booking: env.Booking) {
  */
 export async function update(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpsertBookingPayload = req.body
-    const booking = await Booking.findById(req.body.booking._id)
+    const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
+    const booking = await Booking.findById(body.booking._id)
 
     if (booking) {
       if (!body.booking.additionalDriver && booking._additionalDriver) {
         await AdditionalDriver.deleteOne({ _id: booking._additionalDriver })
       }
 
-      if (req.body.additionalDriver) {
-        const { fullName, email, phone, birthDate } = req.body.additionalDriver
+      if (body.additionalDriver) {
+        const {
+          fullName,
+          email,
+          phone,
+          birthDate,
+        } = body.additionalDriver
 
         if (booking._additionalDriver) {
           const additionalDriver = await AdditionalDriver.findOne({ _id: booking._additionalDriver })
@@ -389,15 +395,15 @@ export async function update(req: Request, res: Response) {
         fullInsurance,
         additionalDriver,
         price,
-      } = req.body.booking
+      } = body.booking
 
       const previousStatus = booking.status
 
-      booking.company = company
-      booking.car = car
-      booking.driver = driver
-      booking.pickupLocation = pickupLocation
-      booking.dropOffLocation = dropOffLocation
+      booking.company = new mongoose.Types.ObjectId(company as string)
+      booking.car = new mongoose.Types.ObjectId(car as string)
+      booking.driver = new mongoose.Types.ObjectId(driver as string)
+      booking.pickupLocation = new mongoose.Types.ObjectId(pickupLocation as string)
+      booking.dropOffLocation = new mongoose.Types.ObjectId(dropOffLocation as string)
       booking.from = from
       booking.to = to
       booking.status = status
@@ -407,7 +413,7 @@ export async function update(req: Request, res: Response) {
       booking.collisionDamageWaiver = collisionDamageWaiver
       booking.fullInsurance = fullInsurance
       booking.additionalDriver = additionalDriver
-      booking.price = price
+      booking.price = price as number
 
       if (!additionalDriver && booking._additionalDriver) {
         booking._additionalDriver = undefined
@@ -421,10 +427,9 @@ export async function update(req: Request, res: Response) {
       }
 
       return res.sendStatus(200)
-    } else {
-      console.error('[booking.update] Booking not found:', req.body._id)
-      return res.sendStatus(204)
     }
+    console.error('[booking.update] Booking not found:', body.booking._id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -442,7 +447,7 @@ export async function update(req: Request, res: Response) {
  */
 export async function updateStatus(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpdateStatusPayload = req.body
+    const { body }: { body: bookcarsTypes.UpdateStatusPayload } = req
     const { ids: _ids, status } = body
     const ids = _ids.map((id) => new mongoose.Types.ObjectId(id))
     const bulk = Booking.collection.initializeOrderedBulkOp()
@@ -474,7 +479,7 @@ export async function updateStatus(req: Request, res: Response) {
  */
 export async function deleteBookings(req: Request, res: Response) {
   try {
-    const body: string[] = req.body
+    const { body }: { body: string[] } = req
     const ids = body.map((id) => new mongoose.Types.ObjectId(id))
     const bookings = await Booking.find({
       _id: { $in: ids },
@@ -534,25 +539,44 @@ export async function getBooking(req: Request, res: Response) {
       .lean()
 
     if (booking) {
-      const language = req.params.language
+      const { language } = req.params
 
       if (booking.company) {
-        const { _id, fullName, avatar, payLater } = booking.company
-        booking.company = { _id, fullName, avatar, payLater }
+        const {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        } = booking.company
+        booking.company = {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        }
       }
       if (booking.car.company) {
-        const { _id, fullName, avatar, payLater } = booking.car.company
-        booking.car.company = { _id, fullName, avatar, payLater }
+        const {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        } = booking.car.company
+        booking.car.company = {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        }
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
       booking.dropOffLocation.name = booking.dropOffLocation.values.filter((value) => value.language === language)[0].value
 
       return res.json(booking)
-    } else {
-      console.error('[booking.getBooking] Car not found:', id)
-      return res.sendStatus(204)
     }
+    console.error('[booking.getBooking] Car not found:', id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -570,13 +594,15 @@ export async function getBooking(req: Request, res: Response) {
  */
 export async function getBookings(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.GetBookingsPayload = req.body
-    const page = Number.parseInt(req.params.page) + 1
-    const size = Number.parseInt(req.params.size)
+    const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
+    const page = Number.parseInt(req.params.page, 10) + 1
+    const size = Number.parseInt(req.params.size, 10)
     const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
-    const statuses = body.statuses
-    const user = body.user
-    const car = body.car
+    const {
+      statuses,
+      user,
+      car,
+    } = body
     const from = (body.filter && body.filter.from && new Date(body.filter.from)) || null
     const to = (body.filter && body.filter.to && new Date(body.filter.to)) || null
     const pickupLocation = (body.filter && body.filter.pickupLocation) || null
@@ -625,7 +651,7 @@ export async function getBookings(req: Request, res: Response) {
       }
     }
 
-    const language = req.params.language
+    const { language } = req.params
 
     const data = await Booking.aggregate([
       {
@@ -634,7 +660,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { companyId: '$company' },
           pipeline: [
             {
-              $match: {$expr: { $eq: ['$_id', '$$companyId'] }},
+              $match: { $expr: { $eq: ['$_id', '$$companyId'] } },
             },
           ],
           as: 'company',
@@ -647,7 +673,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { carId: '$car' },
           pipeline: [
             {
-              $match: {$expr: { $eq: ['$_id', '$$carId'] }},
+              $match: { $expr: { $eq: ['$_id', '$$carId'] } },
             },
           ],
           as: 'car',
@@ -660,7 +686,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { driverId: '$driver' },
           pipeline: [
             {
-              $match: {$expr: { $eq: ['$_id', '$$driverId'] }},
+              $match: { $expr: { $eq: ['$_id', '$$driverId'] } },
             },
           ],
           as: 'driver',
@@ -673,7 +699,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { pickupLocationId: '$pickupLocation' },
           pipeline: [
             {
-              $match: {$expr: { $eq: ['$_id', '$$pickupLocationId'] }},
+              $match: { $expr: { $eq: ['$_id', '$$pickupLocationId'] } },
             },
             {
               $lookup: {
@@ -705,7 +731,7 @@ export async function getBookings(req: Request, res: Response) {
           let: { dropOffLocationId: '$dropOffLocation' },
           pipeline: [
             {
-              $match: {$expr: { $eq: ['$_id', '$$dropOffLocationId'] }},
+              $match: { $expr: { $eq: ['$_id', '$$dropOffLocationId'] } },
             },
             {
               $lookup: {

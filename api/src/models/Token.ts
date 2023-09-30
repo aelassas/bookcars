@@ -1,8 +1,6 @@
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
 
-
-
 const tokenSchema = new Schema<env.Token>(
   {
     user: {

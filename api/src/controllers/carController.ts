@@ -4,12 +4,12 @@ import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
+import * as bookcarsTypes from 'bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 import strings from '../config/app.config'
 import * as env from '../config/env.config'
 import * as Helper from '../common/Helper'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Create a Car.
@@ -21,7 +21,7 @@ import * as bookcarsTypes from 'bookcars-types'
  * @returns {unknown}
  */
 export async function create(req: Request, res: Response) {
-  const body: bookcarsTypes.CreateCarPayload = req.body
+  const { body }: { body: bookcarsTypes.CreateCarPayload } = req
 
   try {
     if (!body.image) {
@@ -70,7 +70,7 @@ export async function create(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function update(req: Request, res: Response) {
-  const body: bookcarsTypes.UpdateCarPayload = req.body
+  const { body }: { body: bookcarsTypes.UpdateCarPayload } = req
   const { _id } = body
 
   try {
@@ -102,7 +102,7 @@ export async function update(req: Request, res: Response) {
 
       car.company = new mongoose.Types.ObjectId(company)
       car.minimumAge = minimumAge
-      car.locations = locations.map(l => new mongoose.Types.ObjectId(l))
+      car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
       car.available = available
       car.type = type as bookcarsTypes.CarType
@@ -123,10 +123,9 @@ export async function update(req: Request, res: Response) {
 
       await car.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[car.update] Car not found:', _id)
-      return res.sendStatus(204)
     }
+    console.error('[car.update] Car not found:', _id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[car.update] ${strings.DB_ERROR} ${_id}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -201,10 +200,10 @@ export async function deleteCar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function createImage(req: Request, res: Response) {
+export async function createImage(req: Request & { file?: any }, res: Response) {
   try {
     if (!req.file) {
-      const msg = `[car.createImage] req.file not found`
+      const msg = '[car.createImage] req.file not found'
       console.error(msg)
       return res.status(400).send(msg)
     }
@@ -233,13 +232,12 @@ export async function createImage(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateImage(req: Request, res: Response) {
+export async function updateImage(req: Request & { file?: any }, res: Response) {
   const { id } = req.params
-
 
   try {
     if (!req.file) {
-      const msg = `[car.createImage] req.file not found`
+      const msg = '[car.updateImage] req.file not found'
       console.error(msg)
       return res.status(400).send(msg)
     }
@@ -267,10 +265,9 @@ export async function updateImage(req: Request, res: Response) {
       car.image = filename
       await car.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[car.updateImage] Car not found:', id)
-      return res.sendStatus(204)
     }
+    console.error('[car.updateImage] Car not found:', id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[car.updateImage] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -303,10 +300,9 @@ export async function deleteImage(req: Request, res: Response) {
 
       await car.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[car.deleteImage] Car not found:', id)
-      return res.sendStatus(204)
     }
+    console.error('[car.deleteImage] Car not found:', id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[car.deleteImage] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -364,20 +360,28 @@ export async function getCar(req: Request, res: Response) {
 
     if (car) {
       if (car.company) {
-        const { _id, fullName, avatar, payLater } = car.company
-        car.company = { _id, fullName, avatar, payLater }
+        const {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        } = car.company
+        car.company = {
+          _id,
+          fullName,
+          avatar,
+          payLater,
+        }
       }
 
-      for (let i = 0; i < car.locations.length; i++) {
-        const location = car.locations[i]
+      for (const location of car.locations) {
         location.name = location.values.filter((value) => value.language === language)[0].value
       }
 
       return res.json(car)
-    } else {
-      console.error('[car.getCar] Car not found:', id)
-      return res.sendStatus(204)
     }
+    console.error('[car.getCar] Car not found:', id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[car.getCar] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -395,15 +399,17 @@ export async function getCar(req: Request, res: Response) {
  */
 export async function getCars(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.GetCarsPayload = req.body
-    const page = Number.parseInt(req.params.page)
-    const size = Number.parseInt(req.params.size)
+    const { body }: { body: bookcarsTypes.GetCarsPayload } = req
+    const page = Number.parseInt(req.params.page, 10)
+    const size = Number.parseInt(req.params.size, 10)
     const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
-    const fuel = body.fuel
-    const gearbox = body.gearbox
-    const mileage = body.mileage
-    const deposit = body.deposit
-    const availability = body.availability
+    const {
+      fuel,
+      gearbox,
+      mileage,
+      deposit,
+      availability,
+    } = body
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
 
@@ -437,7 +443,8 @@ export async function getCars(req: Request, res: Response) {
       if (availability) {
         if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
           $match.$and.push({ available: true })
-        } else if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Unavailable) {
+        } else if (availability.length === 1
+          && availability[0] === bookcarsTypes.Availablity.Unavailable) {
           $match.$and.push({ available: false })
         } else if (availability.length === 0) {
           return res.json([{ resultData: [], pageInfo: [] }])
@@ -492,12 +499,12 @@ export async function getCars(req: Request, res: Response) {
     )
 
     if (data.length > 0) {
-      data[0].resultData.forEach((car: env.CarInfo) => {
+      for (const car of data[0].resultData) {
         if (car.company) {
           const { _id, fullName, avatar } = car.company
           car.company = { _id, fullName, avatar }
         }
-      })
+      }
     }
 
     return res.json(data)
@@ -518,13 +525,13 @@ export async function getCars(req: Request, res: Response) {
  */
 export async function getBookingCars(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.GetBookingCarsPayload = req.body
+    const { body }: { body: bookcarsTypes.GetBookingCarsPayload } = req
     const company = new mongoose.Types.ObjectId(body.company)
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
-    const page = Number.parseInt(req.params.page)
-    const size = Number.parseInt(req.params.size)
+    const page = Number.parseInt(req.params.page, 10)
+    const size = Number.parseInt(req.params.size, 10)
 
     const cars = await Car.aggregate(
       [
@@ -533,7 +540,7 @@ export async function getBookingCars(req: Request, res: Response) {
             $and: [
               { company: { $eq: company } },
               { locations: pickupLocation },
-              { available: true }, { name: { $regex: keyword, $options: options } }
+              { available: true }, { name: { $regex: keyword, $options: options } },
             ],
           },
         },
@@ -562,22 +569,24 @@ export async function getBookingCars(req: Request, res: Response) {
  */
 export async function getFrontendCars(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.GetCarsPayload = req.body
-    const page = Number.parseInt(req.params.page)
-    const size = Number.parseInt(req.params.size)
+    const { body }: { body: bookcarsTypes.GetCarsPayload } = req
+    const page = Number.parseInt(req.params.page, 10)
+    const size = Number.parseInt(req.params.size, 10)
     const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
-    const fuel = body.fuel
-    const gearbox = body.gearbox
-    const mileage = body.mileage
-    const deposit = body.deposit
+    const {
+      fuel,
+      gearbox,
+      mileage,
+      deposit,
+    } = body
 
     const $match: mongoose.FilterQuery<any> = {
       $and: [
         { company: { $in: companies } },
         { locations: pickupLocation },
         { available: true }, { type: { $in: fuel } },
-        { gearbox: { $in: gearbox } }
+        { gearbox: { $in: gearbox } },
       ],
     }
 
@@ -644,12 +653,12 @@ export async function getFrontendCars(req: Request, res: Response) {
     )
 
     if (data.length > 0) {
-      data[0].resultData.forEach((car: env.CarInfo) => {
+      for (const car of data[0].resultData) {
         if (car.company) {
           const { _id, fullName, avatar } = car.company
           car.company = { _id, fullName, avatar }
         }
-      })
+      }
     }
 
     return res.json(data)

@@ -21,12 +21,12 @@ export function StringToBoolean(input: string): boolean {
  *
  * @export
  * @async
- * @param {string} path
+ * @param {string} filePath
  * @returns {Promise<boolean>}
  */
-export async function exists(path: string): Promise<boolean> {
+export async function exists(filePath: string): Promise<boolean> {
     try {
-        await fs.access(path)
+        await fs.access(filePath)
         return true
     } catch {
         return false
@@ -42,15 +42,17 @@ export async function exists(path: string): Promise<boolean> {
  * @returns {string}
  */
 export function joinURL(part1: string, part2: string): string {
+    let p1 = ''
     if (part1.charAt(part1.length - 1) === '/') {
-        part1 = part1.substring(0, part1.length - 1)
+        p1 = part1.substring(0, part1.length - 1)
     }
 
+    let p2 = ''
     if (part2.charAt(0) === '/') {
-        part2 = part2.substring(1)
+        p2 = part2.substring(1)
     }
 
-    return `${part1}/${part2}`
+    return `${p1}/${p2}`
 }
 
 /**

@@ -6,6 +6,7 @@ import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
+import * as bookcarsTypes from 'bookcars-types'
 import strings from '../config/app.config'
 import * as env from '../config/env.config'
 import User from '../models/User'
@@ -18,7 +19,6 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import Car from '../models/Car'
 import AdditionalDriver from '../models/AdditionalDriver'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Get status message as HTML.
@@ -27,8 +27,7 @@ import * as bookcarsTypes from 'bookcars-types'
  * @param {string} msg
  * @returns {string}
  */
-const getStatusMessage = (lang: string, msg: string) =>
-  `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
+const getStatusMessage = (lang: string, msg: string) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
 
 /**
  * Frontend Sign Up.
@@ -40,7 +39,7 @@ const getStatusMessage = (lang: string, msg: string) =>
  * @returns {unknown}
  */
 export async function signup(req: Request, res: Response) {
-  const body: bookcarsTypes.FrontendSignUpPayload = req.body
+  const { body }: { body: bookcarsTypes.FrontendSignUpPayload } = req
 
   try {
     body.active = true
@@ -49,7 +48,7 @@ export async function signup(req: Request, res: Response) {
     body.type = bookcarsTypes.UserType.User
 
     const salt = await bcrypt.genSalt(10)
-    const password = body.password
+    const { password } = body
     const passwordHash = await bcrypt.hash(password, salt)
     body.password = passwordHash
 
@@ -104,7 +103,7 @@ export async function signup(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function adminSignup(req: Request, res: Response) {
-  const body: bookcarsTypes.BackendSignUpPayload = req.body
+  const { body }: { body: bookcarsTypes.BackendSignUpPayload } = req
 
   try {
     body.active = true
@@ -113,7 +112,7 @@ export async function adminSignup(req: Request, res: Response) {
     body.type = bookcarsTypes.UserType.Admin
 
     const salt = await bcrypt.genSalt(10)
-    const password = body.password
+    const { password } = body
     const passwordHash = await bcrypt.hash(password, salt)
     body.password = passwordHash
 
@@ -173,7 +172,7 @@ export async function adminSignup(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function create(req: Request, res: Response) {
-  const body: bookcarsTypes.CreateUserPayload = req.body
+  const { body }: { body: bookcarsTypes.CreateUserPayload } = req
 
   try {
     body.verified = false
@@ -181,7 +180,7 @@ export async function create(req: Request, res: Response) {
 
     if (body.password) {
       const salt = await bcrypt.genSalt(10)
-      const password = body.password
+      const { password } = body
       const passwordHash = await bcrypt.hash(password, salt)
       body.password = passwordHash
     }
@@ -265,27 +264,25 @@ export async function checkToken(req: Request, res: Response) {
       const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
       if (
-        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
-        (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
-        (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User) ||
-        user.active
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
+        || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+        || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
+        || user.active
       ) {
         return res.sendStatus(204)
-      } else {
-        const token = await Token.findOne({
-          user: new mongoose.Types.ObjectId(req.params.userId),
-          token: req.params.token,
-        })
-
-        if (token) {
-          return res.sendStatus(200)
-        } else {
-          return res.sendStatus(204)
-        }
       }
-    } else {
+      const token = await Token.findOne({
+        user: new mongoose.Types.ObjectId(req.params.userId),
+        token: req.params.token,
+      })
+
+      if (token) {
+        return res.sendStatus(200)
+      }
       return res.sendStatus(204)
     }
+
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.checkToken] ${strings.DB_ERROR} ${req.params}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -311,9 +308,9 @@ export async function deleteTokens(req: Request, res: Response) {
 
     if (result.deletedCount > 0) {
       return res.sendStatus(200)
-    } else {
-      return res.sendStatus(400)
     }
+
+    return res.sendStatus(400)
   } catch (err) {
     console.error(`[user.deleteTokens] ${strings.DB_ERROR} ${userId}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -339,44 +336,43 @@ export async function resend(req: Request, res: Response) {
       const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
       if (
-        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
-        (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
-        (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
+        ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
+        || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+        || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
       ) {
         return res.sendStatus(403)
-      } else {
-        user.active = false
-        await user.save()
+      }
+      user.active = false
+      await user.save()
 
-        // generate token and save
-        const token = new Token({ user: user._id, token: uuid() })
-        await token.save()
+      // generate token and save
+      const token = new Token({ user: user._id, token: uuid() })
+      await token.save()
 
-        // Send email
-        strings.setLanguage(user.language)
+      // Send email
+      strings.setLanguage(user.language)
 
-        const reset = req.params.reset === 'true'
+      const reset = req.params.reset === 'true'
 
-        const mailOptions = {
-          from: env.SMTP_FROM,
-          to: user.email,
-          subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
-          html:
-            `<p>${strings.HELLO}${user.fullName},<br><br>
+      const mailOptions = {
+        from: env.SMTP_FROM,
+        to: user.email,
+        subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
+        html:
+          `<p>${strings.HELLO}${user.fullName},<br><br>
             ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>
             ${Helper.joinURL(
-              user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
-              reset ? 'reset-password' : 'activate',
-            )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+            user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
+            reset ? 'reset-password' : 'activate',
+          )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
             ${strings.REGARDS}<br></p>`,
-        }
-
-        await MailHelper.sendMail(mailOptions)
-        return res.sendStatus(200)
       }
-    } else {
-      return res.sendStatus(204)
+
+      await MailHelper.sendMail(mailOptions)
+      return res.sendStatus(200)
     }
+
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.resend] ${strings.DB_ERROR} ${email}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -393,7 +389,7 @@ export async function resend(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function activate(req: Request, res: Response) {
-  const body: bookcarsTypes.ActivatePayload = req.body
+  const { body }: { body: bookcarsTypes.ActivatePayload } = req
   const { userId } = body
 
   try {
@@ -404,7 +400,7 @@ export async function activate(req: Request, res: Response) {
 
       if (token) {
         const salt = await bcrypt.genSalt(10)
-        const password = body.password
+        const { password } = body
         const passwordHash = await bcrypt.hash(password, salt)
         user.password = passwordHash
 
@@ -433,7 +429,7 @@ export async function activate(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function signin(req: Request, res: Response) {
-  const body: bookcarsTypes.SignInPayload = req.body
+  const { body }: { body: bookcarsTypes.SignInPayload } = req
   const { email, password, stayConnected } = body
 
   try {
@@ -441,42 +437,41 @@ export async function signin(req: Request, res: Response) {
     const type = req.params.type.toLowerCase() as bookcarsTypes.AppType
 
     if (
-      !password ||
-      !user ||
-      !user.password ||
-      ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type) ||
-      (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User) ||
-      (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
+      !password
+      || !user
+      || !user.password
+      || ![bookcarsTypes.AppType.Frontend, bookcarsTypes.AppType.Backend].includes(type)
+      || (type === bookcarsTypes.AppType.Backend && user.type === bookcarsTypes.UserType.User)
+      || (type === bookcarsTypes.AppType.Frontend && user.type !== bookcarsTypes.UserType.User)
     ) {
       return res.sendStatus(204)
-    } else {
-      const passwordMatch = await bcrypt.compare(password, user.password)
-
-      if (passwordMatch) {
-        const payload = { id: user._id }
-
-        let options: { expiresIn?: number } = { expiresIn: env.JWT_EXPIRE_AT }
-        if (stayConnected) {
-          options = {}
-        }
-
-        const token = jwt.sign(payload, env.JWT_SECRET, options)
-
-        return res.status(200)
-          .send({
-            _id: user._id,
-            email: user.email,
-            fullName: user.fullName,
-            language: user.language,
-            enableEmailNotifications: user.enableEmailNotifications,
-            accessToken: token,
-            blacklisted: user.blacklisted,
-            avatar: user.avatar,
-          })
-      } else {
-        return res.sendStatus(204)
-      }
     }
+    const passwordMatch = await bcrypt.compare(password, user.password)
+
+    if (passwordMatch) {
+      const payload = { id: user._id }
+
+      let options: { expiresIn?: number } = { expiresIn: env.JWT_EXPIRE_AT }
+      if (stayConnected) {
+        options = {}
+      }
+
+      const token = jwt.sign(payload, env.JWT_SECRET, options)
+
+      return res.status(200)
+        .send({
+          _id: user._id,
+          email: user.email,
+          fullName: user.fullName,
+          language: user.language,
+          enableEmailNotifications: user.enableEmailNotifications,
+          accessToken: token,
+          blacklisted: user.blacklisted,
+          avatar: user.avatar,
+        })
+    }
+
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.signin] ${strings.DB_ERROR} ${email}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -570,7 +565,7 @@ export async function deletePushToken(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function validateEmail(req: Request, res: Response) {
-  const body: bookcarsTypes.ValidateEmailPayload = req.body
+  const { body }: { body: bookcarsTypes.ValidateEmailPayload } = req
   const { email } = body
 
   try {
@@ -578,10 +573,10 @@ export async function validateEmail(req: Request, res: Response) {
 
     if (exists) {
       return res.sendStatus(204)
-    } else {
-      // email does not exist in db (can be added)
-      return res.sendStatus(200)
     }
+
+    // email does not exist in db (can be added)
+    return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.validateEmail] ${strings.DB_ERROR} ${email}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -623,21 +618,21 @@ export async function confirmEmail(req: Request, res: Response) {
     if (!token) {
       console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
       return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
-    } else {
-      // if token is found then check valid user
-      // not valid user
-      if (user.verified) {
-        // user is already verified
-        return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
-      } else {
-        // verify user
-        // change verified to true
-        user.verified = true
-        user.verifiedAt = new Date()
-        await user.save()
-        return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS))
-      }
     }
+
+    // if token is found then check valid user
+    // not valid user
+    if (user.verified) {
+      // user is already verified
+      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
+    }
+
+    // verify user
+    // change verified to true
+    user.verified = true
+    user.verifiedAt = new Date()
+    await user.save()
+    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS))
   } catch (err) {
     console.error(`[user.confirmEmail] ${strings.DB_ERROR} ${req.params}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -654,7 +649,7 @@ export async function confirmEmail(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function resendLink(req: Request, res: Response) {
-  const body: bookcarsTypes.ResendLinkPayload = req.body
+  const { body }: { body: bookcarsTypes.ResendLinkPayload } = req
   const { email } = body
 
   try {
@@ -664,31 +659,31 @@ export async function resendLink(req: Request, res: Response) {
     if (!user) {
       console.error('[user.resendLink] User not found:', email)
       return res.status(400).send(getStatusMessage(env.DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
-    } else if (user.verified) {
+    } if (user.verified) {
       // user has been already verified
       return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
-    } else {
-      // send verification link
-      // generate token and save
-      const token = new Token({ user: user._id, token: uuid() })
-      await token.save()
+    }
 
-      // Send email
-      strings.setLanguage(user.language)
-      const mailOptions = {
-        from: env.SMTP_FROM,
-        to: user.email,
-        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-        html:
-          `<p>${strings.HELLO}${user.fullName},<br><br>
+    // send verification link
+    // generate token and save
+    const token = new Token({ user: user._id, token: uuid() })
+    await token.save()
+
+    // Send email
+    strings.setLanguage(user.language)
+    const mailOptions = {
+      from: env.SMTP_FROM,
+      to: user.email,
+      subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+      html:
+        `<p>${strings.HELLO}${user.fullName},<br><br>
           ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
           http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
           ${strings.REGARDS}<br></p>`,
-      }
-
-      await MailHelper.sendMail(mailOptions)
-      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
     }
+
+    await MailHelper.sendMail(mailOptions)
+    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
   } catch (err) {
     console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -706,45 +701,45 @@ export async function resendLink(req: Request, res: Response) {
  */
 export async function update(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpdateUserPayload = req.body
-    const _id: string = body._id
+    const { body }: { body: bookcarsTypes.UpdateUserPayload } = req
+    const { _id } = body
     const user = await User.findById(_id)
 
     if (!user) {
-      console.error('[user.update] User not found:', req.body.email)
+      console.error('[user.update] User not found:', body.email)
       return res.sendStatus(204)
-    } else {
-      const {
-        fullName,
-        phone,
-        bio,
-        location,
-        type,
-        birthDate,
-        enableEmailNotifications,
-        payLater
-      } = body
-
-      if (fullName) {
-        user.fullName = fullName
-      }
-      user.phone = phone
-      user.location = location
-      user.bio = bio
-      user.birthDate = birthDate ? new Date(birthDate) : undefined
-      if (type) {
-        user.type = type as bookcarsTypes.UserType
-      }
-      if (typeof enableEmailNotifications !== 'undefined') {
-        user.enableEmailNotifications = enableEmailNotifications
-      }
-      if (typeof payLater !== 'undefined') {
-        user.payLater = payLater
-      }
-
-      await user.save()
-      return res.sendStatus(200)
     }
+
+    const {
+      fullName,
+      phone,
+      bio,
+      location,
+      type,
+      birthDate,
+      enableEmailNotifications,
+      payLater,
+    } = body
+
+    if (fullName) {
+      user.fullName = fullName
+    }
+    user.phone = phone
+    user.location = location
+    user.bio = bio
+    user.birthDate = birthDate ? new Date(birthDate) : undefined
+    if (type) {
+      user.type = type as bookcarsTypes.UserType
+    }
+    if (typeof enableEmailNotifications !== 'undefined') {
+      user.enableEmailNotifications = enableEmailNotifications
+    }
+    if (typeof payLater !== 'undefined') {
+      user.payLater = payLater
+    }
+
+    await user.save()
+    return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.update] ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -761,7 +756,7 @@ export async function update(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function updateEmailNotifications(req: Request, res: Response) {
-  const body: bookcarsTypes.UpdateEmailNotificationsPayload = req.body
+  const { body }: { body: bookcarsTypes.UpdateEmailNotificationsPayload } = req
 
   try {
     const { _id } = body
@@ -770,11 +765,11 @@ export async function updateEmailNotifications(req: Request, res: Response) {
     if (!user) {
       console.error('[user.updateEmailNotifications] User not found:', body)
       return res.sendStatus(204)
-    } else {
-      user.enableEmailNotifications = body.enableEmailNotifications
-      await user.save()
-      return res.sendStatus(200)
     }
+
+    user.enableEmailNotifications = body.enableEmailNotifications
+    await user.save()
+    return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -792,18 +787,18 @@ export async function updateEmailNotifications(req: Request, res: Response) {
  */
 export async function updateLanguage(req: Request, res: Response) {
   try {
-    const body: bookcarsTypes.UpdateLanguagePayload = req.body
+    const { body }: { body: bookcarsTypes.UpdateLanguagePayload } = req
     const { id, language } = body
 
     const user = await User.findById(id)
     if (!user) {
       console.error('[user.updateLanguage] User not found:', id)
       return res.sendStatus(204)
-    } else {
-      user.language = language
-      await user.save()
-      return res.sendStatus(200)
     }
+
+    user.language = language
+    await user.save()
+    return res.sendStatus(200)
   } catch (err) {
     console.error(`[user.updateLanguage] ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -842,9 +837,9 @@ export async function getUser(req: Request, res: Response) {
     if (!user) {
       console.error('[user.getUser] User not found:', req.params)
       return res.sendStatus(204)
-    } else {
-      return res.json(user)
     }
+
+    return res.json(user)
   } catch (err) {
     console.error(`[user.getUser] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -860,7 +855,7 @@ export async function getUser(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function createAvatar(req: Request, res: Response) {
+export async function createAvatar(req: Request & { file?: any }, res: Response) {
   try {
     if (!req.file) {
       const msg = 'req.file not found'
@@ -892,7 +887,7 @@ export async function createAvatar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateAvatar(req: Request, res: Response) {
+export async function updateAvatar(req: Request & { file?: any }, res: Response) {
   const { userId } = req.params
 
   try {
@@ -924,10 +919,10 @@ export async function updateAvatar(req: Request, res: Response) {
       user.avatar = filename
       await user.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[user.updateAvatar] User not found:', userId)
-      return res.sendStatus(204)
     }
+
+    console.error('[user.updateAvatar] User not found:', userId)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.updateAvatar] ${strings.DB_ERROR} ${userId}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -960,10 +955,10 @@ export async function deleteAvatar(req: Request, res: Response) {
 
       await user.save()
       return res.sendStatus(200)
-    } else {
-      console.error('[user.deleteAvatar] User not found:', userId)
-      return res.sendStatus(204)
     }
+
+    console.error('[user.deleteAvatar] User not found:', userId)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.deleteAvatar] ${strings.DB_ERROR} ${userId}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -1005,8 +1000,13 @@ export async function deleteTempAvatar(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function changePassword(req: Request, res: Response) {
-  const body: bookcarsTypes.ChangePasswordPayload = req.body
-  const { _id, password: currentPassword, newPassword, strict } = body
+  const { body }: { body: bookcarsTypes.ChangePasswordPayload } = req
+  const {
+    _id,
+    password: currentPassword,
+    newPassword,
+    strict,
+  } = body
 
   try {
     const user = await User.findOne({ _id })
@@ -1033,12 +1033,12 @@ export async function changePassword(req: Request, res: Response) {
       const passwordMatch = await bcrypt.compare(currentPassword, user.password)
       if (passwordMatch) {
         return _changePassword()
-      } else {
-        return res.sendStatus(204)
       }
-    } else {
-      return _changePassword()
+
+      return res.sendStatus(204)
     }
+
+    return _changePassword()
   } catch (err) {
     console.error(`[user.changePassword] ${strings.DB_ERROR} ${_id}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -1068,13 +1068,13 @@ export async function checkPassword(req: Request, res: Response) {
       const passwordMatch = await bcrypt.compare(password, user.password)
       if (passwordMatch) {
         return res.sendStatus(200)
-      } else {
-        return res.sendStatus(204)
       }
-    } else {
-      console.error('[user.checkPassword] User not found:', id)
+
       return res.sendStatus(204)
     }
+
+    console.error('[user.checkPassword] User not found:', id)
+    return res.sendStatus(204)
   } catch (err) {
     console.error(`[user.checkPassword] ${strings.DB_ERROR} ${id}`, err)
     return res.status(400).send(strings.ERROR + err)
@@ -1094,11 +1094,13 @@ export async function getUsers(req: Request, res: Response) {
   try {
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
-    const page = Number.parseInt(req.params.page)
-    const size = Number.parseInt(req.params.size)
-    const body: bookcarsTypes.GetUsersBody = req.body
-    const types = body.types
-    const userId = body.user
+    const page = Number.parseInt(req.params.page, 10)
+    const size = Number.parseInt(req.params.size, 10)
+    const { body }: { body: bookcarsTypes.GetUsersBody } = req
+    const {
+      types,
+      user: userId,
+    } = body
 
     const $match: mongoose.FilterQuery<any> = {
       $and: [
@@ -1169,43 +1171,42 @@ export async function getUsers(req: Request, res: Response) {
  */
 export async function deleteUsers(req: Request, res: Response) {
   try {
-    const body: string[] = req.body
+    const { body }: { body: string[] } = req
     const ids: mongoose.Types.ObjectId[] = body.map((id: string) => new mongoose.Types.ObjectId(id))
 
     for (const id of ids) {
       const user = await User.findByIdAndDelete(id)
 
-      if (!user) {
-        console.error('User not found:', id)
-        continue
-      }
-
-      if (user.avatar) {
-        const avatar = path.join(env.CDN_USERS, user.avatar)
-        if (await Helper.exists(avatar)) {
-          await fs.unlink(avatar)
-        }
-      }
-
-      if (user.type === bookcarsTypes.UserType.Company) {
-        const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
-        await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
-        await Booking.deleteMany({ company: id })
-        const cars = await Car.find({ company: id })
-        await Car.deleteMany({ company: id })
-        for (const car of cars) {
-          if (car.image) {
-            const image = path.join(env.CDN_CARS, car.image)
-            if (await Helper.exists(image)) {
-              await fs.unlink(image)
-            }
+      if (user) {
+        if (user.avatar) {
+          const avatar = path.join(env.CDN_USERS, user.avatar)
+          if (await Helper.exists(avatar)) {
+            await fs.unlink(avatar)
           }
         }
-      } else if (user.type === bookcarsTypes.UserType.User) {
-        await Booking.deleteMany({ driver: id })
+
+        if (user.type === bookcarsTypes.UserType.Company) {
+          const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+          await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
+          await Booking.deleteMany({ company: id })
+          const cars = await Car.find({ company: id })
+          await Car.deleteMany({ company: id })
+          for (const car of cars) {
+            if (car.image) {
+              const image = path.join(env.CDN_CARS, car.image)
+              if (await Helper.exists(image)) {
+                await fs.unlink(image)
+              }
+            }
+          }
+        } else if (user.type === bookcarsTypes.UserType.User) {
+          await Booking.deleteMany({ driver: id })
+        }
+        await NotificationCounter.deleteMany({ user: id })
+        await Notification.deleteMany({ user: id })
+      } else {
+        console.error('User not found:', id)
       }
-      await NotificationCounter.deleteMany({ user: id })
-      await Notification.deleteMany({ user: id })
     }
 
     return res.sendStatus(200)

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
-import * as env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
+import * as env from '../config/env.config'
 
 const bookingSchema = new Schema<env.Booking>(
   {
@@ -45,7 +45,7 @@ const bookingSchema = new Schema<env.Booking>(
         bookcarsTypes.BookingStatus.Deposit,
         bookcarsTypes.BookingStatus.Paid,
         bookcarsTypes.BookingStatus.Reserved,
-        bookcarsTypes.BookingStatus.Cancelled
+        bookcarsTypes.BookingStatus.Cancelled,
       ],
       required: [true, "can't be blank"],
     },
