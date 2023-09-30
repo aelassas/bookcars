@@ -659,7 +659,9 @@ export async function resendLink(req: Request, res: Response) {
     if (!user) {
       console.error('[user.resendLink] User not found:', email)
       return res.status(400).send(getStatusMessage(env.DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
-    } if (user.verified) {
+    }
+
+    if (user.verified) {
       // user has been already verified
       return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
     }
@@ -683,7 +685,9 @@ export async function resendLink(req: Request, res: Response) {
     }
 
     await MailHelper.sendMail(mailOptions)
-    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
+    return res
+      .status(200)
+      .send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
   } catch (err) {
     console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
