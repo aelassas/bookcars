@@ -35,7 +35,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 
 ## Contents
 
-1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
+1. [Screenshots](https://github.com/aelassas/bookcars/wiki/Screenshots)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
