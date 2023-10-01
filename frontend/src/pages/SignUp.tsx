@@ -1,13 +1,5 @@
 import React, { useState } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-up'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
 import ReCAPTCHA from 'react-google-recaptcha'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
-import DatePicker from '../components/DatePicker'
 import {
   OutlinedInput,
   InputLabel,
@@ -20,14 +12,22 @@ import {
 } from '@mui/material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/sign-up'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import DatePicker from '../components/DatePicker'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/signup.css'
 
-const SignUp = () => {
+function SignUp() {
   const navigate = useNavigate()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
@@ -63,21 +63,20 @@ const SignUp = () => {
     }
   }
 
-  const validateEmail = async (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
           if (status === 200) {
             setEmailError(false)
             setEmailValid(true)
             return true
-          } else {
-            setEmailError(true)
-            setEmailValid(true)
-            setError(false)
-            return false
           }
+          setEmailError(true)
+          setEmailValid(true)
+          setError(false)
+          return false
         } catch (err) {
           Helper.error(err)
           setEmailError(false)
@@ -100,17 +99,16 @@ const SignUp = () => {
     await validateEmail(e.target.value)
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,14 +127,13 @@ const SignUp = () => {
     if (date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateValid(true)
+    return true
   }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,18 +161,18 @@ const SignUp = () => {
     try {
       e.preventDefault()
 
-      const emailValid = await validateEmail(email)
-      if (!emailValid) {
+      const _emailValid = await validateEmail(email)
+      if (!_emailValid) {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
-      const birthDateValid = validateBirthDate(birthDate)
-      if (!birthDate || !birthDateValid) {
+      const _birthDateValid = validateBirthDate(birthDate)
+      if (!birthDate || !_birthDateValid) {
         return
       }
 
@@ -218,11 +215,11 @@ const SignUp = () => {
       setLoading(true)
 
       const data: bookcarsTypes.FrontendSignUpPayload = {
-        email: email,
-        phone: phone,
-        password: password,
-        fullName: fullName,
-        birthDate: birthDate,
+        email,
+        phone,
+        password,
+        fullName,
+        birthDate,
         language: UserService.getLanguage(),
       }
 
@@ -230,8 +227,8 @@ const SignUp = () => {
 
       if (status === 200) {
         const signInResult = await UserService.signin({
-          email: email,
-          password: password,
+          email,
+          password,
         })
 
         if (signInResult.status === 200) {
@@ -275,7 +272,11 @@ const SignUp = () => {
       {visible && (
         <div className="signup">
           <Paper className="signup-form" elevation={10}>
-            <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
+            <h1 className="signup-form-title">
+              {' '}
+              {strings.SIGN_UP_HEADING}
+              {' '}
+            </h1>
             <form onSubmit={handleSubmit}>
               <div>
                 <FormControl fullWidth margin="dense">
@@ -319,12 +320,12 @@ const SignUp = () => {
                     value={birthDate}
                     variant="outlined"
                     required
-                    onChange={(birthDate) => {
-                      if (birthDate) {
-                        const birthDateValid = validateBirthDate(birthDate)
+                    onChange={(_birthDate) => {
+                      if (_birthDate) {
+                        const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(birthDate)
-                        setBirthDateValid(birthDateValid)
+                        setBirthDate(_birthDate)
+                        setBirthDateValid(_birthDateValid)
                       }
                     }}
                     language={language}
@@ -369,7 +370,8 @@ const SignUp = () => {
                     <ReCAPTCHA
                       sitekey={Env.RECAPTCHA_SITE_KEY || ''}
                       hl={language}
-                      onChange={handleRecaptchaVerify} />
+                      onChange={handleRecaptchaVerify}
+                    />
                   </div>
                 )}
 

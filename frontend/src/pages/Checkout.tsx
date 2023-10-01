@@ -1,19 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Env from '../config/env.config'
-import * as BookingService from '../services/BookingService'
-import { strings as commonStrings } from '../lang/common'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/checkout'
-import * as Helper from '../common/Helper'
-import * as UserService from '../services/UserService'
-import * as CarService from '../services/CarService'
-import * as LocationService from '../services/LocationService'
-import Master from '../components/Master'
-import Error from '../components/Error'
-import DatePicker from '../components/DatePicker'
-import Backdrop from '../components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Info from './Info'
 import {
   OutlinedInput, InputLabel,
   FormControl,
@@ -39,11 +24,26 @@ import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import * as BookingService from '../services/BookingService'
+import { strings as commonStrings } from '../lang/common'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/checkout'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
+import * as CarService from '../services/CarService'
+import * as LocationService from '../services/LocationService'
+import Master from '../components/Master'
+import Error from '../components/Error'
+import DatePicker from '../components/DatePicker'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Info from './Info'
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/checkout.css'
 
-const Checkout = () => {
+function Checkout() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
@@ -86,13 +86,13 @@ const Checkout = () => {
   const [cardDateError, setCardDateError] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [_fullName, set_FullName] = useState('')
-  const [_email, set_Email] = useState('')
-  const [_phone, set_Phone] = useState('')
-  const [_birthDate, set_BirthDate] = useState<Date>()
-  const [_emailValid, set_EmailValid] = useState(true)
-  const [_phoneValid, set_PhoneValid] = useState(true)
-  const [_birthDateValid, set_BirthDateValid] = useState(true)
+  const [addiontalDriverFullName, setAddiontalDriverFullName] = useState('')
+  const [addiontalDriverEmail, setAddiontalDriverEmail] = useState('')
+  const [addiontalDriverPhone, setAddiontalDriverPhone] = useState('')
+  const [addiontalDriverBirthDate, setAddiontalDriverBirthDate] = useState<Date>()
+  const [addiontalDriverEmailValid, setAddiontalDriverEmailValid] = useState(true)
+  const [addiontalDriverPhoneValid, setAddiontalDriverPhoneValid] = useState(true)
+  const [addiontalDriverBirthDateValid, setAddiontalDriverBirthDateValid] = useState(true)
   const [payLater, setPayLater] = useState(false)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
@@ -105,127 +105,127 @@ const Checkout = () => {
   const adValidate = (val?: string | Date | null) => !!val
 
   useEffect(() => {
-    setAdFullName(adValidate(_fullName))
-  }, [_fullName])
+    setAdFullName(adValidate(addiontalDriverFullName))
+  }, [addiontalDriverFullName])
 
   useEffect(() => {
-    setAdEmail(adValidate(_email))
-  }, [_email])
+    setAdEmail(adValidate(addiontalDriverEmail))
+  }, [addiontalDriverEmail])
 
   useEffect(() => {
-    setAdPhone(adValidate(_phone))
-  }, [_phone])
+    setAdPhone(adValidate(addiontalDriverPhone))
+  }, [addiontalDriverPhone])
 
   useEffect(() => {
-    setAdBirthDate(adValidate(_birthDate))
-  }, [_birthDate])
+    setAdBirthDate(adValidate(addiontalDriverBirthDate))
+  }, [addiontalDriverBirthDate])
 
   const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const cancellation = e.target.checked
+      const _cancellation = e.target.checked
       const options: bookcarsTypes.CarOptions = {
-        cancellation,
+        cancellation: _cancellation,
         amendments,
         theftProtection,
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setCancellation(cancellation)
-      setPrice(price)
+      setCancellation(_cancellation)
+      setPrice(_price)
     }
   }
 
   const handleAmendmentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const amendments = e.target.checked
+      const _amendments = e.target.checked
       const options: bookcarsTypes.CarOptions = {
         cancellation,
-        amendments,
+        amendments: _amendments,
         theftProtection,
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setAmendments(amendments)
-      setPrice(price)
+      setAmendments(_amendments)
+      setPrice(_price)
     }
   }
 
   const handleTheftProtectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const theftProtection = e.target.checked
+      const _theftProtection = e.target.checked
       const options: bookcarsTypes.CarOptions = {
         cancellation,
         amendments,
-        theftProtection,
+        theftProtection: _theftProtection,
         collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setTheftProtection(theftProtection)
-      setPrice(price)
+      setTheftProtection(_theftProtection)
+      setPrice(_price)
     }
   }
 
   const handleCollisionDamageWaiverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const collisionDamageWaiver = e.target.checked
+      const _collisionDamageWaiver = e.target.checked
       const options: bookcarsTypes.CarOptions = {
         cancellation,
         amendments,
         theftProtection,
-        collisionDamageWaiver,
+        collisionDamageWaiver: _collisionDamageWaiver,
         fullInsurance,
         additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setCollisionDamageWaiver(collisionDamageWaiver)
-      setPrice(price)
+      setCollisionDamageWaiver(_collisionDamageWaiver)
+      setPrice(_price)
     }
   }
 
   const handleFullInsuranceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const fullInsurance = e.target.checked
+      const _fullInsurance = e.target.checked
       const options: bookcarsTypes.CarOptions = {
         cancellation,
         amendments,
         theftProtection,
         collisionDamageWaiver,
-        fullInsurance,
+        fullInsurance: _fullInsurance,
         additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setFullInsurance(fullInsurance)
-      setPrice(price)
+      setFullInsurance(_fullInsurance)
+      setPrice(_price)
     }
   }
 
   const handleAdditionalDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
-      const additionalDriver = e.target.checked
+      const _additionalDriver = e.target.checked
       const options: bookcarsTypes.CarOptions = {
         cancellation,
         amendments,
         theftProtection,
         collisionDamageWaiver,
         fullInsurance,
-        additionalDriver,
+        additionalDriver: _additionalDriver,
       }
-      const price = Helper.price(car, from, to, options)
+      const _price = Helper.price(car, from, to, options)
 
-      setAdditionalDriver(additionalDriver)
-      setPrice(price)
-      setAdManuallyChecked(additionalDriver)
+      setAdditionalDriver(_additionalDriver)
+      setPrice(_price)
+      setAdManuallyChecked(_additionalDriver)
     }
   }
 
@@ -242,23 +242,22 @@ const Checkout = () => {
     }
   }
 
-  const validateEmail = async (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
           if (status === 200) {
             setEmailRegitered(false)
             setEmailValid(true)
             setEmailInfo(true)
             return true
-          } else {
-            setEmailRegitered(true)
-            setEmailValid(true)
-            setError(false)
-            setEmailInfo(false)
-            return false
           }
+          setEmailRegitered(true)
+          setEmailValid(true)
+          setError(false)
+          setEmailInfo(false)
+          return false
         } catch (err) {
           Helper.error(err)
           setEmailRegitered(false)
@@ -281,19 +280,17 @@ const Checkout = () => {
   }
 
   // additionalDriver
-  const _validateEmail = (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
-        set_EmailValid(true)
+  const _validateEmail = (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
+        setAddiontalDriverEmailValid(true)
         return true
-      } else {
-        set_EmailValid(false)
-        return false
       }
-    } else {
-      set_EmailValid(true)
+      setAddiontalDriverEmailValid(false)
       return false
     }
+    setAddiontalDriverEmailValid(true)
+    return false
   }
 
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
@@ -308,33 +305,31 @@ const Checkout = () => {
     }
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
-      setPhoneInfo(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
+      setPhoneInfo(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-      setPhoneInfo(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+    setPhoneInfo(true)
+
+    return true
   }
 
   // additionalDriver
-  const _validatePhone = (phone?: string) => {
-    if (phone) {
-      const _phoneValid = validator.isMobilePhone(phone)
-      set_PhoneValid(_phoneValid)
+  const _validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setAddiontalDriverPhoneValid(_phoneValid)
 
       return _phoneValid
-    } else {
-      set_PhoneValid(true)
-
-      return true
     }
+    setAddiontalDriverPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -345,14 +340,13 @@ const Checkout = () => {
     if (car && date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const birthDateValid = sub >= car.minimumAge
+      const _birthDateValid = sub >= car.minimumAge
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateValid(true)
+    return true
   }
 
   // additionalDriver
@@ -362,12 +356,11 @@ const Checkout = () => {
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const _birthDateValid = sub >= car.minimumAge
 
-      set_BirthDateValid(_birthDateValid)
+      setAddiontalDriverBirthDateValid(_birthDateValid)
       return _birthDateValid
-    } else {
-      set_BirthDateValid(true)
-      return true
     }
+    setAddiontalDriverBirthDateValid(true)
+    return true
   }
 
   const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -378,17 +371,16 @@ const Checkout = () => {
     }
   }
 
-  const validateCardNumber = (cardNumber?: string) => {
-    if (cardNumber) {
-      const cardNumberValid = validator.isCreditCard(cardNumber)
-      setCardNumberValid(cardNumberValid)
+  const validateCardNumber = (_cardNumber?: string) => {
+    if (_cardNumber) {
+      const _cardNumberValid = validator.isCreditCard(_cardNumber)
+      setCardNumberValid(_cardNumberValid)
 
-      return cardNumberValid
-    } else {
-      setCardNumberValid(true)
-
-      return true
+      return _cardNumberValid
     }
+    setCardNumberValid(true)
+
+    return true
   }
 
   const handleCardNumberBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -403,28 +395,26 @@ const Checkout = () => {
     }
   }
 
-  const validateCardMonth = (cardMonth?: string) => {
-    if (cardMonth) {
-      if (bookcarsHelper.isInteger(cardMonth)) {
-        const month = Number.parseInt(cardMonth)
-        const cardMonthValid = month >= 1 && month <= 12
+  const validateCardMonth = (_cardMonth?: string) => {
+    if (_cardMonth) {
+      if (bookcarsHelper.isInteger(_cardMonth)) {
+        const month = Number.parseInt(_cardMonth, 10)
+        const _cardMonthValid = month >= 1 && month <= 12
 
-        setCardMonthValid(cardMonthValid)
+        setCardMonthValid(_cardMonthValid)
         setCardDateError(false)
 
-        return cardMonthValid
-      } else {
-        setCardMonthValid(false)
-        setCardDateError(false)
-
-        return false
+        return _cardMonthValid
       }
-    } else {
-      setCardMonthValid(true)
+      setCardMonthValid(false)
       setCardDateError(false)
 
-      return true
+      return false
     }
+    setCardMonthValid(true)
+    setCardDateError(false)
+
+    return true
   }
 
   const handleCardMonthBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -440,29 +430,27 @@ const Checkout = () => {
     }
   }
 
-  const validateCardYear = (cardYear?: string) => {
-    if (cardYear) {
-      if (bookcarsHelper.isYear(cardYear)) {
-        const year = Number.parseInt(cardYear)
-        const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2))
-        const cardYearValid = year >= currentYear
+  const validateCardYear = (_cardYear?: string) => {
+    if (_cardYear) {
+      if (bookcarsHelper.isYear(_cardYear)) {
+        const year = Number.parseInt(_cardYear, 10)
+        const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2), 10)
+        const _cardYearValid = year >= currentYear
 
-        setCardYearValid(cardYearValid)
+        setCardYearValid(_cardYearValid)
         setCardDateError(false)
 
-        return cardYearValid
-      } else {
-        setCardYearValid(false)
-        setCardDateError(false)
-
-        return false
+        return _cardYearValid
       }
-    } else {
-      setCardYearValid(true)
+      setCardYearValid(false)
       setCardDateError(false)
 
-      return true
+      return false
     }
+    setCardYearValid(true)
+    setCardDateError(false)
+
+    return true
   }
 
   const handleCardYearBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -478,17 +466,16 @@ const Checkout = () => {
     }
   }
 
-  const validateCvv = (cvv?: string) => {
-    if (cvv) {
-      const cvvValid = bookcarsHelper.isCvv(cvv)
-      setCvvValid(cvvValid)
+  const validateCvv = (_cvv?: string) => {
+    if (_cvv) {
+      const _cvvValid = bookcarsHelper.isCvv(_cvv)
+      setCvvValid(_cvvValid)
 
-      return cvvValid
-    } else {
-      setCvvValid(true)
-
-      return true
+      return _cvvValid
     }
+    setCvvValid(true)
+
+    return true
   }
 
   const handleCvvBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -503,12 +490,12 @@ const Checkout = () => {
     }
   }
 
-  const validateCardDate = (cardMonth: string, cardYear: string) => {
-    const today = new Date(),
-      cardDate = new Date()
-    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2)) * 100
-    const year = y + Number.parseInt(cardYear)
-    const month = Number.parseInt(cardMonth)
+  const validateCardDate = (_cardMonth: string, _cardYear: string) => {
+    const today = new Date()
+    const cardDate = new Date()
+    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2), 10) * 100
+    const year = y + Number.parseInt(_cardYear, 10)
+    const month = Number.parseInt(_cardMonth, 10)
     cardDate.setFullYear(year, month - 1, 1)
 
     if (cardDate < today) {
@@ -528,18 +515,18 @@ const Checkout = () => {
       }
 
       if (!authenticated) {
-        const emailValid = await validateEmail(email)
-        if (!emailValid) {
+        const _emailValid = await validateEmail(email)
+        if (!_emailValid) {
           return
         }
 
-        const phoneValid = validatePhone(phone)
-        if (!phoneValid) {
+        const _phoneValid = validatePhone(phone)
+        if (!_phoneValid) {
           return
         }
 
-        const birthDateValid = validateBirthDate(birthDate)
-        if (!birthDateValid) {
+        const _birthDateValid = validateBirthDate(birthDate)
+        if (!_birthDateValid) {
           return
         }
 
@@ -554,23 +541,23 @@ const Checkout = () => {
           return
         }
 
-        const cardNumberValid = validateCardNumber(cardNumber)
-        if (!cardNumberValid) {
+        const _cardNumberValid = validateCardNumber(cardNumber)
+        if (!_cardNumberValid) {
           return
         }
 
-        const cardMonthValid = validateCardMonth(cardMonth)
-        if (!cardMonthValid) {
+        const _cardMonthValid = validateCardMonth(cardMonth)
+        if (!_cardMonthValid) {
           return
         }
 
-        const cardYearValid = validateCardYear(cardYear)
-        if (!cardYearValid) {
+        const _cardYearValid = validateCardYear(cardYear)
+        if (!_cardYearValid) {
           return
         }
 
-        const cvvValid = validateCvv(cvv)
-        if (!cvvValid) {
+        const _cvvValid = validateCvv(cvv)
+        if (!_cvvValid) {
           return
         }
 
@@ -582,26 +569,26 @@ const Checkout = () => {
       }
 
       if (adRequired && additionalDriver) {
-        const emailValid = _validateEmail(_email)
-        if (!emailValid) {
+        const _emailValid = _validateEmail(addiontalDriverEmail)
+        if (!_emailValid) {
           return
         }
 
-        const phoneValid = _validatePhone(_phone)
-        if (!phoneValid) {
+        const _phoneValid = _validatePhone(addiontalDriverPhone)
+        if (!_phoneValid) {
           return
         }
 
-        const birthDateValid = _validateBirthDate(_birthDate)
-        if (!birthDateValid) {
+        const _birthDateValid = _validateBirthDate(addiontalDriverBirthDate)
+        if (!_birthDateValid) {
           return
         }
       }
 
       setLoading(true)
 
-      let driver: bookcarsTypes.User | undefined = undefined
-      let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
+      let driver: bookcarsTypes.User | undefined
+      let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined
 
       if (!authenticated) {
         driver = {
@@ -619,8 +606,8 @@ const Checkout = () => {
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id,
         dropOffLocation: dropOffLocation._id,
-        from: from,
-        to: to,
+        from,
+        to,
         status: payLater ? bookcarsTypes.BookingStatus.Pending : bookcarsTypes.BookingStatus.Paid,
         cancellation,
         amendments,
@@ -631,12 +618,12 @@ const Checkout = () => {
         price,
       }
 
-      if (adRequired && additionalDriver && _birthDate) {
+      if (adRequired && additionalDriver && addiontalDriverBirthDate) {
         _additionalDriver = {
-          fullName: _fullName,
-          email: _email,
-          phone: _phone,
-          birthDate: _birthDate,
+          fullName: addiontalDriverFullName,
+          email: addiontalDriverEmail,
+          phone: addiontalDriverPhone,
+          birthDate: addiontalDriverBirthDate,
         }
       }
 
@@ -664,12 +651,20 @@ const Checkout = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    setUser(user)
-    setAuthenticated(user !== undefined)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    setUser(_user)
+    setAuthenticated(_user !== undefined)
     setLanguage(UserService.getLanguage())
 
-    let carId, car, pickupLocationId, pickupLocation, dropOffLocationId, dropOffLocation, from, to
+    let carId
+    let _car
+    let pickupLocationId
+    let _pickupLocation
+    let dropOffLocationId
+    let _dropOffLocation
+    let _from
+    let _to
+
     const params = new URLSearchParams(window.location.search)
     if (params.has('c')) {
       carId = params.get('c')
@@ -682,59 +677,59 @@ const Checkout = () => {
     }
     if (params.has('f')) {
       const val = params.get('f')
-      from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
+      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
     }
     if (params.has('t')) {
       const val = params.get('t')
-      to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
+      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
     }
 
-    if (!carId || !pickupLocationId || !dropOffLocationId || !from || !to) {
+    if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setNoMatch(true)
       return
     }
 
     try {
-      car = await CarService.getCar(carId)
-      if (!car) {
+      _car = await CarService.getCar(carId)
+      if (!_car) {
         setNoMatch(true)
         return
       }
 
-      pickupLocation = await LocationService.getLocation(pickupLocationId)
+      _pickupLocation = await LocationService.getLocation(pickupLocationId)
 
-      if (!pickupLocation) {
+      if (!_pickupLocation) {
         setNoMatch(true)
         return
       }
 
       if (dropOffLocationId !== pickupLocationId) {
-        dropOffLocation = await LocationService.getLocation(dropOffLocationId)
+        _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
       } else {
-        dropOffLocation = pickupLocation
+        _dropOffLocation = _pickupLocation
       }
 
-      if (!dropOffLocation) {
+      if (!_dropOffLocation) {
         setNoMatch(true)
         return
       }
 
-      const price = Helper.price(car, from, to)
+      const _price = Helper.price(_car, _from, _to)
 
       const included = (val: number) => val === 0
 
-      setCar(car)
-      setPrice(price)
-      setPickupLocation(pickupLocation)
-      setDropOffLocation(dropOffLocation)
-      setFrom(from)
-      setTo(to)
-      setCancellation(included(car.cancellation))
-      setAmendments(included(car.amendments))
-      setTheftProtection(included(car.theftProtection))
-      setCollisionDamageWaiver(included(car.collisionDamageWaiver))
-      setFullInsurance(included(car.fullInsurance))
-      setAdditionalDriver(included(car.additionalDriver))
+      setCar(_car)
+      setPrice(_price)
+      setPickupLocation(_pickupLocation)
+      setDropOffLocation(_dropOffLocation)
+      setFrom(_from)
+      setTo(_to)
+      setCancellation(included(_car.cancellation))
+      setAmendments(included(_car.amendments))
+      setTheftProtection(included(_car.theftProtection))
+      setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
+      setFullInsurance(included(_car.fullInsurance))
+      setAdditionalDriver(included(_car.additionalDriver))
       setVisible(true)
     } catch (err) {
       Helper.error(err)
@@ -752,25 +747,29 @@ const Checkout = () => {
       {visible && car && from && to && pickupLocation && dropOffLocation && (
         <div className="booking">
           <Paper className="booking-form" elevation={10}>
-            <h1 className="booking-form-title"> {strings.BOOKING_HEADING} </h1>
+            <h1 className="booking-form-title">
+              {' '}
+              {strings.BOOKING_HEADING}
+              {' '}
+            </h1>
             <form onSubmit={handleSubmit}>
               <div>
                 <div className="booking-options-container">
                   <div className="booking-info">
                     <BookingIcon />
-                    <label>{strings.BOOKING_OPTIONS}</label>
+                    <span>{strings.BOOKING_OPTIONS}</span>
                   </div>
                   <div className="booking-options">
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
                         disabled={car.cancellation === -1 || car.cancellation === 0}
                         control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.CANCELLATION}</span>
                             <span className="booking-option-value">{Helper.getCancellationOption(car.cancellation, _fr)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
 
@@ -778,12 +777,12 @@ const Checkout = () => {
                       <FormControlLabel
                         disabled={car.amendments === -1 || car.amendments === 0}
                         control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
                             <span className="booking-option-value">{Helper.getAmendmentsOption(car.amendments, _fr)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
 
@@ -791,12 +790,12 @@ const Checkout = () => {
                       <FormControlLabel
                         disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
                         control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
                             <span className="booking-option-value">{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
 
@@ -804,12 +803,12 @@ const Checkout = () => {
                       <FormControlLabel
                         disabled={car.theftProtection === -1 || car.theftProtection === 0}
                         control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
                             <span className="booking-option-value">{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
 
@@ -817,12 +816,12 @@ const Checkout = () => {
                       <FormControlLabel
                         disabled={car.fullInsurance === -1 || car.fullInsurance === 0}
                         control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
                             <span className="booking-option-value">{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
 
@@ -830,12 +829,12 @@ const Checkout = () => {
                       <FormControlLabel
                         disabled={car.additionalDriver === -1 || car.additionalDriver === 0}
                         control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
-                        label={
+                        label={(
                           <span>
                             <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
                             <span className="booking-option-value">{Helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
                           </span>
-                        }
+                        )}
                       />
                     </FormControl>
                   </div>
@@ -844,38 +843,40 @@ const Checkout = () => {
                 <div className="booking-details-container">
                   <div className="booking-info">
                     <CarIcon />
-                    <label>{strings.BOOKING_DETAILS}</label>
+                    <span>{strings.BOOKING_DETAILS}</span>
                   </div>
                   <div className="booking-details">
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{strings.DAYS}</label>
-                      <div className="booking-detail-value">{`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
-                        format(from, _format, { locale: _locale }),
-                      )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}</div>
+                      <span className="booking-detail-title">{strings.DAYS}</span>
+                      <div className="booking-detail-value">
+                        {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
+                          format(from, _format, { locale: _locale }),
+                        )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}
+                      </div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</label>
+                      <span className="booking-detail-title">{commonStrings.PICKUP_LOCATION}</span>
                       <div className="booking-detail-value">{pickupLocation.name}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</label>
+                      <span className="booking-detail-title">{commonStrings.DROP_OFF_LOCATION}</span>
                       <div className="booking-detail-value">{dropOffLocation.name}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{strings.CAR}</label>
+                      <span className="booking-detail-title">{strings.CAR}</span>
                       <div className="booking-detail-value">{`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{commonStrings.SUPPLIER}</label>
+                      <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                       <div className="booking-detail-value">
                         <div className="car-company">
                           <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
-                          <label className="car-company-name">{car.company.fullName}</label>
+                          <span className="car-company-name">{car.company.fullName}</span>
                         </div>
                       </div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
-                      <label className="booking-detail-title">{strings.COST}</label>
+                      <span className="booking-detail-title">{strings.COST}</span>
                       <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
                     </div>
                   </div>
@@ -884,7 +885,7 @@ const Checkout = () => {
                   <div className="driver-details">
                     <div className="booking-info">
                       <DriverIcon />
-                      <label>{strings.DRIVER_DETAILS}</label>
+                      <span>{strings.DRIVER_DETAILS}</span>
                     </div>
                     <div className="driver-details-form">
                       <FormControl fullWidth margin="dense">
@@ -910,8 +911,8 @@ const Checkout = () => {
                               <span> </span>
                               <a href={`/sign-in?c=${car._id}&p=${pickupLocation._id}&d=${dropOffLocation._id}&f=${from.getTime()}&t=${to.getTime()}&from=checkout`}>{strings.SIGN_IN}</a>
                             </span>
-                          )) ||
-                            ''}
+                          ))
+                            || ''}
                           {(emailInfo && strings.EMAIL_INFO) || ''}
                         </FormHelperText>
                       </FormControl>
@@ -928,12 +929,12 @@ const Checkout = () => {
                           label={commonStrings.BIRTH_DATE}
                           variant="outlined"
                           required
-                          onChange={(birthDate) => {
-                            if (birthDate) {
-                              const birthDateValid = validateBirthDate(birthDate)
+                          onChange={(_birthDate) => {
+                            if (_birthDate) {
+                              const _birthDateValid = validateBirthDate(_birthDate)
 
-                              setBirthDate(birthDate)
-                              setBirthDateValid(birthDateValid)
+                              setBirthDate(_birthDate)
+                              setBirthDateValid(_birthDateValid)
                             }
                           }}
                           language={language}
@@ -963,7 +964,7 @@ const Checkout = () => {
                   <div className="driver-details">
                     <div className="booking-info">
                       <DriverIcon />
-                      <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                      <span>{csStrings.ADDITIONAL_DRIVER}</span>
                     </div>
                     <div className="driver-details-form">
                       <FormControl fullWidth margin="dense">
@@ -973,7 +974,7 @@ const Checkout = () => {
                           label={commonStrings.FULL_NAME}
                           required={adRequired}
                           onChange={(e) => {
-                            set_FullName(e.target.value)
+                            setAddiontalDriverFullName(e.target.value)
                           }}
                           autoComplete="off"
                         />
@@ -983,42 +984,42 @@ const Checkout = () => {
                         <OutlinedInput
                           type="text"
                           label={commonStrings.EMAIL}
-                          error={!_emailValid}
+                          error={!addiontalDriverEmailValid}
                           onBlur={(e) => {
                             _validateEmail(e.target.value)
                           }}
                           onChange={(e) => {
-                            set_Email(e.target.value)
+                            setAddiontalDriverEmail(e.target.value)
 
                             if (!e.target.value) {
-                              set_EmailValid(true)
+                              setAddiontalDriverEmailValid(true)
                             }
                           }}
                           required={adRequired}
                           autoComplete="off"
                         />
-                        <FormHelperText error={!_emailValid}>{(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                        <FormHelperText error={!addiontalDriverEmailValid}>{(!addiontalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                       <FormControl fullWidth margin="dense">
                         <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                         <OutlinedInput
                           type="text"
                           label={commonStrings.PHONE}
-                          error={!_phoneValid}
+                          error={!addiontalDriverPhoneValid}
                           onBlur={(e) => {
                             _validatePhone(e.target.value)
                           }}
                           onChange={(e) => {
-                            set_Phone(e.target.value)
+                            setAddiontalDriverPhone(e.target.value)
 
                             if (!e.target.value) {
-                              set_PhoneValid(true)
+                              setAddiontalDriverPhoneValid(true)
                             }
                           }}
                           required={adRequired}
                           autoComplete="off"
                         />
-                        <FormHelperText error={!_phoneValid}>{(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                        <FormHelperText error={!addiontalDriverPhoneValid}>{(!addiontalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                       <FormControl fullWidth margin="dense">
                         <DatePicker
@@ -1029,13 +1030,13 @@ const Checkout = () => {
                             if (_birthDate) {
                               const _birthDateValid = _validateBirthDate(_birthDate)
 
-                              set_BirthDate(_birthDate)
-                              set_BirthDateValid(_birthDateValid)
+                              setAddiontalDriverBirthDate(_birthDate)
+                              setAddiontalDriverBirthDateValid(_birthDateValid)
                             }
                           }}
                           language={language}
                         />
-                        <FormHelperText error={!_birthDateValid}>{(!_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                        <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
                     </div>
                   </div>
@@ -1045,7 +1046,7 @@ const Checkout = () => {
                   <div className="payment-options-container">
                     <div className="booking-info">
                       <PaymentOptionsIcon />
-                      <label>{strings.PAYMENT_OPTIONS}</label>
+                      <span>{strings.PAYMENT_OPTIONS}</span>
                     </div>
                     <div className="payment-options">
                       <FormControl>
@@ -1058,22 +1059,22 @@ const Checkout = () => {
                           <FormControlLabel
                             value="payLater"
                             control={<Radio />}
-                            label={
+                            label={(
                               <span className="payment-button">
                                 <span>{strings.PAY_LATER}</span>
                                 <span className="payment-info">{`(${strings.PAY_LATER_INFO})`}</span>
                               </span>
-                            }
+                            )}
                           />
                           <FormControlLabel
                             value="payOnline"
                             control={<Radio />}
-                            label={
+                            label={(
                               <span className="payment-button">
                                 <span>{strings.PAY_ONLINE}</span>
                                 <span className="payment-info">{`(${strings.PAY_ONLINE_INFO})`}</span>
                               </span>
-                            }
+                            )}
                           />
                         </RadioGroup>
                       </FormControl>
@@ -1086,11 +1087,11 @@ const Checkout = () => {
                     <div className="cost">
                       <div className="secure-payment-label">
                         <LockIcon className="secure-payment-lock" />
-                        <label>{strings.PAYMENT}</label>
+                        <span>{strings.PAYMENT}</span>
                       </div>
                       <div className="secure-payment-cost">
-                        <label className="cost-title">{strings.COST}</label>
-                        <label className="cost-value">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</label>
+                        <span className="cost-title">{strings.COST}</span>
+                        <span className="cost-value">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
                       </div>
                     </div>
 
@@ -1172,7 +1173,7 @@ const Checkout = () => {
 
                     <div className="secure-payment-info">
                       <LockIcon className="secure-payment-lock" />
-                      <label>{strings.SECURE_PAYMENT_INFO}</label>
+                      <span>{strings.SECURE_PAYMENT_INFO}</span>
                     </div>
                   </div>
                 )}

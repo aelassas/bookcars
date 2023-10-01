@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import Accordion from './Accordion'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/fuel-filter.css'
 
-const FuelFilter = (
-  {
-    className,
-    onChange
-  }: {
-    className?: string
-    onChange: (values: bookcarsTypes.CarType[]) => void
-  }
-) => {
+function FuelFilter({
+  className,
+  onChange
+}: {
+  className?: string
+  onChange: (values: bookcarsTypes.CarType[]) => void
+}) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
 
@@ -114,13 +112,13 @@ const FuelFilter = (
       if (gasolineRef.current) {
         gasolineRef.current.checked = true
       }
-      const values = [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline]
+      const _values = [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline]
 
       setAllChecked(true)
-      setValues(values)
+      setValues(_values)
 
       if (onChange) {
-        onChange(bookcarsHelper.clone(values))
+        onChange(bookcarsHelper.clone(_values))
       }
     }
   }
@@ -130,15 +128,32 @@ const FuelFilter = (
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={dieselRef} type="checkbox" className="fuel-checkbox" onChange={handleCheckDieselChange} />
-          <label onClick={handleDieselClick}>{strings.DIESEL}</label>
+          <span
+            onClick={handleDieselClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.DIESEL}
+          </span>
         </div>
         <div className="filter-element">
           <input ref={gasolineRef} type="checkbox" className="fuel-checkbox" onChange={handleCheckGasolineChange} />
-          <label onClick={handleGasolineClick}>{strings.GASOLINE}</label>
+          <span
+            onClick={handleGasolineClick}
+            role="button"
+            tabIndex={0}
+          >
+            {strings.GASOLINE}
+          </span>
         </div>
       </div>
       <div className="filter-actions">
-        <span onClick={handleUncheckAllChange} className="uncheckall">
+        <span
+          onClick={handleUncheckAllChange}
+          className="uncheckall"
+          role="button"
+          tabIndex={0}
+        >
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>

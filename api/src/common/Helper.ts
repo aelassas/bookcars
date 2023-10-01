@@ -42,12 +42,12 @@ export async function exists(filePath: string): Promise<boolean> {
  * @returns {string}
  */
 export function joinURL(part1: string, part2: string): string {
-    let p1 = ''
+    let p1 = part1
     if (part1.charAt(part1.length - 1) === '/') {
         p1 = part1.substring(0, part1.length - 1)
     }
 
-    let p2 = ''
+    let p2 = part2
     if (part2.charAt(0) === '/') {
         p2 = part2.substring(1)
     }

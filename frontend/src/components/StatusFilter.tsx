@@ -1,23 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import * as Helper from '../common/Helper'
 import Accordion from '../components/Accordion'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/status-filter.css'
 
-const StatusFilter = (
-  {
-    className,
-    collapse,
-    onChange
-  }: {
-    className?: string
-    collapse?: boolean
-    onChange: (value: bookcarsTypes.BookingStatus[]) => void
-  }
-) => {
+function StatusFilter({
+  className,
+  collapse,
+  onChange
+}: {
+  className?: string
+  collapse?: boolean
+  onChange: (value: bookcarsTypes.BookingStatus[]) => void
+}) {
   const statuses = Helper.getBookingStatuses()
   const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)
@@ -31,14 +29,6 @@ const StatusFilter = (
       }
     })
   }, [])
-
-  const handleStatusClick = (e: React.MouseEvent<HTMLElement>) => {
-    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
-    checkbox.checked = !checkbox.checked
-    const event = e
-    event.currentTarget = checkbox
-    handleCheckStatusChange(event)
-  }
 
   const handleCheckStatusChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     const status = e.currentTarget.getAttribute('data-value') as bookcarsTypes.BookingStatus
@@ -62,6 +52,14 @@ const StatusFilter = (
     if (onChange) {
       onChange(bookcarsHelper.clone(checkedStatuses))
     }
+  }
+
+  const handleStatusClick = (e: React.MouseEvent<HTMLElement>) => {
+    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
+    checkbox.checked = !checkbox.checked
+    const event = e
+    event.currentTarget = checkbox
+    handleCheckStatusChange(event)
   }
 
   const handleUncheckAllChange = () => {
@@ -99,15 +97,33 @@ const StatusFilter = (
         <ul className="status-list">
           {statuses.map((status, index) => (
             <li key={status.value}>
-              <input ref={(ref) => (refs.current[index] = ref)} type="checkbox" data-value={status.value} className="status-checkbox" onChange={handleCheckStatusChange} />
-              <label onClick={handleStatusClick} className={`bs bs-${status.value}`}>
+              <input
+                ref={(ref) => {
+                  refs.current[index] = ref
+                }}
+                type="checkbox"
+                data-value={status.value}
+                className="status-checkbox"
+                onChange={handleCheckStatusChange}
+              />
+              <span
+                onClick={handleStatusClick}
+                className={`bs bs-${status.value}`}
+                role="button"
+                tabIndex={0}
+              >
                 {Helper.getBookingStatus(status.value)}
-              </label>
+              </span>
             </li>
           ))}
         </ul>
         <div className="filter-actions">
-          <span onClick={handleUncheckAllChange} className="uncheckall">
+          <span
+            onClick={handleUncheckAllChange}
+            className="uncheckall"
+            role="button"
+            tabIndex={0}
+          >
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

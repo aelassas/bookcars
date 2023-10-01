@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
@@ -7,12 +9,10 @@ import SupplierFilter from '../components/SupplierFilter'
 import StatusFilter from '../components/StatusFilter'
 import BookingFilter from '../components/BookingFilter'
 import * as SupplierService from '../services/SupplierService'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/bookings.css'
 
-const Bookings = () => {
+function Bookings() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>([])
@@ -30,26 +30,26 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (companies: string[]) => {
-    setCompanies(companies)
+  const handleSupplierFilterChange = (_companies: string[]) => {
+    setCompanies(_companies)
   }
 
-  const handleStatusFilterChange = (statuses: bookcarsTypes.BookingStatus[]) => {
-    setStatuses(statuses)
+  const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
+    setStatuses(_statuses)
   }
 
-  const handleBookingFilterSubmit = (filter: bookcarsTypes.Filter | null) => {
-    setFilter(filter)
+  const handleBookingFilterSubmit = (_filter: bookcarsTypes.Filter | null) => {
+    setFilter(_filter)
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    setUser(user)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    setUser(_user)
     setLoadingCompanies(true)
 
-    const allCompanies = await SupplierService.getAllSuppliers()
-    const companies = bookcarsHelper.flattenCompanies(allCompanies)
-    setAllCompanies(allCompanies)
-    setCompanies(companies)
+    const _allCompanies = await SupplierService.getAllSuppliers()
+    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
+    setAllCompanies(_allCompanies)
+    setCompanies(_companies)
     setLoadingCompanies(false)
   }
 

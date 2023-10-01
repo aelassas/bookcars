@@ -1,7 +1,7 @@
 import axios from 'axios'
+import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Complete the checkout process and create the Booking.
@@ -25,7 +25,8 @@ export const book = (data: bookcarsTypes.BookPayload): Promise<number> =>
  */
 export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number> =>
   axios
-    .put(`${Env.API_HOST}/api/update-booking`,
+    .put(
+`${Env.API_HOST}/api/update-booking`,
       data,
       { headers: UserService.authHeader() }
     )

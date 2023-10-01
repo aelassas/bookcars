@@ -1,9 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
-import Env from './config/env.config'
-import { strings as commonStrings } from './lang/common'
-import * as UserService from './services/UserService'
 import { ToastContainer } from 'react-toastify'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -11,8 +7,12 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
 import { frFR, enUS } from '@mui/x-date-pickers/locales'
 import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid'
-import * as Helper from './common/Helper'
 import { disableDevTools } from 'disable-react-devtools'
+import * as Helper from './common/Helper'
+import * as UserService from './services/UserService'
+import { strings as commonStrings } from './lang/common'
+import Env from './config/env.config'
+import App from './App'
 
 import 'react-toastify/dist/ReactToastify.min.css'
 import './assets/css/common.css'
@@ -51,8 +51,8 @@ if (lang) {
         const status = await UserService.validateAccessToken()
 
         if (status === 200) {
-          const status = await UserService.updateLanguage(data)
-          if (status !== 200) {
+          const _status = await UserService.updateLanguage(data)
+          if (_status !== 200) {
             Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
           }
         }
@@ -162,8 +162,8 @@ root.render(
         closeOnClick
         pauseOnFocusLoss={false}
         draggable={false}
-        pauseOnHover={true}
-        icon={true}
+        pauseOnHover
+        icon
         theme="dark"
       />
     </CssBaseline>

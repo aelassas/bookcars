@@ -1,7 +1,7 @@
 import axios from 'axios'
+import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Get NotificationCounter by UserID.
@@ -44,7 +44,8 @@ export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
  */
 export const markAsUnread = (userId: string, ids: string[]): Promise<number> => (
   axios
-    .post(`${Env.API_HOST}/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
+    .post(
+`${Env.API_HOST}/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
       { ids },
       { headers: UserService.authHeader() }
     )
@@ -63,7 +64,8 @@ export const deleteNotifications = (userId: string, ids: string[]): Promise<numb
     .post(
       `${Env.API_HOST}/api/delete-Notifications/${encodeURIComponent(userId)}`,
       { ids },
-      { headers: UserService.authHeader() })
+      { headers: UserService.authHeader() }
+)
     .then((res) => res.status)
 )
 

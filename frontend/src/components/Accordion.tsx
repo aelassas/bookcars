@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 
 import '../assets/css/accordion.css'
 
-const Accordion = ({
+function Accordion({
   title,
   className,
   collapse,
@@ -14,23 +14,23 @@ const Accordion = ({
   collapse?: boolean,
   offsetHeight?: number,
   children: ReactNode
-}) => {
+}) {
   const accordionRef = useRef<HTMLLabelElement>(null)
 
   const handleAccordionClick = (e: React.MouseEvent<HTMLElement>) => {
     e.currentTarget.classList.toggle('accordion-active')
     const panel = e.currentTarget.nextElementSibling as HTMLDivElement
-    const collapse = panel.classList.contains('panel-collapse')
+    const _collapse = panel.classList.contains('panel-collapse')
 
-    if (panel.style.maxHeight || collapse) {
-      if (collapse) {
+    if (panel.style.maxHeight || _collapse) {
+      if (_collapse) {
         panel.classList.remove('panel-collapse')
         panel.classList.add('panel')
       }
 
       panel.style.maxHeight = ''
     } else {
-      panel.style.maxHeight = panel.scrollHeight + 'px'
+      panel.style.maxHeight = `${panel.scrollHeight}px`
     }
   }
 
@@ -38,15 +38,21 @@ const Accordion = ({
     if (collapse && accordionRef.current) {
       const panel = accordionRef.current.nextElementSibling as HTMLDivElement
       accordionRef.current.classList.toggle('accordion-active')
-      panel.style.maxHeight = panel.scrollHeight + offsetHeight + 'px'
+      panel.style.maxHeight = `${panel.scrollHeight + offsetHeight}px`
     }
   }, [collapse, offsetHeight])
 
   return (
     <div className={`${className ? `${className} ` : ''}accordion-container`}>
-      <label ref={accordionRef} className="accordion" onClick={handleAccordionClick}>
+      <span
+        ref={accordionRef}
+        className="accordion"
+        onClick={handleAccordionClick}
+        role="button"
+        tabIndex={0}
+      >
         {title}
-      </label>
+      </span>
       <div className={collapse ? 'panel-collapse' : 'panel'}>{children}</div>
     </div>
   )

@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import * as Helper from '../common/Helper'
-import { strings as commonStrings } from '../lang/common'
-import * as UserService from '../services/UserService'
 import {
   Button, Avatar as MaterialAvatar,
   Badge,
@@ -19,29 +15,31 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import * as Helper from '../common/Helper'
+import { strings as commonStrings } from '../lang/common'
+import * as UserService from '../services/UserService'
 
-const Avatar = (
+function Avatar({
+  loggedUser,
+  user: avatarUser,
+  size,
+  readonly,
+  color,
+  className,
+  onBeforeUpload,
+  onChange,
+}:
   {
-    loggedUser,
-    user: avatarUser,
-    size,
-    readonly,
-    color,
-    className,
-    onBeforeUpload,
-    onChange,
-  }:
-    {
-      loggedUser?: bookcarsTypes.User
-      user?: bookcarsTypes.User
-      size: 'small' | 'medium' | 'large',
-      readonly?: boolean,
-      color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-      className?: string,
-      onBeforeUpload?: () => void,
-      onChange?: (user: bookcarsTypes.User) => void,
-    }
-) => {
+    loggedUser?: bookcarsTypes.User
+    user?: bookcarsTypes.User
+    size: 'small' | 'medium' | 'large',
+    readonly?: boolean,
+    color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
+    className?: string,
+    onBeforeUpload?: () => void,
+    onChange?: (user: bookcarsTypes.User) => void,
+  }) {
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()
@@ -71,13 +69,13 @@ const Avatar = (
         const status = await UserService.updateAvatar(_id, file)
 
         if (status === 200) {
-          const user = await UserService.getUser(_id)
+          const _user = await UserService.getUser(_id)
 
-          if (user) {
-            setUser(user)
+          if (_user) {
+            setUser(_user)
 
             if (onChange) {
-              onChange(user)
+              onChange(_user)
             }
           } else {
             Helper.error()
@@ -135,12 +133,12 @@ const Avatar = (
       const status = await UserService.deleteAvatar(_id)
 
       if (status === 200) {
-        const user = await UserService.getUser(_id)
+        const _user = await UserService.getUser(_id)
 
-        if (user) {
-          setUser(user)
+        if (_user) {
+          setUser(_user)
           if (onChange) {
-            onChange(user)
+            onChange(_user)
           }
           closeDialog()
         } else {
@@ -166,7 +164,6 @@ const Avatar = (
     }
   }, [avatarUser])
 
-
   return !error && loggedUser && user ? (
     <div className={className}>
       {loggedUser._id === user._id && !readonly ? (
@@ -179,11 +176,11 @@ const Avatar = (
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              badgeContent={
+              badgeContent={(
                 <Box borderRadius="50%" className="avatar-action-box" onClick={handleDeleteAvatar}>
                   <DeleteIcon className="avatar-action-icon" />
                 </Box>
-              }
+              )}
             >
               <Badge
                 overlap="circular"
@@ -191,11 +188,11 @@ const Avatar = (
                   vertical: 'bottom',
                   horizontal: 'right',
                 }}
-                badgeContent={
+                badgeContent={(
                   <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                     <PhotoCameraIcon className="avatar-action-icon" />
                   </Box>
-                }
+                )}
               >
                 <MaterialAvatar src={bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar)} className="avatar" />
               </Badge>
@@ -207,13 +204,13 @@ const Avatar = (
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              badgeContent={
+              badgeContent={(
                 <div>
                   <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
                     <PhotoCameraIcon className={user.language === 'ar' ? 'avatar-action-icon-rtl' : 'avatar-action-icon'} />
                   </Box>
                 </div>
-              }
+              )}
             >
               <MaterialAvatar className="avatar">
                 <AccountCircle className="avatar" />
@@ -222,9 +219,9 @@ const Avatar = (
           )}
         </div>
       ) : user.avatar ? (
-        <MaterialAvatar src={bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar)} className={size ? 'avatar-' + size : 'avatar'} />
+        <MaterialAvatar src={bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar)} className={size ? `avatar-${size}` : 'avatar'} />
       ) : (
-        <AccountCircle className={size ? 'avatar-' + size : 'avatar'} color={color || 'inherit'} />
+        <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={open}>
         <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>

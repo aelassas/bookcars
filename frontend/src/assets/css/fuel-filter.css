@@ -7,7 +7,7 @@ div.fuel-filter div.filter-elements div.filter-element input[type='checkbox'].fu
   margin-left: 5px;
 }
 
-div.fuel-filter div.filter-elements div.filter-element label {
+div.fuel-filter div.filter-elements div.filter-element span {
   margin-left: 5px;
   cursor: pointer;
   font-size: 12px;

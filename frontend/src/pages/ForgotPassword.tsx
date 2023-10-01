@@ -1,9 +1,4 @@
 import React, { useState } from 'react'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/reset-password'
-import NoMatch from './NoMatch'
 import {
   Input,
   InputLabel,
@@ -14,12 +9,17 @@ import {
   Link
 } from '@mui/material'
 import validator from 'validator'
-import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/reset-password'
+import NoMatch from './NoMatch'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/forgot-password.css'
 
-const ForgotPassword = () => {
+function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [visible, setVisible] = useState(false)
   const [error, setError] = useState(false)
@@ -36,28 +36,21 @@ const ForgotPassword = () => {
     }
   }
 
-  const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
-  const validateEmail = async (email: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
 
           if (status === 200) {
             // user not found (error)
             setError(true)
             setEmailValid(true)
             return false
-          } else {
-            setError(false)
-            setEmailValid(true)
-            return true
           }
+          setError(false)
+          setEmailValid(true)
+          return true
         } catch (err) {
           Helper.error(err)
           setError(false)
@@ -84,8 +77,8 @@ const ForgotPassword = () => {
     try {
       e.preventDefault()
 
-      const emailValid = await validateEmail(email)
-      if (!emailValid) {
+      const _emailValid = await validateEmail(email)
+      if (!_emailValid) {
         return
       }
 
@@ -104,6 +97,12 @@ const ForgotPassword = () => {
     }
   }
 
+  const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
+    }
+  }
+
   const onLoad = (user?: bookcarsTypes.User) => {
     if (user) {
       setNoMatch(true)
@@ -117,10 +116,14 @@ const ForgotPassword = () => {
       {visible && (
         <div className="forgot-password">
           <Paper className="forgot-password-form" elevation={10}>
-            <h1 className="forgot-password-title"> {strings.RESET_PASSWORD_HEADING} </h1>
+            <h1 className="forgot-password-title">
+              {' '}
+              {strings.RESET_PASSWORD_HEADING}
+              {' '}
+            </h1>
             {sent && (
               <div>
-                <label>{strings.EMAIL_SENT}</label>
+                <span>{strings.EMAIL_SENT}</span>
                 <p>
                   <Link href="/">{commonStrings.GO_TO_HOME}</Link>
                 </p>
@@ -128,7 +131,7 @@ const ForgotPassword = () => {
             )}
             {!sent && (
               <form onSubmit={handleSubmit}>
-                <label>{strings.RESET_PASSWORD}</label>
+                <span>{strings.RESET_PASSWORD}</span>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                   <Input onChange={handleEmailChange} onKeyDown={handleEmailKeyDown} onBlur={handleEmailBlur} type="text" error={error || !emailValid} autoComplete="off" required />

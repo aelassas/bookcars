@@ -24,7 +24,7 @@ div.status-filter ul.status-list li {
   clear: none;
 }
 
-div.status-filter ul.status-list li label.bs {
+div.status-filter ul.status-list li span.bs {
   padding: 3px;
   width: 80px;
   text-align: center;
@@ -45,31 +45,31 @@ div.status-filter ul.status-list li input[type='checkbox'].status-checkbox {
   cursor: pointer;
 }
 
-div.status-filter ul.status-list li label.bs:hover {
+div.status-filter ul.status-list li span.bs:hover {
   opacity: 0.9;
 }
 
-div.status-filter ul.status-list li label.bs-void {
+div.status-filter ul.status-list li span.bs-void {
   background: #999;
 }
 
-div.status-filter ul.status-list li label.bs-pending {
+div.status-filter ul.status-list li span.bs-pending {
   background: #e98003;
 }
 
-div.status-filter ul.status-list li label.bs-deposit {
+div.status-filter ul.status-list li span.bs-deposit {
   background: #22bba7;
 }
 
-div.status-filter ul.status-list li label.bs-paid {
+div.status-filter ul.status-list li span.bs-paid {
   background: #77bc23;
 }
 
-div.status-filter ul.status-list li label.bs-reserved {
+div.status-filter ul.status-list li span.bs-reserved {
   background: #188ace;
 }
 
-div.status-filter ul.status-list li label.bs-cancelled {
+div.status-filter ul.status-list li span.bs-cancelled {
   background: #bc2143;
 }
 

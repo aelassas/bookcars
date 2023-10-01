@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
+import {
+  FormControl, TextField, Button, IconButton
+} from '@mui/material'
+import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/booking-filter'
 import LocationSelectList from './LocationSelectList'
 import DatePicker from './DatePicker'
-import { FormControl, TextField, Button, IconButton } from '@mui/material'
-import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
 import Accordion from '../components/Accordion'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/booking-filter.css'
 
-const BookingFilter = ({
+function BookingFilter({
   collapse,
   className,
   language,
@@ -22,7 +24,7 @@ const BookingFilter = ({
     className?: string,
     language?: string,
     onSubmit?: (filter: bookcarsTypes.Filter | null) => void
-  }) => {
+  }) {
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [pickupLocation, setPickupLocation] = useState('')
@@ -32,12 +34,6 @@ const BookingFilter = ({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
-  }
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
   }
 
   const handlePickupLocationChange = (locations: bookcarsTypes.Option[]) => {
@@ -51,13 +47,25 @@ const BookingFilter = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
     e.preventDefault()
 
-    let filter: bookcarsTypes.Filter | null = { from, to, pickupLocation, dropOffLocation, keyword }
+    let filter: bookcarsTypes.Filter | null = {
+      from,
+      to,
+      pickupLocation,
+      dropOffLocation,
+      keyword
+    }
 
     if (!from && !to && !pickupLocation && !dropOffLocation && !keyword) {
       filter = null
     }
     if (onSubmit) {
       onSubmit(bookcarsHelper.clone(filter))
+    }
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
     }
   }
 
@@ -69,19 +77,18 @@ const BookingFilter = ({
             label={commonStrings.FROM}
             onChange={(date) => {
               if (date) {
-
                 if (to && to.getTime() <= date.getTime()) {
                   setTo(undefined)
                 }
 
-                const minDate = new Date(date)
-                minDate.setDate(date.getDate() + 1)
-                setMinDate(minDate)
+                const _minDate = new Date(date)
+                _minDate.setDate(date.getDate() + 1)
+                setMinDate(_minDate)
               } else {
                 setMinDate(undefined)
               }
 
-              setFrom(date||undefined)
+              setFrom(date || undefined)
             }}
             language={language}
             variant="standard"

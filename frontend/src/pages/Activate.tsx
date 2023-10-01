@@ -1,12 +1,4 @@
 import React, { useState } from 'react'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings as cpStrings } from '../lang/change-password'
-import { strings as rpStrings } from '../lang/reset-password'
-import { strings as mStrings } from '../lang/master'
-import { strings } from '../lang/activate'
-import NoMatch from './NoMatch'
 import {
   Input,
   InputLabel,
@@ -16,13 +8,21 @@ import {
   Paper,
   Link
 } from '@mui/material'
-import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings as cpStrings } from '../lang/change-password'
+import { strings as rpStrings } from '../lang/reset-password'
+import { strings as mStrings } from '../lang/master'
+import { strings } from '../lang/activate'
+import NoMatch from './NoMatch'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/activate.css'
 
-const Activate = () => {
+function Activate() {
   const navigate = useNavigate()
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
@@ -45,12 +45,6 @@ const Activate = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
     try {
       e.preventDefault()
@@ -60,19 +54,17 @@ const Activate = () => {
         setConfirmPasswordError(false)
         setPasswordError(false)
         return
-      } else {
-        setPasswordLengthError(false)
-        setPasswordError(false)
       }
+      setPasswordLengthError(false)
+      setPasswordError(false)
 
       if (password !== confirmPassword) {
         setConfirmPasswordError(true)
         setPasswordError(false)
         return
-      } else {
-        setConfirmPasswordError(false)
-        setPasswordError(false)
       }
+      setConfirmPasswordError(false)
+      setPasswordError(false)
 
       const data: bookcarsTypes.ActivatePayload = { userId, token, password }
 
@@ -81,9 +73,9 @@ const Activate = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
-          const status = await UserService.deleteTokens(userId)
+          const _status = await UserService.deleteTokens(userId)
 
-          if (status === 200) {
+          if (_status === 200) {
             navigate('/')
           } else {
             Helper.error()
@@ -96,6 +88,12 @@ const Activate = () => {
       }
     } catch (err) {
       Helper.error(err)
+    }
+  }
+
+  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
     }
   }
 
@@ -119,25 +117,25 @@ const Activate = () => {
     } else {
       const params = new URLSearchParams(window.location.search)
       if (params.has('u') && params.has('e') && params.has('t')) {
-        const userId = params.get('u')
-        const email = params.get('e')
-        const token = params.get('t')
-        if (userId && email && token) {
+        const _userId = params.get('u')
+        const _email = params.get('e')
+        const _token = params.get('t')
+        if (_userId && _email && _token) {
           try {
-            const status = await UserService.checkToken(userId, email, token)
+            const status = await UserService.checkToken(_userId, _email, _token)
 
             if (status === 200) {
-              setUserId(userId)
-              setEmail(email)
-              setToken(token)
+              setUserId(_userId)
+              setEmail(_email)
+              setToken(_token)
               setVisible(true)
 
               if (params.has('r')) {
-                const reset = params.get('r') === 'true'
-                setReset(reset)
+                const _reset = params.get('r') === 'true'
+                setReset(_reset)
               }
             } else if (status === 204) {
-              setEmail(email)
+              setEmail(_email)
               setResend(true)
             } else {
               setNoMatch(true)
@@ -161,7 +159,7 @@ const Activate = () => {
           <Paper className="resend-form" elevation={10}>
             <h1>{strings.ACTIVATE_HEADING}</h1>
             <div className="resend-form-content">
-              <label>{strings.TOKEN_EXPIRED}</label>
+              <span>{strings.TOKEN_EXPIRED}</span>
               <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>
                 {mStrings.RESEND}
               </Button>
@@ -198,7 +196,11 @@ const Activate = () => {
                   required
                 />
                 <FormHelperText error={confirmPasswordError || passwordLengthError}>
-                  {confirmPasswordError ? commonStrings.PASSWORDS_DONT_MATCH : passwordLengthError ? commonStrings.PASSWORD_ERROR : ''}
+                  {
+                    (confirmPasswordError && commonStrings.PASSWORDS_DONT_MATCH)
+                    || (passwordLengthError && commonStrings.PASSWORD_ERROR)
+                    || ''
+                  }
                 </FormHelperText>
               </FormControl>
               <div className="buttons">

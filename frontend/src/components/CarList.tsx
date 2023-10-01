@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import Const from '../config/const'
-import * as Helper from '../common/Helper'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as CarService from '../services/CarService'
-import * as UserService from '../services/UserService'
 import {
   Button,
   Tooltip,
@@ -23,53 +16,58 @@ import {
   Clear as UncheckIcon,
   Info as InfoIcon,
 } from '@mui/icons-material'
-import Pager from './Pager'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import Const from '../config/const'
+import * as Helper from '../common/Helper'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as CarService from '../services/CarService'
+import * as UserService from '../services/UserService'
+import Pager from './Pager'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
 import '../assets/css/car-list.css'
 
-const CarList = (
-  {
-    from,
-    to,
-    companies,
-    pickupLocation,
-    dropOffLocation,
-    fuel,
-    gearbox,
-    mileage,
-    deposit,
-    cars,
-    reload,
-    booking,
-    className,
-    hidePrice,
-    hideCompany,
-    loading: carListLoading,
-    onLoad
-  }: {
-    from?: Date
-    to?: Date
-    companies?: string[]
-    pickupLocation?: string
-    dropOffLocation?: string
-    fuel?: string[]
-    gearbox?: string[]
-    mileage?: string[]
-    deposit?: number
-    cars?: bookcarsTypes.Car[]
-    reload?: boolean
-    booking?: bookcarsTypes.Booking
-    className?: string
-    hidePrice?: boolean
-    hideCompany?: boolean
-    loading?: boolean
-    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-  }
-) => {
+function CarList({
+  from,
+  to,
+  companies,
+  pickupLocation,
+  dropOffLocation,
+  fuel,
+  gearbox,
+  mileage,
+  deposit,
+  cars,
+  reload,
+  booking,
+  className,
+  hidePrice,
+  hideCompany,
+  loading: carListLoading,
+  onLoad
+}: {
+  from?: Date
+  to?: Date
+  companies?: string[]
+  pickupLocation?: string
+  dropOffLocation?: string
+  fuel?: string[]
+  gearbox?: string[]
+  mileage?: string[]
+  deposit?: number
+  cars?: bookcarsTypes.Car[]
+  reload?: boolean
+  booking?: bookcarsTypes.Booking
+  className?: string
+  hidePrice?: boolean
+  hideCompany?: boolean
+  loading?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+}) {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -109,52 +107,52 @@ const CarList = (
   }, [fetch, loading, page])
 
   const _fetch = async (
-    page: number,
-    companies?: string[],
-    pickupLocation?: string,
-    fuel?: string[],
-    gearbox?: string[],
-    mileage?: string[],
-    deposit?: number
+    _page: number,
+    _companies?: string[],
+    _pickupLocation?: string,
+    _fuel?: string[],
+    _gearbox?: string[],
+    _mileage?: string[],
+    _deposit?: number
   ) => {
     try {
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: companies ?? [],
-        pickupLocation,
-        fuel,
-        gearbox,
-        mileage,
-        deposit,
+        companies: _companies ?? [],
+        pickupLocation: _pickupLocation,
+        fuel: _fuel,
+        gearbox: _gearbox,
+        mileage: _mileage,
+        deposit: _deposit,
       }
 
-      const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+      const data = await CarService.getCars(payload, _page, Env.CARS_PAGE_SIZE)
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
         return
       }
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+      const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
       let _rows = []
       if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
         _rows = _data.resultData
       }
 
       setRows(_rows)
-      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
-      setTotalRecords(totalRecords)
+      setRowCount((_page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
+      setTotalRecords(_totalRecords)
       setFetch(_data.resultData.length > 0)
 
-      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
+      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && _page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
         window.scrollTo(0, 0)
       }
 
       if (onLoad) {
-        onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
       Helper.error(err)
@@ -238,8 +236,7 @@ const CarList = (
     <>
       <section className={`${className ? `${className} ` : ''}car-list`}>
         {rows.length === 0
-          ?
-          !init
+          ? !init
           && !loading
           && !carListLoading
           && (
@@ -249,8 +246,8 @@ const CarList = (
               </CardContent>
             </Card>
           )
-          : ((from && to && pickupLocation && dropOffLocation) || (hidePrice && booking)) &&
-          rows.map((car) => (
+          : ((from && to && pickupLocation && dropOffLocation) || (hidePrice && booking))
+          && rows.map((car) => (
             <article key={car._id}>
               <div className="name">
                 <h2>{car.name}</h2>
@@ -262,7 +259,7 @@ const CarList = (
                     <span className="car-company-logo">
                       <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                     </span>
-                    <label className="car-company-info">{car.company.fullName}</label>
+                    <span className="car-company-info">{car.company.fullName}</span>
                   </div>
                 )}
               </div>
@@ -384,9 +381,9 @@ const CarList = (
 
               {!hidePrice && (
                 <div className="price">
-                  <label className="price-days">{Helper.getDays(days)}</label>
-                  <label className="price-main">{`${bookcarsHelper.formatNumber(Helper.price(car, from as Date, to as Date))} ${commonStrings.CURRENCY}`}</label>
-                  <label className="price-day">{`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}</label>
+                  <span className="price-days">{Helper.getDays(days)}</span>
+                  <span className="price-main">{`${bookcarsHelper.formatNumber(Helper.price(car, from as Date, to as Date))} ${commonStrings.CURRENCY}`}</span>
+                  <span className="price-day">{`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}</span>
                 </div>
               )}
               {!hidePrice && (

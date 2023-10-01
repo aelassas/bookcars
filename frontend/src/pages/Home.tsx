@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
+import { FormControl, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
-import { FormControl, Button } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
 
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/home.css'
 
-const Home = () => {
+function Home() {
   const navigate = useNavigate()
 
   const _minDate = new Date()
@@ -26,38 +26,38 @@ const Home = () => {
   const [sameLocation, setSameLocation] = useState(true)
 
   useEffect(() => {
-    const from = new Date()
-    from.setDate(from.getDate() + 1)
-    from.setHours(10)
-    from.setMinutes(0)
-    from.setSeconds(0)
-    from.setMilliseconds(0)
+    const _from = new Date()
+    _from.setDate(_from.getDate() + 1)
+    _from.setHours(10)
+    _from.setMinutes(0)
+    _from.setSeconds(0)
+    _from.setMilliseconds(0)
 
-    const to = new Date(from)
-    to.setDate(to.getDate() + 3)
+    const _to = new Date(_from)
+    _to.setDate(_to.getDate() + 3)
 
-    const minDate = new Date(from)
-    minDate.setDate(minDate.getDate() + 1)
+    const __minDate = new Date(_from)
+    __minDate.setDate(__minDate.getDate() + 1)
 
-    setMinDate(minDate)
-    setFrom(from)
-    setTo(to)
+    setMinDate(__minDate)
+    setFrom(_from)
+    setTo(_to)
   }, [])
 
   useEffect(() => {
     if (from) {
-      const minDate = new Date(from)
-      minDate.setDate(from.getDate() + 1)
-      setMinDate(minDate)
+      const __minDate = new Date(from)
+      __minDate.setDate(from.getDate() + 1)
+      setMinDate(__minDate)
     }
   }, [from])
 
   const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    const pickupLocation = (values.length > 0 && values[0]._id) || ''
-    setPickupLocation(pickupLocation)
+    const _pickupLocation = (values.length > 0 && values[0]._id) || ''
+    setPickupLocation(_pickupLocation)
 
     if (sameLocation) {
-      setDropOffLocation(pickupLocation)
+      setDropOffLocation(_pickupLocation)
     }
   }
 
@@ -65,20 +65,6 @@ const Home = () => {
     setSameLocation(e.target.checked)
 
     if (e.target.checked) {
-      setDropOffLocation(pickupLocation)
-    } else {
-      setDropOffLocation('')
-    }
-  }
-
-  const handleSameLocationClick = (e: React.MouseEvent<HTMLElement>) => {
-    const checked = !sameLocation
-
-    setSameLocation(checked)
-    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
-    checkbox.checked = checked
-
-    if (checked) {
       setDropOffLocation(pickupLocation)
     } else {
       setDropOffLocation('')
@@ -106,8 +92,8 @@ const Home = () => {
       <div className="home">
         <div className="home-content">
           <div className="home-logo">
-            <label className="home-logo-main" />
-            <label className="home-logo-registered" />
+            <span className="home-logo-main" />
+            <span className="home-logo-registered" />
           </div>
           <div className="home-search">
             <form onSubmit={handleSubmit} className="home-search-form">
@@ -123,14 +109,13 @@ const Home = () => {
                   required
                   onChange={(date) => {
                     if (date) {
-
                       if (to && to.getTime() <= date.getTime()) {
                         setTo(undefined)
                       }
 
-                      const minDate = new Date(date)
-                      minDate.setDate(date.getDate() + 1)
-                      setMinDate(minDate)
+                      const __minDate = new Date(date)
+                      __minDate.setDate(date.getDate() + 1)
+                      setMinDate(__minDate)
                     } else {
                       setMinDate(_minDate)
                     }
@@ -169,8 +154,17 @@ const Home = () => {
                 </FormControl>
               )}
               <FormControl className="chk-same-location">
-                <input type="checkbox" checked={sameLocation} onChange={handleSameLocationChange} />
-                <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
+                <input
+                  id="chk-same-location"
+                  type="checkbox"
+                  checked={sameLocation}
+                  onChange={handleSameLocationChange}
+                />
+                <label
+                  htmlFor="chk-same-location"
+                >
+                  {strings.DROP_OFF}
+                </label>
               </FormControl>
             </form>
           </div>

@@ -1,31 +1,29 @@
 import React, { useState, useEffect } from 'react'
+import { FormControl, Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
 import * as UserService from '../services/UserService'
 import LocationSelectList from './LocationSelectList'
 import DateTimePicker from './DateTimePicker'
-import { FormControl, Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/car-filter.css'
 
-const CarFilter = (
-  {
-    from: filterFrom,
-    to: filterTo,
-    pickupLocation: filterPickupLocation,
-    dropOffLocation: filterDropOffLocation,
-    className,
-    onSubmit
-  }: {
-    from: Date
-    to: Date
-    pickupLocation: bookcarsTypes.Location
-    dropOffLocation: bookcarsTypes.Location
-    className?: string
-    onSubmit: bookcarsTypes.CarFilterSubmitEvent
-  }) => {
-
+function CarFilter({
+  from: filterFrom,
+  to: filterTo,
+  pickupLocation: filterPickupLocation,
+  dropOffLocation: filterDropOffLocation,
+  className,
+  onSubmit
+}: {
+  from: Date
+  to: Date
+  pickupLocation: bookcarsTypes.Location
+  dropOffLocation: bookcarsTypes.Location
+  className?: string
+  onSubmit: bookcarsTypes.CarFilterSubmitEvent
+}) {
   const _minDate = new Date()
   _minDate.setDate(_minDate.getDate() + 1)
 
@@ -38,19 +36,19 @@ const CarFilter = (
 
   useEffect(() => {
     if (filterFrom) {
-      const minDate = new Date(filterFrom)
-      minDate.setDate(filterFrom.getDate() + 1)
-      setMinDate(minDate)
+      const __minDate = new Date(filterFrom)
+      __minDate.setDate(filterFrom.getDate() + 1)
+      setMinDate(__minDate)
     }
   }, [filterFrom])
 
   const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
-    const pickupLocation = (values.length > 0 && values[0]) || null
+    const _pickupLocation = (values.length > 0 && values[0]) || null
 
-    setPickupLocation(pickupLocation)
+    setPickupLocation(_pickupLocation)
 
     if (sameLocation) {
-      setDropOffLocation(pickupLocation)
+      setDropOffLocation(_pickupLocation)
     }
   }
 
@@ -58,18 +56,6 @@ const CarFilter = (
     setSameLocation(e.target.checked)
 
     if (e.target.checked) {
-      setDropOffLocation(pickupLocation)
-    }
-  }
-
-  const handleSameLocationClick = (e: React.MouseEvent<HTMLElement>) => {
-    const checked = !sameLocation
-
-    setSameLocation(checked)
-    const checkbox = e.currentTarget.previousSibling as HTMLInputElement
-    checkbox.checked = checked
-
-    if (checked) {
       setDropOffLocation(pickupLocation)
     }
   }
@@ -86,7 +72,9 @@ const CarFilter = (
     }
 
     if (onSubmit) {
-      const filter: bookcarsTypes.CarFilter = { pickupLocation, dropOffLocation, from, to }
+      const filter: bookcarsTypes.CarFilter = {
+        pickupLocation, dropOffLocation, from, to
+      }
       onSubmit(filter)
     }
   }
@@ -127,19 +115,18 @@ const CarFilter = (
             required
             onChange={(date) => {
               if (date) {
-
                 if (to && to.getTime() <= date.getTime()) {
                   setTo(undefined)
                 }
 
-                const minDate = new Date(date)
-                minDate.setDate(date.getDate() + 1)
-                setMinDate(minDate)
+                const __minDate = new Date(date)
+                __minDate.setDate(date.getDate() + 1)
+                setMinDate(__minDate)
               } else {
                 setMinDate(_minDate)
               }
 
-              setFrom(date||undefined)
+              setFrom(date || undefined)
             }}
             language={UserService.getLanguage()}
           />
@@ -163,8 +150,17 @@ const CarFilter = (
           </Button>
         </FormControl>
         <FormControl fullWidth className="chk-same-location">
-          <input type="checkbox" checked={sameLocation} onChange={handleSameLocationChange} />
-          <label onClick={handleSameLocationClick}>{strings.DROP_OFF}</label>
+          <input
+            id="chk-same-location"
+            type="checkbox"
+            checked={sameLocation}
+            onChange={handleSameLocationChange}
+          />
+          <label
+            htmlFor="chk-same-location"
+          >
+            {strings.DROP_OFF}
+          </label>
         </FormControl>
       </form>
     </div>

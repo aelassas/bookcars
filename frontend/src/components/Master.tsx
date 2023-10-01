@@ -1,13 +1,13 @@
 import React, { useState, useEffect, ReactNode } from 'react'
+import { Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/master'
 import Header from '../components/Header'
 import * as UserService from '../services/UserService'
-import { Button } from '@mui/material'
 import * as Helper from '../common/Helper'
 import { useInit } from '../common/customHooks'
-import * as bookcarsTypes from 'bookcars-types'
 
-const Master = ({
+function Master({
   user: masterUser,
   strict,
   hideSignin,
@@ -21,7 +21,7 @@ const Master = ({
   notificationCount?: number
   children: ReactNode
   onLoad?: (user?: bookcarsTypes.User) => void
-}) => {
+}) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
 
@@ -53,19 +53,19 @@ const Master = ({
         const status = await UserService.validateAccessToken()
 
         if (status === 200) {
-          const user = await UserService.getUser(currentUser._id)
+          const _user = await UserService.getUser(currentUser._id)
 
-          if (user) {
-            if (user.blacklisted) {
+          if (_user) {
+            if (_user.blacklisted) {
               exit()
               return
             }
 
-            setUser(user)
+            setUser(_user)
             setLoading(false)
 
             if (onLoad) {
-              onLoad(user)
+              onLoad(_user)
             }
           } else {
             exit()

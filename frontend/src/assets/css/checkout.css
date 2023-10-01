@@ -14,7 +14,7 @@ div.booking div.booking-info {
   margin-bottom: 20px;
 }
 
-div.booking div.booking-info label {
+div.booking div.booking-info span {
   color: #444;
   display: inline-block;
   font-size: 17px;
@@ -76,7 +76,7 @@ div.booking div.booking-details div.booking-detail {
   display: table-row;
 }
 
-div.booking div.booking-details div.booking-detail label.booking-detail-title,
+div.booking div.booking-details div.booking-detail span.booking-detail-title,
 div.booking div.booking-details div.booking-detail div.booking-detail-value {
   display: table-cell;
 }
@@ -85,7 +85,7 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value {
   color: rgba(0, 0, 0, 0.55);
 }
 
-div.booking div.booking-details div.booking-detail label.booking-detail-title {
+div.booking div.booking-details div.booking-detail span.booking-detail-title {
   font-weight: 700;
   width: 250px;
 }
@@ -95,7 +95,7 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value div.
   align-items: center;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value label.car-company-name {
+div.booking div.booking-details div.booking-detail div.booking-detail-value span.car-company-name {
   color: rgba(0, 0, 0, 0.6);
   font-size: 0.9em;
   line-height: 1em;
@@ -150,7 +150,7 @@ div.booking div.payment div.cost div.secure-payment-label {
   font-weight: 600;
 }
 
-div.booking div.payment div.cost div.secure-payment-label label {
+div.booking div.payment div.cost div.secure-payment-label span {
   margin-left: 5px;
 }
 
@@ -164,8 +164,8 @@ div.booking div.payment div.cost div.secure-payment-cost {
   justify-content: center;
 }
 
-div.booking div.payment div.cost div.secure-payment-cost label.cost-title,
-div.booking div.payment div.cost div.secure-payment-cost label.cost-value {
+div.booking div.payment div.cost div.secure-payment-cost span.cost-title,
+div.booking div.payment div.cost div.secure-payment-cost span.cost-value {
   display: table-cell;
   padding: 5px;
 }
@@ -239,7 +239,7 @@ div.booking .btn-cancel {
   }
 
   div.booking div.booking-options span.booking-option-value,
-  div.booking div.booking-details div.booking-detail label.booking-detail-title,
+  div.booking div.booking-details div.booking-detail span.booking-detail-title,
   div.booking div.booking-details div.booking-detail div.booking-detail-value {
     display: table-row;
   }

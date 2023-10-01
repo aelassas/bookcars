@@ -1,12 +1,25 @@
 import React from 'react'
-import { strings as commonStrings } from '../lang/common'
 import { Link } from '@mui/material'
+import { strings as commonStrings } from '../lang/common'
 
-const Info = (props: { className?: string, message: string, style?: React.CSSProperties }) => (
-  <div style={props.style} className={`${props.className ? `${props.className} ` : ''}msg`}>
-    <p>{props.message}</p>
-    <Link href="/">{commonStrings.GO_TO_HOME}</Link>
-  </div>
-)
+function Info(
+  {
+    className,
+    message,
+    style
+  }
+    : {
+      className?: string,
+      message: string,
+      style?: React.CSSProperties
+    }
+) {
+  return (
+    <div style={style} className={`${className ? `${className} ` : ''}msg`}>
+      <p>{message}</p>
+      <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+    </div>
+  )
+}
 
 export default Info

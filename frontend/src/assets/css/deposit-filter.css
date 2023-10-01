@@ -7,7 +7,7 @@ div.deposit-filter div.filter-elements div.filter-element input[type='radio'].de
   margin-left: 5px;
 }
 
-div.deposit-filter div.filter-elements div.filter-element label {
+div.deposit-filter div.filter-elements div.filter-element span {
   margin-left: 5px;
   cursor: pointer;
   font-size: 12px;

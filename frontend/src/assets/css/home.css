@@ -51,30 +51,30 @@ div.home footer div.copyright span.part2 {
     height: 140px;
   }
 
-  div.home div.home-content label.home-logo-main,
-  div.home div.home-content label.home-logo-registered {
+  div.home div.home-content span.home-logo-main,
+  div.home div.home-content span.home-logo-registered {
     float: left;
     color: #f37022;
     opacity: 0.97;
   }
 
-  div.home div.home-content label.home-logo-main {
+  div.home div.home-content span.home-logo-main {
     font-size: 70px;
     font-weight: 700;
     line-height: 125px;
   }
 
-  div.home div.home-content label.home-logo-main:after {
+  div.home div.home-content span.home-logo-main:after {
     content: 'BookCars';
   }
 
-  div.home div.home-content label.home-logo-registered {
+  div.home div.home-content span.home-logo-registered {
     margin-top: 40px;
     font-size: 15px;
     font-weight: 600;
   }
 
-  div.home div.home-content label.home-logo-registered:after {
+  div.home div.home-content span.home-logo-registered:after {
     content: '®';
   }
 
@@ -167,30 +167,30 @@ div.home footer div.copyright span.part2 {
     height: 180px;
   }
 
-  div.home div.home-content label.home-logo-main,
-  div.home div.home-content label.home-logo-registered {
+  div.home div.home-content span.home-logo-main,
+  div.home div.home-content span.home-logo-registered {
     float: left;
     color: #f37022;
     opacity: 0.97;
   }
 
-  div.home div.home-content label.home-logo-main {
+  div.home div.home-content span.home-logo-main {
     font-size: 80px;
     font-weight: 700;
     line-height: 135px;
   }
 
-  div.home div.home-content label.home-logo-main:after {
+  div.home div.home-content span.home-logo-main:after {
     content: 'BookCars';
   }
 
-  div.home div.home-content label.home-logo-registered {
+  div.home div.home-content span.home-logo-registered {
     margin-top: 40px;
     font-size: 15px;
     font-weight: 600;
   }
 
-  div.home div.home-content label.home-logo-registered:after {
+  div.home div.home-content span.home-logo-registered:after {
     content: '®';
   }
 
