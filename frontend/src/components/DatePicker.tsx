@@ -5,8 +5,7 @@ import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker'
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
 
-const DatePicker = (
-  {
+function DatePicker({
     value: dateValue,
     label,
     minDate,
@@ -25,8 +24,7 @@ const DatePicker = (
       variant?: TextFieldVariants
       readOnly?: boolean
       onChange?: (value: Date | null) => void
-    }
-) => {
+    }) {
   const [value, setValue] = useState<Date | null>(null)
 
   useEffect(() => {
@@ -40,15 +38,15 @@ const DatePicker = (
         views={['year', 'month', 'day']}
         value={value}
         readOnly={readOnly}
-        onAccept={(value) => {
-          if (value) {
-            const date = value as Date
+        onAccept={(_value) => {
+          if (_value) {
+            const date = _value as Date
             date.setHours(10, 0, 0, 0)
           }
-          setValue(value)
+          setValue(_value)
 
           if (onChange) {
-            onChange(value)
+            onChange(_value)
           }
         }}
         minDate={minDate}
@@ -56,7 +54,7 @@ const DatePicker = (
         slotProps={{
           textField: {
             variant: variant || 'standard',
-            required: required,
+            required,
           },
           actionBar: {
             actions: ['accept', 'cancel', 'today', 'clear'],

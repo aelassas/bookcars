@@ -1,9 +1,4 @@
 import React, { useState } from 'react'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/change-password'
-import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
 import {
   Paper,
   Input,
@@ -12,12 +7,17 @@ import {
   FormHelperText,
   Button
 } from '@mui/material'
-import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/change-password'
+import * as UserService from '../services/UserService'
+import Backdrop from '../components/SimpleBackdrop'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/change-password.css'
 
-const ChangePassword = () => {
+function ChangePassword() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -37,17 +37,11 @@ const ChangePassword = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
   const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentPassword(e.target.value)
   }
 
-  const err = () => {
+  const error = () => {
     Helper.error(null, strings.PASSWORD_UPDATE_ERROR)
   }
 
@@ -56,7 +50,7 @@ const ChangePassword = () => {
       e.preventDefault()
 
       if (!user) {
-        err()
+        error()
         return
       }
 
@@ -66,19 +60,17 @@ const ChangePassword = () => {
           setConfirmPasswordError(false)
           setNewPasswordError(false)
           return
-        } else {
-          setPasswordLengthError(false)
-          setNewPasswordError(false)
         }
+        setPasswordLengthError(false)
+        setNewPasswordError(false)
 
         if (newPassword !== confirmPassword) {
           setConfirmPasswordError(true)
           setNewPasswordError(false)
           return
-        } else {
-          setConfirmPasswordError(false)
-          setNewPasswordError(false)
         }
+        setConfirmPasswordError(false)
+        setNewPasswordError(false)
 
         const data: bookcarsTypes.ChangePasswordPayload = {
           _id: user._id as string,
@@ -100,10 +92,10 @@ const ChangePassword = () => {
             setConfirmPassword('')
             Helper.info(strings.PASSWORD_UPDATE)
           } else {
-            err()
+            error()
           }
         } else {
-          err()
+          error()
         }
       }
 
@@ -122,8 +114,14 @@ const ChangePassword = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    setUser(user)
+  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
+    }
+  }
+
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    setUser(_user)
     setLoading(false)
     setVisible(true)
   }
@@ -132,7 +130,11 @@ const ChangePassword = () => {
     <Master onLoad={onLoad} strict>
       <div className="password-reset" style={visible ? {} : { display: 'none' }}>
         <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
-          <h1 className="password-reset-form-title"> {strings.CHANGE_PASSWORD_HEADING} </h1>
+          <h1 className="password-reset-form-title">
+            {' '}
+            {strings.CHANGE_PASSWORD_HEADING}
+            {' '}
+          </h1>
           <form className="form" onSubmit={handleSubmit}>
             <FormControl fullWidth margin="dense">
               <InputLabel error={currentPasswordError} className="required">

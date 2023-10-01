@@ -452,6 +452,7 @@ export async function signin(req: Request, res: Response) {
       const payload = { id: user._id }
 
       let options: { expiresIn?: number } = { expiresIn: env.JWT_EXPIRE_AT }
+
       if (stayConnected) {
         options = {}
       }

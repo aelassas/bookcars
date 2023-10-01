@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import * as LocationService from '../services/LocationService'
@@ -12,12 +14,10 @@ import GearboxFilter from '../components/GearboxFilter'
 import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
 import CarList from '../components/CarList'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/cars.css'
 
-const Cars = () => {
+function Cars() {
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
@@ -60,7 +60,12 @@ const Cars = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    let pickupLocationId, dropOffLocationId, pickupLocation, dropOffLocation, from, to
+    let pickupLocationId
+    let dropOffLocationId
+    let _pickupLocation
+    let _dropOffLocation
+    let _from
+    let _to
     const params = new URLSearchParams(window.location.search)
     if (params.has('p')) {
       pickupLocationId = params.get('p')
@@ -70,49 +75,49 @@ const Cars = () => {
     }
     if (params.has('f')) {
       const val = params.get('f')
-      from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
+      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
     }
     if (params.has('t')) {
       const val = params.get('t')
-      to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val))
+      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
     }
 
-    if (!pickupLocationId || !dropOffLocationId || !from || !to) {
+    if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setLoading(false)
       setNoMatch(true)
       return
     }
 
     try {
-      pickupLocation = await LocationService.getLocation(pickupLocationId)
+      _pickupLocation = await LocationService.getLocation(pickupLocationId)
 
-      if (!pickupLocation) {
+      if (!_pickupLocation) {
         setLoading(false)
         setNoMatch(true)
         return
       }
 
       if (dropOffLocationId !== pickupLocationId) {
-        dropOffLocation = await LocationService.getLocation(dropOffLocationId)
+        _dropOffLocation = await LocationService.getLocation(dropOffLocationId)
       } else {
-        dropOffLocation = pickupLocation
+        _dropOffLocation = _pickupLocation
       }
 
-      if (!dropOffLocation) {
+      if (!_dropOffLocation) {
         setLoading(false)
         setNoMatch(true)
         return
       }
 
-      const allCompanies = await SupplierService.getAllSuppliers()
-      const companies = bookcarsHelper.flattenCompanies(allCompanies)
+      const _allCompanies = await SupplierService.getAllSuppliers()
+      const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
 
-      setPickupLocation(pickupLocation)
-      setDropOffLocation(dropOffLocation)
-      setFrom(from)
-      setTo(to)
-      setAllCompanies(allCompanies)
-      setCompanies(companies)
+      setPickupLocation(_pickupLocation)
+      setDropOffLocation(_dropOffLocation)
+      setFrom(_from)
+      setTo(_to)
+      setAllCompanies(_allCompanies)
+      setCompanies(_companies)
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)

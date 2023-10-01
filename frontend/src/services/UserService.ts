@@ -1,6 +1,6 @@
 import axios from 'axios'
-import Env from '../config/env.config'
 import * as bookcarsTypes from 'bookcars-types'
+import Env from '../config/env.config'
 
 /**
  * Get authentication header.
@@ -12,9 +12,8 @@ export const authHeader = () => {
 
   if (user && user.accessToken) {
     return { 'x-access-token': user.accessToken }
-  } else {
-    return {}
   }
+  return {}
 }
 
 /**
@@ -25,7 +24,8 @@ export const authHeader = () => {
  */
 export const signup = (data: bookcarsTypes.BackendSignUpPayload): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/sign-up/ `,
+    .post(
+      `${Env.API_HOST}/api/sign-up/ `,
       data
     )
     .then((res) => res.status)
@@ -110,7 +110,8 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
 export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
   axios.post(
     `${Env.API_HOST}/api/sign-in/frontend`,
-    data)
+    data
+  )
     .then((res) => {
       if (res.data.accessToken) {
         localStorage.setItem('bc-user', JSON.stringify(res.data))
@@ -129,11 +130,10 @@ export const signout = (redirect = true, redirectSignin = false) => {
     const deleteAllCookies = () => {
       const cookies = document.cookie.split('')
 
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
+      for (const cookie of cookies) {
         const eqPos = cookie.indexOf('=')
         const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie
-        document.cookie = name + '=expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        document.cookie = `${name}=expires=Thu, 01 Jan 1970 00:00:00 GMT`
       }
     }
 
@@ -166,7 +166,6 @@ export const validateAccessToken = (): Promise<number> =>
     )
     .then((res) => res.status)
 
-
 /**
  * Confirm email.
  *
@@ -177,7 +176,7 @@ export const validateAccessToken = (): Promise<number> =>
 export const confirmEmail = (email: string, token: string): Promise<number> => (
   axios
     .post(
-      `${Env.API_HOST}/api/confirm-email/` + encodeURIComponent(email) + '/' + encodeURIComponent(token)
+      `${Env.API_HOST}/api/confirm-email/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 )
@@ -207,13 +206,12 @@ export const getLanguage = () => {
 
   if (user && user.language) {
     return user.language
-  } else {
-    const lang = localStorage.getItem('bc-language')
-    if (lang && lang.length === 2) {
-      return lang
-    }
-    return Env.DEFAULT_LANGUAGE
   }
+  const lang = localStorage.getItem('bc-language')
+  if (lang && lang.length === 2) {
+    return lang
+  }
+  return Env.DEFAULT_LANGUAGE
 }
 
 /**
@@ -249,7 +247,6 @@ export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
       return res.status
     })
 
-
 /**
  * Set language.
  *
@@ -282,13 +279,14 @@ export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
   if (id) {
     return axios
       .get(
-        `${Env.API_HOST}/api/user/` + encodeURIComponent(id),
+        `${Env.API_HOST}/api/user/${encodeURIComponent(id)}`,
         { headers: authHeader() }
       )
       .then((res) => res.data)
-  } else {
-    return new Promise((resolve) => resolve(null))
   }
+  return new Promise((resolve) => {
+    resolve(null)
+  })
 }
 /**
  * Update a User.
@@ -304,7 +302,6 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
       { headers: authHeader() }
     )
     .then((res) => res.status)
-
 
 /**
  * Update email notifications flag.
@@ -329,7 +326,6 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
       }
       return res.status
     })
-
 
 /**
  * Update avatar.

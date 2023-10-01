@@ -1,12 +1,4 @@
 import React, { useState } from 'react'
-import Env from '../config/env.config'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/settings'
-import * as UserService from '../services/UserService'
-import Backdrop from '../components/SimpleBackdrop'
-import DatePicker from '../components/DatePicker'
-import Avatar from '../components/Avatar'
 import {
   Input,
   InputLabel,
@@ -19,13 +11,21 @@ import {
 } from '@mui/material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/settings'
+import * as UserService from '../services/UserService'
+import Backdrop from '../components/SimpleBackdrop'
+import DatePicker from '../components/DatePicker'
+import Avatar from '../components/Avatar'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/settings.css'
 
-const Settings = () => {
+function Settings() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
@@ -42,17 +42,16 @@ const Settings = () => {
     setFullName(e.target.value)
   }
 
-  const validatePhone = (phone: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,14 +66,13 @@ const Settings = () => {
     if (date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateValid(true)
+    return true
   }
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,8 +112,8 @@ const Settings = () => {
     setLoading(true)
   }
 
-  const onAvatarChange = (user: bookcarsTypes.User) => {
-    setUser(user)
+  const onAvatarChange = (_user: bookcarsTypes.User) => {
+    setUser(_user)
     setLoading(false)
   }
 
@@ -128,13 +126,13 @@ const Settings = () => {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
-      const birthDateValid = validateBirthDate(birthDate)
-      if (!birthDateValid) {
+      const _birthDateValid = validateBirthDate(birthDate)
+      if (!_birthDateValid) {
         return
       }
 
@@ -159,15 +157,15 @@ const Settings = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    if (user) {
-      setUser(user)
-      setFullName(user.fullName)
-      setPhone(user.phone || '')
-      setBirthDate(user && user.birthDate ? new Date(user.birthDate) : undefined)
-      setLocation(user.location || '')
-      setBio(user.bio || '')
-      setEnableEmailNotifications(user.enableEmailNotifications ?? true)
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    if (_user) {
+      setUser(_user)
+      setFullName(_user.fullName)
+      setPhone(_user.phone || '')
+      setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
+      setLocation(_user.location || '')
+      setBio(_user.bio || '')
+      setEnableEmailNotifications(_user.enableEmailNotifications ?? true)
       setVisible(true)
       setLoading(false)
     }
@@ -208,12 +206,12 @@ const Settings = () => {
                   value={birthDate}
                   variant="standard"
                   required
-                  onChange={(birthDate) => {
-                    if (birthDate) {
-                      const birthDateValid = validateBirthDate(birthDate)
+                  onChange={(_birthDate) => {
+                    if (_birthDate) {
+                      const _birthDateValid = validateBirthDate(_birthDate)
 
-                      setBirthDate(birthDate)
-                      setBirthDateValid(birthDateValid)
+                      setBirthDate(_birthDate)
+                      setBirthDateValid(_birthDateValid)
                     }
                   }}
                   language={user.language}
@@ -242,7 +240,11 @@ const Settings = () => {
             </form>
           </Paper>
           <Paper className="settings-net settings-net-wrapper" elevation={10}>
-            <h1 className="settings-form-title"> {strings.NETWORK_SETTINGS} </h1>
+            <h1 className="settings-form-title">
+              {' '}
+              {strings.NETWORK_SETTINGS}
+              {' '}
+            </h1>
             <FormControl component="fieldset">
               <FormControlLabel control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />} label={strings.SETTINGS_EMAIL_NOTIFICATIONS} />
             </FormControl>

@@ -5,22 +5,21 @@ import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/pager.css'
 
-const Pager = (
-  {
-    page,
-    pageSize,
-    totalRecords,
-    rowCount,
-    onNext,
-    onPrevious
-  }: {
-    page: number,
-    pageSize: number,
-    totalRecords: number,
-    rowCount: number,
-    onNext: () => void,
-    onPrevious: () => void
-  }) => {
+function Pager({
+  page,
+  pageSize,
+  totalRecords,
+  rowCount,
+  onNext,
+  onPrevious
+}: {
+  page: number,
+  pageSize: number,
+  totalRecords: number,
+  rowCount: number,
+  onNext: () => void,
+  onPrevious: () => void
+}) {
   return (
     (((page > 1 || rowCount < totalRecords) && (
       <div className="pager-container">

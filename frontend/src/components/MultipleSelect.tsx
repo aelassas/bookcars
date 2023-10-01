@@ -1,29 +1,32 @@
-import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
-import Env from '../config/env.config'
-import { Autocomplete, TextField, InputAdornment, Avatar, SxProps, Theme, TextFieldVariants, AutocompleteInputChangeReason } from '@mui/material'
+import React, {
+  useState, useEffect, forwardRef, useRef, useImperativeHandle
+} from 'react'
+import {
+  Autocomplete, TextField, InputAdornment, Avatar, SxProps, Theme, TextFieldVariants, AutocompleteInputChangeReason
+} from '@mui/material'
 import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
 
 import '../assets/css/multiple-select.css'
 
-const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> =
-  forwardRef(function ListBoxBase(props, ref) {
-    const { children, ...rest }: { children?: React.ReactNode } = props
+const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardRef((props, ref) => {
+  const { children, ...rest }: { children?: React.ReactNode } = props
 
-    const innerRef = useRef(null)
+  const innerRef = useRef(null)
 
-    useImperativeHandle(ref, () => innerRef.current)
+  useImperativeHandle(ref, () => innerRef.current)
 
-    return (
-      // eslint-disable-next-line
-      <ul {...rest} ref={innerRef} role="list-box">
-        {children}
-      </ul>
-    )
-  })
+  return (
+    // eslint-disable-next-line
+    <ul {...rest} ref={innerRef} role="list-box">
+      {children}
+    </ul>
+  )
+})
 
-const MultipleSelect = ({
+function MultipleSelect({
   label,
   reference,
   selectedOptions,
@@ -64,13 +67,12 @@ const MultipleSelect = ({
     hidePopupIcon?: boolean
     customOpen?: boolean
     freeSolo?: boolean
-    callbackFromMultipleSelect?: (newValue: any, key: string, reference: any) => void
+    callbackFromMultipleSelect?: (newValue: any, _key: string, _reference: any) => void
     onFocus?: React.FocusEventHandler<HTMLDivElement>
     onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
     onClear?: () => void
     onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
-  }
-) => {
+  }) {
   const [init, setInit] = React.useState(Array.isArray(selectedOptions) && selectedOptions.length === 0)
   const [open, setOpen] = useState(false)
   const [values, setValues] = useState<any[]>([])
@@ -95,7 +97,7 @@ const MultipleSelect = ({
         open={customOpen ? open : undefined}
         readOnly={readOnly}
         options={options}
-        value={multiple ? values : values.length > 0 ? values[0] : null}
+        value={(multiple && values) || (values.length > 0 && values[0]) || null}
         getOptionLabel={(option) => (option && option.name) || ''}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         inputValue={inputValue}
@@ -111,10 +113,8 @@ const MultipleSelect = ({
               if (open) {
                 setOpen(false)
               }
-            } else {
-              if (!open) {
-                setOpen(true)
-              }
+            } else if (!open) {
+              setOpen(true)
             }
           } else {
             setInit(true)
@@ -164,7 +164,7 @@ const MultipleSelect = ({
         handleHomeEndKeys={false}
         popupIcon={hidePopupIcon ? null : undefined}
         renderInput={(params) => {
-          const inputProps = params.inputProps
+          const { inputProps } = params
           inputProps.autoComplete = 'off'
 
           if (type === bookcarsTypes.RecordType.User && !multiple && values.length === 1 && values[0]) {
@@ -277,12 +277,14 @@ const MultipleSelect = ({
             )
           }
 
-          return <TextField
-            {...params}
-            label={label}
-            variant={variant || 'outlined'}
-            required={required && values && values.length === 0}
-          />
+          return (
+            <TextField
+              {...params}
+              label={label}
+              variant={variant || 'outlined'}
+              required={required && values && values.length === 0}
+            />
+          )
         }}
         onClose={() => {
           setOpen(false)
@@ -297,7 +299,7 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } else if (type === bookcarsTypes.RecordType.Company) {
+          } if (type === bookcarsTypes.RecordType.Company) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image company-ia">
@@ -310,7 +312,7 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } else if (type === bookcarsTypes.RecordType.Location) {
+          } if (type === bookcarsTypes.RecordType.Location) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image">
@@ -319,7 +321,7 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } else if (type === bookcarsTypes.RecordType.Car) {
+          } if (type === bookcarsTypes.RecordType.Car) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image car-ia">

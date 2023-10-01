@@ -4,7 +4,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/no-match'
 import Master from '../components/Master'
 
-const NoMatch = (props: { hideHeader?: boolean }) => {
+function NoMatch({ hideHeader }: { hideHeader?: boolean }) {
   const noMatch = () => (
     <div className="msg">
       <h2>{strings.NO_MATCH}</h2>
@@ -14,7 +14,7 @@ const NoMatch = (props: { hideHeader?: boolean }) => {
     </div>
   )
 
-  return props.hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>
+  return hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>
 }
 
 export default NoMatch
