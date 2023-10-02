@@ -2,8 +2,7 @@ import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const RadioButton = (
-  {
+function RadioButton({
     checked,
     style,
     textStyle,
@@ -15,8 +14,7 @@ const RadioButton = (
     textStyle?: object
     label: string
     onValueChange?: (_checked: boolean) => void
-  }
-) => {
+  }) {
   const onPress = () => {
     if (onRadioButtonValueChange) {
       onRadioButtonValueChange(!checked)

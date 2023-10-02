@@ -1,10 +1,13 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const Backdrop = ({ message }: { message?: string }) =>
-  <View style={styles.container}>
-    {message && <Text style={styles.text}>{message}</Text>}
-  </View>
+function Backdrop({ message }: { message?: string }) {
+  return (
+    <View style={styles.container}>
+      {message && <Text style={styles.text}>{message}</Text>}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

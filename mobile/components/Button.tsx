@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, Pressable } from 'react-native'
 
-const Button = (
-  {
+function Button({
     size,
     color,
     style,
@@ -14,8 +13,7 @@ const Button = (
     style?: object
     label: string
     onPress?: () => void
-  }
-) => {
+  }) {
   const small = size === 'small'
 
   const onPress = () => {

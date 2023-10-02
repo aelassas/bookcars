@@ -11,8 +11,7 @@ import * as BookingService from '../services/BookingService'
 
 import Booking from './Booking'
 
-const BookingList = (
-  {
+function BookingList({
     companies,
     statuses,
     filter,
@@ -28,8 +27,7 @@ const BookingList = (
     booking?: string
     language?: string
     header?: React.ReactElement
-  }
-) => {
+  }) {
   const [firstLoad, setFirstLoad] = useState(true)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)

@@ -10,8 +10,7 @@ import BookingStatus from './BookingStatus'
 import Link from './Link'
 import Switch from './Switch'
 
-const StatusFilter = (
-  {
+function StatusFilter({
     visible,
     style,
     onLoad,
@@ -21,8 +20,7 @@ const StatusFilter = (
     style?: object
     onLoad?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
     onChange?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
-  }
-) => {
+  }) {
   const [statuses, setStatuses] = useState<bookcarsTypes.StatusFilterItem[]>(
     Helper.getBookingStatuses().map((status) => ({ ...status, checked: true }))
   )
@@ -44,7 +42,8 @@ const StatusFilter = (
           <View style={styles.statuses}>
             {statuses.map((status) => (
               typeof status.checked !== 'undefined'
-              && <View key={status.value} style={styles.status}>
+              && (
+              <View key={status.value} style={styles.status}>
                 <Switch
                   value={status.checked}
                   onValueChange={(checked) => {
@@ -75,6 +74,7 @@ const StatusFilter = (
                   <BookingStatus style={styles.bookingStatus} status={status.value} />
                 </Switch>
               </View>
+)
             ))}
 
             <Link

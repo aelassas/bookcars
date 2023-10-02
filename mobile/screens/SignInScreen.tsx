@@ -14,7 +14,7 @@ import * as Helper from '../common/Helper'
 import Switch from '../components/Switch'
 import Header from '../components/Header'
 
-const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignIn'>) => {
+function SignInScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'SignIn'>) {
   const isFocused = useIsFocused()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

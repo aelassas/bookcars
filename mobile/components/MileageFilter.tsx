@@ -8,8 +8,7 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
-const MileageFilter = (
-  {
+function MileageFilter({
     visible,
     style,
     onChange
@@ -17,8 +16,7 @@ const MileageFilter = (
     visible?: boolean
     style?: object
     onChange?: (values: bookcarsTypes.Mileage[]) => void
-  }
-) => {
+  }) {
   const [limited, setLimited] = useState(true)
   const [unlimited, setUnlimited] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])

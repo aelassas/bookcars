@@ -11,8 +11,7 @@ import Link from './Link'
 import Switch from './Switch'
 import Accordion from './Accordion'
 
-const SupplierFilter = (
-  {
+function SupplierFilter({
     visible,
     style,
     onLoad,
@@ -22,8 +21,7 @@ const SupplierFilter = (
     style?: object
     onLoad?: (checkedSuppliers: string[]) => void
     onChange?: (checkedSuppliers: string[]) => void
-  }
-) => {
+  }) {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
   const [allChecked, setAllChecked] = useState(true)
@@ -61,7 +59,8 @@ const SupplierFilter = (
           <View style={styles.companies}>
             {suppliers.map((supplier) => (
               supplier._id && typeof supplier.checked !== 'undefined'
-              && <View key={supplier._id} style={styles.company}>
+              && (
+              <View key={supplier._id} style={styles.company}>
                 <Switch
                   value={supplier.checked}
                   onValueChange={(checked) => {
@@ -97,6 +96,7 @@ const SupplierFilter = (
                   />
                 </Switch>
               </View>
+)
             ))}
           </View>
           <Link

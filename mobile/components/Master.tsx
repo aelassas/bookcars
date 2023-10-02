@@ -11,8 +11,7 @@ import Header from '../components/Header'
 import * as NotificationService from '../services/NotificationService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
-const Master = (
-  {
+function Master({
     navigation,
     strict,
     route,
@@ -36,8 +35,7 @@ const Master = (
     avatar?: string | null
     children: React.ReactNode
     onLoad: (user?: bookcarsTypes.User) => void
-  }
-) => {
+  }) {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)

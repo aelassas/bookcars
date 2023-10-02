@@ -19,8 +19,7 @@ const getExtraIcon = (extra: number) =>
 const getExtraColor = (extra: number) =>
   (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
-const Car = (
-  {
+function Car({
     car,
     fr,
     from,
@@ -36,105 +35,105 @@ const Car = (
     to: Date,
     pickupLocation: string,
     dropOffLocation: string,
-  }
-) => (
-  <View key={car._id} style={styles.carContainer}>
-    <View style={styles.car}>
-      <Text style={styles.name}>{car.name}</Text>
+  }) {
+  return (
+    <View key={car._id} style={styles.carContainer}>
+      <View style={styles.car}>
+        <Text style={styles.name}>{car.name}</Text>
 
-      <View style={styles.imgView}>
-        <Image style={styles.img} source={{ uri: bookcarsHelper.joinURL(Env.CDN_CARS, car.image) }} />
-      </View>
+        <View style={styles.imgView}>
+          <Image style={styles.img} source={{ uri: bookcarsHelper.joinURL(Env.CDN_CARS, car.image) }} />
+        </View>
 
-      <View style={styles.infos}>
-        <View style={styles.info}>
-          <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
-        </View>
-        <View style={styles.info}>
-          <MaterialIcons name="account-tree" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
-        </View>
-        <View style={styles.info}>
-          <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{car.seats}</Text>
-        </View>
-        <View style={styles.info}>
-          <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
-          <Text style={styles.text}>{car.doors}</Text>
-        </View>
-        {car.aircon && (
+        <View style={styles.infos}>
+          <View style={styles.info}>
+            <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getCarTypeShort(car.type)}</Text>
+          </View>
+          <View style={styles.info}>
+            <MaterialIcons name="account-tree" size={iconSize} color={iconColor} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getGearboxTypeShort(car.gearbox)}</Text>
+          </View>
+          <View style={styles.info}>
+            <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
+            <Text style={styles.text}>{car.seats}</Text>
+          </View>
+          <View style={styles.info}>
+            <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
+            <Text style={styles.text}>{car.doors}</Text>
+          </View>
+          {car.aircon && (
           <View style={styles.info}>
             <MaterialIcons name="ac-unit" size={iconSize} color={iconColor} style={styles.infoIcon} />
           </View>
         )}
-      </View>
-
-      <View style={styles.infos}>
-        <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
-        <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
-      </View>
-
-      <View style={styles.infos}>
-        <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
-        <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
-      </View>
-
-      <View style={styles.extras}>
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
         </View>
 
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
+        <View style={styles.infos}>
+          <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
+          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${Helper.getMileage(car.mileage)}`}</Text>
         </View>
 
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
+        <View style={styles.infos}>
+          <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
+          <Text style={styles.text}>{`${i18n.t('FUEL_POLICY')}${fr ? ' : ' : ': '}${Helper.getFuelPolicy(car.fuelPolicy)}`}</Text>
         </View>
 
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+        <View style={styles.extras}>
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getCancellation(car.cancellation, fr)}</Text>
+          </View>
+
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getAmendments(car.amendments, fr)}</Text>
+          </View>
+
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getTheftProtection(car.theftProtection, fr)}</Text>
+          </View>
+
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+          </View>
+
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
+          </View>
+
+          <View style={styles.extra}>
+            <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
+            <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
+          </View>
         </View>
 
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getFullInsurance(car.fullInsurance, fr)}</Text>
-        </View>
-
-        <View style={styles.extra}>
-          <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
-          <Text style={styles.text}>{Helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
-        </View>
-      </View>
-
-      <View style={styles.footer}>
-        <View style={styles.company}>
-          <Image
-            style={styles.companyImg}
-            source={{
+        <View style={styles.footer}>
+          <View style={styles.company}>
+            <Image
+              style={styles.companyImg}
+              source={{
               uri: bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar),
             }}
-          />
-          <Text style={styles.companyText}>{car.company.fullName}</Text>
+            />
+            <Text style={styles.companyText}>{car.company.fullName}</Text>
+          </View>
+
+          <View style={styles.price}>
+            <Text style={styles.priceSecondary}>{Helper.getDays(bookcarsHelper.days(from, to))}</Text>
+            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatNumber(Helper.price(car, from, to))} ${i18n.t('CURRENCY')}`}</Text>
+            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CURRENCY')}`}</Text>
+          </View>
         </View>
 
-        <View style={styles.price}>
-          <Text style={styles.priceSecondary}>{Helper.getDays(bookcarsHelper.days(from, to))}</Text>
-          <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatNumber(Helper.price(car, from, to))} ${i18n.t('CURRENCY')}`}</Text>
-          <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CURRENCY')}`}</Text>
-        </View>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Button
-          style={styles.button}
-          label={i18n.t('BOOK')}
-          onPress={() => {
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.button}
+            label={i18n.t('BOOK')}
+            onPress={() => {
             const params = {
               car: car._id,
               pickupLocation,
@@ -144,11 +143,12 @@ const Car = (
             }
             navigation.navigate('Checkout', params)
           }}
-        />
+          />
+        </View>
       </View>
     </View>
-  </View>
-)
+  )
+}
 
 const styles = StyleSheet.create({
   carContainer: {

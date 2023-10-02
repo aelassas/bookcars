@@ -14,7 +14,7 @@ import StatusFilter from '../components/StatusFilter'
 import * as BookingService from '../services/BookingService'
 import BookingFilter from '../components/BookingFilter'
 
-const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Bookings'>) => {
+function BookingsScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Bookings'>) {
   const isFocused = useIsFocused()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [reload, setReload] = useState(false)
@@ -104,7 +104,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           companies={companies}
           statuses={statuses}
           filter={filter}
-          header={
+          header={(
             <View>
               <SupplierFilter
                 style={styles.filter}
@@ -124,7 +124,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                 onSubmit={onSubmitBookingFilter}
               />
             </View>
-          }
+          )}
         />
       )}
     </Master>

@@ -17,8 +17,7 @@ const iconColor = '#000'
 const extraIconColor = '#1f9201'
 const extraIconSize = 16
 
-const Booking = (
-  {
+function Booking({
     booking,
     locale,
     fr,
@@ -28,8 +27,7 @@ const Booking = (
     locale: Locale
     fr: boolean
     onCancel: () => void
-  }
-) => {
+  }) {
   const from = new Date(booking.from)
   const to = new Date(booking.to)
   const days = bookcarsHelper.days(from, to)
@@ -53,9 +51,11 @@ const Booking = (
         <BookingStatus style={styles.status} status={booking.status} />
 
         <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-        <Text style={styles.detailText}>{`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+        <Text style={styles.detailText}>
+          {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
           format(to, _format, { locale }),
-        )})`}</Text>
+        )})`}
+        </Text>
 
         <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
         <Text style={styles.detailText}>{(booking.pickupLocation as bookcarsTypes.Location).name}</Text>

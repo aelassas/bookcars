@@ -8,8 +8,7 @@ import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Env from '../config/env.config'
 
-const DateTimePicker = (
-  {
+function DateTimePicker({
     value: dateTimeValue,
     locale: dateTimeLocale,
     mode,
@@ -39,8 +38,7 @@ const DateTimePicker = (
     hideClearButton?: boolean
     onPress?: () => void
     onChange?: (date: Date | undefined) => void
-  }
-) => {
+  }) {
   const [label, setLabel] = useState('')
   const [value, setValue] = useState<Date | undefined>(dateTimeValue)
   const [show, setShow] = useState(false)
