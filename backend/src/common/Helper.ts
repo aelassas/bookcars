@@ -1,9 +1,9 @@
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as CarService from '../services/CarService'
 import { toast } from 'react-toastify'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as CarService from '../services/CarService'
 
 /**
  * Toast info message.
@@ -170,9 +170,7 @@ export const getGearboxTooltip = (type: string) => {
  * @param {number} seats
  * @returns {string}
  */
-export const getSeatsTooltip = (seats: number) => {
-  return `${strings.SEATS_TOOLTIP_1}${seats} ${strings.SEATS_TOOLTIP_2}`
-}
+export const getSeatsTooltip = (seats: number) => `${strings.SEATS_TOOLTIP_1}${seats} ${strings.SEATS_TOOLTIP_2}`
 
 /**
  * Get doors tooltip.
@@ -180,9 +178,7 @@ export const getSeatsTooltip = (seats: number) => {
  * @param {number} doors
  * @returns {string}
  */
-export const getDoorsTooltip = (doors: number) => {
-  return `${strings.DOORS_TOOLTIP_1}${doors} ${strings.DOORS_TOOLTIP_2}`
-}
+export const getDoorsTooltip = (doors: number) => `${strings.DOORS_TOOLTIP_1}${doors} ${strings.DOORS_TOOLTIP_2}`
 
 /**
  * Get fuel policy tooltip.
@@ -212,9 +208,8 @@ export const getFuelPolicyTooltip = (fuelPolicy: string) => {
 export const getMileage = (mileage: number) => {
   if (mileage === -1) {
     return strings.UNLIMITED
-  } else {
-    return `${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
   }
+  return `${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
 }
 
 /**
@@ -227,9 +222,8 @@ export const getMileage = (mileage: number) => {
 export const getMileageTooltip = (mileage: number, fr: boolean) => {
   if (mileage === -1) {
     return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
-  } else {
-    return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
   }
+  return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
 }
 
 /**
@@ -242,11 +236,10 @@ export const getMileageTooltip = (mileage: number, fr: boolean) => {
 export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   if (additionalDriver === -1) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } else if (additionalDriver === 0) {
+  } if (additionalDriver === 0) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
-  } else {
-    return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
   }
+  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
 }
 
 /**
@@ -259,11 +252,10 @@ export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
 export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   if (fullInsurance === -1) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } else if (fullInsurance === 0) {
+  } if (fullInsurance === 0) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
   }
+  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
 }
 
 /**
@@ -276,11 +268,10 @@ export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
 export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: boolean) => {
   if (collisionDamageWaiver === -1) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } else if (collisionDamageWaiver === 0) {
+  } if (collisionDamageWaiver === 0) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
   }
+  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
 }
 
 /**
@@ -293,11 +284,10 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: bool
 export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   if (theftProtection === -1) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } else if (theftProtection === 0) {
+  } if (theftProtection === 0) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
   }
+  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
 }
 
 /**
@@ -310,11 +300,10 @@ export const getTheftProtection = (theftProtection: number, fr: boolean) => {
 export const getAmendments = (amendments: number, fr: boolean) => {
   if (amendments === -1) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}${fr ? 's' : ''}`
-  } else if (amendments === 0) {
+  } if (amendments === 0) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
-  } else {
-    return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
   }
+  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
 }
 
 /**
@@ -327,11 +316,10 @@ export const getAmendments = (amendments: number, fr: boolean) => {
 export const getCancellation = (cancellation: number, fr: boolean) => {
   if (cancellation === -1) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
-  } else if (cancellation === 0) {
+  } if (cancellation === 0) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
   }
+  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
 }
 
 /**
@@ -340,9 +328,7 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
  * @param {?bookcarsTypes.User} [user]
  * @returns {boolean}
  */
-export const admin = (user?: bookcarsTypes.User): boolean => {
-  return (user && user.type === bookcarsTypes.RecordType.Admin) ?? false
-}
+export const admin = (user?: bookcarsTypes.User): boolean => (user && user.type === bookcarsTypes.RecordType.Admin) ?? false
 
 /**
  * Get booking status label.
@@ -380,34 +366,32 @@ export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
  *
  * @returns {bookcarsTypes.StatusFilterItem[]}
  */
-export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
-  return [
-    {
-      value: bookcarsTypes.BookingStatus.Void,
-      label: commonStrings.BOOKING_STATUS_VOID,
-    },
-    {
-      value: bookcarsTypes.BookingStatus.Pending,
-      label: commonStrings.BOOKING_STATUS_PENDING,
-    },
-    {
-      value: bookcarsTypes.BookingStatus.Deposit,
-      label: commonStrings.BOOKING_STATUS_DEPOSIT,
-    },
-    {
-      value: bookcarsTypes.BookingStatus.Paid,
-      label: commonStrings.BOOKING_STATUS_PAID,
-    },
-    {
-      value: bookcarsTypes.BookingStatus.Reserved,
-      label: commonStrings.BOOKING_STATUS_RESERVED,
-    },
-    {
-      value: bookcarsTypes.BookingStatus.Cancelled,
-      label: commonStrings.BOOKING_STATUS_CANCELLED,
-    },
-  ]
-}
+export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => [
+  {
+    value: bookcarsTypes.BookingStatus.Void,
+    label: commonStrings.BOOKING_STATUS_VOID,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Pending,
+    label: commonStrings.BOOKING_STATUS_PENDING,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Deposit,
+    label: commonStrings.BOOKING_STATUS_DEPOSIT,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Paid,
+    label: commonStrings.BOOKING_STATUS_PAID,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Reserved,
+    label: commonStrings.BOOKING_STATUS_RESERVED,
+  },
+  {
+    value: bookcarsTypes.BookingStatus.Cancelled,
+    label: commonStrings.BOOKING_STATUS_CANCELLED,
+  },
+]
 
 /**
  * Get price.
@@ -422,12 +406,10 @@ export const getBookingStatuses = (): bookcarsTypes.StatusFilterItem[] => {
 export const price = async (
   booking: bookcarsTypes.Booking,
   car: bookcarsTypes.Car | undefined | null,
-  onSucess: (price: number) => void,
+  onSucess: (_price: number) => void,
   onError: (err: unknown) => void
 ) => {
-  const totalDays = (date1: Date, date2: Date) => {
-    return Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
-  }
+  const totalDays = (date1: Date, date2: Date) => Math.ceil((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24))
 
   try {
     if (!car) {
@@ -439,33 +421,31 @@ export const price = async (
       const to = new Date(booking.to)
       const days = totalDays(from, to)
 
-      let price = car.price * days
+      let _price = car.price * days
       if (booking.cancellation && car.cancellation > 0) {
-        price += car.cancellation
+        _price += car.cancellation
       }
       if (booking.amendments && car.amendments > 0) {
-        price += car.amendments
+        _price += car.amendments
       }
       if (booking.theftProtection && car.theftProtection > 0) {
-        price += car.theftProtection * days
+        _price += car.theftProtection * days
       }
       if (booking.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-        price += car.collisionDamageWaiver * days
+        _price += car.collisionDamageWaiver * days
       }
       if (booking.fullInsurance && car.fullInsurance > 0) {
-        price += car.fullInsurance * days
+        _price += car.fullInsurance * days
       }
       if (booking.additionalDriver && car.additionalDriver > 0) {
-        price += car.additionalDriver * days
+        _price += car.additionalDriver * days
       }
 
       if (onSucess) {
-        onSucess(price)
+        onSucess(_price)
       }
-    } else {
-      if (onError) {
-        onError(`Car ${booking.car} not found.`)
-      }
+    } else if (onError) {
+      onError(`Car ${booking.car} not found.`)
     }
   } catch (err) {
     if (onError) {
@@ -479,22 +459,20 @@ export const price = async (
  *
  * @returns {{}}
  */
-export const getUserTypes = () => {
-  return [
-    {
-      value: bookcarsTypes.UserType.Admin,
-      label: commonStrings.RECORD_TYPE_ADMIN
-    },
-    {
-      value: bookcarsTypes.UserType.Company,
-      label: commonStrings.RECORD_TYPE_COMPANY,
-    },
-    {
-      value: bookcarsTypes.UserType.User,
-      label: commonStrings.RECORD_TYPE_USER
-    },
-  ]
-}
+export const getUserTypes = () => [
+  {
+    value: bookcarsTypes.UserType.Admin,
+    label: commonStrings.RECORD_TYPE_ADMIN
+  },
+  {
+    value: bookcarsTypes.UserType.Company,
+    label: commonStrings.RECORD_TYPE_COMPANY,
+  },
+  {
+    value: bookcarsTypes.UserType.User,
+    label: commonStrings.RECORD_TYPE_USER
+  },
+]
 
 /**
  * Get user type label.
@@ -546,11 +524,10 @@ export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART
 export const getCancellationOption = (cancellation: number, fr: boolean, hidePlus: boolean) => {
   if (cancellation === -1) {
     return strings.UNAVAILABLE
-  } else if (cancellation === 0) {
+  } if (cancellation === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${cancellation} ${commonStrings.CURRENCY}`
   }
+  return `${hidePlus ? '' : '+ '}${cancellation} ${commonStrings.CURRENCY}`
 }
 
 /**
@@ -564,11 +541,10 @@ export const getCancellationOption = (cancellation: number, fr: boolean, hidePlu
 export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus: boolean) => {
   if (amendments === -1) {
     return `${strings.UNAVAILABLE}${fr ? 's' : ''}`
-  } else if (amendments === 0) {
+  } if (amendments === 0) {
     return `${strings.INCLUDED}${fr ? 'es' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${amendments} ${commonStrings.CURRENCY}`
   }
+  return `${hidePlus ? '' : '+ '}${amendments} ${commonStrings.CURRENCY}`
 }
 
 /**
@@ -583,11 +559,10 @@ export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus: b
 export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean, hidePlus: boolean) => {
   if (collisionDamageWaiver === -1) {
     return strings.UNAVAILABLE
-  } else if (collisionDamageWaiver === 0) {
+  } if (collisionDamageWaiver === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${collisionDamageWaiver * days} ${commonStrings.CURRENCY} (${collisionDamageWaiver} ${strings.CAR_CURRENCY})`
   }
+  return `${hidePlus ? '' : '+ '}${collisionDamageWaiver * days} ${commonStrings.CURRENCY} (${collisionDamageWaiver} ${strings.CAR_CURRENCY})`
 }
 
 /**
@@ -602,11 +577,10 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
 export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean, hidePlus: boolean) => {
   if (theftProtection === -1) {
     return strings.UNAVAILABLE
-  } else if (theftProtection === 0) {
+  } if (theftProtection === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${theftProtection * days} ${commonStrings.CURRENCY} (${theftProtection} ${strings.CAR_CURRENCY})`
   }
+  return `${hidePlus ? '' : '+ '}${theftProtection * days} ${commonStrings.CURRENCY} (${theftProtection} ${strings.CAR_CURRENCY})`
 }
 
 /**
@@ -621,11 +595,10 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
 export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: boolean, hidePlus: boolean) => {
   if (fullInsurance === -1) {
     return strings.UNAVAILABLE
-  } else if (fullInsurance === 0) {
+  } if (fullInsurance === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${fullInsurance * days} ${commonStrings.CURRENCY} (${fullInsurance} ${strings.CAR_CURRENCY})`
   }
+  return `${hidePlus ? '' : '+ '}${fullInsurance * days} ${commonStrings.CURRENCY} (${fullInsurance} ${strings.CAR_CURRENCY})`
 }
 
 /**
@@ -640,11 +613,10 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, fr: boolean, hidePlus: boolean) => {
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
-  } else if (additionalDriver === 0) {
+  } if (additionalDriver === 0) {
     return strings.INCLUDED
-  } else {
-    return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${commonStrings.CURRENCY} (${additionalDriver} ${strings.CAR_CURRENCY})`
   }
+  return `${hidePlus ? '' : '+ '}${additionalDriver * days} ${commonStrings.CURRENCY} (${additionalDriver} ${strings.CAR_CURRENCY})`
 }
 
 /**

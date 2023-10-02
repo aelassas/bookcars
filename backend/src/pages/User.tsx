@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import {
+  Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip
+} from '@mui/material'
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ulStrings } from '../lang/user-list'
@@ -9,16 +16,11 @@ import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import BookingList from '../components/BookingList'
 import NoMatch from './NoMatch'
-import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import * as SupplierService from '../services/SupplierService'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/user.css'
 
-const User = () => {
+function User() {
   const navigate = useNavigate()
   const statuses = Helper.getBookingStatuses().map((status) => status.value)
 
@@ -77,8 +79,8 @@ const User = () => {
     setOpenDeleteDialog(false)
   }
 
-  const onLoad = async (loggedUser?: bookcarsTypes.User) => {
-    if (loggedUser && loggedUser.verified) {
+  const onLoad = async (_loggedUser?: bookcarsTypes.User) => {
+    if (_loggedUser && _loggedUser.verified) {
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
@@ -86,24 +88,24 @@ const User = () => {
         const id = params.get('u')
         if (id && id !== '') {
           try {
-            const user = await UserService.getUser(id)
+            const _user = await UserService.getUser(id)
 
-            if (user) {
-              const setState = (companies: string[]) => {
-                setCompanies(companies)
-                setLoggedUser(loggedUser)
-                setUser(user)
+            if (_user) {
+              const setState = (_companies: string[]) => {
+                setCompanies(_companies)
+                setLoggedUser(_loggedUser)
+                setUser(_user)
                 setVisible(true)
                 setLoading(false)
               }
 
-              const admin = Helper.admin(loggedUser)
+              const admin = Helper.admin(_loggedUser)
               if (admin) {
-                const companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(companies)
+                const _companies = await SupplierService.getAllSuppliers()
+                const companyIds = bookcarsHelper.flattenCompanies(_companies)
                 setState(companyIds)
               } else {
-                setState([loggedUser._id as string])
+                setState([_loggedUser._id as string])
               }
             } else {
               setLoading(false)
@@ -125,8 +127,7 @@ const User = () => {
     }
   }
 
-  const edit =
-    loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Company && loggedUser._id === user.company))
+  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Company && loggedUser._id === user.company))
   const company = user && user.type === bookcarsTypes.RecordType.Company
 
   return (

@@ -1,4 +1,9 @@
 import React, { useState } from 'react'
+import {
+  Input, InputLabel, FormControl, FormHelperText, Button, Paper
+} from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/create-location'
@@ -7,15 +12,12 @@ import * as LocationService from '../services/LocationService'
 import NoMatch from './NoMatch'
 import Error from './Error'
 import Backdrop from '../components/SimpleBackdrop'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@mui/material'
 import * as Helper from '../common/Helper'
 import Env from '../config/env.config'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-location.css'
 
-const UpdateLocation = () => {
+function UpdateLocation() {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
@@ -25,29 +27,29 @@ const UpdateLocation = () => {
   const [location, setLocation] = useState<bookcarsTypes.Location>()
   const [nameChanged, setNameChanged] = useState(false)
 
-  const err = () => {
+  const _error = () => {
     setLoading(false)
     Helper.error()
   }
 
   const checkName = () => {
-    let nameChanged = false
+    let _nameChanged = false
 
     if (!location || !location.values) {
       Helper.error()
-      return nameChanged
+      return _nameChanged
     }
 
-    for (let i = 0; i < names.length; i++) {
+    for (let i = 0; i < names.length; i += 1) {
       const name = names[i]
       if (name.name !== location.values[i].value) {
-        nameChanged = true
+        _nameChanged = true
         break
       }
     }
 
-    setNameChanged(nameChanged)
-    return nameChanged
+    setNameChanged(_nameChanged)
+    return _nameChanged
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,19 +61,19 @@ const UpdateLocation = () => {
         return
       }
 
-      const nameChanged = checkName()
+      const _nameChanged = checkName()
 
-      if (!nameChanged) {
+      if (!_nameChanged) {
         return
       }
 
       let isValid = true
 
-      for (let i = 0; i < nameErrors.length; i++) {
+      for (let i = 0; i < nameErrors.length; i += 1) {
         nameErrors[i] = false
       }
 
-      for (let i = 0; i < names.length; i++) {
+      for (let i = 0; i < names.length; i += 1) {
         const name = names[i]
         if (name.name !== location.values[i].value) {
           const _isValid = (await LocationService.validate(name)) === 200
@@ -88,7 +90,7 @@ const UpdateLocation = () => {
         const status = await LocationService.update(location._id, names)
 
         if (status === 200) {
-          for (let i = 0; i < names.length; i++) {
+          for (let i = 0; i < names.length; i += 1) {
             const name = names[i]
             location.values[i].value = name.name
           }
@@ -96,7 +98,7 @@ const UpdateLocation = () => {
           setLocation(bookcarsHelper.clone(location))
           Helper.info(strings.LOCATION_UPDATED)
         } else {
-          err()
+          _error()
         }
       }
     } catch (err) {
@@ -113,22 +115,22 @@ const UpdateLocation = () => {
         const id = params.get('l')
         if (id && id !== '') {
           try {
-            const location = await LocationService.getLocation(id)
+            const _location = await LocationService.getLocation(id)
 
-            if (location && location.values) {
+            if (_location && _location.values) {
               Env._LANGUAGES.forEach((lang) => {
-                if (location.values && !location.values.some((value) => value.language === lang.code)) {
-                  location.values.push({ language: lang.code, name: '' })
+                if (_location.values && !_location.values.some((value) => value.language === lang.code)) {
+                  _location.values.push({ language: lang.code, name: '' })
                 }
               })
 
-              const names: bookcarsTypes.LocationName[] = location.values.map((value) => ({
+              const _names: bookcarsTypes.LocationName[] = _location.values.map((value) => ({
                 language: value.language || '',
                 name: value.value || '',
               }))
 
-              setLocation(location)
-              setNames(names)
+              setLocation(_location)
+              setNames(_names)
               setVisible(true)
               setLoading(false)
             } else {
@@ -157,10 +159,14 @@ const UpdateLocation = () => {
       {!error && !noMatch && location && location.values && (
         <div className="update-location">
           <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="location-form-title"> {strings.UPDATE_LOCATION} </h1>
+            <h1 className="location-form-title">
+              {' '}
+              {strings.UPDATE_LOCATION}
+              {' '}
+            </h1>
             <form onSubmit={handleSubmit}>
               {location.values.map((value, index) => (
-                <FormControl key={index} fullWidth margin="dense">
+                <FormControl key={value.value} fullWidth margin="dense">
                   <InputLabel className="required">{Env._LANGUAGES.filter((l) => l.code === value.language)[0].label}</InputLabel>
                   <Input
                     type="text"

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
+import { TextFieldVariants } from '@mui/material'
 import Env from '../config/env.config'
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
-import { TextFieldVariants } from '@mui/material'
 
-const LocationSelectList = (
-  {
+function LocationSelectList({
     value,
     multiple,
     label,
@@ -22,8 +21,7 @@ const LocationSelectList = (
     required?: boolean
     variant?: TextFieldVariants
     onChange?: (values: bookcarsTypes.Option[]) => void
-  }
-) => {
+  }) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Location[]>([])
@@ -39,18 +37,18 @@ const LocationSelectList = (
     }
   }, [value, multiple, selectedOptions])
 
-  const _fetch = async (page: number, keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>) => {
+  const _fetch = async (_page: number, _keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.Location>) => {
     try {
-      if (fetch || page === 1) {
+      if (fetch || _page === 1) {
         setLoading(true)
 
-        const data = await LocationService.getLocations(keyword, page, Env.PAGE_SIZE)
+        const data = await LocationService.getLocations(_keyword, _page, Env.PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           return
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-        const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        const _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
         setRows(_rows)
         setFetch(_data.resultData.length > 0)
@@ -104,14 +102,14 @@ const LocationSelectList = (
         }
       }}
       onInputChange={(event) => {
-        const value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
+        const _value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
 
-        //if (event.target.type === 'text' && value !== keyword) {
-        if (value !== keyword) {
+        // if (event.target.type === 'text' && value !== keyword) {
+        if (_value !== keyword) {
           setRows([])
           setPage(1)
-          setKeyword(value)
-          _fetch(1, value)
+          setKeyword(_value)
+          _fetch(1, _value)
         }
       }}
       onClear={() => {

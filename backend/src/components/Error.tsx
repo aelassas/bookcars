@@ -1,20 +1,22 @@
 import React from 'react'
-import { strings as commonStrings } from '../lang/common'
 import { Link } from '@mui/material'
+import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/error.css'
 
-const Error = ({ message, style, homeLink }: { message: string, style?: React.CSSProperties, homeLink?: boolean }) => (
-  <div style={style}>
-    <div className="error">
-      <span className="message">{message}</span>
-    </div>
-    {homeLink && (
+function Error({ message, style, homeLink }: { message: string, style?: React.CSSProperties, homeLink?: boolean }) {
+  return (
+    <div style={style}>
+      <div className="error">
+        <span className="message">{message}</span>
+      </div>
+      {homeLink && (
       <p>
         <Link href="/">{commonStrings.GO_TO_HOME}</Link>
       </p>
     )}
-  </div>
-)
+    </div>
+  )
+}
 
 export default Error

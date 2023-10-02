@@ -1,4 +1,11 @@
 import React, { useState } from 'react'
+import {
+  Input, InputLabel, FormControl, FormHelperText, Button, Paper, FormControlLabel, Switch
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import validator from 'validator'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-company'
@@ -7,16 +14,11 @@ import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, FormControlLabel, Switch } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
-import { useNavigate } from 'react-router-dom'
 import * as Helper from '../common/Helper'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/create-company.css'
 
-const CreateCompany = () => {
+function CreateCompany() {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -42,20 +44,20 @@ const CreateCompany = () => {
     }
   }
 
-  const validateFullName = async (fullName: string) => {
-    if (fullName) {
+  const validateFullName = async (_fullName: string) => {
+    if (_fullName) {
       try {
-        const status = await SupplierService.validate({ fullName })
+        const status = await SupplierService.validate({ fullName: _fullName })
 
         if (status === 200) {
           setFullNameError(false)
           return true
-        } else {
-          setFullNameError(true)
-          return false
         }
+        setFullNameError(true)
+        return false
       } catch (err) {
         Helper.error(err)
+        return true
       }
     } else {
       setFullNameError(false)
@@ -76,23 +78,23 @@ const CreateCompany = () => {
     }
   }
 
-  const validateEmail = async (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
 
           if (status === 200) {
             setEmailError(false)
             setEmailValid(true)
             return true
-          } else {
-            setEmailError(true)
-            setEmailValid(true)
-            return false
           }
+          setEmailError(true)
+          setEmailValid(true)
+          return false
         } catch (err) {
           Helper.error(err)
+          return true
         }
       } else {
         setEmailError(false)
@@ -118,17 +120,16 @@ const CreateCompany = () => {
     }
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -147,11 +148,11 @@ const CreateCompany = () => {
     setLoading(true)
   }
 
-  const onAvatarChange = (avatar: string) => {
+  const onAvatarChange = (_avatar: string) => {
     setLoading(false)
-    setAvatar(avatar)
+    setAvatar(_avatar)
 
-    if (avatar !== null) {
+    if (_avatar !== null) {
       setAvatarError(false)
     }
   }
@@ -181,8 +182,8 @@ const CreateCompany = () => {
     try {
       e.preventDefault()
 
-      const emailValid = await validateEmail(email)
-      if (!emailValid) {
+      const _emailValid = await validateEmail(email)
+      if (!_emailValid) {
         return
       }
 
@@ -191,8 +192,8 @@ const CreateCompany = () => {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
@@ -227,10 +228,14 @@ const CreateCompany = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict admin={true}>
+    <Master onLoad={onLoad} strict admin>
       <div className="create-company">
         <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="company-form-title"> {strings.CREATE_COMPANY_HEADING} </h1>
+          <h1 className="company-form-title">
+            {' '}
+            {strings.CREATE_COMPANY_HEADING}
+            {' '}
+          </h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Company}
@@ -246,7 +251,7 @@ const CreateCompany = () => {
 
             <div className="info">
               <InfoIcon />
-              <label>{strings.RECOMMENDED_IMAGE_SIZE}</label>
+              <span>{strings.RECOMMENDED_IMAGE_SIZE}</span>
             </div>
 
             <FormControl fullWidth margin="dense">
@@ -258,7 +263,8 @@ const CreateCompany = () => {
                 required
                 onBlur={handleFullNameBlur}
                 onChange={handleFullNameChange}
-                autoComplete="off" />
+                autoComplete="off"
+              />
               <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
             </FormControl>
 
@@ -271,7 +277,8 @@ const CreateCompany = () => {
                 onBlur={handleEmailBlur}
                 onChange={handleEmailChange}
                 autoComplete="off"
-                required />
+                required
+              />
               <FormHelperText error={!emailValid || emailError}>
                 {(!emailValid && commonStrings.EMAIL_NOT_VALID) || ''}
                 {(emailError && commonStrings.EMAIL_ALREADY_REGISTERED) || ''}
@@ -280,7 +287,7 @@ const CreateCompany = () => {
 
             <FormControl component="fieldset" style={{ marginTop: 15 }}>
               <FormControlLabel
-                control={
+                control={(
                   <Switch
                     checked={payLater}
                     onChange={(e) => {
@@ -288,14 +295,14 @@ const CreateCompany = () => {
                     }}
                     color="primary"
                   />
-                }
+                )}
                 label={commonStrings.PAY_LATER}
               />
             </FormControl>
 
             <div className="info">
               <InfoIcon />
-              <label>{commonStrings.OPTIONAL}</label>
+              <span>{commonStrings.OPTIONAL}</span>
             </div>
 
             <FormControl fullWidth margin="dense">

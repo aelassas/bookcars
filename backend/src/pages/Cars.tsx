@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import * as Helper from '../common/Helper'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
@@ -13,13 +16,10 @@ import DepositFilter from '../components/DepositFilter'
 import AvailabilityFilter from '../components/AvailabilityFilter'
 import CarList from '../components/CarList'
 import * as SupplierService from '../services/SupplierService'
-import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/cars.css'
 
-const Cars = () => {
+function Cars() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
@@ -47,8 +47,8 @@ const Cars = () => {
     }
   }
 
-  const handleCarDelete = (rowCount: number) => {
-    setRowCount(rowCount)
+  const handleCarDelete = (_rowCount: number) => {
+    setRowCount(_rowCount)
   }
 
   const handleFuelFilterChange = (values: string[]) => {
@@ -71,13 +71,13 @@ const Cars = () => {
     setAvailability(values)
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    setUser(user)
-    setAdmin(Helper.admin(user))
-    const allCompanies = await SupplierService.getAllSuppliers()
-    const companies = bookcarsHelper.flattenCompanies(allCompanies)
-    setAllCompanies(allCompanies)
-    setCompanies(companies)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    setUser(_user)
+    setAdmin(Helper.admin(_user))
+    const _allCompanies = await SupplierService.getAllSuppliers()
+    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
+    setAllCompanies(_allCompanies)
+    setCompanies(_companies)
     setLoading(false)
   }
 

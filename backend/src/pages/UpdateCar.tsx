@@ -1,4 +1,17 @@
 import React, { useState } from 'react'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  Button,
+  Paper,
+  FormControlLabel,
+  Switch,
+  TextField,
+  FormHelperText
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -18,24 +31,11 @@ import GearboxList from '../components/GearboxList'
 import SeatsList from '../components/SeatsList'
 import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-  TextField,
-  FormHelperText
-} from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/create-car.css'
 import '../assets/css/update-car.css'
 
-const UpdateCar = () => {
+function UpdateCar() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [noMatch, setNoMatch] = useState(false)
@@ -72,11 +72,11 @@ const UpdateCar = () => {
     setLoading(true)
   }
 
-  const handleImageChange = (image: string) => {
+  const handleImageChange = (_image: string) => {
     setLoading(false)
-    setImage(image as string)
+    setImage(_image as string)
 
-    if (image !== null) {
+    if (_image !== null) {
       setImageRequired(false)
     }
   }
@@ -103,34 +103,33 @@ const UpdateCar = () => {
 
   const validateMinimumAge = (age: string, updateState = true) => {
     if (age) {
-      const _age = Number.parseInt(age)
-      const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
+      const _age = Number.parseInt(age, 10)
+      const _minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
       if (updateState) {
-        setMinimumAgeValid(minimumAgeValid)
+        setMinimumAgeValid(_minimumAgeValid)
       }
-      if (minimumAgeValid) {
+      if (_minimumAgeValid) {
         setFormError(false)
       }
-      return minimumAgeValid
-    } else {
-      setMinimumAgeValid(true)
-      setFormError(false)
-      return true
+      return _minimumAgeValid
     }
+    setMinimumAgeValid(true)
+    setFormError(false)
+    return true
   }
 
   const handleMinimumAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumAge(e.target.value)
 
-    const minimumAgeValid = validateMinimumAge(e.target.value, false)
-    if (minimumAgeValid) {
+    const _minimumAgeValid = validateMinimumAge(e.target.value, false)
+    if (_minimumAgeValid) {
       setMinimumAgeValid(true)
       setFormError(false)
     }
   }
 
-  const handleLocationsChange = (locations: bookcarsTypes.Option[]) => {
-    setLocations(locations)
+  const handleLocationsChange = (_locations: bookcarsTypes.Option[]) => {
+    setLocations(_locations)
   }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,8 +204,8 @@ const UpdateCar = () => {
     try {
       e.preventDefault()
 
-      const minimumAgeValid = validateMinimumAge(minimumAge)
-      if (!minimumAgeValid) {
+      const _minimumAgeValid = validateMinimumAge(minimumAge)
+      if (!_minimumAgeValid) {
         setFormError(true)
         return
       }
@@ -220,7 +219,7 @@ const UpdateCar = () => {
         _id: car._id,
         name,
         company: company._id,
-        minimumAge: Number.parseInt(minimumAge),
+        minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
         deposit: Number(deposit),
@@ -229,8 +228,8 @@ const UpdateCar = () => {
         gearbox,
         aircon,
         image,
-        seats: Number.parseInt(seats),
-        doors: Number.parseInt(doors),
+        seats: Number.parseInt(seats, 10),
+        doors: Number.parseInt(doors, 10),
         fuelPolicy,
         mileage: extraToNumber(mileage),
         cancellation: extraToNumber(cancellation),
@@ -253,58 +252,58 @@ const UpdateCar = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setLoading(true)
-      setUser(user)
+      setUser(_user)
       const params = new URLSearchParams(window.location.search)
       if (params.has('cr')) {
         const id = params.get('cr')
         if (id && id !== '') {
           try {
-            const car = await CarService.getCar(id)
+            const _car = await CarService.getCar(id)
 
-            if (car) {
-              if (user.type === bookcarsTypes.RecordType.Company && user._id !== car.company._id) {
+            if (_car) {
+              if (_user.type === bookcarsTypes.RecordType.Company && _user._id !== _car.company._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
               }
 
-              const company = {
-                _id: car.company._id as string,
-                name: car.company.fullName,
-                image: car.company.avatar,
+              const _company = {
+                _id: _car.company._id as string,
+                name: _car.company.fullName,
+                image: _car.company.avatar,
               }
 
-              setCar(car)
-              setImageRequired(!car.image)
-              setName(car.name)
-              setCompany(company)
-              setMinimumAge(car.minimumAge.toString())
+              setCar(_car)
+              setImageRequired(!_car.image)
+              setName(_car.name)
+              setCompany(_company)
+              setMinimumAge(_car.minimumAge.toString())
               const lcs: bookcarsTypes.Option[] = []
-              for (const loc of car.locations) {
-                const { _id, name } = loc
-                const lc: bookcarsTypes.Option = { _id, name: name ?? '' }
+              for (const loc of _car.locations) {
+                const { _id, name: _name } = loc
+                const lc: bookcarsTypes.Option = { _id, name: _name ?? '' }
                 lcs.push(lc)
               }
               setLocations(lcs)
-              setPrice(car.price.toString())
-              setDeposit(car.deposit.toString())
-              setAvailable(car.available)
-              setType(car.type)
-              setGearbox(car.gearbox)
-              setAircon(car.aircon)
-              setSeats(car.seats.toString())
-              setDoors(car.doors.toString())
-              setFuelPolicy(car.fuelPolicy)
-              setMileage(extraToString(car.mileage))
-              setCancellation(extraToString(car.cancellation))
-              setAmendments(extraToString(car.amendments))
-              setTheftProtection(extraToString(car.theftProtection))
-              setCollisionDamageWaiver(extraToString(car.collisionDamageWaiver))
-              setFullInsurance(extraToString(car.fullInsurance))
-              setAdditionalDriver(extraToString(car.additionalDriver))
+              setPrice(_car.price.toString())
+              setDeposit(_car.deposit.toString())
+              setAvailable(_car.available)
+              setType(_car.type)
+              setGearbox(_car.gearbox)
+              setAircon(_car.aircon)
+              setSeats(_car.seats.toString())
+              setDoors(_car.doors.toString())
+              setFuelPolicy(_car.fuelPolicy)
+              setMileage(extraToString(_car.mileage))
+              setCancellation(extraToString(_car.cancellation))
+              setAmendments(extraToString(_car.amendments))
+              setTheftProtection(extraToString(_car.theftProtection))
+              setCollisionDamageWaiver(extraToString(_car.collisionDamageWaiver))
+              setFullInsurance(extraToString(_car.fullInsurance))
+              setAdditionalDriver(extraToString(_car.additionalDriver))
               setVisible(true)
               setLoading(false)
             } else {
@@ -340,7 +339,7 @@ const UpdateCar = () => {
                 type={bookcarsTypes.RecordType.Car}
                 mode="update"
                 record={car}
-                hideDelete={true}
+                hideDelete
                 size="large"
                 readonly={false}
                 onBeforeUpload={handleBeforeUpload}
@@ -352,7 +351,7 @@ const UpdateCar = () => {
 
               <div className="info">
                 <InfoIcon />
-                <label>{strings.RECOMMENDED_IMAGE_SIZE}</label>
+                <span>{strings.RECOMMENDED_IMAGE_SIZE}</span>
               </div>
 
               <FormControl fullWidth margin="dense">
@@ -367,7 +366,8 @@ const UpdateCar = () => {
                     required
                     value={company}
                     variant="standard"
-                    onChange={handleCompanyChange} />
+                    onChange={handleCompanyChange}
+                  />
                 </FormControl>
               )}
 
@@ -448,7 +448,7 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <div className="info">
                   <InfoIcon />
-                  <label>{commonStrings.OPTIONAL}</label>
+                  <span>{commonStrings.OPTIONAL}</span>
                 </div>
               </FormControl>
 

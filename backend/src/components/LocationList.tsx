@@ -1,9 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import Const from '../config/const'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/locations'
-import * as LocationService from '../services/LocationService'
 import {
   IconButton,
   Button,
@@ -22,25 +17,28 @@ import {
   Avatar,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, LocationOn as LocationIcon } from '@mui/icons-material'
+import * as bookcarsTypes from 'bookcars-types'
+import Env from '../config/env.config'
+import Const from '../config/const'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/locations'
+import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import Pager from './Pager'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/location-list.css'
 
-const LocationList = (
-  {
-    keyword: locationKeyword,
-    reload: locationReload,
-    onLoad,
-    onDelete
-  }: {
-    keyword?: string
-    reload?: boolean
-    onLoad: bookcarsTypes.DataEvent<bookcarsTypes.Location>
-    onDelete: (rowCount: number) => void
-  }
-) => {
+function LocationList({
+  keyword: locationKeyword,
+  reload: locationReload,
+  onLoad,
+  onDelete
+}: {
+  keyword?: string
+  reload?: boolean
+  onLoad: bookcarsTypes.DataEvent<bookcarsTypes.Location>
+  onDelete: (rowCount: number) => void
+}) {
   const [keyword, setKeyword] = useState(locationKeyword)
   const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)
@@ -55,37 +53,37 @@ const LocationList = (
   const [locationId, setLocationId] = useState('')
   const [locationIndex, setLocationIndex] = useState(-1)
 
-  const _fetch = async (page: number, keyword?: string) => {
+  const _fetch = async (_page: number, _keyword?: string) => {
     try {
       setLoading(true)
 
-      const data = await LocationService.getLocations(keyword || '', page, Env.PAGE_SIZE)
+      const data = await LocationService.getLocations(_keyword || '', _page, Env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
         return
       }
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+      const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
       let _rows = []
       if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
         _rows = _data.resultData
       }
 
       setRows(_rows)
-      setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
-      setTotalRecords(totalRecords)
+      setRowCount((_page - 1) * Env.PAGE_SIZE + _rows.length)
+      setTotalRecords(_totalRecords)
       setFetch(_data.resultData.length > 0)
 
-      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1)
+      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && _page === 1)
         || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
         window.scrollTo(0, 0)
       }
 
       if (onLoad) {
-        onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
       Helper.error(err)
@@ -133,15 +131,15 @@ const LocationList = (
 
   const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
     try {
-      const locationId = e.currentTarget.getAttribute('data-id') as string
-      const locationIndex = Number(e.currentTarget.getAttribute('data-index') as string)
+      const _locationId = e.currentTarget.getAttribute('data-id') as string
+      const _locationIndex = Number(e.currentTarget.getAttribute('data-index') as string)
 
-      const status = await LocationService.check(locationId)
+      const status = await LocationService.check(_locationId)
 
       if (status === 204) {
         setOpenDeleteDialog(true)
-        setLocationId(locationId)
-        setLocationIndex(locationIndex)
+        setLocationId(_locationId)
+        setLocationIndex(_locationIndex)
       } else if (status === 200) {
         setOpenInfoDialog(true)
       } else {
@@ -221,7 +219,7 @@ const LocationList = (
               <ListItem
                 className="location-list-item"
                 key={location._id}
-                secondaryAction={
+                secondaryAction={(
                   <div>
                     <Tooltip title={commonStrings.UPDATE}>
                       <IconButton edge="end" href={`/update-location?l=${location._id}`}>
@@ -234,7 +232,7 @@ const LocationList = (
                       </IconButton>
                     </Tooltip>
                   </div>
-                }
+                )}
               >
                 <ListItemAvatar>
                   <Avatar>

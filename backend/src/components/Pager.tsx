@@ -5,8 +5,7 @@ import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/pager.css'
 
-const Pager = (
-  {
+function Pager({
     page,
     pageSize,
     totalRecords,
@@ -20,7 +19,7 @@ const Pager = (
     rowCount: number,
     onNext: () => void,
     onPrevious: () => void
-  }) => {
+  }) {
   return (
     (((page > 1 || rowCount < totalRecords) && (
       <div className="pager-container">

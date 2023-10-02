@@ -1,7 +1,7 @@
 import axios from 'axios'
+import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Create a Car.

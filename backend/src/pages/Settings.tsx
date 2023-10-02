@@ -1,19 +1,21 @@
 import React, { useState } from 'react'
+import {
+  Input, InputLabel, FormHelperText, FormControl, FormControlLabel, Switch, Button, Paper
+} from '@mui/material'
+import validator from 'validator'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/settings'
 import * as UserService from '../services/UserService'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import { Input, InputLabel, FormHelperText, FormControl, FormControlLabel, Switch, Button, Paper } from '@mui/material'
-import validator from 'validator'
 import * as Helper from '../common/Helper'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/settings.css'
 
-const Settings = () => {
+function Settings() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [fullName, setFullName] = useState('')
@@ -29,17 +31,16 @@ const Settings = () => {
     setFullName(e.target.value)
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,8 +106,8 @@ const Settings = () => {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
@@ -130,15 +131,15 @@ const Settings = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    if (user) {
-      setUser(user)
-      setAdmin(Helper.admin(user))
-      setFullName(user.fullName)
-      setPhone(user.phone || '')
-      setLocation(user.location || '')
-      setBio(user.bio || '')
-      setEnableEmailNotifications(user.enableEmailNotifications || false)
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    if (_user) {
+      setUser(_user)
+      setAdmin(Helper.admin(_user))
+      setFullName(_user.fullName)
+      setPhone(_user.phone || '')
+      setLocation(_user.location || '')
+      setBio(_user.bio || '')
+      setEnableEmailNotifications(_user.enableEmailNotifications || false)
       setVisible(true)
       setLoading(false)
     }
@@ -197,7 +198,11 @@ const Settings = () => {
             </form>
           </Paper>
           <Paper className="settings-net settings-net-wrapper" elevation={10}>
-            <h1 className="settings-form-title"> {strings.NETWORK_SETTINGS} </h1>
+            <h1 className="settings-form-title">
+              {' '}
+              {strings.NETWORK_SETTINGS}
+              {' '}
+            </h1>
             <FormControl component="fieldset">
               <FormControlLabel control={<Switch checked={enableEmailNotifications} onChange={handleEmailNotificationsChange} />} label={strings.SETTINGS_EMAIL_NOTIFICATIONS} />
             </FormControl>

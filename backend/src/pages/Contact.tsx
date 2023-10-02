@@ -3,7 +3,7 @@ import Master from '../components/Master'
 
 import '../assets/css/contact.css'
 
-const Contact = () => {
+function Contact() {
   const onLoad = () => {}
 
   return (

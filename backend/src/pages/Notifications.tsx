@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/notifications'
-import Master from '../components/Master'
-import * as NotificationService from '../services/NotificationService'
+import React, {
+ useCallback, useEffect, useRef, useState
+} from 'react'
 import {
   Button,
   Card,
@@ -24,18 +22,22 @@ import {
   ArrowBackIos as PreviousPageIcon,
   ArrowForwardIos as NextPageIcon,
 } from '@mui/icons-material'
-import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
-import Backdrop from '../components/SimpleBackdrop'
 import { format } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/notifications'
+import Master from '../components/Master'
+import * as NotificationService from '../services/NotificationService'
+import * as Helper from '../common/Helper'
+import Env from '../config/env.config'
+import Backdrop from '../components/SimpleBackdrop'
 
 import '../assets/css/notifications.css'
 
-const Notifications = () => {
+function Notifications() {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
@@ -96,8 +98,8 @@ const Notifications = () => {
     }
   }, [user])
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    setUser(user)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    setUser(_user)
   }
 
   const checkedRows = rows.filter((row) => row.checked)

@@ -1,4 +1,18 @@
 import React, { useState } from 'react'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  Button,
+  Paper,
+  FormControlLabel,
+  Switch,
+  TextField,
+  FormHelperText
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -16,24 +30,10 @@ import GearboxList from '../components/GearboxList'
 import SeatsList from '../components/SeatsList'
 import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
-import {
-  Input,
-  InputLabel,
-  FormControl,
-  Button,
-  Paper,
-  FormControlLabel,
-  Switch,
-  TextField,
-  FormHelperText
-} from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/create-car.css'
 
-const CreateCar = () => {
+function CreateCar() {
   const navigate = useNavigate()
   const [isCompany, setIsCompany] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -68,11 +68,11 @@ const CreateCar = () => {
     setLoading(true)
   }
 
-  const handleImageChange = (image: bookcarsTypes.Car | string | null) => {
+  const handleImageChange = (_image: bookcarsTypes.Car | string | null) => {
     setLoading(false)
-    setImage(image as string)
+    setImage(_image as string)
 
-    if (image !== null) {
+    if (_image !== null) {
       setImageError(false)
     }
   }
@@ -100,34 +100,33 @@ const CreateCar = () => {
 
   const validateMinimumAge = (age: string, updateState = true) => {
     if (age) {
-      const _age = Number.parseInt(age)
-      const minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
+      const _age = Number.parseInt(age, 10)
+      const _minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
       if (updateState) {
-        setMinimumAgeValid(minimumAgeValid)
+        setMinimumAgeValid(_minimumAgeValid)
       }
-      if (minimumAgeValid) {
+      if (_minimumAgeValid) {
         setFormError(false)
       }
-      return minimumAgeValid
-    } else {
+      return _minimumAgeValid
+    }
       setMinimumAgeValid(true)
       setFormError(false)
       return true
-    }
   }
 
   const handleMinimumAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinimumAge(e.target.value)
 
-    const minimumAgeValid = validateMinimumAge(e.target.value, false)
-    if (minimumAgeValid) {
+    const _minimumAgeValid = validateMinimumAge(e.target.value, false)
+    if (_minimumAgeValid) {
       setMinimumAgeValid(true)
       setFormError(false)
     }
   }
 
-  const handleLocationsChange = (locations: bookcarsTypes.Option[]) => {
-    setLocations(locations)
+  const handleLocationsChange = (_locations: bookcarsTypes.Option[]) => {
+    setLocations(_locations)
   }
 
   const handleAvailableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,8 +199,8 @@ const CreateCar = () => {
     try {
       e.preventDefault()
 
-      const minimumAgeValid = validateMinimumAge(minimumAge)
-      if (!minimumAgeValid) {
+      const _minimumAgeValid = validateMinimumAge(minimumAge)
+      if (!_minimumAgeValid) {
         setFormError(true)
         setImageError(false)
         return
@@ -216,7 +215,7 @@ const CreateCar = () => {
       const data = {
         name,
         company,
-        minimumAge: Number.parseInt(minimumAge),
+        minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
         deposit: Number(deposit),
@@ -225,8 +224,8 @@ const CreateCar = () => {
         gearbox,
         aircon,
         image,
-        seats: Number.parseInt(seats),
-        doors: Number.parseInt(doors),
+        seats: Number.parseInt(seats, 10),
+        doors: Number.parseInt(doors, 10),
         fuelPolicy,
         mileage: extraToNumber(mileage),
         cancellation: extraToNumber(cancellation),
@@ -264,7 +263,11 @@ const CreateCar = () => {
     <Master onLoad={onLoad} strict>
       <div className="create-car">
         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="car-form-title"> {strings.NEW_CAR_HEADING} </h1>
+          <h1 className="car-form-title">
+            {' '}
+            {strings.NEW_CAR_HEADING}
+            {' '}
+          </h1>
           <form onSubmit={handleSubmit}>
             <Avatar
               type={bookcarsTypes.RecordType.Car}
@@ -281,7 +284,7 @@ const CreateCar = () => {
 
             <div className="info">
               <InfoIcon />
-              <label>{strings.RECOMMENDED_IMAGE_SIZE}</label>
+              <span>{strings.RECOMMENDED_IMAGE_SIZE}</span>
             </div>
 
             <FormControl fullWidth margin="dense">
@@ -295,7 +298,8 @@ const CreateCar = () => {
                   label={strings.COMPANY}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange} />
+                  onChange={handleCompanyChange}
+                />
               </FormControl>
             )}
 
@@ -369,7 +373,7 @@ const CreateCar = () => {
 
             <div className="info">
               <InfoIcon />
-              <label>{commonStrings.OPTIONAL}</label>
+              <span>{commonStrings.OPTIONAL}</span>
             </div>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">

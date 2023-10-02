@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import Accordion from './Accordion'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/mileage-filter.css'
 
-const MileageFilter = (
-  {
-    className,
-    onChange
-  }: {
-    className?: string
-    onChange: (value: bookcarsTypes.Mileage[]) => void
-  }
-) => {
+function MileageFilter({
+  className,
+  onChange
+}: {
+  className?: string
+  onChange: (value: bookcarsTypes.Mileage[]) => void
+}) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
 
@@ -116,13 +114,13 @@ const MileageFilter = (
         unlimitedRef.current.checked = true
       }
 
-      const values = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
+      const _values = [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited]
 
       setAllChecked(true)
-      setValues(values)
+      setValues(_values)
 
       if (onChange) {
-        onChange(bookcarsHelper.clone(values))
+        onChange(bookcarsHelper.clone(_values))
       }
     }
   }
@@ -132,14 +130,14 @@ const MileageFilter = (
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={limitedRef} type="checkbox" className="mileage-checkbox" onChange={handleLimitedMileageChange} />
-          <label onClick={handleLimitedMileageClick}>{strings.LIMITED}</label>
+          <span role="button" tabIndex={0} onClick={handleLimitedMileageClick}>{strings.LIMITED}</span>
         </div>
         <div className="filter-element">
           <input ref={unlimitedRef} type="checkbox" className="mileage-checkbox" onChange={handleUnlimitedMileageChange} />
-          <label onClick={handleUnlimitedMileageClick}>{strings.UNLIMITED}</label>
+          <span role="button" tabIndex={0} onClick={handleUnlimitedMileageClick}>{strings.UNLIMITED}</span>
         </div>
         <div className="filter-actions">
-          <span onClick={handleUncheckAllChange} className="uncheckall">
+          <span role="button" tabIndex={0} onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

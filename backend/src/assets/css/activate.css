@@ -31,7 +31,7 @@ div.resend {
   left: calc(50% - 150px);
 }
 
-.resend-form div.resend-form-content label {
+.resend-form div.resend-form-content span {
   float: left;
 }
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
-import { strings } from '../lang/cars'
+import {
+ InputLabel, Select, MenuItem, SelectChangeEvent
+} from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
+import { strings } from '../lang/cars'
 
-const CarTypeList = (
-  {
+function CarTypeList({
     value: carTypeValue,
     required,
     label,
@@ -17,8 +18,7 @@ const CarTypeList = (
       label?: string
       variant?: 'filled' | 'standard' | 'outlined'
       onChange?: (value: string) => void
-    }
-) => {
+    }) {
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -26,11 +26,11 @@ const CarTypeList = (
   }, [carTypeValue])
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    const value = e.target.value || ''
-    setValue(value)
+    const _value = e.target.value || ''
+    setValue(_value)
 
     if (onChange) {
-      onChange(value)
+      onChange(_value)
     }
   }
 

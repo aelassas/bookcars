@@ -12,7 +12,7 @@ div.info-box .info-box-icon {
   top: 7px;
 }
 
-div.info-box label.info-box-text {
+div.info-box span.info-box-text {
   color: rgba(0, 0, 0, 0.63);
   position: relative;
   left: 90px;

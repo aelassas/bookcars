@@ -6,11 +6,10 @@ import {
   SelectChangeEvent,
   TextFieldVariants
 } from '@mui/material'
-import { strings } from '../lang/cars'
 import * as bookcarsTypes from 'bookcars-types'
+import { strings } from '../lang/cars'
 
-const FuelPolicyList = (
-  {
+function FuelPolicyList({
     value: fuelPolicyValue,
     label,
     required,
@@ -22,8 +21,7 @@ const FuelPolicyList = (
     required?: boolean
     variant: TextFieldVariants
     onChange: (value: string) => void
-  }
-) => {
+  }) {
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -31,11 +29,11 @@ const FuelPolicyList = (
   }, [fuelPolicyValue])
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    const value = e.target.value || ''
-    setValue(value)
+    const _value = e.target.value || ''
+    setValue(_value)
 
     if (onChange) {
-      onChange(value)
+      onChange(_value)
     }
   }
 

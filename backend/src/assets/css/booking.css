@@ -11,7 +11,7 @@ div.booking div.col-2 div.col-2-header div.price {
   width: fit-content;
 }
 
-div.booking div.col-2 div.col-2-header label.price-main {
+div.booking div.col-2 div.col-2-header span.price-main {
   color: #383838;
   font-size: 2em;
   font-weight: 700;
@@ -21,8 +21,8 @@ div.booking div.col-2 div.col-2-header label.price-main {
   text-align: right;
 }
 
-div.booking div.col-2 div.col-2-header label.price-days,
-div.booking div.col-2 div.col-2-header label.price-day {
+div.booking div.col-2 div.col-2-header span.price-days,
+div.booking div.col-2 div.col-2-header span.price-day {
   font-size: 13px;
   color: #a1a1a1;
   display: table-row;

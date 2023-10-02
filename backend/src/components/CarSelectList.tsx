@@ -1,11 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings } from '../lang/booking-car-list'
-import * as CarService from '../services/CarService'
-import MultipleSelect from './MultipleSelect'
 import {
   Dialog,
   DialogTitle,
@@ -14,11 +7,17 @@ import {
   Button,
   TextFieldVariants
 } from '@mui/material'
-import * as Helper from '../common/Helper'
 import * as bookcarsTypes from 'bookcars-types'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as bfStrings } from '../lang/booking-filter'
+import { strings as blStrings } from '../lang/booking-list'
+import { strings } from '../lang/booking-car-list'
+import * as CarService from '../services/CarService'
+import MultipleSelect from './MultipleSelect'
+import * as Helper from '../common/Helper'
 
-const CarSelectList = (
-  {
+function CarSelectList({
     label,
     required,
     multiple,
@@ -37,13 +36,12 @@ const CarSelectList = (
       company: string
       pickupLocation: string
       onChange?: (values: bookcarsTypes.Car[]) => void
-    }
-) => {
+    }) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)
-  const [_company, set_Company] = useState('-1')
-  const [_pickupLocation, set_PickupLocation] = useState('-1')
+  const [currentCompany, setCurrentCompany] = useState('-1')
+  const [currentPickupLocation, setCurrentPickupLocation] = useState('-1')
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
   const [cars, setCars] = useState<bookcarsTypes.Car[]>([])
@@ -61,10 +59,10 @@ const CarSelectList = (
   }, [value])
 
   useEffect(() => {
-    if (company && _company !== company) {
-      set_Company(company || '-1')
+    if (company && currentCompany !== company) {
+      setCurrentCompany(company || '-1')
 
-      if (_company !== '-1' && _pickupLocation !== '-1') {
+      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -75,13 +73,13 @@ const CarSelectList = (
         }
       }
     }
-  }, [_company, company, _pickupLocation, onChange])
+  }, [currentCompany, company, currentPickupLocation, onChange])
 
   useEffect(() => {
-    if (pickupLocation && _pickupLocation !== pickupLocation) {
-      set_PickupLocation(pickupLocation || '-1')
+    if (pickupLocation && currentPickupLocation !== pickupLocation) {
+      setCurrentPickupLocation(pickupLocation || '-1')
 
-      if (_company !== '-1' && _pickupLocation !== '-1') {
+      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -92,13 +90,13 @@ const CarSelectList = (
         }
       }
     }
-  }, [_pickupLocation, _company, pickupLocation, onChange])
+  }, [currentPickupLocation, currentCompany, pickupLocation, onChange])
 
   useEffect(() => {
-    if (_pickupLocation !== pickupLocation) {
-      set_PickupLocation(pickupLocation)
+    if (currentPickupLocation !== pickupLocation) {
+      setCurrentPickupLocation(pickupLocation)
     }
-  }, [_pickupLocation, pickupLocation])
+  }, [currentPickupLocation, pickupLocation])
 
   const handleChange = (values: bookcarsTypes.Car[]) => {
     if (onChange) {
@@ -106,27 +104,27 @@ const CarSelectList = (
     }
   }
 
-  const _fetch = async (page: number, keyword: string, company: string, pickupLocation: string) => {
+  const _fetch = async (_page: number, _keyword: string, _company: string, _pickupLocation: string) => {
     try {
-      if (!pickupLocation) {
+      if (!_pickupLocation) {
         return
       }
 
-      const payload: bookcarsTypes.GetBookingCarsPayload = { company, pickupLocation }
+      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _company, pickupLocation: _pickupLocation }
 
       if (closeDialog) {
         setCloseDialog(false)
       }
 
-      if (company === '-1' || pickupLocation === '-1') {
+      if (_company === '-1' || _pickupLocation === '-1') {
         setOpenDialog(true)
         return
       }
 
       setLoading(true)
 
-      const data = await CarService.getBookingCars(keyword, payload, page, Env.PAGE_SIZE)
-      const _cars = page === 1 ? data : [...cars, ...data]
+      const data = await CarService.getBookingCars(_keyword, payload, _page, Env.PAGE_SIZE)
+      const _cars = _page === 1 ? data : [...cars, ...data]
 
       setCars(_cars)
       setFetch(data.length > 0)
@@ -163,7 +161,7 @@ const CarSelectList = (
             if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
-              _fetch(p, keyword, _company, _pickupLocation)
+              _fetch(p, keyword, currentCompany, currentPickupLocation)
             }
           },
         }}
@@ -172,17 +170,17 @@ const CarSelectList = (
             const p = 1
             setCars([])
             setPage(p)
-            _fetch(p, keyword, _company, _pickupLocation)
+            _fetch(p, keyword, currentCompany, currentPickupLocation)
           }
         }}
         onInputChange={(event: React.SyntheticEvent<Element, Event>) => {
-          const value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
+          const _value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
 
-          if (value !== keyword) {
+          if (_value !== keyword) {
             setCars([])
             setPage(1)
-            setKeyword(value)
-            _fetch(1, value, _company, _pickupLocation)
+            setKeyword(_value)
+            _fetch(1, _value, currentCompany, currentPickupLocation)
           }
         }}
         onClear={() => {
@@ -190,18 +188,18 @@ const CarSelectList = (
           setPage(1)
           setKeyword('')
           setFetch(true)
-          _fetch(1, '', _company, _pickupLocation)
+          _fetch(1, '', currentCompany, currentPickupLocation)
         }}
       />
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent className="dialog-content">
-          {_company === '-1' && _pickupLocation === '-1' ? (
+          {currentCompany === '-1' && currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
-          ) : _company === '-1' ? (
+          ) : currentCompany === '-1' ? (
             `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
-          ) : _pickupLocation === '-1' ? (
+          ) : currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
           ) : (
             <></>

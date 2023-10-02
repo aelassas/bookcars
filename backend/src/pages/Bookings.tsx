@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings } from '../lang/bookings'
@@ -7,14 +10,11 @@ import BookingList from '../components/BookingList'
 import SupplierFilter from '../components/SupplierFilter'
 import StatusFilter from '../components/StatusFilter'
 import BookingFilter from '../components/BookingFilter'
-import { Button } from '@mui/material'
 import * as SupplierService from '../services/SupplierService'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/bookings.css'
 
-const Bookings = () => {
+function Bookings() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
@@ -34,30 +34,30 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (companies: string[]) => {
-    setCompanies(companies)
+  const handleSupplierFilterChange = (_companies: string[]) => {
+    setCompanies(_companies)
   }
 
-  const handleStatusFilterChange = (statuses: bookcarsTypes.BookingStatus[]) => {
-    setStatuses(statuses)
+  const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
+    setStatuses(_statuses)
   }
 
-  const handleBookingFilterSubmit = (filter: bookcarsTypes.Filter | null) => {
-    setFilter(filter)
+  const handleBookingFilterSubmit = (_filter: bookcarsTypes.Filter | null) => {
+    setFilter(_filter)
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user) {
-      const admin = Helper.admin(user)
-      setUser(user)
-      setAdmin(admin)
-      setLeftPanel(!admin)
-      setLoadingCompanies(admin)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user) {
+      const _admin = Helper.admin(_user)
+      setUser(_user)
+      setAdmin(_admin)
+      setLeftPanel(!_admin)
+      setLoadingCompanies(_admin)
 
-      const allCompanies = admin ? await SupplierService.getAllSuppliers() : []
-      const companies = admin ? bookcarsHelper.flattenCompanies(allCompanies) : [user._id ?? '']
-      setAllCompanies(allCompanies)
-      setCompanies(companies)
+      const _allCompanies = _admin ? await SupplierService.getAllSuppliers() : []
+      const _companies = _admin ? bookcarsHelper.flattenCompanies(_allCompanies) : [_user._id ?? '']
+      setAllCompanies(_allCompanies)
+      setCompanies(_companies)
       setLeftPanel(true)
       setLoadingCompanies(false)
     }
@@ -73,15 +73,18 @@ const Bookings = () => {
                 <Button variant="contained" className="btn-primary cl-new-booking" size="small" href="/create-booking">
                   {strings.NEW_BOOKING}
                 </Button>
-                {admin &&
+                {admin
+                  && (
                   <SupplierFilter
                     companies={allCompanies}
                     onChange={handleSupplierFilterChange}
                     className="cl-company-filter"
-                  />}
+                  />
+)}
                 <StatusFilter
                   onChange={handleStatusFilterChange}
-                  className="cl-status-filter" />
+                  className="cl-status-filter"
+                />
                 <BookingFilter
                   onSubmit={handleBookingFilterSubmit}
                   language={(user && user.language) || Env.DEFAULT_LANGUAGE}

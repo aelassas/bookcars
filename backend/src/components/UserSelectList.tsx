@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
+import { TextFieldVariants } from '@mui/material'
 import Env from '../config/env.config'
 import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
-import { TextFieldVariants } from '@mui/material'
 
-const UserSelectList = (
-  {
-    multiple,
-    value,
-    label,
-    required,
-    variant,
-    onChange
-  }: {
-    multiple?: boolean
-    value?: bookcarsTypes.Option | bookcarsTypes.Option[]
-    label?: string
-    required?: boolean
-    variant?: TextFieldVariants
-    onChange: (values: bookcarsTypes.Option[]) => void
-  }
-) => {
+function UserSelectList({
+  multiple,
+  value,
+  label,
+  required,
+  variant,
+  onChange
+}: {
+  multiple?: boolean
+  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange: (values: bookcarsTypes.Option[]) => void
+}) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [drivers, setDrivers] = useState<bookcarsTypes.Option[]>([])
@@ -45,11 +43,11 @@ const UserSelectList = (
       return { _id: _id as string, name: fullName, image: avatar }
     })
 
-  const _fetch = async (page: number, keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.User>) => {
+  const _fetch = async (_page: number, _keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.User>) => {
     try {
       setLoading(true)
 
-      const data = await UserService.getDrivers(keyword, page, Env.PAGE_SIZE)
+      const data = await UserService.getDrivers(_keyword, _page, Env.PAGE_SIZE)
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
@@ -58,7 +56,7 @@ const UserSelectList = (
       }
 
       const driverOptionsList = getDrivers(_data.resultData)
-      const _drivers = page === 1 ? driverOptionsList : [...drivers, ...driverOptionsList]
+      const _drivers = _page === 1 ? driverOptionsList : [...drivers, ...driverOptionsList]
 
       setDrivers(_drivers)
       setFetch(driverOptionsList.length > 0)
@@ -111,14 +109,14 @@ const UserSelectList = (
         }
       }}
       onInputChange={(event) => {
-        const value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
+        const _value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
 
-        //if (event.target.type === 'text' && value !== keyword) {
-        if (value !== keyword) {
+        // if (event.target.type === 'text' && value !== keyword) {
+        if (_value !== keyword) {
           setDrivers([])
           setPage(1)
-          setKeyword(value)
-          _fetch(1, value)
+          setKeyword(_value)
+          _fetch(1, _value)
         }
       }}
       onClear={() => {

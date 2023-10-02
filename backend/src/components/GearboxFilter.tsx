@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import Accordion from './Accordion'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/gearbox-filter.css'
 
-const GearboxFilter = (
-  {
-    className,
-    onChange
-  }: {
-    className?: string
-    onChange: (value: bookcarsTypes.GearboxType[]) => void
-  }
-) => {
+function GearboxFilter({
+  className,
+  onChange
+}: {
+  className?: string
+  onChange: (value: bookcarsTypes.GearboxType[]) => void
+}) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
 
@@ -116,13 +114,13 @@ const GearboxFilter = (
         manualRef.current.checked = true
       }
 
-      const values = [bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual]
+      const _values = [bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual]
 
       setAllChecked(true)
-      setValues(values)
+      setValues(_values)
 
       if (onChange) {
-        onChange(bookcarsHelper.clone(values))
+        onChange(bookcarsHelper.clone(_values))
       }
     }
   }
@@ -132,15 +130,15 @@ const GearboxFilter = (
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={automaticRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckAutomaticChange} />
-          <label onClick={handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</label>
+          <span role="button" tabIndex={0} onClick={handleAutomaticClick}>{strings.GEARBOX_AUTOMATIC}</span>
         </div>
         <div className="filter-element">
           <input ref={manualRef} type="checkbox" className="gearbox-checkbox" onChange={handleCheckManualChange} />
-          <label onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</label>
+          <span role="button" tabIndex={0} onClick={handleManualClick}>{strings.GEARBOX_MANUAL}</span>
         </div>
       </div>
       <div className="filter-actions">
-        <span onClick={handleUncheckAllChange} className="uncheckall">
+        <span role="button" tabIndex={0} onClick={handleUncheckAllChange} className="uncheckall">
           {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
         </span>
       </div>
