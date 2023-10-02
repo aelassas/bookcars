@@ -4,17 +4,16 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Helper from '../common/Helper'
 
-const BookingStatus = (
-  {
+function BookingStatus({
     style,
     status
   }: {
     style: object
     status: bookcarsTypes.BookingStatus
-  }
-) => (
-  <View
-    style={{
+  }) {
+  return (
+    <View
+      style={{
       ...styles.container,
       ...style,
       backgroundColor:
@@ -32,10 +31,11 @@ const BookingStatus = (
                     ? '#bc2143'
                     : 'transparent',
     }}
-  >
-    <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
-  </View>
-)
+    >
+      <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -13,7 +13,7 @@ import Button from '../components/Button'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
 
-const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
+function HomeScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) {
   const isFocused = useIsFocused()
 
   const dateOffset = 3
@@ -265,7 +265,8 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               onChange={(time) => {
                 setToTime(time)
               }}
-              onPress={blurLocations} />
+              onPress={blurLocations}
+            />
 
             <Button style={styles.component} label={i18n.t('SEARCH')} onPress={handleSearch} />
 

@@ -8,8 +8,7 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
-const FuelFilter = (
-  {
+function FuelFilter({
     visible,
     style,
     onChange
@@ -17,8 +16,7 @@ const FuelFilter = (
     visible?: boolean
     style?: object
     onChange?: (values: bookcarsTypes.CarType[]) => void
-  }
-) => {
+  }) {
   const [diesel, setDiesel] = useState(true)
   const [gasoline, setGasoline] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])

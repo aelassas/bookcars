@@ -5,8 +5,7 @@ import i18n from '../lang/i18n'
 import Accordion from './Accordion'
 import RadioButton from './RadioButton'
 
-const DepositFilter = (
-  {
+function DepositFilter({
     visible,
     style,
     onChange
@@ -14,8 +13,7 @@ const DepositFilter = (
     visible?: boolean
     style?: object
     onChange?: (value: number) => void
-  }
-) => {
+  }) {
   const [deposit2500, setDeposit2500] = useState(false)
   const [deposit5000, setDeposit5000] = useState(false)
   const [deposit7500, setDeposit7500] = useState(false)

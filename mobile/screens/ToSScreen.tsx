@@ -7,7 +7,7 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 
-const ToSScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ToS'>) => {
+function ToSScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'ToS'>) {
   const isFocused = useIsFocused()
 
   const [reload, setReload] = useState(false)

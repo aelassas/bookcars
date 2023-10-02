@@ -10,8 +10,7 @@ import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import Car from './Car'
 
-const CarList = (
-  {
+function CarList({
     navigation,
     from,
     to,
@@ -37,8 +36,7 @@ const CarList = (
     deposit?: number
     header?: React.ReactElement
     onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-  }
-) => {
+  }) {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -151,7 +149,8 @@ const CarList = (
               to={to}
               pickupLocation={pickupLocation}
               dropOffLocation={dropOffLocation}
-              navigation={navigation} />
+              navigation={navigation}
+            />
           )}
           keyExtractor={(item) => item._id}
           onEndReached={() => setOnScrollEnd(true)}
@@ -165,7 +164,8 @@ const CarList = (
           ListFooterComponent={
             fetch
               ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-              : <></>}
+              : <></>
+}
           ListEmptyComponent={
             !loading ? (
               <View style={styles.container}>

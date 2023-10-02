@@ -20,7 +20,7 @@ import Button from '../components/Button'
 import * as Helper from '../common/Helper'
 import * as Env from '../config/env.config'
 
-const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
+function SettingsScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)

@@ -23,8 +23,7 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 let yOffset = 0
 
-const DrawerContent = (
-  {
+function DrawerContent({
     language: drawerLanguage,
     index,
     drawerItems,
@@ -48,8 +47,7 @@ const DrawerContent = (
     labelStyle?: StyleProp<ViewStyle>
     itemStyle?: StyleProp<ViewStyle>
     props: DrawerContentComponentProps
-  }
-) => {
+  }) {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [openLanguageMenu, setopenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(drawerLanguage)
@@ -104,9 +102,7 @@ const DrawerContent = (
       contentContainerStyle={styles.drawer}
       {...props}
     >
-      <View
-      // forceInset={styles.drawerList}
-      >
+      <View>
         {props?.state?.routes
           && props.state.routes.map((route, i: number) => {
             const focused = i === props.state.index
@@ -145,7 +141,8 @@ const DrawerContent = (
             hitSlop={15}
             onPress={async () => {
               await UserService.signout(navigation)
-            }}>
+            }}
+          >
             <MaterialIcons style={styles.signoutIcon} name="logout" size={24} color="rgba(0, 0, 0, 0.54)" />
             <Text style={styles.text}>{i18n.t('SIGN_OUT')}</Text>
           </Pressable>

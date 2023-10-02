@@ -27,7 +27,7 @@ import DrawerContent from './DrawerContent'
 import CheckoutScreen from '../screens/Checkout'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
-const DrawerNavigator = () => {
+function DrawerNavigator() {
   // const buildLink = useLinkBuilder()
   const routes = useNavigationState((state) => state && state.routes)
   const index = useNavigationState((state) => state && state.index)
@@ -167,271 +167,313 @@ const DrawerNavigator = () => {
       >
         {drawerItems.map((drawer) => (
           drawer.name === 'Home'
-            ? <Drawer.Screen
-              key={drawer.name}
-              name={drawer.name}
-              component={HomeScreen}
-              options={{
+            ? (
+              <Drawer.Screen
+                key={drawer.name}
+                name={drawer.name}
+                component={HomeScreen}
+                options={{
                 title: drawer.title,
                 drawerItemStyle: {
                   height: drawer.hidden ? 0 : 'auto',
                 },
-                drawerIcon: () =>
+                drawerIcon: () => (
                   <MaterialIcons
                     name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                     size={24}
                     color="rgba(0, 0, 0, 0.54)"
-                  />,
+                  />
+                ),
                 headerShown: false,
               }}
-            />
+              />
+)
             : drawer.name === 'Cars'
-              ? <Drawer.Screen
-                key={drawer.name}
-                name={drawer.name}
-                component={CarsScreen}
-                options={{
+              ? (
+                <Drawer.Screen
+                  key={drawer.name}
+                  name={drawer.name}
+                  component={CarsScreen}
+                  options={{
                   title: drawer.title,
                   drawerItemStyle: {
                     height: drawer.hidden ? 0 : 'auto',
                   },
-                  drawerIcon: () =>
+                  drawerIcon: () => (
                     <MaterialIcons
                       name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                       size={24}
                       color="rgba(0, 0, 0, 0.54)"
-                    />,
+                    />
+                  ),
                   headerShown: false,
                 }}
-              />
+                />
+)
               : drawer.name === 'Checkout'
-                ? <Drawer.Screen
-                  key={drawer.name}
-                  name={drawer.name}
-                  component={CheckoutScreen}
-                  options={{
+                ? (
+                  <Drawer.Screen
+                    key={drawer.name}
+                    name={drawer.name}
+                    component={CheckoutScreen}
+                    options={{
                     title: drawer.title,
                     drawerItemStyle: {
                       height: drawer.hidden ? 0 : 'auto',
                     },
-                    drawerIcon: () =>
+                    drawerIcon: () => (
                       <MaterialIcons
                         name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                         size={24}
                         color="rgba(0, 0, 0, 0.54)"
-                      />,
+                      />
+                    ),
                     headerShown: false,
                   }}
-                />
+                  />
+)
                 : drawer.name === 'Bookings'
-                  ? <Drawer.Screen
-                    key={drawer.name}
-                    name={drawer.name}
-                    component={BookingsScreen}
-                    options={{
+                  ? (
+                    <Drawer.Screen
+                      key={drawer.name}
+                      name={drawer.name}
+                      component={BookingsScreen}
+                      options={{
                       title: drawer.title,
                       drawerItemStyle: {
                         height: drawer.hidden || !loggedIn ? 0 : 'auto',
                       },
-                      drawerIcon: () =>
+                      drawerIcon: () => (
                         <MaterialIcons
                           name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                           size={24}
                           color="rgba(0, 0, 0, 0.54)"
-                        />,
+                        />
+                      ),
                       headerShown: false,
                     }}
-                  />
+                    />
+)
                   : drawer.name === 'Booking'
-                    ? <Drawer.Screen
-                      key={drawer.name}
-                      name={drawer.name}
-                      component={BookingScreen}
-                      options={{
+                    ? (
+                      <Drawer.Screen
+                        key={drawer.name}
+                        name={drawer.name}
+                        component={BookingScreen}
+                        options={{
                         title: drawer.title,
                         drawerItemStyle: {
                           height: drawer.hidden ? 0 : 'auto',
                         },
-                        drawerIcon: () =>
+                        drawerIcon: () => (
                           <MaterialIcons
                             name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                             size={24}
                             color="rgba(0, 0, 0, 0.54)"
-                          />,
+                          />
+                        ),
                         headerShown: false,
                       }}
-                    />
+                      />
+)
                     : drawer.name === 'About'
-                      ? <Drawer.Screen
-                        key={drawer.name}
-                        name={drawer.name}
-                        component={AboutScreen}
-                        options={{
+                      ? (
+                        <Drawer.Screen
+                          key={drawer.name}
+                          name={drawer.name}
+                          component={AboutScreen}
+                          options={{
                           title: drawer.title,
                           drawerItemStyle: {
                             height: drawer.hidden ? 0 : 'auto',
                           },
-                          drawerIcon: () =>
+                          drawerIcon: () => (
                             <MaterialIcons
                               name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                               size={24}
                               color="rgba(0, 0, 0, 0.54)"
-                            />,
+                            />
+                          ),
                           headerShown: false,
                         }}
-                      />
+                        />
+)
                       : drawer.name === 'ToS'
-                        ? <Drawer.Screen
-                          key={drawer.name}
-                          name={drawer.name}
-                          component={ToSScreen}
-                          options={{
+                        ? (
+                          <Drawer.Screen
+                            key={drawer.name}
+                            name={drawer.name}
+                            component={ToSScreen}
+                            options={{
                             title: drawer.title,
                             drawerItemStyle: {
                               height: drawer.hidden ? 0 : 'auto',
                             },
-                            drawerIcon: () =>
+                            drawerIcon: () => (
                               <MaterialIcons
                                 name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                 size={24}
                                 color="rgba(0, 0, 0, 0.54)"
-                              />,
+                              />
+                            ),
                             headerShown: false,
                           }}
-                        />
+                          />
+)
                         : drawer.name === 'Contact'
-                          ? <Drawer.Screen
-                            key={drawer.name}
-                            name={drawer.name}
-                            component={ContactScreen}
-                            options={{
+                          ? (
+                            <Drawer.Screen
+                              key={drawer.name}
+                              name={drawer.name}
+                              component={ContactScreen}
+                              options={{
                               title: drawer.title,
                               drawerItemStyle: {
                                 height: drawer.hidden ? 0 : 'auto',
                               },
-                              drawerIcon: () =>
+                              drawerIcon: () => (
                                 <MaterialIcons
                                   name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                   size={24}
                                   color="rgba(0, 0, 0, 0.54)"
-                                />,
+                                />
+                              ),
                               headerShown: false,
                             }}
-                          />
+                            />
+)
                           : drawer.name === 'Settings'
-                            ? <Drawer.Screen
-                              key={drawer.name}
-                              name={drawer.name}
-                              component={SettingsScreen}
-                              options={{
+                            ? (
+                              <Drawer.Screen
+                                key={drawer.name}
+                                name={drawer.name}
+                                component={SettingsScreen}
+                                options={{
                                 title: drawer.title,
                                 drawerItemStyle: {
                                   height: drawer.hidden || !loggedIn ? 0 : 'auto',
                                 },
-                                drawerIcon: () =>
+                                drawerIcon: () => (
                                   <MaterialIcons
                                     name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                     size={24}
                                     color="rgba(0, 0, 0, 0.54)"
-                                  />,
+                                  />
+                                ),
                                 headerShown: false,
                               }}
-                            />
+                              />
+)
                             : drawer.name === 'ChangePassword'
-                              ? <Drawer.Screen
-                                key={drawer.name}
-                                name={drawer.name}
-                                component={ChangePasswordScreen}
-                                options={{
+                              ? (
+                                <Drawer.Screen
+                                  key={drawer.name}
+                                  name={drawer.name}
+                                  component={ChangePasswordScreen}
+                                  options={{
                                   title: drawer.title,
                                   drawerItemStyle: {
                                     height: drawer.hidden ? 0 : 'auto',
                                   },
-                                  drawerIcon: () =>
+                                  drawerIcon: () => (
                                     <MaterialIcons
                                       name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                       size={24}
                                       color="rgba(0, 0, 0, 0.54)"
-                                    />,
+                                    />
+                                  ),
                                   headerShown: false,
                                 }}
-                              />
+                                />
+)
                               : drawer.name === 'SignIn'
-                                ? <Drawer.Screen
-                                  key={drawer.name}
-                                  name={drawer.name}
-                                  component={SignInScreen}
-                                  options={{
+                                ? (
+                                  <Drawer.Screen
+                                    key={drawer.name}
+                                    name={drawer.name}
+                                    component={SignInScreen}
+                                    options={{
                                     title: drawer.title,
                                     drawerItemStyle: {
                                       height: drawer.hidden || loggedIn ? 0 : 'auto',
                                     },
-                                    drawerIcon: () =>
+                                    drawerIcon: () => (
                                       <MaterialIcons
                                         name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                         size={24}
                                         color="rgba(0, 0, 0, 0.54)"
-                                      />,
+                                      />
+                                    ),
                                     headerShown: false,
                                   }}
-                                />
+                                  />
+)
                                 : drawer.name === 'SignUp'
-                                  ? <Drawer.Screen
-                                    key={drawer.name}
-                                    name={drawer.name}
-                                    component={SignUpScreen}
-                                    options={{
+                                  ? (
+                                    <Drawer.Screen
+                                      key={drawer.name}
+                                      name={drawer.name}
+                                      component={SignUpScreen}
+                                      options={{
                                       title: drawer.title,
                                       drawerItemStyle: {
                                         height: drawer.hidden ? 0 : 'auto',
                                       },
-                                      drawerIcon: () =>
+                                      drawerIcon: () => (
                                         <MaterialIcons
                                           name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                           size={24}
                                           color="rgba(0, 0, 0, 0.54)"
-                                        />,
+                                        />
+                                      ),
                                       headerShown: false,
                                     }}
-                                  />
+                                    />
+)
                                   : drawer.name === 'ForgotPassword'
-                                    ? <Drawer.Screen
-                                      key={drawer.name}
-                                      name={drawer.name}
-                                      component={ForgotPasswordScreen}
-                                      options={{
+                                    ? (
+                                      <Drawer.Screen
+                                        key={drawer.name}
+                                        name={drawer.name}
+                                        component={ForgotPasswordScreen}
+                                        options={{
                                         title: drawer.title,
                                         drawerItemStyle: {
                                           height: drawer.hidden ? 0 : 'auto',
                                         },
-                                        drawerIcon: () =>
+                                        drawerIcon: () => (
                                           <MaterialIcons
                                             name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                             size={24}
                                             color="rgba(0, 0, 0, 0.54)"
-                                          />,
+                                          />
+                                        ),
                                         headerShown: false,
                                       }}
-                                    />
+                                      />
+)
                                     : drawer.name === 'Notifications'
-                                      ? <Drawer.Screen
-                                        key={drawer.name}
-                                        name={drawer.name}
-                                        component={NotificationsScreen}
-                                        options={{
+                                      ? (
+                                        <Drawer.Screen
+                                          key={drawer.name}
+                                          name={drawer.name}
+                                          component={NotificationsScreen}
+                                          options={{
                                           title: drawer.title,
                                           drawerItemStyle: {
                                             height: drawer.hidden ? 0 : 'auto',
                                           },
-                                          drawerIcon: () =>
+                                          drawerIcon: () => (
                                             <MaterialIcons
                                               name={drawer.iconName as keyof typeof MaterialIcons.glyphMap}
                                               size={24}
                                               color="rgba(0, 0, 0, 0.54)"
-                                            />,
+                                            />
+                                          ),
                                           headerShown: false,
                                         }}
-                                      />
+                                        />
+)
                                       : null
         ))}
       </Drawer.Navigator>

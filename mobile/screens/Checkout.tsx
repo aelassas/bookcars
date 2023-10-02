@@ -26,7 +26,7 @@ import * as BookingService from '../services/BookingService'
 import * as Env from '../config/env.config'
 import Backdrop from '../components/Backdrop'
 
-const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) => {
+function CheckoutScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -955,9 +955,11 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
-                  <Text style={styles.detailText}>{`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+                  <Text style={styles.detailText}>
+                    {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
                     format(to, _format, { locale }),
-                  )})`}</Text>
+                  )})`}
+                  </Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
                   <Text style={styles.detailText}>{pickupLocation.name}</Text>

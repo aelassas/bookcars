@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, Pressable } from 'react-native'
 
-const Link = (
-  {
+function Link({
     style,
     textStyle,
     label,
@@ -12,8 +11,7 @@ const Link = (
     textStyle?: object
     label: string
     onPress?: () => void
-  }
-) => {
+  }) {
   const onPress = () => {
     if (onLinkPress) {
       onLinkPress()

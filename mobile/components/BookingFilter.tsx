@@ -9,8 +9,7 @@ import DateTimePicker from './DateTimePicker'
 import LocationSelectList from './LocationSelectList'
 import TextInput from './TextInput'
 
-const BookingFilter = (
-  {
+function BookingFilter({
     visible,
     style,
     language,
@@ -20,8 +19,7 @@ const BookingFilter = (
     style?: object
     language?: string
     onSubmit: (filter: bookcarsTypes.Filter) => void
-  }
-) => {
+  }) {
   const [init, setInit] = useState(false)
   const [from, setFrom] = useState<Date | undefined>(undefined)
   const [to, setTo] = useState<Date | undefined>(undefined)

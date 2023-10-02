@@ -2,8 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const Accordion = (
-  {
+function Accordion({
     style,
     title,
     children
@@ -11,8 +10,7 @@ const Accordion = (
     style?: object
     title: string
     children?: React.ReactNode
-  }
-) => {
+  }) {
   const [open, setOpen] = useState(false)
   const animatedController = useRef(new Animated.Value(0)).current
 

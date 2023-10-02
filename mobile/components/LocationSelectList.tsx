@@ -7,8 +7,7 @@ import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 
-const LocationSelectList = (
-  {
+function LocationSelectList({
     selectedItem: listSelectedItem,
     size,
     style,
@@ -32,8 +31,7 @@ const LocationSelectList = (
     onFetch?: () => void
     onChangeText?: (text: string) => void
     onFocus?: () => void
-  }
-) => {
+  }) {
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<AutocompleteOption[]>([])
   const [selectedItem, setSelectedItem] = useState<string>()
@@ -170,9 +168,9 @@ const LocationSelectList = (
         inputHeight={small ? 37 : 55}
         showChevron={false}
         showClear={!!selectedItem}
-        closeOnBlur={true}
+        closeOnBlur
         clearOnFocus={false}
-        closeOnSubmit={true}
+        closeOnSubmit
         EmptyResultComponent={<></>}
       />
     </View>

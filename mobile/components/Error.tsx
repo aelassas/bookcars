@@ -1,19 +1,19 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-const Error = (
-  {
+function Error({
     style,
     message
   }: {
     style?: object
     message: string
-  }
-) => (
-  <View style={style}>
-    <Text style={styles.text}>{message}</Text>
-  </View>
-)
+  }) {
+  return (
+    <View style={style}>
+      <Text style={styles.text}>{message}</Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   text: {

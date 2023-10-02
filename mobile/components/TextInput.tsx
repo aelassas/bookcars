@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 // TODO Complete rewrite to TypeScript
 
-const TextInputComponent = (props: any, ref: any) => {
+function TextInputComponent(props: any, ref: any) {
   const [value, setValue] = useState('')
   const _ref = useRef<ReactTextInput | null>(null)
   const small = props.size === 'small'

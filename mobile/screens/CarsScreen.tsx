@@ -14,7 +14,7 @@ import GearboxFilter from '../components/GearboxFilter'
 import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
 
-const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) => {
+function CarsScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Cars'>) {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -83,7 +83,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
           dropOffLocation={route.params.dropOffLocation}
           from={new Date(route.params.from)}
           to={new Date(route.params.to)}
-          header={
+          header={(
             <View>
               <SupplierFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
               <FuelFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
@@ -91,7 +91,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
               <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />
             </View>
-          }
+          )}
         />
       )}
     </Master>

@@ -8,8 +8,7 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
-const GearboxFilter = (
-  {
+function GearboxFilter({
     visible,
     style,
     onChange
@@ -17,8 +16,7 @@ const GearboxFilter = (
     visible?: boolean
     style?: object
     onChange?: (values: bookcarsTypes.GearboxType[]) => void
-  }
-) => {
+  }) {
   const [automatic, setAutomatic] = useState(true)
   const [manual, setManual] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])

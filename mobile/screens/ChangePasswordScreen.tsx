@@ -11,7 +11,7 @@ import * as Helper from '../common/Helper'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 
-const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ChangePassword'>) => {
+function ChangePasswordScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'ChangePassword'>) {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
