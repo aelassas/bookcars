@@ -1,22 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import Accordion from './Accordion'
 import * as Helper from '../common/Helper'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/availability-filter.css'
 
-const AvailabilityFilter = (
-  {
-    className,
-    onChange
-  }: {
-    className?: string,
-    onChange?: (values: string[]) => void
-  }
-) => {
+function AvailabilityFilter({
+  className,
+  onChange
+}: {
+  className?: string,
+  onChange?: (values: string[]) => void
+}) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState<string[]>([
     bookcarsTypes.Availablity.Available,
@@ -121,13 +119,13 @@ const AvailabilityFilter = (
         availableRef.current.checked = true
         unavailableRef.current.checked = true
 
-        const values = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
+        const _values = [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable]
 
         setAllChecked(true)
-        setValues(values)
+        setValues(_values)
 
         if (onChange) {
-          onChange(bookcarsHelper.clone(values))
+          onChange(bookcarsHelper.clone(_values))
         }
       }
     } else {
@@ -140,14 +138,14 @@ const AvailabilityFilter = (
       <div className="filter-elements">
         <div className="filter-element">
           <input ref={availableRef} type="checkbox" className="availability-checkbox" onChange={handleAvailableChange} />
-          <label onClick={handleAvailableClick}>{strings.AVAILABLE}</label>
+          <span role="button" tabIndex={0} onClick={handleAvailableClick}>{strings.AVAILABLE}</span>
         </div>
         <div className="filter-element">
           <input ref={unavailableRef} type="checkbox" className="availability-checkbox" onChange={handleUnavailableChange} />
-          <label onClick={handleUnavailableClick}>{strings.UNAVAILABLE}</label>
+          <span role="button" tabIndex={0} onClick={handleUnavailableClick}>{strings.UNAVAILABLE}</span>
         </div>
         <div className="filter-actions">
-          <span onClick={handleUncheckAllChange} className="uncheckall">
+          <span role="button" tabIndex={0} onClick={handleUncheckAllChange} className="uncheckall">
             {allChecked ? commonStrings.UNCHECK_ALL : commonStrings.CHECK_ALL}
           </span>
         </div>

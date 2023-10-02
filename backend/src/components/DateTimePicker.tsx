@@ -5,8 +5,7 @@ import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTim
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
 
-const DateTimePicker = (
-  {
+function DateTimePicker({
     value: dateTimeValue,
     label,
     minDate,
@@ -25,8 +24,7 @@ const DateTimePicker = (
       variant?: TextFieldVariants
       readOnly?: boolean
       onChange: (value: Date | null) => void
-    }
-) => {
+    }) {
   const [value, setValue] = useState<Date | null>(null)
 
   useEffect(() => {
@@ -40,11 +38,11 @@ const DateTimePicker = (
         // showToolbar
         value={value}
         readOnly={readOnly}
-        onAccept={(value) => {
-          setValue(value)
+        onAccept={(_value) => {
+          setValue(_value)
 
           if (onChange) {
-            onChange(value)
+            onChange(_value)
           }
         }}
         minDate={minDate}
@@ -52,7 +50,7 @@ const DateTimePicker = (
         slotProps={{
           textField: {
             variant: variant || 'standard',
-            required: required,
+            required,
           },
           actionBar: {
             actions: ['accept', 'cancel', 'today', 'clear'],

@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Master from '../components/Master'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as CarService from '../services/CarService'
-import * as SupplierService from '../services/SupplierService'
-import Backdrop from '../components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Error from './Error'
-import Avatar from '../components/Avatar'
-import BookingList from '../components/BookingList'
-import * as Helper from '../common/Helper'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
+import {
+ Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip
+} from '@mui/material'
 import {
   LocalGasStation as FuelIcon,
   AccountTree as GearboxIcon,
@@ -24,11 +14,23 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as CarService from '../services/CarService'
+import * as SupplierService from '../services/SupplierService'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import Avatar from '../components/Avatar'
+import BookingList from '../components/BookingList'
+import * as Helper from '../common/Helper'
 
 import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car.css'
 
-const Car = () => {
+function Car() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [error, setError] = useState(false)
@@ -102,32 +104,32 @@ const Car = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
+  const onLoad = async (_user?: bookcarsTypes.User) => {
     setLoading(true)
-    setUser(user)
+    setUser(_user)
 
     const params = new URLSearchParams(window.location.search)
-    if (user && user.verified && params.has('cr')) {
+    if (_user && _user.verified && params.has('cr')) {
       const id = params.get('cr')
       if (id && id !== '') {
         try {
-          const car = await CarService.getCar(id)
+          const _car = await CarService.getCar(id)
 
-          if (car) {
-            if (user.type === bookcarsTypes.RecordType.Admin) {
+          if (_car) {
+            if (_user.type === bookcarsTypes.RecordType.Admin) {
               try {
-                const companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(companies)
+                const _companies = await SupplierService.getAllSuppliers()
+                const companyIds = bookcarsHelper.flattenCompanies(_companies)
                 setCompanies(companyIds)
-                setCar(car)
+                setCar(_car)
                 setVisible(true)
                 setLoading(false)
               } catch (err) {
                 Helper.error(err)
               }
-            } else if (car.company._id === user._id) {
-              setCompanies([user._id as string])
-              setCar(car)
+            } else if (_car.company._id === _user._id) {
+              setCompanies([_user._id as string])
+              setCar(_car)
               setVisible(true)
               setLoading(false)
             } else {
@@ -173,7 +175,7 @@ const Car = () => {
                   record={car}
                   size="large"
                   readonly={!edit}
-                  hideDelete={true}
+                  hideDelete
                   onBeforeUpload={handleBeforeUpload}
                   onChange={handleImageChange}
                   color="disabled"
@@ -339,8 +341,8 @@ const Car = () => {
               companies={companies}
               statuses={statuses}
               car={car._id}
-              hideCompanyColumn={true}
-              hideCarColumn={true}
+              hideCompanyColumn
+              hideCarColumn
               hideDates={Env.isMobile()}
               checkboxSelection={!Env.isMobile()}
             />

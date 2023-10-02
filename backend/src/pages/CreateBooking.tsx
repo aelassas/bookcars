@@ -1,21 +1,4 @@
 import React, { useState, useCallback } from 'react'
-import Master from '../components/Master'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/create-booking'
-import * as UserService from '../services/UserService'
-import * as BookingService from '../services/BookingService'
-import * as Helper from '../common/Helper'
-import SupplierSelectList from '../components/SupplierSelectList'
-import UserSelectList from '../components/UserSelectList'
-import LocationSelectList from '../components/LocationSelectList'
-import CarSelectList from '../components/CarSelectList'
-import StatusList from '../components/StatusList'
-import DateTimePicker from '../components/DateTimePicker'
-import DatePicker from '../components/DatePicker'
 import {
   FormControl,
   Button,
@@ -35,10 +18,27 @@ import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Master from '../components/Master'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as blStrings } from '../lang/booking-list'
+import { strings as bfStrings } from '../lang/booking-filter'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/create-booking'
+import * as UserService from '../services/UserService'
+import * as BookingService from '../services/BookingService'
+import * as Helper from '../common/Helper'
+import SupplierSelectList from '../components/SupplierSelectList'
+import UserSelectList from '../components/UserSelectList'
+import LocationSelectList from '../components/LocationSelectList'
+import CarSelectList from '../components/CarSelectList'
+import StatusList from '../components/StatusList'
+import DateTimePicker from '../components/DateTimePicker'
+import DatePicker from '../components/DatePicker'
 
 import '../assets/css/create-booking.css'
 
-const CreateBooking = () => {
+function CreateBooking() {
   const navigate = useNavigate()
   const [isCompany, setIsCompany] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -57,13 +57,13 @@ const CreateBooking = () => {
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
   const [minDate, setMinDate] = useState<Date>()
-  const [_fullName, set_FullName] = useState('')
-  const [_email, set_Email] = useState('')
-  const [_phone, set_Phone] = useState('')
-  const [_birthDate, set_BirthDate] = useState<Date>()
-  const [_emailValid, set_EmailValid] = useState(true)
-  const [_phoneValid, set_PhoneValid] = useState(true)
-  const [_birthDateValid, set_BirthDateValid] = useState(true)
+  const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
+  const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
+  const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
+  const [addtionalDriverBirthDate, setAdditionalDriverBirthDate] = useState<Date>()
+  const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
+  const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
+  const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
   const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
     setCompany(values.length > 0 ? values[0]._id : '')
@@ -83,9 +83,9 @@ const CreateBooking = () => {
 
   const handleCarSelectListChange = useCallback((values: bookcarsTypes.Car[]) => {
     if (Array.isArray(values) && values.length > 0) {
-      const car = values[0]
-      if (car) {
-        setCar(car)
+      const _car = values[0]
+      if (_car) {
+        setCar(_car)
       } else {
         Helper.error()
       }
@@ -123,29 +123,26 @@ const CreateBooking = () => {
   const _validateEmail = (email: string) => {
     if (email) {
       if (validator.isEmail(email)) {
-        set_EmailValid(true)
+        setAdditionalDriverEmailValid(true)
         return true
-      } else {
-        set_EmailValid(false)
-        return false
       }
-    } else {
-      set_EmailValid(true)
+      setAdditionalDriverEmailValid(false)
       return false
     }
+    setAdditionalDriverEmailValid(true)
+    return false
   }
 
   const _validatePhone = (phone?: string) => {
     if (phone) {
       const _phoneValid = validator.isMobilePhone(phone)
-      set_PhoneValid(_phoneValid)
+      setAdditionalDriverPhoneValid(_phoneValid)
 
       return _phoneValid
-    } else {
-      set_PhoneValid(true)
-
-      return true
     }
+    setAdditionalDriverPhoneValid(true)
+
+    return true
   }
 
   const _validateBirthDate = (date?: Date) => {
@@ -154,12 +151,11 @@ const CreateBooking = () => {
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      set_BirthDateValid(_birthDateValid)
+      setAdditionalDriverBirthDateValid(_birthDateValid)
       return _birthDateValid
-    } else {
-      set_BirthDateValid(true)
-      return true
     }
+    setAdditionalDriverBirthDateValid(true)
+    return true
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -173,17 +169,17 @@ const CreateBooking = () => {
     const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
     if (additionalDriverSet) {
-      const emailValid = _validateEmail(_email)
+      const emailValid = _validateEmail(addtionalDriverEmail)
       if (!emailValid) {
         return
       }
 
-      const phoneValid = _validatePhone(_phone)
+      const phoneValid = _validatePhone(additionalDriverPhone)
       if (!phoneValid) {
         return
       }
 
-      const birthDateValid = _validateBirthDate(_birthDate)
+      const birthDateValid = _validateBirthDate(addtionalDriverBirthDate)
       if (!birthDateValid) {
         return
       }
@@ -208,17 +204,16 @@ const CreateBooking = () => {
 
     let _additionalDriver: bookcarsTypes.AdditionalDriver
     if (additionalDriverSet) {
-
-      if (!_birthDate) {
+      if (!addtionalDriverBirthDate) {
         Helper.error()
         return
       }
 
       _additionalDriver = {
-        fullName: _fullName,
-        email: _email,
-        phone: _phone,
-        birthDate: _birthDate,
+        fullName: additionalDriverfullName,
+        email: addtionalDriverEmail,
+        phone: additionalDriverPhone,
+        birthDate: addtionalDriverBirthDate,
       }
     }
 
@@ -263,7 +258,11 @@ const CreateBooking = () => {
     <Master onLoad={onLoad} strict>
       <div className="create-booking">
         <Paper className="booking-form booking-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="booking-form-title"> {strings.NEW_BOOKING_HEADING} </h1>
+          <h1 className="booking-form-title">
+            {' '}
+            {strings.NEW_BOOKING_HEADING}
+            {' '}
+          </h1>
           <form onSubmit={handleSubmit}>
             {!isCompany && (
               <FormControl fullWidth margin="dense">
@@ -271,7 +270,8 @@ const CreateBooking = () => {
                   label={blStrings.COMPANY}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange} />
+                  onChange={handleCompanyChange}
+                />
               </FormControl>
             )}
 
@@ -279,14 +279,16 @@ const CreateBooking = () => {
               label={blStrings.DRIVER}
               required
               variant="standard"
-              onChange={handleDriverChange} />
+              onChange={handleDriverChange}
+            />
 
             <FormControl fullWidth margin="dense">
               <LocationSelectList
                 label={bfStrings.PICKUP_LOCATION}
                 required
                 variant="standard"
-                onChange={handlePickupLocationChange} />
+                onChange={handlePickupLocationChange}
+              />
             </FormControl>
 
             <FormControl fullWidth margin="dense">
@@ -294,7 +296,8 @@ const CreateBooking = () => {
                 label={bfStrings.DROP_OFF_LOCATION}
                 required
                 variant="standard"
-                onChange={handleDropOffLocationChange} />
+                onChange={handleDropOffLocationChange}
+              />
             </FormControl>
 
             <CarSelectList
@@ -302,7 +305,8 @@ const CreateBooking = () => {
               company={company}
               pickupLocation={pickupLocation}
               onChange={handleCarSelectListChange}
-              required />
+              required
+            />
 
             <FormControl fullWidth margin="dense">
               <DateTimePicker
@@ -311,14 +315,13 @@ const CreateBooking = () => {
                 required
                 onChange={(date) => {
                   if (date) {
-
                     if (to && to.getTime() <= date.getTime()) {
                       setTo(undefined)
                     }
 
-                    const minDate = new Date(date)
-                    minDate.setDate(minDate.getDate() + 1)
-                    setMinDate(minDate)
+                    const _minDate = new Date(date)
+                    _minDate.setDate(_minDate.getDate() + 1)
+                    setMinDate(_minDate)
                   } else {
                     setMinDate(undefined)
                   }
@@ -346,12 +349,13 @@ const CreateBooking = () => {
               <StatusList
                 label={blStrings.STATUS}
                 onChange={handleStatusChange}
-                required />
+                required
+              />
             </FormControl>
 
             <div className="info">
               <InfoIcon />
-              <label>{commonStrings.OPTIONAL}</label>
+              <span>{commonStrings.OPTIONAL}</span>
             </div>
 
             <FormControl fullWidth margin="dense" className="checkbox-fc">
@@ -412,7 +416,7 @@ const CreateBooking = () => {
               <>
                 <div className="info">
                   <DriverIcon />
-                  <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                  <span>{csStrings.ADDITIONAL_DRIVER}</span>
                 </div>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
@@ -420,7 +424,7 @@ const CreateBooking = () => {
                     type="text"
                     required
                     onChange={(e) => {
-                      set_FullName(e.target.value)
+                      setAdditionalDriverFullName(e.target.value)
                     }}
                     autoComplete="off"
                   />
@@ -429,42 +433,44 @@ const CreateBooking = () => {
                   <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                   <Input
                     type="text"
-                    error={!_emailValid}
+                    error={!additionalDriverEmailValid}
                     onBlur={(e) => {
                       _validateEmail(e.target.value)
                     }}
                     onChange={(e) => {
-                      set_Email(e.target.value)
+                      setAdditionalDriverEmail(e.target.value)
 
                       if (!e.target.value) {
-                        set_EmailValid(true)
+                        setAdditionalDriverEmailValid(true)
                       }
                     }}
                     required
                     autoComplete="off"
                   />
-                  <FormHelperText error={!_emailValid}>{(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                  <FormHelperText error={!additionalDriverEmailValid}>{(!additionalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
                   <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                   <Input
                     type="text"
-                    error={!_phoneValid}
+                    error={!additionalDriverPhoneValid}
                     onBlur={(e) => {
                       _validatePhone(e.target.value)
                     }}
                     onChange={(e) => {
-                      set_Phone(e.target.value)
+                      setAdditionalDriverPhone(e.target.value)
 
                       if (!e.target.value) {
-                        set_PhoneValid(true)
+                        setAdditionalDriverPhoneValid(true)
                       }
                     }}
                     required
                     autoComplete="off"
                   />
                   <FormHelperText
-                    error={!_phoneValid}>{(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}
+                    error={!additionalDriverPhoneValid}
+                  >
+                    {(!additionalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}
                   </FormHelperText>
                 </FormControl>
                 <FormControl fullWidth margin="dense">
@@ -475,14 +481,16 @@ const CreateBooking = () => {
                       if (_birthDate) {
                         const _birthDateValid = _validateBirthDate(_birthDate)
 
-                        set_BirthDate(_birthDate)
-                        set_BirthDateValid(_birthDateValid)
+                        setAdditionalDriverBirthDate(_birthDate)
+                        setAdditionalDriverBirthDateValid(_birthDateValid)
                       }
                     }}
                     language={UserService.getLanguage()}
                   />
                   <FormHelperText
-                    error={!_birthDateValid}>{(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}
+                    error={!additionalDriverBirthDateValid}
+                  >
+                    {(!additionalDriverBirthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}
                   </FormHelperText>
                 </FormControl>
               </>

@@ -1,32 +1,32 @@
 import React, { useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
 import { IconButton, TextField } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
+import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/search.css'
 
-const Search = ({
+function Search({
   className,
   onSubmit
 }: {
   className?: string,
   onSubmit: (value: string) => void
-}) => {
+}) {
   const [keyword, setKeyword] = useState('')
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
   }
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch()
-    }
-  }
-
   const handleSearch = () => {
     if (onSubmit) {
       onSubmit(keyword)
+    }
+  }
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch()
     }
   }
 

@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import Const from '../config/const'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/cars'
-import * as Helper from '../common/Helper'
-import * as CarService from '../services/CarService'
 import {
   IconButton,
   Button,
@@ -30,16 +24,21 @@ import {
   Delete as DeleteIcon,
   Info as InfoIcon,
 } from '@mui/icons-material'
-import Pager from './Pager'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import Const from '../config/const'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/cars'
+import * as Helper from '../common/Helper'
+import * as CarService from '../services/CarService'
+import Pager from './Pager'
 
 import DoorsIcon from '../assets/img/car-door.png'
 
 import '../assets/css/car-list.css'
 
-const CarList = (
-  {
+function CarList({
     companies: carCompanies,
     keyword: carKeyword,
     fuel: carFuel,
@@ -76,9 +75,7 @@ const CarList = (
       hidePrice?: boolean
       onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
       onDelete?: (rowCount: number) => void
-    }
-
-) => {
+    }) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -111,7 +108,7 @@ const CarList = (
   }, [fetch, loading, page])
 
   const _fetch = async (
-    page: number,
+    _page: number,
     companies?: string[],
     keyword?: string,
     fuel?: string[],
@@ -125,39 +122,39 @@ const CarList = (
 
       const payload: bookcarsTypes.GetCarsPayload = {
         companies: companies ?? [],
-        fuel: fuel,
+        fuel,
         gearbox,
         mileage,
         deposit,
         availability,
       }
-      const data = await CarService.getCars(keyword || '', payload, page, Env.CARS_PAGE_SIZE)
+      const data = await CarService.getCars(keyword || '', payload, _page, Env.CARS_PAGE_SIZE)
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
         return
       }
-      const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
+      const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
       let _rows: bookcarsTypes.Car[] = []
       if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
-        _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
         _rows = _data.resultData
       }
 
       setRows(_rows)
-      setRowCount((page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
-      setTotalRecords(totalRecords)
+      setRowCount((_page - 1) * Env.CARS_PAGE_SIZE + _rows.length)
+      setTotalRecords(_totalRecords)
       setFetch(_data.resultData.length > 0)
 
-      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
+      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && _page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
         window.scrollTo(0, 0)
       }
 
       if (onLoad) {
-        onLoad({ rows: _data.resultData, rowCount: totalRecords })
+        onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
       Helper.error(err)
@@ -170,14 +167,16 @@ const CarList = (
   useEffect(() => {
     if (carCompanies) {
       if (carCompanies.length > 0) {
-        _fetch(page,
+        _fetch(
+page,
           carCompanies,
           carKeyword,
           carFuel,
           carGearbox,
           carMileage,
           carDeposit || 0,
-          carAvailability)
+          carAvailability
+)
       } else {
         setRows([])
         setRowCount(0)
@@ -226,14 +225,16 @@ const CarList = (
   useEffect(() => {
     if (reload) {
       setPage(1)
-      _fetch(1,
+      _fetch(
+1,
         carCompanies,
         carKeyword,
         carFuel,
         carGearbox,
         carMileage,
         carDeposit,
-        carAvailability)
+        carAvailability
+)
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reload,
@@ -252,17 +253,17 @@ const CarList = (
 
   const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
     try {
-      const carId = e.currentTarget.getAttribute('data-id') as string
-      const carIndex = Number(e.currentTarget.getAttribute('data-index') as string)
+      const _carId = e.currentTarget.getAttribute('data-id') as string
+      const _carIndex = Number(e.currentTarget.getAttribute('data-index') as string)
 
-      const status = await CarService.check(carId)
+      const status = await CarService.check(_carId)
 
       if (status === 200) {
         setOpenInfoDialog(true)
       } else if (status === 204) {
         setOpenDeleteDialog(true)
-        setCarId(carId)
-        setCarIndex(carIndex)
+        setCarId(_carId)
+        setCarIndex(_carIndex)
       } else {
         Helper.error()
       }

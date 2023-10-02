@@ -1,14 +1,16 @@
-import React, { useState, useEffect, CSSProperties, ReactNode } from 'react'
+import React, {
+ useState, useEffect, CSSProperties, ReactNode
+} from 'react'
+import { Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/master'
 import Header from './Header'
 import * as UserService from '../services/UserService'
 import Unauthorized from '../components/Unauthorized'
-import { Button } from '@mui/material'
 import * as Helper from '../common/Helper'
 import { useInit } from '../common/customHooks'
-import * as bookcarsTypes from 'bookcars-types'
 
-const Master = ({
+function Master({
   user: masterUser,
   strict,
   admin,
@@ -26,7 +28,7 @@ const Master = ({
   style?: CSSProperties
   children: ReactNode
   onLoad?: (user?: bookcarsTypes.User) => void
-}) => {
+}) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
   const [unauthorized, setUnauthorized] = useState(false)
@@ -58,28 +60,28 @@ const Master = ({
         const status = await UserService.validateAccessToken()
 
         if (status === 200) {
-          const user = await UserService.getUser(currentUser._id)
+          const _user = await UserService.getUser(currentUser._id)
 
-          if (user) {
-            if (user.blacklisted) {
-              setUser(user)
+          if (_user) {
+            if (_user.blacklisted) {
+              setUser(_user)
               setUnauthorized(true)
               setLoading(false)
               return
             }
 
-            if (admin && user.type !== bookcarsTypes.RecordType.Admin) {
-              setUser(user)
+            if (admin && _user.type !== bookcarsTypes.RecordType.Admin) {
+              setUser(_user)
               setUnauthorized(true)
               setLoading(false)
               return
             }
 
-            setUser(user)
+            setUser(_user)
             setLoading(false)
 
             if (onLoad) {
-              onLoad(user)
+              onLoad(_user)
             }
           } else {
             exit()
@@ -124,8 +126,8 @@ const Master = ({
           {children}
         </div>
       ) : (
-        !loading &&
-        !unauthorized && (
+        !loading
+        && !unauthorized && (
           <div className="validate-email">
             <span>{strings.VALIDATE_EMAIL}</span>
             <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>

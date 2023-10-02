@@ -1,4 +1,11 @@
 import React, { useState } from 'react'
+import {
+  Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip
+} from '@mui/material'
+import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/company-list'
@@ -11,15 +18,10 @@ import CarList from '../components/CarList'
 import InfoBox from '../components/InfoBox'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import { Typography, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/company.css'
 
-const Company = () => {
+function Company() {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [company, setCompany] = useState<bookcarsTypes.User>()
@@ -80,24 +82,24 @@ const Company = () => {
     }
   }
 
-  const handleCarDelete = (rowCount: number) => {
-    setRowCount(rowCount)
+  const handleCarDelete = (_rowCount: number) => {
+    setRowCount(_rowCount)
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    setUser(user)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    setUser(_user)
 
-    if (user && user.verified) {
+    if (_user && _user.verified) {
       const params = new URLSearchParams(window.location.search)
       if (params.has('c')) {
         const id = params.get('c')
         if (id && id !== '') {
           try {
-            const company = await SupplierService.getSupplier(id)
+            const _company = await SupplierService.getSupplier(id)
 
-            if (company) {
-              setCompany(company)
-              setCompanies([company._id as string])
+            if (_company) {
+              setCompany(_company)
+              setCompanies([_company._id as string])
               setVisible(true)
               setLoading(false)
             } else {

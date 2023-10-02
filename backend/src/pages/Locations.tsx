@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
 import { strings } from '../lang/locations'
 import Search from '../components/Search'
 import LocationList from '../components/LocationList'
 import InfoBox from '../components/InfoBox'
-import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
 
 import '../assets/css/locations.css'
 
-const Locations = () => {
+function Locations() {
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
 
@@ -23,8 +23,8 @@ const Locations = () => {
     }
   }
 
-  const handleLocationDelete = (rowCount: number) => {
-    setRowCount(rowCount)
+  const handleLocationDelete = (_rowCount: number) => {
+    setRowCount(_rowCount)
   }
 
   const onLoad = () => { }
@@ -42,11 +42,13 @@ const Locations = () => {
               </Button>
             )}
 
-            {rowCount > 0 &&
-              <InfoBox
-                value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`}
-                className="location-count"
-              />}
+            {rowCount > 0
+              && (
+                <InfoBox
+                  value={`${rowCount} ${rowCount > 1 ? strings.LOCATIONS : strings.LOCATION}`}
+                  className="location-count"
+                />
+              )}
           </div>
         </div>
         <div className="col-2">

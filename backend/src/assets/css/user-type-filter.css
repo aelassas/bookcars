@@ -23,7 +23,7 @@ div.user-type-filter ul.user-type-list li {
   clear: none;
 }
 
-div.user-type-filter ul.user-type-list li label.bs {
+div.user-type-filter ul.user-type-list li span.bs {
   padding: 3px;
   width: 80px;
   text-align: center;
@@ -40,19 +40,19 @@ div.user-type-filter ul.user-type-list li label.bs {
   opacity: 1;
 }
 
-div.user-type-filter ul.user-type-list li label.bs:hover {
+div.user-type-filter ul.user-type-list li span.bs:hover {
   opacity: 0.9;
 }
 
-div.user-type-filter ul.user-type-list li label.bs-admin {
+div.user-type-filter ul.user-type-list li span.bs-admin {
   background: #121212;
 }
 
-div.user-type-filter ul.user-type-list li label.bs-company {
+div.user-type-filter ul.user-type-list li span.bs-company {
   background: #e98003;
 }
 
-div.user-type-filter ul.user-type-list li label.bs-user {
+div.user-type-filter ul.user-type-list li span.bs-user {
   background: #22bba7;
 }
 

@@ -7,7 +7,7 @@ div.mileage-filter div.filter-elements div.filter-element input[type='checkbox']
   margin-left: 5px;
 }
 
-div.mileage-filter div.filter-elements div.filter-element label {
+div.mileage-filter div.filter-elements div.filter-element span {
   margin-left: 5px;
   cursor: pointer;
   font-size: 12px;

@@ -1,7 +1,7 @@
 import axios from 'axios'
+import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Validate Supplier name.
@@ -86,5 +86,6 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
   axios
     .get(
       `${Env.API_HOST}/api/all-suppliers`,
-      { headers: UserService.authHeader() })
+      { headers: UserService.authHeader() }
+)
     .then((res) => res.data)

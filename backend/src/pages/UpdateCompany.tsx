@@ -1,4 +1,18 @@
 import React, { useState } from 'react'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper,
+  FormControlLabel,
+  Switch
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import validator from 'validator'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -10,15 +24,10 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '../components/Avatar'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Link, FormControlLabel, Switch } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-company.css'
 
-const UpdateCompany = () => {
+function UpdateCompany() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [company, setCompany] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
@@ -44,23 +53,23 @@ const UpdateCompany = () => {
     }
   }
 
-  const validateFullName = async (fullName: string) => {
-    if (company && fullName) {
-      if (company.fullName !== fullName) {
+  const validateFullName = async (_fullName: string) => {
+    if (company && _fullName) {
+      if (company.fullName !== _fullName) {
         try {
-          const status = await SupplierService.validate({ fullName })
+          const status = await SupplierService.validate({ fullName: _fullName })
 
           if (status === 200) {
             setFullNameError(false)
             return true
-          } else {
-            setFullNameError(true)
-            setAvatarError(false)
-            setError(false)
-            return false
           }
+          setFullNameError(true)
+          setAvatarError(false)
+          setError(false)
+          return false
         } catch (err) {
           Helper.error(err)
+          return true
         }
       } else {
         setFullNameError(false)
@@ -88,17 +97,16 @@ const UpdateCompany = () => {
     }
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -117,21 +125,21 @@ const UpdateCompany = () => {
     setLoading(true)
   }
 
-  const onAvatarChange = (avatar: string) => {
+  const onAvatarChange = (_avatar: string) => {
     if (company && user) {
       const _company = bookcarsHelper.clone(company)
-      _company.avatar = avatar
+      _company.avatar = _avatar
 
       if (user._id === company._id) {
         const _user = bookcarsHelper.clone(user)
-        _user.avatar = avatar
+        _user.avatar = _avatar
         setUser(_user)
       }
 
       setLoading(false)
       setCompany(_company)
 
-      if (avatar) {
+      if (_avatar) {
         setAvatarError(false)
       }
     } else {
@@ -155,27 +163,27 @@ const UpdateCompany = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
       setLoading(true)
-      setUser(user)
+      setUser(_user)
 
       const params = new URLSearchParams(window.location.search)
       if (params.has('c')) {
         const id = params.get('c')
         if (id && id !== '') {
           try {
-            const company = await SupplierService.getSupplier(id)
+            const _company = await SupplierService.getSupplier(id)
 
-            if (company) {
-              setCompany(company)
-              setEmail(company.email || '')
-              setAvatar(company.avatar || '')
-              setFullName(company.fullName || '')
-              setPhone(company.phone || '')
-              setLocation(company.location || '')
-              setBio(company.bio || '')
-              setPayLater(company.payLater || false)
+            if (_company) {
+              setCompany(_company)
+              setEmail(_company.email || '')
+              setAvatar(_company.avatar || '')
+              setFullName(_company.fullName || '')
+              setPhone(_company.phone || '')
+              setLocation(_company.location || '')
+              setBio(_company.bio || '')
+              setPayLater(_company.payLater || false)
               setVisible(true)
               setLoading(false)
             } else {
@@ -208,8 +216,8 @@ const UpdateCompany = () => {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
@@ -261,7 +269,7 @@ const UpdateCompany = () => {
                 record={company}
                 size="large"
                 readonly={false}
-                hideDelete={true}
+                hideDelete
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"
@@ -270,7 +278,7 @@ const UpdateCompany = () => {
 
               <div className="info">
                 <InfoIcon />
-                <label>{ccStrings.RECOMMENDED_IMAGE_SIZE}</label>
+                <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
               </div>
 
               <FormControl fullWidth margin="dense">
@@ -286,7 +294,7 @@ const UpdateCompany = () => {
 
               <FormControl component="fieldset" style={{ marginTop: 15 }}>
                 <FormControlLabel
-                  control={
+                  control={(
                     <Switch
                       checked={payLater}
                       onChange={(e) => {
@@ -294,14 +302,14 @@ const UpdateCompany = () => {
                       }}
                       color="primary"
                     />
-                  }
+                  )}
                   label={commonStrings.PAY_LATER}
                 />
               </FormControl>
 
               <div className="info">
                 <InfoIcon />
-                <label>{commonStrings.OPTIONAL}</label>
+                <span>{commonStrings.OPTIONAL}</span>
               </div>
 
               <FormControl fullWidth margin="dense">
@@ -319,7 +327,12 @@ const UpdateCompany = () => {
               </FormControl>
               {admin && (
                 <FormControl fullWidth margin="dense" className="resend-activation-link">
-                  <Link onClick={handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
+                  <Button
+                    variant="outlined"
+                    onClick={handleResendActivationLink}
+                  >
+                    {commonStrings.RESEND_ACTIVATION_LINK}
+                  </Button>
                 </FormControl>
               )}
               <div className="buttons">

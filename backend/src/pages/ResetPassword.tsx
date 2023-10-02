@@ -1,11 +1,4 @@
 import React, { useState } from 'react'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
-import { strings as commonStrings } from '../lang/common'
-import { strings as cpStrings } from '../lang/change-password'
-import { strings as rpStrings } from '../lang/reset-password'
-import Error from './Error'
-import NoMatch from './NoMatch'
 import {
   Input,
   InputLabel,
@@ -14,13 +7,20 @@ import {
   Button,
   Paper
 } from '@mui/material'
-import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import { strings as commonStrings } from '../lang/common'
+import { strings as cpStrings } from '../lang/change-password'
+import { strings as rpStrings } from '../lang/reset-password'
+import Error from './Error'
+import NoMatch from './NoMatch'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/reset-password.css'
 
-const ResetPassword = () => {
+function ResetPassword() {
   const navigate = useNavigate()
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
@@ -42,12 +42,6 @@ const ResetPassword = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit(e)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
     try {
       e.preventDefault()
@@ -57,19 +51,17 @@ const ResetPassword = () => {
         setConfirmPasswordError(false)
         setPasswordError(false)
         return
-      } else {
-        setPasswordLengthError(false)
-        setPasswordError(false)
       }
+      setPasswordLengthError(false)
+      setPasswordError(false)
 
       if (password !== confirmPassword) {
         setConfirmPasswordError(true)
         setPasswordError(false)
         return
-      } else {
-        setConfirmPasswordError(false)
-        setPasswordError(false)
       }
+      setConfirmPasswordError(false)
+      setPasswordError(false)
 
       const data = { userId, token, password }
 
@@ -79,9 +71,9 @@ const ResetPassword = () => {
         const signInResult = await UserService.signin({ email, password })
 
         if (signInResult.status === 200) {
-          const status = await UserService.deleteTokens(userId)
+          const _status = await UserService.deleteTokens(userId)
 
-          if (status === 200) {
+          if (_status === 200) {
             navigate('/')
           } else {
             Helper.error()
@@ -97,23 +89,29 @@ const ResetPassword = () => {
     }
   }
 
+  const handleConfirmPasswordKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
+    }
+  }
+
   const onLoad = async (user?: bookcarsTypes.User) => {
     if (user) {
       setNoMatch(true)
     } else {
       const params = new URLSearchParams(window.location.search)
       if (params.has('u') && params.has('e') && params.has('t')) {
-        const userId = params.get('u')
-        const email = params.get('e')
-        const token = params.get('t')
-        if (userId && email && token) {
+        const _userId = params.get('u')
+        const _email = params.get('e')
+        const _token = params.get('t')
+        if (_userId && _email && _token) {
           try {
-            const status = await UserService.checkToken(userId, email, token)
+            const status = await UserService.checkToken(_userId, _email, _token)
 
             if (status === 200) {
-              setUserId(userId)
-              setEmail(email)
-              setToken(token)
+              setUserId(_userId)
+              setEmail(_email)
+              setToken(_token)
               setVisible(true)
             } else {
               setNoMatch(true)

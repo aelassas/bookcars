@@ -1,10 +1,4 @@
 import React, { useState } from 'react'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/sign-up'
-import * as UserService from '../services/UserService'
-import Master from '../components/Master'
-import Error from '../components/Error'
-import Backdrop from '../components/SimpleBackdrop'
 import {
   Input,
   InputLabel,
@@ -14,13 +8,19 @@ import {
   Paper
 } from '@mui/material'
 import validator from 'validator'
-import * as Helper from '../common/Helper'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/sign-up'
+import * as UserService from '../services/UserService'
+import Master from '../components/Master'
+import Error from '../components/Error'
+import Backdrop from '../components/SimpleBackdrop'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/signup.css'
 
-const SignUp = () => {
+function SignUp() {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -55,21 +55,20 @@ const SignUp = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const validateEmail = async (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
           if (status === 200) {
             setEmailError(false)
             setEmailValid(true)
             return true
-          } else {
-            setEmailError(true)
-            setEmailValid(true)
-            setError(false)
-            return false
           }
+          setEmailError(true)
+          setEmailValid(true)
+          setError(false)
+          return false
         } catch (err) {
           Helper.error(err)
           setEmailError(false)
@@ -96,8 +95,8 @@ const SignUp = () => {
     try {
       e.preventDefault()
 
-      const emailValid = await validateEmail(email)
-      if (!emailValid) {
+      const _emailValid = await validateEmail(email)
+      if (!_emailValid) {
         return
       }
 
@@ -118,9 +117,9 @@ const SignUp = () => {
       setLoading(true)
 
       const data: bookcarsTypes.BackendSignUpPayload = {
-        email: email,
-        password: password,
-        fullName: fullName,
+        email,
+        password,
+        fullName,
         language: UserService.getLanguage(),
       }
 
@@ -128,8 +127,8 @@ const SignUp = () => {
 
       if (status === 200) {
         const signInResult = await UserService.signin({
-          email: email,
-          password: password,
+          email,
+          password,
         })
 
         if (signInResult.status === 200) {
@@ -165,7 +164,11 @@ const SignUp = () => {
     <Master strict={false} onLoad={onLoad}>
       <div className="signup">
         <Paper className="signup-form" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="signup-form-title"> {strings.SIGN_UP_HEADING} </h1>
+          <h1 className="signup-form-title">
+            {' '}
+            {strings.SIGN_UP_HEADING}
+            {' '}
+          </h1>
           <form onSubmit={handleSubmit}>
             <div>
               <FormControl fullWidth margin="dense">

@@ -1,4 +1,13 @@
 import React, { useState } from 'react'
+import {
+  Input, InputLabel, FormControl, FormHelperText, Button, Paper, Select, MenuItem, FormControlLabel, Switch, SelectChangeEvent
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import validator from 'validator'
+import { intervalToDuration } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -11,17 +20,10 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import DatePicker from '../components/DatePicker'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Select, MenuItem, FormControlLabel, Switch, SelectChangeEvent } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import validator from 'validator'
-import { intervalToDuration } from 'date-fns'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/create-user.css'
 
-const CreateUser = () => {
+function CreateUser() {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
@@ -44,18 +46,6 @@ const CreateUser = () => {
   const [birthDate, setBirthDate] = useState<Date>()
   const [birthDateValid, setBirthDateValid] = useState(true)
 
-  const handleUserTypeChange = async (e: SelectChangeEvent<string>) => {
-    const type = e.target.value
-
-    setType(type)
-
-    if (type === bookcarsTypes.RecordType.Company) {
-      await validateFullName(fullName)
-    } else {
-      setFullNameError(false)
-    }
-  }
-
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value)
 
@@ -64,27 +54,39 @@ const CreateUser = () => {
     }
   }
 
-  const validateFullName = async (fullName: string) => {
-    if (fullName) {
+  const validateFullName = async (_fullName: string) => {
+    if (_fullName) {
       try {
-        const status = await SupplierService.validate({ fullName })
+        const status = await SupplierService.validate({ fullName: _fullName })
 
         if (status === 200) {
           setFullNameError(false)
           setError(false)
           return true
-        } else {
-          setFullNameError(true)
-          setAvatarError(false)
-          setError(false)
-          return false
         }
+        setFullNameError(true)
+        setAvatarError(false)
+        setError(false)
+        return false
       } catch (err) {
         Helper.error(err)
+        return true
       }
     } else {
       setFullNameError(false)
       return true
+    }
+  }
+
+  const handleUserTypeChange = async (e: SelectChangeEvent<string>) => {
+    const _type = e.target.value
+
+    setType(_type)
+
+    if (_type === bookcarsTypes.RecordType.Company) {
+      await validateFullName(fullName)
+    } else {
+      setFullNameError(false)
     }
   }
 
@@ -105,24 +107,24 @@ const CreateUser = () => {
     }
   }
 
-  const validateEmail = async (email?: string) => {
-    if (email) {
-      if (validator.isEmail(email)) {
+  const validateEmail = async (_email?: string) => {
+    if (_email) {
+      if (validator.isEmail(_email)) {
         try {
-          const status = await UserService.validateEmail({ email })
+          const status = await UserService.validateEmail({ email: _email })
           if (status === 200) {
             setEmailError(false)
             setEmailValid(true)
             return true
-          } else {
-            setEmailError(true)
-            setEmailValid(true)
-            setAvatarError(false)
-            setError(false)
-            return false
           }
+          setEmailError(true)
+          setEmailValid(true)
+          setAvatarError(false)
+          setError(false)
+          return false
         } catch (err) {
           Helper.error(err)
+          return true
         }
       } else {
         setEmailError(false)
@@ -148,17 +150,16 @@ const CreateUser = () => {
     }
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -169,14 +170,13 @@ const CreateUser = () => {
     if (date && bookcarsHelper.isDate(date) && type === bookcarsTypes.RecordType.User) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateValid(true)
+    return true
   }
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,11 +191,11 @@ const CreateUser = () => {
     setLoading(true)
   }
 
-  const onAvatarChange = (avatar: string) => {
+  const onAvatarChange = (_avatar: string) => {
     setLoading(false)
-    setAvatar(avatar)
+    setAvatar(_avatar)
 
-    if (avatar !== null && type === bookcarsTypes.RecordType.Company) {
+    if (_avatar !== null && type === bookcarsTypes.RecordType.Company) {
       setAvatarError(false)
     }
   }
@@ -213,12 +213,12 @@ const CreateUser = () => {
     }
   }
 
-  const onLoad = (user?: bookcarsTypes.User) => {
-    if (user && user.verified) {
-      const admin = Helper.admin(user)
-      setUser(user)
-      setAdmin(admin)
-      setType(admin ? '' : bookcarsTypes.RecordType.User)
+  const onLoad = (_user?: bookcarsTypes.User) => {
+    if (_user && _user.verified) {
+      const _admin = Helper.admin(_user)
+      setUser(_user)
+      setAdmin(_admin)
+      setType(_admin ? '' : bookcarsTypes.RecordType.User)
       setVisible(true)
     }
   }
@@ -242,18 +242,18 @@ const CreateUser = () => {
         setFullNameError(false)
       }
 
-      const emailValid = await validateEmail(email)
-      if (!emailValid) {
+      const _emailValid = await validateEmail(email)
+      if (!_emailValid) {
         return
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
-      const birthDateValid = validateBirthDate(birthDate)
-      if (!birthDateValid) {
+      const _birthDateValid = validateBirthDate(birthDate)
+      if (!_birthDateValid) {
         return
       }
 
@@ -303,7 +303,11 @@ const CreateUser = () => {
       {user && (
         <div className="create-user">
           <Paper className="user-form user-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-            <h1 className="user-form-title"> {strings.CREATE_USER_HEADING} </h1>
+            <h1 className="user-form-title">
+              {' '}
+              {strings.CREATE_USER_HEADING}
+              {' '}
+            </h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={type}
@@ -320,7 +324,7 @@ const CreateUser = () => {
               {company && (
                 <div className="info">
                   <InfoIcon />
-                  <label>{ccStrings.RECOMMENDED_IMAGE_SIZE}</label>
+                  <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
                 </div>
               )}
 
@@ -356,12 +360,12 @@ const CreateUser = () => {
                     label={strings.BIRTH_DATE}
                     value={birthDate}
                     required
-                    onChange={(birthDate) => {
-                      if (birthDate) {
-                        const birthDateValid = validateBirthDate(birthDate)
+                    onChange={(_birthDate) => {
+                      if (_birthDate) {
+                        const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(birthDate)
-                        setBirthDateValid(birthDateValid)
+                        setBirthDate(_birthDate)
+                        setBirthDateValid(_birthDateValid)
                       }
                     }}
                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
@@ -372,7 +376,7 @@ const CreateUser = () => {
 
               <FormControl fullWidth margin="dense">
                 <InputLabel className={driver ? 'required' : ''}>{commonStrings.PHONE}</InputLabel>
-                <Input id="phone" type="text" onBlur={handlePhoneBlur} onChange={handlePhoneChange} error={!phoneValid} required={driver ? true : false} autoComplete="off" />
+                <Input id="phone" type="text" onBlur={handlePhoneBlur} onChange={handlePhoneChange} error={!phoneValid} required={!!driver} autoComplete="off" />
                 <FormHelperText error={!phoneValid}>{(!phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
               </FormControl>
 
@@ -389,7 +393,7 @@ const CreateUser = () => {
               {company && (
                 <FormControl component="fieldset" style={{ marginTop: 15 }}>
                   <FormControlLabel
-                    control={
+                    control={(
                       <Switch
                         checked={payLater}
                         onChange={(e) => {
@@ -397,7 +401,7 @@ const CreateUser = () => {
                         }}
                         color="primary"
                       />
-                    }
+                    )}
                     label={commonStrings.PAY_LATER}
                   />
                 </FormControl>

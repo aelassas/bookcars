@@ -1,4 +1,23 @@
 import React, { useState } from 'react'
+import {
+  Input,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+  Button,
+  Paper,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Switch,
+  SelectChangeEvent
+} from '@mui/material'
+import { Info as InfoIcon } from '@mui/icons-material'
+import { intervalToDuration } from 'date-fns'
+import validator from 'validator'
+import { useNavigate } from 'react-router-dom'
+import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import Env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -13,17 +32,10 @@ import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import DatePicker from '../components/DatePicker'
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper, Select, MenuItem, Link, FormControlLabel, Switch, SelectChangeEvent } from '@mui/material'
-import { Info as InfoIcon } from '@mui/icons-material'
-import { intervalToDuration } from 'date-fns'
-import validator from 'validator'
-import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
 
 import '../assets/css/update-user.css'
 
-const UpdateUser = () => {
+function UpdateUser() {
   const navigate = useNavigate()
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
@@ -46,26 +58,6 @@ const UpdateUser = () => {
   const [phoneValid, setPhoneValid] = useState(true)
   const [payLater, setPayLater] = useState(true)
 
-  const handleUserTypeChange = async (e: SelectChangeEvent<string>) => {
-    const type = e.target.value
-
-    setType(e.target.value)
-
-    if (type === bookcarsTypes.RecordType.Company) {
-      await validateFullName(fullName)
-    } else {
-      setFullNameError(false)
-    }
-  }
-
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value)
-
-    if (!e.target.value) {
-      setFullNameError(false)
-    }
-  }
-
   const validateFullName = async (_fullName: string, strict = true) => {
     const __fullName = _fullName || fullName
 
@@ -77,18 +69,38 @@ const UpdateUser = () => {
           setFullNameError(false)
           setError(false)
           return true
-        } else {
-          setFullNameError(true)
-          setAvatarError(false)
-          setError(false)
-          return false
         }
+        setFullNameError(true)
+        setAvatarError(false)
+        setError(false)
+        return false
       } catch (err) {
         Helper.error(err)
+        return true
       }
     } else {
       setFullNameError(false)
       return true
+    }
+  }
+
+  const handleUserTypeChange = async (e: SelectChangeEvent<string>) => {
+    const _type = e.target.value
+
+    setType(e.target.value)
+
+    if (_type === bookcarsTypes.RecordType.Company) {
+      await validateFullName(fullName)
+    } else {
+      setFullNameError(false)
+    }
+  }
+
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullName(e.target.value)
+
+    if (!e.target.value) {
+      setFullNameError(false)
     }
   }
 
@@ -108,17 +120,16 @@ const UpdateUser = () => {
     }
   }
 
-  const validatePhone = (phone?: string) => {
-    if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneValid(phoneValid)
+  const validatePhone = (_phone?: string) => {
+    if (_phone) {
+      const _phoneValid = validator.isMobilePhone(_phone)
+      setPhoneValid(_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneValid(true)
-
-      return true
+      return _phoneValid
     }
+    setPhoneValid(true)
+
+    return true
   }
 
   const handlePhoneBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -129,14 +140,13 @@ const UpdateUser = () => {
     if (date && bookcarsHelper.isDate(date) && type === bookcarsTypes.RecordType.User) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateValid(true)
-      return true
+      setBirthDateValid(_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateValid(true)
+    return true
   }
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,22 +161,22 @@ const UpdateUser = () => {
     setLoading(true)
   }
 
-  const onAvatarChange = (avatar: string) => {
+  const onAvatarChange = (_avatar: string) => {
     if (loggedUser && user && loggedUser._id === user._id) {
       const _loggedUser = bookcarsHelper.clone(loggedUser)
-      _loggedUser.avatar = avatar
+      _loggedUser.avatar = _avatar
 
       setLoggedUser(_loggedUser)
     }
 
     const _user = bookcarsHelper.clone(user)
-    _user.avatar = avatar
+    _user.avatar = _avatar
 
     setLoading(false)
     setUser(_user)
-    setAvatar(avatar)
+    setAvatar(_avatar)
 
-    if (avatar !== null && type === bookcarsTypes.RecordType.Company) {
+    if (_avatar !== null && type === bookcarsTypes.RecordType.Company) {
       setAvatarError(false)
     }
   }
@@ -200,8 +210,8 @@ const UpdateUser = () => {
     }
   }
 
-  const onLoad = async (loggedUser?: bookcarsTypes.User) => {
-    if (loggedUser && loggedUser.verified) {
+  const onLoad = async (_loggedUser?: bookcarsTypes.User) => {
+    if (_loggedUser && _loggedUser.verified) {
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
@@ -209,21 +219,21 @@ const UpdateUser = () => {
         const id = params.get('u')
         if (id && id !== '') {
           try {
-            const user = await UserService.getUser(id)
+            const _user = await UserService.getUser(id)
 
-            if (user) {
-              setLoggedUser(loggedUser)
-              setUser(user)
-              setAdmin(Helper.admin(loggedUser))
-              setType(user.type || '')
-              setEmail(user.email || '')
-              setAvatar(user.avatar || '')
-              setFullName(user.fullName || '')
-              setPhone(user.phone || '')
-              setLocation(user.location || '')
-              setBio(user.bio || '')
-              setBirthDate(user && user.birthDate ? new Date(user.birthDate) : undefined)
-              setPayLater(user.payLater || false)
+            if (_user) {
+              setLoggedUser(_loggedUser)
+              setUser(_user)
+              setAdmin(Helper.admin(_loggedUser))
+              setType(_user.type || '')
+              setEmail(_user.email || '')
+              setAvatar(_user.avatar || '')
+              setFullName(_user.fullName || '')
+              setPhone(_user.phone || '')
+              setLocation(_user.location || '')
+              setBio(_user.bio || '')
+              setBirthDate(_user && _user.birthDate ? new Date(_user.birthDate) : undefined)
+              setPayLater(_user.payLater || false)
               setVisible(true)
               setLoading(false)
             } else {
@@ -265,13 +275,13 @@ const UpdateUser = () => {
         setFullNameError(false)
       }
 
-      const phoneValid = validatePhone(phone)
-      if (!phoneValid) {
+      const _phoneValid = validatePhone(phone)
+      if (!_phoneValid) {
         return
       }
 
-      const birthDateValid = validateBirthDate(birthDate)
-      if (!birthDateValid) {
+      const _birthDateValid = validateBirthDate(birthDate)
+      if (!_birthDateValid) {
         return
       }
 
@@ -325,7 +335,11 @@ const UpdateUser = () => {
       {loggedUser && user && visible && (
         <div className="update-user">
           <Paper className="user-form user-form-wrapper" elevation={10}>
-            <h1 className="user-form-title"> {strings.UPDATE_USER_HEADING} </h1>
+            <h1 className="user-form-title">
+              {' '}
+              {strings.UPDATE_USER_HEADING}
+              {' '}
+            </h1>
             <form onSubmit={handleSubmit}>
               <Avatar
                 type={type}
@@ -343,7 +357,7 @@ const UpdateUser = () => {
               {company && (
                 <div className="info">
                   <InfoIcon />
-                  <label>{ccStrings.RECOMMENDED_IMAGE_SIZE}</label>
+                  <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
                 </div>
               )}
 
@@ -375,12 +389,12 @@ const UpdateUser = () => {
                     label={cuStrings.BIRTH_DATE}
                     value={birthDate}
                     required
-                    onChange={(birthDate) => {
-                      if (birthDate) {
-                        const birthDateValid = validateBirthDate(birthDate)
+                    onChange={(_birthDate) => {
+                      if (_birthDate) {
+                        const _birthDateValid = validateBirthDate(_birthDate)
 
-                        setBirthDate(birthDate)
-                        setBirthDateValid(birthDateValid)
+                        setBirthDate(_birthDate)
+                        setBirthDateValid(_birthDateValid)
                       }
                     }}
                     language={(user && user.language) || Env.DEFAULT_LANGUAGE}
@@ -392,7 +406,7 @@ const UpdateUser = () => {
               {company && (
                 <FormControl component="fieldset" style={{ marginTop: 15 }}>
                   <FormControlLabel
-                    control={
+                    control={(
                       <Switch
                         checked={payLater}
                         onChange={(e) => {
@@ -400,7 +414,7 @@ const UpdateUser = () => {
                         }}
                         color="primary"
                       />
-                    }
+                    )}
                     label={commonStrings.PAY_LATER}
                   />
                 </FormControl>
@@ -408,7 +422,7 @@ const UpdateUser = () => {
 
               <div className="info">
                 <InfoIcon />
-                <label>{commonStrings.OPTIONAL}</label>
+                <span>{commonStrings.OPTIONAL}</span>
               </div>
 
               <FormControl fullWidth margin="dense">
@@ -429,7 +443,12 @@ const UpdateUser = () => {
 
               {activate && (
                 <FormControl fullWidth margin="dense" className="resend-activation-link">
-                  <Link onClick={handleResendActivationLink}>{commonStrings.RESEND_ACTIVATION_LINK}</Link>
+                  <Button
+                    variant="outlined"
+                    onClick={handleResendActivationLink}
+                  >
+                    {commonStrings.RESEND_ACTIVATION_LINK}
+                  </Button>
                 </FormControl>
               )}
 

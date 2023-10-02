@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/user-list'
-import * as Helper from '../common/Helper'
-import * as UserService from '../services/UserService'
-import { DataGrid, frFR, enUS, GridColDef } from '@mui/x-data-grid'
+import {
+  DataGrid, frFR, enUS, GridColDef
+} from '@mui/x-data-grid'
 import {
   Tooltip,
   IconButton,
@@ -25,25 +22,29 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings } from '../lang/user-list'
+import * as Helper from '../common/Helper'
+import * as UserService from '../services/UserService'
 
 import '../assets/css/user-list.css'
 
-const UserList = (
-  {
-    types: userListTypes,
-    keyword: userListKeyword,
-    user: userListUser,
-    hideDesktopColumns,
-    checkboxSelection,
-    onLoad
-  }: {
-    types?: bookcarsTypes.UserType[]
-    keyword?: string
-    user?: bookcarsTypes.User
-    hideDesktopColumns?: boolean
-    checkboxSelection?: boolean
-    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
-  }) => {
+function UserList({
+  types: userListTypes,
+  keyword: userListKeyword,
+  user: userListUser,
+  hideDesktopColumns,
+  checkboxSelection,
+  onLoad
+}: {
+  types?: bookcarsTypes.UserType[]
+  keyword?: string
+  user?: bookcarsTypes.User
+  hideDesktopColumns?: boolean
+  checkboxSelection?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
+}) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)
@@ -67,18 +68,17 @@ const UserList = (
     setPageSize(paginationModel.pageSize)
   }, [paginationModel])
 
-  const _fetch = async (page: number, user?: bookcarsTypes.User) => {
+  const _fetch = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
-      if (user && types) {
+      if (_user && types) {
         setLoading(true)
 
-        const payload: bookcarsTypes.GetUsersBody =
-        {
-          user: (user && user._id) || '',
+        const payload: bookcarsTypes.GetUsersBody = {
+          user: (_user && _user._id) || '',
           types
         }
 
-        const data = await UserService.getUsers(payload, keyword || '', page + 1, pageSize)
+        const data = await UserService.getUsers(payload, keyword || '', _page + 1, pageSize)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           Helper.error()
@@ -127,46 +127,22 @@ const UserList = (
     }
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (userListUser && types) {
-      setUser(userListUser)
-      const columns = getColumns(userListUser)
-      setColumns(columns)
-
-      if (page === 0) {
-        _fetch(0, userListUser)
-      } else {
-        const _paginationModel = bookcarsHelper.clone(paginationModel)
-        _paginationModel.page = 0
-        setPaginationModel(_paginationModel)
-      }
-    }
-  }, [userListUser, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (user && reloadColumns) {
-      const columns = getColumns(user)
-      setColumns(columns)
-      setReloadColumns(false)
-    }
-  }, [user, selectedIds, reloadColumns]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const getColumns = (user: bookcarsTypes.User) => {
-    const columns = [
+  const getColumns = (_user: bookcarsTypes.User) => {
+    const _columns = [
       {
         field: 'fullName',
         headerName: commonStrings.USER,
         flex: 1,
         renderCell: (params: any) => {
-          const user = params.row
+          const __user = params.row
           let userAvatar
 
-          if (user.avatar) {
-            if (user.type === bookcarsTypes.RecordType.Company) {
+          if (__user.avatar) {
+            if (__user.type === bookcarsTypes.RecordType.Company) {
               userAvatar = <img src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} alt={params.row.fullName} />
             } else {
               const avatar = <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} className="avatar-small" />
-              if (user.verified) {
+              if (__user.verified) {
                 userAvatar = (
                   <Badge
                     overlap="circular"
@@ -174,13 +150,13 @@ const UserList = (
                       vertical: 'bottom',
                       horizontal: 'right',
                     }}
-                    badgeContent={
+                    badgeContent={(
                       <Tooltip title={commonStrings.VERIFIED}>
                         <Box borderRadius="50%" className="user-avatar-verified-small">
                           <VerifiedIcon className="user-avatar-verified-icon-small" />
                         </Box>
                       </Tooltip>
-                    }
+                    )}
                   >
                     {avatar}
                   </Badge>
@@ -192,7 +168,7 @@ const UserList = (
           } else {
             const avatar = <AccountCircle className="avatar-small" color="disabled" />
 
-            if (user.verified) {
+            if (__user.verified) {
               userAvatar = (
                 <Badge
                   overlap="circular"
@@ -200,13 +176,13 @@ const UserList = (
                     vertical: 'bottom',
                     horizontal: 'right',
                   }}
-                  badgeContent={
+                  badgeContent={(
                     <Tooltip title={commonStrings.VERIFIED}>
                       <Box borderRadius="50%" className="user-avatar-verified-small">
                         <VerifiedIcon className="user-avatar-verified-icon-small" />
                       </Box>
                     </Tooltip>
-                  }
+                  )}
                 >
                   {avatar}
                 </Badge>
@@ -256,8 +232,8 @@ const UserList = (
             setOpenDeleteDialog(true)
           }
 
-          const _user = params.row
-          return user.type === bookcarsTypes.RecordType.Admin || _user.company === user._id ? (
+          const __user = params.row
+          return _user.type === bookcarsTypes.RecordType.Admin || __user.company === _user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
                 <IconButton href={`update-user?u=${params.row._id}`}>
@@ -274,33 +250,55 @@ const UserList = (
             <></>
           )
         },
-        renderHeader: () => {
-          return selectedIds.length > 0 ? (
-            <div>
-              <div style={{ width: 40, display: 'inline-block' }}></div>
-              <Tooltip title={strings.DELETE_SELECTION}>
-                <IconButton
-                  onClick={() => {
-                    setOpenDeleteDialog(true)
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          ) : (
-            <></>
-          )
-        },
+        renderHeader: () => (selectedIds.length > 0 ? (
+          <div>
+            <div style={{ width: 40, display: 'inline-block' }} />
+            <Tooltip title={strings.DELETE_SELECTION}>
+              <IconButton
+                onClick={() => {
+                  setOpenDeleteDialog(true)
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ) : (
+          <></>
+        )),
       },
     ]
 
     if (hideDesktopColumns) {
-      columns.splice(1, 3)
+      _columns.splice(1, 3)
     }
 
-    return columns
+    return _columns
   }
+
+  useEffect(() => {
+    if (userListUser && types) {
+      setUser(userListUser)
+      const _columns = getColumns(userListUser)
+      setColumns(_columns)
+
+      if (page === 0) {
+        _fetch(0, userListUser)
+      } else {
+        const _paginationModel = bookcarsHelper.clone(paginationModel)
+        _paginationModel.page = 0
+        setPaginationModel(_paginationModel)
+      }
+    }
+  }, [userListUser, types, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (user && reloadColumns) {
+      const _columns = getColumns(user)
+      setColumns(_columns)
+      setReloadColumns(false)
+    }
+  }, [user, selectedIds, reloadColumns]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false)
@@ -350,8 +348,8 @@ const UserList = (
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-          onRowSelectionModelChange={(selectedIds) => {
-            setSelectedIds(Array.from(new Set(selectedIds)).map(id => id.toString()))
+          onRowSelectionModelChange={(_selectedIds) => {
+            setSelectedIds(Array.from(new Set(_selectedIds)).map((id) => id.toString()))
             setReloadColumns(true)
           }}
           getRowClassName={(params: any) => (params.row.blacklisted ? 'us-blacklisted' : '')}

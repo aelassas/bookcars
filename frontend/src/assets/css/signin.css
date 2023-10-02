@@ -31,6 +31,7 @@ div.signin div.stay-connected input[type='checkbox'] {
 div.signin div.stay-connected label {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.6);
+  user-select: none;
 }
 
 div.signin div.forgot-password {

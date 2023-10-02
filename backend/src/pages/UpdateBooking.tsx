@@ -1,26 +1,4 @@
 import React, { useState, useCallback } from 'react'
-import Env from '../config/env.config'
-import { strings as commonStrings } from '../lang/common'
-import { strings as blStrings } from '../lang/booking-list'
-import { strings as bfStrings } from '../lang/booking-filter'
-import { strings as csStrings } from '../lang/cars'
-import { strings } from '../lang/booking'
-import * as Helper from '../common/Helper'
-import Master from '../components/Master'
-import * as UserService from '../services/UserService'
-import * as BookingService from '../services/BookingService'
-import * as CarService from '../services/CarService'
-import Backdrop from '../components/SimpleBackdrop'
-import NoMatch from './NoMatch'
-import Error from './Error'
-import CarList from '../components/CarList'
-import SupplierSelectList from '../components/SupplierSelectList'
-import UserSelectList from '../components/UserSelectList'
-import LocationSelectList from '../components/LocationSelectList'
-import CarSelectList from '../components/CarSelectList'
-import StatusList from '../components/StatusList'
-import DateTimePicker from '../components/DateTimePicker'
-import DatePicker from '../components/DatePicker'
 import {
   FormControl,
   FormControlLabel,
@@ -43,10 +21,32 @@ import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
+import Env from '../config/env.config'
+import { strings as commonStrings } from '../lang/common'
+import { strings as blStrings } from '../lang/booking-list'
+import { strings as bfStrings } from '../lang/booking-filter'
+import { strings as csStrings } from '../lang/cars'
+import { strings } from '../lang/booking'
+import * as Helper from '../common/Helper'
+import Master from '../components/Master'
+import * as UserService from '../services/UserService'
+import * as BookingService from '../services/BookingService'
+import * as CarService from '../services/CarService'
+import Backdrop from '../components/SimpleBackdrop'
+import NoMatch from './NoMatch'
+import Error from './Error'
+import CarList from '../components/CarList'
+import SupplierSelectList from '../components/SupplierSelectList'
+import UserSelectList from '../components/UserSelectList'
+import LocationSelectList from '../components/LocationSelectList'
+import CarSelectList from '../components/CarSelectList'
+import StatusList from '../components/StatusList'
+import DateTimePicker from '../components/DateTimePicker'
+import DatePicker from '../components/DatePicker'
 
 import '../assets/css/booking.css'
 
-const UpdateBooking = () => {
+function UpdateBooking() {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(false)
@@ -71,13 +71,13 @@ const UpdateBooking = () => {
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
   const [minDate, setMinDate] = useState<Date>()
-  const [_fullName, set_FullName] = useState('')
-  const [_email, set_Email] = useState('')
-  const [_phone, set_Phone] = useState('')
-  const [_birthDate, set_BirthDate] = useState<Date>()
-  const [_emailValid, set_EmailValid] = useState(true)
-  const [_phoneValid, set_PhoneValid] = useState(true)
-  const [_birthDateValid, set_BirthDateValid] = useState(true)
+  const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
+  const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
+  const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
+  const [addtionalDriverBirthDate, setAdditionalDriverBirthDate] = useState<Date>()
+  const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
+  const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
+  const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
   const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
@@ -103,16 +103,16 @@ const UpdateBooking = () => {
 
         if ((!car && newCar) || (car && newCar && car._id !== newCar._id)) {
           // car changed
-          const car = await CarService.getCar(newCar._id)
+          const _car = await CarService.getCar(newCar._id)
 
-          if (car) {
+          if (_car) {
             const _booking = bookcarsHelper.clone(booking)
-            _booking.car = car
+            _booking.car = _car
             Helper.price(
               _booking,
-              car,
-              (price) => {
-                setPrice(price)
+              _car,
+              (_price) => {
+                setPrice(_price)
               },
               (err) => {
                 Helper.error(err)
@@ -148,9 +148,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setCancellation(booking.cancellation || false)
         },
         (err) => {
@@ -167,9 +167,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setAmendments(booking.amendments || false)
         },
         (err) => {
@@ -186,9 +186,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setCollisionDamageWaiver(booking.collisionDamageWaiver || false)
         },
         (err) => {
@@ -205,9 +205,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setTheftProtection(booking.theftProtection || false)
         },
         (err) => {
@@ -224,9 +224,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setFullInsurance(booking.fullInsurance || false)
         },
         (err) => {
@@ -243,9 +243,9 @@ const UpdateBooking = () => {
       Helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
-        (price) => {
+        (_price) => {
           setBooking(booking)
-          setPrice(price)
+          setPrice(_price)
           setAdditionalDriver(booking.additionalDriver || false)
         },
         (err) => {
@@ -275,9 +275,9 @@ const UpdateBooking = () => {
       try {
         setOpenDeleteDialog(false)
 
-        const status = await BookingService.deleteBookings([booking._id])
+        const _status = await BookingService.deleteBookings([booking._id])
 
-        if (status === 200) {
+        if (_status === 200) {
           navigate('/')
         } else {
           toastErr(true)
@@ -293,29 +293,26 @@ const UpdateBooking = () => {
   const _validateEmail = (email: string) => {
     if (email) {
       if (validator.isEmail(email)) {
-        set_EmailValid(true)
+        setAdditionalDriverEmailValid(true)
         return true
-      } else {
-        set_EmailValid(false)
-        return false
       }
-    } else {
-      set_EmailValid(true)
+      setAdditionalDriverEmailValid(false)
       return false
     }
+    setAdditionalDriverEmailValid(true)
+    return false
   }
 
   const _validatePhone = (phone?: string) => {
     if (phone) {
       const _phoneValid = validator.isMobilePhone(phone)
-      set_PhoneValid(_phoneValid)
+      setAdditionalDriverPhoneValid(_phoneValid)
 
       return _phoneValid
-    } else {
-      set_PhoneValid(true)
-
-      return true
     }
+    setAdditionalDriverPhoneValid(true)
+
+    return true
   }
 
   const _validateBirthDate = (date?: Date) => {
@@ -324,12 +321,11 @@ const UpdateBooking = () => {
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
       const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      set_BirthDateValid(_birthDateValid)
+      setAdditionalDriverBirthDateValid(_birthDateValid)
       return _birthDateValid
-    } else {
-      set_BirthDateValid(true)
-      return true
     }
+    setAdditionalDriverBirthDateValid(true)
+    return true
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -339,17 +335,17 @@ const UpdateBooking = () => {
       const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
       if (additionalDriverSet) {
-        const emailValid = _validateEmail(_email)
+        const emailValid = _validateEmail(addtionalDriverEmail)
         if (!emailValid) {
           return
         }
 
-        const phoneValid = _validatePhone(_phone)
+        const phoneValid = _validatePhone(additionalDriverPhone)
         if (!phoneValid) {
           return
         }
 
-        const birthDateValid = _validateBirthDate(_birthDate)
+        const birthDateValid = _validateBirthDate(addtionalDriverBirthDate)
         if (!birthDateValid) {
           return
         }
@@ -382,15 +378,15 @@ const UpdateBooking = () => {
       let payload: bookcarsTypes.UpsertBookingPayload
       let _additionalDriver: bookcarsTypes.AdditionalDriver
       if (additionalDriverSet) {
-        if (!_birthDate) {
+        if (!addtionalDriverBirthDate) {
           Helper.error()
           return
         }
         _additionalDriver = {
-          fullName: _fullName,
-          email: _email,
-          phone: _phone,
-          birthDate: _birthDate,
+          fullName: additionalDriverfullName,
+          email: addtionalDriverEmail,
+          phone: additionalDriverPhone,
+          birthDate: addtionalDriverBirthDate,
         }
 
         payload = {
@@ -405,10 +401,10 @@ const UpdateBooking = () => {
 
       if (_status === 200) {
         if (!additionalDriverSet) {
-          set_FullName('')
-          set_Email('')
-          set_Phone('')
-          set_BirthDate(undefined)
+          setAdditionalDriverFullName('')
+          setAdditionalDriverEmail('')
+          setAdditionalDriverPhone('')
+          setAdditionalDriverBirthDate(undefined)
         }
         Helper.info(commonStrings.UPDATED)
       } else {
@@ -419,9 +415,9 @@ const UpdateBooking = () => {
     }
   }
 
-  const onLoad = async (user?: bookcarsTypes.User) => {
-    if (user) {
-      setUser(user)
+  const onLoad = async (_user?: bookcarsTypes.User) => {
+    if (_user) {
+      setUser(_user)
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
@@ -429,59 +425,59 @@ const UpdateBooking = () => {
         const id = params.get('b')
         if (id && id !== '') {
           try {
-            const booking = await BookingService.getBooking(id)
+            const _booking = await BookingService.getBooking(id)
 
-            if (booking) {
-              if (!Helper.admin(user) && (booking.company as bookcarsTypes.User)._id !== user._id) {
+            if (_booking) {
+              if (!Helper.admin(_user) && (_booking.company as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
               }
 
-              setBooking(booking)
-              setPrice(booking.price)
+              setBooking(_booking)
+              setPrice(_booking.price)
               setLoading(false)
               setVisible(true)
-              setIsCompany(user.type === bookcarsTypes.RecordType.Company)
-              const cmp = booking.company as bookcarsTypes.User
+              setIsCompany(_user.type === bookcarsTypes.RecordType.Company)
+              const cmp = _booking.company as bookcarsTypes.User
               setCompany({
                 _id: cmp._id as string,
                 name: cmp.fullName,
                 image: cmp.avatar,
               })
-              setCar(booking.car as bookcarsTypes.Car)
-              const drv = booking.driver as bookcarsTypes.User
+              setCar(_booking.car as bookcarsTypes.Car)
+              const drv = _booking.driver as bookcarsTypes.User
               setDriver({
                 _id: drv._id as string,
                 name: drv.fullName,
                 image: drv.avatar,
               })
-              const pul = booking.pickupLocation as bookcarsTypes.Location
+              const pul = _booking.pickupLocation as bookcarsTypes.Location
               setPickupLocation({
                 _id: pul._id,
                 name: pul.name || '',
               })
-              const dol = booking.dropOffLocation as bookcarsTypes.Location
+              const dol = _booking.dropOffLocation as bookcarsTypes.Location
               setDropOffLocation({
                 _id: dol._id,
                 name: dol.name || '',
               })
-              setFrom(new Date(booking.from))
-              setMinDate(new Date(booking.from))
-              setTo(new Date(booking.to))
-              setStatus(booking.status)
-              setCancellation(booking.cancellation || false)
-              setAmendments(booking.amendments || false)
-              setTheftProtection(booking.theftProtection || false)
-              setCollisionDamageWaiver(booking.collisionDamageWaiver || false)
-              setFullInsurance(booking.fullInsurance || false)
-              setAdditionalDriver((booking.additionalDriver && !!booking._additionalDriver) || false)
-              if (booking.additionalDriver && booking._additionalDriver) {
-                const additionalDriver = booking._additionalDriver as bookcarsTypes.AdditionalDriver
-                set_FullName(additionalDriver.fullName)
-                set_Email(additionalDriver.email)
-                set_Phone(additionalDriver.phone)
-                set_BirthDate(new Date(additionalDriver.birthDate))
+              setFrom(new Date(_booking.from))
+              setMinDate(new Date(_booking.from))
+              setTo(new Date(_booking.to))
+              setStatus(_booking.status)
+              setCancellation(_booking.cancellation || false)
+              setAmendments(_booking.amendments || false)
+              setTheftProtection(_booking.theftProtection || false)
+              setCollisionDamageWaiver(_booking.collisionDamageWaiver || false)
+              setFullInsurance(_booking.fullInsurance || false)
+              setAdditionalDriver((_booking.additionalDriver && !!_booking._additionalDriver) || false)
+              if (_booking.additionalDriver && _booking._additionalDriver) {
+                const _additionalDriver = _booking._additionalDriver as bookcarsTypes.AdditionalDriver
+                setAdditionalDriverFullName(_additionalDriver.fullName)
+                setAdditionalDriverEmail(_additionalDriver.email)
+                setAdditionalDriverPhone(_additionalDriver.phone)
+                setAdditionalDriverBirthDate(new Date(_additionalDriver.birthDate))
               }
             } else {
               setLoading(false)
@@ -518,7 +514,8 @@ const UpdateBooking = () => {
                     required
                     variant="standard"
                     onChange={handleCompanyChange}
-                    value={company} />
+                    value={company}
+                  />
                 </FormControl>
               )}
 
@@ -536,7 +533,8 @@ const UpdateBooking = () => {
                   required
                   variant="standard"
                   onChange={handlePickupLocationChange}
-                  value={pickupLocation} />
+                  value={pickupLocation}
+                />
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -545,7 +543,8 @@ const UpdateBooking = () => {
                   required
                   variant="standard"
                   onChange={handleDropOffLocationChange}
-                  value={dropOffLocation} />
+                  value={dropOffLocation}
+                />
               </FormControl>
 
               <CarSelectList
@@ -569,14 +568,14 @@ const UpdateBooking = () => {
                       Helper.price(
                         booking,
                         booking.car as bookcarsTypes.Car,
-                        (price) => {
+                        (_price) => {
                           setBooking(booking)
-                          setPrice(price)
+                          setPrice(_price)
                           setFrom(date)
 
-                          const minDate = new Date(date)
-                          minDate.setDate(minDate.getDate() + 1)
-                          setMinDate(minDate)
+                          const _minDate = new Date(date)
+                          _minDate.setDate(_minDate.getDate() + 1)
+                          setMinDate(_minDate)
 
                           if (to && to.getTime() <= date.getTime()) {
                             setTo(undefined)
@@ -607,9 +606,9 @@ const UpdateBooking = () => {
                       Helper.price(
                         booking,
                         booking.car as bookcarsTypes.Car,
-                        (price) => {
+                        (_price) => {
                           setBooking(booking)
-                          setPrice(price)
+                          setPrice(_price)
                           setTo(date)
                         },
                         (err) => {
@@ -628,7 +627,7 @@ const UpdateBooking = () => {
 
               <div className="info">
                 <InfoIcon />
-                <label>{commonStrings.OPTIONAL}</label>
+                <span>{commonStrings.OPTIONAL}</span>
               </div>
 
               <FormControl fullWidth margin="dense" className="checkbox-fc">
@@ -689,16 +688,16 @@ const UpdateBooking = () => {
                 <>
                   <div className="info">
                     <DriverIcon />
-                    <label>{csStrings.ADDITIONAL_DRIVER}</label>
+                    <span>{csStrings.ADDITIONAL_DRIVER}</span>
                   </div>
                   <FormControl fullWidth margin="dense">
                     <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                     <Input
                       type="text"
-                      value={_fullName}
+                      value={additionalDriverfullName}
                       required
                       onChange={(e) => {
-                        set_FullName(e.target.value)
+                        setAdditionalDriverFullName(e.target.value)
                       }}
                       autoComplete="off"
                     />
@@ -707,59 +706,59 @@ const UpdateBooking = () => {
                     <InputLabel className="required">{commonStrings.EMAIL}</InputLabel>
                     <Input
                       type="text"
-                      value={_email}
-                      error={!_emailValid}
+                      value={addtionalDriverEmail}
+                      error={!additionalDriverEmailValid}
                       onBlur={(e) => {
                         _validateEmail(e.target.value)
                       }}
                       onChange={(e) => {
-                        set_Email(e.target.value)
+                        setAdditionalDriverEmail(e.target.value)
 
                         if (!e.target.value) {
-                          set_EmailValid(true)
+                          setAdditionalDriverEmailValid(true)
                         }
                       }}
                       required
                       autoComplete="off"
                     />
-                    <FormHelperText error={!_emailValid}>{(!_emailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
+                    <FormHelperText error={!additionalDriverEmailValid}>{(!additionalDriverEmailValid && commonStrings.EMAIL_NOT_VALID) || ''}</FormHelperText>
                   </FormControl>
                   <FormControl fullWidth margin="dense">
                     <InputLabel className="required">{commonStrings.PHONE}</InputLabel>
                     <Input
                       type="text"
-                      value={_phone}
-                      error={!_phoneValid}
+                      value={additionalDriverPhone}
+                      error={!additionalDriverPhoneValid}
                       onBlur={(e) => {
                         _validatePhone(e.target.value)
                       }}
                       onChange={(e) => {
-                        set_Phone(e.target.value)
+                        setAdditionalDriverPhone(e.target.value)
 
                         if (!e.target.value) {
-                          set_PhoneValid(true)
+                          setAdditionalDriverPhoneValid(true)
                         }
                       }}
                       required
                       autoComplete="off"
                     />
-                    <FormHelperText error={!_phoneValid}>{(!_phoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
+                    <FormHelperText error={!additionalDriverPhoneValid}>{(!additionalDriverPhoneValid && commonStrings.PHONE_NOT_VALID) || ''}</FormHelperText>
                   </FormControl>
                   <FormControl fullWidth margin="dense">
                     <DatePicker
                       label={commonStrings.BIRTH_DATE}
-                      value={_birthDate}
+                      value={addtionalDriverBirthDate}
                       required
                       onChange={(_birthDate) => {
                         if (_birthDate) {
                           const _birthDateValid = _validateBirthDate(_birthDate)
-                          set_BirthDate(_birthDate)
-                          set_BirthDateValid(_birthDateValid)
+                          setAdditionalDriverBirthDate(_birthDate)
+                          setAdditionalDriverBirthDateValid(_birthDateValid)
                         }
                       }}
                       language={UserService.getLanguage()}
                     />
-                    <FormHelperText error={!_birthDateValid}>{(!_birthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}</FormHelperText>
+                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}</FormHelperText>
                   </FormControl>
                 </>
               )}
@@ -782,9 +781,9 @@ const UpdateBooking = () => {
           <div className="col-2">
             <div className="col-2-header">
               <div className="price">
-                <label className="price-days">{Helper.getDays(days)}</label>
-                <label className="price-main">{`${bookcarsHelper.formatNumber(price ?? 0)} ${commonStrings.CURRENCY}`}</label>
-                <label className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price ?? 0) / days)} ${commonStrings.CURRENCY}`}</label>
+                <span className="price-days">{Helper.getDays(days)}</span>
+                <span className="price-main">{`${bookcarsHelper.formatNumber(price ?? 0)} ${commonStrings.CURRENCY}`}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price ?? 0) / days)} ${commonStrings.CURRENCY}`}</span>
               </div>
             </div>
             <CarList
@@ -792,7 +791,8 @@ const UpdateBooking = () => {
               user={user}
               booking={booking}
               cars={((car && [booking.car]) as bookcarsTypes.Car[]) || []}
-              hidePrice />
+              hidePrice
+            />
           </div>
 
           <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>

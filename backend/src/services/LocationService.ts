@@ -1,7 +1,7 @@
 import axios from 'axios'
+import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import * as UserService from './UserService'
-import * as bookcarsTypes from 'bookcars-types'
 
 /**
  * Validate a Location name.
@@ -11,7 +11,8 @@ import * as bookcarsTypes from 'bookcars-types'
  */
 export const validate = (data: bookcarsTypes.ValidateLocationPayload): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/validate-location`,
+    .post(
+`${Env.API_HOST}/api/validate-location`,
       data,
       { headers: UserService.authHeader() }
     )
@@ -25,7 +26,8 @@ export const validate = (data: bookcarsTypes.ValidateLocationPayload): Promise<n
  */
 export const create = (data: bookcarsTypes.LocationName[]): Promise<number> =>
   axios
-    .post(`${Env.API_HOST}/api/create-location`,
+    .post(
+`${Env.API_HOST}/api/create-location`,
       data,
       { headers: UserService.authHeader() }
     )
@@ -40,7 +42,8 @@ export const create = (data: bookcarsTypes.LocationName[]): Promise<number> =>
  */
 export const update = (id: string, data: bookcarsTypes.LocationName[]): Promise<number> =>
   axios
-    .put(`${Env.API_HOST}/api/update-location/${id}`,
+    .put(
+`${Env.API_HOST}/api/update-location/${id}`,
       data,
       { headers: UserService.authHeader() }
     )
@@ -54,7 +57,8 @@ export const update = (id: string, data: bookcarsTypes.LocationName[]): Promise<
  */
 export const deleteLocation = (id: string): Promise<number> =>
   axios
-    .delete(`${Env.API_HOST}/api/delete-location/${encodeURIComponent(id)}`,
+    .delete(
+`${Env.API_HOST}/api/delete-location/${encodeURIComponent(id)}`,
       { headers: UserService.authHeader() }
     )
     .then((res) => res.status)

@@ -7,7 +7,7 @@ div.availability-filter div.filter-elements div.filter-element input[type='check
   margin-left: 5px;
 }
 
-div.availability-filter div.filter-elements div.filter-element label {
+div.availability-filter div.filter-elements div.filter-element span {
   margin-left: 5px;
   cursor: pointer;
   font-size: 12px;

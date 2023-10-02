@@ -7,7 +7,7 @@ import {
   TextFieldVariants
 } from '@mui/material'
 
-const DoorsList = ({
+function DoorsList({
   value: doorsListValue,
   label,
   required,
@@ -19,7 +19,7 @@ const DoorsList = ({
   required?: boolean
   variant?: TextFieldVariants
   onChange: (value: string) => void
-}) => {
+}) {
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -27,11 +27,11 @@ const DoorsList = ({
   }, [doorsListValue])
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    const value = e.target.value || ''
-    setValue(value)
+    const _value = e.target.value || ''
+    setValue(_value)
 
     if (onChange) {
-      onChange(value)
+      onChange(_value)
     }
   }
 
