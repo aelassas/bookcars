@@ -10,8 +10,9 @@ const Checkbox = (
   }: {
     indeterminate?: boolean
     checked?: boolean
-    onChange?: (checked: boolean) => void
-  }) => (
+    onChange?: (_checked: boolean) => void
+  }
+) => (
   <Pressable
     onPress={() => {
       if (onChange) {

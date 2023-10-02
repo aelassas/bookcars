@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
@@ -44,29 +44,29 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setReload(false)
   }
 
-  const onLoadCompanies = (companies: string[]) => {
-    setCompanies(companies)
+  const onLoadCompanies = (_companies: string[]) => {
+    setCompanies(_companies)
     setLoaded(true)
   }
 
-  const onChangeCompanies = (companies: string[]) => {
-    setCompanies(companies)
+  const onChangeCompanies = (_companies: string[]) => {
+    setCompanies(_companies)
   }
 
-  const onChangeFuel = (fuel: bookcarsTypes.CarType[]) => {
-    setFuel(fuel)
+  const onChangeFuel = (_fuel: bookcarsTypes.CarType[]) => {
+    setFuel(_fuel)
   }
 
-  const onChangeGearbox = (gearbox: bookcarsTypes.GearboxType[]) => {
-    setGearbox(gearbox)
+  const onChangeGearbox = (_gearbox: bookcarsTypes.GearboxType[]) => {
+    setGearbox(_gearbox)
   }
 
-  const onChangeMileage = (mileage: bookcarsTypes.Mileage[]) => {
-    setMileage(mileage)
+  const onChangeMileage = (_mileage: bookcarsTypes.Mileage[]) => {
+    setMileage(_mileage)
   }
 
-  const onChangeDeposit = (deposit: number) => {
-    setDeposit(deposit)
+  const onChangeDeposit = (_deposit: number) => {
+    setDeposit(_deposit)
   }
 
   return (

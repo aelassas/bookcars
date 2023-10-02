@@ -8,7 +8,8 @@ const Error = (
   }: {
     style?: object
     message: string
-  }) => (
+  }
+) => (
   <View style={style}>
     <Text style={styles.text}>{message}</Text>
   </View>

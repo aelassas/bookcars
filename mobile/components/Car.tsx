@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StyleSheet, Text, View, Image } from 'react-native'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import Button from './Button'
@@ -14,10 +14,10 @@ const iconSize = 24
 const iconColor = '#000'
 
 const getExtraIcon = (extra: number) =>
-  extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info'
+  (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info')
 
 const getExtraColor = (extra: number) =>
-  extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)'
+  (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
 const Car = (
   {
@@ -137,8 +137,8 @@ const Car = (
           onPress={() => {
             const params = {
               car: car._id,
-              pickupLocation: pickupLocation,
-              dropOffLocation: dropOffLocation,
+              pickupLocation,
+              dropOffLocation,
               from: from.getTime(),
               to: to.getTime(),
             }

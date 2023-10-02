@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Helper from '../common/Helper'
@@ -43,8 +43,8 @@ const StatusFilter = (
         <Accordion style={styles.accordion} title={i18n.t('BOOKING_STATUS')}>
           <View style={styles.statuses}>
             {statuses.map((status) => (
-              typeof status.checked !== 'undefined' &&
-              <View key={status.value} style={styles.status}>
+              typeof status.checked !== 'undefined'
+              && <View key={status.value} style={styles.status}>
                 <Switch
                   value={status.checked}
                   onValueChange={(checked) => {

@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { Platform } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import * as Localization from 'expo-localization'
 import * as Env from '../config/env.config'
 import * as AsyncStorage from '../common/AsyncStorage'
 import * as AxiosHelper from '../common/AxiosHelper'
-import * as Localization from 'expo-localization'
 import * as ToastHelper from '../common/ToastHelper'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
@@ -21,9 +21,8 @@ export const authHeader = async () => {
 
   if (user && user.accessToken) {
     return { 'x-access-token': user.accessToken }
-  } else {
-    return {}
   }
+  return {}
 }
 
 /**
@@ -36,7 +35,8 @@ export const signup = (data: bookcarsTypes.FrontendSignUpPayload): Promise<numbe
   axios
     .post(
       `${Env.API_HOST}/api/sign-up`,
-      data)
+      data
+    )
     .then((res) => res.status)
 
 /**
@@ -62,8 +62,7 @@ export const checkToken = (userId: string, email: string, token: string): Promis
  */
 export const deleteTokens = (userId: string): Promise<number> =>
   axios
-    .delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`
-    )
+    .delete(`${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`)
     .then((res) => res.status)
 
 /**
@@ -93,7 +92,7 @@ export const activate = async (data: bookcarsTypes.ActivatePayload): Promise<num
     .post(
       `${Env.API_HOST}/api/activate/ `,
       data,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }
@@ -197,7 +196,8 @@ export const deletePushToken = async (userId: string): Promise<number> => {
 export const signout = async (
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
   redirect = true,
-  redirectSignin = false) => {
+  redirectSignin = false
+) => {
   await AsyncStorage.removeItem('bc-user')
 
   if (redirect) {
@@ -217,9 +217,8 @@ export const signout = async (
 export const validateAccessToken = async (): Promise<number> => {
   const headers = await authHeader()
   return axios
-    .post(
-      `${Env.API_HOST}/api/validate-access-token`, null, {
-      headers: headers,
+    .post(`${Env.API_HOST}/api/validate-access-token`, null, {
+      headers,
       timeout: Env.AXIOS_TIMEOUT,
     })
     .then((res) => res.status)
@@ -235,7 +234,7 @@ export const validateAccessToken = async (): Promise<number> => {
 export const confirmEmail = (email: string, token: string): Promise<number> =>
   axios
     .post(
-      `${Env.API_HOST}/api/confirm-email/` + encodeURIComponent(email) + '/' + encodeURIComponent(token)
+      `${Env.API_HOST}/api/confirm-email/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 
@@ -252,7 +251,7 @@ export const resendLink = async (data: bookcarsTypes.ResendLinkPayload): Promise
     .post(
       `${Env.API_HOST}/api/resend-link`,
       data,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }
@@ -268,16 +267,15 @@ export const getLanguage = async () => {
 
   if (user && user.language) {
     return user.language
-  } else {
-    let lang = await AsyncStorage.getString('bc-language')
+  }
+  let lang = await AsyncStorage.getString('bc-language')
 
-    if (lang && lang.length === 2) {
-      return lang
-    }
-
-    lang = Localization.locale.includes(Env.LANGUAGE.FR) ? Env.LANGUAGE.FR : Env.DEFAULT_LANGUAGE
+  if (lang && lang.length === 2) {
     return lang
   }
+
+  lang = Localization.locale.includes(Env.LANGUAGE.FR) ? Env.LANGUAGE.FR : Env.DEFAULT_LANGUAGE
+  return lang
 }
 
 /**
@@ -289,7 +287,7 @@ export const getLanguage = async () => {
  */
 export const updateLanguage = async (data: bookcarsTypes.UpdateLanguagePayload) => {
   const headers = await authHeader()
-  return axios.post(`${Env.API_HOST}/api/update-language`, data, { headers: headers }).then(async (res) => {
+  return axios.post(`${Env.API_HOST}/api/update-language`, data, { headers }).then(async (res) => {
     if (res.status === 200) {
       const user = await AsyncStorage.getObject<bookcarsTypes.User>('bc-user')
       if (user) {
@@ -338,8 +336,8 @@ export const getCurrentUser = async () => {
 export const getUser = async (id: string): Promise<bookcarsTypes.User> => {
   const headers = await authHeader()
   return axios
-    .get(`${Env.API_HOST}/api/user/` + encodeURIComponent(id), {
-      headers: headers,
+    .get(`${Env.API_HOST}/api/user/${encodeURIComponent(id)}`, {
+      headers,
     })
     .then((res) => res.data)
 }
@@ -357,7 +355,7 @@ export const updateUser = async (data: bookcarsTypes.UpdateUserPayload): Promise
     .post(
       `${Env.API_HOST}/api/update-user`,
       data,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }
@@ -373,8 +371,9 @@ export const updateEmailNotifications = async (data: bookcarsTypes.UpdateEmailNo
   const headers = await authHeader()
   return axios
     .post(
-      `${Env.API_HOST}/api/update-email-notifications`, data,
-      { headers: headers }
+      `${Env.API_HOST}/api/update-email-notifications`,
+      data,
+      { headers }
     )
     .then(async (res) => {
       if (res.status === 200) {
@@ -401,7 +400,7 @@ export const checkPassword = async (id: string, pass: string): Promise<number> =
   return axios
     .get(
       `${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }
@@ -419,7 +418,7 @@ export const changePassword = async (data: bookcarsTypes.ChangePasswordPayload):
     .post(
       `${Env.API_HOST}/api/change-password/ `,
       data,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }
@@ -432,6 +431,7 @@ export const changePassword = async (data: bookcarsTypes.ChangePasswordPayload):
  * @param {BlobInfo} file
  * @returns {Promise<number | undefined>}
  */
+// eslint-disable-next-line consistent-return
 export const updateAvatar = async (userId: string, file: BlobInfo): Promise<number | undefined> => {
   async function _updateAvatar() {
     const user = await AsyncStorage.getObject<bookcarsTypes.User>('bc-user')
@@ -444,7 +444,7 @@ export const updateAvatar = async (userId: string, file: BlobInfo): Promise<numb
     } as any)
     return axios
       .post(
-        `${Env.API_HOST}/api/update-avatar/` + encodeURIComponent(userId),
+        `${Env.API_HOST}/api/update-avatar/${encodeURIComponent(userId)}`,
         formData,
         user && user.accessToken
           ? {
@@ -464,7 +464,7 @@ export const updateAvatar = async (userId: string, file: BlobInfo): Promise<numb
       return await _updateAvatar()
     } catch (err) {
       // Retry if Stream Closed
-      retries--
+      retries -= 1
     }
   }
 }
@@ -480,9 +480,9 @@ export const deleteAvatar = async (userId: string): Promise<number> => {
   const headers = await authHeader()
   return axios
     .post(
-      `${Env.API_HOST}/api/delete-avatar/` + encodeURIComponent(userId),
+      `${Env.API_HOST}/api/delete-avatar/${encodeURIComponent(userId)}`,
       null,
-      { headers: headers }
+      { headers }
     )
     .then((res) => res.status)
 }

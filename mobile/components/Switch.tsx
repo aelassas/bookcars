@@ -30,10 +30,10 @@ const Switch = ({
     setValue(switchValue)
   }, [switchValue])
 
-  const onValueChange = (value: boolean) => {
-    setValue(value)
+  const onValueChange = (_value: boolean) => {
+    setValue(_value)
     if (onSwitchValueChange) {
-      onSwitchValueChange(value)
+      onSwitchValueChange(_value)
     }
   }
 

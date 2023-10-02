@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, ScrollView, View, Text } from 'react-native'
+import { StyleSheet, ScrollView, View, Text, TextInput as ReactTextInput } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { TextInput as ReactTextInput } from 'react-native'
+
 import validator from 'validator'
 
 import TextInput from '../components/TextInput'
@@ -52,11 +52,10 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
             setEmailError(true)
             setEmailValid(true)
             return false
-          } else {
+          }
             setEmailError(false)
             setEmailValid(true)
             return true
-          }
         } catch (err) {
           Helper.toast(i18n.t('GENERIC_ERROR'))
           setEmailError(false)
@@ -85,8 +84,8 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
 
   const onPressReset = async () => {
     try {
-      const emailValid = await validateEmail()
-      if (!emailValid) {
+      const _emailValid = await validateEmail()
+      if (!_emailValid) {
         return
       }
 

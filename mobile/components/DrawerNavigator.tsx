@@ -126,10 +126,10 @@ const DrawerNavigator = () => {
 
   useEffect(() => {
     const init = async () => {
-      const loggedIn = await UserService.loggedIn()
-      setLoggedIn(loggedIn)
-      const language = await UserService.getLanguage()
-      setLanguage(language)
+      const _loggedIn = await UserService.loggedIn()
+      setLoggedIn(_loggedIn)
+      const _language = await UserService.getLanguage()
+      setLanguage(_language)
     }
 
     init()
@@ -166,8 +166,8 @@ const DrawerNavigator = () => {
       // useLegacyImplementation
       >
         {drawerItems.map((drawer) => (
-          drawer.name === 'Home' ?
-            <Drawer.Screen
+          drawer.name === 'Home'
+            ? <Drawer.Screen
               key={drawer.name}
               name={drawer.name}
               component={HomeScreen}
@@ -185,8 +185,8 @@ const DrawerNavigator = () => {
                 headerShown: false,
               }}
             />
-            : drawer.name === 'Cars' ?
-              <Drawer.Screen
+            : drawer.name === 'Cars'
+              ? <Drawer.Screen
                 key={drawer.name}
                 name={drawer.name}
                 component={CarsScreen}
@@ -204,8 +204,8 @@ const DrawerNavigator = () => {
                   headerShown: false,
                 }}
               />
-              : drawer.name === 'Checkout' ?
-                <Drawer.Screen
+              : drawer.name === 'Checkout'
+                ? <Drawer.Screen
                   key={drawer.name}
                   name={drawer.name}
                   component={CheckoutScreen}
@@ -223,8 +223,8 @@ const DrawerNavigator = () => {
                     headerShown: false,
                   }}
                 />
-                : drawer.name === 'Bookings' ?
-                  <Drawer.Screen
+                : drawer.name === 'Bookings'
+                  ? <Drawer.Screen
                     key={drawer.name}
                     name={drawer.name}
                     component={BookingsScreen}
@@ -242,8 +242,8 @@ const DrawerNavigator = () => {
                       headerShown: false,
                     }}
                   />
-                  : drawer.name === 'Booking' ?
-                    <Drawer.Screen
+                  : drawer.name === 'Booking'
+                    ? <Drawer.Screen
                       key={drawer.name}
                       name={drawer.name}
                       component={BookingScreen}
@@ -261,8 +261,8 @@ const DrawerNavigator = () => {
                         headerShown: false,
                       }}
                     />
-                    : drawer.name === 'About' ?
-                      <Drawer.Screen
+                    : drawer.name === 'About'
+                      ? <Drawer.Screen
                         key={drawer.name}
                         name={drawer.name}
                         component={AboutScreen}
@@ -280,8 +280,8 @@ const DrawerNavigator = () => {
                           headerShown: false,
                         }}
                       />
-                      : drawer.name === 'ToS' ?
-                        <Drawer.Screen
+                      : drawer.name === 'ToS'
+                        ? <Drawer.Screen
                           key={drawer.name}
                           name={drawer.name}
                           component={ToSScreen}
@@ -299,8 +299,8 @@ const DrawerNavigator = () => {
                             headerShown: false,
                           }}
                         />
-                        : drawer.name === 'Contact' ?
-                          <Drawer.Screen
+                        : drawer.name === 'Contact'
+                          ? <Drawer.Screen
                             key={drawer.name}
                             name={drawer.name}
                             component={ContactScreen}
@@ -318,8 +318,8 @@ const DrawerNavigator = () => {
                               headerShown: false,
                             }}
                           />
-                          : drawer.name === 'Settings' ?
-                            <Drawer.Screen
+                          : drawer.name === 'Settings'
+                            ? <Drawer.Screen
                               key={drawer.name}
                               name={drawer.name}
                               component={SettingsScreen}
@@ -337,8 +337,8 @@ const DrawerNavigator = () => {
                                 headerShown: false,
                               }}
                             />
-                            : drawer.name === 'ChangePassword' ?
-                              <Drawer.Screen
+                            : drawer.name === 'ChangePassword'
+                              ? <Drawer.Screen
                                 key={drawer.name}
                                 name={drawer.name}
                                 component={ChangePasswordScreen}
@@ -356,8 +356,8 @@ const DrawerNavigator = () => {
                                   headerShown: false,
                                 }}
                               />
-                              : drawer.name === 'SignIn' ?
-                                <Drawer.Screen
+                              : drawer.name === 'SignIn'
+                                ? <Drawer.Screen
                                   key={drawer.name}
                                   name={drawer.name}
                                   component={SignInScreen}
@@ -375,8 +375,8 @@ const DrawerNavigator = () => {
                                     headerShown: false,
                                   }}
                                 />
-                                : drawer.name === 'SignUp' ?
-                                  <Drawer.Screen
+                                : drawer.name === 'SignUp'
+                                  ? <Drawer.Screen
                                     key={drawer.name}
                                     name={drawer.name}
                                     component={SignUpScreen}
@@ -394,8 +394,8 @@ const DrawerNavigator = () => {
                                       headerShown: false,
                                     }}
                                   />
-                                  : drawer.name === 'ForgotPassword' ?
-                                    <Drawer.Screen
+                                  : drawer.name === 'ForgotPassword'
+                                    ? <Drawer.Screen
                                       key={drawer.name}
                                       name={drawer.name}
                                       component={ForgotPasswordScreen}
@@ -413,8 +413,8 @@ const DrawerNavigator = () => {
                                         headerShown: false,
                                       }}
                                     />
-                                    : drawer.name === 'Notifications' ?
-                                      <Drawer.Screen
+                                    : drawer.name === 'Notifications'
+                                      ? <Drawer.Screen
                                         key={drawer.name}
                                         name={drawer.name}
                                         component={NotificationsScreen}

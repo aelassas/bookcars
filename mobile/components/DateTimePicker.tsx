@@ -3,8 +3,8 @@ import { StyleSheet, View, Pressable, Text } from 'react-native'
 import ReactDateTimePicker from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 import { MaterialIcons } from '@expo/vector-icons'
+import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Env from '../config/env.config'
 

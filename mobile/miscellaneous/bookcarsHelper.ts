@@ -12,7 +12,7 @@ export function formatNumber(x?: number): string {
 }
 
 export function formatDatePart(n: number): string {
-    return n > 9 ? String(n) : '0' + n
+    return n > 9 ? String(n) : `0${n}`
 }
 
 export function capitalize(str: string): string {
@@ -36,20 +36,14 @@ export const joinURL = (part1?: string, part2?: string) => {
     if (part2.charAt(0) === '/') {
         part2 = part2.substring(1)
     }
-    return part1 + '/' + part2
+    return `${part1}/${part2}`
 }
 
-export const isInteger = (val: string) => {
-    return /^\d+$/.test(val)
-}
+export const isInteger = (val: string) => /^\d+$/.test(val)
 
-export const isYear = (val: string) => {
-    return /^\d{2}$/.test(val)
-}
+export const isYear = (val: string) => /^\d{2}$/.test(val)
 
-export const isCvv = (val: string) => {
-    return /^\d{3,4}$/.test(val)
-}
+export const isCvv = (val: string) => /^\d{3,4}$/.test(val)
 
 export const arrayEqual = (a: any, b: any) => {
     if (a === b) {
@@ -75,9 +69,7 @@ export const arrayEqual = (a: any, b: any) => {
     return true
 }
 
-export const clone = (obj: any) => {
-    return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
-}
+export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
 
 export function cloneArray<T>(arr: T[]): T[] | undefined | null {
     if (typeof arr === 'undefined') {

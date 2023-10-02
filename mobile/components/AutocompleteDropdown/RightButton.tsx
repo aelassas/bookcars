@@ -2,6 +2,7 @@ import React, { memo, useEffect, useRef } from 'react'
 import { ActivityIndicator, Animated, Easing, StyleSheet, Pressable, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import Feather from 'react-native-vector-icons/Feather'
+
 Feather.loadFont()
 
 const RightButtonComponent = (

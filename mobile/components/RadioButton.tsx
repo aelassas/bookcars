@@ -14,7 +14,7 @@ const RadioButton = (
     style?: object
     textStyle?: object
     label: string
-    onValueChange?: (checked: boolean) => void
+    onValueChange?: (_checked: boolean) => void
   }
 ) => {
   const onPress = () => {

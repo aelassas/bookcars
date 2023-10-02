@@ -57,10 +57,10 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [_fullName, set_FullName] = useState('')
-  const [_email, set_Email] = useState('')
-  const [_phone, set_Phone] = useState('')
-  const [_birthDate, set_BirthDate] = useState<Date>()
+  const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
+  const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
+  const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
+  const [addtionalDriverBirthDate, setAdditionalDriverBirthDate] = useState<Date>()
   const [payLater, setPayLater] = useState(false)
 
   const [fullNameRequired, setFullNameRequired] = useState(false)
@@ -87,13 +87,13 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(true)
   const [locale, setLoacle] = useState(fr)
-  const [_fullNameRequired, set_FullNameRequired] = useState(false)
-  const [_emailRequired, set_EmailRequired] = useState(false)
-  const [_emailValid, set_EmailValid] = useState(true)
-  const [_phoneRequired, set_PhoneRequired] = useState(false)
-  const [_phoneValid, set_PhoneValid] = useState(true)
-  const [_birthDateRequired, set_BirthDateRequired] = useState(false)
-  const [_birthDateValid, set_BirthDateValid] = useState(true)
+  const [additionalDriverFullNameRequired, setAdditionalDriverFullNameRequired] = useState(false)
+  const [additionalDriverEmailRequired, setAdditionalDriverEmailRequired] = useState(false)
+  const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
+  const [additionalDriverPhoneRequired, setAdditionalDriverPhoneRequired] = useState(false)
+  const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
+  const [additionalDriverBirthDateRequired, setAdditionalDriverBirthDateRequired] = useState(false)
+  const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
   const [adFullName, setAdFullName] = useState(false)
@@ -106,20 +106,20 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const adValidate = (val?: string | Date | null) => !!val
 
   useEffect(() => {
-    setAdFullName(adValidate(_fullName))
-  }, [_fullName])
+    setAdFullName(adValidate(additionalDriverfullName))
+  }, [additionalDriverfullName])
 
   useEffect(() => {
-    setAdEmail(adValidate(_email))
-  }, [_email])
+    setAdEmail(adValidate(addtionalDriverEmail))
+  }, [addtionalDriverEmail])
 
   useEffect(() => {
-    setAdPhone(adValidate(_phone))
-  }, [_phone])
+    setAdPhone(adValidate(additionalDriverPhone))
+  }, [additionalDriverPhone])
 
   useEffect(() => {
-    setAdBirthDate(adValidate(_birthDate))
-  }, [_birthDate])
+    setAdBirthDate(adValidate(addtionalDriverBirthDate))
+  }, [addtionalDriverBirthDate])
 
   const fullNameRef = useRef<ReactTextInput>(null)
   const emailRef = useRef<ReactTextInput>(null)
@@ -138,16 +138,16 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setVisible(false)
       setFormVisible(false)
 
-      const language = await UserService.getLanguage()
-      i18n.locale = language
-      setLanguage(language)
-      setLoacle(language === Env.LANGUAGE.FR ? fr : enUS)
+      const _language = await UserService.getLanguage()
+      i18n.locale = _language
+      setLanguage(_language)
+      setLoacle(_language === Env.LANGUAGE.FR ? fr : enUS)
 
       setAuthenticated(false)
       setUser(null)
 
-      let authenticated = false
-      let user = null
+      let _authenticated = false
+      let _user: bookcarsTypes.User | null = null
       const currentUser = await UserService.getCurrentUser()
 
       if (currentUser?._id) {
@@ -159,19 +159,19 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         }
 
         if (status === 200) {
-          const _user = await UserService.getUser(currentUser._id)
+          const __user = await UserService.getUser(currentUser._id)
 
-          if (_user) {
-            authenticated = true
-            user = _user
+          if (__user) {
+            _authenticated = true
+            _user = __user
           }
         }
       }
 
-      setAuthenticated(authenticated)
-      setUser(user)
+      setAuthenticated(_authenticated)
+      setUser(_user)
 
-      if (!authenticated) {
+      if (!_authenticated) {
         setFullName('')
         setEmail('')
         setPhone('')
@@ -189,10 +189,10 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         }
       }
 
-      set_FullName('')
-      set_Email('')
-      set_Phone('')
-      set_BirthDate(undefined)
+      setAdditionalDriverFullName('')
+      setAdditionalDriverEmail('')
+      setAdditionalDriverPhone('')
+      setAdditionalDriverBirthDate(undefined)
       if (_fullNameRef.current) {
         _fullNameRef.current.clear()
       }
@@ -258,17 +258,17 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         return
       }
 
-      const car = await CarService.getCar(route.params.car)
-      setCar(car)
+      const _car = await CarService.getCar(route.params.car)
+      setCar(_car)
 
-      const pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
-      setPickupLocation(pickupLocation)
+      const _pickupLocation = await LocationService.getLocation(route.params.pickupLocation)
+      setPickupLocation(_pickupLocation)
 
       if (route.params.dropOffLocation !== route.params.pickupLocation) {
-        const dropOffLocation = await LocationService.getLocation(route.params.dropOffLocation)
-        setDropOffLocation(dropOffLocation)
+        const _dropOffLocation = await LocationService.getLocation(route.params.dropOffLocation)
+        setDropOffLocation(_dropOffLocation)
       } else {
-        setDropOffLocation(pickupLocation)
+        setDropOffLocation(_pickupLocation)
       }
 
       const _from = new Date(route.params.from)
@@ -277,17 +277,17 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const _to = new Date(route.params.to)
       setTo(_to)
 
-      const _price = Helper.price(car, _from, _to)
+      const _price = Helper.price(_car, _from, _to)
       setPrice(_price)
 
       const included = (val: number) => val === 0
 
-      setCancellation(included(car.cancellation))
-      setAmendments(included(car.amendments))
-      setCollisionDamageWaiver(included(car.collisionDamageWaiver))
-      setTheftProtection(included(car.theftProtection))
-      setFullInsurance(included(car.fullInsurance))
-      setAdditionalDriver(included(car.additionalDriver))
+      setCancellation(included(_car.cancellation))
+      setAmendments(included(_car.amendments))
+      setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
+      setTheftProtection(included(_car.theftProtection))
+      setFullInsurance(included(_car.fullInsurance))
+      setAdditionalDriver(included(_car.additionalDriver))
 
       setVisible(true)
       setFormVisible(true)
@@ -317,8 +317,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   const _validateFullName = () => {
-    const valid = _fullName !== ''
-    set_FullNameRequired(!valid)
+    const valid = additionalDriverfullName !== ''
+    setAdditionalDriverFullNameRequired(!valid)
     setError(!valid)
     return valid
   }
@@ -342,13 +342,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
             setEmailValid(true)
             setError(false)
             return true
-          } else {
-            setEmailInfo(false)
-            setEmailError(true)
-            setEmailValid(true)
-            setError(true)
-            return false
           }
+          setEmailInfo(false)
+          setEmailError(true)
+          setEmailValid(true)
+          setError(true)
+          return false
         } catch (err) {
           Helper.error(err)
           setEmailInfo(true)
@@ -374,24 +373,22 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   const _validateEmail = () => {
-    if (_email) {
-      set_EmailRequired(false)
+    if (addtionalDriverEmail) {
+      setAdditionalDriverEmailRequired(false)
 
-      if (validator.isEmail(_email)) {
-        set_EmailValid(true)
+      if (validator.isEmail(addtionalDriverEmail)) {
+        setAdditionalDriverEmailValid(true)
         setError(false)
         return true
-      } else {
-        set_EmailValid(false)
-        setError(true)
-        return false
       }
-    } else {
-      set_EmailRequired(true)
-      set_EmailValid(true)
+      setAdditionalDriverEmailValid(false)
       setError(true)
       return false
     }
+    setAdditionalDriverEmailRequired(true)
+    setAdditionalDriverEmailValid(true)
+    setError(true)
+    return false
   }
 
   const onChangeEmail = (text: string) => {
@@ -405,38 +402,36 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const validatePhone = () => {
     if (phone) {
-      const phoneValid = validator.isMobilePhone(phone)
-      setPhoneInfo(phoneValid)
+      const _phoneValid = validator.isMobilePhone(phone)
+      setPhoneInfo(_phoneValid)
       setPhoneRequired(false)
-      setPhoneValid(phoneValid)
-      setError(!phoneValid)
+      setPhoneValid(_phoneValid)
+      setError(!_phoneValid)
 
-      return phoneValid
-    } else {
-      setPhoneInfo(false)
-      setPhoneRequired(true)
-      setPhoneValid(true)
-      setError(true)
-
-      return false
+      return _phoneValid
     }
+    setPhoneInfo(false)
+    setPhoneRequired(true)
+    setPhoneValid(true)
+    setError(true)
+
+    return false
   }
 
   const _validatePhone = () => {
-    if (_phone) {
-      const phoneValid = validator.isMobilePhone(_phone)
-      set_PhoneRequired(false)
-      set_PhoneValid(phoneValid)
-      setError(!phoneValid)
+    if (additionalDriverPhone) {
+      const _phoneValid = validator.isMobilePhone(additionalDriverPhone)
+      setAdditionalDriverPhoneRequired(false)
+      setAdditionalDriverPhoneValid(_phoneValid)
+      setError(!_phoneValid)
 
-      return phoneValid
-    } else {
-      set_PhoneRequired(true)
-      set_PhoneValid(true)
-      setError(true)
-
-      return false
+      return _phoneValid
     }
+    setAdditionalDriverPhoneRequired(true)
+    setAdditionalDriverPhoneValid(true)
+    setError(true)
+
+    return false
   }
 
   const onChangePhone = (text: string) => {
@@ -455,40 +450,38 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         start: birthDate,
         end: new Date(),
       }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      setBirthDateValid(birthDateValid)
-      setError(!birthDateValid)
-      return birthDateValid
-    } else {
-      setBirthDateRequired(true)
-      setBirthDateValid(true)
-      setError(true)
-
-      return false
+      setBirthDateValid(_birthDateValid)
+      setError(!_birthDateValid)
+      return _birthDateValid
     }
+    setBirthDateRequired(true)
+    setBirthDateValid(true)
+    setError(true)
+
+    return false
   }
 
   const _validateBirthDate = () => {
-    if (_birthDate) {
-      set_BirthDateRequired(false)
+    if (addtionalDriverBirthDate) {
+      setAdditionalDriverBirthDateRequired(false)
 
       const sub = intervalToDuration({
-        start: _birthDate,
+        start: addtionalDriverBirthDate,
         end: new Date(),
       }).years ?? 0
-      const birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= Env.MINIMUM_AGE
 
-      set_BirthDateValid(birthDateValid)
-      setError(!birthDateValid)
-      return birthDateValid
-    } else {
-      set_BirthDateRequired(true)
-      set_BirthDateValid(true)
-      setError(true)
-
-      return false
+      setAdditionalDriverBirthDateValid(_birthDateValid)
+      setError(!_birthDateValid)
+      return _birthDateValid
     }
+    setAdditionalDriverBirthDateRequired(true)
+    setAdditionalDriverBirthDateValid(true)
+    setError(true)
+
+    return false
   }
 
   const onChangeBirthDate = (date: Date | undefined) => {
@@ -509,10 +502,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     if (cardName) {
       setCardNameRequired(false)
       return true
-    } else {
-      setCardNameRequired(true)
-      return false
     }
+    setCardNameRequired(true)
+    return false
   }
 
   const onCardNameChange = (text: string) => {
@@ -522,17 +514,16 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const validateCardNumber = () => {
     if (cardNumber) {
-      const cardNumberValid = validator.isCreditCard(cardNumber)
+      const _cardNumberValid = validator.isCreditCard(cardNumber)
       setCardNumberRequired(false)
-      setCardNumberValid(cardNumberValid)
+      setCardNumberValid(_cardNumberValid)
 
-      return cardNumberValid
-    } else {
-      setCardNumberRequired(true)
-      setCardNumberValid(true)
-
-      return false
+      return _cardNumberValid
     }
+    setCardNumberRequired(true)
+    setCardNumberValid(true)
+
+    return false
   }
 
   const onCardNumberChange = (text: string) => {
@@ -543,21 +534,20 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const validateCardMonth = () => {
     if (cardMonth) {
-      const month = Number.parseInt(cardMonth)
-      const cardMonthValid = month >= 1 && month <= 12
+      const month = Number.parseInt(cardMonth, 10)
+      const _cardMonthValid = month >= 1 && month <= 12
 
       setCardMonthRequired(false)
-      setCardMonthValid(cardMonthValid)
+      setCardMonthValid(_cardMonthValid)
       setCardDateError(false)
 
-      return cardMonthValid
-    } else {
-      setCardMonthRequired(true)
-      setCardMonthValid(true)
-      setCardDateError(false)
-
-      return false
+      return _cardMonthValid
     }
+    setCardMonthRequired(true)
+    setCardMonthValid(true)
+    setCardDateError(false)
+
+    return false
   }
 
   const onCardMonthChange = (text: string) => {
@@ -568,22 +558,21 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const validateCardYear = () => {
     if (cardYear) {
-      const year = Number.parseInt(cardYear)
-      const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2))
-      const cardYearValid = year >= currentYear
+      const year = Number.parseInt(cardYear, 10)
+      const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2), 10)
+      const _cardYearValid = year >= currentYear
 
       setCardYearRequired(false)
-      setCardYearValid(cardYearValid)
+      setCardYearValid(_cardYearValid)
       setCardDateError(false)
 
-      return cardYearValid
-    } else {
-      setCardYearRequired(true)
-      setCardYearValid(true)
-      setCardDateError(false)
-
-      return false
+      return _cardYearValid
     }
+    setCardYearRequired(true)
+    setCardYearValid(true)
+    setCardDateError(false)
+
+    return false
   }
 
   const onCardYearChange = (text: string) => {
@@ -594,17 +583,16 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const validateCvv = () => {
     if (cvv) {
-      const cvvValid = bookcarsHelper.isCvv(cvv)
+      const _cvvValid = bookcarsHelper.isCvv(cvv)
       setCardCvvRequired(false)
-      setCardCvvValid(cvvValid)
+      setCardCvvValid(_cvvValid)
 
-      return cvvValid
-    } else {
-      setCardCvvRequired(true)
-      setCardCvvValid(true)
-
-      return false
+      return _cvvValid
     }
+    setCardCvvRequired(true)
+    setCardCvvValid(true)
+
+    return false
   }
 
   const onCardCvvChange = (text: string) => {
@@ -613,12 +601,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     setCardCvvValid(true)
   }
 
-  const validateCardDate = (cardMonth: string, cardYear: string) => {
-    const today = new Date(),
-      cardDate = new Date()
-    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2)) * 100
-    const year = y + Number.parseInt(cardYear)
-    const month = Number.parseInt(cardMonth)
+  const validateCardDate = (_cardMonth: string, _cardYear: string) => {
+    const today = new Date()
+    const cardDate = new Date()
+    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2), 10) * 100
+    const year = y + Number.parseInt(_cardYear, 10)
+    const month = Number.parseInt(_cardMonth, 10)
     cardDate.setFullYear(year, month - 1, 1)
 
     if (cardDate < today) {
@@ -637,9 +625,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setCancellation(checked)
-    setPrice(price)
+    setPrice(_price)
   }
 
   const onAmendmentsChange = (checked: boolean) => {
@@ -651,9 +639,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setAmendments(checked)
-    setPrice(price)
+    setPrice(_price)
   }
 
   const onCollisionDamageWaiverChange = (checked: boolean) => {
@@ -665,9 +653,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setCollisionDamageWaiver(checked)
-    setPrice(price)
+    setPrice(_price)
   }
 
   const onTheftProtectionChange = (checked: boolean) => {
@@ -679,9 +667,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setTheftProtection(checked)
-    setPrice(price)
+    setPrice(_price)
   }
 
   const onFullInsuranceChange = (checked: boolean) => {
@@ -693,9 +681,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance: checked,
       additionalDriver,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setFullInsurance(checked)
-    setPrice(price)
+    setPrice(_price)
   }
 
   const onAdditionalDriverChange = (checked: boolean) => {
@@ -707,9 +695,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver: checked,
     }
-    const price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setAdditionalDriver(checked)
-    setPrice(price)
+    setPrice(_price)
     setAdManuallyChecked(checked)
   }
 
@@ -720,7 +708,6 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const onPressBook = async () => {
     try {
-
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
         Helper.error()
         return
@@ -736,23 +723,24 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           return
         }
 
-        const emailValid = await validateEmail()
-        if (!emailValid) {
+        const _emailValid = await validateEmail()
+        if (!_emailValid) {
           return
         }
 
-        const phoneValid = validatePhone()
-        if (!phoneValid) {
+        const _phoneValid = validatePhone()
+        if (!_phoneValid) {
           return
         }
 
-        const birthDateValid = validateBirthDate()
-        if (!birthDateValid) {
+        const _birthDateValid = validateBirthDate()
+        if (!_birthDateValid) {
           return
         }
 
         if (!tosChecked) {
-          return setTosError(true)
+          setTosError(true)
+          return
         }
       }
 
@@ -762,18 +750,18 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           return
         }
 
-        const emailValid = _validateEmail()
-        if (!emailValid) {
+        const _emailValid = _validateEmail()
+        if (!_emailValid) {
           return
         }
 
-        const phoneValid = _validatePhone()
-        if (!phoneValid) {
+        const _phoneValid = _validatePhone()
+        if (!_phoneValid) {
           return
         }
 
-        const birthDateValid = _validateBirthDate()
-        if (!birthDateValid) {
+        const _birthDateValid = _validateBirthDate()
+        if (!_birthDateValid) {
           return
         }
       }
@@ -784,36 +772,37 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           return
         }
 
-        const cardNumberValid = validateCardNumber()
-        if (!cardNumberValid) {
+        const _cardNumberValid = validateCardNumber()
+        if (!_cardNumberValid) {
           return
         }
 
-        const cardMonthValid = validateCardMonth()
-        if (!cardMonthValid) {
+        const _cardMonthValid = validateCardMonth()
+        if (!_cardMonthValid) {
           return
         }
 
-        const cardYearValid = validateCardYear()
-        if (!cardYearValid) {
+        const _cardYearValid = validateCardYear()
+        if (!_cardYearValid) {
           return
         }
 
-        const cvvValid = validateCvv()
-        if (!cvvValid) {
+        const _cvvValid = validateCvv()
+        if (!_cvvValid) {
           return
         }
 
         const cardDateValid = validateCardDate(cardMonth, cardYear)
         if (!cardDateValid) {
-          return setCardDateError(true)
+          setCardDateError(true)
+          return
         }
       }
 
       setLoading(true)
 
-      let driver: bookcarsTypes.User | undefined = undefined
-      let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined = undefined
+      let driver: bookcarsTypes.User | undefined
+      let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined
 
       if (!authenticated) {
         driver = {
@@ -831,8 +820,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id as string,
         dropOffLocation: dropOffLocation._id as string,
-        from: from,
-        to: to,
+        from,
+        to,
         status: payLater ? bookcarsTypes.BookingStatus.Pending : bookcarsTypes.BookingStatus.Paid,
         cancellation,
         amendments,
@@ -843,12 +832,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         price,
       }
 
-      if (adRequired && additionalDriver && _birthDate) {
+      if (adRequired && additionalDriver && addtionalDriverBirthDate) {
         _additionalDriver = {
-          fullName: _fullName,
-          email: _email,
-          phone: _phone,
-          birthDate: _birthDate,
+          fullName: additionalDriverfullName,
+          email: addtionalDriverEmail,
+          phone: additionalDriverPhone,
+          birthDate: addtionalDriverBirthDate,
         }
       }
 
@@ -1019,11 +1008,11 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={email}
                       error={emailRequired || !emailValid || emailError}
                       helperText={
-                        (emailInfo && i18n.t('EMAIL_INFO')) ||
-                        (emailRequired && i18n.t('REQUIRED')) ||
-                        (!emailValid && i18n.t('EMAIL_NOT_VALID')) ||
-                        (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED')) ||
-                        ''
+                        (emailInfo && i18n.t('EMAIL_INFO'))
+                        || (emailRequired && i18n.t('REQUIRED'))
+                        || (!emailValid && i18n.t('EMAIL_NOT_VALID'))
+                        || (emailError && i18n.t('BOOKING_EMAIL_ALREADY_REGISTERED'))
+                        || ''
                       }
                       onChangeText={onChangeEmail}
                       backgroundColor="#fbfbfb"
@@ -1067,12 +1056,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       ref={_fullNameRef}
                       style={styles.component}
                       label={i18n.t('FULL_NAME')}
-                      value={_fullName}
-                      error={adRequired && _fullNameRequired}
-                      helperText={(adRequired && _fullNameRequired && i18n.t('REQUIRED')) || ''}
+                      value={additionalDriverfullName}
+                      error={adRequired && additionalDriverFullNameRequired}
+                      helperText={(adRequired && additionalDriverFullNameRequired && i18n.t('REQUIRED')) || ''}
                       onChangeText={(text: string) => {
-                        set_FullName(text)
-                        set_FullNameRequired(false)
+                        setAdditionalDriverFullName(text)
+                        setAdditionalDriverFullNameRequired(false)
                         setError(false)
                       }}
                       backgroundColor="#fbfbfb"
@@ -1082,13 +1071,13 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       ref={_emailRef}
                       style={styles.component}
                       label={i18n.t('EMAIL')}
-                      value={_email}
-                      error={adRequired && (_emailRequired || !_emailValid)}
-                      helperText={(adRequired && _emailRequired && i18n.t('REQUIRED')) || (adRequired && !_emailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
+                      value={addtionalDriverEmail}
+                      error={adRequired && (additionalDriverEmailRequired || !additionalDriverEmailValid)}
+                      helperText={(adRequired && additionalDriverEmailRequired && i18n.t('REQUIRED')) || (adRequired && !additionalDriverEmailValid && i18n.t('EMAIL_NOT_VALID')) || ''}
                       onChangeText={(text: string) => {
-                        set_Email(text)
-                        set_EmailRequired(false)
-                        set_EmailValid(true)
+                        setAdditionalDriverEmail(text)
+                        setAdditionalDriverEmailRequired(false)
+                        setAdditionalDriverEmailValid(true)
                         setError(false)
                       }}
                       backgroundColor="#fbfbfb"
@@ -1098,13 +1087,13 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       ref={_phoneRef}
                       style={styles.component}
                       label={i18n.t('PHONE')}
-                      value={_phone}
-                      error={adRequired && (_phoneRequired || !_phoneValid)}
-                      helperText={(adRequired && _phoneRequired && i18n.t('REQUIRED')) || (adRequired && !_phoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
+                      value={additionalDriverPhone}
+                      error={adRequired && (additionalDriverPhoneRequired || !additionalDriverPhoneValid)}
+                      helperText={(adRequired && additionalDriverPhoneRequired && i18n.t('REQUIRED')) || (adRequired && !additionalDriverPhoneValid && i18n.t('PHONE_NOT_VALID')) || ''}
                       onChangeText={(text: string) => {
-                        set_Phone(text)
-                        set_PhoneRequired(false)
-                        set_PhoneValid(true)
+                        setAdditionalDriverPhone(text)
+                        setAdditionalDriverPhoneRequired(false)
+                        setAdditionalDriverPhoneValid(true)
                         setError(false)
                       }}
                       backgroundColor="#fbfbfb"
@@ -1115,13 +1104,13 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       locale={language}
                       style={styles.date}
                       label={i18n.t('BIRTH_DATE')}
-                      value={_birthDate}
-                      error={adRequired && (_birthDateRequired || !_birthDateValid)}
-                      helperText={(adRequired && _birthDateRequired && i18n.t('REQUIRED')) || (adRequired && !_birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      value={addtionalDriverBirthDate}
+                      error={adRequired && (additionalDriverBirthDateRequired || !additionalDriverBirthDateValid)}
+                      helperText={(adRequired && additionalDriverBirthDateRequired && i18n.t('REQUIRED')) || (adRequired && !additionalDriverBirthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={(date: Date | undefined) => {
-                        set_BirthDate(date)
-                        set_BirthDateRequired(false)
-                        set_BirthDateValid(true)
+                        setAdditionalDriverBirthDate(date)
+                        setAdditionalDriverBirthDateRequired(false)
+                        setAdditionalDriverBirthDateValid(true)
                         setError(false)
                       }}
                       backgroundColor="#fbfbfb"

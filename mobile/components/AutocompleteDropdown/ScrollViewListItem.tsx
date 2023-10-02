@@ -18,8 +18,7 @@ const ScrollViewListItemComponent = (
       numberOfLines?: number
       onPress: () => void
     }
-) => {
-  return (
+) => (
     <Pressable onPress={onPress}>
       <View style={styles.container}>
         <Text numberOfLines={numberOfLines}>
@@ -36,7 +35,6 @@ const ScrollViewListItemComponent = (
       </View>
     </Pressable>
   )
-}
 
 export const ScrollViewListItem = memo(ScrollViewListItemComponent)
 

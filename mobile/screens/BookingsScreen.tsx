@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
@@ -32,9 +32,9 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setCompanies([])
       setFilter(undefined)
 
-      const language = await UserService.getLanguage()
-      i18n.locale = language
-      setLanguage(language)
+      const _language = await UserService.getLanguage()
+      i18n.locale = _language
+      setLanguage(_language)
 
       const currentUser = await UserService.getCurrentUser()
 
@@ -43,18 +43,18 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         return
       }
 
-      const user = await UserService.getUser(currentUser._id)
+      const _user = await UserService.getUser(currentUser._id)
 
-      if (!user?._id) {
+      if (!_user?._id) {
         await UserService.signout(navigation, false, true)
         return
       }
 
-      setUser(user)
+      setUser(_user)
 
-      const hasBookingsStatus = await BookingService.hasBookings(user._id)
-      const hasBookings = hasBookingsStatus === 200
-      setHasBookings(hasBookings)
+      const hasBookingsStatus = await BookingService.hasBookings(_user._id)
+      const _hasBookings = hasBookingsStatus === 200
+      setHasBookings(_hasBookings)
 
       setVisible(true)
     } catch (err) {
@@ -75,24 +75,24 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     setReload(false)
   }
 
-  const onLoadCompanies = (companies: string[]) => {
-    setCompanies(companies)
+  const onLoadCompanies = (_companies: string[]) => {
+    setCompanies(_companies)
   }
 
-  const onChangeCompanies = (companies: string[]) => {
-    setCompanies(companies)
+  const onChangeCompanies = (_companies: string[]) => {
+    setCompanies(_companies)
   }
 
-  const onLoadStatuses = (statuses: string[]) => {
-    setStatuses(statuses)
+  const onLoadStatuses = (_statuses: string[]) => {
+    setStatuses(_statuses)
   }
 
-  const onChangeStatuses = (statuses: string[]) => {
-    setStatuses(statuses)
+  const onChangeStatuses = (_statuses: string[]) => {
+    setStatuses(_statuses)
   }
 
-  const onSubmitBookingFilter = (filter: bookcarsTypes.Filter) => {
-    setFilter(filter)
+  const onSubmitBookingFilter = (_filter: bookcarsTypes.Filter) => {
+    setFilter(_filter)
   }
 
   return (

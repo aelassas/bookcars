@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Helper from '../common/Helper'
@@ -32,15 +32,15 @@ const SupplierFilter = (
     try {
       const allSuppliers = await SupplierService.getAllSuppliers()
       if (allSuppliers) {
-        const suppliers = allSuppliers.map((supplier: bookcarsTypes.User) => ({
+        const _suppliers = allSuppliers.map((supplier: bookcarsTypes.User) => ({
           ...supplier,
           checked: true,
         }))
-        const checkedSuppliers = bookcarsHelper.flattenCompanies(suppliers)
-        setSuppliers(suppliers)
-        setCheckedSuppliers(checkedSuppliers)
+        const _checkedSuppliers = bookcarsHelper.flattenCompanies(_suppliers)
+        setSuppliers(_suppliers)
+        setCheckedSuppliers(_checkedSuppliers)
         if (onLoad) {
-          onLoad(checkedSuppliers)
+          onLoad(_checkedSuppliers)
         }
       } else {
         Helper.error()
@@ -60,8 +60,8 @@ const SupplierFilter = (
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
           <View style={styles.companies}>
             {suppliers.map((supplier) => (
-              supplier._id && typeof supplier.checked !== 'undefined' &&
-              <View key={supplier._id} style={styles.company}>
+              supplier._id && typeof supplier.checked !== 'undefined'
+              && <View key={supplier._id} style={styles.company}>
                 <Switch
                   value={supplier.checked}
                   onValueChange={(checked) => {

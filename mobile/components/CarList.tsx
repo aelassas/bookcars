@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Helper from '../common/Helper'
 import * as Env from '../config/env.config'
@@ -48,9 +48,9 @@ const CarList = (
 
   const _init = async () => {
     try {
-      const language = await UserService.getLanguage()
-      i18n.locale = language
-      setLanguage(language)
+      const _language = await UserService.getLanguage()
+      i18n.locale = _language
+      setLanguage(_language)
     } catch (err) {
       Helper.error(err)
     }
@@ -59,40 +59,40 @@ const CarList = (
   useEffect(() => {
     (async function () {
       await _init()
-    })()
+    }())
   }, [])
 
   const _fetch = async (
-    page: number,
-    companies?: string[],
-    pickupLocation?: string,
-    fuel?: string[],
-    gearbox?: string[],
-    mileage?: string[],
-    deposit?: number
+    _page: number,
+    _companies?: string[],
+    _pickupLocation?: string,
+    _fuel?: string[],
+    _gearbox?: string[],
+    _mileage?: string[],
+    _deposit?: number
   ) => {
     try {
-      if (companies && companies.length > 0) {
+      if (_companies && _companies.length > 0) {
         setLoading(true)
         setFetch(true)
 
         const payload = {
-          companies,
-          pickupLocation,
-          fuel,
-          gearbox,
-          mileage,
-          deposit,
+          companies: _companies,
+          pickupLocation: _pickupLocation,
+          fuel: _fuel,
+          gearbox: _gearbox,
+          mileage: _mileage,
+          deposit: _deposit,
         }
 
-        const data = await CarService.getCars(payload, page, Env.CARS_PAGE_SIZE)
+        const data = await CarService.getCars(payload, _page, Env.CARS_PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           Helper.error()
           return
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-        const _rows = page === 1 ? _data.resultData : [...rows, ..._data.resultData]
+        const _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
 
         setRows(_rows)
         setFetch(_data.resultData.length > 0)

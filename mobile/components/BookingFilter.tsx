@@ -56,12 +56,12 @@ const BookingFilter = (
     setCloseDropOffLocation(true)
   }
 
-  const handlePickupLocationSelect = (pickupLocation: string) => {
-    setPickupLocation(pickupLocation)
+  const handlePickupLocationSelect = (_pickupLocation: string) => {
+    setPickupLocation(_pickupLocation)
   }
 
-  const handleDropOffLocationSelect = (dropOffLocation: string) => {
-    setDropOffLocation(dropOffLocation)
+  const handleDropOffLocationSelect = (_dropOffLocation: string) => {
+    setDropOffLocation(_dropOffLocation)
   }
 
   const onPressSearch = () => {
@@ -79,8 +79,8 @@ const BookingFilter = (
   }
 
   return (
-    init &&
-    visible && (
+    init
+    && visible && (
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('SEARCH')}>
           <DateTimePicker
@@ -99,13 +99,13 @@ const BookingFilter = (
                   setTo(undefined)
                 }
 
-                const minDate = new Date(date)
-                minDate.setDate(date.getDate() + 1)
-                setMinDate(minDate)
+                const _minDate = new Date(date)
+                _minDate.setDate(date.getDate() + 1)
+                setMinDate(_minDate)
               } else {
                 setMinDate(undefined)
               }
-              
+
               setFrom(date)
             }}
             onPress={blurLocations}

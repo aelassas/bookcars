@@ -42,11 +42,11 @@ const LocationSelectList = (
     setSelectedItem(listSelectedItem)
   }, [listSelectedItem])
 
-  const _setSelectedItem = (selectedItem?: string) => {
-    setSelectedItem(selectedItem)
+  const _setSelectedItem = (_selectedItem?: string) => {
+    setSelectedItem(_selectedItem)
 
     if (onSelectItem) {
-      onSelectItem(selectedItem as string)
+      onSelectItem(_selectedItem as string)
     }
   }
 
@@ -108,7 +108,9 @@ const LocationSelectList = (
         useFilter={false} // set false to prevent rerender twice
         dataSet={rows}
         onSelectItem={(item: AutocompleteOption) => {
-          item && _setSelectedItem(item.id)
+          if (item) {
+            _setSelectedItem(item.id)
+          }
         }}
         onChangeText={(text: string) => {
           onChangeText(text)
