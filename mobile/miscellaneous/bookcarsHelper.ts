@@ -20,7 +20,7 @@ export function capitalize(str: string): string {
 }
 
 export function isDate(date?: Date): boolean {
-    return date instanceof Date && !isNaN(date.valueOf())
+    return date instanceof Date && !Number.isNaN(date.valueOf())
 }
 
 export const joinURL = (part1?: string, part2?: string) => {
@@ -67,7 +67,7 @@ export const arrayEqual = (a: any, b: any) => {
     // Please note that calling sort on an array will modify that array.
     // you might want to clone your array first.
 
-    for (let i = 0; i < a.length; i++) {
+    for (let i = 0; i < a.length; i += 1) {
         if (a[i] !== b[i]) {
             return false
         }

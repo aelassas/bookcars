@@ -41,7 +41,7 @@ export function capitalize(str) {
  * @returns {boolean}
  */
 export function isDate(value) {
-    return value instanceof Date && !isNaN(value.valueOf());
+    return value instanceof Date && !Number.isNaN(value.valueOf());
 }
 /**
  * Join two url parts.
@@ -112,7 +112,7 @@ export const arrayEqual = (a, b) => {
     // the array, you should sort both arrays here.
     // Please note that calling sort on an array will modify that array.
     // you might want to clone your array first.
-    for (let i = 0; i < a.length; i++) {
+    for (let i = 0; i < a.length; i += 1) {
         if (a[i] !== b[i]) {
             return false;
         }
@@ -188,6 +188,6 @@ export const flattenCompanies = (companies) => companies.map((company) => compan
  *
  * @param {?Date} [from]
  * @param {?Date} [to]
- * @returns {*}
+ * @returns {number}
  */
 export const days = (from, to) => (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0;

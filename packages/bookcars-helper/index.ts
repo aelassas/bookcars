@@ -46,7 +46,7 @@ export function capitalize(str: string): string {
  * @returns {boolean}
  */
 export function isDate(value?: any): boolean {
-    return value instanceof Date && !isNaN(value.valueOf())
+    return value instanceof Date && !Number.isNaN(value.valueOf())
 }
 
 /**
@@ -125,7 +125,7 @@ export const arrayEqual = (a: any, b: any) => {
     // Please note that calling sort on an array will modify that array.
     // you might want to clone your array first.
 
-    for (let i = 0; i < a.length; i++) {
+    for (let i = 0; i < a.length; i += 1) {
         if (a[i] !== b[i]) {
             return false
         }
