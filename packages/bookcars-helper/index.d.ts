@@ -104,6 +104,6 @@ export declare const flattenCompanies: (companies: bookcarsTypes.User[]) => stri
  *
  * @param {?Date} [from]
  * @param {?Date} [to]
- * @returns {*}
+ * @returns {number}
  */
 export declare const days: (from?: Date, to?: Date) => number;
