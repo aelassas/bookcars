@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import i18n from '../lang/i18n'
@@ -46,14 +46,14 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
       return
     }
 
-    const user = await UserService.getUser(currentUser._id)
+    const _user = await UserService.getUser(currentUser._id)
 
-    if (!user) {
+    if (!_user) {
       await UserService.signout(navigation, false, true)
       return
     }
 
-    setUser(user)
+    setUser(_user)
     setVisible(true)
   }
 
@@ -105,7 +105,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
 
   useEffect(() => {
     if (user) {
-      const _init = async () => {
+      const __init = async () => {
         if (user?._id) {
           const notificationCounter = await NotificationService.getNotificationCounter(user._id)
           const _notificationCount = notificationCounter.count
@@ -113,7 +113,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
         }
       }
 
-      _init()
+      __init()
     }
   }, [user])
 

@@ -1,4 +1,8 @@
+/* eslint-disable no-shadow */
+
+//
 // Metro does not support symlinks
+//
 
 export enum UserType {
     Admin = 'admin',
@@ -103,7 +107,6 @@ export interface AdditionalDriver {
     phone: string
     birthDate: Date
 }
-
 
 export interface UpsertBookingPayload {
     booking: Booking
@@ -363,7 +366,7 @@ export interface GetUsersBody {
     types: UserType[]
 }
 
-// 
+//
 // React types
 //
 export type DataEvent<T> = (data?: Data<T>) => void

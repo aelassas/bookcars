@@ -30,6 +30,7 @@ export const getString = async (key: string) => {
     return value
   } catch (err) {
     ToastHelper.error(err)
+    return ''
   }
 }
 

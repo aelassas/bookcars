@@ -54,9 +54,9 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [reload, setReload] = useState(false)
 
   const _init = async () => {
-    const language = await UserService.getLanguage()
-    i18n.locale = language
-    setLanguage(language)
+    const _language = await UserService.getLanguage()
+    i18n.locale = _language
+    setLanguage(_language)
 
     setPickupLocation('')
     setDropOffLocation('')
@@ -87,15 +87,15 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setReload(false)
   }
 
-  const handlePickupLocationSelect = (pickupLocation: string) => {
-    setPickupLocation(pickupLocation)
+  const handlePickupLocationSelect = (_pickupLocation: string) => {
+    setPickupLocation(_pickupLocation)
     if (sameLocation) {
-      setDropOffLocation(pickupLocation)
+      setDropOffLocation(_pickupLocation)
     }
   }
 
-  const handleDropOffLocationSelect = (dropOffLocation: string) => {
-    setDropOffLocation(dropOffLocation)
+  const handleDropOffLocationSelect = (_dropOffLocation: string) => {
+    setDropOffLocation(_dropOffLocation)
   }
 
   const blurLocations = () => {
@@ -122,27 +122,33 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     blurLocations()
 
     if (!pickupLocation) {
-      return Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
+      Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
+      return
     }
 
     if (!dropOffLocation) {
-      return Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
+      Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
+      return
     }
 
     if (!fromDate) {
-      return Helper.toast(i18n.t('FROM_DATE_EMPTY'))
+      Helper.toast(i18n.t('FROM_DATE_EMPTY'))
+      return
     }
 
     if (!fromTime) {
-      return Helper.toast(i18n.t('FROM_TIME_EMPTY'))
+      Helper.toast(i18n.t('FROM_TIME_EMPTY'))
+      return
     }
 
     if (!toDate) {
-      return Helper.toast(i18n.t('TO_DATE_EMPTY'))
+      Helper.toast(i18n.t('TO_DATE_EMPTY'))
+      return
     }
 
     if (!toTime) {
-      return Helper.toast(i18n.t('TO_TIME_EMPTY'))
+      Helper.toast(i18n.t('TO_TIME_EMPTY'))
+      return
     }
 
     const from = Helper.dateTime(fromDate, fromTime)
@@ -206,14 +212,13 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               hideClearButton
               onChange={(date) => {
                 if (date) {
-
                   if (toDate && toDate.getTime() <= date.getTime()) {
                     setToDate(undefined)
                   }
 
-                  const minDate = new Date(date)
-                  minDate.setDate(date.getDate() + 1)
-                  setMinDate(minDate)
+                  const __minDate = new Date(date)
+                  __minDate.setDate(date.getDate() + 1)
+                  setMinDate(__minDate)
                 } else {
                   setMinDate(_minDate)
                 }

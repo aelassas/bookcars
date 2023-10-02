@@ -11,7 +11,7 @@ export const toast = (message: string) => {
       duration: Toast.durations.LONG,
     })
   }
-  
+
 /**
  * Toast an error message.
  *

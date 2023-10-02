@@ -24,7 +24,7 @@ export const AutocompleteDropdown: any = memo(
     const [isCleared, setIsCleared] = useState(false)
     const [searchText, setSearchText] = useState('')
     const [dataSet, setDataSet] = useState(props.dataSet)
-    const clearOnFocus = props.clearOnFocus === false ? false : true
+    const clearOnFocus = props.clearOnFocus !== false
     const inputHeight = props.inputHeight ?? moderateScale(40, 0.2)
     const suggestionsListMaxHeight = props.suggestionsListMaxHeight ?? moderateScale(200, 0.2)
     const position = props.position ?? 'absolute'
@@ -139,11 +139,11 @@ export const AutocompleteDropdown: any = memo(
     }, [])
 
     const calculateDirection = async () => {
-      const [, positionY]: any = await new Promise((resolve) =>
+      const [, positionY]: any = await new Promise((resolve) => {
         containerRef.current?.measureInWindow((...rect) => {
           resolve(rect)
-        }),
-      )
+        })
+      })
 
       const screenHeight = Dimensions.get('window').height
 
@@ -165,7 +165,11 @@ export const AutocompleteDropdown: any = memo(
     }
 
     const toggle = () => {
-      isOpened ? close() : open()
+      if (isOpened) {
+        close()
+      } else {
+        open()
+      }
     }
 
     const clear = () => {
@@ -183,17 +187,17 @@ export const AutocompleteDropdown: any = memo(
     const ItemSeparatorComponent = props.ItemSeparatorComponent ?? <View style={{ height: 1, width: '100%', backgroundColor: '#ddd' }} />
 
     const renderItem = useCallback(
-      (item: any, searchText: string) => {
+      (item: any, _searchText: string) => {
         let titleHighlighted = ''
         let titleStart = item.title
         let titleEnd = ''
         let substrIndex = 0
-        if (props.useFilter !== false && typeof item.title === 'string' && item.title.length > 0 && searchText.length > 0) {
-          substrIndex = item.title.toLowerCase().indexOf(searchText.toLowerCase())
+        if (props.useFilter !== false && typeof item.title === 'string' && item.title.length > 0 && _searchText.length > 0) {
+          substrIndex = item.title.toLowerCase().indexOf(_searchText.toLowerCase())
           if (substrIndex !== -1) {
             titleStart = item.title.slice(0, substrIndex)
-            titleHighlighted = item.title.slice(substrIndex, substrIndex + searchText.length)
-            titleEnd = item.title.slice(substrIndex + searchText.length)
+            titleHighlighted = item.title.slice(substrIndex, substrIndex + _searchText.length)
+            titleEnd = item.title.slice(substrIndex + _searchText.length)
           }
         }
 
@@ -202,7 +206,7 @@ export const AutocompleteDropdown: any = memo(
         }
 
         if (typeof props.renderItem === 'function') {
-          const EL = props.renderItem(item, searchText)
+          const EL = props.renderItem(item, _searchText)
           return (
             <Pressable
               onPress={() => {

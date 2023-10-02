@@ -16,18 +16,18 @@ const DepositFilter = (
     onChange?: (value: number) => void
   }
 ) => {
-  const [deposit_2500, setDeposit_2500] = useState(false)
-  const [deposit_5000, setDeposit_5000] = useState(false)
-  const [deposit_7500, setDeposit_7500] = useState(false)
-  const [deposit_all, setDeposit_all] = useState(true)
+  const [deposit2500, setDeposit2500] = useState(false)
+  const [deposit5000, setDeposit5000] = useState(false)
+  const [deposit7500, setDeposit7500] = useState(false)
+  const [depositall, setDepositall] = useState(true)
 
-  const onValueChangeDeposit_2500 = (checked: boolean) => {
+  const onValueChangeDeposit2500 = (checked: boolean) => {
     if (checked) {
       const value = 2500
-      setDeposit_2500(true)
-      setDeposit_5000(false)
-      setDeposit_7500(false)
-      setDeposit_all(false)
+      setDeposit2500(true)
+      setDeposit5000(false)
+      setDeposit7500(false)
+      setDepositall(false)
 
       if (onChange) {
         onChange(value)
@@ -35,13 +35,13 @@ const DepositFilter = (
     }
   }
 
-  const onValueChangeDeposit_5000 = (checked: boolean) => {
+  const onValueChangeDeposit5000 = (checked: boolean) => {
     if (checked) {
       const value = 5000
-      setDeposit_2500(false)
-      setDeposit_5000(true)
-      setDeposit_7500(false)
-      setDeposit_all(false)
+      setDeposit2500(false)
+      setDeposit5000(true)
+      setDeposit7500(false)
+      setDepositall(false)
 
       if (onChange) {
         onChange(value)
@@ -49,13 +49,13 @@ const DepositFilter = (
     }
   }
 
-  const onValueChangeDeposit_7500 = (checked: boolean) => {
+  const onValueChangeDeposit7500 = (checked: boolean) => {
     if (checked) {
       const value = 7500
-      setDeposit_2500(false)
-      setDeposit_5000(false)
-      setDeposit_7500(true)
-      setDeposit_all(false)
+      setDeposit2500(false)
+      setDeposit5000(false)
+      setDeposit7500(true)
+      setDepositall(false)
 
       if (onChange) {
         onChange(value)
@@ -63,13 +63,13 @@ const DepositFilter = (
     }
   }
 
-  const onValueChangeDeposit_all = (checked: boolean) => {
+  const onValueChangeDepositall = (checked: boolean) => {
     if (checked) {
       const value = -1
-      setDeposit_2500(false)
-      setDeposit_5000(false)
-      setDeposit_7500(false)
-      setDeposit_all(true)
+      setDeposit2500(false)
+      setDeposit5000(false)
+      setDeposit7500(false)
+      setDepositall(true)
 
       if (onChange) {
         onChange(value)
@@ -82,10 +82,10 @@ const DepositFilter = (
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('DEPOSIT')}>
           <View style={styles.contentContainer}>
-            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit_2500} label={i18n.t('LESS_THAN_2500')} onValueChange={onValueChangeDeposit_2500} />
-            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit_5000} label={i18n.t('LESS_THAN_5000')} onValueChange={onValueChangeDeposit_5000} />
-            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit_7500} label={i18n.t('LESS_THAN_7500')} onValueChange={onValueChangeDeposit_7500} />
-            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit_all} label={i18n.t('ALL')} onValueChange={onValueChangeDeposit_all} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit2500} label={i18n.t('LESS_THAN_2500')} onValueChange={onValueChangeDeposit2500} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit5000} label={i18n.t('LESS_THAN_5000')} onValueChange={onValueChangeDeposit5000} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={deposit7500} label={i18n.t('LESS_THAN_7500')} onValueChange={onValueChangeDeposit7500} />
+            <RadioButton style={styles.component} textStyle={styles.text} checked={depositall} label={i18n.t('ALL')} onValueChange={onValueChangeDepositall} />
           </View>
         </Accordion>
       </View>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import * as Env from '../config/env.config'
 import * as UserService from './UserService'
 import * as AxiosHelper from '../common/AxiosHelper'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 AxiosHelper.init(axios)
 
@@ -53,7 +53,8 @@ export const markAsRead = async (userId: string, ids: string[]): Promise<number>
 export const markAsUnread = async (userId: string, ids: string[]): Promise<number> => {
   const headers = await UserService.authHeader()
   return axios
-    .post(`${Env.API_HOST}/api/mark-notifications-as-unread/${encodeURIComponent(userId)}`,
+    .post(
+`${Env.API_HOST}/api/mark-notifications-as-unread/${encodeURIComponent(userId)}`,
       { ids },
       { headers }
     )

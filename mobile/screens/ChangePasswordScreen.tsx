@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, View, TextInput as ReactTextInput } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
@@ -10,7 +10,6 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
-
 
 const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'ChangePassword'>) => {
   const isFocused = useIsFocused()
@@ -62,14 +61,14 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
         return
       }
 
-      const user = await UserService.getUser(currentUser._id)
+      const _user = await UserService.getUser(currentUser._id)
 
-      if (!user) {
+      if (!_user) {
         await UserService.signout(navigation, false, true)
         return
       }
 
-      setUser(user)
+      setUser(_user)
       setVisible(true)
     } catch (err) {
       await UserService.signout(navigation, false, true)
@@ -202,9 +201,9 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
               value={currentPassword}
               error={currentPasswordRequired || currentPasswordError}
               helperText={
-                (currentPasswordRequired && i18n.t('REQUIRED')) ||
-                (currentPasswordError && i18n.t('PASSWORD_ERROR')) ||
-                ''
+                (currentPasswordRequired && i18n.t('REQUIRED'))
+                || (currentPasswordError && i18n.t('PASSWORD_ERROR'))
+                || ''
               }
               onChangeText={onChangeCurrentPassword}
             />
@@ -217,9 +216,9 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
               value={password}
               error={passwordRequired || passwordLengthError}
               helperText={
-                (passwordRequired && i18n.t('REQUIRED')) ||
-                (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR')) ||
-                ''
+                (passwordRequired && i18n.t('REQUIRED'))
+                || (passwordLengthError && i18n.t('PASSWORD_LENGTH_ERROR'))
+                || ''
               }
               onChangeText={onChangePassword}
             />
@@ -232,9 +231,9 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
               value={confirmPassword}
               error={confirmPasswordRequired || confirmPasswordError}
               helperText={
-                (confirmPasswordRequired && i18n.t('REQUIRED')) ||
-                (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH')) ||
-                ''
+                (confirmPasswordRequired && i18n.t('REQUIRED'))
+                || (confirmPasswordError && i18n.t('PASSWORDS_DONT_MATCH'))
+                || ''
               }
               onChangeText={onChangeConfirmPassword}
             />

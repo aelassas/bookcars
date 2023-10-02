@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-native'
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Env from '../config/env.config'
 import i18n from '../lang/i18n'
@@ -52,10 +52,10 @@ const BookingList = (
           setPage(0)
         }
         const payload: bookcarsTypes.GetBookingsPayload = {
-          companies: companies,
-          statuses: statuses,
-          filter: filter,
-          user: user,
+          companies,
+          statuses,
+          filter,
+          user,
         }
         setLoading(true)
         setFetch(true)
@@ -94,7 +94,7 @@ const BookingList = (
         await _fetch()
         setFirstLoad(false)
       }
-    })()
+    }())
   }, [firstLoad, companies, statuses]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -168,8 +168,8 @@ const BookingList = (
         }}
         ListHeaderComponent={header}
         ListFooterComponent={
-          fetch && !openCancelDialog ?
-            <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
+          fetch && !openCancelDialog
+            ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
             : <></>
         }
         ListEmptyComponent={
@@ -226,7 +226,6 @@ const BookingList = (
                     const status = await BookingService.cancel(selectedId)
 
                     if (status === 200) {
-
                       row.cancelRequest = true
 
                       setCancelRequestSent(true)

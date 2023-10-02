@@ -53,7 +53,7 @@ export const AXIOS_RETRIES: number = 3
  *
  * @type {number}
  */
-export const AXIOS_RETRIES_INTERVAL: number = 500  // in milliseconds
+export const AXIOS_RETRIES_INTERVAL: number = 500 // in milliseconds
 
 /**
  * Languages.
@@ -88,21 +88,21 @@ export const AXIOS_TIMEOUT: number = 5000
  *
  * @type {number}
  */
-export const PAGE_SIZE: number = Number.parseInt(BC_PAGE_SIZE) || 20
+export const PAGE_SIZE: number = Number.parseInt(BC_PAGE_SIZE, 10) || 20
 
 /**
  * Cars page size. Default is 8.
  *
  * @type {number}
  */
-export const CARS_PAGE_SIZE: number = Number.parseInt(BC_CARS_PAGE_SIZE) || 8
+export const CARS_PAGE_SIZE: number = Number.parseInt(BC_CARS_PAGE_SIZE, 10) || 8
 
 /**
  * Bookings page size. Default is 8.
  *
  * @type {number}
  */
-export const BOOKINGS_PAGE_SIZE: number = Number.parseInt(BC_BOOKINGS_PAGE_SIZE) || 8
+export const BOOKINGS_PAGE_SIZE: number = Number.parseInt(BC_BOOKINGS_PAGE_SIZE, 10) || 8
 
 /**
  * User images CDN.
@@ -130,32 +130,32 @@ export const PAGE_OFFSET: number = 200
  *
  * @type {number}
  */
-export const COMPANY_IMAGE_WIDTH: number = Number.parseInt(BC_COMPANY_IMAGE_WIDTH) || 60
+export const COMPANY_IMAGE_WIDTH: number = Number.parseInt(BC_COMPANY_IMAGE_WIDTH, 10) || 60
 
 /**
  * Supplier image height. Default is 30.
  *
  * @type {number}
  */
-export const COMPANY_IMAGE_HEIGHT: number = Number.parseInt(BC_COMPANY_IMAGE_HEIGHT) || 30
+export const COMPANY_IMAGE_HEIGHT: number = Number.parseInt(BC_COMPANY_IMAGE_HEIGHT, 10) || 30
 
 /**
  * Car image width. Default is 300.
  *
  * @type {number}
  */
-export const CAR_IMAGE_WIDTH: number = Number.parseInt(BC_CAR_IMAGE_WIDTH) || 300
+export const CAR_IMAGE_WIDTH: number = Number.parseInt(BC_CAR_IMAGE_WIDTH, 10) || 300
 
 /**
  * Car image height. Default is 200.
  *
  * @type {number}
  */
-export const CAR_IMAGE_HEIGHT: number = Number.parseInt(BC_CAR_IMAGE_HEIGHT) || 200
+export const CAR_IMAGE_HEIGHT: number = Number.parseInt(BC_CAR_IMAGE_HEIGHT, 10) || 200
 
 /**
  * Minimum age. Default is 21.
  *
  * @type {number}
  */
-export const MINIMUM_AGE: number = Number.parseInt(BC_MINIMUM_AGE) || 21
+export const MINIMUM_AGE: number = Number.parseInt(BC_MINIMUM_AGE, 10) || 21

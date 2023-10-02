@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Helper from '../common/Helper'
 
@@ -11,7 +11,8 @@ const BookingStatus = (
   }: {
     style: object
     status: bookcarsTypes.BookingStatus
-  }) => (
+  }
+) => (
   <View
     style={{
       ...styles.container,

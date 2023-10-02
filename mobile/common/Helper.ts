@@ -5,9 +5,9 @@ import Constants from 'expo-constants'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
+import * as mime from 'mime'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import * as mime from 'mime'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 import * as ToasHelper from './ToastHelper'
@@ -75,7 +75,7 @@ export const registerPushToken = async (userId: string) => {
         }
         if (finalStatus !== 'granted') {
           alert('Failed to get push token for push notification!')
-          return
+          return ''
         }
         token = (
           await Notifications.getExpoPushTokenAsync({
@@ -126,12 +126,12 @@ export const registerPushToken = async (userId: string) => {
  * @returns {Date}
  */
 export const dateTime = (date: Date, time: Date) => {
-  const dateTime = new Date(date)
-  dateTime.setHours(time.getHours())
-  dateTime.setMinutes(time.getMinutes())
-  dateTime.setSeconds(time.getSeconds())
-  dateTime.setMilliseconds(time.getMilliseconds())
-  return dateTime
+  const _dateTime = new Date(date)
+  _dateTime.setHours(time.getHours())
+  _dateTime.setMinutes(time.getMinutes())
+  _dateTime.setSeconds(time.getSeconds())
+  _dateTime.setMilliseconds(time.getMilliseconds())
+  return _dateTime
 }
 
 /**
@@ -181,9 +181,8 @@ export const getGearboxTypeShort = (type: string) => {
 export const getMileage = (mileage: number) => {
   if (mileage === -1) {
     return i18n.t('UNLIMITED')
-  } else {
-    return `${bookcarsHelper.formatNumber(mileage)} ${i18n.t('MILEAGE_UNIT')}`
   }
+  return `${bookcarsHelper.formatNumber(mileage)} ${i18n.t('MILEAGE_UNIT')}`
 }
 
 /**
@@ -215,11 +214,10 @@ export const getFuelPolicy = (type: string) => {
 export const getCancellation = (cancellation: number, fr: boolean) => {
   if (cancellation === -1) {
     return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
-  } else if (cancellation === 0) {
+  } if (cancellation === 0) {
     return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
   }
+  return `${i18n.t('CANCELLATION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
 }
 
 /**
@@ -232,11 +230,10 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
 export const getAmendments = (amendments: number, fr: boolean) => {
   if (amendments === -1) {
     return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`
-  } else if (amendments === 0) {
+  } if (amendments === 0) {
     return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
-  } else {
-    return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${i18n.t('CURRENCY')}`
   }
+  return `${i18n.t('AMENDMENTS')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${i18n.t('CURRENCY')}`
 }
 
 /**
@@ -249,11 +246,10 @@ export const getAmendments = (amendments: number, fr: boolean) => {
 export const getTheftProtection = (theftProtection: number, fr: boolean) => {
   if (theftProtection === -1) {
     return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
-  } else if (theftProtection === 0) {
+  } if (theftProtection === 0) {
     return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')}`
   }
+  return `${i18n.t('THEFT_PROTECTION')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')}`
 }
 
 /**
@@ -266,11 +262,10 @@ export const getTheftProtection = (theftProtection: number, fr: boolean) => {
 export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: boolean) => {
   if (collisionDamageWaiver === -1) {
     return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
-  } else if (collisionDamageWaiver === 0) {
+  } if (collisionDamageWaiver === 0) {
     return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')}`
   }
+  return `${i18n.t('COLLISION_DAMAGE_WAVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')}`
 }
 
 /**
@@ -283,11 +278,10 @@ export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: bool
 export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
   if (fullInsurance === -1) {
     return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
-  } else if (fullInsurance === 0) {
+  } if (fullInsurance === 0) {
     return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')}`
   }
+  return `${i18n.t('FULL_INSURANCE')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')}`
 }
 
 /**
@@ -300,11 +294,10 @@ export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
 export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
   if (additionalDriver === -1) {
     return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('UNAVAILABLE')}`
-  } else if (additionalDriver === 0) {
+  } if (additionalDriver === 0) {
     return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${i18n.t('INCLUDED')}`
-  } else {
-    return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')}`
   }
+  return `${i18n.t('ADDITIONAL_DRIVER')}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')}`
 }
 
 /**
@@ -313,9 +306,7 @@ export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
  * @param {number} days
  * @returns {string}
  */
-export const getDays = (days: number) => {
-  return `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
-}
+export const getDays = (days: number) => `${i18n.t('PRICE_DAYS_PART_1')} ${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 
 /**
  * Get short days label.
@@ -323,10 +314,7 @@ export const getDays = (days: number) => {
  * @param {number} days
  * @returns {string}
  */
-export const getDaysShort = (days: number) => {
-  return `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
-}
-
+export const getDaysShort = (days: number) => `${days} ${i18n.t('PRICE_DAYS_PART_2')}${days > 1 ? 's' : ''}`
 
 /**
  * Get price.
@@ -340,29 +328,29 @@ export const getDaysShort = (days: number) => {
 export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bookcarsTypes.CarOptions) => {
   const _days = bookcarsHelper.days(from, to)
 
-  let price = car.price * _days
+  let _price = car.price * _days
   if (options) {
     if (options.cancellation && car.cancellation > 0) {
-      price += car.cancellation
+      _price += car.cancellation
     }
     if (options.amendments && car.amendments > 0) {
-      price += car.amendments
+      _price += car.amendments
     }
     if (options.theftProtection && car.theftProtection > 0) {
-      price += car.theftProtection * _days
+      _price += car.theftProtection * _days
     }
     if (options.collisionDamageWaiver && car.collisionDamageWaiver > 0) {
-      price += car.collisionDamageWaiver * _days
+      _price += car.collisionDamageWaiver * _days
     }
     if (options.fullInsurance && car.fullInsurance > 0) {
-      price += car.fullInsurance * _days
+      _price += car.fullInsurance * _days
     }
     if (options.additionalDriver && car.additionalDriver > 0) {
-      price += car.additionalDriver * _days
+      _price += car.additionalDriver * _days
     }
   }
 
-  return price
+  return _price
 }
 
 /**
@@ -376,11 +364,10 @@ export const price = (car: bookcarsTypes.Car, from: Date, to: Date, options?: bo
 export const getCancellationOption = (cancellation: number, fr: boolean, hidePlus?: boolean) => {
   if (cancellation === -1) {
     return i18n.t('UNAVAILABLE')
-  } else if (cancellation === 0) {
+  } if (cancellation === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(cancellation)} ${i18n.t('CURRENCY')}`
 }
 
 /**
@@ -394,11 +381,10 @@ export const getCancellationOption = (cancellation: number, fr: boolean, hidePlu
 export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus?: boolean) => {
   if (amendments === -1) {
     return `${i18n.t('UNAVAILABLE')}${fr ? 's' : ''}`
-  } else if (amendments === 0) {
+  } if (amendments === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'es' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(amendments)} ${i18n.t('CURRENCY')}`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(amendments)} ${i18n.t('CURRENCY')}`
 }
 
 /**
@@ -413,11 +399,10 @@ export const getAmendmentsOption = (amendments: number, fr: boolean, hidePlus?: 
 export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (collisionDamageWaiver === -1) {
     return i18n.t('UNAVAILABLE')
-  } else if (collisionDamageWaiver === 0) {
+  } if (collisionDamageWaiver === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(collisionDamageWaiver * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')})`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(collisionDamageWaiver * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${i18n.t('CAR_CURRENCY')})`
 }
 
 /**
@@ -432,11 +417,10 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
 export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (theftProtection === -1) {
     return i18n.t('UNAVAILABLE')
-  } else if (theftProtection === 0) {
+  } if (theftProtection === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(theftProtection * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')})`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(theftProtection * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(theftProtection)} ${i18n.t('CAR_CURRENCY')})`
 }
 
 /**
@@ -451,11 +435,10 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
 export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (fullInsurance === -1) {
     return i18n.t('UNAVAILABLE')
-  } else if (fullInsurance === 0) {
+  } if (fullInsurance === 0) {
     return `${i18n.t('INCLUDED')}${fr ? 'e' : ''}`
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(fullInsurance * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')})`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(fullInsurance * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(fullInsurance)} ${i18n.t('CAR_CURRENCY')})`
 }
 
 /**
@@ -470,11 +453,10 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, fr: boolean, hidePlus?: boolean) => {
   if (additionalDriver === -1) {
     return i18n.t('UNAVAILABLE')
-  } else if (additionalDriver === 0) {
+  } if (additionalDriver === 0) {
     return i18n.t('INCLUDED')
-  } else {
-    return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(additionalDriver * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')})`
   }
+  return `${hidePlus ? '' : '+ '}${bookcarsHelper.formatNumber(additionalDriver * days)} ${i18n.t('CURRENCY')} (${bookcarsHelper.formatNumber(additionalDriver)} ${i18n.t('CAR_CURRENCY')})`
 }
 
 /**
@@ -574,24 +556,29 @@ export const navigate = (
       navigation.navigate(route.name, { d: new Date().getTime() })
       break
     case 'Booking':
-      navigation.navigate(route.name,
+      navigation.navigate(
+        route.name,
         {
           d: new Date().getTime(),
           id: (route.params && 'id' in route.params && route.params.id as string) || '',
-        })
+        }
+      )
       break
     case 'Cars':
-      navigation.navigate(route.name,
+      navigation.navigate(
+        route.name,
         {
           d: new Date().getTime(),
           pickupLocation: (route.params && 'pickupLocation' in route.params && route.params.pickupLocation as string) || '',
           dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
           from: (route.params && 'from' in route.params && route.params.from as number) || 0,
           to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-        })
+        }
+      )
       break
     case 'Checkout':
-      navigation.navigate(route.name,
+      navigation.navigate(
+        route.name,
         {
           d: new Date().getTime(),
           car: (route.params && 'car' in route.params && route.params.car as string) || '',
@@ -599,7 +586,10 @@ export const navigate = (
           dropOffLocation: (route.params && 'dropOffLocation' in route.params && route.params.dropOffLocation as string) || '',
           from: (route.params && 'from' in route.params && route.params.from as number) || 0,
           to: (route.params && 'to' in route.params && route.params.to as number) || 0,
-        })
+        }
+      )
+      break
+    default:
       break
   }
 }

@@ -76,11 +76,10 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
             setEmailError(false)
             setEmailValid(true)
             return true
-          } else {
+          }
             setEmailError(true)
             setEmailValid(true)
             return false
-          }
         } catch (err) {
           Helper.error(err)
           setEmailError(false)
@@ -138,8 +137,8 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   }
 
   const onPressSignIn = async () => {
-    const emailValid = await validateEmail()
-    if (!emailValid) {
+    const _emailValid = await validateEmail()
+    if (!_emailValid) {
       return
     }
 

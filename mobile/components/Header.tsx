@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { Avatar, Badge } from 'react-native-paper'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { DrawerActions } from '@react-navigation/native'
+
 import * as UserService from '../services/UserService'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
@@ -24,7 +24,8 @@ const Header = (
     notificationCount?: number
     reload?: boolean
     _avatar?: string | null
-  }) => {
+  }
+) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [avatar, setAvatar] = useState<string | null | undefined>(null)
 

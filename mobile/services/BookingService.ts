@@ -2,7 +2,7 @@ import axios from 'axios'
 import * as Env from '../config/env.config'
 import * as UserService from './UserService'
 import * as AxiosHelper from '../common/AxiosHelper'
-import * as bookcarsTypes from  '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 AxiosHelper.init(axios)
 
@@ -52,7 +52,8 @@ export const getBooking = async (id: string): Promise<bookcarsTypes.Booking> => 
   const headers = await UserService.authHeader()
   const language = await UserService.getLanguage()
   return axios
-    .get(`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${language}`,
+    .get(
+`${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${language}`,
       { headers }
     )
     .then((res) => res.data)
