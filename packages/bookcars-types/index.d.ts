@@ -164,7 +164,6 @@ export interface CreateUserPayload {
     avatar?: string;
     birthDate?: number | Date;
     language?: string;
-    agency?: string;
     password?: string;
     verified?: boolean;
     blacklisted?: boolean;
@@ -308,10 +307,6 @@ export interface ResultData<T> {
     resultData: T[];
 }
 export type Result<T> = [ResultData<T>] | [] | undefined | null;
-export interface Name {
-    name: string;
-    language: string;
-}
 export interface GetUsersBody {
     user: string;
     types: UserType[];
