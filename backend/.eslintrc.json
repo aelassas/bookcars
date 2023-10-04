@@ -47,6 +47,7 @@
     "react/display-name": "off",
     "no-nested-ternary": "off",
     "react/jsx-no-useless-fragment": "off",
+    "object-curly-newline": "off",
     "react/jsx-filename-extension": [
       "warn",
       {
