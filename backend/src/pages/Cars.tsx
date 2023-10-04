@@ -23,7 +23,7 @@ function Cars() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>([])
+  const [companies, setCompanies] = useState<string[]>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(true)
