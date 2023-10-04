@@ -25,7 +25,7 @@ function Cars() {
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>([])
+  const [companies, setCompanies] = useState<string[]>()
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
