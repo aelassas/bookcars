@@ -5,7 +5,7 @@ import Const from './const'
 // ISO 639-1 language codes and their labels
 // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 //
-const languages = [
+const LANGUAGES = [
   {
     code: 'fr',
     label: 'Français',
@@ -21,8 +21,8 @@ const Env = {
 
   APP_TYPE: bookcarsTypes.AppType.Backend,
   API_HOST: process.env.REACT_APP_BC_API_HOST,
-  LANGUAGES: languages.map((l) => l.code),
-  _LANGUAGES: languages,
+  LANGUAGES: LANGUAGES.map((l) => l.code),
+  _LANGUAGES: LANGUAGES,
   DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'en',
   PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_CARS_PAGE_SIZE), 10) || 15,
