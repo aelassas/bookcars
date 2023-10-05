@@ -39,43 +39,43 @@ import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car-list.css'
 
 function CarList({
-    companies: carCompanies,
-    keyword: carKeyword,
-    fuel: carFuel,
-    gearbox: carGearbox,
-    mileage: carMileage,
-    deposit: carDeposit,
-    availability: carAvailability,
-    reload,
-    cars,
-    user: carUser,
-    booking,
-    className,
-    loading: carLoading,
-    hideCompany,
-    hidePrice,
-    onLoad,
-    onDelete
-  }:
-    {
-      companies?: string[]
-      keyword?: string
-      fuel?: string[]
-      gearbox?: string[]
-      mileage?: string[]
-      deposit?: number
-      availability?: string[]
-      reload?: boolean
-      cars?: bookcarsTypes.Car[]
-      user?: bookcarsTypes.User
-      booking?: bookcarsTypes.Booking
-      className?: string
-      loading?: boolean
-      hideCompany?: boolean
-      hidePrice?: boolean
-      onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-      onDelete?: (rowCount: number) => void
-    }) {
+  companies: carCompanies,
+  keyword: carKeyword,
+  fuel: carFuel,
+  gearbox: carGearbox,
+  mileage: carMileage,
+  deposit: carDeposit,
+  availability: carAvailability,
+  reload,
+  cars,
+  user: carUser,
+  booking,
+  className,
+  loading: carLoading,
+  hideCompany,
+  hidePrice,
+  onLoad,
+  onDelete
+}:
+  {
+    companies?: string[]
+    keyword?: string
+    fuel?: string[]
+    gearbox?: string[]
+    mileage?: string[]
+    deposit?: number
+    availability?: string[]
+    reload?: boolean
+    cars?: bookcarsTypes.Car[]
+    user?: bookcarsTypes.User
+    booking?: bookcarsTypes.Booking
+    className?: string
+    loading?: boolean
+    hideCompany?: boolean
+    hidePrice?: boolean
+    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+    onDelete?: (rowCount: number) => void
+  }) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -168,7 +168,7 @@ function CarList({
     if (carCompanies) {
       if (carCompanies.length > 0) {
         _fetch(
-page,
+          page,
           carCompanies,
           carKeyword,
           carFuel,
@@ -176,7 +176,7 @@ page,
           carMileage,
           carDeposit || 0,
           carAvailability
-)
+        )
       } else {
         setRows([])
         setRowCount(0)
@@ -226,7 +226,7 @@ page,
     if (reload) {
       setPage(1)
       _fetch(
-1,
+        1,
         carCompanies,
         carKeyword,
         carFuel,
@@ -234,7 +234,7 @@ page,
         carMileage,
         carDeposit,
         carAvailability
-)
+      )
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reload,
