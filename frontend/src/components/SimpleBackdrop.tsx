@@ -1,9 +1,11 @@
 import React from 'react'
-import { Backdrop, CircularProgress, Typography } from '@mui/material'
+import {
+  Backdrop,
+  CircularProgress,
+  Typography
+} from '@mui/material'
 
-function SimpleBackdrop(props: { progress?: boolean, text?: string }) {
-  const { progress, text } = props
-
+function SimpleBackdrop({ progress, text }: { progress?: boolean, text?: string }) {
   return (
     <div>
       <Backdrop open sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
