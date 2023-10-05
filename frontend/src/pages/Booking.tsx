@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {
-  FormControl, FormControlLabel,
+  FormControl,
+  FormControlLabel,
   Switch,
   Button
 } from '@mui/material'
