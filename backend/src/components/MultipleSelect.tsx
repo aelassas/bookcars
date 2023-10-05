@@ -1,8 +1,13 @@
-import React, {
- useState, useEffect, forwardRef, useRef, useImperativeHandle
-} from 'react'
+import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react'
 import {
- Autocomplete, TextField, InputAdornment, Avatar, SxProps, Theme, TextFieldVariants, AutocompleteInputChangeReason
+  Autocomplete,
+  TextField,
+  InputAdornment,
+  Avatar,
+  SxProps,
+  Theme,
+  TextFieldVariants,
+  AutocompleteInputChangeReason
 } from '@mui/material'
 import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
@@ -12,19 +17,19 @@ import Env from '../config/env.config'
 import '../assets/css/multiple-select.css'
 
 const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardRef((props, ref) => {
-    const { children, ...rest }: { children?: React.ReactNode } = props
+  const { children, ...rest }: { children?: React.ReactNode } = props
 
-    const innerRef = useRef(null)
+  const innerRef = useRef(null)
 
-    useImperativeHandle(ref, () => innerRef.current)
+  useImperativeHandle(ref, () => innerRef.current)
 
-    return (
-      // eslint-disable-next-line
-      <ul {...rest} ref={innerRef} role="list-box">
-        {children}
-      </ul>
-    )
-  })
+  return (
+    // eslint-disable-next-line
+    <ul {...rest} ref={innerRef} role="list-box">
+      {children}
+    </ul>
+  )
+})
 
 function MultipleSelect({
   label,
