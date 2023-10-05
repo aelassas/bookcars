@@ -1,7 +1,10 @@
 import * as bookcarsTypes from 'bookcars-types'
 import Const from './const'
 
-// ISO 639-1 language codes
+//
+// ISO 639-1 language codes and their labels
+// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+//
 const languages = [
   {
     code: 'fr',
