@@ -48,14 +48,14 @@ function ListItemLink(props: any) {
 }
 
 function Header({
-    user,
-    hidden,
-    notificationCount: headerNotificationCount
-  }: {
-    user?: bookcarsTypes.User
-    hidden?: boolean
-    notificationCount?: number
-  }) {
+  user,
+  hidden,
+  notificationCount: headerNotificationCount
+}: {
+  user?: bookcarsTypes.User
+  hidden?: boolean
+  notificationCount?: number
+}) {
   const navigate = useNavigate()
   const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
