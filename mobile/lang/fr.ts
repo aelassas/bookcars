@@ -1,5 +1,4 @@
 import * as Env from '../config/env.config'
-import { COPYRIGHT, REGISTERED } from './copyright'
 
 export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",
@@ -74,9 +73,6 @@ export const fr = {
   BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
   BIRTH_DATE_NOT_VALID_PART2: 'ans.',
   SUPPLIER: 'Fournisseur',
-  COPYRIGHT_PART1: COPYRIGHT,
-  COPYRIGHT_PART2: REGISTERED,
-  COPYRIGHT_PART3: '. Tous droits réservés.',
   SAME_LOCATION: 'Restituer au même endroit',
   FROM_DATE: 'Date de prise en charge',
   FROM_TIME: 'Heure de prise en charge',

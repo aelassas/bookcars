@@ -1,5 +1,4 @@
 import * as Env from '../config/env.config'
-import { COPYRIGHT, REGISTERED } from './copyright'
 
 export const en = {
   GENERIC_ERROR: 'An unhandled error occurred.',
@@ -75,9 +74,6 @@ export const en = {
   BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
   BIRTH_DATE_NOT_VALID_PART2: 'years old.',
   SUPPLIER: 'Supplier',
-  COPYRIGHT_PART1: COPYRIGHT,
-  COPYRIGHT_PART2: REGISTERED,
-  COPYRIGHT_PART3: '. All rights reserved.',
   SAME_LOCATION: 'Return to same location',
   FROM_DATE: 'Pickup date',
   FROM_TIME: 'Pickup time',
