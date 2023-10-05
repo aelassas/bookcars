@@ -11,7 +11,11 @@ import {
   CardContent,
   Typography
 } from '@mui/material'
-import { Visibility as ViewIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import {
+  Visibility as ViewIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon
+} from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Env from '../config/env.config'
