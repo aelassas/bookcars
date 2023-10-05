@@ -16,7 +16,11 @@ import {
   ListItemText,
   Avatar,
 } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon, LocationOn as LocationIcon } from '@mui/icons-material'
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  LocationOn as LocationIcon
+} from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 import Const from '../config/const'
