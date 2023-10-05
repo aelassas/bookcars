@@ -14,18 +14,20 @@ import {
 } from '@env'
 
 /**
- * English ISO 639-1 language code.
+ * ISO 639-1 languages and their labels.
  *
- * @type {'en'}
+ * @type {{}}
  */
-const EN = 'en'
-
-/**
- * French ISO 639-1 language code.
- *
- * @type {'fr'}
- */
-const FR = 'fr'
+export const LANGUAGES = [
+  {
+    code: 'fr',
+    label: 'Français',
+  },
+  {
+    code: 'en',
+    label: 'English',
+  },
+]
 
 /**
  * Application type.
@@ -56,25 +58,11 @@ export const AXIOS_RETRIES: number = 3
 export const AXIOS_RETRIES_INTERVAL: number = 500 // in milliseconds
 
 /**
- * Languages.
- *
- * @type {string[]}
- */
-export const LANGUAGES: string[] = [EN, FR]
-
-/**
  * Default language. Default is English.
  *
  * @type {string}
  */
-export const DEFAULT_LANGUAGE: string = BC_DEFAULT_LANGUAGE || EN
-
-/**
- * Languages.
- *
- * @type {{ EN: 'en', FR: 'fr' }}
- */
-export const LANGUAGE: { EN: 'en', FR: 'fr' } = { EN, FR }
+export const DEFAULT_LANGUAGE: string = BC_DEFAULT_LANGUAGE || 'en'
 
 /**
  * Axios timeout in milliseconds.

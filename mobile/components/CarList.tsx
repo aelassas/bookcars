@@ -126,7 +126,7 @@ function CarList({
     setPage(1)
   }, [companies, pickupLocation, fuel, gearbox, mileage, deposit])
 
-  const fr = language === Env.LANGUAGE.FR
+  const fr = language === 'fr'
   const numToRender = Math.floor(Env.CARS_PAGE_SIZE / 2)
 
   return (

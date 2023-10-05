@@ -42,13 +42,13 @@ function DateTimePicker({
   const [label, setLabel] = useState('')
   const [value, setValue] = useState<Date | undefined>(dateTimeValue)
   const [show, setShow] = useState(false)
-  const [locale, setLoacle] = useState(dateTimeLocale === Env.LANGUAGE.FR ? fr : enUS)
+  const [locale, setLoacle] = useState(dateTimeLocale === 'fr' ? fr : enUS)
   const _format = mode === 'date' ? 'eeee, d LLLL yyyy' : 'kk:mm'
   const now = new Date()
   const small = size === 'small'
 
   useEffect(() => {
-    const _locale = dateTimeLocale === Env.LANGUAGE.FR ? fr : enUS
+    const _locale = dateTimeLocale === 'fr' ? fr : enUS
     setLoacle(_locale)
     setLabel((value && bookcarsHelper.capitalize(format(value, _format, { locale: _locale }))) || dateTimeLabel)
   }, [dateTimeLocale]) // eslint-disable-line react-hooks/exhaustive-deps

@@ -141,7 +141,7 @@ function CheckoutScreen({ navigation, route }: NativeStackScreenProps<StackParam
       const _language = await UserService.getLanguage()
       i18n.locale = _language
       setLanguage(_language)
-      setLoacle(_language === Env.LANGUAGE.FR ? fr : enUS)
+      setLoacle(_language === 'fr' ? fr : enUS)
 
       setAuthenticated(false)
       setUser(null)
@@ -864,7 +864,7 @@ function CheckoutScreen({ navigation, route }: NativeStackScreenProps<StackParam
 
   const iconSize = 18
   const iconColor = '#000'
-  const _fr = language === Env.LANGUAGE.FR
+  const _fr = language === 'fr'
   const _format = `eee d LLLL yyyy ${_fr ? 'kk:mm' : 'p'}`
   const days = bookcarsHelper.days(from, to)
 

@@ -37,7 +37,7 @@ function NotificationsScreen({ navigation, route }: NativeStackScreenProps<Stack
     setVisible(false)
     const language = await UserService.getLanguage()
     i18n.locale = language
-    setLoacle(language === Env.LANGUAGE.FR ? fr : enUS)
+    setLoacle(language === 'fr' ? fr : enUS)
 
     const currentUser = await UserService.getCurrentUser()
 

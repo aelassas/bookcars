@@ -274,7 +274,7 @@ export const getLanguage = async () => {
     return lang
   }
 
-  lang = Localization.locale.includes(Env.LANGUAGE.FR) ? Env.LANGUAGE.FR : Env.DEFAULT_LANGUAGE
+  lang = Localization.locale.includes('fr') ? 'fr' : Env.DEFAULT_LANGUAGE
   return lang
 }
 
