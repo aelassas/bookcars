@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Button, Avatar as MaterialAvatar,
+  Button,
+  Avatar as MaterialAvatar,
   Badge,
   Box,
   Dialog,
