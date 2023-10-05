@@ -1,22 +1,25 @@
 import * as bookcarsTypes from 'bookcars-types'
 import Const from './const'
 
+// ISO 639-1 language codes
+const languages = [
+  {
+    code: 'fr',
+    label: 'Français',
+  },
+  {
+    code: 'en',
+    label: 'English',
+  },
+]
+
 const Env = {
   isMobile: () => window.innerWidth <= 960,
 
   APP_TYPE: bookcarsTypes.AppType.Backend,
   API_HOST: process.env.REACT_APP_BC_API_HOST,
-  LANGUAGES: ['fr', 'en'], // ISO 639-1 language codes
-  _LANGUAGES: [
-    {
-      code: 'fr',
-      label: 'Français',
-    },
-    {
-      code: 'en',
-      label: 'English',
-    },
-  ],
+  LANGUAGES: languages.map((l) => l.code),
+  _LANGUAGES: languages,
   DEFAULT_LANGUAGE: process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'en',
   PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_PAGE_SIZE), 10) || 30,
   CARS_PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_CARS_PAGE_SIZE), 10) || 15,
