@@ -1,16 +1,23 @@
 import React, { useRef, useState } from 'react'
-import { Animated, Easing, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
 function Accordion({
-    style,
-    title,
-    children
-  }: {
-    style?: object
-    title: string
-    children?: React.ReactNode
-  }) {
+  style,
+  title,
+  children
+}: {
+  style?: object
+  title: string
+  children?: React.ReactNode
+}) {
   const [open, setOpen] = useState(false)
   const animatedController = useRef(new Animated.Value(0)).current
 
