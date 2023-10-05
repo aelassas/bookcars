@@ -27,7 +27,6 @@ import CheckoutScreen from '../screens/Checkout'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
 function DrawerNavigator() {
-  // const buildLink = useLinkBuilder()
   const routes = useNavigationState((state) => state && state.routes)
   const index = useNavigationState((state) => state && state.index)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -144,7 +143,6 @@ function DrawerNavigator() {
   return (
     <View style={styles.container}>
       <Drawer.Navigator
-        // drawerType="front"
         initialRouteName="Home"
         backBehavior="history"
         screenOptions={{
@@ -158,7 +156,6 @@ function DrawerNavigator() {
             language={language}
             activeBackgroundColor="#feeee4"
             activeTintColor="#f37022"
-            // buildLink={buildLink}
             props={props}
           />
         )}
