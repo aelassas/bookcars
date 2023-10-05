@@ -5,32 +5,32 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as Helper from '../common/Helper'
 
 function BookingStatus({
-    style,
-    status
-  }: {
-    style: object
-    status: bookcarsTypes.BookingStatus
-  }) {
+  style,
+  status
+}: {
+  style: object
+  status: bookcarsTypes.BookingStatus
+}) {
   return (
     <View
       style={{
-      ...styles.container,
-      ...style,
-      backgroundColor:
-        status === bookcarsTypes.BookingStatus.Void
-          ? '#999'
-          : status === bookcarsTypes.BookingStatus.Pending
-            ? '#e98003'
-            : status === bookcarsTypes.BookingStatus.Deposit
-              ? '#22bba7'
-              : status === bookcarsTypes.BookingStatus.Paid
-                ? '#77bc23'
-                : status === bookcarsTypes.BookingStatus.Reserved
-                  ? '#188ace'
-                  : status === bookcarsTypes.BookingStatus.Cancelled
-                    ? '#bc2143'
-                    : 'transparent',
-    }}
+        ...styles.container,
+        ...style,
+        backgroundColor:
+          status === bookcarsTypes.BookingStatus.Void
+            ? '#999'
+            : status === bookcarsTypes.BookingStatus.Pending
+              ? '#e98003'
+              : status === bookcarsTypes.BookingStatus.Deposit
+                ? '#22bba7'
+                : status === bookcarsTypes.BookingStatus.Paid
+                  ? '#77bc23'
+                  : status === bookcarsTypes.BookingStatus.Reserved
+                    ? '#188ace'
+                    : status === bookcarsTypes.BookingStatus.Cancelled
+                      ? '#bc2143'
+                      : 'transparent',
+      }}
     >
       <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
     </View>
