@@ -1,6 +1,4 @@
-import React, {
- useState, useEffect, CSSProperties, ReactNode
-} from 'react'
+import React, { useState, useEffect, CSSProperties, ReactNode } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/master'
