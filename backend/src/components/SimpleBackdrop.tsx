@@ -1,5 +1,9 @@
 import React from 'react'
-import { Backdrop, CircularProgress, Typography } from '@mui/material'
+import {
+  Backdrop,
+  CircularProgress,
+  Typography
+} from '@mui/material'
 
 function SimpleBackdrop(props: { progress?: boolean, text?: string }) {
   const { progress, text } = props
