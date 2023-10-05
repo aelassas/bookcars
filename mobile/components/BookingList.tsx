@@ -77,7 +77,7 @@ function BookingList({
   }
 
   useEffect(() => {
-    setLoacle(language === Env.LANGUAGE.FR ? fr : enUS)
+    setLoacle(language === 'fr' ? fr : enUS)
   }, [language])
 
   useEffect(() => {
@@ -131,7 +131,7 @@ function BookingList({
     }
   }, [bookingId])
 
-  const _fr = language === Env.LANGUAGE.FR
+  const _fr = language === 'fr'
   const numToRender = Math.floor(Env.BOOKINGS_PAGE_SIZE / 2)
 
   return (

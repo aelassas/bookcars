@@ -24,30 +24,30 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 let yOffset = 0
 
 function DrawerContent({
-    language: drawerLanguage,
-    index,
-    drawerItems,
-    loggedIn,
-    activeTintColor,
-    inactiveTintColor,
-    activeBackgroundColor,
-    inactiveBackgroundColor,
-    labelStyle,
-    itemStyle,
-    props
-  }: {
-    language: string
-    index: number
-    drawerItems: DrawerItem[]
-    loggedIn?: boolean
-    activeTintColor?: string
-    inactiveTintColor?: string
-    activeBackgroundColor?: string
-    inactiveBackgroundColor?: string
-    labelStyle?: StyleProp<ViewStyle>
-    itemStyle?: StyleProp<ViewStyle>
-    props: DrawerContentComponentProps
-  }) {
+  language: drawerLanguage,
+  index,
+  drawerItems,
+  loggedIn,
+  activeTintColor,
+  inactiveTintColor,
+  activeBackgroundColor,
+  inactiveBackgroundColor,
+  labelStyle,
+  itemStyle,
+  props
+}: {
+  language: string
+  index: number
+  drawerItems: DrawerItem[]
+  loggedIn?: boolean
+  activeTintColor?: string
+  inactiveTintColor?: string
+  activeBackgroundColor?: string
+  inactiveBackgroundColor?: string
+  labelStyle?: StyleProp<ViewStyle>
+  itemStyle?: StyleProp<ViewStyle>
+  props: DrawerContentComponentProps
+}) {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [openLanguageMenu, setopenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(drawerLanguage)
@@ -160,30 +160,25 @@ function DrawerContent({
           <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
           <Text style={styles.text}>{i18n.t('LANGUAGE')}</Text>
         </Pressable>
+
         {openLanguageMenu && (
           <View style={styles.languageMenu}>
-            <Pressable
-              style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedItem : styles.languageMenuItem}
-              onPress={async () => {
-                if (language !== Env.LANGUAGE.FR) {
-                  await updateLanguage(Env.LANGUAGE.FR)
-                  setopenLanguageMenu(false)
-                }
-              }}
-            >
-              <Text style={language === Env.LANGUAGE.FR ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_FR')}</Text>
-            </Pressable>
-            <Pressable
-              style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedItem : styles.languageMenuItem}
-              onPress={async () => {
-                if (language !== Env.LANGUAGE.EN) {
-                  await updateLanguage(Env.LANGUAGE.EN)
-                  setopenLanguageMenu(false)
-                }
-              }}
-            >
-              <Text style={language === Env.LANGUAGE.EN ? styles.languageMenuSelectedText : styles.languageMenuText}>{i18n.t('LANGUAGE_EN')}</Text>
-            </Pressable>
+            {
+              Env.LANGUAGES.map((lang) => (
+                <Pressable
+                  key={lang.code}
+                  style={lang.code === language ? styles.languageMenuSelectedItem : styles.languageMenuItem}
+                  onPress={async () => {
+                    if (lang.code !== language) {
+                      await updateLanguage(lang.code)
+                      setopenLanguageMenu(false)
+                    }
+                  }}
+                >
+                  <Text style={lang.code === language ? styles.languageMenuSelectedText : styles.languageMenuText}>{lang.label}</Text>
+                </Pressable>
+              ))
+            }
           </View>
         )}
       </View>
