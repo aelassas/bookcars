@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Paper, FormControl, InputLabel, Input, Button, Link
+  Paper,
+  FormControl,
+  InputLabel,
+  Input,
+  Button,
+  Link
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { strings as commonStrings } from '../lang/common'
