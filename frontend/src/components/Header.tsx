@@ -38,6 +38,7 @@ import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import Avatar from './Avatar'
 import * as LangHelper from '../common/LangHelper'
+import * as Helper from '../common/Helper'
 
 import '../assets/css/header.css'
 
@@ -57,7 +58,7 @@ function Header({
   notificationCount?: number
 }) {
   const navigate = useNavigate()
-  const [lang, setLang] = useState(Env.DEFAULT_LANGUAGE)
+  const [lang, setLang] = useState(Helper.getLanguage(Env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
@@ -119,7 +120,7 @@ function Header({
 
     const { code } = event.currentTarget.dataset
     if (code) {
-      setLang(code)
+      setLang(Helper.getLanguage(code))
       const currentLang = UserService.getLanguage()
       if (isSignedIn && user) {
         // Update user language
@@ -144,17 +145,6 @@ function Header({
           refreshPage()
         }
       }
-    }
-  }
-
-  const getLang = (_lang: string) => {
-    switch (_lang) {
-      case 'fr':
-        return strings.LANGUAGE_FR
-      case 'en':
-        return strings.LANGUAGE_EN
-      default:
-        return Env.DEFAULT_LANGUAGE
     }
   }
 
@@ -189,7 +179,7 @@ function Header({
 
   useEffect(() => {
     const language = LangHelper.getLanguage()
-    setLang(language)
+    setLang(Helper.getLanguage(language))
     LangHelper.setLanguage(strings, language)
   }, [])
 
@@ -282,12 +272,13 @@ function Header({
       open={isLangMenuOpen}
       onClose={handleLangMenuClose}
     >
-      <MenuItem onClick={handleLangMenuClose} data-code="fr">
-        {strings.LANGUAGE_FR}
-      </MenuItem>
-      <MenuItem onClick={handleLangMenuClose} data-code="en">
-        {strings.LANGUAGE_EN}
-      </MenuItem>
+      {
+        Env._LANGUAGES.map((language) => (
+          <MenuItem onClick={handleLangMenuClose} data-code={language.code} key={language.code}>
+            {language.label}
+          </MenuItem>
+        ))
+      }
     </Menu>
   )
 
@@ -349,7 +340,7 @@ function Header({
               )}
               {isLoaded && !loading && (
                 <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
-                  {getLang(lang)}
+                  {lang?.label}
                 </Button>
               )}
               {isSignedIn && (
@@ -361,7 +352,7 @@ function Header({
             <div className="header-mobile">
               {!isSignedIn && !loading && (
                 <Button variant="contained" startIcon={<LanguageIcon />} onClick={handleLangMenuOpen} disableElevation fullWidth className="btn-primary">
-                  {getLang(lang)}
+                  {lang?.label}
                 </Button>
               )}
               {isSignedIn && (

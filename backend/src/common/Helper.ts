@@ -4,6 +4,15 @@ import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import * as CarService from '../services/CarService'
+import Env from '../config/env.config'
+
+/**
+ * Get language.
+ *
+ * @param {string} code
+ * @returns {*}
+ */
+export const getLanguage = (code: string) => Env._LANGUAGES.find((l) => l.code === code)
 
 /**
  * Toast info message.
