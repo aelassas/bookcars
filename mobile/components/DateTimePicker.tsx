@@ -6,8 +6,6 @@ import { enUS, fr } from 'date-fns/locale'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
-import * as Env from '../config/env.config'
-
 function DateTimePicker({
     value: dateTimeValue,
     locale: dateTimeLocale,
