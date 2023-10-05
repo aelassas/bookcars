@@ -1,25 +1,28 @@
 import React from 'react'
 import { IconButton } from '@mui/material'
-import { ArrowBackIos as PreviousPageIcon, ArrowForwardIos as NextPageIcon } from '@mui/icons-material'
+import {
+  ArrowBackIos as PreviousPageIcon,
+  ArrowForwardIos as NextPageIcon
+} from '@mui/icons-material'
 import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/pager.css'
 
 function Pager({
-    page,
-    pageSize,
-    totalRecords,
-    rowCount,
-    onNext,
-    onPrevious
-  }: {
-    page: number,
-    pageSize: number,
-    totalRecords: number,
-    rowCount: number,
-    onNext: () => void,
-    onPrevious: () => void
-  }) {
+  page,
+  pageSize,
+  totalRecords,
+  rowCount,
+  onNext,
+  onPrevious
+}: {
+  page: number,
+  pageSize: number,
+  totalRecords: number,
+  rowCount: number,
+  onNext: () => void,
+  onPrevious: () => void
+}) {
   return (
     (((page > 1 || rowCount < totalRecords) && (
       <div className="pager-container">
