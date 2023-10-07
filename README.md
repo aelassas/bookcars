@@ -1,4 +1,4 @@
-[![](https://bookcars.github.io/content/cover.jpg)](https://bookcars.github.io)
+[![](https://bookcars.github.io/content/cover-small.jpg)](https://bookcars.github.io)
 
 |**Supported Platforms**| ![](https://img.shields.io/badge/iOS-4630EB.svg?logo=APPLE&labelColor=999999&logoColor=fff) ![](https://img.shields.io/badge/Android-4630EB.svg?&logo=ANDROID&labelColor=A4C639&logoColor=fff) ![](https://img.shields.io/badge/web-4630EB.svg?logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff) |
 | --------------------- | ----------- |
