@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [lts/*]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -32,4 +32,5 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './backend/package-lock.json'
     - run: npm install
+    - run: npm run lint
     - run: npm run build
