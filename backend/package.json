@@ -5,13 +5,13 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.11",
-    "@mui/material": "^5.14.11",
-    "@mui/x-data-grid": "^6.16.0",
-    "@mui/x-date-pickers": "^6.16.0",
-    "@types/node": "^20.8.2",
-    "@types/react": "^18.2.24",
-    "@types/react-dom": "^18.2.8",
+    "@mui/icons-material": "^5.14.12",
+    "@mui/material": "^5.14.12",
+    "@mui/x-data-grid": "^6.16.1",
+    "@mui/x-date-pickers": "^6.16.1",
+    "@types/node": "^20.8.3",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.11",
     "@types/validator": "^13.11.2",
     "axios": "^1.5.1",
     "bookcars-helper": "file:../packages/bookcars-helper",
@@ -56,6 +56,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-airbnb": "^19.0.4",
-    "npm-check-updates": "^16.14.4"
+    "npm-check-updates": "^16.14.5"
   }
 }
