@@ -217,10 +217,14 @@ export const signout = async (
 export const validateAccessToken = async (): Promise<number> => {
   const headers = await authHeader()
   return axios
-    .post(`${Env.API_HOST}/api/validate-access-token`, null, {
-      headers,
-      timeout: Env.AXIOS_TIMEOUT,
-    })
+    .post(
+      `${Env.API_HOST}/api/validate-access-token`,
+      null,
+      {
+        headers,
+        timeout: Env.AXIOS_TIMEOUT,
+      }
+    )
     .then((res) => res.status)
 }
 

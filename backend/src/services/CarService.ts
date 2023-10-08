@@ -68,7 +68,6 @@ export const deleteCar = (id: string): Promise<number> =>
  * @returns {Promise<string>}
  */
 export const createImage = (file: Blob): Promise<string> => {
-  const user = UserService.getCurrentUser()
   const formData = new FormData()
   formData.append('image', file)
 
@@ -76,14 +75,10 @@ export const createImage = (file: Blob): Promise<string> => {
     .post(
       `${Env.API_HOST}/api/create-car-image`,
       formData,
-      user && user.accessToken
-        ? {
-          headers: {
-            'x-access-token': user.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        : { headers: { 'Content-Type': 'multipart/form-data' } },
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
     )
     .then((res) => res.data)
 }
@@ -96,7 +91,6 @@ export const createImage = (file: Blob): Promise<string> => {
  * @returns {Promise<number>}
  */
 export const updateImage = (id: string, file: Blob): Promise<number> => {
-  const user = UserService.getCurrentUser()
   const formData = new FormData()
   formData.append('image', file)
 
@@ -104,14 +98,10 @@ export const updateImage = (id: string, file: Blob): Promise<number> => {
     .post(
       `${Env.API_HOST}/api/update-car-image/${encodeURIComponent(id)}`,
       formData,
-      user && user.accessToken
-        ? {
-          headers: {
-            'x-access-token': user.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        : { headers: { 'Content-Type': 'multipart/form-data' } },
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
     )
     .then((res) => res.status)
 }

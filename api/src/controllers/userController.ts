@@ -430,7 +430,7 @@ export async function activate(req: Request, res: Response) {
  */
 export async function signin(req: Request, res: Response) {
   const { body }: { body: bookcarsTypes.SignInPayload } = req
-  const { email, password, stayConnected } = body
+  const { email, password, stayConnected, mobile } = body
 
   try {
     const user = await User.findOne({ email })
@@ -461,19 +461,29 @@ export async function signin(req: Request, res: Response) {
 
       const token = jwt.sign(payload, env.JWT_SECRET, options)
 
+      const loggedUser: bookcarsTypes.User = {
+        _id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        language: user.language,
+        enableEmailNotifications: user.enableEmailNotifications,
+        blacklisted: user.blacklisted,
+        avatar: user.avatar,
+      }
+
+      if (mobile) {
+        loggedUser.accessToken = token
+
+        return res
+          .status(200)
+          .send(loggedUser)
+      }
+
       return res
         .clearCookie('x-access-token')
         .cookie('x-access-token', token, cookieOptions)
         .status(200)
-        .send({
-          _id: user._id,
-          email: user.email,
-          fullName: user.fullName,
-          language: user.language,
-          enableEmailNotifications: user.enableEmailNotifications,
-          blacklisted: user.blacklisted,
-          avatar: user.avatar,
-        })
+        .send(loggedUser)
     }
 
     return res.sendStatus(204)

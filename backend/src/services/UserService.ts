@@ -374,7 +374,6 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
  * @returns {Promise<string>}
  */
 export const createAvatar = (file: Blob): Promise<string> => {
-  const user = getCurrentUser()
   const formData = new FormData()
   formData.append('image', file)
 
@@ -382,14 +381,10 @@ export const createAvatar = (file: Blob): Promise<string> => {
     .post(
       `${Env.API_HOST}/api/create-avatar`,
       formData,
-      user && user.accessToken
-        ? {
-          headers: {
-            'x-access-token': user.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        : { headers: { 'Content-Type': 'multipart/form-data' } },
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
     )
     .then((res) => res.data)
 }
@@ -402,7 +397,6 @@ export const createAvatar = (file: Blob): Promise<string> => {
  * @returns {Promise<number>}
  */
 export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
-  const user = getCurrentUser()
   const formData = new FormData()
   formData.append('image', file)
 
@@ -410,14 +404,10 @@ export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
     .post(
       `${Env.API_HOST}/api/update-avatar/${encodeURIComponent(userId)}`,
       formData,
-      user && user.accessToken
-        ? {
-          headers: {
-            'x-access-token': user.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        : { headers: { 'Content-Type': 'multipart/form-data' } },
+      {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      },
     )
     .then((res) => res.status)
 }
