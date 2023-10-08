@@ -45,6 +45,6 @@ export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCa
     .post(
       `${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)

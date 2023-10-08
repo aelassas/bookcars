@@ -14,7 +14,7 @@ export const validate = (data: bookcarsTypes.ValidateLocationPayload): Promise<n
     .post(
 `${Env.API_HOST}/api/validate-location`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -29,7 +29,7 @@ export const create = (data: bookcarsTypes.LocationName[]): Promise<number> =>
     .post(
 `${Env.API_HOST}/api/create-location`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -45,7 +45,7 @@ export const update = (id: string, data: bookcarsTypes.LocationName[]): Promise<
     .put(
 `${Env.API_HOST}/api/update-location/${id}`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -59,7 +59,7 @@ export const deleteLocation = (id: string): Promise<number> =>
   axios
     .delete(
 `${Env.API_HOST}/api/delete-location/${encodeURIComponent(id)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -73,7 +73,7 @@ export const getLocation = (id: string): Promise<bookcarsTypes.Location> =>
   axios
     .get(
       `${Env.API_HOST}/api/location/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -89,7 +89,7 @@ export const getLocations = (keyword: string, page: number, size: number): Promi
   axios
     .get(
       `${Env.API_HOST}/api/locations/${page}/${size}/${UserService.getLanguage()}/?s=${encodeURIComponent(keyword)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -103,6 +103,6 @@ export const check = (id: string): Promise<number> =>
   axios
     .get(
       `${Env.API_HOST}/api/check-location/${encodeURIComponent(id)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)

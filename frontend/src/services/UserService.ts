@@ -3,20 +3,6 @@ import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
 
 /**
- * Get authentication header.
- *
- * @returns {unknown}
- */
-export const authHeader = () => {
-  const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
-
-  if (user && user.accessToken) {
-    return { 'x-access-token': user.accessToken }
-  }
-  return {}
-}
-
-/**
  * Sign up.
  *
  * @param {bookcarsTypes.BackendSignUpPayload} data
@@ -83,7 +69,7 @@ export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =
     .post(
       `${Env.API_HOST}/api/activate/ `,
       data,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -110,12 +96,11 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
 export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
   axios.post(
     `${Env.API_HOST}/api/sign-in/frontend`,
-    data
+    data,
+    { withCredentials: true }
   )
     .then((res) => {
-      if (res.data.accessToken) {
-        localStorage.setItem('bc-user', JSON.stringify(res.data))
-      }
+      localStorage.setItem('bc-user', JSON.stringify(res.data))
       return { status: res.status, data: res.data }
     })
 
@@ -125,31 +110,33 @@ export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: num
  * @param {boolean} [redirect=true]
  * @param {boolean} [redirectSignin=false]
  */
-export const signout = (redirect = true, redirectSignin = false) => {
-  const _signout = () => {
-    const deleteAllCookies = () => {
-      const cookies = document.cookie.split('')
+export const signout = async (redirect = true, redirectSignin = false) => {
+  const deleteAllCookies = () => {
+    const cookies = document.cookie.split('')
 
-      for (const cookie of cookies) {
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie
-        document.cookie = `${name}=expires=Thu, 01 Jan 1970 00:00:00 GMT`
-      }
-    }
-
-    sessionStorage.clear()
-    localStorage.removeItem('bc-user')
-    deleteAllCookies()
-
-    if (redirect) {
-      window.location.href = '/'
-    }
-    if (redirectSignin) {
-      window.location.href = '/sign-in'
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie
+      document.cookie = `${name}=expires=Thu, 01 Jan 1970 00:00:00 GMT`
     }
   }
 
-  _signout()
+  sessionStorage.clear()
+  localStorage.removeItem('bc-user')
+  deleteAllCookies()
+
+  await axios.post(
+    `${Env.API_HOST}/api/sign-out`,
+    null,
+    { withCredentials: true }
+  )
+
+  if (redirect) {
+    window.location.href = '/'
+  }
+  if (redirectSignin) {
+    window.location.href = '/sign-in'
+  }
 }
 
 /**
@@ -162,7 +149,7 @@ export const validateAccessToken = (): Promise<number> =>
     .post(
       `${Env.API_HOST}/api/validate-access-token`,
       null,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -192,7 +179,7 @@ export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<numbe
     .post(
       `${Env.API_HOST}/api/resend-link`,
       data,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -235,9 +222,11 @@ export const getQueryLanguage = () => {
  */
 export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
   axios
-    .post(`${Env.API_HOST}/api/update-language`, data, {
-      headers: authHeader(),
-    })
+    .post(
+      `${Env.API_HOST}/api/update-language`,
+      data,
+      { withCredentials: true }
+    )
     .then((res) => {
       if (res.status === 200) {
         const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
@@ -263,10 +252,7 @@ export const setLanguage = (lang: string) => {
  */
 export const getCurrentUser = (): bookcarsTypes.User | null => {
   const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null') as bookcarsTypes.User | null
-  if (user && user.accessToken) {
-    return user
-  }
-  return null
+  return user
 }
 
 /**
@@ -280,7 +266,7 @@ export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
     return axios
       .get(
         `${Env.API_HOST}/api/user/${encodeURIComponent(id)}`,
-        { headers: authHeader() }
+        { withCredentials: true }
       )
       .then((res) => res.data)
   }
@@ -299,7 +285,7 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
     .post(
       `${Env.API_HOST}/api/update-user`,
       data,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -314,7 +300,7 @@ export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotifica
     .post(
       `${Env.API_HOST}/api/update-email-notifications`,
       data,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => {
       if (res.status === 200) {
@@ -366,7 +352,7 @@ export const deleteAvatar = (userId: string): Promise<number> =>
     .post(
       `${Env.API_HOST}/api/delete-avatar/${encodeURIComponent(userId)}`,
       null,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -381,7 +367,7 @@ export const checkPassword = (id: string, pass: string): Promise<number> =>
   axios
     .get(
       `${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -396,6 +382,6 @@ export const changePassword = (data: bookcarsTypes.ChangePasswordPayload): Promi
     .post(
       `${Env.API_HOST}/api/change-password/ `,
       data,
-      { headers: authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)

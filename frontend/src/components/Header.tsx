@@ -157,8 +157,8 @@ function Header({
     navigate('/settings')
   }
 
-  const handleSignout = () => {
-    UserService.signout()
+  const handleSignout = async () => {
+    await UserService.signout()
   }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

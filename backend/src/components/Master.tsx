@@ -38,11 +38,11 @@ function Master({
   }, [masterUser, user])
 
   useInit(async () => {
-    const exit = () => {
+    const exit = async () => {
       if (strict) {
-        UserService.signout()
+        await UserService.signout()
       } else {
-        UserService.signout(false)
+        await UserService.signout(false)
         setLoading(false)
 
         if (onLoad) {
@@ -82,16 +82,16 @@ function Master({
               onLoad(_user)
             }
           } else {
-            exit()
+            await exit()
           }
         } else {
-          exit()
+          await exit()
         }
       } catch {
-        exit()
+        await exit()
       }
     } else {
-      exit()
+      await exit()
     }
   })
 

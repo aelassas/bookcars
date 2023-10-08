@@ -4,6 +4,7 @@ import mongoose, { ConnectOptions } from 'mongoose'
 import compression from 'compression'
 import helmet from 'helmet'
 import nocache from 'nocache'
+import cookieParser from 'cookie-parser'
 import strings from './config/app.config'
 import * as env from './config/env.config'
 import supplierRoutes from './routes/supplierRoutes'
@@ -50,7 +51,15 @@ app.use(nocache())
 app.use(compression({ threshold: 0 }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(express.json({ limit: '50mb' }))
-app.use(cors())
+
+const corsConfig = {
+    origin: true,
+    credentials: true,
+}
+app.use(cors(corsConfig))
+app.options('*', cors(corsConfig))
+app.use(cookieParser(env.COOKIE_SECRET))
+
 app.use('/', supplierRoutes)
 app.use('/', bookingRoutes)
 app.use('/', locationRoutes)

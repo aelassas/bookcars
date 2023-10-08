@@ -14,7 +14,7 @@ export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTy
     .post(
       `${Env.API_HOST}/api/create-car`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -29,7 +29,7 @@ export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
     .put(
       `${Env.API_HOST}/api/update-car`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -43,7 +43,7 @@ export const check = (id: string): Promise<number> =>
   axios
     .get(
       `${Env.API_HOST}/api/check-car/${encodeURIComponent(id)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -57,7 +57,7 @@ export const deleteCar = (id: string): Promise<number> =>
   axios
     .delete(
       `${Env.API_HOST}/api/delete-car/${encodeURIComponent(id)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -127,7 +127,7 @@ export const deleteImage = (id: string): Promise<number> =>
     .post(
       `${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`,
       null,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -142,7 +142,7 @@ export const deleteTempImage = (image: string): Promise<number> =>
     .post(
       `${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(image)}`,
       null,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -156,7 +156,7 @@ export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
   axios
     .get(
       `${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -174,7 +174,7 @@ export const getCars = (keyword: string, data: bookcarsTypes.GetCarsPayload, pag
     .post(
       `${Env.API_HOST}/api/cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -192,6 +192,6 @@ export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCa
     .post(
       `${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
