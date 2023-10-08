@@ -32,13 +32,13 @@ function Master({
   }, [masterUser, user])
 
   useInit(async () => {
-    const exit = () => {
+    const exit = async () => {
       if (strict) {
-        UserService.signout(false, true)
+        await UserService.signout(false, true)
       } else {
         setLoading(false)
 
-        UserService.signout(false, false)
+        await UserService.signout(false, false)
 
         if (onLoad) {
           onLoad()
@@ -57,7 +57,7 @@ function Master({
 
           if (_user) {
             if (_user.blacklisted) {
-              exit()
+              await exit()
               return
             }
 
@@ -68,16 +68,16 @@ function Master({
               onLoad(_user)
             }
           } else {
-            exit()
+            await exit()
           }
         } else {
-          exit()
+          await exit()
         }
       } catch {
-        exit()
+        await exit()
       }
     } else {
-      exit()
+      await exit()
     }
   }, [])
 

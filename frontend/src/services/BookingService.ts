@@ -26,9 +26,9 @@ export const book = (data: bookcarsTypes.BookPayload): Promise<number> =>
 export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number> =>
   axios
     .put(
-`${Env.API_HOST}/api/update-booking`,
+      `${Env.API_HOST}/api/update-booking`,
       data,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 
@@ -45,7 +45,7 @@ export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: num
     .post(
       `${Env.API_HOST}/api/bookings/${page}/${size}/${UserService.getLanguage()}`,
       payload,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -59,7 +59,7 @@ export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
   axios
     .get(
       `${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 
@@ -74,5 +74,5 @@ export const cancel = (id: string): Promise<number> =>
     .post(
       `${Env.API_HOST}/api/cancel-booking/${encodeURIComponent(id)}`,
       null,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     ).then((res) => res.status)

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
 import Env from '../config/env.config'
-import * as UserService from './UserService'
 
 /**
  * Get NotificationCounter by UserID.
@@ -13,7 +12,7 @@ export const getNotificationCounter = (userId: string): Promise<bookcarsTypes.No
   axios
     .get(
       `${Env.API_HOST}/api/notification-counter/${encodeURIComponent(userId)}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 )
@@ -30,7 +29,7 @@ export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
     .post(
       `${Env.API_HOST}/api/mark-Notifications-as-read/${encodeURIComponent(userId)}`,
       { ids },
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 )
@@ -47,7 +46,7 @@ export const markAsUnread = (userId: string, ids: string[]): Promise<number> => 
     .post(
 `${Env.API_HOST}/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
       { ids },
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.status)
 )
@@ -64,7 +63,7 @@ export const deleteNotifications = (userId: string, ids: string[]): Promise<numb
     .post(
       `${Env.API_HOST}/api/delete-Notifications/${encodeURIComponent(userId)}`,
       { ids },
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
 )
     .then((res) => res.status)
 )
@@ -80,7 +79,7 @@ export const getNotifications = (userId: string, page: number): Promise<bookcars
   axios
     .get(
       `${Env.API_HOST}/api/Notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
-      { headers: UserService.authHeader() }
+      { withCredentials: true }
     )
     .then((res) => res.data)
 )

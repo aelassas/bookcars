@@ -1,5 +1,6 @@
 import process from 'node:process'
 import { Document, Types } from 'mongoose'
+import { CookieOptions } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
 import * as Helper from '../common/Helper'
 
@@ -86,6 +87,18 @@ export const DB_SSL_CA = __env__('BC_DB_SSL_CA', DB_SSL)
 export const DB_DEBUG = Helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
 
 /**
+ * Cookie options.
+ */
+export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, signed: true, sameSite: 'strict' }
+
+/**
+ * Cookie secret. It should at least be 32 characters long, but the longer the better.
+ *
+ * @type {string}
+ */
+export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'BookCars')
+
+/**
  * JWT secret. It should at least be 32 characters long, but the longer the better.
  *
  * @type {string}
@@ -93,18 +106,18 @@ export const DB_DEBUG = Helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'fa
 export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'BookCars')
 
 /**
- * JWT expiration in seconds. Dedault is 86400 seconds.
+ * JWT expiration in seconds. Dedault is 86400 seconds (1 day).
  *
  * @type {number}
  */
-export const JWT_EXPIRE_AT = Number.parseInt(__env__('BC_JWT_EXPIRE_AT', false, '86400'), 10) // in seconds (default: 1d)
+export const JWT_EXPIRE_AT = Number.parseInt(__env__('BC_JWT_EXPIRE_AT', false, '86400'), 10)
 
 /**
- * Validation Token expiration in seconds. Dedault is 86400 seconds.
+ * Validation Token expiration in seconds. Dedault is 86400 seconds (1 day).
  *
  * @type {number}
  */
-export const TOKEN_EXPIRE_AT = Number.parseInt(__env__('BC_TOKEN_EXPIRE_AT', false, '86400'), 10) // in seconds (default: 1d)
+export const TOKEN_EXPIRE_AT = Number.parseInt(__env__('BC_TOKEN_EXPIRE_AT', false, '86400'), 10)
 
 /**
  * SMTP host.

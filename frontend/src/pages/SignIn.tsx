@@ -43,7 +43,7 @@ function SignIn() {
       const res = await UserService.signin(data)
       if (res.status === 200) {
         if (res.data.blacklisted) {
-          UserService.signout(false)
+          await UserService.signout(false)
           setError(false)
           setBlacklisted(true)
         } else {
@@ -103,14 +103,14 @@ function SignIn() {
                 navigate(`/${window.location.search}`)
               }
             } else {
-              UserService.signout()
+              await UserService.signout()
             }
           }
         } else {
           setVisible(true)
         }
       } catch {
-        UserService.signout()
+        await UserService.signout()
       }
     }())
   }, [navigate])

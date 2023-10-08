@@ -65,3 +65,11 @@ export function joinURL(part1: string, part2: string): string {
 export function getFilenameWithoutExtension(filename: string): string {
     return path.parse(filename).name
 }
+
+/**
+ * Clone an object or an array.
+ *
+ * @param {*} obj
+ * @returns {*}
+ */
+export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
