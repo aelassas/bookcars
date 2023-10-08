@@ -10,7 +10,7 @@
 
 BookCars is an open source car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
-BookCars is user-friendly, straightforward, secured against XSS, XST, CSRF and MITM, and subtly crafted.
+BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MITM, and subtly crafted.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
@@ -39,6 +39,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Responsive backend and frontend
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
+* Secure against XSS, XST, CSRF and MITM
 
 ## Contents
 
