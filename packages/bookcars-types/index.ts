@@ -221,6 +221,7 @@ export interface SignInPayload {
     email: string
     password?: string
     stayConnected?: boolean
+    mobile?: boolean
 }
 
 export interface ResendLinkPayload {
