@@ -451,13 +451,30 @@ export async function signin(req: Request, res: Response) {
     if (passwordMatch) {
       const payload = { id: user._id }
 
-      let options: { expiresIn?: number } = {}
+      let options: { expiresIn?: number }
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
 
       if (stayConnected) {
-        cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000 // 400 days
+        //
+        // Empty JWT options object will result in no expiration.
+        //
+        options = {}
+        //
+        // Cookies can no longer set an expiration date more than 400 days in the future.
+        // The limit MUST NOT be greater than 400 days in duration
+        // (400 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds).
+        // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
+        // limit to be less.
+        //
+        cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000
       } else {
+        //
+        // JWT expiration is set in seconds.
+        //
         options = { expiresIn: env.JWT_EXPIRE_AT }
+        //
+        // maxAge is set in milliseconds.
+        //
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
 
