@@ -454,7 +454,9 @@ export async function signin(req: Request, res: Response) {
       let options: { expiresIn?: number } = {}
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
 
-      if (!stayConnected) {
+      if (stayConnected) {
+        cookieOptions.maxAge = 400 * 24 * 60 * 60 * 1000 // 400 days
+      } else {
         options = { expiresIn: env.JWT_EXPIRE_AT }
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
