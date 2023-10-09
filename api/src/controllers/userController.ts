@@ -428,7 +428,7 @@ export async function signin(req: Request, res: Response) {
         //
         options = { expiresIn: env.JWT_EXPIRE_AT }
         //
-        // maxAge is set in milliseconds.
+        // Cookie maxAge option is set in milliseconds.
         //
         cookieOptions.maxAge = env.JWT_EXPIRE_AT * 1000
       }
