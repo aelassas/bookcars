@@ -139,7 +139,7 @@ export interface GetCarsPayload {
     availability?: string[];
     pickupLocation?: string;
 }
-export interface BackendSignUpPayload {
+export interface SignUpPayload {
     email: string;
     password: string;
     fullName: string;
@@ -150,9 +150,7 @@ export interface BackendSignUpPayload {
     blacklisted?: boolean;
     type?: string;
     avatar?: string;
-}
-export interface FrontendSignUpPayload extends BackendSignUpPayload {
-    birthDate: number | Date;
+    birthDate?: number | Date;
 }
 export interface CreateUserPayload {
     email?: string;
@@ -193,6 +191,7 @@ export interface SignInPayload {
     email: string;
     password?: string;
     stayConnected?: boolean;
+    backend?: boolean;
     mobile?: boolean;
 }
 export interface ResendLinkPayload {

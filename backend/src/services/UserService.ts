@@ -20,10 +20,10 @@ export const create = (data: bookcarsTypes.CreateUserPayload): Promise<number> =
 /**
  * Sign up.
  *
- * @param {bookcarsTypes.BackendSignUpPayload} data
+ * @param {bookcarsTypes.SignUpPayload} data
  * @returns {Promise<number>}
  */
-export const signup = (data: bookcarsTypes.BackendSignUpPayload): Promise<number> =>
+export const signup = (data: bookcarsTypes.SignUpPayload): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/admin-sign-up/ `,
@@ -143,7 +143,7 @@ export const signout = async (redirect = true) => {
 
   await axios.post(
     `${Env.API_HOST}/api/sign-out`,
-    null,
+    { backend: true },
     { withCredentials: true }
   )
 
@@ -161,7 +161,7 @@ export const validateAccessToken = (): Promise<number> =>
   axios
     .post(
       `${Env.API_HOST}/api/validate-access-token`,
-      null,
+      { backend: true },
       { withCredentials: true }
     )
     .then((res) => res.status)
