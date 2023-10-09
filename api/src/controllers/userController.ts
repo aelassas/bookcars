@@ -410,6 +410,7 @@ export async function signin(req: Request, res: Response) {
       //
       // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
       // These options prevent XSS, CSRF and MITM attacks.
+      // Authentication cookies are protected against XST attacks as well via allowedMethods middleware.
       //
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
       cookieOptions.domain = env.AUTH_COOKIE_DOMAIN
