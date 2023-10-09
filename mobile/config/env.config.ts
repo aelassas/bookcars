@@ -66,6 +66,13 @@ export const AXIOS_RETRIES_INTERVAL: number = 500 // in milliseconds
 export const DEFAULT_LANGUAGE: string = BC_DEFAULT_LANGUAGE || 'en'
 
 /**
+ * Axios timeout in milliseconds.
+ *
+ * @type {number}
+ */
+export const AXIOS_TIMEOUT: number = 5000
+
+/**
  * Page size. Default is 20.
  *
  * @type {number}
