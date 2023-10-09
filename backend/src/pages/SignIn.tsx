@@ -43,7 +43,6 @@ function SignIn() {
         email,
         password,
         stayConnected,
-        backend: true
       }
 
       const res = await UserService.signin(data)

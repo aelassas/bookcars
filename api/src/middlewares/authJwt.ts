@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import * as env from '../config/env.config'
+import * as Helper from '../common/Helper'
 
 function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const token: string = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
-    || req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
+  const token: string = Helper.isBackend(req)
+    ? req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
+    : req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
     || req.headers['x-access-token'] as string // mobile app
 
   if (!token) {
