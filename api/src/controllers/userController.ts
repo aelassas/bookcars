@@ -30,22 +30,22 @@ import AdditionalDriver from '../models/AdditionalDriver'
 const getStatusMessage = (lang: string, msg: string) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
 
 /**
- * Frontend Sign Up.
+ * Sign Up.
  *
- * @export
  * @async
  * @param {Request} req
  * @param {Response} res
+ * @param {bookcarsTypes.UserType} userType
  * @returns {unknown}
  */
-export async function signup(req: Request, res: Response) {
-  const { body }: { body: bookcarsTypes.FrontendSignUpPayload } = req
+async function _signup(req: Request, res: Response, userType: bookcarsTypes.UserType) {
+  const { body }: { body: bookcarsTypes.SignUpPayload } = req
 
   try {
     body.active = true
     body.verified = false
     body.blacklisted = false
-    body.type = bookcarsTypes.UserType.User
+    body.type = userType
 
     const salt = await bcrypt.genSalt(10)
     const { password } = body
@@ -94,72 +94,27 @@ export async function signup(req: Request, res: Response) {
 }
 
 /**
+ * Frontend Sign Up.
+ *
+ * @export
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ */
+export async function signup(req: Request, res: Response) {
+  await _signup(req, res, bookcarsTypes.UserType.User)
+}
+
+/**
  * Backend Sign Up.
  *
  * @export
  * @async
  * @param {Request} req
  * @param {Response} res
- * @returns {unknown}
  */
 export async function adminSignup(req: Request, res: Response) {
-  const { body }: { body: bookcarsTypes.BackendSignUpPayload } = req
-
-  try {
-    body.active = true
-    body.verified = false
-    body.blacklisted = false
-    body.type = bookcarsTypes.UserType.Admin
-
-    const salt = await bcrypt.genSalt(10)
-    const { password } = body
-    const passwordHash = await bcrypt.hash(password, salt)
-    body.password = passwordHash
-
-    const user = new User(body)
-    await user.save()
-
-    if (body.avatar) {
-      const avatar = path.join(env.CDN_TEMP_USERS, body.avatar)
-      if (await Helper.exists(avatar)) {
-        const filename = `${user._id}_${Date.now()}${path.extname(body.avatar)}`
-        const newPath = path.join(env.CDN_USERS, filename)
-
-        try {
-          await fs.rename(avatar, newPath)
-          user.avatar = filename
-          await user.save()
-        } catch (err) {
-          console.error(strings.ERROR, err)
-          res.status(400).send(strings.ERROR + err)
-        }
-      }
-    }
-
-    // generate token and save
-    const token = new Token({ user: user._id, token: uuid() })
-    await token.save()
-
-    // Send email
-    strings.setLanguage(user.language)
-
-    const mailOptions = {
-      from: env.SMTP_FROM,
-      to: user.email,
-      subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-      html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>
-        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-        http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${strings.REGARDS}<br></p>`,
-    }
-
-    await MailHelper.sendMail(mailOptions)
-    return res.sendStatus(200)
-  } catch (err) {
-    console.error(`[user.adminSignup] ${strings.DB_ERROR} ${body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
-  }
+  await _signup(req, res, bookcarsTypes.UserType.Admin)
 }
 
 /**
@@ -430,7 +385,7 @@ export async function activate(req: Request, res: Response) {
  */
 export async function signin(req: Request, res: Response) {
   const { body }: { body: bookcarsTypes.SignInPayload } = req
-  const { email, password, stayConnected, mobile } = body
+  const { email, password, stayConnected, backend, mobile } = body
 
   try {
     const user = await User.findOne({ email })
@@ -498,9 +453,11 @@ export async function signin(req: Request, res: Response) {
           .send(loggedUser)
       }
 
+      const cookieName = Helper.getAuthCookieName(backend)
+
       return res
-        .clearCookie('x-access-token')
-        .cookie('x-access-token', token, cookieOptions)
+        .clearCookie(cookieName)
+        .cookie(cookieName, token, cookieOptions)
         .status(200)
         .send(loggedUser)
     }
@@ -522,7 +479,9 @@ export async function signin(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function signout(req: Request, res: Response) {
-  return res.clearCookie('x-access-token').sendStatus(200)
+  const { backend }: { backend?: boolean } = req.body
+  const cookieName = Helper.getAuthCookieName(backend)
+  return res.clearCookie(cookieName).sendStatus(200)
 }
 
 /**

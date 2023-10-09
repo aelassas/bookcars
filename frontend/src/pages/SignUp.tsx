@@ -214,7 +214,7 @@ function SignUp() {
 
       setLoading(true)
 
-      const data: bookcarsTypes.FrontendSignUpPayload = {
+      const data: bookcarsTypes.SignUpPayload = {
         email,
         phone,
         password,

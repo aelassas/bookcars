@@ -218,6 +218,20 @@ export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'
 export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
 
 /**
+ * frontend authentication cookie name.
+ *
+ * @type {"bc-x-access-token-frontend"}
+ */
+export const FRONTEND_AUTH_COOKIE_NAME = 'bc-x-access-token-frontend'
+
+/**
+ * Backend authentication cookie name.
+ *
+ * @type {"bc-x-access-token-frontend"}
+ */
+export const BACKEND_AUTH_COOKIE_NAME = 'bc-x-access-token-backend'
+
+/**
  * User Document.
  *
  * @export

@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import * as env from '../config/env.config'
 
 /**
  * Convert string to boolean.
@@ -73,3 +74,11 @@ export function getFilenameWithoutExtension(filename: string): string {
  * @returns {*}
  */
 export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
+
+/**
+ * Get authentification cookie name.
+ *
+ * @param {?boolean} backend
+ * @returns {string}
+ */
+export const getAuthCookieName = (backend?: boolean): string => (backend ? env.BACKEND_AUTH_COOKIE_NAME : env.FRONTEND_AUTH_COOKIE_NAME)
