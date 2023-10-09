@@ -96,6 +96,11 @@ export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'BookCars')
 /**
  * Cookie options.
  *
+ * On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
+ * This will prevent XSS attacks by not allowing access to the cookie via JavaScript.
+ * This will prevent CSRF attacks by not allowing the browser to send the cookie along with cross-site requests.
+ * This will prevent MITM attacks by only allowing the cookie to be sent over HTTPS.
+ *
  * @type {CookieOptions}
  */
 export const COOKIE_OPTIONS: CookieOptions = { httpOnly: true, secure: HTTPS, signed: true, sameSite: 'strict' }
