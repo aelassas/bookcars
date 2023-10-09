@@ -220,7 +220,10 @@ export const validateAccessToken = async (): Promise<number> => {
     .post(
       `${Env.API_HOST}/api/validate-access-token`,
       null,
-      { headers }
+      {
+        headers,
+        timeout: Env.AXIOS_TIMEOUT,
+      }
     )
     .then((res) => res.status)
 }
