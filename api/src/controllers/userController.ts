@@ -407,6 +407,11 @@ export async function signin(req: Request, res: Response) {
       const payload = { id: user._id }
 
       let options: { expiresIn?: number }
+      //
+      // On production, authentication cookie is httpOnly, signed, secure and strict sameSite.
+      // This will prevent XSS attacks by not allowing access to the cookie via JavaScript.
+      // These options allow also to prevent CSRF, XST and MITM attacks.
+      //
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
       cookieOptions.domain = env.AUTH_COOKIE_DOMAIN
 
