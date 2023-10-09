@@ -450,6 +450,9 @@ export async function signin(req: Request, res: Response) {
         avatar: user.avatar,
       }
 
+      //
+      // On mobile, we return the token in the response body.
+      //
       if (mobile) {
         loggedUser.accessToken = token
 
@@ -458,6 +461,9 @@ export async function signin(req: Request, res: Response) {
           .send(loggedUser)
       }
 
+      //
+      // On web, we return the token in a httpOnly, signed, secure and strict sameSite cookie.
+      //
       const cookieName = Helper.getAuthCookieName(req)
 
       return res
