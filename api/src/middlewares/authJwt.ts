@@ -4,10 +4,15 @@ import * as env from '../config/env.config'
 import * as Helper from '../common/Helper'
 
 function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const token: string = Helper.isBackend(req)
-    ? req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
-    : req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
-    || req.headers['x-access-token'] as string // mobile app
+  let token: string
+
+  if (Helper.isBackend(req)) {
+    token = req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
+  } else if (Helper.isFrontend(req)) {
+    token = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
+  } else {
+    token = req.headers['x-access-token'] as string // mobile app
+  }
 
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' })

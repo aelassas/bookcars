@@ -101,6 +101,17 @@ export function isBackend(req: Request): boolean {
 }
 
 /**
+ * Check whether the request is from the frontend or not.
+ *
+ * @export
+ * @param {Request} req
+ * @returns {boolean}
+ */
+export function isFrontend(req: Request): boolean {
+    return req.headers.origin === trim(env.FRONTEND_HOST, '/')
+}
+
+/**
  * Get authentification cookie name.
  *
  * @param {?boolean} backend
