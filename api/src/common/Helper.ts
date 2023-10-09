@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { Request } from 'express'
 import * as env from '../config/env.config'
 
 /**
@@ -35,6 +36,22 @@ export async function exists(filePath: string): Promise<boolean> {
 }
 
 /**
+ * Removes a leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export function trim(str: string, char: string): string {
+    let res = str
+    while (res.charAt(res.length - 1) === char) {
+        res = res.substring(0, res.length - 1)
+    }
+    return res
+}
+
+/**
  * Join two url parts.
  *
  * @export
@@ -43,12 +60,9 @@ export async function exists(filePath: string): Promise<boolean> {
  * @returns {string}
  */
 export function joinURL(part1: string, part2: string): string {
-    let p1 = part1
-    if (part1.charAt(part1.length - 1) === '/') {
-        p1 = part1.substring(0, part1.length - 1)
-    }
-
+    const p1 = trim(part1, '/')
     let p2 = part2
+
     if (part2.charAt(0) === '/') {
         p2 = part2.substring(1)
     }
@@ -76,9 +90,20 @@ export function getFilenameWithoutExtension(filename: string): string {
 export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
 
 /**
+ * Check whether the request is from the backend or not.
+ *
+ * @export
+ * @param {Request} req
+ * @returns {boolean}
+ */
+export function isBackend(req: Request): boolean {
+    return req.headers.origin === trim(env.BACKEND_HOST, '/')
+}
+
+/**
  * Get authentification cookie name.
  *
  * @param {?boolean} backend
  * @returns {string}
  */
-export const getAuthCookieName = (backend?: boolean): string => (backend ? env.BACKEND_AUTH_COOKIE_NAME : env.FRONTEND_AUTH_COOKIE_NAME)
+export const getAuthCookieName = (req: Request): string => (isBackend(req) ? env.BACKEND_AUTH_COOKIE_NAME : env.FRONTEND_AUTH_COOKIE_NAME)

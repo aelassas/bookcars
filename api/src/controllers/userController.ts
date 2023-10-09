@@ -385,7 +385,7 @@ export async function activate(req: Request, res: Response) {
  */
 export async function signin(req: Request, res: Response) {
   const { body }: { body: bookcarsTypes.SignInPayload } = req
-  const { email, password, stayConnected, backend, mobile } = body
+  const { email, password, stayConnected, mobile } = body
 
   try {
     const user = await User.findOne({ email })
@@ -454,7 +454,7 @@ export async function signin(req: Request, res: Response) {
           .send(loggedUser)
       }
 
-      const cookieName = Helper.getAuthCookieName(backend)
+      const cookieName = Helper.getAuthCookieName(req)
 
       return res
         .clearCookie(cookieName)
@@ -480,8 +480,7 @@ export async function signin(req: Request, res: Response) {
  * @returns {unknown}
  */
 export async function signout(req: Request, res: Response) {
-  const { backend }: { backend?: boolean } = req.body
-  const cookieName = Helper.getAuthCookieName(backend)
+  const cookieName = Helper.getAuthCookieName(req)
   return res.clearCookie(cookieName).sendStatus(200)
 }
 

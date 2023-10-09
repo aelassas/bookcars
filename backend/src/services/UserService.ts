@@ -143,7 +143,7 @@ export const signout = async (redirect = true) => {
 
   await axios.post(
     `${Env.API_HOST}/api/sign-out`,
-    { backend: true },
+    null,
     { withCredentials: true }
   )
 
