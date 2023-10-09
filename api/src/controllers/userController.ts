@@ -408,6 +408,7 @@ export async function signin(req: Request, res: Response) {
 
       let options: { expiresIn?: number }
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
+      cookieOptions.domain = env.AUTH_COOKIE_DOMAIN
 
       if (stayConnected) {
         //
