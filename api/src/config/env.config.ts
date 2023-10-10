@@ -100,6 +100,7 @@ export const COOKIE_SECRET = __env__('BC_COOKIE_SECRET', false, 'BookCars')
  * This will prevent XSS attacks by not allowing access to the cookie via JavaScript.
  * This will prevent CSRF attacks by not allowing the browser to send the cookie along with cross-site requests.
  * This will prevent MITM attacks by only allowing the cookie to be sent over HTTPS.
+ * Authentication cookies are protected against XST attacks as well by disabling TRACE HTTP method via allowedMethods middleware.
  *
  * @type {CookieOptions}
  */

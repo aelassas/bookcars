@@ -410,6 +410,7 @@ export async function signin(req: Request, res: Response) {
       //
       // On production, authentication cookies are httpOnly, signed, secure and strict sameSite.
       // These options prevent XSS, CSRF and MITM attacks.
+      // Authentication cookies are protected against XST attacks as well via allowedMethods middleware.
       //
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
       cookieOptions.domain = env.AUTH_COOKIE_DOMAIN
@@ -421,8 +422,7 @@ export async function signin(req: Request, res: Response) {
         options = {}
         //
         // Cookies can no longer set an expiration date more than 400 days in the future.
-        // The limit MUST NOT be greater than 400 days in duration
-        // (400 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds).
+        // The limit MUST NOT be greater than 400 days in duration.
         // The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust the
         // limit to be less.
         //
@@ -450,6 +450,9 @@ export async function signin(req: Request, res: Response) {
         avatar: user.avatar,
       }
 
+      //
+      // On mobile, we return the token in the response body.
+      //
       if (mobile) {
         loggedUser.accessToken = token
 
@@ -458,6 +461,9 @@ export async function signin(req: Request, res: Response) {
           .send(loggedUser)
       }
 
+      //
+      // On web, we return the token in a httpOnly, signed, secure and strict sameSite cookie.
+      //
       const cookieName = Helper.getAuthCookieName(req)
 
       return res
