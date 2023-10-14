@@ -27,7 +27,7 @@
     "@types/mime": "^3.0.2",
     "@types/react-native-dotenv": "^0.2.0",
     "@types/react-native-vector-icons": "^6.4.15",
-    "@types/validator": "^13.11.2",
+    "@types/validator": "^13.11.3",
     "axios": "^1.5.1",
     "axios-retry": "^3.8.0",
     "date-fns": "^2.30.0",
@@ -60,10 +60,10 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "@types/react": "~18.2.25",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "@typescript-eslint/parser": "^6.7.4",
+    "@babel/core": "^7.23.2",
+    "@types/react": "~18.2.28",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
     "cross-env": "^7.0.3",
     "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
