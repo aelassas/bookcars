@@ -106,7 +106,7 @@ function BookingList({
 
       if (companies && statuses) {
         setLoading(true)
-console.log('fetch')
+
         const payload: bookcarsTypes.GetBookingsPayload = {
           companies,
           statuses,
