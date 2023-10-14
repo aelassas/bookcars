@@ -345,7 +345,7 @@ export const admin = (user?: bookcarsTypes.User): boolean => (user && user.type 
  * @param {string} status
  * @returns {string}
  */
-export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
+export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
       return commonStrings.BOOKING_STATUS_VOID
@@ -489,7 +489,7 @@ export const getUserTypes = () => [
  * @param {string} status
  * @returns {string}
  */
-export const getUserType = (status: bookcarsTypes.UserType) => {
+export const getUserType = (status?: bookcarsTypes.UserType) => {
   switch (status) {
     case bookcarsTypes.UserType.Admin:
       return commonStrings.RECORD_TYPE_ADMIN
