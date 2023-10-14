@@ -15,7 +15,7 @@ import '../assets/css/bookings.css'
 function Bookings() {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>([])
+  const [companies, setCompanies] = useState<string[]>()
   const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingCompanies, setLoadingCompanies] = useState(true)

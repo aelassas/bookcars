@@ -3,7 +3,9 @@ import {
   DataGrid,
   frFR,
   enUS,
-  GridColDef
+  GridColDef,
+  GridRenderCellParams,
+  GridValueGetterParams
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -130,21 +132,21 @@ function UserList({
     }
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getColumns = (_user: bookcarsTypes.User) => {
-    const _columns = [
+  const getColumns = (_user: bookcarsTypes.User): GridColDef<bookcarsTypes.User>[] => {
+    const _columns: GridColDef<bookcarsTypes.User>[] = [
       {
         field: 'fullName',
         headerName: commonStrings.USER,
         flex: 1,
-        renderCell: (params: any) => {
-          const __user = params.row
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.User, string>) => {
+          const __user = row
           let userAvatar
 
           if (__user.avatar) {
             if (__user.type === bookcarsTypes.RecordType.Company) {
-              userAvatar = <img src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} alt={params.row.fullName} />
+              userAvatar = <img src={bookcarsHelper.joinURL(Env.CDN_USERS, row.avatar)} alt={row.fullName} />
             } else {
-              const avatar = <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.avatar)} className="avatar-small" />
+              const avatar = <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, row.avatar)} className="avatar-small" />
               if (__user.verified) {
                 userAvatar = (
                   <Badge
@@ -196,9 +198,9 @@ function UserList({
           }
 
           return (
-            <Link href={`/user?u=${params.row._id}`} className="us-user">
+            <Link href={`/user?u=${row._id}`} className="us-user">
               <span className="us-avatar">{userAvatar}</span>
-              <span>{params.value}</span>
+              <span>{value}</span>
             </Link>
           )
         },
@@ -208,38 +210,38 @@ function UserList({
         field: 'email',
         headerName: commonStrings.EMAIL,
         flex: 1,
-        valueGetter: (params: any) => params.value,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
       },
       {
         field: 'phone',
         headerName: commonStrings.PHONE,
         flex: 1,
-        valueGetter: (params: any) => params.value,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
       },
       {
         field: 'type',
         headerName: commonStrings.TYPE,
         flex: 1,
-        renderCell: (params: any) => <span className={`bs us-${params.value}`}>{Helper.getUserType(params.value)}</span>,
-        valueGetter: (params: any) => params.value,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.User, bookcarsTypes.UserType>) => <span className={`bs us-${value?.toLowerCase()}`}>{Helper.getUserType(value)}</span>,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
       },
       {
         field: 'action',
         headerName: '',
         sortable: false,
         disableColumnMenu: true,
-        renderCell: (params: any) => {
+        renderCell: ({ row }: GridRenderCellParams<bookcarsTypes.User>) => {
           const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation() // don't select this row after clicking
-            setSelectedId(params.row._id)
+            setSelectedId(row._id || '')
             setOpenDeleteDialog(true)
           }
 
-          const __user = params.row
+          const __user = row
           return _user.type === bookcarsTypes.RecordType.Admin || __user.company === _user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
-                <IconButton href={`update-user?u=${params.row._id}`}>
+                <IconButton href={`update-user?u=${row._id}`}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>

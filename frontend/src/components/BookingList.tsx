@@ -5,7 +5,9 @@ import {
   enUS,
   GridColDef,
   GridPaginationModel,
-  GridRowId
+  GridRowId,
+  GridValueGetterParams,
+  GridRenderCellParams
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -104,7 +106,7 @@ function BookingList({
 
       if (companies && statuses) {
         setLoading(true)
-
+console.log('fetch')
         const payload: bookcarsTypes.GetBookingsPayload = {
           companies,
           statuses,
@@ -197,48 +199,52 @@ function BookingList({
     }
   }, [pageSize]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getDate = (date: string) => {
-    const d = new Date(date)
-    return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
+  const getDate = (date?: string) => {
+    if (date) {
+      const d = new Date(date)
+      return `${bookcarsHelper.formatDatePart(d.getDate())}-${bookcarsHelper.formatDatePart(d.getMonth() + 1)}-${d.getFullYear()}`
+    }
+
+    throw new Error('Invalid date')
   }
 
-  const getColumns = () => {
-    const _columns = [
+  const getColumns = (): GridColDef<bookcarsTypes.Booking>[] => {
+    const _columns: GridColDef<bookcarsTypes.Booking>[] = [
       {
         field: 'from',
         headerName: commonStrings.FROM,
         flex: 1,
-        valueGetter: (params: any) => getDate(params.value),
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => getDate(value),
       },
       {
         field: 'to',
         headerName: commonStrings.TO,
         flex: 1,
-        valueGetter: (params: any) => getDate(params.value),
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => getDate(value),
       },
       {
         field: 'price',
         headerName: strings.PRICE,
         flex: 1,
-        valueGetter: (params: any) => `${bookcarsHelper.formatNumber(params.value)} ${strings.CURRENCY}`,
-        renderCell: (params: any) => <span className="bp">{params.value}</span>,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <span className="bp">{value}</span>,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, number>) => `${bookcarsHelper.formatNumber(value)} ${commonStrings.CURRENCY}`,
       },
       {
         field: 'status',
         headerName: strings.STATUS,
         flex: 1,
-        renderCell: (params: any) => <span className={`bs bs-${params.value}`}>{Helper.getBookingStatus(params.value)}</span>,
-        valueGetter: (params: any) => params.value,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <span className={`bs bs-${value?.toLowerCase()}`}>{Helper.getBookingStatus(value)}</span>,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => value,
       },
       {
         field: 'action',
         headerName: '',
         sortable: false,
         disableColumnMenu: true,
-        renderCell: (params: any) => {
+        renderCell: ({ row }: GridRenderCellParams<bookcarsTypes.Booking>) => {
           const cancelBooking = (e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation() // don't select this row after clicking
-            setSelectedId(params.row._id)
+            setSelectedId(row._id || '')
             setOpenCancelDialog(true)
           }
 
@@ -251,14 +257,14 @@ function BookingList({
           return (
             <>
               <Tooltip title={strings.VIEW}>
-                <IconButton href={`booking?b=${params.row._id}`}>
+                <IconButton href={`booking?b=${row._id}`}>
                   <ViewIcon />
                 </IconButton>
               </Tooltip>
-              {params.row.cancellation
-                && !params.row.cancelRequest
-                && params.row.status !== bookcarsTypes.BookingStatus.Cancelled
-                && new Date(params.row.from) >= today && (
+              {row.cancellation
+                && !row.cancelRequest
+                && row.status !== bookcarsTypes.BookingStatus.Cancelled
+                && new Date(row.from) >= today && (
                   <Tooltip title={strings.CANCEL}>
                     <IconButton onClick={cancelBooking}>
                       <CancelIcon />
@@ -280,7 +286,7 @@ function BookingList({
         field: 'car',
         headerName: strings.CAR,
         flex: 1,
-        valueGetter: (params: any) => params.value.name,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.Car>) => value?.name,
       })
     }
 
@@ -289,12 +295,12 @@ function BookingList({
         field: 'company',
         headerName: commonStrings.SUPPLIER,
         flex: 1,
-        renderCell: (params: any) => (
+        renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
           <div className="cell-company">
-            <img src={bookcarsHelper.joinURL(Env.CDN_USERS, params.row.company.avatar)} alt={params.value} />
+            <img src={bookcarsHelper.joinURL(Env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
           </div>
         ),
-        valueGetter: (params: any) => params.value.fullName,
+        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.User>) => value?.fullName,
       })
     }
 

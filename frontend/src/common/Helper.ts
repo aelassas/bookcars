@@ -336,7 +336,7 @@ export const getCancellation = (cancellation: number, fr: boolean) => {
  * @param {string} status
  * @returns {string}
  */
-export const getBookingStatus = (status: bookcarsTypes.BookingStatus) => {
+export const getBookingStatus = (status?: bookcarsTypes.BookingStatus) => {
   switch (status) {
     case bookcarsTypes.BookingStatus.Void:
       return commonStrings.BOOKING_STATUS_VOID
