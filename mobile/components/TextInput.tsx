@@ -101,15 +101,15 @@ function TextInputComponent(
       {value !== '' && !props.hideLabel && <Text style={styles.label}>{props.label}</Text>}
       <View style={styles.inputContainer}>
         <ReactTextInput
-          ref={(r) => {
+          ref={(inputRef) => {
             if (ref) {
               if (typeof ref === 'function') {
-                ref(r)
+                ref(inputRef)
               } else {
-                ref.current = r
+                ref.current = inputRef
               }
             }
-            _ref.current = r
+            _ref.current = inputRef
           }}
           secureTextEntry={props.secureTextEntry}
           placeholder={props.label}
