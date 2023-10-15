@@ -1,10 +1,41 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { StyleSheet, View, Text, TextInput as ReactTextInput } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput as ReactTextInput,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData
+} from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-// TODO Complete rewrite to TypeScript
+interface TextInputProps {
+  size?: 'small' | 'large'
+  value?: string
+  style?: object
+  inputStyle?: object
+  backgroundColor?: string
+  error?: boolean
+  label?: string
+  hideLabel?: boolean
+  secureTextEntry?: boolean
+  readOnly?: boolean
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
+  maxLength?: number
+  autoCorrect?: boolean
+  hideClearButton?: boolean
+  helperText?: string
+  onKeyPress?: (event: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
+  onFocus?: () => void
+  onBlur?: () => void
+  onSubmitEditing?: () => void
+  onChangeText?: (text: string) => void
+}
 
-function TextInputComponent(props: any, ref: any) {
+function TextInputComponent(
+  props: TextInputProps,
+  ref: React.ForwardedRef<ReactTextInput>
+) {
   const [value, setValue] = useState('')
   const _ref = useRef<ReactTextInput | null>(null)
   const small = props.size === 'small'
@@ -71,7 +102,7 @@ function TextInputComponent(props: any, ref: any) {
       <View style={styles.inputContainer}>
         <ReactTextInput
           ref={(r) => {
-            if (ref) {
+            if (ref && 'current' in ref) {
               ref.current = r
             }
             _ref.current = r
@@ -112,6 +143,8 @@ function TextInputComponent(props: any, ref: any) {
   )
 }
 
-const TextInput = forwardRef(TextInputComponent)
+const TextInput = forwardRef<ReactTextInput, TextInputProps>(TextInputComponent)
+
+TextInput.displayName = 'TextInput'
 
 export default TextInput
