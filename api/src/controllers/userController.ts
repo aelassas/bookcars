@@ -413,7 +413,6 @@ export async function signin(req: Request, res: Response) {
       // Authentication cookies are protected against XST attacks as well via allowedMethods middleware.
       //
       const cookieOptions: CookieOptions = Helper.clone(env.COOKIE_OPTIONS)
-      cookieOptions.domain = env.AUTH_COOKIE_DOMAIN
 
       if (stayConnected) {
         //
