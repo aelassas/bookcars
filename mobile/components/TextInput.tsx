@@ -102,8 +102,12 @@ function TextInputComponent(
       <View style={styles.inputContainer}>
         <ReactTextInput
           ref={(r) => {
-            if (ref && 'current' in ref) {
-              ref.current = r
+            if (ref) {
+              if (typeof ref === 'function') {
+                ref(r)
+              } else {
+                ref.current = r
+              }
             }
             _ref.current = r
           }}
