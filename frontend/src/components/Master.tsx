@@ -7,6 +7,15 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import { useInit } from '../common/customHooks'
 
+interface MasterProps {
+  user?: bookcarsTypes.User
+  strict?: boolean
+  hideSignin?: boolean
+  notificationCount?: number
+  children: ReactNode
+  onLoad?: (user?: bookcarsTypes.User) => void
+}
+
 function Master({
   user: masterUser,
   strict,
@@ -14,14 +23,7 @@ function Master({
   notificationCount,
   children,
   onLoad
-}: {
-  user?: bookcarsTypes.User
-  strict?: boolean
-  hideSignin?: boolean
-  notificationCount?: number
-  children: ReactNode
-  onLoad?: (user?: bookcarsTypes.User) => void
-}) {
+}: MasterProps) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
 

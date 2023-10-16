@@ -8,6 +8,15 @@ import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/pager.css'
 
+interface PagerProps {
+  page: number,
+  pageSize: number,
+  totalRecords: number,
+  rowCount: number,
+  onNext: () => void,
+  onPrevious: () => void
+}
+
 function Pager({
   page,
   pageSize,
@@ -15,14 +24,7 @@ function Pager({
   rowCount,
   onNext,
   onPrevious
-}: {
-  page: number,
-  pageSize: number,
-  totalRecords: number,
-  rowCount: number,
-  onNext: () => void,
-  onPrevious: () => void
-}) {
+}: PagerProps) {
   return (
     (((page > 1 || rowCount < totalRecords) && (
       <div className="pager-container">

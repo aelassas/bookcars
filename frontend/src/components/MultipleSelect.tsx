@@ -16,6 +16,32 @@ import Env from '../config/env.config'
 
 import '../assets/css/multiple-select.css'
 
+interface MultipleSelectProps {
+  label?: string
+  reference?: any
+  selectedOptions?: any[]
+  key?: string
+  required?: boolean
+  options?: any[]
+  ListboxProps?: (React.HTMLAttributes<HTMLUListElement> & {
+    sx?: SxProps<Theme> | undefined
+    ref?: React.Ref<Element> | undefined
+  }),
+  loading?: boolean
+  multiple?: boolean
+  type: string
+  variant?: TextFieldVariants
+  readOnly?: boolean
+  hidePopupIcon?: boolean
+  customOpen?: boolean
+  freeSolo?: boolean
+  callbackFromMultipleSelect?: (newValue: any, _key: string, _reference: any) => void
+  onFocus?: React.FocusEventHandler<HTMLDivElement>
+  onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
+  onClear?: () => void
+  onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
+}
+
 const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardRef((props, ref) => {
   const { children, ...rest }: { children?: React.ReactNode } = props
 
@@ -52,32 +78,7 @@ function MultipleSelect({
   onInputChange,
   onClear,
   onOpen
-}
-  : {
-    label?: string
-    reference?: any
-    selectedOptions?: any[]
-    key?: string
-    required?: boolean
-    options?: any[]
-    ListboxProps?: (React.HTMLAttributes<HTMLUListElement> & {
-      sx?: SxProps<Theme> | undefined
-      ref?: React.Ref<Element> | undefined
-    }),
-    loading?: boolean
-    multiple?: boolean
-    type: string
-    variant?: TextFieldVariants
-    readOnly?: boolean
-    hidePopupIcon?: boolean
-    customOpen?: boolean
-    freeSolo?: boolean
-    callbackFromMultipleSelect?: (newValue: any, _key: string, _reference: any) => void
-    onFocus?: React.FocusEventHandler<HTMLDivElement>
-    onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
-    onClear?: () => void
-    onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
-  }) {
+}: MultipleSelectProps) {
   const [init, setInit] = React.useState(Array.isArray(selectedOptions) && selectedOptions.length === 0)
   const [open, setOpen] = useState(false)
   const [values, setValues] = useState<any[]>([])

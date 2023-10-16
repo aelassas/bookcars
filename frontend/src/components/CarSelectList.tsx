@@ -17,6 +17,18 @@ import * as CarService from '../services/CarService'
 import MultipleSelect from './MultipleSelect'
 import * as Helper from '../common/Helper'
 
+interface CarSelectListProps {
+  label?: string
+  required?: boolean
+  multiple?: boolean
+  variant?: TextFieldVariants
+  value?: bookcarsTypes.Car
+  company: string
+  pickupLocation: string
+  readOnly?: boolean
+  onChange?: (values: bookcarsTypes.Car[]) => void
+}
+
 function CarSelectList({
   label,
   required,
@@ -27,18 +39,7 @@ function CarSelectList({
   pickupLocation,
   readOnly,
   onChange
-}:
-  {
-    label?: string
-    required?: boolean
-    multiple?: boolean
-    variant?: TextFieldVariants
-    value?: bookcarsTypes.Car
-    company: string
-    pickupLocation: string
-    readOnly?: boolean
-    onChange?: (values: bookcarsTypes.Car[]) => void
-  }) {
+}: CarSelectListProps) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)

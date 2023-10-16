@@ -2,19 +2,21 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 
 import '../assets/css/accordion.css'
 
+interface AccordionProps {
+  title?: string,
+  className?: string,
+  collapse?: boolean,
+  offsetHeight?: number,
+  children: ReactNode
+}
+
 function Accordion({
   title,
   className,
   collapse,
   offsetHeight = 0,
   children
-}: {
-  title?: string,
-  className?: string,
-  collapse?: boolean,
-  offsetHeight?: number,
-  children: ReactNode
-}) {
+}: AccordionProps) {
   const accordionRef = useRef<HTMLLabelElement>(null)
 
   const handleAccordionClick = (e: React.MouseEvent<HTMLElement>) => {

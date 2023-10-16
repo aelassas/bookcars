@@ -5,26 +5,27 @@ import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker'
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
 
+interface DatePickerProps {
+  value?: Date
+  label?: string
+  minDate?: Date
+  required?: boolean
+  language?: string
+  variant?: TextFieldVariants
+  readOnly?: boolean
+  onChange?: (value: Date | null) => void
+}
+
 function DatePicker({
-    value: dateValue,
-    label,
-    minDate,
-    required,
-    language,
-    variant,
-    readOnly,
-    onChange
-  }
-    : {
-      value?: Date
-      label?: string
-      minDate?: Date
-      required?: boolean
-      language?: string
-      variant?: TextFieldVariants
-      readOnly?: boolean
-      onChange?: (value: Date | null) => void
-    }) {
+  value: dateValue,
+  label,
+  minDate,
+  required,
+  language,
+  variant,
+  readOnly,
+  onChange
+}: DatePickerProps) {
   const [value, setValue] = useState<Date | null>(null)
 
   useEffect(() => {

@@ -21,6 +21,17 @@ import * as Helper from '../common/Helper'
 import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
 
+interface AvatarProps {
+  loggedUser?: bookcarsTypes.User
+  user?: bookcarsTypes.User
+  size: 'small' | 'medium' | 'large',
+  readonly?: boolean,
+  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
+  className?: string,
+  onBeforeUpload?: () => void,
+  onChange?: (user: bookcarsTypes.User) => void,
+}
+
 function Avatar({
   loggedUser,
   user: avatarUser,
@@ -30,17 +41,7 @@ function Avatar({
   className,
   onBeforeUpload,
   onChange,
-}:
-  {
-    loggedUser?: bookcarsTypes.User
-    user?: bookcarsTypes.User
-    size: 'small' | 'medium' | 'large',
-    readonly?: boolean,
-    color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-    className?: string,
-    onBeforeUpload?: () => void,
-    onChange?: (user: bookcarsTypes.User) => void,
-  }) {
+}: AvatarProps) {
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()

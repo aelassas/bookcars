@@ -7,13 +7,15 @@ import Accordion from './Accordion'
 
 import '../assets/css/fuel-filter.css'
 
+interface FuelFilterProps {
+  className?: string
+  onChange: (values: bookcarsTypes.CarType[]) => void
+}
+
 function FuelFilter({
   className,
   onChange
-}: {
-  className?: string
-  onChange: (values: bookcarsTypes.CarType[]) => void
-}) {
+}: FuelFilterProps) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
 

@@ -4,7 +4,11 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/no-match'
 import Master from '../components/Master'
 
-function NoMatch({ hideHeader }: { hideHeader?: boolean }) {
+interface NoMatchProps {
+  hideHeader?: boolean
+}
+
+function NoMatch({ hideHeader }: NoMatchProps) {
   const noMatch = () => (
     <div className="msg">
       <h2>{strings.NO_MATCH}</h2>
