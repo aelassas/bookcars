@@ -8,15 +8,17 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
+interface GearboxFilterProps {
+  visible?: boolean
+  style?: object
+  onChange?: (values: bookcarsTypes.GearboxType[]) => void
+}
+
 function GearboxFilter({
-    visible,
-    style,
-    onChange
-  }: {
-    visible?: boolean
-    style?: object
-    onChange?: (values: bookcarsTypes.GearboxType[]) => void
-  }) {
+  visible,
+  style,
+  onChange
+}: GearboxFilterProps) {
   const [automatic, setAutomatic] = useState(true)
   const [manual, setManual] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])

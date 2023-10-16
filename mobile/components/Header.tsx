@@ -10,20 +10,22 @@ import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Env from '../config/env.config'
 
+interface HeaderProps {
+  title?: string
+  hideTitle?: boolean
+  loggedIn?: boolean
+  notificationCount?: number
+  reload?: boolean
+  _avatar?: string | null
+}
+
 function Header({ title,
-    hideTitle,
-    loggedIn,
-    notificationCount,
-    reload,
-    _avatar
-  }: {
-    title?: string
-    hideTitle?: boolean
-    loggedIn?: boolean
-    notificationCount?: number
-    reload?: boolean
-    _avatar?: string | null
-  }) {
+  hideTitle,
+  loggedIn,
+  notificationCount,
+  reload,
+  _avatar
+}: HeaderProps) {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [avatar, setAvatar] = useState<string | null | undefined>(null)
 

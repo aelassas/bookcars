@@ -1,17 +1,19 @@
 import React from 'react'
 import { StyleSheet, Text, Pressable } from 'react-native'
 
+interface LinkProps {
+  style?: object
+  textStyle?: object
+  label: string
+  onPress?: () => void
+}
+
 function Link({
-    style,
-    textStyle,
-    label,
-    onPress: onLinkPress
-  }: {
-    style?: object
-    textStyle?: object
-    label: string
-    onPress?: () => void
-  }) {
+  style,
+  textStyle,
+  label,
+  onPress: onLinkPress
+}: LinkProps) {
   const onPress = () => {
     if (onLinkPress) {
       onLinkPress()

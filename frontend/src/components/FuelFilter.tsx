@@ -9,7 +9,7 @@ import '../assets/css/fuel-filter.css'
 
 interface FuelFilterProps {
   className?: string
-  onChange: (values: bookcarsTypes.CarType[]) => void
+  onChange?: (values: bookcarsTypes.CarType[]) => void
 }
 
 function FuelFilter({

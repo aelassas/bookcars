@@ -8,15 +8,17 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
+interface FuelFilterProps {
+  visible?: boolean
+  style?: object
+  onChange?: (values: bookcarsTypes.CarType[]) => void
+}
+
 function FuelFilter({
-    visible,
-    style,
-    onChange
-  }: {
-    visible?: boolean
-    style?: object
-    onChange?: (values: bookcarsTypes.CarType[]) => void
-  }) {
+  visible,
+  style,
+  onChange
+}: FuelFilterProps) {
   const [diesel, setDiesel] = useState(true)
   const [gasoline, setGasoline] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])

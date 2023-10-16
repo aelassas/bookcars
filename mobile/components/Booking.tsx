@@ -11,6 +11,13 @@ import * as Helper from '../common/Helper'
 import * as Env from '../config/env.config'
 import i18n from '../lang/i18n'
 
+interface BookingProps {
+  booking: bookcarsTypes.Booking
+  locale: Locale
+  fr: boolean
+  onCancel: () => void
+}
+
 const _format = 'eee d LLLL yyyy kk:mm'
 const iconSize = 24
 const iconColor = '#000'
@@ -18,16 +25,11 @@ const extraIconColor = '#1f9201'
 const extraIconSize = 16
 
 function Booking({
-    booking,
-    locale,
-    fr,
-    onCancel
-  }: {
-    booking: bookcarsTypes.Booking
-    locale: Locale
-    fr: boolean
-    onCancel: () => void
-  }) {
+  booking,
+  locale,
+  fr,
+  onCancel
+}: BookingProps) {
   const from = new Date(booking.from)
   const to = new Date(booking.to)
   const days = bookcarsHelper.days(from, to)
@@ -53,8 +55,8 @@ function Booking({
         <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
         <Text style={styles.detailText}>
           {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
-          format(to, _format, { locale }),
-        )})`}
+            format(to, _format, { locale }),
+          )})`}
         </Text>
 
         <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>

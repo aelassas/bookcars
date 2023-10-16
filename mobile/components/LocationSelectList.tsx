@@ -7,31 +7,33 @@ import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 
+interface LocationSelectListProps {
+  selectedItem?: string
+  size?: 'small'
+  style?: object
+  backgroundColor?: string
+  label: string
+  blur?: boolean
+  close?: boolean
+  onSelectItem?: (selectedItem: string) => void
+  onFetch?: () => void
+  onChangeText?: (text: string) => void
+  onFocus?: () => void
+}
+
 function LocationSelectList({
-    selectedItem: listSelectedItem,
-    size,
-    style,
-    backgroundColor,
-    label,
-    blur,
-    close,
-    onSelectItem,
-    onFetch,
-    onChangeText: listOnChangeText,
-    onFocus
-  }: {
-    selectedItem?: string
-    size?: 'small'
-    style?: object
-    backgroundColor?: string
-    label: string
-    blur?: boolean
-    close?: boolean
-    onSelectItem?: (selectedItem: string) => void
-    onFetch?: () => void
-    onChangeText?: (text: string) => void
-    onFocus?: () => void
-  }) {
+  selectedItem: listSelectedItem,
+  size,
+  style,
+  backgroundColor,
+  label,
+  blur,
+  close,
+  onSelectItem,
+  onFetch,
+  onChangeText: listOnChangeText,
+  onFocus
+}: LocationSelectListProps) {
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<AutocompleteOption[]>([])
   const [selectedItem, setSelectedItem] = useState<string>()

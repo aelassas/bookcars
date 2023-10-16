@@ -10,17 +10,19 @@ import BookingStatus from './BookingStatus'
 import Link from './Link'
 import Switch from './Switch'
 
+interface StatusFilterProps {
+  visible?: boolean
+  style?: object
+  onLoad?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
+  onChange?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
+}
+
 function StatusFilter({
-    visible,
-    style,
-    onLoad,
-    onChange
-  }: {
-    visible?: boolean
-    style?: object
-    onLoad?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
-    onChange?: (checkedStatuses: bookcarsTypes.BookingStatus[]) => void
-  }) {
+  visible,
+  style,
+  onLoad,
+  onChange
+}: StatusFilterProps) {
   const [statuses, setStatuses] = useState<bookcarsTypes.StatusFilterItem[]>(
     Helper.getBookingStatuses().map((status) => ({ ...status, checked: true }))
   )
@@ -43,38 +45,38 @@ function StatusFilter({
             {statuses.map((status) => (
               typeof status.checked !== 'undefined'
               && (
-              <View key={status.value} style={styles.status}>
-                <Switch
-                  value={status.checked}
-                  onValueChange={(checked) => {
-                    if (checked) {
-                      status.checked = true
-                      setStatuses(bookcarsHelper.clone(statuses))
-                      checkedStatuses.push(status.value)
+                <View key={status.value} style={styles.status}>
+                  <Switch
+                    value={status.checked}
+                    onValueChange={(checked) => {
+                      if (checked) {
+                        status.checked = true
+                        setStatuses(bookcarsHelper.clone(statuses))
+                        checkedStatuses.push(status.value)
 
-                      if (checkedStatuses.length === statuses.length) {
-                        setAllChecked(true)
+                        if (checkedStatuses.length === statuses.length) {
+                          setAllChecked(true)
+                        }
+                      } else {
+                        status.checked = false
+                        setStatuses(bookcarsHelper.clone(statuses))
+                        const index = checkedStatuses.indexOf(status.value)
+                        checkedStatuses.splice(index, 1)
+
+                        if (checkedStatuses.length === 0) {
+                          setAllChecked(false)
+                        }
                       }
-                    } else {
-                      status.checked = false
-                      setStatuses(bookcarsHelper.clone(statuses))
-                      const index = checkedStatuses.indexOf(status.value)
-                      checkedStatuses.splice(index, 1)
 
-                      if (checkedStatuses.length === 0) {
-                        setAllChecked(false)
+                      if (onChange) {
+                        onChange(bookcarsHelper.clone(checkedStatuses))
                       }
-                    }
-
-                    if (onChange) {
-                      onChange(bookcarsHelper.clone(checkedStatuses))
-                    }
-                  }}
-                >
-                  <BookingStatus style={styles.bookingStatus} status={status.value} />
-                </Switch>
-              </View>
-)
+                    }}
+                  >
+                    <BookingStatus style={styles.bookingStatus} status={status.value} />
+                  </Switch>
+                </View>
+              )
             ))}
 
             <Link

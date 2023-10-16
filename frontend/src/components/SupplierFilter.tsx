@@ -11,7 +11,7 @@ interface SupplierFilterProps {
   companies: bookcarsTypes.User[]
   collapse?: boolean
   className?: string
-  onChange: (value: string[]) => void
+  onChange?: (value: string[]) => void
 }
 
 function SupplierFilter({

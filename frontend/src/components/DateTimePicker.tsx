@@ -13,7 +13,7 @@ interface DateTimePickerProps {
   language?: string
   variant?: TextFieldVariants
   readOnly?: boolean
-  onChange: (value: Date | null) => void
+  onChange?: (value: Date | null) => void
 }
 
 function DateTimePicker({

@@ -8,15 +8,17 @@ import Accordion from './Accordion'
 import Link from './Link'
 import Switch from './Switch'
 
+interface MileageFilterProps {
+  visible?: boolean
+  style?: object
+  onChange?: (values: bookcarsTypes.Mileage[]) => void
+}
+
 function MileageFilter({
-    visible,
-    style,
-    onChange
-  }: {
-    visible?: boolean
-    style?: object
-    onChange?: (values: bookcarsTypes.Mileage[]) => void
-  }) {
+  visible,
+  style,
+  onChange
+}: MileageFilterProps) {
   const [limited, setLimited] = useState(true)
   const [unlimited, setUnlimited] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])

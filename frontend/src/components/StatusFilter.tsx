@@ -10,7 +10,7 @@ import '../assets/css/status-filter.css'
 interface StatusFilterProps {
   className?: string
   collapse?: boolean
-  onChange: (value: bookcarsTypes.BookingStatus[]) => void
+  onChange?: (value: bookcarsTypes.BookingStatus[]) => void
 }
 
 function StatusFilter({

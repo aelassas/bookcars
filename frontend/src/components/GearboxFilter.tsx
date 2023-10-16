@@ -9,7 +9,7 @@ import '../assets/css/gearbox-filter.css'
 
 interface GearboxFilterProps {
   className?: string
-  onChange: (value: bookcarsTypes.GearboxType[]) => void
+  onChange?: (value: bookcarsTypes.GearboxType[]) => void
 }
 
 function GearboxFilter({

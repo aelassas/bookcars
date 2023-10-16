@@ -6,37 +6,39 @@ import { enUS, fr } from 'date-fns/locale'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
+interface DateTimePickerProps {
+  value?: Date
+  locale?: string,
+  mode?: 'date' | 'datetime' | 'time' | 'countdown'
+  size?: 'small'
+  label: string
+  backgroundColor?: string
+  error?: boolean
+  style?: object
+  helperText?: string
+  minDate?: Date
+  readOnly?: boolean
+  hideClearButton?: boolean
+  onPress?: () => void
+  onChange?: (date: Date | undefined) => void
+}
+
 function DateTimePicker({
-    value: dateTimeValue,
-    locale: dateTimeLocale,
-    mode,
-    size,
-    label: dateTimeLabel,
-    backgroundColor,
-    error,
-    style,
-    helperText,
-    minDate,
-    readOnly,
-    hideClearButton,
-    onPress,
-    onChange
-  }: {
-    value?: Date
-    locale?: string,
-    mode?: 'date' | 'datetime' | 'time' | 'countdown'
-    size?: 'small'
-    label: string
-    backgroundColor?: string
-    error?: boolean
-    style?: object
-    helperText?: string
-    minDate?: Date
-    readOnly?: boolean
-    hideClearButton?: boolean
-    onPress?: () => void
-    onChange?: (date: Date | undefined) => void
-  }) {
+  value: dateTimeValue,
+  locale: dateTimeLocale,
+  mode,
+  size,
+  label: dateTimeLabel,
+  backgroundColor,
+  error,
+  style,
+  helperText,
+  minDate,
+  readOnly,
+  hideClearButton,
+  onPress,
+  onChange
+}: DateTimePickerProps) {
   const [label, setLabel] = useState('')
   const [value, setValue] = useState<Date | undefined>(dateTimeValue)
   const [show, setShow] = useState(false)

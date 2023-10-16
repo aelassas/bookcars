@@ -1,19 +1,21 @@
 import React from 'react'
 import { StyleSheet, Text, Pressable } from 'react-native'
 
+interface ButtonProps {
+  size?: 'small'
+  color?: string
+  style?: object
+  label: string
+  onPress?: () => void
+}
+
 function Button({
-    size,
-    color,
-    style,
-    label,
-    onPress: onButtonPress
-  }: {
-    size?: 'small'
-    color?: string
-    style?: object
-    label: string
-    onPress?: () => void
-  }) {
+  size,
+  color,
+  style,
+  label,
+  onPress: onButtonPress
+}: ButtonProps) {
   const small = size === 'small'
 
   const onPress = () => {
