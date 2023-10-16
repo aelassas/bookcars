@@ -7,6 +7,16 @@ import {
   Switch as ReactSwitch
 } from 'react-native'
 
+interface SwitchProps {
+  value?: boolean
+  style?: object
+  textStyle?: object
+  label?: string
+  disabled?: boolean
+  children?: React.ReactNode
+  onValueChange?: (value: boolean) => void
+}
+
 function Switch({
   value: switchValue,
   style,
@@ -15,15 +25,7 @@ function Switch({
   disabled,
   children,
   onValueChange: onSwitchValueChange
-}: {
-  value?: boolean
-  style?: object
-  textStyle?: object
-  label?: string
-  disabled?: boolean
-  children?: React.ReactNode
-  onValueChange?: (value: boolean) => void
-}) {
+}: SwitchProps) {
   const [value, setValue] = useState(switchValue)
 
   useEffect(() => {

@@ -11,17 +11,19 @@ import Link from './Link'
 import Switch from './Switch'
 import Accordion from './Accordion'
 
+interface SupplierFilterProps {
+  visible?: boolean
+  style?: object
+  onLoad?: (checkedSuppliers: string[]) => void
+  onChange?: (checkedSuppliers: string[]) => void
+}
+
 function SupplierFilter({
-    visible,
-    style,
-    onLoad,
-    onChange
-  }: {
-    visible?: boolean
-    style?: object
-    onLoad?: (checkedSuppliers: string[]) => void
-    onChange?: (checkedSuppliers: string[]) => void
-  }) {
+  visible,
+  style,
+  onLoad,
+  onChange
+}: SupplierFilterProps) {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
   const [allChecked, setAllChecked] = useState(true)
@@ -60,43 +62,43 @@ function SupplierFilter({
             {suppliers.map((supplier) => (
               supplier._id && typeof supplier.checked !== 'undefined'
               && (
-              <View key={supplier._id} style={styles.company}>
-                <Switch
-                  value={supplier.checked}
-                  onValueChange={(checked) => {
-                    if (checked) {
-                      supplier.checked = true
-                      setSuppliers(bookcarsHelper.clone(suppliers))
-                      checkedSuppliers.push(supplier._id as string)
+                <View key={supplier._id} style={styles.company}>
+                  <Switch
+                    value={supplier.checked}
+                    onValueChange={(checked) => {
+                      if (checked) {
+                        supplier.checked = true
+                        setSuppliers(bookcarsHelper.clone(suppliers))
+                        checkedSuppliers.push(supplier._id as string)
 
-                      if (checkedSuppliers.length === suppliers.length) {
-                        setAllChecked(true)
+                        if (checkedSuppliers.length === suppliers.length) {
+                          setAllChecked(true)
+                        }
+                      } else {
+                        supplier.checked = false
+                        setSuppliers(bookcarsHelper.clone(suppliers))
+                        const index = checkedSuppliers.indexOf(supplier._id as string)
+                        checkedSuppliers.splice(index, 1)
+
+                        if (checkedSuppliers.length === 0) {
+                          setAllChecked(false)
+                        }
                       }
-                    } else {
-                      supplier.checked = false
-                      setSuppliers(bookcarsHelper.clone(suppliers))
-                      const index = checkedSuppliers.indexOf(supplier._id as string)
-                      checkedSuppliers.splice(index, 1)
 
-                      if (checkedSuppliers.length === 0) {
-                        setAllChecked(false)
+                      if (onChange) {
+                        onChange(bookcarsHelper.clone(checkedSuppliers))
                       }
-                    }
-
-                    if (onChange) {
-                      onChange(bookcarsHelper.clone(checkedSuppliers))
-                    }
-                  }}
-                >
-                  <Image
-                    style={styles.image}
-                    source={{
-                      uri: bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar),
                     }}
-                  />
-                </Switch>
-              </View>
-)
+                  >
+                    <Image
+                      style={styles.image}
+                      source={{
+                        uri: bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar),
+                      }}
+                    />
+                  </Switch>
+                </View>
+              )
             ))}
           </View>
           <Link

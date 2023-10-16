@@ -7,7 +7,7 @@ import '../assets/css/deposit-filter.css'
 
 interface DepositFilterProps {
   className?: string
-  onChange: (value: number) => void
+  onChange?: (value: number) => void
 }
 
 function DepositFilter({

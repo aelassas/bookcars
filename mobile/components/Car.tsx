@@ -10,32 +10,32 @@ import * as Helper from '../common/Helper'
 import * as Env from '../config/env.config'
 import i18n from '../lang/i18n'
 
+interface CarProps {
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
+  fr: boolean,
+  car: bookcarsTypes.Car,
+  from: Date,
+  to: Date,
+  pickupLocation: string,
+  dropOffLocation: string,
+}
+
 const iconSize = 24
 const iconColor = '#000'
 
-const getExtraIcon = (extra: number) =>
-  (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info')
+const getExtraIcon = (extra: number) => (extra === -1 ? 'clear' : extra === 0 ? 'check' : 'info')
 
-const getExtraColor = (extra: number) =>
-  (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
+const getExtraColor = (extra: number) => (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
 function Car({
-    car,
-    fr,
-    from,
-    to,
-    pickupLocation,
-    dropOffLocation,
-    navigation
-  }: {
-    navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-    fr: boolean,
-    car: bookcarsTypes.Car,
-    from: Date,
-    to: Date,
-    pickupLocation: string,
-    dropOffLocation: string,
-  }) {
+  car,
+  fr,
+  from,
+  to,
+  pickupLocation,
+  dropOffLocation,
+  navigation
+}: CarProps) {
   return (
     <View key={car._id} style={styles.carContainer}>
       <View style={styles.car}>
@@ -63,10 +63,10 @@ function Car({
             <Text style={styles.text}>{car.doors}</Text>
           </View>
           {car.aircon && (
-          <View style={styles.info}>
-            <MaterialIcons name="ac-unit" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          </View>
-        )}
+            <View style={styles.info}>
+              <MaterialIcons name="ac-unit" size={iconSize} color={iconColor} style={styles.infoIcon} />
+            </View>
+          )}
         </View>
 
         <View style={styles.infos}>
@@ -116,8 +116,8 @@ function Car({
             <Image
               style={styles.companyImg}
               source={{
-              uri: bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar),
-            }}
+                uri: bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar),
+              }}
             />
             <Text style={styles.companyText}>{car.company.fullName}</Text>
           </View>
@@ -134,15 +134,15 @@ function Car({
             style={styles.button}
             label={i18n.t('BOOK')}
             onPress={() => {
-            const params = {
-              car: car._id,
-              pickupLocation,
-              dropOffLocation,
-              from: from.getTime(),
-              to: to.getTime(),
-            }
-            navigation.navigate('Checkout', params)
-          }}
+              const params = {
+                car: car._id,
+                pickupLocation,
+                dropOffLocation,
+                from: from.getTime(),
+                to: to.getTime(),
+              }
+              navigation.navigate('Checkout', params)
+            }}
           />
         </View>
       </View>

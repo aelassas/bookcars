@@ -19,7 +19,7 @@ interface StatusListProps {
   variant?: TextFieldVariants
   disabled?: boolean
   style?: CSSProperties
-  onChange: (value: bookcarsTypes.BookingStatus) => void
+  onChange?: (value: bookcarsTypes.BookingStatus) => void
 }
 
 function StatusList({

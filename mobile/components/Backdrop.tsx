@@ -1,7 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-function Backdrop({ message }: { message?: string }) {
+interface BackdropProps {
+  message?: string
+}
+
+function Backdrop({ message }: BackdropProps) {
   return (
     <View style={styles.container}>
       {message && <Text style={styles.text}>{message}</Text>}

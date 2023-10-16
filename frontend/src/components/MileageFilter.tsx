@@ -9,7 +9,7 @@ import '../assets/css/mileage-filter.css'
 
 interface MileageFilterProps {
   className?: string
-  onChange: (value: bookcarsTypes.Mileage[]) => void
+  onChange?: (value: bookcarsTypes.Mileage[]) => void
 }
 
 function MileageFilter({

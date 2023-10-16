@@ -9,15 +9,17 @@ import {
 } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
+interface AccordionProps {
+  style?: object
+  title: string
+  children?: React.ReactNode
+}
+
 function Accordion({
   style,
   title,
   children
-}: {
-  style?: object
-  title: string
-  children?: React.ReactNode
-}) {
+}: AccordionProps) {
   const [open, setOpen] = useState(false)
   const animatedController = useRef(new Animated.Value(0)).current
 

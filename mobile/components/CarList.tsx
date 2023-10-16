@@ -10,33 +10,35 @@ import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import Car from './Car'
 
+interface CarListProps {
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  from?: Date
+  to?: Date
+  companies?: string[]
+  pickupLocation?: string
+  dropOffLocation?: string
+  fuel?: string[]
+  gearbox?: string[]
+  mileage?: string[]
+  deposit?: number
+  header?: React.ReactElement
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+}
+
 function CarList({
-    navigation,
-    from,
-    to,
-    companies,
-    pickupLocation,
-    dropOffLocation,
-    fuel,
-    gearbox,
-    mileage,
-    deposit,
-    header,
-    onLoad
-  }: {
-    navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
-    from?: Date
-    to?: Date
-    companies?: string[]
-    pickupLocation?: string
-    dropOffLocation?: string
-    fuel?: string[]
-    gearbox?: string[]
-    mileage?: string[]
-    deposit?: number
-    header?: React.ReactElement
-    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-  }) {
+  navigation,
+  from,
+  to,
+  companies,
+  pickupLocation,
+  dropOffLocation,
+  fuel,
+  gearbox,
+  mileage,
+  deposit,
+  header,
+  onLoad
+}: CarListProps) {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -165,7 +167,7 @@ function CarList({
             fetch
               ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
               : <></>
-}
+          }
           ListEmptyComponent={
             !loading ? (
               <View style={styles.container}>

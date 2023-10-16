@@ -14,7 +14,7 @@ interface SupplierSelectListProps {
   required?: boolean,
   readOnly?: boolean,
   variant?: TextFieldVariants,
-  onChange: (values: bookcarsTypes.Option[]) => void
+  onChange?: (values: bookcarsTypes.Option[]) => void
 }
 
 function SupplierSelectList({

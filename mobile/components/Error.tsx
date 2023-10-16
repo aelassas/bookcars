@@ -1,13 +1,15 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
+interface ErrorProps {
+  style?: object
+  message: string
+}
+
 function Error({
-    style,
-    message
-  }: {
-    style?: object
-    message: string
-  }) {
+  style,
+  message
+}: ErrorProps) {
   return (
     <View style={style}>
       <Text style={styles.text}>{message}</Text>

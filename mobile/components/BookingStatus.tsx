@@ -4,13 +4,15 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Helper from '../common/Helper'
 
+interface BookingStatusProps {
+  style: object
+  status: bookcarsTypes.BookingStatus
+}
+
 function BookingStatus({
   style,
   status
-}: {
-  style: object
-  status: bookcarsTypes.BookingStatus
-}) {
+}: BookingStatusProps) {
   return (
     <View
       style={{

@@ -9,17 +9,19 @@ import DateTimePicker from './DateTimePicker'
 import LocationSelectList from './LocationSelectList'
 import TextInput from './TextInput'
 
+interface BookingFilterProps {
+  visible?: boolean
+  style?: object
+  language?: string
+  onSubmit: (filter: bookcarsTypes.Filter) => void
+}
+
 function BookingFilter({
-    visible,
-    style,
-    language,
-    onSubmit
-  }: {
-    visible?: boolean
-    style?: object
-    language?: string
-    onSubmit: (filter: bookcarsTypes.Filter) => void
-  }) {
+  visible,
+  style,
+  language,
+  onSubmit
+}: BookingFilterProps) {
   const [init, setInit] = useState(false)
   const [from, setFrom] = useState<Date | undefined>(undefined)
   const [to, setTo] = useState<Date | undefined>(undefined)

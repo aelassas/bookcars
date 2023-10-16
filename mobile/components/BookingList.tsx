@@ -8,26 +8,27 @@ import * as Env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as Helper from '../common/Helper'
 import * as BookingService from '../services/BookingService'
-
 import Booking from './Booking'
 
+interface BookingListProps {
+  companies?: string[]
+  statuses?: string[]
+  filter?: bookcarsTypes.Filter
+  user: string
+  booking?: string
+  language?: string
+  header?: React.ReactElement
+}
+
 function BookingList({
-    companies,
-    statuses,
-    filter,
-    user,
-    booking: bookingId,
-    language,
-    header
-  }: {
-    companies?: string[]
-    statuses?: string[]
-    filter?: bookcarsTypes.Filter
-    user: string
-    booking?: string
-    language?: string
-    header?: React.ReactElement
-  }) {
+  companies,
+  statuses,
+  filter,
+  user,
+  booking: bookingId,
+  language,
+  header
+}: BookingListProps) {
   const [firstLoad, setFirstLoad] = useState(true)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)

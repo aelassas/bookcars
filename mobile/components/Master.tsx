@@ -11,31 +11,33 @@ import Header from '../components/Header'
 import * as NotificationService from '../services/NotificationService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
+interface MasterProps {
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  strict?: boolean
+  route?: RouteProp<StackParams, keyof StackParams>,
+  reload?: boolean
+  notificationCount?: number
+  style?: object
+  title?: string
+  hideTitle?: boolean
+  avatar?: string | null
+  children: React.ReactNode
+  onLoad: (user?: bookcarsTypes.User) => void
+}
+
 function Master({
-    navigation,
-    strict,
-    route,
-    reload,
-    notificationCount: mNotificationCount,
-    style,
-    title,
-    hideTitle,
-    avatar,
-    children,
-    onLoad
-  }: {
-    navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
-    strict?: boolean
-    route?: RouteProp<StackParams, keyof StackParams>,
-    reload?: boolean
-    notificationCount?: number
-    style?: object
-    title?: string
-    hideTitle?: boolean
-    avatar?: string | null
-    children: React.ReactNode
-    onLoad: (user?: bookcarsTypes.User) => void
-  }) {
+  navigation,
+  strict,
+  route,
+  reload,
+  notificationCount: mNotificationCount,
+  style,
+  title,
+  hideTitle,
+  avatar,
+  children,
+  onLoad
+}: MasterProps) {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)
