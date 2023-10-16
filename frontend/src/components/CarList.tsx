@@ -31,6 +31,26 @@ import DoorsIcon from '../assets/img/car-door.png'
 
 import '../assets/css/car-list.css'
 
+interface CarListProps {
+  from?: Date
+  to?: Date
+  companies?: string[]
+  pickupLocation?: string
+  dropOffLocation?: string
+  fuel?: string[]
+  gearbox?: string[]
+  mileage?: string[]
+  deposit?: number
+  cars?: bookcarsTypes.Car[]
+  reload?: boolean
+  booking?: bookcarsTypes.Booking
+  className?: string
+  hidePrice?: boolean
+  hideCompany?: boolean
+  loading?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+}
+
 function CarList({
   from,
   to,
@@ -49,25 +69,7 @@ function CarList({
   hideCompany,
   loading: carListLoading,
   onLoad
-}: {
-  from?: Date
-  to?: Date
-  companies?: string[]
-  pickupLocation?: string
-  dropOffLocation?: string
-  fuel?: string[]
-  gearbox?: string[]
-  mileage?: string[]
-  deposit?: number
-  cars?: bookcarsTypes.Car[]
-  reload?: boolean
-  booking?: bookcarsTypes.Booking
-  className?: string
-  hidePrice?: boolean
-  hideCompany?: boolean
-  loading?: boolean
-  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-}) {
+}: CarListProps) {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)

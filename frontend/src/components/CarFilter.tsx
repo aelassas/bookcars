@@ -9,6 +9,15 @@ import DateTimePicker from './DateTimePicker'
 
 import '../assets/css/car-filter.css'
 
+interface CarFilterProps {
+  from: Date
+  to: Date
+  pickupLocation: bookcarsTypes.Location
+  dropOffLocation: bookcarsTypes.Location
+  className?: string
+  onSubmit: bookcarsTypes.CarFilterSubmitEvent
+}
+
 function CarFilter({
   from: filterFrom,
   to: filterTo,
@@ -16,14 +25,7 @@ function CarFilter({
   dropOffLocation: filterDropOffLocation,
   className,
   onSubmit
-}: {
-  from: Date
-  to: Date
-  pickupLocation: bookcarsTypes.Location
-  dropOffLocation: bookcarsTypes.Location
-  className?: string
-  onSubmit: bookcarsTypes.CarFilterSubmitEvent
-}) {
+}: CarFilterProps) {
   const _minDate = new Date()
   _minDate.setDate(_minDate.getDate() + 1)
 

@@ -5,13 +5,15 @@ import Accordion from './Accordion'
 
 import '../assets/css/deposit-filter.css'
 
+interface DepositFilterProps {
+  className?: string
+  onChange: (value: number) => void
+}
+
 function DepositFilter({
   className,
   onChange
-}: {
-  className?: string
-  onChange: (value: number) => void
-}) {
+}: DepositFilterProps) {
   const deposit2500Ref = useRef<HTMLInputElement>(null)
   const deposit5000Ref = useRef<HTMLInputElement>(null)
   const deposit7500Ref = useRef<HTMLInputElement>(null)

@@ -42,6 +42,13 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/header.css'
 
+interface HeaderProps {
+  user?: bookcarsTypes.User
+  hidden?: boolean
+  hideSignin?: boolean
+  notificationCount?: number
+}
+
 function ListItemLink(props: any) {
   return <ListItemButton component="a" {...props} />
 }
@@ -51,12 +58,7 @@ function Header({
   hidden,
   hideSignin,
   notificationCount: headerNotificationCount
-}: {
-  user?: bookcarsTypes.User
-  hidden?: boolean
-  hideSignin?: boolean
-  notificationCount?: number
-}) {
+}: HeaderProps) {
   const navigate = useNavigate()
   const [lang, setLang] = useState(Helper.getLanguage(Env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
