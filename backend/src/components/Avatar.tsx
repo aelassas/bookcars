@@ -26,6 +26,23 @@ import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 
+interface AvatarProps {
+  width?: number,
+  height?: number,
+  mode?: 'create' | 'update',
+  type?: string,
+  record?: bookcarsTypes.User | bookcarsTypes.Car | null,
+  size: 'small' | 'medium' | 'large',
+  readonly?: boolean,
+  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
+  className?: string,
+  verified?: boolean,
+  hideDelete?: boolean,
+  onValidate?: (valid: boolean) => void,
+  onBeforeUpload?: () => void,
+  onChange?: (param: string) => void,
+}
+
 function Avatar({
   width,
   height,
@@ -41,23 +58,7 @@ function Avatar({
   onValidate,
   onBeforeUpload,
   onChange,
-}:
-  {
-    width?: number,
-    height?: number,
-    mode?: 'create' | 'update',
-    type?: string,
-    record?: bookcarsTypes.User | bookcarsTypes.Car | null,
-    size: 'small' | 'medium' | 'large',
-    readonly?: boolean,
-    color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-    className?: string,
-    verified?: boolean,
-    hideDelete?: boolean,
-    onValidate?: (valid: boolean) => void,
-    onBeforeUpload?: () => void,
-    onChange?: (param: string) => void,
-  }) {
+}: AvatarProps) {
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [openTypeDialog, setOpenTypeDialog] = useState(false)

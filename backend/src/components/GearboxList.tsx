@@ -9,19 +9,21 @@ import {
 import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/cars'
 
+interface GearboxListProps {
+  value?: string
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange?: (value: string) => void
+}
+
 function GearboxList({
   value: gearboxListValue,
   label,
   required,
   variant,
   onChange
-}: {
-  value?: string
-  label?: string
-  required?: boolean
-  variant?: TextFieldVariants
-  onChange: (value: string) => void
-}) {
+}: GearboxListProps) {
   const [value, setValue] = useState('')
 
   useEffect(() => {

@@ -7,13 +7,15 @@ import Accordion from './Accordion'
 
 import '../assets/css/gearbox-filter.css'
 
+interface GearboxFilterProps {
+  className?: string
+  onChange?: (value: bookcarsTypes.GearboxType[]) => void
+}
+
 function GearboxFilter({
   className,
   onChange
-}: {
-  className?: string
-  onChange: (value: bookcarsTypes.GearboxType[]) => void
-}) {
+}: GearboxFilterProps) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
 

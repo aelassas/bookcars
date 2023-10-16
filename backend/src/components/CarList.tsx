@@ -38,6 +38,26 @@ import DoorsIcon from '../assets/img/car-door.png'
 
 import '../assets/css/car-list.css'
 
+interface CarListProps {
+  companies?: string[]
+  keyword?: string
+  fuel?: string[]
+  gearbox?: string[]
+  mileage?: string[]
+  deposit?: number
+  availability?: string[]
+  reload?: boolean
+  cars?: bookcarsTypes.Car[]
+  user?: bookcarsTypes.User
+  booking?: bookcarsTypes.Booking
+  className?: string
+  loading?: boolean
+  hideCompany?: boolean
+  hidePrice?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
+  onDelete?: (rowCount: number) => void
+}
+
 function CarList({
   companies: carCompanies,
   keyword: carKeyword,
@@ -56,26 +76,7 @@ function CarList({
   hidePrice,
   onLoad,
   onDelete
-}:
-  {
-    companies?: string[]
-    keyword?: string
-    fuel?: string[]
-    gearbox?: string[]
-    mileage?: string[]
-    deposit?: number
-    availability?: string[]
-    reload?: boolean
-    cars?: bookcarsTypes.Car[]
-    user?: bookcarsTypes.User
-    booking?: bookcarsTypes.Booking
-    className?: string
-    loading?: boolean
-    hideCompany?: boolean
-    hidePrice?: boolean
-    onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
-    onDelete?: (rowCount: number) => void
-  }) {
+}: CarListProps) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)

@@ -28,19 +28,21 @@ import Pager from './Pager'
 
 import '../assets/css/company-list.css'
 
+interface SupplierListProps {
+  user?: bookcarsTypes.User
+  keyword?: string
+  reload?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
+  onDelete?: (rowCount: number) => void
+}
+
 function SupplierList({
   user,
   keyword: supplierListKeyword,
   reload: supplierListReload,
   onDelete,
   onLoad
-}: {
-  user?: bookcarsTypes.User
-  keyword?: string
-  reload?: boolean
-  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
-  onDelete?: (rowCount: number) => void
-}) {
+}: SupplierListProps) {
   const [keyword, setKeyword] = useState(supplierListKeyword)
   const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)

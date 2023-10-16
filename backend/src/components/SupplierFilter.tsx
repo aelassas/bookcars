@@ -7,17 +7,19 @@ import Accordion from './Accordion'
 
 import '../assets/css/company-filter.css'
 
+interface SupplierFilterProps {
+  companies: bookcarsTypes.User[]
+  collapse?: boolean
+  className?: string
+  onChange?: (value: string[]) => void
+}
+
 function SupplierFilter({
   companies,
   collapse,
   className,
   onChange
-}: {
-  companies: bookcarsTypes.User[]
-  collapse?: boolean
-  className?: string
-  onChange: (value: string[]) => void
-}) {
+}: SupplierFilterProps) {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
   const [allChecked, setAllChecked] = useState(true)

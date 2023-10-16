@@ -8,20 +8,21 @@ import {
 import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/cars'
 
+interface CarTypeListProps {
+  value?: string,
+  required?: boolean,
+  label?: string
+  variant?: 'filled' | 'standard' | 'outlined'
+  onChange?: (value: string) => void
+}
+
 function CarTypeList({
   value: carTypeValue,
   required,
   label,
   variant,
   onChange
-}:
-  {
-    value?: string,
-    required?: boolean,
-    label?: string
-    variant?: 'filled' | 'standard' | 'outlined'
-    onChange?: (value: string) => void
-  }) {
+}: CarTypeListProps) {
   const [value, setValue] = useState('')
 
   useEffect(() => {

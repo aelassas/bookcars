@@ -5,13 +5,15 @@ import { strings as commonStrings } from '../lang/common'
 
 import '../assets/css/search.css'
 
+interface SearchProps {
+  className?: string,
+  onSubmit?: (value: string) => void
+}
+
 function Search({
   className,
   onSubmit
-}: {
-  className?: string,
-  onSubmit: (value: string) => void
-}) {
+}: SearchProps) {
   const [keyword, setKeyword] = useState('')
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

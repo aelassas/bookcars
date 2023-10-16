@@ -35,6 +35,15 @@ import * as UserService from '../services/UserService'
 
 import '../assets/css/user-list.css'
 
+interface UserListProps {
+  types?: bookcarsTypes.UserType[]
+  keyword?: string
+  user?: bookcarsTypes.User
+  hideDesktopColumns?: boolean
+  checkboxSelection?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
+}
+
 function UserList({
   types: userListTypes,
   keyword: userListKeyword,
@@ -42,14 +51,7 @@ function UserList({
   hideDesktopColumns,
   checkboxSelection,
   onLoad
-}: {
-  types?: bookcarsTypes.UserType[]
-  keyword?: string
-  user?: bookcarsTypes.User
-  hideDesktopColumns?: boolean
-  checkboxSelection?: boolean
-  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
-}) {
+}: UserListProps) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)

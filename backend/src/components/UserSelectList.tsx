@@ -7,6 +7,15 @@ import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 
+interface UserSelectListProps {
+  multiple?: boolean
+  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange?: (values: bookcarsTypes.Option[]) => void
+}
+
 function UserSelectList({
   multiple,
   value,
@@ -14,14 +23,7 @@ function UserSelectList({
   required,
   variant,
   onChange
-}: {
-  multiple?: boolean
-  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
-  label?: string
-  required?: boolean
-  variant?: TextFieldVariants
-  onChange: (values: bookcarsTypes.Option[]) => void
-}) {
+}: UserSelectListProps) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [drivers, setDrivers] = useState<bookcarsTypes.Option[]>([])

@@ -9,19 +9,21 @@ import {
 import * as bookcarsTypes from 'bookcars-types'
 import { strings } from '../lang/cars'
 
+interface FuelPolicyListProps {
+  value?: string
+  label?: string
+  required?: boolean
+  variant: TextFieldVariants
+  onChange?: (value: string) => void
+}
+
 function FuelPolicyList({
-    value: fuelPolicyValue,
-    label,
-    required,
-    variant,
-    onChange
-  }: {
-    value?: string
-    label?: string
-    required?: boolean
-    variant: TextFieldVariants
-    onChange: (value: string) => void
-  }) {
+  value: fuelPolicyValue,
+  label,
+  required,
+  variant,
+  onChange
+}: FuelPolicyListProps) {
   const [value, setValue] = useState('')
 
   useEffect(() => {

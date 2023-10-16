@@ -8,13 +8,15 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/availability-filter.css'
 
+interface AvailabilityFilterProps {
+  className?: string,
+  onChange?: (values: string[]) => void
+}
+
 function AvailabilityFilter({
   className,
   onChange
-}: {
-  className?: string,
-  onChange?: (values: string[]) => void
-}) {
+}: AvailabilityFilterProps) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState<string[]>([
     bookcarsTypes.Availablity.Available,

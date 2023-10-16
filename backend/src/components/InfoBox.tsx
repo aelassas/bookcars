@@ -3,7 +3,12 @@ import { Info as InfoIcon } from '@mui/icons-material'
 
 import '../assets/css/info-box.css'
 
-function InfoBox({ className, value }: { className?: string, value: string }) {
+interface InfoBoxProps {
+  className?: string
+  value: string
+}
+
+function InfoBox({ className, value }: InfoBoxProps) {
   return (
     <div className={`info-box${className ? ' ' : ''}${className || ''}`}>
       <InfoIcon className="info-box-icon" />

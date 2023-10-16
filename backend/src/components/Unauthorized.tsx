@@ -3,7 +3,11 @@ import { Link } from '@mui/material'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/unauthorized'
 
-function Unauthorized({ style }: { style?: CSSProperties }) {
+interface UnauthorizedProps {
+  style?: CSSProperties
+}
+
+function Unauthorized({ style }: UnauthorizedProps) {
   return (
     <div className="msg" style={style}>
       <h2>{strings.UNAUTHORIZED}</h2>

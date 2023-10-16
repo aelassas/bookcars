@@ -7,21 +7,23 @@ import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 
+interface LocationSelectListProps {
+  value?: bookcarsTypes.Location | bookcarsTypes.Location[]
+  multiple?: boolean
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange?: (values: bookcarsTypes.Option[]) => void
+}
+
 function LocationSelectList({
-    value,
-    multiple,
-    label,
-    required,
-    variant,
-    onChange
-  }: {
-    value?: bookcarsTypes.Location | bookcarsTypes.Location[]
-    multiple?: boolean
-    label?: string
-    required?: boolean
-    variant?: TextFieldVariants
-    onChange?: (values: bookcarsTypes.Option[]) => void
-  }) {
+  value,
+  multiple,
+  label,
+  required,
+  variant,
+  onChange
+}: LocationSelectListProps) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Location[]>([])
