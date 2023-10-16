@@ -7,19 +7,21 @@ import {
   TextFieldVariants
 } from '@mui/material'
 
+interface SeatsListProps {
+  value?: string
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange?: (value: string) => void
+}
+
 function SeatsList({
   value: seatsListValue,
   label,
   required,
   variant,
   onChange
-}: {
-  value?: string
-  label?: string
-  required?: boolean
-  variant?: TextFieldVariants
-  onChange: (value: string) => void
-}) {
+}: SeatsListProps) {
   const [value, setValue] = useState('')
 
   useEffect(() => {

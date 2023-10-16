@@ -7,13 +7,15 @@ import Accordion from './Accordion'
 
 import '../assets/css/mileage-filter.css'
 
+interface MileageFilterProps {
+  className?: string
+  onChange?: (value: bookcarsTypes.Mileage[]) => void
+}
+
 function MileageFilter({
   className,
   onChange
-}: {
-  className?: string
-  onChange: (value: bookcarsTypes.Mileage[]) => void
-}) {
+}: MileageFilterProps) {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
 

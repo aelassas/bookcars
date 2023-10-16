@@ -37,6 +37,24 @@ import StatusList from './StatusList'
 
 import '../assets/css/booking-list.css'
 
+interface BookingListProps {
+  companies?: string[]
+  statuses?: string[]
+  filter?: bookcarsTypes.Filter | null
+  car?: string
+  offset?: number
+  user?: bookcarsTypes.User
+  loggedUser?: bookcarsTypes.User
+  containerClassName?: string
+  hideDates?: boolean
+  hideCarColumn?: boolean
+  hideCompanyColumn?: boolean
+  language?: string
+  loading?: boolean
+  checkboxSelection?: boolean
+  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Booking>
+}
+
 function BookingList({
   companies: bookingCompanies,
   statuses: bookingStatuses,
@@ -53,23 +71,7 @@ function BookingList({
   loading: bookingLoading,
   checkboxSelection,
   onLoad,
-}: {
-  companies?: string[]
-  statuses?: string[]
-  filter?: bookcarsTypes.Filter | null
-  car?: string
-  offset?: number
-  user?: bookcarsTypes.User
-  loggedUser?: bookcarsTypes.User
-  containerClassName?: string
-  hideDates?: boolean
-  hideCarColumn?: boolean
-  hideCompanyColumn?: boolean
-  language?: string
-  loading?: boolean
-  checkboxSelection?: boolean
-  onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Booking>
-}) {
+}: BookingListProps) {
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)

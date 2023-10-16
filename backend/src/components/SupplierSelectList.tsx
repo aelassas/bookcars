@@ -7,6 +7,16 @@ import * as SupplierService from '../services/SupplierService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
 
+interface SupplierSelectListProps {
+  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
+  multiple?: boolean,
+  label?: string,
+  required?: boolean,
+  readOnly?: boolean,
+  variant?: TextFieldVariants,
+  onChange?: (values: bookcarsTypes.Option[]) => void
+}
+
 function SupplierSelectList({
   value,
   multiple,
@@ -15,15 +25,7 @@ function SupplierSelectList({
   readOnly,
   variant,
   onChange
-}: {
-  value?: bookcarsTypes.Option | bookcarsTypes.Option[]
-  multiple?: boolean,
-  label?: string,
-  required?: boolean,
-  readOnly?: boolean,
-  variant?: TextFieldVariants,
-  onChange: (values: bookcarsTypes.Option[]) => void
-}) {
+}: SupplierSelectListProps) {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Option[]>([])

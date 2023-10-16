@@ -6,13 +6,15 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/user-type-filter.css'
 
+interface UserTypeFilterProps {
+  className?: string,
+  onChange?: (types: bookcarsTypes.UserType[]) => void
+}
+
 function UserTypeFilter({
   className,
   onChange
-}: {
-  className?: string,
-  onChange?: (types: bookcarsTypes.UserType[]) => void
-}) {
+}: UserTypeFilterProps) {
   const userTypes = Helper.getUserTypes()
   const [checkedUserTypes, setCheckedUserTypes] = useState<bookcarsTypes.UserType[]>(userTypes.map((user) => user.value))
   const [allChecked, setAllChecked] = useState(true)

@@ -5,26 +5,27 @@ import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTim
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
 
+interface DateTimePickerProps {
+  value?: Date
+  label?: string
+  minDate?: Date
+  required?: boolean
+  language?: string
+  variant?: TextFieldVariants
+  readOnly?: boolean
+  onChange?: (value: Date | null) => void
+}
+
 function DateTimePicker({
-    value: dateTimeValue,
-    label,
-    minDate,
-    required,
-    variant,
-    language,
-    readOnly,
-    onChange
-  }
-    : {
-      value?: Date
-      label?: string
-      minDate?: Date
-      required?: boolean
-      language?: string
-      variant?: TextFieldVariants
-      readOnly?: boolean
-      onChange: (value: Date | null) => void
-    }) {
+  value: dateTimeValue,
+  label,
+  minDate,
+  required,
+  variant,
+  language,
+  readOnly,
+  onChange
+}: DateTimePickerProps) {
   const [value, setValue] = useState<Date | null>(null)
 
   useEffect(() => {

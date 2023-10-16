@@ -7,15 +7,17 @@ import Accordion from '../components/Accordion'
 
 import '../assets/css/status-filter.css'
 
+interface StatusFilterProps {
+  className?: string
+  collapse?: boolean
+  onChange?: (value: bookcarsTypes.BookingStatus[]) => void
+}
+
 function StatusFilter({
   className,
   collapse,
   onChange
-}: {
-  className?: string
-  collapse?: boolean
-  onChange: (value: bookcarsTypes.BookingStatus[]) => void
-}) {
+}: StatusFilterProps) {
   const statuses = Helper.getBookingStatuses()
   const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)

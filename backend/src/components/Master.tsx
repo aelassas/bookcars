@@ -8,6 +8,17 @@ import Unauthorized from '../components/Unauthorized'
 import * as Helper from '../common/Helper'
 import { useInit } from '../common/customHooks'
 
+interface MasterProps {
+  user?: bookcarsTypes.User
+  strict?: boolean
+  admin?: boolean
+  hideHeader?: boolean
+  notificationCount?: number
+  style?: CSSProperties
+  children: ReactNode
+  onLoad?: (user?: bookcarsTypes.User) => void
+}
+
 function Master({
   user: masterUser,
   strict,
@@ -17,16 +28,7 @@ function Master({
   style,
   children,
   onLoad
-}: {
-  user?: bookcarsTypes.User
-  strict?: boolean
-  admin?: boolean
-  hideHeader?: boolean
-  notificationCount?: number
-  style?: CSSProperties
-  children: ReactNode
-  onLoad?: (user?: bookcarsTypes.User) => void
-}) {
+}: MasterProps) {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
   const [unauthorized, setUnauthorized] = useState(false)

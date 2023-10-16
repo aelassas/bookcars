@@ -7,19 +7,21 @@ import {
   TextFieldVariants
 } from '@mui/material'
 
+interface DoorsListProps {
+  value?: string
+  label?: string
+  required?: boolean
+  variant?: TextFieldVariants
+  onChange?: (value: string) => void
+}
+
 function DoorsList({
   value: doorsListValue,
   label,
   required,
   variant,
   onChange
-}: {
-  value?: string
-  label?: string
-  required?: boolean
-  variant?: TextFieldVariants
-  onChange: (value: string) => void
-}) {
+}: DoorsListProps) {
   const [value, setValue] = useState('')
 
   useEffect(() => {
