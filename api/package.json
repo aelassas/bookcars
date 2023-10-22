@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node --experimental-specifier-resolution=node dist/index.js",
+    "build": "rimraf ./dist && tsc && babel dist -d dist",
+    "start": "npm run build && node dist",
     "lint": "eslint --ext .ts .",
     "ncu": "ncu -u"
   },
@@ -15,6 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-typescript": "^7.23.2",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.3",
     "@types/cookie-parser": "^1.4.4",
@@ -26,6 +29,7 @@
     "@types/nodemailer": "^6.4.11",
     "@types/uuid": "^9.0.5",
     "@types/validator": "^13.11.3",
+    "babel-plugin-add-import-extension": "^1.6.0",
     "bcrypt": "^5.1.1",
     "bookcars-types": "file:../packages/bookcars-types",
     "compression": "^1.7.4",
