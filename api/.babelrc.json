@@ -8,8 +8,7 @@
                     "node": "current"
                 }
             }
-        ],
-        "@babel/typescript"
+        ]
     ],
     "plugins": [
         "add-import-extension"
