@@ -41,7 +41,7 @@ export async function create(req: Request, res: Response) {
     await booking.save()
     return res.json(booking)
   } catch (err) {
-    console.error(`[booking.create]  ${strings.DB_ERROR} ${req.body}`, err)
+    console.error(`[booking.create] ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
   }
 }
