@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "ts",
     "ignore": [],
-    "exec": "npx ts-node-esm --experimentalSpecifierResolution node ./src"
-  }
+    "exec": "node --loader=ts-node/esm --experimental-specifier-resolution=node ./src"
+}
