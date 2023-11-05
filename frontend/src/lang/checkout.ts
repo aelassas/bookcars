@@ -56,7 +56,7 @@ const strings = new LocalizedStrings({
     CARD_NUMBER_NOT_VALID: 'Invalid card number',
     CVV: 'Card Validation Code',
     CVV_NOT_VALID: 'Invalid Card Validation Code',
-    BOOK: 'Book  now',
+    BOOK: 'Book now',
     SIGN_IN: 'Sign in?',
     SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
     CARD_DATE_ERROR: 'Invalid card date.',
