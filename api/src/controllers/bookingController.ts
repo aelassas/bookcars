@@ -82,7 +82,12 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
     from: env.SMTP_FROM,
     to: company.email,
     subject: message,
-    html: `<p>${strings.HELLO}${company.fullName},<br><br>${message}<br><br>${Helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>${strings.REGARDS}<br></p>`,
+    html: `<p>
+    ${strings.HELLO}${company.fullName},<br><br>
+    ${message}<br><br>
+    ${Helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
+    ${strings.REGARDS}<br>
+    </p>`,
   }
 
   await MailHelper.sendMail(mailOptions)
@@ -129,10 +134,12 @@ export async function book(req: Request, res: Response) {
         from: env.SMTP_FROM,
         to: user.email,
         subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
-        html: `<p>${strings.HELLO}${user.fullName},<br><br>
+        html: `<p>
+        ${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
         ${Helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${strings.REGARDS}<br></p>`,
+        ${strings.REGARDS}<br>
+        </p>`,
       }
       await MailHelper.sendMail(mailOptions)
 
@@ -198,7 +205,8 @@ export async function book(req: Request, res: Response) {
       to: user.email,
       subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>
+        `<p>
+        ${strings.HELLO}${user.fullName},<br><br>
         ${!body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}`
           + '<br><br>' : ''}
         ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocationName}${strings.BOOKING_CONFIRMED_PART5}`
@@ -208,7 +216,8 @@ export async function book(req: Request, res: Response) {
         + `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocationName}${strings.BOOKING_CONFIRMED_PART11}`
         + `${to} ${strings.BOOKING_CONFIRMED_PART12}`
         + `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
-        ${strings.REGARDS}<br></p>`,
+        ${strings.REGARDS}<br>
+        </p>`,
     }
     await MailHelper.sendMail(mailOptions)
 
@@ -267,10 +276,12 @@ async function notifyDriver(booking: env.Booking) {
     from: env.SMTP_FROM,
     to: driver.email,
     subject: message,
-    html: `<p>${strings.HELLO}${driver.fullName},<br><br>
+    html: `<p>
+    ${strings.HELLO}${driver.fullName},<br><br>
     ${message}<br><br>
     ${Helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
-    ${strings.REGARDS}<br></p>`,
+    ${strings.REGARDS}<br>
+    </p>`,
   }
   await MailHelper.sendMail(mailOptions)
 
