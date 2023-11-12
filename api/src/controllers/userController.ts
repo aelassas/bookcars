@@ -27,7 +27,9 @@ import AdditionalDriver from '../models/AdditionalDriver'
  * @param {string} msg
  * @returns {string}
  */
-const getStatusMessage = (lang: string, msg: string) => `<!DOCTYPE html><html lang="' ${lang}'"><head></head><body><p>${msg}</p></body></html>`
+const getStatusMessage = (lang: string, msg: string) => (
+  `<!DOCTYPE html><html lang="'${lang}'"><head></head><body><p>${msg}</p></body></html>`
+)
 
 /**
  * Sign Up.
@@ -80,10 +82,12 @@ async function _signup(req: Request, res: Response, userType: bookcarsTypes.User
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>
+        `<p>
+        ${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
         http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${strings.REGARDS}<br></p>`,
+        ${strings.REGARDS}<br>
+        </p>`,
     }
     await MailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
@@ -180,13 +184,15 @@ export async function create(req: Request, res: Response) {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>
+        `<p>
+        ${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
         ${Helper.joinURL(
           user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
           'activate',
         )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${strings.REGARDS}<br></p>`,
+        ${strings.REGARDS}<br>
+        </p>`,
     }
 
     await MailHelper.sendMail(mailOptions)
@@ -314,13 +320,15 @@ export async function resend(req: Request, res: Response) {
         to: user.email,
         subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
         html:
-          `<p>${strings.HELLO}${user.fullName},<br><br>
-            ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-            ${Helper.joinURL(
+          `<p>
+          ${strings.HELLO}${user.fullName},<br><br>  
+          ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>  
+          ${Helper.joinURL(
             user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
             reset ? 'reset-password' : 'activate',
           )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-            ${strings.REGARDS}<br></p>`,
+          ${strings.REGARDS}<br>
+          </p>`,
       }
 
       await MailHelper.sendMail(mailOptions)
@@ -693,10 +701,12 @@ export async function resendLink(req: Request, res: Response) {
       to: user.email,
       subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
       html:
-        `<p>${strings.HELLO}${user.fullName},<br><br>
-          ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-          http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-          ${strings.REGARDS}<br></p>`,
+        `<p>
+        ${strings.HELLO}${user.fullName},<br><br>
+        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
+        ${strings.REGARDS}<br>
+        </p>`,
     }
 
     await MailHelper.sendMail(mailOptions)
