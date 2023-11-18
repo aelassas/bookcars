@@ -146,7 +146,10 @@ export async function checkCar(req: Request, res: Response) {
 
   try {
     const _id = new mongoose.Types.ObjectId(id)
-    const count = await Booking.find({ car: _id }).limit(1).count()
+    const count = await Booking
+      .find({ car: _id })
+      .limit(1)
+      .countDocuments()
 
     if (count === 1) {
       return res.sendStatus(200)
