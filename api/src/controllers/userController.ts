@@ -1201,9 +1201,11 @@ export async function deleteUsers(req: Request, res: Response) {
     const ids: mongoose.Types.ObjectId[] = body.map((id: string) => new mongoose.Types.ObjectId(id))
 
     for (const id of ids) {
-      const user = await User.findByIdAndDelete(id)
+      const user = await User.findById(id)
 
       if (user) {
+        await User.deleteOne({ _id: id })
+
         if (user.avatar) {
           const avatar = path.join(env.CDN_USERS, user.avatar)
           if (await Helper.exists(avatar)) {
