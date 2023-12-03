@@ -5,7 +5,7 @@ import Constants from 'expo-constants'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
-import * as mime from 'mime'
+import mime from 'mime'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'

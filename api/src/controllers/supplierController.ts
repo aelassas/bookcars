@@ -94,8 +94,10 @@ export async function deleteSupplier(req: Request, res: Response) {
   const { id } = req.params
 
   try {
-    const supplier = await User.findByIdAndDelete(id)
+    const supplier = await User.findById(id)
     if (supplier) {
+      await User.deleteOne({ _id: id })
+
       if (supplier.avatar) {
         const avatar = path.join(env.CDN_USERS, supplier.avatar)
         if (await Helper.exists(avatar)) {

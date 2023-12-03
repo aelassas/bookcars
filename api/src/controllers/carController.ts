@@ -175,8 +175,10 @@ export async function deleteCar(req: Request, res: Response) {
   const { id } = req.params
 
   try {
-    const car = await Car.findByIdAndDelete(id)
+    const car = await Car.findById(id)
     if (car) {
+      await Car.deleteOne({ _id: id })
+
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await Helper.exists(image)) {

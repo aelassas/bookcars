@@ -125,12 +125,13 @@ export async function deleteLocation(req: Request, res: Response) {
   const { id } = req.params
 
   try {
-    const location = await Location.findByIdAndDelete(id)
+    const location = await Location.findById(id)
     if (!location) {
       const msg = `[location.delete] Location ${id} not found`
       console.log(msg)
       return res.status(204).send(msg)
     }
+    await Location.deleteOne({ _id: id })
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     return res.sendStatus(200)
   } catch (err) {
