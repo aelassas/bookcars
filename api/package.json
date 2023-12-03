@@ -9,7 +9,7 @@
     "build": "rimraf ./dist && tsc && babel dist -d dist",
     "start": "npm run build && node dist",
     "lint": "eslint --ext .ts .",
-    "ncu": "ncu -u"
+    "ncu": "ncu -u -x typescript"
   },
   "keywords": [],
   "author": "",
