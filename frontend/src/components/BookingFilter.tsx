@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   FormControl,
   TextField,
@@ -35,6 +35,8 @@ function BookingFilter({
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [keyword, setKeyword] = useState('')
   const [minDate, setMinDate] = useState<Date>()
+
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
@@ -75,7 +77,8 @@ function BookingFilter({
 
   return (
     <Accordion title={commonStrings.SEARCH} collapse={collapse} className={`${className ? `${className} ` : ''}booking-filter`}>
-      <form onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
         <FormControl fullWidth margin="dense">
           <DatePicker
             label={commonStrings.FROM}
@@ -129,6 +132,7 @@ function BookingFilter({
         </FormControl>
         <FormControl fullWidth margin="dense">
           <TextField
+            inputRef={inputRef}
             variant="standard"
             value={keyword}
             onKeyDown={handleSearchKeyDown}
@@ -140,6 +144,7 @@ function BookingFilter({
                   size="small"
                   onClick={() => {
                     setKeyword('')
+                    inputRef.current?.focus()
                   }}
                 >
                   <ClearIcon className="d-adornment-icon" />
@@ -148,7 +153,6 @@ function BookingFilter({
                 <SearchIcon className="d-adornment-icon" />
               ),
             }}
-            autoComplete="off"
             className="bf-search"
           />
         </FormControl>

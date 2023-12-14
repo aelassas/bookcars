@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.23.4",
-    "@babel/preset-env": "^7.23.5",
+    "@babel/preset-env": "^7.23.6",
     "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.6",
@@ -24,7 +24,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/multer": "^1.4.11",
-    "@types/node": "^20.10.2",
+    "@types/node": "^20.10.4",
     "@types/nodemailer": "^6.4.14",
     "@types/uuid": "^9.0.7",
     "@types/validator": "^13.11.7",
@@ -41,23 +41,23 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "localized-strings": "^0.2.4",
-    "mongoose": "^8.0.2",
+    "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1",
     "nocache": "^4.0.0",
     "nodemailer": "^6.9.7",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.2",
+    "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
     "eslint": "^8.55.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.0",
     "nodemon": "^3.0.2",
-    "npm-check-updates": "^16.14.11",
+    "npm-check-updates": "^16.14.12",
     "ts-node": "^10.9.2"
   }
 }
