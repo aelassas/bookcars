@@ -59,7 +59,7 @@ function SupplierList({
   const _fetch = async (_page: number, _keyword?: string) => {
     try {
       setLoading(true)
-      console.log('fetch', _page)
+
       const data = await SupplierService.getSuppliers(_keyword || '', _page, Env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
