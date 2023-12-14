@@ -7,7 +7,7 @@ import '../assets/css/search.css'
 
 interface SearchProps {
   className?: string,
-  onSubmit: (value: string) => void
+  onSubmit?: (value: string) => void
 }
 
 function Search({
