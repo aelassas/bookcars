@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { format } from 'date-fns'
+import { Locale, format } from 'date-fns'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
