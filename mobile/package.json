@@ -1,6 +1,6 @@
 {
   "name": "bookcars",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start --port 8082",
