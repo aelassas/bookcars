@@ -116,7 +116,6 @@ root.render(
         pauseOnFocusLoss={false}
         draggable={false}
         pauseOnHover
-        icon
         theme="dark"
       />
     </CssBaseline>
