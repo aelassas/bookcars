@@ -41,7 +41,7 @@
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
     "expo-updates": "~0.24.10",
-    "i18n-js": "^4.3.2",
+    "i18n-js": "^4.4.2",
     "lodash.debounce": "^4.0.8",
     "mime": "^4.0.1",
     "prop-types": "^15.8.1",
