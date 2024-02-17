@@ -18,6 +18,7 @@ const IMAGE1 = 'bmw-x1.jpg'
 const IMAGE1_PATH = path.resolve(__dirname, `./img/${IMAGE1}`)
 const IMAGE2 = 'bmw-x5.jpg'
 const IMAGE2_PATH = path.resolve(__dirname, `./img/${IMAGE2}`)
+
 let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
 let LOCATION1_ID: string
