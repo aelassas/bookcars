@@ -25,6 +25,7 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
     // Check token
     jwt.verify(token, env.JWT_SECRET, (err) => {
       if (err) {
+        // Token not valid!
         console.log(err)
         res.status(401).send({ message: 'Unauthorized!' })
       } else {
