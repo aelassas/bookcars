@@ -9,6 +9,7 @@ import app from './app'
 
 if (await DatabaseHelper.Connect(env.DB_DEBUG)) {
     let server: http.Server | https.Server
+
     if (env.HTTPS) {
         https.globalAgent.maxSockets = Number.POSITIVE_INFINITY
         const privateKey = await fs.readFile(env.PRIVATE_KEY, 'utf8')
