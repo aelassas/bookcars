@@ -1,5 +1,4 @@
 import express, { Express } from 'express'
-import mongoose, { ConnectOptions } from 'mongoose'
 import compression from 'compression'
 import helmet from 'helmet'
 import nocache from 'nocache'
@@ -14,24 +13,6 @@ import locationRoutes from './routes/locationRoutes'
 import notificationRoutes from './routes/notificationRoutes'
 import carRoutes from './routes/carRoutes'
 import userRoutes from './routes/userRoutes'
-
-let options: ConnectOptions = {}
-if (env.DB_SSL) {
-    options = {
-        tls: true,
-        tlsCertificateKeyFile: env.DB_SSL_CERT,
-        tlsCAFile: env.DB_SSL_CA,
-    }
-}
-
-mongoose.set('debug', env.DB_DEBUG)
-mongoose.Promise = globalThis.Promise
-try {
-    await mongoose.connect(env.DB_URI, options)
-    console.log('Database is connected')
-} catch (err) {
-    console.error('Cannot connect to the database:', err)
-}
 
 const app: Express = express()
 
@@ -68,4 +49,5 @@ app.use('/', carRoutes)
 app.use('/', userRoutes)
 
 strings.setLanguage(env.DEFAULT_LANGUAGE)
+
 export default app

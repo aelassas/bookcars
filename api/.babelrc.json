@@ -1,14 +1,15 @@
 {
     "presets": [
         [
-            "@babel/env",
+            "@babel/preset-env",
             {
                 "modules": false,
                 "targets": {
                     "node": "current"
                 }
             }
-        ]
+        ],
+        "@babel/preset-typescript"
     ],
     "plugins": [
         "add-import-extension"
