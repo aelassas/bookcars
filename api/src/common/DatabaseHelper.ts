@@ -37,7 +37,7 @@ export async function Connect(debug: boolean): Promise<boolean> {
  * @export
  * @async
  * @param {boolean} force
- * @returns {*}
+ * @returns {Promise<void>}
  */
 export async function Close(force: boolean): Promise<void> {
     await mongoose.connection.close(force)
