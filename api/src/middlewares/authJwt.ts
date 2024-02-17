@@ -28,6 +28,7 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
         console.log(err)
         res.status(401).send({ message: 'Unauthorized!' })
       } else {
+        // Token valid!
         next()
       }
     })
