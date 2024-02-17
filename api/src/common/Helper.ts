@@ -114,7 +114,20 @@ export function isFrontend(req: Request): boolean {
 /**
  * Get authentification cookie name.
  *
- * @param {?boolean} backend
+ * @param {Request} req
  * @returns {string}
  */
-export const getAuthCookieName = (req: Request): string => (isBackend(req) ? env.BACKEND_AUTH_COOKIE_NAME : env.FRONTEND_AUTH_COOKIE_NAME)
+export const getAuthCookieName = (req: Request): string => {
+    if (isBackend(req)) {
+        // Backend auth cookie name
+        return env.BACKEND_AUTH_COOKIE_NAME
+    }
+
+    if (isFrontend(req)) {
+        // Frontend auth cookie name
+        return env.FRONTEND_AUTH_COOKIE_NAME
+    }
+
+    // Mobile app and unit tests auth header name
+    return env.X_ACCESS_TOKEN
+}

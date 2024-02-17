@@ -122,7 +122,7 @@ export async function update(req: Request, res: Response) {
       car.additionalDriver = additionalDriver
 
       await car.save()
-      return res.sendStatus(200)
+      return res.json(car)
     }
     console.error('[car.update] Car not found:', _id)
     return res.sendStatus(204)
@@ -269,7 +269,7 @@ export async function updateImage(req: Request, res: Response) {
       await fs.writeFile(filepath, file.buffer)
       car.image = filename
       await car.save()
-      return res.sendStatus(200)
+      return res.json(filename)
     }
     console.error('[car.updateImage] Car not found:', id)
     return res.sendStatus(204)

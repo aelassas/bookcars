@@ -129,6 +129,13 @@ export const FRONTEND_AUTH_COOKIE_NAME = 'bc-x-access-token-frontend'
 export const BACKEND_AUTH_COOKIE_NAME = 'bc-x-access-token-backend'
 
 /**
+ * Mobile App and unit tests authentication header name.
+ *
+ * @type {"x-access-token"}
+ */
+export const X_ACCESS_TOKEN = 'x-access-token'
+
+/**
  * JWT secret. It should at least be 32 characters long, but the longer the better.
  *
  * @type {string}
