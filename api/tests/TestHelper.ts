@@ -2,13 +2,15 @@ import request from 'supertest'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
 import * as bookcarsTypes from 'bookcars-types'
+import { v1 as uuid } from 'uuid'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
 import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
 
-const ADMIN_EMAIL = 'admin@test.bookcars.ma'
+const ADMIN_EMAIL = `admin.${uuid()}@test.bookcars.ma`
+const USER_EMAIL = `user.${uuid()}@test.bookcars.ma`
 export const PASSWORD = 'Un1tTest5'
 export const LANGUAGE = 'en'
 export const PAGE = 1
@@ -24,32 +26,50 @@ export async function initializeDatabase() {
         password: passwordHash,
         type: bookcarsTypes.UserType.Admin,
     }
-    const user = new User(body)
+    // admin
+    let user = new User(body)
+    await user.save()
+    expect(user.id).toBeDefined()
+
+    // user
+    user = new User({ ...body, fullName: 'user', email: USER_EMAIL, type: bookcarsTypes.UserType.User })
     await user.save()
     expect(user.id).toBeDefined()
 }
 
 export async function clearDatabase() {
-    const res = await User.deleteOne({ email: ADMIN_EMAIL })
-    expect(res.deletedCount).toBe(1)
+    const res = await User.deleteMany({ email: { $in: [ADMIN_EMAIL, USER_EMAIL] } })
+    expect(res.deletedCount).toBe(2)
 }
 
-export async function signinAsAdmin() {
-    const APP_TYPE = 'backend'
+const getToken = (cookie: string) => {
+    const signedCookie = decodeURIComponent(cookie)
+    const token = cookieParser.signedCookie((signedCookie.match(`${env.X_ACCESS_TOKEN}=(s:.*?);`) ?? [])[1], env.COOKIE_SECRET) as string
+    return token
+}
 
+const signin = async (appType: bookcarsTypes.AppType, email: string) => {
     const signinRequest = await request(app)
-        .post(`/api/sign-in/${APP_TYPE}`)
+        .post(`/api/sign-in/${appType}`)
         .send({
-            email: ADMIN_EMAIL,
+            email,
             password: PASSWORD,
         })
 
     expect(signinRequest.statusCode).toBe(200)
     const cookies = signinRequest.headers['set-cookie'] as unknown as string[]
-    const signedCookie = decodeURIComponent(cookies[1])
-    const token = cookieParser.signedCookie((signedCookie.match(`${env.X_ACCESS_TOKEN}=(s:.*?);`) ?? [])[1], env.COOKIE_SECRET) as string
+    expect(cookies.length).toBeGreaterThan(1)
+    const token = getToken(cookies[1])
     expect(token).toBeDefined()
     return token
+}
+
+export async function signinAsAdmin() {
+    return signin(bookcarsTypes.AppType.Backend, ADMIN_EMAIL)
+}
+
+export async function signinAsUser() {
+    return signin(bookcarsTypes.AppType.Frontend, USER_EMAIL)
 }
 
 export async function signout(token: string) {
@@ -111,4 +131,8 @@ export async function createLocation(nameEN: string, nameFR: string) {
     await location.save()
     expect(location.id).toBeDefined()
     return location.id as string
+}
+
+export function getSupplierName() {
+    return `supplier.${uuid()}`
 }

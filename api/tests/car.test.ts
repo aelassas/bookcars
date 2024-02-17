@@ -32,8 +32,10 @@ beforeAll(async () => {
         await TestHelper.initializeDatabase()
 
         // create two suppliers
-        SUPPLIER1_ID = await TestHelper.createSupplier('supplier1@test.bookcars.ma', 'supplier1')
-        SUPPLIER2_ID = await TestHelper.createSupplier('supplier2@test.bookcars.ma', 'supplier2')
+        const supplier1Name = TestHelper.getSupplierName()
+        const supplier2Name = TestHelper.getSupplierName()
+        SUPPLIER1_ID = await TestHelper.createSupplier(`${supplier1Name}@test.bookcars.ma`, supplier1Name)
+        SUPPLIER2_ID = await TestHelper.createSupplier(`${supplier2Name}@test.bookcars.ma`, supplier2Name)
 
         // create two locations
         LOCATION1_ID = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
@@ -344,7 +346,3 @@ describe('DELETE /api/delete-car/:id', () => {
         await TestHelper.signout(token)
     })
 })
-
-// TODO other test suites empty bookcars
-
-// TODO other test suites empty movinin
