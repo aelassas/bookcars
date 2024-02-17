@@ -345,12 +345,6 @@ describe('DELETE /api/delete-car/:id', () => {
     })
 })
 
-// TODO movinin unit tests
-
-// TODO commit bookcars: Add unit tests
-
-// TODO commit movinin
-
 // TODO other test suites empty bookcars
 
 // TODO other test suites empty movinin
