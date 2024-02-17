@@ -133,7 +133,7 @@ export interface CreateCarPayload {
     type: string
     gearbox: string
     aircon: boolean
-    image: string
+    image?: string
     seats: number
     doors: number
     fuelPolicy: string
