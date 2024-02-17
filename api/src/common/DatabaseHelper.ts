@@ -2,7 +2,7 @@ import mongoose, { ConnectOptions } from 'mongoose'
 import * as env from '../config/env.config'
 
 /**
- * Connect to database
+ * Connect to database.
  *
  * @export
  * @async
@@ -32,7 +32,7 @@ export async function Connect(debug: boolean): Promise<boolean> {
 }
 
 /**
- * Close database connection
+ * Close database connection.
  *
  * @export
  * @async
