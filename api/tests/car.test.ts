@@ -32,10 +32,10 @@ beforeAll(async () => {
         await TestHelper.initializeDatabase()
 
         // create two suppliers
-        const supplier1Name = TestHelper.getSupplierName()
-        const supplier2Name = TestHelper.getSupplierName()
-        SUPPLIER1_ID = await TestHelper.createSupplier(`${supplier1Name}@test.bookcars.ma`, supplier1Name)
-        SUPPLIER2_ID = await TestHelper.createSupplier(`${supplier2Name}@test.bookcars.ma`, supplier2Name)
+        const supplierName1 = TestHelper.getSupplierName()
+        const supplierName2 = TestHelper.getSupplierName()
+        SUPPLIER1_ID = await TestHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
+        SUPPLIER2_ID = await TestHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName2)
 
         // create two locations
         LOCATION1_ID = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
