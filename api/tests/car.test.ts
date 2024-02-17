@@ -74,32 +74,34 @@ describe('POST /api/create-car', () => {
             fs.copyFile(IMAGE1_PATH, tempImage)
         }
 
+        const payload: bookcarsTypes.CreateCarPayload = {
+            name: 'BMW X1',
+            company: SUPPLIER1_ID,
+            minimumAge: 21,
+            locations: [LOCATION1_ID],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: IMAGE1,
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        }
+
         const res = await request(app)
             .post('/api/create-car')
             .set(env.X_ACCESS_TOKEN, token)
-            .send({
-                name: 'BMW X1',
-                company: SUPPLIER1_ID,
-                minimumAge: 21,
-                locations: [LOCATION1_ID],
-                price: 780,
-                deposit: 9500,
-                available: false,
-                type: bookcarsTypes.CarType.Diesel,
-                gearbox: bookcarsTypes.GearboxType.Automatic,
-                aircon: true,
-                image: IMAGE1,
-                seats: 5,
-                doors: 4,
-                fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
-                mileage: -1,
-                cancellation: 0,
-                amendments: 0,
-                theftProtection: 90,
-                collisionDamageWaiver: 120,
-                fullInsurance: 200,
-                additionalDriver: 200,
-            })
+            .send(payload)
 
         expect(res.statusCode).toBe(200)
         CAR_ID = res.body._id
@@ -112,32 +114,34 @@ describe('PUT /api/update-car', () => {
     it('should update a car', async () => {
         const token = await TestHelper.signinAsAdmin()
 
+        const payload: bookcarsTypes.UpdateCarPayload = {
+            _id: CAR_ID,
+            name: 'BMW X5',
+            company: SUPPLIER2_ID,
+            minimumAge: 23,
+            locations: [LOCATION2_ID],
+            price: 980,
+            deposit: 10500,
+            available: true,
+            type: bookcarsTypes.CarType.Gasoline,
+            gearbox: bookcarsTypes.GearboxType.Manual,
+            aircon: false,
+            seats: 4,
+            doors: 5,
+            fuelPolicy: bookcarsTypes.FuelPolicy.LikeForlike,
+            mileage: 30000,
+            cancellation: 70,
+            amendments: 30,
+            theftProtection: 100,
+            collisionDamageWaiver: 130,
+            fullInsurance: 210,
+            additionalDriver: 220,
+        }
+
         const res = await request(app)
             .put('/api/update-car')
             .set(env.X_ACCESS_TOKEN, token)
-            .send({
-                _id: CAR_ID,
-                name: 'BMW X5',
-                company: SUPPLIER2_ID,
-                minimumAge: 23,
-                locations: [LOCATION2_ID],
-                price: 980,
-                deposit: 10500,
-                available: true,
-                type: bookcarsTypes.CarType.Gasoline,
-                gearbox: bookcarsTypes.GearboxType.Manual,
-                aircon: false,
-                seats: 4,
-                doors: 5,
-                fuelPolicy: bookcarsTypes.FuelPolicy.LikeForlike,
-                mileage: 30000,
-                cancellation: 70,
-                amendments: 30,
-                theftProtection: 100,
-                collisionDamageWaiver: 130,
-                fullInsurance: 210,
-                additionalDriver: 220,
-            })
+            .send(payload)
 
         expect(res.statusCode).toBe(200)
 
@@ -259,19 +263,19 @@ describe('POST /api/cars/:page/:size', () => {
     it('should return cars', async () => {
         const token = await TestHelper.signinAsAdmin()
 
+        const payload: bookcarsTypes.GetCarsPayload = {
+            companies: [SUPPLIER2_ID],
+            fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+            gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
+            mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
+            availability: [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable],
+            deposit: -1,
+        }
+
         const res = await request(app)
             .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
-            .send(
-                {
-                    companies: [SUPPLIER2_ID],
-                    fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
-                    gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
-                    mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
-                    availability: [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable],
-                    deposit: -1,
-                },
-            )
+            .send(payload)
 
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
@@ -284,15 +288,15 @@ describe('POST /api/booking-cars/:page/:size', () => {
     it('should return booking cars', async () => {
         const token = await TestHelper.signinAsAdmin()
 
+        const payload: bookcarsTypes.GetBookingCarsPayload = {
+            company: SUPPLIER2_ID,
+            pickupLocation: LOCATION2_ID,
+        }
+
         const res = await request(app)
             .post(`/api/booking-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
-            .send(
-                {
-                    company: SUPPLIER2_ID,
-                    pickupLocation: LOCATION2_ID,
-                },
-            )
+            .send(payload)
 
         expect(res.statusCode).toBe(200)
         expect(res.body.length).toBeGreaterThan(0)
@@ -302,18 +306,17 @@ describe('POST /api/booking-cars/:page/:size', () => {
 
 describe('POST /api/frontend-cars/:page/:size', () => {
     it('should return frontend cars', async () => {
+        const payload: bookcarsTypes.GetCarsPayload = {
+            companies: [SUPPLIER2_ID],
+            pickupLocation: LOCATION2_ID,
+            fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+            gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
+            mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
+            deposit: -1,
+        }
         const res = await request(app)
             .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
-            .send(
-                {
-                    companies: [SUPPLIER2_ID],
-                    pickupLocation: LOCATION2_ID,
-                    fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
-                    gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
-                    mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
-                    deposit: -1,
-                },
-            )
+            .send(payload)
 
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
