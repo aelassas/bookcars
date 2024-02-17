@@ -16,6 +16,9 @@ export const LANGUAGE = 'en'
 export const PAGE = 1
 export const SIZE = 1
 
+let ADMIN_USER_ID: string
+let USER_ID: string
+
 export async function initializeDatabase() {
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(PASSWORD, salt)
@@ -30,11 +33,21 @@ export async function initializeDatabase() {
     let user = new User(body)
     await user.save()
     expect(user.id).toBeDefined()
+    ADMIN_USER_ID = user.id
 
     // user
     user = new User({ ...body, fullName: 'user', email: USER_EMAIL, type: bookcarsTypes.UserType.User })
     await user.save()
     expect(user.id).toBeDefined()
+    USER_ID = user.id
+}
+
+export function getAdminUserId() {
+    return ADMIN_USER_ID
+}
+
+export function getUserId() {
+    return USER_ID
 }
 
 export async function clearDatabase() {
