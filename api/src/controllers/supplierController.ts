@@ -71,7 +71,14 @@ export async function update(req: Request, res: Response) {
       supplier.payLater = payLater
 
       await supplier.save()
-      return res.sendStatus(200)
+      return res.json({
+        _id,
+        fullName: supplier.fullName,
+        phone: supplier.phone,
+        location: supplier.location,
+        bio: supplier.bio,
+        payLater: supplier.payLater,
+      })
     }
     console.error('[supplier.update] Supplier not found:', _id)
     return res.sendStatus(204)
