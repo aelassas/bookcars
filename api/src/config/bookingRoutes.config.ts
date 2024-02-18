@@ -1,6 +1,6 @@
 export default {
   create: '/api/create-booking',
-  book: '/api/book',
+  checkout: '/api/checkout',
   update: '/api/update-booking',
   updateStatus: '/api/update-booking-status',
   delete: '/api/delete-bookings',

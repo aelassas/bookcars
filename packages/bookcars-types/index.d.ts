@@ -62,7 +62,7 @@ export interface Booking {
     cancelRequest?: boolean;
     price?: number;
 }
-export interface BookPayload {
+export interface CheckoutPayload {
     driver?: User;
     booking?: Booking;
     additionalDriver?: AdditionalDriver;
@@ -115,7 +115,7 @@ export interface CreateCarPayload {
     type: string;
     gearbox: string;
     aircon: boolean;
-    image: string;
+    image?: string;
     seats: number;
     doors: number;
     fuelPolicy: string;
