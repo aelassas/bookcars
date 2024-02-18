@@ -144,8 +144,6 @@ describe('POST /api/create-booking', () => {
 
 describe('POST /api/checkout', () => {
     it('should checkout', async () => {
-        const token = await TestHelper.signinAsUser()
-
         let bookings = await Booking.find({ driver: USER_ID })
         expect(bookings.length).toBe(1)
 
@@ -172,15 +170,12 @@ describe('POST /api/checkout', () => {
 
         const res = await request(app)
             .post('/api/checkout')
-            .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
-        bookings = await Booking.find({ driver: USER_ID })
-        expect(bookings.length).toBeGreaterThan(1)
 
         expect(res.statusCode).toBe(200)
 
-        await TestHelper.signout(token)
+        bookings = await Booking.find({ driver: USER_ID })
+        expect(bookings.length).toBeGreaterThan(1)
     })
 })
 
