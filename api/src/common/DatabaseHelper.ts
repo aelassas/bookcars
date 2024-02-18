@@ -11,6 +11,7 @@ import * as env from '../config/env.config'
  */
 export async function Connect(debug: boolean): Promise<boolean> {
     let options: ConnectOptions = {}
+
     if (env.DB_SSL) {
         options = {
             tls: true,
