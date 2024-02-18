@@ -841,14 +841,14 @@ function CheckoutScreen({ navigation, route }: NativeStackScreenProps<StackParam
         }
       }
 
-      const payload: bookcarsTypes.BookPayload = {
+      const payload: bookcarsTypes.CheckoutPayload = {
         driver,
         booking,
         additionalDriver: _additionalDriver,
         payLater,
       }
 
-      const status = await BookingService.book(payload)
+      const status = await BookingService.checkout(payload)
 
       if (status === 200) {
         setLoading(false)
