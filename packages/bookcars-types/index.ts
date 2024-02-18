@@ -72,7 +72,7 @@ export interface Booking {
     price?: number
 }
 
-export interface BookPayload {
+export interface CheckoutPayload {
     driver?: User
     booking?: Booking
     additionalDriver?: AdditionalDriver

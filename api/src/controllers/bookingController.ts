@@ -102,10 +102,10 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
  * @param {Response} res
  * @returns {unknown}
  */
-export async function book(req: Request, res: Response) {
+export async function checkout(req: Request, res: Response) {
   try {
     let user: env.User | null
-    const { body }: { body: bookcarsTypes.BookPayload } = req
+    const { body }: { body: bookcarsTypes.CheckoutPayload } = req
     const { driver } = body
 
     if (!body.booking) {
@@ -437,7 +437,7 @@ export async function update(req: Request, res: Response) {
         await notifyDriver(booking)
       }
 
-      return res.sendStatus(200)
+      return res.json(booking)
     }
     console.error('[booking.update] Booking not found:', body.booking._id)
     return res.sendStatus(204)
@@ -606,7 +606,7 @@ export async function getBooking(req: Request, res: Response) {
 export async function getBookings(req: Request, res: Response) {
   try {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
-    const page = Number.parseInt(req.params.page, 10) + 1
+    const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
     const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
     const {
@@ -624,6 +624,7 @@ export async function getBookings(req: Request, res: Response) {
     const $match: mongoose.FilterQuery<any> = {
       $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
     }
+
     if ($match.$and) {
       if (user) {
         $match.$and.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })

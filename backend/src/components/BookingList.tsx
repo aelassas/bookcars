@@ -119,7 +119,7 @@ function BookingList({
 
         const data = await BookingService.getBookings(
           payload,
-          _page,
+          _page + 1,
           _pageSize,
         )
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
