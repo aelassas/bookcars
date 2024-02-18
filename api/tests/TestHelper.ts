@@ -14,7 +14,7 @@ const USER_EMAIL = `user.${uuid()}@test.bookcars.ma`
 export const PASSWORD = 'Un1tTest5'
 export const LANGUAGE = 'en'
 export const PAGE = 1
-export const SIZE = 1
+export const SIZE = 30
 
 let ADMIN_USER_ID: string
 let USER_ID: string
