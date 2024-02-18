@@ -22,6 +22,7 @@ export async function Connect(debug: boolean): Promise<boolean> {
 
     mongoose.set('debug', debug)
     mongoose.Promise = globalThis.Promise
+
     try {
         await mongoose.connect(env.DB_URI, options)
         console.log('Database is connected')
