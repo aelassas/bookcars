@@ -1,11 +1,19 @@
 import 'dotenv/config'
 import request from 'supertest'
+import url from 'url'
+import path from 'path'
+import fs from 'node:fs/promises'
 import * as bookcarsTypes from 'bookcars-types'
 import * as DatabaseHelper from '../src/common/DatabaseHelper'
 import * as TestHelper from './TestHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
+import * as Helper from '../src/common/Helper'
 import User from '../src/models/User'
+import Car from '../src/models/Car'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 let SUPPLIER1_ID: string
 let SUPPLIER2_ID: string
@@ -149,19 +157,67 @@ describe('DELETE /api/delete-supplier/:id', () => {
         const token = await TestHelper.signinAsAdmin()
 
         const supplierName = TestHelper.getSupplierName()
-        const _id = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        const supplierId = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
 
-        let supplier = await User.findById(_id)
+        let supplier = await User.findById(supplierId)
         expect(supplier).not.toBeNull()
 
+        const avatarName = 'avatar1.jpg'
+        const avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+
+        const avatar = path.join(env.CDN_USERS, avatarName)
+        if (!await Helper.exists(avatar)) {
+            fs.copyFile(avatarPath, avatar)
+        }
+        supplier!.avatar = avatarName
+        await supplier?.save()
+
+        const locationId = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
+
+        const carImageName = 'bmw-x1.jpg'
+        const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
+
+        const car = new Car({
+            name: 'BMW X1',
+            company: supplierId,
+            minimumAge: 21,
+            locations: [locationId],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: carImageName,
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+
+        const carImage = path.join(env.CDN_CARS, carImageName)
+        if (!await Helper.exists(carImage)) {
+            fs.copyFile(carImagePath, carImage)
+        }
+
+        await car.save()
+
         const res = await request(app)
-            .delete(`/api/delete-supplier/${_id}`)
+            .delete(`/api/delete-supplier/${supplierId}`)
             .set(env.X_ACCESS_TOKEN, token)
 
         expect(res.statusCode).toBe(200)
 
-        supplier = await User.findById(_id)
+        supplier = await User.findById(supplierId)
         expect(supplier).toBeNull()
+
+        await TestHelper.deleteLocation(locationId)
 
         await TestHelper.signout(token)
     })
