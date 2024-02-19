@@ -8,9 +8,20 @@ import * as env from '../src/config/env.config'
 import User from '../src/models/User'
 import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
+import Notification from '../src/models/Notification'
+import NotificationCounter from '../src/models/NotificationCounter'
 
-const ADMIN_EMAIL = `admin.${uuid()}@test.bookcars.ma`
-const USER_EMAIL = `user.${uuid()}@test.bookcars.ma`
+export function getName(prefix: string) {
+    expect(prefix.length).toBeGreaterThan(1)
+    return `${prefix}.${uuid()}`
+}
+
+export function getSupplierName() {
+    return getName('supplier')
+}
+
+const ADMIN_EMAIL = `${getName('admin')}@test.bookcars.ma`
+const USER_EMAIL = `${getName('user')}@test.bookcars.ma`
 export const PASSWORD = 'Un1tTest5'
 export const LANGUAGE = 'en'
 export const PAGE = 1
@@ -53,24 +64,28 @@ export function getUserId() {
 export async function clearDatabase() {
     const res = await User.deleteMany({ email: { $in: [ADMIN_EMAIL, USER_EMAIL] } })
     expect(res.deletedCount).toBe(2)
+    await Notification.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
+    await NotificationCounter.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })
 }
 
-const getToken = (cookie: string) => {
+export function getToken(cookie: string) {
     const signedCookie = decodeURIComponent(cookie)
     const token = cookieParser.signedCookie((signedCookie.match(`${env.X_ACCESS_TOKEN}=(s:.*?);`) ?? [])[1], env.COOKIE_SECRET) as string
     return token
 }
 
 const signin = async (appType: bookcarsTypes.AppType, email: string) => {
-    const signinRequest = await request(app)
-        .post(`/api/sign-in/${appType}`)
-        .send({
-            email,
-            password: PASSWORD,
-        })
+    const payload: bookcarsTypes.SignInPayload = {
+        email,
+        password: PASSWORD,
+    }
 
-    expect(signinRequest.statusCode).toBe(200)
-    const cookies = signinRequest.headers['set-cookie'] as unknown as string[]
+    const res = await request(app)
+        .post(`/api/sign-in/${appType}`)
+        .send(payload)
+
+    expect(res.statusCode).toBe(200)
+    const cookies = res.headers['set-cookie'] as unknown as string[]
     expect(cookies.length).toBeGreaterThan(1)
     const token = getToken(cookies[1])
     expect(token).toBeDefined()
@@ -86,10 +101,14 @@ export async function signinAsUser() {
 }
 
 export async function signout(token: string) {
-    const signoutRequest = await request(app)
+    const res = await request(app)
         .post('/api/sign-out')
-        .set(env.X_ACCESS_TOKEN, token)
-    expect(signoutRequest.statusCode).toBe(200)
+        .set('Cookie', [`${env.X_ACCESS_TOKEN}=${token};`])
+    expect(res.statusCode).toBe(200)
+
+    const cookies = res.headers['set-cookie'] as unknown as string[]
+    expect(cookies.length).toBe(1)
+    expect(cookies[0]).toContain(`${env.X_ACCESS_TOKEN}=;`)
 }
 
 export async function createSupplier(email: string, fullName: string) {
@@ -111,6 +130,9 @@ export async function createSupplier(email: string, fullName: string) {
 export async function deleteSupplier(id: string) {
     const res = await User.deleteOne({ _id: id })
     expect(res.deletedCount).toBe(1)
+
+    await Notification.deleteMany({ user: id })
+    await NotificationCounter.deleteMany({ user: id })
 }
 
 export async function deleteLocation(id: string) {
@@ -146,6 +168,6 @@ export async function createLocation(nameEN: string, nameFR: string) {
     return location.id as string
 }
 
-export function getSupplierName() {
-    return `supplier.${uuid()}`
+export function GetRandomEmail() {
+    return `random.${uuid()}@test.bookcars.ma`
 }
