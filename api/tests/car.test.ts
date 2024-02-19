@@ -203,8 +203,10 @@ describe('POST /api/create-car-image', () => {
 
         expect(res.statusCode).toBe(200)
         const filename = res.body as string
-        const imageExists = await Helper.exists(path.resolve(env.CDN_TEMP_CARS, filename))
+        const filePath = path.resolve(env.CDN_TEMP_CARS, filename)
+        const imageExists = await Helper.exists(filePath)
         expect(imageExists).toBeTruthy()
+        await fs.unlink(filePath)
 
         await TestHelper.signout(token)
     })
