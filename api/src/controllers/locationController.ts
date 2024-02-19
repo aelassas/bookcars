@@ -62,7 +62,7 @@ export async function create(req: Request, res: Response) {
 
     const location = new Location({ values })
     await location.save()
-    return res.sendStatus(200)
+    return res.send(location)
   } catch (err) {
     console.error(`[location.create] ${strings.DB_ERROR} ${req.body}`, err)
     return res.status(400).send(strings.DB_ERROR + err)
@@ -102,8 +102,9 @@ export async function update(req: Request, res: Response) {
           await location.save()
         }
       }
-      return res.sendStatus(200)
+      return res.json(location)
     }
+
     console.error('[location.update] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
