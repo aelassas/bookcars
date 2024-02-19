@@ -8,7 +8,7 @@
     "dev": "nodemon",
     "build": "rimraf dist && tsc && babel dist -d dist",
     "start": "npm run build && node dist/src",
-    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test": "rimraf coverage && cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "lint": "eslint --ext .ts .",
     "ncu": "ncu -u"
   },

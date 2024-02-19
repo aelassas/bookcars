@@ -8,7 +8,7 @@ const config = {
         './tests/',
     ],
     collectCoverage: true,
-    coverageReporters: ['text', 'cobertura'],
+    coverageReporters: ['cobertura'],
 }
 
 export default config
