@@ -128,7 +128,7 @@ export async function deleteSupplier(req: Request, res: Response) {
         }
       }
     } else {
-      return res.sendStatus(404)
+      return res.sendStatus(204)
     }
     return res.sendStatus(200)
   } catch (err) {
