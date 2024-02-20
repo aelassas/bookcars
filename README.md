@@ -55,10 +55,10 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
    2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
 8. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
-9. [Run Unit Tests](https://github.com/aelassas/bookcars/wiki/Run-Unit-Tests)
-10. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
-11. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
-12. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+9. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
+10. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
+11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+12. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 
 ### License
 
