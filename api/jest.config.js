@@ -8,7 +8,8 @@ const config = {
         './tests/',
     ],
     collectCoverage: true,
-    coverageReporters: ['cobertura'],
+    coverageReporters: ['cobertura', 'html'],
+    testTimeout: 15000,
 }
 
 export default config

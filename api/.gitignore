@@ -16,3 +16,7 @@ npm-debug.log*
 
 # eslint
 .eslintcache
+
+# jest
+/coverage
+!/coverage/cobertura-coverage.xml
