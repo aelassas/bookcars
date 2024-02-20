@@ -162,9 +162,6 @@ export async function create(req: Request, res: Response) {
         const newPath = path.join(env.CDN_USERS, filename)
 
         try {
-          if (!await Helper.exists(env.CDN_USERS)) {
-            await fs.mkdir(env.CDN_USERS, { recursive: true })
-          }
           await fs.rename(avatar, newPath)
           user.avatar = filename
           await user.save()
@@ -907,10 +904,6 @@ export async function createAvatar(req: Request, res: Response) {
       return res.status(204).send(msg)
     }
 
-    if (!(await Helper.exists(env.CDN_TEMP_USERS))) {
-      await fs.mkdir(env.CDN_TEMP_USERS, { recursive: true })
-    }
-
     const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_USERS, filename)
 
@@ -944,10 +937,6 @@ export async function updateAvatar(req: Request, res: Response) {
     const user = await User.findById(userId)
 
     if (user) {
-      if (!(await Helper.exists(env.CDN_USERS))) {
-        await fs.mkdir(env.CDN_USERS, { recursive: true })
-      }
-
       if (user.avatar && !user.avatar.startsWith('http')) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
 

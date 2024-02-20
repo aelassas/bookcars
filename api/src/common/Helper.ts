@@ -36,6 +36,19 @@ export async function exists(filePath: string): Promise<boolean> {
 }
 
 /**
+ * Create a folder recursively.
+ *
+ * @export
+ * @async
+ * @param {string} folder
+ * @param {boolean} recursive
+ * @returns {Promise<void>}
+ */
+export async function mkdir(folder: string) {
+    await fs.mkdir(folder, { recursive: true })
+}
+
+/**
  * Removes a leading and trailing line terminator character from a string.
  *
  * @export

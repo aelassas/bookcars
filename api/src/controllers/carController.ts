@@ -33,10 +33,6 @@ export async function create(req: Request, res: Response) {
     await car.save()
 
     if (car.image) {
-      if (!(await Helper.exists(env.CDN_CARS))) {
-        await fs.mkdir(env.CDN_CARS, { recursive: true })
-      }
-
       const image = path.join(env.CDN_TEMP_CARS, body.image)
 
       if (await Helper.exists(image)) {
@@ -124,6 +120,7 @@ export async function update(req: Request, res: Response) {
       await car.save()
       return res.json(car)
     }
+
     console.error('[car.update] Car not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
@@ -187,7 +184,7 @@ export async function deleteCar(req: Request, res: Response) {
       }
       await Booking.deleteMany({ car: car._id })
     } else {
-      return res.sendStatus(404)
+      return res.sendStatus(204)
     }
     return res.sendStatus(200)
   } catch (err) {
@@ -211,10 +208,6 @@ export async function createImage(req: Request, res: Response) {
       const msg = '[car.createImage] req.file not found'
       console.error(msg)
       return res.status(400).send(msg)
-    }
-
-    if (!(await Helper.exists(env.CDN_TEMP_CARS))) {
-      await fs.mkdir(env.CDN_TEMP_CARS, { recursive: true })
     }
 
     const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
@@ -252,10 +245,6 @@ export async function updateImage(req: Request, res: Response) {
     const car = await Car.findById(id)
 
     if (car) {
-      if (!(await Helper.exists(env.CDN_CARS))) {
-        await fs.mkdir(env.CDN_CARS, { recursive: true })
-      }
-
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
         if (await Helper.exists(image)) {
@@ -271,6 +260,7 @@ export async function updateImage(req: Request, res: Response) {
       await car.save()
       return res.json(filename)
     }
+
     console.error('[car.updateImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
