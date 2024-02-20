@@ -5,7 +5,6 @@ import path from 'path'
 import fs from 'node:fs/promises'
 import { v1 as uuid } from 'uuid'
 import * as bookcarsTypes from 'bookcars-types'
-import mongoose from 'mongoose'
 import app from '../src/app'
 import * as DatabaseHelper from '../src/common/DatabaseHelper'
 import * as TestHelper from './TestHelper'
@@ -176,7 +175,7 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
         expect(res.statusCode).toBe(204)
 
         res = await request(app)
-            .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${new mongoose.Types.ObjectId().toString()}/${USER1_EMAIL}/${token}`)
+            .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${TestHelper.GetRandromObjectIdAsString()}/${USER1_EMAIL}/${token}`)
         expect(res.statusCode).toBe(204)
     })
 })
@@ -213,7 +212,7 @@ describe('POST /api/activate', () => {
 
         expect(res.statusCode).toBe(204)
 
-        payload.userId = new mongoose.Types.ObjectId().toString()
+        payload.userId = TestHelper.GetRandromObjectIdAsString()
 
         res = await request(app)
             .post('/api/activate')

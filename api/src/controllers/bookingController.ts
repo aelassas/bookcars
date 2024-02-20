@@ -116,14 +116,10 @@ export async function checkout(req: Request, res: Response) {
     if (driver) {
       driver.verified = false
       driver.blacklisted = false
+      driver.type = bookcarsTypes.UserType.User
 
       user = new User(driver)
       await user.save()
-
-      if (!user._id) {
-        console.log('user._id not found', body.booking)
-        return res.sendStatus(400)
-      }
 
       const token = new Token({ user: user._id, token: uuid() })
       await token.save()
@@ -221,14 +217,14 @@ export async function checkout(req: Request, res: Response) {
     }
     await MailHelper.sendMail(mailOptions)
 
-    // Notify company
-    const company = await User.findById(booking.company)
-    if (!company) {
+    // Notify supplier
+    const supplier = await User.findById(booking.company)
+    if (!supplier) {
       console.log(`Supplier ${booking.company} not found`)
       return res.sendStatus(204)
     }
-    strings.setLanguage(company.language)
-    await notifySupplier(user, booking._id.toString(), company, strings.BOOKING_NOTIFICATION)
+    strings.setLanguage(supplier.language)
+    await notifySupplier(user, booking._id.toString(), supplier, strings.BOOKING_NOTIFICATION)
 
     return res.sendStatus(200)
   } catch (err) {
@@ -439,6 +435,7 @@ export async function update(req: Request, res: Response) {
 
       return res.json(booking)
     }
+
     console.error('[booking.update] Booking not found:', body.booking._id)
     return res.sendStatus(204)
   } catch (err) {
@@ -586,7 +583,8 @@ export async function getBooking(req: Request, res: Response) {
 
       return res.json(booking)
     }
-    console.error('[booking.getBooking] Car not found:', id)
+
+    console.error('[booking.getBooking] Booking not found:', id)
     return res.sendStatus(204)
   } catch (err) {
     console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err)

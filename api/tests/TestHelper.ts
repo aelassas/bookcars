@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
 import * as bookcarsTypes from 'bookcars-types'
 import { v1 as uuid } from 'uuid'
+import mongoose from 'mongoose'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
@@ -22,6 +23,7 @@ export function getSupplierName() {
 
 const ADMIN_EMAIL = `${getName('admin')}@test.bookcars.ma`
 const USER_EMAIL = `${getName('user')}@test.bookcars.ma`
+export const USER_FULL_NAME = 'user'
 export const PASSWORD = 'Un1tTest5'
 export const LANGUAGE = 'en'
 export const PAGE = 1
@@ -47,7 +49,7 @@ export async function initializeDatabase() {
     ADMIN_USER_ID = user.id
 
     // user
-    user = new User({ ...body, fullName: 'user', email: USER_EMAIL, type: bookcarsTypes.UserType.User })
+    user = new User({ ...body, fullName: USER_FULL_NAME, email: USER_EMAIL, type: bookcarsTypes.UserType.User })
     await user.save()
     expect(user.id).toBeDefined()
     USER_ID = user.id
@@ -170,4 +172,12 @@ export async function createLocation(nameEN: string, nameFR: string) {
 
 export function GetRandomEmail() {
     return `random.${uuid()}@test.bookcars.ma`
+}
+
+export function GetRandromObjectId() {
+    return new mongoose.Types.ObjectId()
+}
+
+export function GetRandromObjectIdAsString() {
+    return GetRandromObjectId().toString()
 }
