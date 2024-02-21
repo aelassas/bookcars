@@ -12,7 +12,7 @@ import * as Helper from '../common/Helper'
  * @param {?string} [defaultValue]
  * @returns {string}
  */
-const __env__ = (name: string, required?: boolean, defaultValue?: string): string => {
+export const __env__ = (name: string, required?: boolean, defaultValue?: string): string => {
     const value = process.env[name]
     if (required && !value) {
         throw new Error(`'${name} not found`)
