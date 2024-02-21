@@ -74,7 +74,6 @@ describe('POST /api/create-car', () => {
         if (!await Helper.exists(tempImage)) {
             fs.copyFile(IMAGE1_PATH, tempImage)
         }
-
         const payload: bookcarsTypes.CreateCarPayload = {
             name: 'BMW X1',
             company: SUPPLIER1_ID,
@@ -117,6 +116,12 @@ describe('POST /api/create-car', () => {
             .post('/api/create-car')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
+        expect(res.statusCode).toBe(400)
+
+        res = await request(app)
+            .post('/api/create-car')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send({ image: 'image.jpg' })
         expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
@@ -184,6 +189,11 @@ describe('PUT /api/update-car', () => {
             .send(payload)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .put('/api/update-car')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -207,6 +217,11 @@ describe('POST /api/delete-car-image/:id', () => {
             .post(`/api/delete-car-image/${TestHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .post('/api/delete-car-image/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -269,6 +284,12 @@ describe('POST /api/update-car-image/:id', () => {
             .attach('image', IMAGE1_PATH)
         expect(res.statusCode).toBe(200)
 
+        res = await request(app)
+            .post('/api/update-car-image/0')
+            .set(env.X_ACCESS_TOKEN, token)
+            .attach('image', IMAGE1_PATH)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -281,12 +302,17 @@ describe('POST /api/delete-temp-car-image/:image', () => {
         if (!await Helper.exists(tempImage)) {
             fs.copyFile(IMAGE1_PATH, tempImage)
         }
-        const res = await request(app)
+        let res = await request(app)
             .post(`/api/delete-temp-car-image/${IMAGE1}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
         const tempImageExists = await Helper.exists(tempImage)
         expect(tempImageExists).toBeFalsy()
+
+        res = await request(app)
+            .post('/api/delete-temp-car-image/unknown.jpg')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -302,6 +328,10 @@ describe('GET /api/car/:id/:language', () => {
         res = await request(app)
             .get(`/api/car/${TestHelper.GetRandromObjectIdAsString()}/${TestHelper.LANGUAGE}`)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .get(`/api/car/0/${TestHelper.LANGUAGE}`)
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -324,6 +354,11 @@ describe('POST /api/cars/:page/:size', () => {
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+        res = await request(app)
+            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         payload.mileage = [bookcarsTypes.Mileage.Unlimited]
         res = await request(app)
@@ -394,14 +429,19 @@ describe('POST /api/booking-cars/:page/:size', () => {
             company: SUPPLIER2_ID,
             pickupLocation: LOCATION2_ID,
         }
-
-        const res = await request(app)
+        let res = await request(app)
             .post(`/api/booking-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
         expect(res.statusCode).toBe(200)
         expect(res.body.length).toBeGreaterThan(0)
+
+        res = await request(app)
+            .post(`/api/booking-cars/unknown/${TestHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -421,6 +461,10 @@ describe('POST /api/frontend-cars/:page/:size', () => {
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+        res = await request(app)
+            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+        expect(res.statusCode).toBe(400)
 
         payload.mileage = [bookcarsTypes.Mileage.Unlimited]
         res = await request(app)
@@ -480,12 +524,21 @@ describe('GET /api/check-car/:id', () => {
             additionalDriver: true,
         })
         await booking.save()
-
         res = await request(app)
             .get(`/api/check-car/${CAR_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
         await Booking.deleteOne({ _id: booking._id })
+
+        res = await request(app)
+            .get('/api/check-car/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
+        res = await request(app)
+            .get('/api/check-car/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -504,6 +557,16 @@ describe('DELETE /api/delete-car/:id', () => {
             .delete(`/api/delete-car/${TestHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .delete('/api/delete-car/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
+        res = await request(app)
+            .delete('/api/delete-car/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
