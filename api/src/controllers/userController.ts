@@ -901,7 +901,7 @@ export async function createAvatar(req: Request, res: Response) {
     if (!req.file) {
       const msg = 'req.file not found'
       console.error(`[user.createAvatar] ${msg}`)
-      return res.status(204).send(msg)
+      return res.status(400).send(msg)
     }
 
     const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
@@ -931,7 +931,7 @@ export async function updateAvatar(req: Request, res: Response) {
     if (!req.file) {
       const msg = 'req.file not found'
       console.error(`[user.createAvatar] ${msg}`)
-      return res.status(204).send(msg)
+      return res.status(400).send(msg)
     }
 
     const user = await User.findById(userId)
