@@ -17,7 +17,7 @@ let NOTIFICATION2_ID: string
 //
 beforeAll(async () => {
     if (await DatabaseHelper.Connect(false)) {
-        await TestHelper.initializeDatabase()
+        await TestHelper.initialize()
         ADMIN_USER_ID = TestHelper.getAdminUserId()
         const supplierName = TestHelper.getSupplierName()
         SUPPLIER_ID = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
@@ -38,7 +38,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.clearDatabase()
+    await TestHelper.close()
 
     await TestHelper.deleteSupplier(SUPPLIER_ID)
 

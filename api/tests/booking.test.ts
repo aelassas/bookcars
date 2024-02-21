@@ -35,7 +35,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 //
 beforeAll(async () => {
     if (await DatabaseHelper.Connect(false)) {
-        await TestHelper.initializeDatabase()
+        await TestHelper.initialize()
 
         // create a supplier
         const supplierName = TestHelper.getSupplierName()
@@ -88,7 +88,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.clearDatabase()
+    await TestHelper.close()
 
     // delete the supplier
     await TestHelper.deleteSupplier(SUPPLIER_ID)

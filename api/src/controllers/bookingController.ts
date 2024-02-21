@@ -643,7 +643,7 @@ export async function getBookings(req: Request, res: Response) {
         $match.$and.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
       }
       if (keyword) {
-        const isObjectId = mongoose.isValidObjectId(keyword)
+        const isObjectId = Helper.isValidObjectId(keyword)
         if (isObjectId) {
           $match.$and.push({
             _id: { $eq: new mongoose.Types.ObjectId(keyword) },

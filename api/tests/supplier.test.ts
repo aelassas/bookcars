@@ -24,7 +24,7 @@ let SUPPLIER1_NAME: string
 //
 beforeAll(async () => {
     if (await DatabaseHelper.Connect(false)) {
-        await TestHelper.initializeDatabase()
+        await TestHelper.initialize()
 
         // create two suppliers
         SUPPLIER1_NAME = TestHelper.getSupplierName()
@@ -38,7 +38,7 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.clearDatabase()
+    await TestHelper.close()
 
     // delete suppliers
     await TestHelper.deleteSupplier(SUPPLIER1_ID)
