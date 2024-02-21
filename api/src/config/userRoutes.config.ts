@@ -1,4 +1,4 @@
-export default {
+const routes = {
   create: '/api/create-user',
   checkToken: '/api/check-token/:type/:userId/:email/:token',
   deleteTokens: '/api/delete-tokens/:userId',
@@ -28,3 +28,5 @@ export default {
   checkPassword: '/api/check-password/:id/:password',
   signout: '/api/sign-out',
 }
+
+export default routes

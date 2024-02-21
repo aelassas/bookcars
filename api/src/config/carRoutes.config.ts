@@ -1,4 +1,4 @@
-export default {
+const routes = {
   create: '/api/create-car',
   update: '/api/update-car',
   delete: '/api/delete-car/:id',
@@ -12,3 +12,5 @@ export default {
   getFrontendCars: '/api/frontend-cars/:page/:size',
   checkCar: '/api/check-car/:id',
 }
+
+export default routes

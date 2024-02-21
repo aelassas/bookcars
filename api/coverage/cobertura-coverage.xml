@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1463" lines-covered="1446" line-rate="0.9883" branches-valid="527" branches-covered="443" branch-rate="0.8406" timestamp="1708554582926" complexity="0" version="0.1">
+<coverage lines-valid="1469" lines-covered="1452" line-rate="0.9884000000000001" branches-valid="527" branches-covered="443" branch-rate="0.8406" timestamp="1708554964440" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -217,12 +217,14 @@
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
         <class name="carRoutes.config.ts" filename="src\config\carRoutes.config.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
         <class name="env.config.ts" filename="src\config\env.config.ts" line-rate="1" branch-rate="1">
@@ -279,24 +281,28 @@
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
         <class name="notificationRoutes.config.ts" filename="src\config\notificationRoutes.config.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
         <class name="supplierRoutes.config.ts" filename="src\config\supplierRoutes.config.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
         <class name="userRoutes.config.ts" filename="src\config\userRoutes.config.ts" line-rate="1" branch-rate="1">
           <methods>
           </methods>
           <lines>
+            <line number="1" hits="7" branch="false"/>
           </lines>
         </class>
       </classes>
