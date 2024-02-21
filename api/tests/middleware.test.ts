@@ -44,6 +44,12 @@ describe('GET /api/user/:id', () => {
         const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.BACKEND_AUTH_COOKIE_NAME)
 
         res = await request(app)
+            .post(`/api/sign-in/${bookcarsTypes.AppType.Backend}`)
+            .set('Origin', env.BACKEND_HOST)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+
+        res = await request(app)
             .get(`/api/user/${USER_ID}`)
             .set('Origin', env.BACKEND_HOST)
             .set('Cookie', cookie)
@@ -66,6 +72,12 @@ describe('GET /api/user/:id', () => {
         const cookies = res.headers['set-cookie'] as unknown as string[]
         expect(cookies.length).toBeGreaterThan(1)
         const cookie = cookies[1].replace(env.X_ACCESS_TOKEN, env.FRONTEND_AUTH_COOKIE_NAME)
+
+        res = await request(app)
+            .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
+            .set('Origin', env.FRONTEND_HOST)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
 
         res = await request(app)
             .get(`/api/user/${USER_ID}`)
