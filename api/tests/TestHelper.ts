@@ -32,7 +32,7 @@ export const SIZE = 30
 let ADMIN_USER_ID: string
 let USER_ID: string
 
-export async function initializeDatabase() {
+export async function initialize() {
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(PASSWORD, salt)
     const body = {
@@ -53,6 +53,8 @@ export async function initializeDatabase() {
     await user.save()
     expect(user.id).toBeDefined()
     USER_ID = user.id
+
+    console.error = () => { }
 }
 
 export function getAdminUserId() {
@@ -63,7 +65,7 @@ export function getUserId() {
     return USER_ID
 }
 
-export async function clearDatabase() {
+export async function close() {
     const res = await User.deleteMany({ email: { $in: [ADMIN_EMAIL, USER_EMAIL] } })
     expect(res.deletedCount).toBe(2)
     await Notification.deleteMany({ user: { $in: [ADMIN_USER_ID, USER_ID] } })

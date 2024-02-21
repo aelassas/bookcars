@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Request } from 'express'
+import mongoose from 'mongoose'
 import * as env from '../config/env.config'
 
 /**
@@ -143,4 +144,14 @@ export const getAuthCookieName = (req: Request): string => {
 
     // Mobile app and unit tests auth header name
     return env.X_ACCESS_TOKEN
+}
+
+/**
+ * Check ObjectId
+ *
+ * @param {string} id
+ * @returns {boolean}
+ */
+export function isValidObjectId(id?: string) {
+    return mongoose.isValidObjectId(id)
 }
