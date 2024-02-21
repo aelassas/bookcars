@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Request } from 'express'
 import mongoose from 'mongoose'
+import validator from 'validator'
 import * as env from '../config/env.config'
 
 /**
@@ -149,9 +150,19 @@ export const getAuthCookieName = (req: Request): string => {
 /**
  * Check ObjectId
  *
- * @param {string} id
+ * @param {?string} id
  * @returns {boolean}
  */
 export function isValidObjectId(id?: string) {
     return mongoose.isValidObjectId(id)
+}
+
+/**
+ * Check email
+ *
+ * @param {string} email
+ * @returns {boolean}
+ */
+export function isValidEmail(email?: string) {
+    return !!email && validator.isEmail(email)
 }

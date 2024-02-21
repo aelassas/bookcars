@@ -30,7 +30,7 @@ let USER2_ID: string
 let ADMIN_ID: string
 
 const USER1_EMAIL = `${TestHelper.getName('user1')}@test.bookcars.ma`
-let USER1_PASSWORD = TestHelper.PASSWORD
+const USER1_PASSWORD = TestHelper.PASSWORD
 const USER2_EMAIL = `${TestHelper.getName('user2')}@test.bookcars.ma`
 const ADMIN_EMAIL = `${TestHelper.getName('admin')}@test.bookcars.ma`
 
@@ -74,13 +74,10 @@ describe('POST /api/sign-up', () => {
             phone: '09090909',
             avatar: AVATAR1,
         }
-
-        const res = await request(app)
+        let res = await request(app)
             .post('/api/sign-up')
             .send(payload)
-
         expect(res.statusCode).toBe(200)
-
         const user = await User.findOne({ email: USER1_EMAIL })
         expect(user).not.toBeNull()
         USER1_ID = user?.id
@@ -90,6 +87,10 @@ describe('POST /api/sign-up', () => {
         expect(user?.language).toBe(payload.language)
         expect(user?.birthDate).toStrictEqual(payload.birthDate)
         expect(user?.phone).toBe(payload.phone)
+
+        res = await request(app)
+            .post('/api/sign-up')
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -130,7 +131,6 @@ describe('POST /api/create-user', () => {
         if (!await Helper.exists(tempAvatar)) {
             fs.copyFile(AVATAR1_PATH, tempAvatar)
         }
-
         const payload: bookcarsTypes.CreateUserPayload = {
             email: USER2_EMAIL,
             fullName: 'user2',
@@ -141,7 +141,6 @@ describe('POST /api/create-user', () => {
             bio: 'bio',
             avatar: AVATAR1,
         }
-
         let res = await request(app)
             .post('/api/create-user')
             .set(env.X_ACCESS_TOKEN, token)
@@ -159,6 +158,19 @@ describe('POST /api/create-user', () => {
         expect(user?.location).toBe(payload.location)
         expect(user?.bio).toBe(payload.bio)
 
+        payload.avatar = 'unknown.jpg'
+        res = await request(app)
+            .post('/api/create-user')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
+        res = await request(app)
+            .post('/api/create-user')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
+        payload.avatar = AVATAR1
         const email = TestHelper.GetRandomEmail()
         payload.email = email
         payload.password = 'password'
@@ -180,7 +192,6 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
         expect(user).not.toBeNull()
         user!.active = false
         await user!.save()
-
         const userToken = await Token.findOne({ user: USER1_ID })
         expect(userToken).not.toBeNull()
         const token = userToken?.token
@@ -205,6 +216,10 @@ describe('GET /api/check-token/:type/:userId/:email/:token', () => {
         res = await request(app)
             .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/${USER1_ID}/${USER1_EMAIL}/${uuid()}`)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .get(`/api/check-token/${bookcarsTypes.AppType.Frontend}/0/${USER1_EMAIL}/${token}`)
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -220,33 +235,30 @@ describe('POST /api/activate', () => {
             password: TestHelper.PASSWORD,
             token: token!,
         }
-
         let res = await request(app)
             .post('/api/activate')
             .send(payload)
-
         expect(res.statusCode).toBe(200)
-
         const user = await User.findById(USER1_ID)
         expect(user).not.toBeNull()
         expect(user?.active).toBeTruthy()
         expect(user?.verified).toBeTruthy()
 
         payload.userId = USER2_ID
-
         res = await request(app)
             .post('/api/activate')
             .send(payload)
-
         expect(res.statusCode).toBe(204)
 
         payload.userId = TestHelper.GetRandromObjectIdAsString()
-
         res = await request(app)
             .post('/api/activate')
             .send(payload)
-
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .post('/api/activate')
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -256,34 +268,31 @@ describe('GET /api/confirm-email/:email/:token', () => {
         expect(user).not.toBeNull()
         user!.verified = false
         await user?.save()
-
         const userToken = await Token.findOne({ user: USER1_ID })
         expect(userToken).not.toBeNull()
         const token = userToken?.token
         expect(token?.length).toBeGreaterThan(1)
-
         let res = await request(app)
             .get(`/api/confirm-email/${USER1_EMAIL}/${token}`)
-
         expect(res.statusCode).toBe(200)
 
         user = await User.findById(USER1_ID)
         expect(user).not.toBeNull()
         expect(user?.verified).toBeTruthy()
-
         res = await request(app)
             .get(`/api/confirm-email/${USER1_EMAIL}/${token}`)
-
         expect(res.statusCode).toBe(200)
 
         res = await request(app)
             .get(`/api/confirm-email/${TestHelper.GetRandomEmail()}/${token}`)
-
         expect(res.statusCode).toBe(204)
 
         res = await request(app)
             .get(`/api/confirm-email/${USER1_EMAIL}/${uuid()}`)
+        expect(res.statusCode).toBe(400)
 
+        res = await request(app)
+            .get(`/api/confirm-email/unknown/${uuid()}`)
         expect(res.statusCode).toBe(400)
     })
 })
@@ -295,7 +304,6 @@ describe('DELETE /api/delete-tokens/:userId', () => {
 
         let res = await request(app)
             .delete(`/api/delete-tokens/${USER1_ID}`)
-
         expect(res.statusCode).toBe(200)
 
         userTokens = await Token.find({ user: USER1_ID })
@@ -303,7 +311,10 @@ describe('DELETE /api/delete-tokens/:userId', () => {
 
         res = await request(app)
             .delete(`/api/delete-tokens/${USER1_ID}`)
+        expect(res.statusCode).toBe(400)
 
+        res = await request(app)
+            .delete('/api/delete-tokens/0')
         expect(res.statusCode).toBe(400)
     })
 })
@@ -314,27 +325,25 @@ describe('POST /api/resend/:type/:email/:reset', () => {
         expect(user).not.toBeNull()
         user!.active = true
         await user!.save()
-
         const reset = true
-
         let res = await request(app)
             .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${USER1_EMAIL}/${reset}`)
-
         expect(res.statusCode).toBe(200)
-
         user = await User.findById(USER1_ID)
         expect(user).not.toBeNull()
         expect(user?.active).toBeFalsy()
 
         res = await request(app)
             .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${USER1_EMAIL}/${reset}`)
-
         expect(res.statusCode).toBe(403)
 
         res = await request(app)
             .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${TestHelper.GetRandomEmail()}/${reset}`)
-
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/unknown/${reset}`)
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -378,6 +387,12 @@ describe('POST /api/sign-in/:type', () => {
             .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
+
+        payload.email = 'unknown'
+        res = await request(app)
+            .post(`/api/sign-in/${bookcarsTypes.AppType.Frontend}`)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -399,26 +414,25 @@ describe('POST /api/create-push-token/:userId/:token', () => {
         const token = await TestHelper.signinAsAdmin()
 
         let pushToken = uuid()
-
         let res = await request(app)
             .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
-
         let pushNotifiation = await PushNotification.findOne({ user: USER1_ID, token: pushToken })
         expect(pushNotifiation).not.toBeNull()
 
         pushToken = uuid()
-
         res = await request(app)
             .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(400)
-
         pushNotifiation = await PushNotification.findOne({ user: USER1_ID, token: pushToken })
         expect(pushNotifiation).toBeNull()
+
+        res = await request(app)
+            .post(`/api/create-push-token/0/${pushToken}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -439,6 +453,11 @@ describe('GET /api/push-token/:userId', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .get('/api/push-token/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -449,15 +468,17 @@ describe('POST /api/delete-push-token/:userId', () => {
 
         let pushNotifiations = await PushNotification.find({ user: USER1_ID })
         expect(pushNotifiations.length).toBeGreaterThan(0)
-
-        const res = await request(app)
+        let res = await request(app)
             .post(`/api/delete-push-token/${USER1_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
-
         pushNotifiations = await PushNotification.find({ user: USER1_ID })
         expect(pushNotifiations.length).toBe(0)
+
+        res = await request(app)
+            .post('/api/delete-push-token/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -468,20 +489,22 @@ describe('POST /api/validate-email', () => {
         const payload: bookcarsTypes.ValidateEmailPayload = {
             email: USER1_EMAIL,
         }
-
         let res = await request(app)
             .post('/api/validate-email')
             .send(payload)
-
         expect(res.statusCode).toBe(204)
 
         payload.email = TestHelper.GetRandomEmail()
-
         res = await request(app)
             .post('/api/validate-email')
             .send(payload)
-
         expect(res.statusCode).toBe(200)
+
+        payload.email = 'unkown'
+        res = await request(app)
+            .post('/api/validate-email')
+            .send(payload)
+        expect(res.statusCode).toBe(400)
     })
 })
 
@@ -550,6 +573,13 @@ describe('POST /api/resend-link', () => {
             .send(payload)
         expect(res.statusCode).toBe(200)
 
+        payload.email = 'unknown'
+        res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -601,6 +631,13 @@ describe('POST /api/update-user', () => {
         expect(user).not.toBeNull()
         expect(user?.enableEmailNotifications).toBeFalsy()
 
+        payload._id = '0'
+        res = await request(app)
+            .post('/api/update-user')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -631,6 +668,13 @@ describe('POST /api/update-email-notifications', () => {
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(204)
+
+        payload._id = '0'
+        res = await request(app)
+            .post('/api/update-email-notifications')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -663,6 +707,13 @@ describe('POST /api/update-language', () => {
             .send(payload)
         expect(res.statusCode).toBe(204)
 
+        payload.id = '0'
+        res = await request(app)
+            .post('/api/update-language')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -681,6 +732,11 @@ describe('GET /api/user/:id', () => {
             .get(`/api/user/${TestHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .get('/api/user/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -738,6 +794,12 @@ describe('POST /api/update-avatar/:userId', () => {
             .attach('image', AVATAR2_PATH)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .post('/api/update-avatar/0')
+            .set(env.X_ACCESS_TOKEN, token)
+            .attach('image', AVATAR2_PATH)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -768,6 +830,11 @@ describe('POST /api/delete-avatar/:userId', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .post('/api/delete-avatar/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -780,14 +847,17 @@ describe('POST /api/delete-temp-avatar/:avatar', () => {
         if (!await Helper.exists(tempAvatar)) {
             fs.copyFile(AVATAR1_PATH, tempAvatar)
         }
-
-        const res = await request(app)
+        let res = await request(app)
             .post(`/api/delete-temp-avatar/${AVATAR1}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
         const tempImageExists = await Helper.exists(tempAvatar)
         expect(tempImageExists).toBeFalsy()
+
+        res = await request(app)
+            .post('/api/delete-temp-avatar/unknown.jpg')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -810,8 +880,17 @@ describe('POST /api/change-password', () => {
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
-        USER1_PASSWORD = newPassword
 
+        payload.password = newPassword
+        payload.newPassword = USER1_PASSWORD
+        payload.strict = false
+        res = await request(app)
+            .post('/api/change-password')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+
+        payload.strict = true
         payload.password = ''
         res = await request(app)
             .post('/api/change-password')
@@ -832,6 +911,27 @@ describe('POST /api/change-password', () => {
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(204)
+
+        const user = await User.findById(USER1_ID)
+        expect(user).not.toBeNull()
+        const password = user?.password
+        user!.password = undefined
+        await user?.save()
+        payload._id = USER1_ID
+        res = await request(app)
+            .post('/api/change-password')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(204)
+        user!.password = password
+        await user?.save()
+
+        payload._id = '0'
+        res = await request(app)
+            .post('/api/change-password')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -865,6 +965,12 @@ describe('GET /api/check-password/:id/:password', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
+        // wrong user id
+        res = await request(app)
+            .get('/api/check-password/0/some-password')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -877,14 +983,18 @@ describe('POST /api/users/:page/:size', () => {
             user: TestHelper.getAdminUserId(),
             types: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Company, bookcarsTypes.UserType.User],
         }
-
-        const res = await request(app)
+        let res = await request(app)
             .post(`/api/users/${TestHelper.PAGE}/${TestHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(3)
+
+        res = await request(app)
+            .post(`/api/users/unknown/${TestHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -987,6 +1097,11 @@ describe('POST /api/delete-users', () => {
         expect(s).toBeNull()
         expect(await Helper.exists(image)).toBeFalsy()
         TestHelper.deleteLocation(locationId)
+
+        res = await request(app)
+            .post('/api/delete-users')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
