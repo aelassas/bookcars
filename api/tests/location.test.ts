@@ -119,13 +119,18 @@ describe('PUT /api/update-location/:id', () => {
             },
         ]
 
-        const res = await request(app)
+        let res = await request(app)
             .put(`/api/update-location/${LOCATION_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(LOCATION_NAMES)
-
         expect(res.statusCode).toBe(200)
         expect(res.body.values?.length).toBe(3)
+
+        res = await request(app)
+            .put(`/api/update-location/${TestHelper.GetRandromObjectIdAsString()}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(LOCATION_NAMES)
+        expect(res.statusCode).toBe(204)
 
         await TestHelper.signout(token)
     })
@@ -135,11 +140,14 @@ describe('GET /api/location/:id/:language', () => {
     it('should get a location', async () => {
         const language = 'en'
 
-        const res = await request(app)
+        let res = await request(app)
             .get(`/api/location/${LOCATION_ID}/${language}`)
-
         expect(res.statusCode).toBe(200)
         expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].name)
+
+        res = await request(app)
+            .get(`/api/location/${TestHelper.GetRandromObjectIdAsString()}/${language}`)
+        expect(res.statusCode).toBe(204)
     })
 })
 
@@ -213,14 +221,17 @@ describe('DELETE /api/delete-location/:id', () => {
         let location = await Location.findById(LOCATION_ID)
         expect(location).not.toBeNull()
 
-        const res = await request(app)
+        let res = await request(app)
             .delete(`/api/delete-location/${LOCATION_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
-
         location = await Location.findById(LOCATION_ID)
         expect(location).toBeNull()
+
+        res = await request(app)
+            .delete(`/api/delete-location/${LOCATION_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(204)
 
         await TestHelper.signout(token)
     })
