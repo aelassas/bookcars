@@ -35,8 +35,8 @@ beforeAll(async () => {
 
         // create two suppliers
         const supplierName1 = TestHelper.getSupplierName()
-        const supplierName2 = TestHelper.getSupplierName()
         SUPPLIER1_ID = await TestHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
+        const supplierName2 = TestHelper.getSupplierName()
         SUPPLIER2_ID = await TestHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName2)
 
         // create two locations
