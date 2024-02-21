@@ -86,7 +86,6 @@ describe('PUT /api/update-supplier', () => {
         const location = 'location1'
         const phone = '01010101'
         const payLater = false
-
         const payload: bookcarsTypes.UpdateSupplierPayload = {
             _id: SUPPLIER1_ID,
             fullName: SUPPLIER1_NAME,
@@ -95,18 +94,23 @@ describe('PUT /api/update-supplier', () => {
             phone,
             payLater,
         }
-
-        const res = await request(app)
+        let res = await request(app)
             .put('/api/update-supplier')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
         expect(res.statusCode).toBe(200)
         expect(res.body.fullName).toBe(SUPPLIER1_NAME)
         expect(res.body.bio).toBe(bio)
         expect(res.body.location).toBe(location)
         expect(res.body.phone).toBe(phone)
         expect(res.body.payLater).toBeFalsy()
+
+        payload._id = TestHelper.GetRandromObjectIdAsString()
+        res = await request(app)
+            .put('/api/update-supplier')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(204)
 
         await TestHelper.signout(token)
     })
@@ -116,12 +120,16 @@ describe('GET /api/supplier/:id', () => {
     it('should get a supplier', async () => {
         const token = await TestHelper.signinAsAdmin()
 
-        const res = await request(app)
+        let res = await request(app)
             .get(`/api/supplier/${SUPPLIER1_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
         expect(res.body.fullName).toBe(SUPPLIER1_NAME)
+
+        res = await request(app)
+            .get(`/api/supplier/${TestHelper.GetRandromObjectIdAsString()}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(204)
 
         await TestHelper.signout(token)
     })
@@ -208,16 +216,18 @@ describe('DELETE /api/delete-supplier/:id', () => {
 
         await car.save()
 
-        const res = await request(app)
+        let res = await request(app)
             .delete(`/api/delete-supplier/${supplierId}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
-
         supplier = await User.findById(supplierId)
         expect(supplier).toBeNull()
-
         await TestHelper.deleteLocation(locationId)
+
+        res = await request(app)
+            .delete(`/api/delete-supplier/${TestHelper.GetRandromObjectIdAsString()}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(204)
 
         await TestHelper.signout(token)
     })
