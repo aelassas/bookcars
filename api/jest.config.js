@@ -4,10 +4,8 @@ const config = {
     },
     testEnvironment: 'node',
     extensionsToTreatAsEsm: ['.ts'],
-    roots: [
-        './tests/',
-    ],
-    collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**'],
+    roots: ['./tests/'],
+    collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**', '!**/dist/**', '!**/tests/**'],
     testMatch: ['**/*.test.ts'],
     collectCoverage: true,
     coverageReporters: ['cobertura', 'html'],
