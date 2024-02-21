@@ -112,7 +112,7 @@ export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ..
  * @returns {boolean}
  */
 export function isBackend(req: Request): boolean {
-    return req.headers.origin === trim(env.BACKEND_HOST, '/')
+    return !!req.headers.origin && trim(req.headers.origin, '/') === trim(env.BACKEND_HOST, '/')
 }
 
 /**
@@ -123,7 +123,7 @@ export function isBackend(req: Request): boolean {
  * @returns {boolean}
  */
 export function isFrontend(req: Request): boolean {
-    return req.headers.origin === trim(env.FRONTEND_HOST, '/')
+    return !!req.headers.origin && trim(req.headers.origin, '/') === trim(env.FRONTEND_HOST, '/')
 }
 
 /**

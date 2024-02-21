@@ -21,8 +21,8 @@ export function getSupplierName() {
     return getName('supplier')
 }
 
-const ADMIN_EMAIL = `${getName('admin')}@test.bookcars.ma`
-const USER_EMAIL = `${getName('user')}@test.bookcars.ma`
+export const ADMIN_EMAIL = `${getName('admin')}@test.bookcars.ma`
+export const USER_EMAIL = `${getName('user')}@test.bookcars.ma`
 export const USER_FULL_NAME = 'user'
 export const PASSWORD = 'Un1tTest5'
 export const LANGUAGE = 'en'
