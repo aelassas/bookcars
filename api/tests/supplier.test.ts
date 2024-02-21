@@ -11,6 +11,8 @@ import * as env from '../src/config/env.config'
 import * as Helper from '../src/common/Helper'
 import User from '../src/models/User'
 import Car from '../src/models/Car'
+import Booking from '../src/models/Booking'
+import AdditionalDriver from '../src/models/AdditionalDriver'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -56,22 +58,23 @@ describe('POST /api/validate-supplier', () => {
         const token = await TestHelper.signinAsAdmin()
 
         let payload: bookcarsTypes.ValidateSupplierPayload = { fullName: SUPPLIER1_NAME }
-
         let res = await request(app)
             .post('/api/validate-supplier')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
         expect(res.statusCode).toBe(204)
 
         payload = { fullName: TestHelper.getSupplierName() }
-
         res = await request(app)
             .post('/api/validate-supplier')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
-
         expect(res.statusCode).toBe(200)
+
+        res = await request(app)
+            .post('/api/validate-supplier')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -112,6 +115,11 @@ describe('PUT /api/update-supplier', () => {
             .send(payload)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .put('/api/update-supplier')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -131,6 +139,11 @@ describe('GET /api/supplier/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
+        res = await request(app)
+            .get('/api/supplier/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
+
         await TestHelper.signout(token)
     })
 })
@@ -139,12 +152,16 @@ describe('GET /api/suppliers/:page/:size', () => {
     it('should get suppliers', async () => {
         const token = await TestHelper.signinAsAdmin()
 
-        const res = await request(app)
+        let res = await request(app)
             .get(`/api/suppliers/${TestHelper.PAGE}/${TestHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
-
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(1)
+
+        res = await request(app)
+            .get(`/api/suppliers/unknown/${TestHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })
@@ -152,11 +169,16 @@ describe('GET /api/suppliers/:page/:size', () => {
 
 describe('GET /api/all-suppliers', () => {
     it('should get all suppliers', async () => {
-        const res = await request(app)
+        let res = await request(app)
             .get('/api/all-suppliers')
-
         expect(res.statusCode).toBe(200)
         expect(res.body.length).toBeGreaterThan(1)
+
+        await DatabaseHelper.Close(false)
+        res = await request(app)
+            .get('/api/all-suppliers')
+        expect(res.statusCode).toBe(400)
+        expect(await DatabaseHelper.Connect(false)).toBeTruthy()
     })
 })
 
@@ -166,25 +188,19 @@ describe('DELETE /api/delete-supplier/:id', () => {
 
         const supplierName = TestHelper.getSupplierName()
         const supplierId = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
-
         let supplier = await User.findById(supplierId)
         expect(supplier).not.toBeNull()
-
         const avatarName = 'avatar1.jpg'
         const avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
-
         const avatar = path.join(env.CDN_USERS, avatarName)
         if (!await Helper.exists(avatar)) {
             fs.copyFile(avatarPath, avatar)
         }
         supplier!.avatar = avatarName
         await supplier?.save()
-
         const locationId = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
-
         const carImageName = 'bmw-x1.jpg'
         const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
-
         const car = new Car({
             name: 'BMW X1',
             company: supplierId,
@@ -208,14 +224,37 @@ describe('DELETE /api/delete-supplier/:id', () => {
             fullInsurance: 200,
             additionalDriver: 200,
         })
-
         const carImage = path.join(env.CDN_CARS, carImageName)
         if (!await Helper.exists(carImage)) {
             fs.copyFile(carImagePath, carImage)
         }
-
         await car.save()
-
+        const additionalDriver = new AdditionalDriver({
+            email: TestHelper.GetRandomEmail(),
+            fullName: 'additional-driver',
+            phone: '01010101',
+            birthDate: new Date(1990, 2, 3),
+        })
+        await additionalDriver.save()
+        const booking = new Booking({
+            company: supplierId,
+            car: car._id,
+            driver: TestHelper.getUserId(),
+            pickupLocation: locationId,
+            dropOffLocation: locationId,
+            from: new Date(2024, 2, 1),
+            to: new Date(1990, 2, 4),
+            status: bookcarsTypes.BookingStatus.Pending,
+            cancellation: true,
+            amendments: true,
+            theftProtection: false,
+            collisionDamageWaiver: false,
+            fullInsurance: false,
+            price: 3120,
+            additionalDriver: true,
+            _additionalDriver: additionalDriver._id,
+        })
+        await booking.save()
         let res = await request(app)
             .delete(`/api/delete-supplier/${supplierId}`)
             .set(env.X_ACCESS_TOKEN, token)
@@ -228,6 +267,11 @@ describe('DELETE /api/delete-supplier/:id', () => {
             .delete(`/api/delete-supplier/${TestHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
+
+        res = await request(app)
+            .delete('/api/delete-supplier/0')
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(400)
 
         await TestHelper.signout(token)
     })

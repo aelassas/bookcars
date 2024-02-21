@@ -54,6 +54,9 @@ export async function update(req: Request, res: Response) {
   const { _id } = body
 
   try {
+    if (!Helper.isValidObjectId(_id)) {
+      throw new Error('body._id is not valid')
+    }
     const supplier = await User.findById(_id)
 
     if (supplier) {
