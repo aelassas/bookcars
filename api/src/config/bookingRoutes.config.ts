@@ -1,4 +1,4 @@
-export default {
+const routes = {
   create: '/api/create-booking',
   checkout: '/api/checkout',
   update: '/api/update-booking',
@@ -9,3 +9,5 @@ export default {
   hasBookings: '/api/has-bookings/:driver',
   cancelBooking: '/api/cancel-booking/:id',
 }
+
+export default routes
