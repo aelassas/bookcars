@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1541" lines-covered="1518" line-rate="0.985" branches-valid="529" branches-covered="437" branch-rate="0.826" timestamp="1708552258324" complexity="0" version="0.1">
+<coverage lines-valid="1541" lines-covered="1520" line-rate="0.9863" branches-valid="529" branches-covered="441" branch-rate="0.8336" timestamp="1708552888966" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -81,9 +81,9 @@
         </class>
         <class name="Helper.ts" filename="src\common\Helper.ts" line-rate="0.862" branch-rate="0.7142000000000001">
           <methods>
-            <method name="StringToBoolean" hits="21" signature="()V">
+            <method name="StringToBoolean" hits="24" signature="()V">
               <lines>
-                <line number="15" hits="21"/>
+                <line number="15" hits="24"/>
               </lines>
             </method>
             <method name="exists" hits="37" signature="()V">
@@ -143,8 +143,8 @@
             </method>
           </methods>
           <lines>
-            <line number="16" hits="21" branch="false"/>
-            <line number="17" hits="21" branch="false"/>
+            <line number="16" hits="24" branch="false"/>
+            <line number="17" hits="24" branch="false"/>
             <line number="19" hits="0" branch="false"/>
             <line number="32" hits="37" branch="false"/>
             <line number="33" hits="37" branch="false"/>
@@ -164,7 +164,7 @@
             <line number="105" hits="58" branch="true" condition-coverage="50% (1/2)"/>
             <line number="115" hits="283" branch="true" condition-coverage="100% (2/2)"/>
             <line number="126" hits="282" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="135" hits="7" branch="false"/>
+            <line number="135" hits="8" branch="false"/>
             <line number="136" hits="111" branch="true" condition-coverage="50% (1/2)"/>
             <line number="138" hits="0" branch="false"/>
             <line number="141" hits="111" branch="true" condition-coverage="50% (1/2)"/>
@@ -204,7 +204,7 @@
         </class>
       </classes>
     </package>
-    <package name="src.config" line-rate="0.95" branch-rate="0.5">
+    <package name="src.config" line-rate="1" branch-rate="0.9">
       <classes>
         <class name="app.config.ts" filename="src\config\app.config.ts" line-rate="1" branch-rate="0.5">
           <methods>
@@ -225,54 +225,54 @@
           <lines>
           </lines>
         </class>
-        <class name="env.config.ts" filename="src\config\env.config.ts" line-rate="0.9487000000000001" branch-rate="0.5">
+        <class name="env.config.ts" filename="src\config\env.config.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="196" signature="()V">
+            <method name="(anonymous_0)" hits="228" signature="()V">
               <lines>
-                <line number="15" hits="196"/>
+                <line number="15" hits="228"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="15" hits="7" branch="false"/>
-            <line number="16" hits="196" branch="false"/>
-            <line number="17" hits="196" branch="true" condition-coverage="75% (3/4)"/>
-            <line number="18" hits="0" branch="false"/>
-            <line number="20" hits="196" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="21" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="23" hits="196" branch="false"/>
-            <line number="31" hits="7" branch="false"/>
-            <line number="38" hits="7" branch="false"/>
-            <line number="45" hits="7" branch="false"/>
-            <line number="52" hits="7" branch="false"/>
-            <line number="59" hits="7" branch="false"/>
-            <line number="66" hits="7" branch="false"/>
-            <line number="73" hits="7" branch="false"/>
-            <line number="80" hits="7" branch="false"/>
-            <line number="87" hits="7" branch="false"/>
-            <line number="94" hits="7" branch="false"/>
-            <line number="102" hits="7" branch="false"/>
-            <line number="115" hits="7" branch="false"/>
-            <line number="122" hits="7" branch="false"/>
-            <line number="129" hits="7" branch="false"/>
-            <line number="136" hits="7" branch="false"/>
-            <line number="143" hits="7" branch="false"/>
-            <line number="150" hits="7" branch="false"/>
-            <line number="157" hits="7" branch="false"/>
-            <line number="164" hits="7" branch="false"/>
-            <line number="171" hits="7" branch="false"/>
-            <line number="178" hits="7" branch="false"/>
-            <line number="185" hits="7" branch="false"/>
-            <line number="192" hits="7" branch="false"/>
-            <line number="199" hits="7" branch="false"/>
-            <line number="206" hits="7" branch="false"/>
-            <line number="213" hits="7" branch="false"/>
-            <line number="220" hits="7" branch="false"/>
-            <line number="227" hits="7" branch="false"/>
-            <line number="234" hits="7" branch="false"/>
-            <line number="241" hits="7" branch="false"/>
-            <line number="248" hits="7" branch="false"/>
-            <line number="255" hits="7" branch="false"/>
+            <line number="15" hits="8" branch="false"/>
+            <line number="16" hits="228" branch="false"/>
+            <line number="17" hits="228" branch="true" condition-coverage="100% (4/4)"/>
+            <line number="18" hits="1" branch="false"/>
+            <line number="20" hits="227" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="21" hits="1" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="23" hits="226" branch="false"/>
+            <line number="31" hits="8" branch="false"/>
+            <line number="38" hits="8" branch="false"/>
+            <line number="45" hits="8" branch="false"/>
+            <line number="52" hits="8" branch="false"/>
+            <line number="59" hits="8" branch="false"/>
+            <line number="66" hits="8" branch="false"/>
+            <line number="73" hits="8" branch="false"/>
+            <line number="80" hits="8" branch="false"/>
+            <line number="87" hits="8" branch="false"/>
+            <line number="94" hits="8" branch="false"/>
+            <line number="102" hits="8" branch="false"/>
+            <line number="115" hits="8" branch="false"/>
+            <line number="122" hits="8" branch="false"/>
+            <line number="129" hits="8" branch="false"/>
+            <line number="136" hits="8" branch="false"/>
+            <line number="143" hits="8" branch="false"/>
+            <line number="150" hits="8" branch="false"/>
+            <line number="157" hits="8" branch="false"/>
+            <line number="164" hits="8" branch="false"/>
+            <line number="171" hits="8" branch="false"/>
+            <line number="178" hits="8" branch="false"/>
+            <line number="185" hits="8" branch="false"/>
+            <line number="192" hits="8" branch="false"/>
+            <line number="199" hits="8" branch="false"/>
+            <line number="206" hits="8" branch="false"/>
+            <line number="213" hits="8" branch="false"/>
+            <line number="220" hits="8" branch="false"/>
+            <line number="227" hits="8" branch="false"/>
+            <line number="234" hits="8" branch="false"/>
+            <line number="241" hits="8" branch="false"/>
+            <line number="248" hits="8" branch="false"/>
+            <line number="255" hits="8" branch="false"/>
           </lines>
         </class>
         <class name="locationRoutes.config.ts" filename="src\config\locationRoutes.config.ts" line-rate="1" branch-rate="1">
