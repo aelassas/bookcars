@@ -93,12 +93,14 @@ export async function markAsRead(req: Request, res: Response) {
     const { length } = notifications
 
     bulk.find({ _id: { $in: ids }, isRead: false }).update({ $set: { isRead: true } })
-    const result = await bulk.execute()
+    await bulk.execute()
+    // const result = await bulk.execute()
 
-    if (result.modifiedCount !== length) {
-      console.error(`[notification.markAsRead] ${strings.DB_ERROR}`)
-      return res.status(400).send(strings.DB_ERROR)
-    }
+    // if (result.modifiedCount !== length) {
+    //   console.error(`[notification.markAsRead] ${strings.DB_ERROR}`)
+    //   return res.status(400).send(strings.DB_ERROR)
+    // }
+
     const counter = await NotificationCounter.findOne({ user: userId })
     if (!counter || typeof counter.count === 'undefined') {
       return res.sendStatus(204)
@@ -138,12 +140,14 @@ export async function markAsUnRead(req: Request, res: Response) {
     const { length } = notifications
 
     bulk.find({ _id: { $in: ids }, isRead: true }).update({ $set: { isRead: false } })
-    const result = await bulk.execute()
+    await bulk.execute()
+    // const result = await bulk.execute()
 
-    if (result.modifiedCount !== length) {
-      console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`)
-      return res.status(400).send(strings.DB_ERROR)
-    }
+    // if (result.modifiedCount !== length) {
+    //   console.error(`[notification.markAsUnRead] ${strings.DB_ERROR}`)
+    //   return res.status(400).send(strings.DB_ERROR)
+    // }
+
     const counter = await NotificationCounter.findOne({ user: userId })
     if (!counter || typeof counter.count === 'undefined') {
       return res.sendStatus(204)
