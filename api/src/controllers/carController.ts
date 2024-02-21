@@ -70,6 +70,9 @@ export async function update(req: Request, res: Response) {
   const { _id } = body
 
   try {
+    if (!Helper.isValidObjectId(_id)) {
+      throw new Error('body._id is not valid')
+    }
     const car = await Car.findById(_id)
 
     if (car) {
@@ -205,9 +208,7 @@ export async function deleteCar(req: Request, res: Response) {
 export async function createImage(req: Request, res: Response) {
   try {
     if (!req.file) {
-      const msg = '[car.createImage] req.file not found'
-      console.error(msg)
-      return res.status(400).send(msg)
+      throw new Error('[car.createImage] req.file not found')
     }
 
     const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
@@ -318,9 +319,11 @@ export async function deleteTempImage(req: Request, res: Response) {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (await Helper.exists(imageFile)) {
-      await fs.unlink(imageFile)
+    if (!await Helper.exists(imageFile)) {
+      throw new Error(`[car.deleteTempImage] temp image ${imageFile} not found`)
     }
+
+    await fs.unlink(imageFile)
 
     res.sendStatus(200)
   } catch (err) {
