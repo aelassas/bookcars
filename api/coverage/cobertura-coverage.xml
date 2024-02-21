@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1541" lines-covered="1524" line-rate="0.9889" branches-valid="529" branches-covered="444" branch-rate="0.8393" timestamp="1708553986823" complexity="0" version="0.1">
+<coverage lines-valid="1463" lines-covered="1446" line-rate="0.9883" branches-valid="527" branches-covered="443" branch-rate="0.8406" timestamp="1708554366760" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -1280,9 +1280,9 @@
                 <line number="198" hits="2"/>
               </lines>
             </method>
-            <method name="(anonymous_6)" hits="6" signature="()V">
+            <method name="(anonymous_6)" hits="5" signature="()V">
               <lines>
-                <line number="228" hits="6"/>
+                <line number="228" hits="5"/>
               </lines>
             </method>
             <method name="getAllSuppliers" hits="2" signature="()V">
@@ -1290,9 +1290,9 @@
                 <line number="250" hits="2"/>
               </lines>
             </method>
-            <method name="(anonymous_8)" hits="7" signature="()V">
+            <method name="(anonymous_8)" hits="5" signature="()V">
               <lines>
-                <line number="261" hits="7"/>
+                <line number="261" hits="5"/>
               </lines>
             </method>
           </methods>
@@ -1368,8 +1368,8 @@
             <line number="205" hits="2" branch="false"/>
             <line number="227" hits="1" branch="true" condition-coverage="50% (1/2)"/>
             <line number="228" hits="1" branch="false"/>
-            <line number="229" hits="6" branch="false"/>
-            <line number="230" hits="6" branch="false"/>
+            <line number="229" hits="5" branch="false"/>
+            <line number="230" hits="5" branch="false"/>
             <line number="234" hits="1" branch="false"/>
             <line number="236" hits="1" branch="false"/>
             <line number="237" hits="1" branch="false"/>
@@ -1377,8 +1377,8 @@
             <line number="252" hits="2" branch="false"/>
             <line number="260" hits="1" branch="true" condition-coverage="50% (1/2)"/>
             <line number="261" hits="1" branch="false"/>
-            <line number="262" hits="7" branch="false"/>
-            <line number="263" hits="7" branch="false"/>
+            <line number="262" hits="5" branch="false"/>
+            <line number="263" hits="5" branch="false"/>
             <line number="267" hits="1" branch="false"/>
             <line number="269" hits="1" branch="false"/>
             <line number="270" hits="1" branch="false"/>
@@ -2379,189 +2379,6 @@
             <line number="34" hits="7" branch="false"/>
             <line number="35" hits="7" branch="false"/>
             <line number="36" hits="7" branch="false"/>
-          </lines>
-        </class>
-      </classes>
-    </package>
-    <package name="tests" line-rate="1" branch-rate="0.5">
-      <classes>
-        <class name="TestHelper.ts" filename="tests\TestHelper.ts" line-rate="1" branch-rate="0.5">
-          <methods>
-            <method name="getName" hits="28" signature="()V">
-              <lines>
-                <line number="15" hits="28"/>
-              </lines>
-            </method>
-            <method name="getSupplierName" hits="11" signature="()V">
-              <lines>
-                <line number="20" hits="11"/>
-              </lines>
-            </method>
-            <method name="initialize" hits="7" signature="()V">
-              <lines>
-                <line number="35" hits="7"/>
-              </lines>
-            </method>
-            <method name="(anonymous_3)" hits="95" signature="()V">
-              <lines>
-                <line number="57" hits="95"/>
-              </lines>
-            </method>
-            <method name="getAdminUserId" hits="2" signature="()V">
-              <lines>
-                <line number="60" hits="2"/>
-              </lines>
-            </method>
-            <method name="getUserId" hits="11" signature="()V">
-              <lines>
-                <line number="64" hits="11"/>
-              </lines>
-            </method>
-            <method name="close" hits="7" signature="()V">
-              <lines>
-                <line number="68" hits="7"/>
-              </lines>
-            </method>
-            <method name="getToken" hits="54" signature="()V">
-              <lines>
-                <line number="75" hits="54"/>
-              </lines>
-            </method>
-            <method name="(anonymous_8)" hits="53" signature="()V">
-              <lines>
-                <line number="81" hits="53"/>
-              </lines>
-            </method>
-            <method name="signinAsAdmin" hits="52" signature="()V">
-              <lines>
-                <line number="99" hits="52"/>
-              </lines>
-            </method>
-            <method name="signinAsUser" hits="1" signature="()V">
-              <lines>
-                <line number="103" hits="1"/>
-              </lines>
-            </method>
-            <method name="signout" hits="53" signature="()V">
-              <lines>
-                <line number="107" hits="53"/>
-              </lines>
-            </method>
-            <method name="createSupplier" hits="9" signature="()V">
-              <lines>
-                <line number="118" hits="9"/>
-              </lines>
-            </method>
-            <method name="deleteSupplier" hits="7" signature="()V">
-              <lines>
-                <line number="134" hits="7"/>
-              </lines>
-            </method>
-            <method name="deleteLocation" hits="5" signature="()V">
-              <lines>
-                <line number="142" hits="5"/>
-              </lines>
-            </method>
-            <method name="createLocation" hits="5" signature="()V">
-              <lines>
-                <line number="153" hits="5"/>
-              </lines>
-            </method>
-            <method name="GetRandomEmail" hits="9" signature="()V">
-              <lines>
-                <line number="175" hits="9"/>
-              </lines>
-            </method>
-            <method name="GetRandromObjectId" hits="32" signature="()V">
-              <lines>
-                <line number="179" hits="32"/>
-              </lines>
-            </method>
-            <method name="GetRandromObjectIdAsString" hits="31" signature="()V">
-              <lines>
-                <line number="183" hits="31"/>
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="16" hits="28" branch="false"/>
-            <line number="17" hits="28" branch="false"/>
-            <line number="21" hits="11" branch="false"/>
-            <line number="24" hits="7" branch="false"/>
-            <line number="25" hits="7" branch="false"/>
-            <line number="26" hits="7" branch="false"/>
-            <line number="27" hits="7" branch="false"/>
-            <line number="28" hits="7" branch="false"/>
-            <line number="29" hits="7" branch="false"/>
-            <line number="30" hits="7" branch="false"/>
-            <line number="36" hits="7" branch="false"/>
-            <line number="37" hits="7" branch="false"/>
-            <line number="38" hits="7" branch="false"/>
-            <line number="46" hits="7" branch="false"/>
-            <line number="47" hits="7" branch="false"/>
-            <line number="48" hits="7" branch="false"/>
-            <line number="49" hits="7" branch="false"/>
-            <line number="52" hits="7" branch="false"/>
-            <line number="53" hits="7" branch="false"/>
-            <line number="54" hits="7" branch="false"/>
-            <line number="55" hits="7" branch="false"/>
-            <line number="57" hits="7" branch="false"/>
-            <line number="61" hits="2" branch="false"/>
-            <line number="65" hits="11" branch="false"/>
-            <line number="69" hits="7" branch="false"/>
-            <line number="70" hits="7" branch="false"/>
-            <line number="71" hits="7" branch="false"/>
-            <line number="72" hits="7" branch="false"/>
-            <line number="76" hits="54" branch="false"/>
-            <line number="77" hits="54" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="78" hits="54" branch="false"/>
-            <line number="81" hits="7" branch="false"/>
-            <line number="82" hits="53" branch="false"/>
-            <line number="87" hits="53" branch="false"/>
-            <line number="91" hits="53" branch="false"/>
-            <line number="92" hits="53" branch="false"/>
-            <line number="93" hits="53" branch="false"/>
-            <line number="94" hits="53" branch="false"/>
-            <line number="95" hits="53" branch="false"/>
-            <line number="96" hits="53" branch="false"/>
-            <line number="100" hits="52" branch="false"/>
-            <line number="104" hits="1" branch="false"/>
-            <line number="108" hits="53" branch="false"/>
-            <line number="111" hits="53" branch="false"/>
-            <line number="113" hits="53" branch="false"/>
-            <line number="114" hits="53" branch="false"/>
-            <line number="115" hits="53" branch="false"/>
-            <line number="119" hits="9" branch="false"/>
-            <line number="120" hits="9" branch="false"/>
-            <line number="121" hits="9" branch="false"/>
-            <line number="128" hits="9" branch="false"/>
-            <line number="129" hits="9" branch="false"/>
-            <line number="130" hits="9" branch="false"/>
-            <line number="131" hits="9" branch="false"/>
-            <line number="135" hits="7" branch="false"/>
-            <line number="136" hits="7" branch="false"/>
-            <line number="138" hits="7" branch="false"/>
-            <line number="139" hits="7" branch="false"/>
-            <line number="143" hits="5" branch="false"/>
-            <line number="144" hits="5" branch="false"/>
-            <line number="146" hits="5" branch="false"/>
-            <line number="147" hits="5" branch="false"/>
-            <line number="149" hits="5" branch="false"/>
-            <line number="150" hits="5" branch="false"/>
-            <line number="154" hits="5" branch="false"/>
-            <line number="158" hits="5" branch="false"/>
-            <line number="159" hits="5" branch="false"/>
-            <line number="161" hits="5" branch="false"/>
-            <line number="165" hits="5" branch="false"/>
-            <line number="166" hits="5" branch="false"/>
-            <line number="168" hits="5" branch="false"/>
-            <line number="169" hits="5" branch="false"/>
-            <line number="170" hits="5" branch="false"/>
-            <line number="171" hits="5" branch="false"/>
-            <line number="172" hits="5" branch="false"/>
-            <line number="176" hits="9" branch="false"/>
-            <line number="180" hits="32" branch="false"/>
-            <line number="184" hits="31" branch="false"/>
           </lines>
         </class>
       </classes>
