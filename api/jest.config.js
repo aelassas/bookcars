@@ -7,6 +7,8 @@ const config = {
     roots: [
         './tests/',
     ],
+    collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**'],
+    testMatch: ['**/*.test.ts'],
     collectCoverage: true,
     coverageReporters: ['cobertura', 'html'],
     testTimeout: 15000,
