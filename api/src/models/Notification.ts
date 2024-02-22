@@ -15,7 +15,7 @@ const notificationSchema = new Schema<env.Notification>(
     },
     booking: {
       type: Schema.Types.ObjectId,
-      ref: 'Booking',
+      ref: 'Notification',
     },
     isRead: {
       type: Boolean,
@@ -32,7 +32,9 @@ const notificationSchema = new Schema<env.Notification>(
 const Notification = model<env.Notification>('Notification', notificationSchema)
 
 Notification.on('index', (err) => {
-  if (!err) {
+  if (err) {
+    console.error('Notification index error: %s', err)
+  } else {
     console.info('Notification indexing complete')
   }
 })

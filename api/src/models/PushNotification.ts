@@ -24,7 +24,9 @@ const pushNotificationSchema = new Schema<env.PushNotification>(
 const PushNotification = model<env.PushNotification>('PushNotification', pushNotificationSchema)
 
 PushNotification.on('index', (err) => {
-  if (!err) {
+  if (err) {
+    console.error('PushNotification index error: %s', err)
+  } else {
     console.info('PushNotification indexing complete')
   }
 })

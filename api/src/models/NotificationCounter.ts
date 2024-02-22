@@ -28,7 +28,9 @@ const notificationCounterSchema = new Schema<env.NotificationCounter>(
 const NotificationCounter = model<env.NotificationCounter>('NotificationCounter', notificationCounterSchema)
 
 NotificationCounter.on('index', (err) => {
-  if (!err) {
+  if (err) {
+    console.error('NotificationCounter index error: %s', err)
+  } else {
     console.info('NotificationCounter indexing complete')
   }
 })
