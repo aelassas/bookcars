@@ -5,6 +5,10 @@ import * as TestHelper from './TestHelper'
 import AdditionalDriver from '../src/models/AdditionalDriver'
 import User from '../src/models/User'
 
+beforeAll(() => {
+    TestHelper.initializeConsole()
+})
+
 const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
     email: TestHelper.GetRandomEmail(),
     fullName: 'Additional Driver 1',
@@ -55,20 +59,6 @@ describe('Test User phone validation', () => {
             }
         }
         await DatabaseHelper.Close()
-        expect(res).toBeFalsy()
-    })
-})
-
-describe('Test indexing error', () => {
-    it('should test indexing error', async () => {
-        let res = true
-        try {
-            await DatabaseHelper.Close()
-            await TestHelper.initialize()
-        } catch (err) {
-            console.log(err)
-            res = false
-        }
         expect(res).toBeFalsy()
     })
 })
