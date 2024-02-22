@@ -38,7 +38,7 @@ const ADMIN_EMAIL = `${TestHelper.getName('admin')}@test.bookcars.ma`
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect(false)) {
+    if (await DatabaseHelper.Connect()) {
         await TestHelper.initialize()
     }
 })
@@ -51,7 +51,7 @@ afterAll(async () => {
 
     await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
 
-    await DatabaseHelper.Close(false)
+    await DatabaseHelper.Close()
 })
 
 //

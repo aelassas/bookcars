@@ -29,14 +29,12 @@ const notificationSchema = new Schema<env.Notification>(
   },
 )
 
-const notificationModel = model<env.Notification>('Notification', notificationSchema)
+const Notification = model<env.Notification>('Notification', notificationSchema)
 
-notificationModel.on('index', (err) => {
-  if (err) {
-    console.error('Notification index error: %s', err)
-  } else {
+Notification.on('index', (err) => {
+  if (!err) {
     console.info('Notification indexing complete')
   }
 })
 
-export default notificationModel
+export default Notification

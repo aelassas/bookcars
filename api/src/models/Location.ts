@@ -16,14 +16,12 @@ const locationSchema = new Schema<env.Location>(
   },
 )
 
-const locationModel = model<env.Location>('Location', locationSchema)
+const Location = model<env.Location>('Location', locationSchema)
 
-locationModel.on('index', (err) => {
-  if (err) {
-    console.error('Location index error: %s', err)
-  } else {
+Location.on('index', (err) => {
+  if (!err) {
     console.info('Location indexing complete')
   }
 })
 
-export default locationModel
+export default Location

@@ -25,14 +25,12 @@ const notificationCounterSchema = new Schema<env.NotificationCounter>(
   },
 )
 
-const notificationCounterModel = model<env.NotificationCounter>('NotificationCounter', notificationCounterSchema)
+const NotificationCounter = model<env.NotificationCounter>('NotificationCounter', notificationCounterSchema)
 
-notificationCounterModel.on('index', (err) => {
-  if (err) {
-    console.error('NotificationCounter index error: %s', err)
-  } else {
+NotificationCounter.on('index', (err) => {
+  if (!err) {
     console.info('NotificationCounter indexing complete')
   }
 })
 
-export default notificationCounterModel
+export default NotificationCounter

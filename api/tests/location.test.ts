@@ -27,7 +27,7 @@ let LOCATION_NAMES: bookcarsTypes.LocationName[] = [
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect(false)) {
+    if (await DatabaseHelper.Connect()) {
         await TestHelper.initialize()
     }
 })
@@ -37,7 +37,7 @@ beforeAll(async () => {
 //
 afterAll(async () => {
     await TestHelper.close()
-    await DatabaseHelper.Close(false)
+    await DatabaseHelper.Close()
 })
 
 //

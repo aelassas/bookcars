@@ -14,7 +14,7 @@ let USER_ID: string
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect(false)) {
+    if (await DatabaseHelper.Connect()) {
         await TestHelper.initialize()
         USER_ID = TestHelper.getUserId()
     }
@@ -25,7 +25,7 @@ beforeAll(async () => {
 //
 afterAll(async () => {
     await TestHelper.close()
-    await DatabaseHelper.Close(false)
+    await DatabaseHelper.Close()
 })
 
 describe('GET /api/user/:id', () => {

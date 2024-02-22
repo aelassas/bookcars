@@ -16,7 +16,7 @@ let NOTIFICATION2_ID: string
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect(false)) {
+    if (await DatabaseHelper.Connect()) {
         await TestHelper.initialize()
         ADMIN_USER_ID = TestHelper.getAdminUserId()
         const supplierName = TestHelper.getSupplierName()
@@ -46,7 +46,7 @@ afterAll(async () => {
     await Notification.deleteMany({ user: ADMIN_USER_ID })
     await NotificationCounter.deleteOne({ user: ADMIN_USER_ID })
 
-    await DatabaseHelper.Close(false)
+    await DatabaseHelper.Close()
 })
 
 //
