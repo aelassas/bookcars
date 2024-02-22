@@ -93,14 +93,12 @@ const bookingSchema = new Schema<env.Booking>(
   },
 )
 
-const bookingModel = model<env.Booking>('Booking', bookingSchema)
+const Booking = model<env.Booking>('Booking', bookingSchema)
 
-bookingModel.on('index', (err) => {
-  if (err) {
-    console.error('Booking index error: %s', err)
-  } else {
+Booking.on('index', (err) => {
+  if (!err) {
     console.info('Booking indexing complete')
   }
 })
 
-export default bookingModel
+export default Booking

@@ -22,9 +22,9 @@ const additionalDriverSchema = new Schema<env.AdditionalDriver>(
       type: String,
       validate: {
         validator: (value: string) => {
-          // Check if value is empty then return true.
+          // Check if value is empty then return false.
           if (!value) {
-            return true
+            return false
           }
 
           // If value is empty will not validate for mobile phone.
@@ -46,9 +46,9 @@ const additionalDriverSchema = new Schema<env.AdditionalDriver>(
   },
 )
 
-const additionalDriverModel = model<env.AdditionalDriver>('AdditionalDriver', additionalDriverSchema)
+const AdditionalDriver = model<env.AdditionalDriver>('AdditionalDriver', additionalDriverSchema)
 
-additionalDriverModel.on('index', (err) => {
+AdditionalDriver.on('index', (err) => {
   if (err) {
     console.error('AdditionalDriver index error: %s', err)
   } else {
@@ -56,4 +56,4 @@ additionalDriverModel.on('index', (err) => {
   }
 })
 
-export default additionalDriverModel
+export default AdditionalDriver

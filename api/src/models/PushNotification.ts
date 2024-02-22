@@ -21,14 +21,12 @@ const pushNotificationSchema = new Schema<env.PushNotification>(
   },
 )
 
-const pushNotificationModel = model<env.PushNotification>('PushNotification', pushNotificationSchema)
+const PushNotification = model<env.PushNotification>('PushNotification', pushNotificationSchema)
 
-pushNotificationModel.on('index', (err) => {
-  if (err) {
-    console.error('PushNotification index error: %s', err)
-  } else {
+PushNotification.on('index', (err) => {
+  if (!err) {
     console.info('PushNotification indexing complete')
   }
 })
 
-export default pushNotificationModel
+export default PushNotification

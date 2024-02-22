@@ -34,7 +34,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect(false)) {
+    if (await DatabaseHelper.Connect()) {
         await TestHelper.initialize()
 
         // create a supplier
@@ -99,7 +99,7 @@ afterAll(async () => {
     // delete the car
     await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
 
-    await DatabaseHelper.Close(false)
+    await DatabaseHelper.Close()
 })
 
 //

@@ -113,9 +113,9 @@ const carSchema = new Schema<env.Car>(
   },
 )
 
-const carModel = model<env.Car>('Car', carSchema)
+const Car = model<env.Car>('Car', carSchema)
 
-carModel.on('index', (err) => {
+Car.on('index', (err) => {
   if (err) {
     console.error('Car index error: %s', err)
   } else {
@@ -123,4 +123,4 @@ carModel.on('index', (err) => {
   }
 })
 
-export default carModel
+export default Car

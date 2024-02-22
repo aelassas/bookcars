@@ -24,14 +24,12 @@ const tokenSchema = new Schema<env.Token>(
   },
 )
 
-const tokenModel = model<env.Token>('Token', tokenSchema)
+const Token = model<env.Token>('Token', tokenSchema)
 
-tokenModel.on('index', (err) => {
-  if (err) {
-    console.error('Token index error: %s', err)
-  } else {
+Token.on('index', (err) => {
+  if (!err) {
     console.info('Token indexing complete')
   }
 })
 
-export default tokenModel
+export default Token
