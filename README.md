@@ -60,6 +60,6 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 12. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 
-### License
+## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
