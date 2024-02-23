@@ -37,8 +37,4 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
       with:
-        fail_ci_if_error: true # optional (default = false)
-        files: ./coverage/cobertura-coverage.xml # optional
-        flags: unittests # optional
-        token: ${{ secrets.CODECOV_TOKEN }} # required
-        verbose: true # optional (default = false)
+        token: ${{ secrets.CODECOV_TOKEN }}
