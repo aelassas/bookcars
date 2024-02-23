@@ -5,10 +5,10 @@ const config = {
     testEnvironment: 'node',
     extensionsToTreatAsEsm: ['.ts'],
     roots: ['./tests/'],
-    collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**', '!**/dist/**', '!**/tests/**'],
     testMatch: ['**/*.test.ts'],
     collectCoverage: true,
     coverageReporters: ['cobertura', 'html'],
+    collectCoverageFrom: ['src/**/*.ts', '!**/node_modules/**', '!**/dist/**', '!**/tests/**'],
     testTimeout: 15000,
 }
 
