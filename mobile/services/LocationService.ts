@@ -1,10 +1,6 @@
-import axios from 'axios'
-import * as Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
-import * as AxiosHelper from '../common/AxiosHelper'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-
-AxiosHelper.init(axios)
 
 /**
  * Get locations.
@@ -17,9 +13,9 @@ AxiosHelper.init(axios)
  */
 export const getLocations = async (keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Location>> => {
   const language = await UserService.getLanguage()
-  return axios
+  return axiosInstance
     .get(
-      `${Env.API_HOST}/api/locations/${page}/${size}/${language}/?s=${encodeURIComponent(keyword)}`
+      `/api/locations/${page}/${size}/${language}/?s=${encodeURIComponent(keyword)}`
     )
     .then((res) => res.data)
 }
@@ -33,9 +29,9 @@ export const getLocations = async (keyword: string, page: number, size: number):
  */
 export const getLocation = async (id: string): Promise<bookcarsTypes.Location> => {
   const language = await UserService.getLanguage()
-  return axios
+  return axiosInstance
     .get(
-      `${Env.API_HOST}/api/location/${encodeURIComponent(id)}/${language}`
+      `/api/location/${encodeURIComponent(id)}/${language}`
     )
     .then((res) => res.data)
 }

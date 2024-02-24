@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
 
 /**
@@ -10,9 +9,9 @@ import * as UserService from './UserService'
  * @returns {Promise<number>}
  */
 export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/checkout`,
+      '/api/checkout',
       data
     )
     .then((res) => res.status)
@@ -24,9 +23,9 @@ export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<number> =
  * @returns {Promise<number>}
  */
 export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number> =>
-  axios
+  axiosInstance
     .put(
-      `${Env.API_HOST}/api/update-booking`,
+      '/api/update-booking',
       data,
       { withCredentials: true }
     )
@@ -41,9 +40,9 @@ export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Booking>>}
  */
 export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Booking>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/bookings/${page}/${size}/${UserService.getLanguage()}`,
+      `/api/bookings/${page}/${size}/${UserService.getLanguage()}`,
       payload,
       { withCredentials: true }
     )
@@ -56,9 +55,9 @@ export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: num
  * @returns {Promise<bookcarsTypes.Booking>}
  */
 export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
+      `/api/booking/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -70,9 +69,9 @@ export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
  * @returns {Promise<number>}
  */
 export const cancel = (id: string): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/cancel-booking/${encodeURIComponent(id)}`,
+      `/api/cancel-booking/${encodeURIComponent(id)}`,
       null,
       { withCredentials: true }
     ).then((res) => res.status)

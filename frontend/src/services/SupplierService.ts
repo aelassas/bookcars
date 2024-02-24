@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 
 /**
  * Get all suppliers.
@@ -8,9 +7,9 @@ import Env from '../config/env.config'
  * @returns {Promise<bookcarsTypes.User[]>}
  */
 export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/all-suppliers`,
+      '/api/all-suppliers',
       { withCredentials: true }
 )
     .then((res) => res.data)
@@ -24,9 +23,9 @@ export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.User>>}
  */
 export const getSuppliers = (keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       { withCredentials: true }
     )
     .then((res) => res.data)

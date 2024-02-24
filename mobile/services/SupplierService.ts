@@ -1,9 +1,5 @@
-import axios from 'axios'
-import * as Env from '../config/env.config'
-import * as AxiosHelper from '../common/AxiosHelper'
+import axiosInstance from './axiosInstance'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-
-AxiosHelper.init(axios)
 
 /**
  * Get all suppliers.
@@ -11,8 +7,8 @@ AxiosHelper.init(axios)
  * @returns {Promise<bookcarsTypes.User[]>}
  */
 export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/all-suppliers`
+      '/api/all-suppliers'
     )
     .then((res) => res.data)
