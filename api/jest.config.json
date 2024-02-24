@@ -1,0 +1,27 @@
+{
+    "moduleNameMapper": {
+        "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "testEnvironment": "node",
+    "extensionsToTreatAsEsm": [
+        ".ts"
+    ],
+    "roots": [
+        "./tests/"
+    ],
+    "testMatch": [
+        "**/*.test.ts"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+        "cobertura",
+        "html"
+    ],
+    "collectCoverageFrom": [
+        "src/**/*.ts",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/tests/**"
+    ],
+    "testTimeout": 15000
+}
