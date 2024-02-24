@@ -51,10 +51,10 @@ function LocationSelectList({
   }
 
   const onChangeText = (text: string) => {
-    _fetch(text)
+    fetchData(text)
   }
 
-  const _fetch = async (text: string) => {
+  const fetchData = async (text: string) => {
     try {
       setLoading(true)
 

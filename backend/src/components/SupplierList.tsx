@@ -56,7 +56,7 @@ function SupplierList({
   const [companyId, setCompanyId] = useState('')
   const [companyIndex, setCompanyIndex] = useState(-1)
 
-  const _fetch = async (_page: number, _keyword?: string) => {
+  const fetchData = async (_page: number, _keyword?: string) => {
     try {
       setLoading(true)
 
@@ -97,20 +97,20 @@ function SupplierList({
 
   useEffect(() => {
     if (supplierListKeyword !== keyword) {
-      _fetch(1, supplierListKeyword)
+      fetchData(1, supplierListKeyword)
     }
     setKeyword(supplierListKeyword || '')
   }, [supplierListKeyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (supplierListReload && !reload) {
-      _fetch(1, '')
+      fetchData(1, '')
     }
     setReload(supplierListReload || false)
   }, [supplierListReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    _fetch(page, keyword)
+    fetchData(page, keyword)
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

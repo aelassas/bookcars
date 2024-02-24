@@ -62,7 +62,7 @@ function CarList({
     }())
   }, [])
 
-  const _fetch = async (
+  const fetchData = async (
     _page: number,
     _companies?: string[],
     _pickupLocation?: string,
@@ -113,7 +113,7 @@ function CarList({
   useEffect(() => {
     if (companies) {
       if (companies.length > 0) {
-        _fetch(page, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+        fetchData(page, companies, pickupLocation, fuel, gearbox, mileage, deposit)
       } else {
         setRows([])
         setFetch(false)
