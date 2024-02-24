@@ -11,8 +11,6 @@
 
 BookCars is an open source car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
-BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MITM, and subtly crafted.
-
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
 From the backend, admins can create and manage suppliers, cars, locations, customers and bookings.
@@ -26,6 +24,8 @@ A key design decision was made to use TypeScript instead of JavaScript due to it
 <img src="https://bookcars.github.io/content/docker.png" alt="" width="220" />
 
 BookCars can run in a Docker container. Follow this step by step [guide](https://github.com/aelassas/bookcars/wiki/Docker) to walk you through on how to build BookCars Docker image and run it in a Docker container.
+
+BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MITM, and subtly crafted.
 
 ## Features
 
@@ -44,7 +44,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 
 ## Contents
 
-1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
+1. [Overview and Screenshots](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
