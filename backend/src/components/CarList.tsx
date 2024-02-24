@@ -108,7 +108,7 @@ function CarList({
     }
   }, [fetch, loading, page])
 
-  const _fetch = async (
+  const fetchData = async (
     _page: number,
     companies?: string[],
     keyword?: string,
@@ -168,7 +168,7 @@ function CarList({
   useEffect(() => {
     if (carCompanies) {
       if (carCompanies.length > 0) {
-        _fetch(
+        fetchData(
           page,
           carCompanies,
           carKeyword,
@@ -226,7 +226,7 @@ function CarList({
   useEffect(() => {
     if (reload) {
       setPage(1)
-      _fetch(
+      fetchData(
         1,
         carCompanies,
         carKeyword,

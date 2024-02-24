@@ -103,7 +103,7 @@ function BookingList({
     setPageSize(paginationModel.pageSize)
   }, [paginationModel])
 
-  const _fetch = async (_page: number, _user?: bookcarsTypes.User) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
       const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
@@ -185,14 +185,14 @@ function BookingList({
 
   useEffect(() => {
     if (companies && statuses) {
-      _fetch(page, user)
+      fetchData(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (companies && statuses) {
       if (page === 0) {
-        _fetch(0, user)
+        fetchData(0, user)
       } else {
         const _paginationModel = bookcarsHelper.clone(paginationModel)
         _paginationModel.page = 0
@@ -336,7 +336,7 @@ function BookingList({
       setColumns(_columns)
 
       if (page === 0) {
-        _fetch(0, user)
+        fetchData(0, user)
       } else {
         const _paginationModel = bookcarsHelper.clone(paginationModel)
         _paginationModel.page = 0

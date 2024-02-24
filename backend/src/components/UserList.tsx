@@ -75,7 +75,7 @@ function UserList({
     setPageSize(paginationModel.pageSize)
   }, [paginationModel])
 
-  const _fetch = async (_page: number, _user?: bookcarsTypes.User) => {
+  const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
       if (_user && types) {
         setLoading(true)
@@ -118,14 +118,14 @@ function UserList({
 
   useEffect(() => {
     if (types) {
-      _fetch(page, user)
+      fetchData(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (types) {
       if (page === 0) {
-        _fetch(0, user)
+        fetchData(0, user)
       } else {
         const _paginationModel = bookcarsHelper.clone(paginationModel)
         _paginationModel.page = 0
@@ -290,7 +290,7 @@ function UserList({
       setColumns(_columns)
 
       if (page === 0) {
-        _fetch(0, userListUser)
+        fetchData(0, userListUser)
       } else {
         const _paginationModel = bookcarsHelper.clone(paginationModel)
         _paginationModel.page = 0
