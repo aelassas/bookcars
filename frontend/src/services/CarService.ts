@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
 
 /**
@@ -12,9 +11,9 @@ import * as UserService from './UserService'
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Car>>}
  */
 export const getCars = (data: bookcarsTypes.GetCarsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Car>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/frontend-cars/${page}/${size}}`,
+      `/api/frontend-cars/${page}/${size}}`,
       data
     ).then((res) => res.data)
 
@@ -25,9 +24,9 @@ export const getCars = (data: bookcarsTypes.GetCarsPayload, page: number, size: 
  * @returns {Promise<bookcarsTypes.Car>}
  */
 export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`
+      `/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`
     )
     .then((res) => res.data)
 
@@ -41,9 +40,9 @@ export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
  * @returns {Promise<bookcarsTypes.Car[]>}
  */
 export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCarsPayload, page: number, size: number): Promise<bookcarsTypes.Car[]> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
       { withCredentials: true }
     )

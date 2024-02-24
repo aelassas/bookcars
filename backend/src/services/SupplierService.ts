@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 
 /**
  * Validate Supplier name.
@@ -9,9 +8,9 @@ import Env from '../config/env.config'
  * @returns {Promise<number>}
  */
 export const validate = (data: bookcarsTypes.ValidateSupplierPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/validate-supplier`,
+      '/api/validate-supplier',
       data,
       { withCredentials: true }
     )
@@ -24,9 +23,9 @@ export const validate = (data: bookcarsTypes.ValidateSupplierPayload): Promise<n
  * @returns {Promise<number>}
  */
 export const update = (data: bookcarsTypes.UpdateSupplierPayload): Promise<number> =>
-  axios
+  axiosInstance
     .put(
-      `${Env.API_HOST}/api/update-supplier`,
+      '/api/update-supplier',
       data,
       { withCredentials: true }
     )
@@ -39,9 +38,9 @@ export const update = (data: bookcarsTypes.UpdateSupplierPayload): Promise<numbe
  * @returns {Promise<number>}
  */
 export const deleteSupplier = (id: string): Promise<number> =>
-  axios
+  axiosInstance
     .delete(
-      `${Env.API_HOST}/api/delete-supplier/${encodeURIComponent(id)}`,
+      `/api/delete-supplier/${encodeURIComponent(id)}`,
       { withCredentials: true }
     )
     .then((res) => res.status)
@@ -53,9 +52,9 @@ export const deleteSupplier = (id: string): Promise<number> =>
  * @returns {Promise<bookcarsTypes.User>}
  */
 export const getSupplier = (id: string): Promise<bookcarsTypes.User> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/supplier/${encodeURIComponent(id)}`,
+      `/api/supplier/${encodeURIComponent(id)}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -69,9 +68,9 @@ export const getSupplier = (id: string): Promise<bookcarsTypes.User> =>
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.User>>}
  */
 export const getSuppliers = (keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/suppliers/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -82,9 +81,9 @@ export const getSuppliers = (keyword: string, page: number, size: number): Promi
  * @returns {Promise<bookcarsTypes.User[]>}
  */
 export const getAllSuppliers = (): Promise<bookcarsTypes.User[]> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/all-suppliers`,
+      '/api/all-suppliers',
       { withCredentials: true }
 )
     .then((res) => res.data)

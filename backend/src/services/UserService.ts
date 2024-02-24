@@ -1,5 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
+import axiosInstance from './axiosInstance'
 import Env from '../config/env.config'
 
 /**
@@ -9,9 +9,9 @@ import Env from '../config/env.config'
  * @returns {Promise<number>}
  */
 export const create = (data: bookcarsTypes.CreateUserPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/create-user`,
+      '/api/create-user',
       data,
       { withCredentials: true }
     )
@@ -24,9 +24,9 @@ export const create = (data: bookcarsTypes.CreateUserPayload): Promise<number> =
  * @returns {Promise<number>}
  */
 export const signup = (data: bookcarsTypes.SignUpPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/admin-sign-up/ `,
+      '/api/admin-sign-up/ ',
       data
     )
     .then((res) => res.status)
@@ -40,9 +40,9 @@ export const signup = (data: bookcarsTypes.SignUpPayload): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+      `/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 
@@ -53,9 +53,9 @@ export const checkToken = (userId: string, email: string, token: string): Promis
  * @returns {Promise<number>}
  */
 export const deleteTokens = (userId: string): Promise<number> =>
-  axios
+  axiosInstance
     .delete(
-      `${Env.API_HOST}/api/delete-tokens/${encodeURIComponent(userId)}`
+      `/api/delete-tokens/${encodeURIComponent(userId)}`
     )
     .then((res) => res.status)
 
@@ -68,9 +68,9 @@ export const deleteTokens = (userId: string): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const resend = (email?: string, reset = false, appType: string = bookcarsTypes.AppType.Backend): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/resend/${appType}/${encodeURIComponent(email || '')}/${reset}`
+      `/api/resend/${appType}/${encodeURIComponent(email || '')}/${reset}`
     )
     .then((res) => res.status)
 
@@ -81,9 +81,9 @@ export const resend = (email?: string, reset = false, appType: string = bookcars
  * @returns {Promise<number>}
  */
 export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/activate/ `,
+      '/api/activate/ ',
       data,
       { withCredentials: true }
     )
@@ -96,9 +96,9 @@ export const activate = (data: bookcarsTypes.ActivatePayload): Promise<number> =
  * @returns {Promise<number>}
  */
 export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/validate-email`,
+      '/api/validate-email',
       data
     )
     .then((exist) => exist.status)
@@ -110,9 +110,9 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
  * @returns {Promise<{ status: number, data: bookcarsTypes.User }>}
  */
 export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/sign-in/${Env.APP_TYPE}`,
+      `/api/sign-in/${Env.APP_TYPE}`,
       data,
       { withCredentials: true }
     )
@@ -141,11 +141,12 @@ export const signout = async (redirect = true) => {
   localStorage.removeItem('bc-user')
   deleteAllCookies()
 
-  await axios.post(
-    `${Env.API_HOST}/api/sign-out`,
-    null,
-    { withCredentials: true }
-  )
+  await axiosInstance
+    .post(
+      '/api/sign-out',
+      null,
+      { withCredentials: true }
+    )
 
   if (redirect) {
     window.location.href = '/sign-in'
@@ -158,9 +159,9 @@ export const signout = async (redirect = true) => {
  * @returns {Promise<number>}
  */
 export const validateAccessToken = (): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/validate-access-token`,
+      '/api/validate-access-token',
       { backend: true },
       { withCredentials: true }
     )
@@ -174,9 +175,9 @@ export const validateAccessToken = (): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const confirmEmail = (email: string, token: string): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/confirm-email/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+      `/api/confirm-email/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 )
@@ -188,9 +189,9 @@ export const confirmEmail = (email: string, token: string): Promise<number> => (
  * @returns {Promise<number>}
  */
 export const resendLink = (data: bookcarsTypes.ResendLinkPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/resend-link`,
+      '/api/resend-link',
       data,
       { withCredentials: true }
     )
@@ -234,9 +235,9 @@ export const getQueryLanguage = (): string | null => {
  * @returns {Promise<number>}
  */
 export const updateLanguage = (data: bookcarsTypes.UpdateLanguagePayload) =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-language`,
+      '/api/update-language',
       data,
       { withCredentials: true }
     )
@@ -276,9 +277,9 @@ export const getCurrentUser = (): bookcarsTypes.User | null => {
  */
 export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
   if (id) {
-    return axios
+    return axiosInstance
       .get(
-        `${Env.API_HOST}/api/user/${encodeURIComponent(id)}`,
+        `/api/user/${encodeURIComponent(id)}`,
         { withCredentials: true }
       )
       .then((res) => res.data)
@@ -297,9 +298,9 @@ export const getUser = (id?: string): Promise<bookcarsTypes.User | null> => {
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.User>>}
  */
 export const getDrivers = (keyword: string, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       { types: [bookcarsTypes.RecordType.User] },
       { withCredentials: true }
     )
@@ -320,9 +321,9 @@ export const getUsers = (
   page: number,
   size: number
 ): Promise<bookcarsTypes.Result<bookcarsTypes.User>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/users/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       payload,
       { withCredentials: true }
     )
@@ -335,9 +336,9 @@ export const getUsers = (
  * @returns {Promise<number>}
  */
 export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-user`,
+      '/api/update-user',
       data,
       { withCredentials: true }
     )
@@ -350,9 +351,9 @@ export const updateUser = (data: bookcarsTypes.UpdateUserPayload): Promise<numbe
  * @returns {Promise<number>}
  */
 export const updateEmailNotifications = (data: bookcarsTypes.UpdateEmailNotificationsPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-email-notifications`,
+      '/api/update-email-notifications',
       data,
       { withCredentials: true }
     )
@@ -377,9 +378,9 @@ export const createAvatar = (file: Blob): Promise<string> => {
   const formData = new FormData()
   formData.append('image', file)
 
-  return axios
+  return axiosInstance
     .post(
-      `${Env.API_HOST}/api/create-avatar`,
+      '/api/create-avatar',
       formData,
       {
         withCredentials: true,
@@ -400,9 +401,9 @@ export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
   const formData = new FormData()
   formData.append('image', file)
 
-  return axios
+  return axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-avatar/${encodeURIComponent(userId)}`,
+      `/api/update-avatar/${encodeURIComponent(userId)}`,
       formData,
       {
         withCredentials: true,
@@ -419,9 +420,9 @@ export const updateAvatar = (userId: string, file: Blob): Promise<number> => {
  * @returns {Promise<number>}
  */
 export const deleteAvatar = (userId: string): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-avatar/${encodeURIComponent(userId)}`,
+      `/api/delete-avatar/${encodeURIComponent(userId)}`,
       null,
       { withCredentials: true }
     )
@@ -434,9 +435,9 @@ export const deleteAvatar = (userId: string): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const deleteTempAvatar = (avatar: string): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-temp-avatar/${encodeURIComponent(avatar)}`,
+      `/api/delete-temp-avatar/${encodeURIComponent(avatar)}`,
       null,
       { withCredentials: true }
     )
@@ -451,9 +452,9 @@ export const deleteTempAvatar = (avatar: string): Promise<number> => (
  * @returns {Promise<number>}
  */
 export const checkPassword = (id: string, pass: string): Promise<number> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`,
+      `/api/check-password/${encodeURIComponent(id)}/${encodeURIComponent(pass)}`,
       { withCredentials: true }
     )
     .then((res) => res.status)
@@ -465,9 +466,9 @@ export const checkPassword = (id: string, pass: string): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const changePassword = (data: bookcarsTypes.ChangePasswordPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/change-password/ `,
+      '/api/change-password/ ',
       data,
       { withCredentials: true }
     )
@@ -480,9 +481,9 @@ export const changePassword = (data: bookcarsTypes.ChangePasswordPayload): Promi
  * @returns {Promise<number>}
  */
 export const deleteUsers = (ids: string[]): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-users`,
+      '/api/delete-users',
       ids,
       { withCredentials: true }
     )

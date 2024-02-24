@@ -1,5 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
+import axiosInstance from './axiosInstance'
 import Env from '../config/env.config'
 
 /**
@@ -9,9 +9,9 @@ import Env from '../config/env.config'
  * @returns {Promise<bookcarsTypes.NotificationCounter>}
  */
 export const getNotificationCounter = (userId: string): Promise<bookcarsTypes.NotificationCounter> => (
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/notification-counter/${encodeURIComponent(userId)}`,
+      `/api/notification-counter/${encodeURIComponent(userId)}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -25,9 +25,9 @@ export const getNotificationCounter = (userId: string): Promise<bookcarsTypes.No
  * @returns {Promise<number>}
  */
 export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/mark-Notifications-as-read/${encodeURIComponent(userId)}`,
+      `/api/mark-Notifications-as-read/${encodeURIComponent(userId)}`,
       { ids },
       { withCredentials: true }
     )
@@ -42,9 +42,9 @@ export const markAsRead = (userId: string, ids: string[]): Promise<number> => (
  * @returns {Promise<number>}
  */
 export const markAsUnread = (userId: string, ids: string[]): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-`${Env.API_HOST}/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
+`/api/mark-Notifications-as-unread/${encodeURIComponent(userId)}`,
       { ids },
       { withCredentials: true }
     )
@@ -59,9 +59,9 @@ export const markAsUnread = (userId: string, ids: string[]): Promise<number> => 
  * @returns {Promise<number>}
  */
 export const deleteNotifications = (userId: string, ids: string[]): Promise<number> => (
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-Notifications/${encodeURIComponent(userId)}`,
+      `/api/delete-Notifications/${encodeURIComponent(userId)}`,
       { ids },
       { withCredentials: true }
 )
@@ -76,9 +76,9 @@ export const deleteNotifications = (userId: string, ids: string[]): Promise<numb
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Notification>>}
  */
 export const getNotifications = (userId: string, page: number): Promise<bookcarsTypes.Result<bookcarsTypes.Notification>> => (
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/Notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
+      `/api/Notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
       { withCredentials: true }
     )
     .then((res) => res.data)

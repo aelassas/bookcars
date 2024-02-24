@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
 
 /**
@@ -10,9 +9,9 @@ import * as UserService from './UserService'
  * @returns {Promise<bookcarsTypes.Booking>}
  */
 export const create = (data: bookcarsTypes.UpsertBookingPayload): Promise<bookcarsTypes.Booking> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/create-booking`,
+      '/api/create-booking',
       data,
       { withCredentials: true }
     )
@@ -25,9 +24,9 @@ export const create = (data: bookcarsTypes.UpsertBookingPayload): Promise<bookca
  * @returns {Promise<number>}
  */
 export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number> =>
-  axios
+  axiosInstance
     .put(
-      `${Env.API_HOST}/api/update-booking`,
+      '/api/update-booking',
       data,
       { withCredentials: true }
     )
@@ -40,9 +39,9 @@ export const update = (data: bookcarsTypes.UpsertBookingPayload): Promise<number
  * @returns {Promise<number>}
  */
 export const updateStatus = (data: bookcarsTypes.UpdateStatusPayload): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-booking-status`,
+      '/api/update-booking-status',
       data,
       { withCredentials: true }
     )
@@ -55,9 +54,9 @@ export const updateStatus = (data: bookcarsTypes.UpdateStatusPayload): Promise<n
  * @returns {Promise<number>}
  */
 export const deleteBookings = (ids: string[]): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-bookings`,
+      '/api/delete-bookings',
       ids,
       { withCredentials: true }
     )
@@ -70,9 +69,9 @@ export const deleteBookings = (ids: string[]): Promise<number> =>
  * @returns {Promise<bookcarsTypes.Booking>}
  */
 export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/booking/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
+      `/api/booking/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -86,9 +85,9 @@ export const getBooking = (id: string): Promise<bookcarsTypes.Booking> =>
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Booking>>}
  */
 export const getBookings = (payload: bookcarsTypes.GetBookingsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Booking>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/bookings/${page}/${size}/${UserService.getLanguage()}`,
+      `/api/bookings/${page}/${size}/${UserService.getLanguage()}`,
       payload,
       { withCredentials: true }
     )

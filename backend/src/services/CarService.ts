@@ -1,6 +1,5 @@
-import axios from 'axios'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
 
 /**
@@ -10,9 +9,9 @@ import * as UserService from './UserService'
  * @returns {Promise<bookcarsTypes.Car>}
  */
 export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTypes.Car> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/create-car`,
+      '/api/create-car',
       data,
       { withCredentials: true }
     )
@@ -25,9 +24,9 @@ export const create = (data: bookcarsTypes.CreateCarPayload): Promise<bookcarsTy
  * @returns {Promise<number>}
  */
 export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
-  axios
+  axiosInstance
     .put(
-      `${Env.API_HOST}/api/update-car`,
+      '/api/update-car',
       data,
       { withCredentials: true }
     )
@@ -40,9 +39,9 @@ export const update = (data: bookcarsTypes.UpdateCarPayload): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const check = (id: string): Promise<number> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/check-car/${encodeURIComponent(id)}`,
+      `/api/check-car/${encodeURIComponent(id)}`,
       { withCredentials: true }
     )
     .then((res) => res.status)
@@ -54,9 +53,9 @@ export const check = (id: string): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const deleteCar = (id: string): Promise<number> =>
-  axios
+  axiosInstance
     .delete(
-      `${Env.API_HOST}/api/delete-car/${encodeURIComponent(id)}`,
+      `/api/delete-car/${encodeURIComponent(id)}`,
       { withCredentials: true }
     )
     .then((res) => res.status)
@@ -71,9 +70,9 @@ export const createImage = (file: Blob): Promise<string> => {
   const formData = new FormData()
   formData.append('image', file)
 
-  return axios
+  return axiosInstance
     .post(
-      `${Env.API_HOST}/api/create-car-image`,
+      '/api/create-car-image',
       formData,
       {
         withCredentials: true,
@@ -94,9 +93,9 @@ export const updateImage = (id: string, file: Blob): Promise<number> => {
   const formData = new FormData()
   formData.append('image', file)
 
-  return axios
+  return axiosInstance
     .post(
-      `${Env.API_HOST}/api/update-car-image/${encodeURIComponent(id)}`,
+      `/api/update-car-image/${encodeURIComponent(id)}`,
       formData,
       {
         withCredentials: true,
@@ -113,9 +112,9 @@ export const updateImage = (id: string, file: Blob): Promise<number> => {
  * @returns {Promise<number>}
  */
 export const deleteImage = (id: string): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-car-image/${encodeURIComponent(id)}`,
+      `/api/delete-car-image/${encodeURIComponent(id)}`,
       null,
       { withCredentials: true }
     )
@@ -128,9 +127,9 @@ export const deleteImage = (id: string): Promise<number> =>
  * @returns {Promise<number>}
  */
 export const deleteTempImage = (image: string): Promise<number> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/delete-temp-car-image/${encodeURIComponent(image)}`,
+      `/api/delete-temp-car-image/${encodeURIComponent(image)}`,
       null,
       { withCredentials: true }
     )
@@ -143,9 +142,9 @@ export const deleteTempImage = (image: string): Promise<number> =>
  * @returns {Promise<bookcarsTypes.Car>}
  */
 export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
-  axios
+  axiosInstance
     .get(
-      `${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
+      `/api/car/${encodeURIComponent(id)}/${UserService.getLanguage()}`,
       { withCredentials: true }
     )
     .then((res) => res.data)
@@ -160,9 +159,9 @@ export const getCar = (id: string): Promise<bookcarsTypes.Car> =>
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Car>>}
  */
 export const getCars = (keyword: string, data: bookcarsTypes.GetCarsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Car>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
       { withCredentials: true }
     )
@@ -178,9 +177,9 @@ export const getCars = (keyword: string, data: bookcarsTypes.GetCarsPayload, pag
  * @returns {Promise<bookcarsTypes.Car[]>}
  */
 export const getBookingCars = (keyword: string, data: bookcarsTypes.GetBookingCarsPayload, page: number, size: number): Promise<bookcarsTypes.Car[]> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
+      `/api/booking-cars/${page}/${size}/?s=${encodeURIComponent(keyword)}`,
       data,
       { withCredentials: true }
     )

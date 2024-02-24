@@ -1,10 +1,6 @@
-import axios from 'axios'
-import * as Env from '../config/env.config'
+import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
-import * as AxiosHelper from '../common/AxiosHelper'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-
-AxiosHelper.init(axios)
 
 /**
  * Get cars.
@@ -16,9 +12,9 @@ AxiosHelper.init(axios)
  * @returns {Promise<bookcarsTypes.Result<bookcarsTypes.Car>>}
  */
 export const getCars = async (data: bookcarsTypes.GetCarsPayload, page: number, size: number): Promise<bookcarsTypes.Result<bookcarsTypes.Car>> =>
-  axios
+  axiosInstance
     .post(
-      `${Env.API_HOST}/api/frontend-cars/${page}/${size}}`,
+      `/api/frontend-cars/${page}/${size}}`,
       data
     )
     .then((res) => res.data)
@@ -32,9 +28,9 @@ export const getCars = async (data: bookcarsTypes.GetCarsPayload, page: number, 
  */
 export const getCar = async (id: string): Promise<bookcarsTypes.Car> => {
   const language = await UserService.getLanguage()
-  return axios
+  return axiosInstance
     .get(
-      `${Env.API_HOST}/api/car/${encodeURIComponent(id)}/${language}`
+      `/api/car/${encodeURIComponent(id)}/${language}`
     )
     .then((res) => res.data)
 }
