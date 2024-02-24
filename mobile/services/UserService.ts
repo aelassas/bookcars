@@ -435,41 +435,29 @@ export const changePassword = async (data: bookcarsTypes.ChangePasswordPayload):
  * @returns {Promise<number | undefined>}
  */
 // eslint-disable-next-line consistent-return
-export const updateAvatar = async (userId: string, file: BlobInfo): Promise<number | undefined> => {
-  async function _updateAvatar() {
-    const user = await AsyncStorage.getObject<bookcarsTypes.User>('bc-user')
-    const uri = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '')
-    const formData = new FormData()
-    formData.append('image', {
-      uri,
-      name: file.name,
-      type: file.type,
-    } as any)
-    return axiosInstance
-      .post(
-        `/api/update-avatar/${encodeURIComponent(userId)}`,
-        formData,
-        user && user.accessToken
-          ? {
-            headers: {
-              'x-access-token': user.accessToken,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-          : { headers: { 'Content-Type': 'multipart/form-data' } },
-      )
-      .then((res) => res.status)
-  }
-
-  let retries = 5
-  while (retries > 0) {
-    try {
-      return await _updateAvatar()
-    } catch (err) {
-      // Retry if Stream Closed
-      retries -= 1
-    }
-  }
+export const updateAvatar = async (userId: string, file: BlobInfo): Promise<number> => {
+  const user = await AsyncStorage.getObject<bookcarsTypes.User>('bc-user')
+  const uri = Platform.OS === 'android' ? file.uri : file.uri.replace('file://', '')
+  const formData = new FormData()
+  formData.append('image', {
+    uri,
+    name: file.name,
+    type: file.type,
+  } as any)
+  return axiosInstance
+    .post(
+      `/api/update-avatar/${encodeURIComponent(userId)}`,
+      formData,
+      user && user.accessToken
+        ? {
+          headers: {
+            'x-access-token': user.accessToken,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+        : { headers: { 'Content-Type': 'multipart/form-data' } },
+    )
+    .then((res) => res.status)
 }
 
 /**

@@ -10,7 +10,7 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
-import * as ToasHelper from './ToastHelper'
+import * as ToastHelper from './ToastHelper'
 
 /**
  * Indicate whether Platform OS is Android or not.
@@ -25,7 +25,7 @@ export const android = () => Platform.OS === 'android'
  * @param {string} message
  */
 export const toast = (message: string) => {
-  ToasHelper.toast(message)
+  ToastHelper.toast(message)
 }
 
 /**
@@ -35,7 +35,7 @@ export const toast = (message: string) => {
  * @param {boolean} [__toast__=true]
  */
 export const error = (err?: unknown, __toast__ = true) => {
-  ToasHelper.error(err, __toast__)
+  ToastHelper.error(err, __toast__)
 }
 
 /**
