@@ -535,7 +535,7 @@ export async function getPushToken(req: Request, res: Response) {
 
     const pushToken = await PushToken.findOne({ user: userId })
     if (pushToken) {
-      return res.status(200).json(pushToken.token)
+      return res.json(pushToken.token)
     }
 
     return res.sendStatus(204)
