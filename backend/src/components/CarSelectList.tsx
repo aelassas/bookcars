@@ -105,7 +105,7 @@ function CarSelectList({
     }
   }
 
-  const _fetch = async (_page: number, _keyword: string, _company: string, _pickupLocation: string) => {
+  const fetchData = async (_page: number, _keyword: string, _company: string, _pickupLocation: string) => {
     try {
       if (!_pickupLocation) {
         return
@@ -162,7 +162,7 @@ function CarSelectList({
             if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
-              _fetch(p, keyword, currentCompany, currentPickupLocation)
+              fetchData(p, keyword, currentCompany, currentPickupLocation)
             }
           },
         }}
@@ -171,7 +171,7 @@ function CarSelectList({
             const p = 1
             setCars([])
             setPage(p)
-            _fetch(p, keyword, currentCompany, currentPickupLocation)
+            fetchData(p, keyword, currentCompany, currentPickupLocation)
           }
         }}
         onInputChange={(event: React.SyntheticEvent<Element, Event>) => {
@@ -181,7 +181,7 @@ function CarSelectList({
             setCars([])
             setPage(1)
             setKeyword(_value)
-            _fetch(1, _value, currentCompany, currentPickupLocation)
+            fetchData(1, _value, currentCompany, currentPickupLocation)
           }
         }}
         onClear={() => {
@@ -189,7 +189,7 @@ function CarSelectList({
           setPage(1)
           setKeyword('')
           setFetch(true)
-          _fetch(1, '', currentCompany, currentPickupLocation)
+          fetchData(1, '', currentCompany, currentPickupLocation)
         }}
       />
 
