@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1470" lines-covered="1460" line-rate="0.9931" branches-valid="529" branches-covered="452" branch-rate="0.8543999999999999" timestamp="1708855503282" complexity="0" version="0.1">
+<coverage lines-valid="1470" lines-covered="1460" line-rate="0.9931" branches-valid="529" branches-covered="452" branch-rate="0.8543999999999999" timestamp="1708857561865" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -1287,9 +1287,9 @@
                 <line number="198" hits="2"/>
               </lines>
             </method>
-            <method name="(anonymous_6)" hits="14" signature="()V">
+            <method name="(anonymous_6)" hits="15" signature="()V">
               <lines>
-                <line number="228" hits="14"/>
+                <line number="228" hits="15"/>
               </lines>
             </method>
             <method name="getAllSuppliers" hits="2" signature="()V">
@@ -1375,8 +1375,8 @@
             <line number="205" hits="2" branch="false"/>
             <line number="227" hits="1" branch="true" condition-coverage="50% (1/2)"/>
             <line number="228" hits="1" branch="false"/>
-            <line number="229" hits="14" branch="false"/>
-            <line number="230" hits="14" branch="false"/>
+            <line number="229" hits="15" branch="false"/>
+            <line number="230" hits="15" branch="false"/>
             <line number="234" hits="1" branch="false"/>
             <line number="236" hits="1" branch="false"/>
             <line number="237" hits="1" branch="false"/>
@@ -1453,7 +1453,7 @@
                 <line number="511" hits="54"/>
               </lines>
             </method>
-            <method name="pushToken" hits="3" signature="()V">
+            <method name="getPushToken" hits="3" signature="()V">
               <lines>
                 <line number="528" hits="3"/>
               </lines>
