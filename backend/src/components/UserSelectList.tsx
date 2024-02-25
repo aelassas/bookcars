@@ -45,7 +45,7 @@ function UserSelectList({
       return { _id: _id as string, name: fullName, image: avatar }
     })
 
-  const _fetch = async (_page: number, _keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.User>) => {
+  const fetchData = async (_page: number, _keyword: string, onFetch?: bookcarsTypes.DataEvent<bookcarsTypes.User>) => {
     try {
       setLoading(true)
 
@@ -96,7 +96,7 @@ function UserSelectList({
           if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
             const p = page + 1
             setPage(p)
-            _fetch(p, keyword)
+            fetchData(p, keyword)
           }
         },
       }}
@@ -105,7 +105,7 @@ function UserSelectList({
           const p = 1
           setPage(p)
           setDrivers([])
-          _fetch(p, keyword, () => {
+          fetchData(p, keyword, () => {
             setInit(true)
           })
         }
@@ -118,7 +118,7 @@ function UserSelectList({
           setDrivers([])
           setPage(1)
           setKeyword(_value)
-          _fetch(1, _value)
+          fetchData(1, _value)
         }
       }}
       onClear={() => {
@@ -126,7 +126,7 @@ function UserSelectList({
         setPage(1)
         setKeyword('')
         setFetch(true)
-        _fetch(1, '')
+        fetchData(1, '')
       }}
     />
   )

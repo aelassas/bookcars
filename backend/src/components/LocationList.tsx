@@ -59,7 +59,7 @@ function LocationList({
   const [locationId, setLocationId] = useState('')
   const [locationIndex, setLocationIndex] = useState(-1)
 
-  const _fetch = async (_page: number, _keyword?: string) => {
+  const fetchData = async (_page: number, _keyword?: string) => {
     try {
       setLoading(true)
 
@@ -101,20 +101,20 @@ function LocationList({
 
   useEffect(() => {
     if (locationKeyword !== keyword) {
-      _fetch(1, locationKeyword)
+      fetchData(1, locationKeyword)
     }
     setKeyword(locationKeyword || '')
   }, [locationKeyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (locationReload && !reload) {
-      _fetch(1, '')
+      fetchData(1, '')
     }
     setReload(locationReload || false)
   }, [locationReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    _fetch(page, keyword)
+    fetchData(page, keyword)
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

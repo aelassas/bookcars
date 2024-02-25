@@ -47,7 +47,7 @@ function SupplierSelectList({
       return { _id: _id as string, name: fullName, image: avatar }
     })
 
-  const _fetch = async (_page: number, _keyword: string, onFetch?: (data: { rows: any[], rowCount: number }) => void) => {
+  const fetchData = async (_page: number, _keyword: string, onFetch?: (data: { rows: any[], rowCount: number }) => void) => {
     try {
       setLoading(true)
       const data = await SupplierService.getSuppliers(_keyword, _page, Env.PAGE_SIZE)
@@ -96,7 +96,7 @@ function SupplierSelectList({
           if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
             const p = page + 1
             setPage(p)
-            _fetch(p, keyword)
+            fetchData(p, keyword)
           }
         },
       }}
@@ -105,7 +105,7 @@ function SupplierSelectList({
           const p = 1
           setRows([])
           setPage(p)
-          _fetch(p, keyword, () => {
+          fetchData(p, keyword, () => {
             setInit(true)
           })
         }
@@ -118,7 +118,7 @@ function SupplierSelectList({
           setRows([])
           setPage(1)
           setKeyword(_value)
-          _fetch(1, _value)
+          fetchData(1, _value)
         }
       }}
       onClear={() => {
@@ -126,7 +126,7 @@ function SupplierSelectList({
         setPage(1)
         setKeyword('')
         setFetch(true)
-        _fetch(1, '')
+        fetchData(1, '')
       }}
     />
   )

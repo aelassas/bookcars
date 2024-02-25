@@ -148,7 +148,7 @@ export const getAuthCookieName = (req: Request): string => {
 }
 
 /**
- * Check ObjectId
+ * Check ObjectId.
  *
  * @param {?string} id
  * @returns {boolean}
@@ -158,7 +158,7 @@ export function isValidObjectId(id?: string) {
 }
 
 /**
- * Check email
+ * Check email.
  *
  * @param {string} email
  * @returns {boolean}
