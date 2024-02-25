@@ -12,7 +12,7 @@ import Car from '../models/Car'
 import Location from '../models/Location'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
-import PushNotification from '../models/PushNotification'
+import PushToken from '../models/PushToken'
 import AdditionalDriver from '../models/AdditionalDriver'
 import * as Helper from '../common/Helper'
 import * as MailHelper from '../common/MailHelper'
@@ -282,19 +282,19 @@ async function notifyDriver(booking: env.Booking) {
   await MailHelper.sendMail(mailOptions)
 
   // push notification
-  const pushNotification = await PushNotification.findOne({ user: driver._id })
-  if (pushNotification) {
-    const pushToken = pushNotification.token
+  const pushToken = await PushToken.findOne({ user: driver._id })
+  if (pushToken) {
+    const { token } = pushToken
     const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN })
 
-    if (!Expo.isExpoPushToken(pushToken)) {
-      console.log(`Push token ${pushToken} is not a valid Expo push token.`)
+    if (!Expo.isExpoPushToken(token)) {
+      console.log(`Push token ${token} is not a valid Expo push token.`)
       return
     }
 
     const messages: ExpoPushMessage[] = [
       {
-        to: pushToken,
+        to: token,
         sound: 'default',
         body: message,
         data: {

@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import * as env from '../config/env.config'
 
-const pushNotificationSchema = new Schema<env.PushNotification>(
+const pushTokenSchema = new Schema<env.PushToken>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -17,18 +17,18 @@ const pushNotificationSchema = new Schema<env.PushNotification>(
   {
     timestamps: true,
     strict: true,
-    collection: 'PushNotification',
+    collection: 'PushToken',
   },
 )
 
-const PushNotification = model<env.PushNotification>('PushNotification', pushNotificationSchema)
+const PushToken = model<env.PushToken>('PushToken', pushTokenSchema)
 
-PushNotification.on('index', (err) => {
+PushToken.on('index', (err) => {
   if (err) {
-    console.error('PushNotification index error: %s', err)
+    console.error('PushToken index error: %s', err)
   } else {
-    console.info('PushNotification indexing complete')
+    console.info('PushToken indexing complete')
   }
 })
 
-export default PushNotification
+export default PushToken

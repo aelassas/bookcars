@@ -513,14 +513,14 @@ export interface NotificationCounter extends Document {
 }
 
 /**
- * PushNotification Document.
+ * PushToken Document.
  *
  * @export
- * @interface PushNotification
- * @typedef {PushNotification}
+ * @interface PushToken
+ * @typedef {PushToken}
  * @extends {Document}
  */
-export interface PushNotification extends Document {
+export interface PushToken extends Document {
     user: Types.ObjectId
     token: string
 }
