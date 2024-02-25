@@ -525,7 +525,7 @@ export async function signout(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function pushToken(req: Request, res: Response) {
+export async function getPushToken(req: Request, res: Response) {
   const { userId } = req.params
 
   try {
