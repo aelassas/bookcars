@@ -11,7 +11,7 @@ import * as TestHelper from './TestHelper'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
 import Token from '../src/models/Token'
-import PushNotification from '../src/models/PushNotification'
+import PushToken from '../src/models/PushToken'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
@@ -418,7 +418,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
             .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
-        let pushNotifiation = await PushNotification.findOne({ user: USER1_ID, token: pushToken })
+        let pushNotifiation = await PushToken.findOne({ user: USER1_ID, token: pushToken })
         expect(pushNotifiation).not.toBeNull()
 
         pushToken = uuid()
@@ -426,7 +426,7 @@ describe('POST /api/create-push-token/:userId/:token', () => {
             .post(`/api/create-push-token/${USER1_ID}/${pushToken}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
-        pushNotifiation = await PushNotification.findOne({ user: USER1_ID, token: pushToken })
+        pushNotifiation = await PushToken.findOne({ user: USER1_ID, token: pushToken })
         expect(pushNotifiation).toBeNull()
 
         res = await request(app)
@@ -466,13 +466,13 @@ describe('POST /api/delete-push-token/:userId', () => {
     it('should delete push token', async () => {
         const token = await TestHelper.signinAsAdmin()
 
-        let pushNotifiations = await PushNotification.find({ user: USER1_ID })
+        let pushNotifiations = await PushToken.find({ user: USER1_ID })
         expect(pushNotifiations.length).toBeGreaterThan(0)
         let res = await request(app)
             .post(`/api/delete-push-token/${USER1_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
-        pushNotifiations = await PushNotification.find({ user: USER1_ID })
+        pushNotifiations = await PushToken.find({ user: USER1_ID })
         expect(pushNotifiations.length).toBe(0)
 
         res = await request(app)

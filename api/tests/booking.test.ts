@@ -11,7 +11,7 @@ import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
 import User from '../src/models/User'
 import * as env from '../src/config/env.config'
-import PushNotification from '../src/models/PushNotification'
+import PushToken from '../src/models/PushToken'
 
 let SUPPLIER_ID: string
 let DRIVER1_ID: string
@@ -347,24 +347,24 @@ describe('POST /api/update-booking', () => {
 
         payload.booking.driver = DRIVER1_ID
         payload.booking.status = bookcarsTypes.BookingStatus.Void
-        let pushNotification = new PushNotification({ user: payload.booking.driver, token: uuid() })
-        await pushNotification.save()
+        let pushToken = new PushToken({ user: payload.booking.driver, token: uuid() })
+        await pushToken.save()
         res = await request(app)
             .put('/api/update-booking')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
-        await PushNotification.deleteOne({ _id: pushNotification._id })
+        await PushToken.deleteOne({ _id: pushToken._id })
 
         payload.booking.status = bookcarsTypes.BookingStatus.Cancelled
-        pushNotification = new PushNotification({ user: payload.booking.driver, token: '0' })
-        await pushNotification.save()
+        pushToken = new PushToken({ user: payload.booking.driver, token: '0' })
+        await pushToken.save()
         res = await request(app)
             .put('/api/update-booking')
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
-        await PushNotification.deleteOne({ _id: pushNotification._id })
+        await PushToken.deleteOne({ _id: pushToken._id })
 
         res = await request(app)
             .put('/api/update-booking')
