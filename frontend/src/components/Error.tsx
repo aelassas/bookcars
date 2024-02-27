@@ -10,19 +10,17 @@ interface ErrorProps {
   homeLink?: boolean
 }
 
-function Error({ message, style, homeLink }: ErrorProps) {
-  return (
-    <div style={style}>
-      <div className="error">
-        <span className="message">{message}</span>
-      </div>
-      {homeLink && (
-        <p>
-          <Link href="/">{commonStrings.GO_TO_HOME}</Link>
-        </p>
-      )}
+const Error = ({ message, style, homeLink }: ErrorProps) => (
+  <div style={style}>
+    <div className="error">
+      <span className="message">{message}</span>
     </div>
+    {homeLink && (
+    <p>
+      <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+    </p>
+      )}
+  </div>
   )
-}
 
 export default Error

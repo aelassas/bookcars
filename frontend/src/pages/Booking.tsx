@@ -29,7 +29,7 @@ import DateTimePicker from '../components/DateTimePicker'
 
 import '../assets/css/booking.css'
 
-function Booking() {
+const Booking = () => {
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)

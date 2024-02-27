@@ -44,7 +44,7 @@ import Info from './Info'
 import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/checkout.css'
 
-function Checkout() {
+const Checkout = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()

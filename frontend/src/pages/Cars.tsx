@@ -17,7 +17,7 @@ import CarList from '../components/CarList'
 
 import '../assets/css/cars.css'
 
-function Cars() {
+const Cars = () => {
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()

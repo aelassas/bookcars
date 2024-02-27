@@ -16,14 +16,14 @@ interface MasterProps {
   onLoad?: (user?: bookcarsTypes.User) => void
 }
 
-function Master({
+const Master = ({
   user: masterUser,
   strict,
   hideSignin,
   notificationCount,
   children,
   onLoad
-}: MasterProps) {
+}: MasterProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
 

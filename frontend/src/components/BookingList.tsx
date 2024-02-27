@@ -58,7 +58,7 @@ interface BookingListProps {
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Booking>
 }
 
-function BookingList({
+const BookingList = ({
   companies: bookingCompanies,
   statuses: bookingStatuses,
   filter: bookingFilter,
@@ -73,7 +73,7 @@ function BookingList({
   language,
   checkboxSelection,
   onLoad,
-}: BookingListProps) {
+}: BookingListProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE)

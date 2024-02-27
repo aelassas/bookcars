@@ -10,13 +10,13 @@ interface AccordionProps {
   children: ReactNode
 }
 
-function Accordion({
+const Accordion = ({
   title,
   className,
   collapse,
   offsetHeight = 0,
   children
-}: AccordionProps) {
+}: AccordionProps) => {
   const accordionRef = useRef<HTMLLabelElement>(null)
 
   const handleAccordionClick = (e: React.MouseEvent<HTMLElement>) => {

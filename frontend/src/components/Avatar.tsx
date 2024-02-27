@@ -32,7 +32,7 @@ interface AvatarProps {
   onChange?: (user: bookcarsTypes.User) => void,
 }
 
-function Avatar({
+const Avatar = ({
   loggedUser,
   user: avatarUser,
   size,
@@ -41,7 +41,7 @@ function Avatar({
   className,
   onBeforeUpload,
   onChange,
-}: AvatarProps) {
+}: AvatarProps) => {
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()

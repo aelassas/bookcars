@@ -3,7 +3,7 @@ import Master from '../components/Master'
 
 import '../assets/css/about.css'
 
-function About() {
+const About = () => {
   const onLoad = () => {}
 
   return (

@@ -25,7 +25,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/settings.css'
 
-function Settings() {
+const Settings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')

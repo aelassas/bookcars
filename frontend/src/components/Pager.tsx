@@ -17,15 +17,14 @@ interface PagerProps {
   onPrevious: () => void
 }
 
-function Pager({
+const Pager = ({
   page,
   pageSize,
   totalRecords,
   rowCount,
   onNext,
   onPrevious
-}: PagerProps) {
-  return (
+}: PagerProps) => (
     (((page > 1 || rowCount < totalRecords) && (
       <div className="pager-container">
         <div className="pager">
@@ -44,6 +43,5 @@ function Pager({
       </div>
     )) || <></>)
   )
-}
 
 export default Pager
