@@ -14,7 +14,7 @@ import StatusFilter from '../components/StatusFilter'
 import * as BookingService from '../services/BookingService'
 import BookingFilter from '../components/BookingFilter'
 
-function BookingsScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Bookings'>) {
+const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Bookings'>) => {
   const isFocused = useIsFocused()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [reload, setReload] = useState(false)

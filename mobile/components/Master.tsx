@@ -25,7 +25,7 @@ interface MasterProps {
   onLoad: (user?: bookcarsTypes.User) => void
 }
 
-function Master({
+const Master = ({
   navigation,
   strict,
   route,
@@ -37,7 +37,7 @@ function Master({
   avatar,
   children,
   onLoad
-}: MasterProps) {
+}: MasterProps) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)

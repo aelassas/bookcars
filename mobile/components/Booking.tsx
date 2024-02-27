@@ -24,12 +24,12 @@ const iconColor = '#000'
 const extraIconColor = '#1f9201'
 const extraIconSize = 16
 
-function Booking({
+const Booking = ({
   booking,
   locale,
   fr,
   onCancel
-}: BookingProps) {
+}: BookingProps) => {
   const from = new Date(booking.from)
   const to = new Date(booking.to)
   const days = bookcarsHelper.days(from, to)

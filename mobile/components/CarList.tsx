@@ -25,7 +25,7 @@ interface CarListProps {
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
-function CarList({
+const CarList = ({
   navigation,
   from,
   to,
@@ -38,7 +38,7 @@ function CarList({
   deposit,
   header,
   onLoad
-}: CarListProps) {
+}: CarListProps) => {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)

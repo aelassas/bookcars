@@ -14,11 +14,11 @@ interface GearboxFilterProps {
   onChange?: (values: bookcarsTypes.GearboxType[]) => void
 }
 
-function GearboxFilter({
+const GearboxFilter = ({
   visible,
   style,
   onChange
-}: GearboxFilterProps) {
+}: GearboxFilterProps) => {
   const [automatic, setAutomatic] = useState(true)
   const [manual, setManual] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])

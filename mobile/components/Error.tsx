@@ -6,16 +6,14 @@ interface ErrorProps {
   message: string
 }
 
-function Error({
+const Error = ({
   style,
   message
-}: ErrorProps) {
-  return (
+}: ErrorProps) => (
     <View style={style}>
       <Text style={styles.text}>{message}</Text>
     </View>
   )
-}
 
 const styles = StyleSheet.create({
   text: {

@@ -5,13 +5,11 @@ interface BackdropProps {
   message?: string
 }
 
-function Backdrop({ message }: BackdropProps) {
-  return (
+const Backdrop = ({ message }: BackdropProps) => (
     <View style={styles.container}>
       {message && <Text style={styles.text}>{message}</Text>}
     </View>
   )
-}
 
 const styles = StyleSheet.create({
   container: {

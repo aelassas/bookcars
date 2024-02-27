@@ -23,7 +23,7 @@ interface DateTimePickerProps {
   onChange?: (date: Date | undefined) => void
 }
 
-function DateTimePicker({
+const DateTimePicker = ({
   value: dateTimeValue,
   locale: dateTimeLocale,
   mode,
@@ -38,7 +38,7 @@ function DateTimePicker({
   hideClearButton,
   onPress,
   onChange
-}: DateTimePickerProps) {
+}: DateTimePickerProps) => {
   const [label, setLabel] = useState('')
   const [value, setValue] = useState<Date | undefined>(dateTimeValue)
   const [show, setShow] = useState(false)

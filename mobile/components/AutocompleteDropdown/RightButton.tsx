@@ -5,7 +5,7 @@ import Feather from 'react-native-vector-icons/Feather'
 
 Feather.loadFont()
 
-function RightButtonComponent({
+const RightButtonComponent = ({
     inputHeight,
     isOpened,
     showChevron,
@@ -27,7 +27,7 @@ function RightButtonComponent({
     ClearIconComponent?: boolean
     onClearPress: () => void
     onChevronPress: () => void
-  }) {
+  }) => {
   const isOpenedAnimationValue = useRef(new Animated.Value(0)).current
 
   useEffect(() => {

@@ -37,7 +37,7 @@ interface DrawerContentProps {
 
 let yOffset = 0
 
-function DrawerContent({
+const DrawerContent = ({
   language: drawerLanguage,
   index,
   drawerItems,
@@ -49,7 +49,7 @@ function DrawerContent({
   labelStyle,
   itemStyle,
   props
-}: DrawerContentProps) {
+}: DrawerContentProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [openLanguageMenu, setopenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(drawerLanguage)

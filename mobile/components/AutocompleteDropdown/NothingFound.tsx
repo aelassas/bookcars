@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { withFadeAnimation } from './HOC/withFadeAnimation'
 
-function EmptyResult({ ...props }) {
+const EmptyResult = ({ ...props }) => {
   const EL = withFadeAnimation(
     () => (
       <View style={{ ...styles.container }}>

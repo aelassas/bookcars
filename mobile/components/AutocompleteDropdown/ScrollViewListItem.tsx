@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { StyleSheet, Text, Pressable, View } from 'react-native'
 
-function ScrollViewListItemComponent({
+const ScrollViewListItemComponent = ({
     titleHighlighted,
     titleStart,
     titleEnd,
@@ -16,8 +16,7 @@ function ScrollViewListItemComponent({
       style?: object
       numberOfLines?: number
       onPress: () => void
-    }) {
-  return (
+    }) => (
     <Pressable onPress={onPress}>
       <View style={styles.container}>
         <Text numberOfLines={numberOfLines}>
@@ -34,7 +33,6 @@ function ScrollViewListItemComponent({
       </View>
     </Pressable>
   )
-}
 
 export const ScrollViewListItem = memo(ScrollViewListItemComponent)
 

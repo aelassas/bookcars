@@ -14,11 +14,11 @@ interface FuelFilterProps {
   onChange?: (values: bookcarsTypes.CarType[]) => void
 }
 
-function FuelFilter({
+const FuelFilter = ({
   visible,
   style,
   onChange
-}: FuelFilterProps) {
+}: FuelFilterProps) => {
   const [diesel, setDiesel] = useState(true)
   const [gasoline, setGasoline] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])

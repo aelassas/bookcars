@@ -10,7 +10,7 @@ import Master from '../components/Master'
 import BookingList from '../components/BookingList'
 import * as Env from '../config/env.config'
 
-function BookingScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Booking'>) {
+const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Booking'>) => {
   const isFocused = useIsFocused()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [reload, setReload] = useState(false)

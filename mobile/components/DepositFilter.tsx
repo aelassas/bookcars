@@ -11,11 +11,11 @@ interface DepositFilterProps {
   onChange?: (value: number) => void
 }
 
-function DepositFilter({
+const DepositFilter = ({
   visible,
   style,
   onChange
-}: DepositFilterProps) {
+}: DepositFilterProps) => {
   const [deposit2500, setDeposit2500] = useState(false)
   const [deposit5000, setDeposit5000] = useState(false)
   const [deposit7500, setDeposit7500] = useState(false)

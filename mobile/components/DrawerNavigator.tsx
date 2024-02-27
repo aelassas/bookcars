@@ -26,7 +26,7 @@ import DrawerContent from './DrawerContent'
 import CheckoutScreen from '../screens/Checkout'
 import NotificationsScreen from '../screens/NotificationsScreen'
 
-function DrawerNavigator() {
+const DrawerNavigator = () => {
   const routes = useNavigationState((state) => state && state.routes)
   const index = useNavigationState((state) => state && state.index)
   const [loggedIn, setLoggedIn] = useState(false)

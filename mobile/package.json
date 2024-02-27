@@ -14,7 +14,8 @@
     "build:ios:local": "cross-env EAS_NO_VCS=1 eas build --profile production --platform ios --local",
     "build:ios:preview": "cross-env EAS_NO_VCS=1 eas build --profile preview --platform android",
     "ts:check": "tsc",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "fix": "eslint --fix ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -31,7 +32,7 @@
     "axios": "^1.6.7",
     "axios-retry": "^4.0.0",
     "date-fns": "^3.3.1",
-    "expo": "~50.0.7",
+    "expo": "~50.0.8",
     "expo-asset": "~9.0.2",
     "expo-constants": "~15.4.5",
     "expo-device": "~5.9.3",

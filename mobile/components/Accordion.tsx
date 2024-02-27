@@ -15,11 +15,11 @@ interface AccordionProps {
   children?: React.ReactNode
 }
 
-function Accordion({
+const Accordion = ({
   style,
   title,
   children
-}: AccordionProps) {
+}: AccordionProps) => {
   const [open, setOpen] = useState(false)
   const animatedController = useRef(new Animated.Value(0)).current
 
