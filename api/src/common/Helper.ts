@@ -1,9 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { Request } from 'express'
 import mongoose from 'mongoose'
 import validator from 'validator'
-import * as env from '../config/env.config'
 
 /**
  * Convert string to boolean.
@@ -12,7 +10,7 @@ import * as env from '../config/env.config'
  * @param {string} input
  * @returns {boolean}
  */
-export function StringToBoolean(input: string): boolean {
+export const StringToBoolean = (input: string): boolean => {
     try {
         return Boolean(JSON.parse(input.toLowerCase()))
     } catch {
@@ -28,7 +26,7 @@ export function StringToBoolean(input: string): boolean {
  * @param {string} filePath
  * @returns {Promise<boolean>}
  */
-export async function exists(filePath: string): Promise<boolean> {
+export const exists = async (filePath: string): Promise<boolean> => {
     try {
         await fs.access(filePath)
         return true
@@ -46,7 +44,7 @@ export async function exists(filePath: string): Promise<boolean> {
  * @param {boolean} recursive
  * @returns {Promise<void>}
  */
-export async function mkdir(folder: string) {
+export const mkdir = async (folder: string) => {
     await fs.mkdir(folder, { recursive: true })
 }
 
@@ -58,7 +56,7 @@ export async function mkdir(folder: string) {
  * @param {string} char
  * @returns {string}
  */
-export function trim(str: string, char: string): string {
+export const trim = (str: string, char: string): string => {
     let res = str
     while (res.charAt(res.length - 1) === char) {
         res = res.substring(0, res.length - 1)
@@ -74,7 +72,7 @@ export function trim(str: string, char: string): string {
  * @param {string} part2
  * @returns {string}
  */
-export function joinURL(part1: string, part2: string): string {
+export const joinURL = (part1: string, part2: string): string => {
     const p1 = trim(part1, '/')
     let p2 = part2
 
@@ -92,9 +90,7 @@ export function joinURL(part1: string, part2: string): string {
  * @param {string} filename
  * @returns {string}
  */
-export function getFilenameWithoutExtension(filename: string): string {
-    return path.parse(filename).name
-}
+export const getFilenameWithoutExtension = (filename: string): string => path.parse(filename).name
 
 /**
  * Clone an object or an array.
@@ -105,57 +101,12 @@ export function getFilenameWithoutExtension(filename: string): string {
 export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
 
 /**
- * Check whether the request is from the backend or not.
- *
- * @export
- * @param {Request} req
- * @returns {boolean}
- */
-export function isBackend(req: Request): boolean {
-    return !!req.headers.origin && trim(req.headers.origin, '/') === trim(env.BACKEND_HOST, '/')
-}
-
-/**
- * Check whether the request is from the frontend or not.
- *
- * @export
- * @param {Request} req
- * @returns {boolean}
- */
-export function isFrontend(req: Request): boolean {
-    return !!req.headers.origin && trim(req.headers.origin, '/') === trim(env.FRONTEND_HOST, '/')
-}
-
-/**
- * Get authentification cookie name.
- *
- * @param {Request} req
- * @returns {string}
- */
-export const getAuthCookieName = (req: Request): string => {
-    if (isBackend(req)) {
-        // Backend auth cookie name
-        return env.BACKEND_AUTH_COOKIE_NAME
-    }
-
-    if (isFrontend(req)) {
-        // Frontend auth cookie name
-        return env.FRONTEND_AUTH_COOKIE_NAME
-    }
-
-    // Mobile app and unit tests auth header name
-    return env.X_ACCESS_TOKEN
-}
-
-/**
  * Check ObjectId.
  *
  * @param {?string} id
  * @returns {boolean}
  */
-export function isValidObjectId(id?: string) {
-    return mongoose.isValidObjectId(id)
-}
+export const isValidObjectId = (id?: string) => mongoose.isValidObjectId(id)
 
 /**
  * Check email.
@@ -163,6 +114,4 @@ export function isValidObjectId(id?: string) {
  * @param {string} email
  * @returns {boolean}
  */
-export function isValidEmail(email?: string) {
-    return !!email && validator.isEmail(email)
-}
+export const isValidEmail = (email?: string) => !!email && validator.isEmail(email)

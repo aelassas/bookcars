@@ -22,7 +22,7 @@ import * as Helper from '../common/Helper'
  * @param {Response} res
  * @returns {unknown}
  */
-export async function validate(req: Request, res: Response) {
+export const validate = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.ValidateSupplierPayload } = req
   const { fullName } = body
 
@@ -49,7 +49,7 @@ export async function validate(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function update(req: Request, res: Response) {
+export const update = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.UpdateSupplierPayload } = req
   const { _id } = body
 
@@ -100,7 +100,7 @@ export async function update(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function deleteSupplier(req: Request, res: Response) {
+export const deleteSupplier = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -149,7 +149,7 @@ export async function deleteSupplier(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getSupplier(req: Request, res: Response) {
+export const getSupplier = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -195,7 +195,7 @@ export async function getSupplier(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getSuppliers(req: Request, res: Response) {
+export const getSuppliers = async (req: Request, res: Response) => {
   try {
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
@@ -247,7 +247,7 @@ export async function getSuppliers(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getAllSuppliers(req: Request, res: Response) {
+export const getAllSuppliers = async (req: Request, res: Response) => {
   try {
     let data = await User.aggregate(
       [

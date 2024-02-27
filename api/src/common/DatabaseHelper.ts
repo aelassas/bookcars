@@ -9,7 +9,7 @@ import * as env from '../config/env.config'
  * @param {boolean} debug
  * @returns {Promise<boolean>}
  */
-export async function Connect(debug: boolean = false): Promise<boolean> {
+export const Connect = async (debug: boolean = false): Promise<boolean> => {
     let options: ConnectOptions = {}
 
     if (env.DB_SSL) {
@@ -41,6 +41,6 @@ export async function Connect(debug: boolean = false): Promise<boolean> {
  * @param {boolean} force
  * @returns {Promise<void>}
  */
-export async function Close(force: boolean = false): Promise<void> {
+export const Close = async (force: boolean = false): Promise<void> => {
     await mongoose.connection.close(force)
 }

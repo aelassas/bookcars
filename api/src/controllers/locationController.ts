@@ -17,7 +17,7 @@ import Car from '../models/Car'
  * @param {Response} res
  * @returns {unknown}
  */
-export async function validate(req: Request, res: Response) {
+export const validate = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.ValidateLocationPayload } = req
   const { language, name } = body
 
@@ -45,7 +45,7 @@ export async function validate(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function create(req: Request, res: Response) {
+export const create = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.LocationName[] } = req
   const names = body
 
@@ -78,7 +78,7 @@ export async function create(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function update(req: Request, res: Response) {
+export const update = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -122,7 +122,7 @@ export async function update(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function deleteLocation(req: Request, res: Response) {
+export const deleteLocation = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -150,7 +150,7 @@ export async function deleteLocation(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getLocation(req: Request, res: Response) {
+export const getLocation = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -178,7 +178,7 @@ export async function getLocation(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getLocations(req: Request, res: Response) {
+export const getLocations = async (req: Request, res: Response) => {
   try {
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
@@ -238,7 +238,7 @@ export async function getLocations(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function checkLocation(req: Request, res: Response) {
+export const checkLocation = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {

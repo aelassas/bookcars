@@ -20,7 +20,7 @@ import * as Helper from '../common/Helper'
  * @param {Response} res
  * @returns {unknown}
  */
-export async function create(req: Request, res: Response) {
+export const create = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.CreateCarPayload } = req
 
   try {
@@ -65,7 +65,7 @@ export async function create(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function update(req: Request, res: Response) {
+export const update = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.UpdateCarPayload } = req
   const { _id } = body
 
@@ -141,7 +141,7 @@ export async function update(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function checkCar(req: Request, res: Response) {
+export const checkCar = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -171,7 +171,7 @@ export async function checkCar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function deleteCar(req: Request, res: Response) {
+export const deleteCar = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -205,7 +205,7 @@ export async function deleteCar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function createImage(req: Request, res: Response) {
+export const createImage = async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       throw new Error('[car.createImage] req.file not found')
@@ -231,7 +231,7 @@ export async function createImage(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateImage(req: Request, res: Response) {
+export const updateImage = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -279,7 +279,7 @@ export async function updateImage(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function deleteImage(req: Request, res: Response) {
+export const deleteImage = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -314,7 +314,7 @@ export async function deleteImage(req: Request, res: Response) {
  * @param {Response} res
  * @returns {*}
  */
-export async function deleteTempImage(req: Request, res: Response) {
+export const deleteTempImage = async (req: Request, res: Response) => {
   const { image } = req.params
 
   try {
@@ -341,7 +341,7 @@ export async function deleteTempImage(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getCar(req: Request, res: Response) {
+export const getCar = async (req: Request, res: Response) => {
   const { id, language } = req.params
 
   try {
@@ -395,7 +395,7 @@ export async function getCar(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getCars(req: Request, res: Response) {
+export const getCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
@@ -521,7 +521,7 @@ export async function getCars(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getBookingCars(req: Request, res: Response) {
+export const getBookingCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingCarsPayload } = req
     const company = new mongoose.Types.ObjectId(body.company)
@@ -565,7 +565,7 @@ export async function getBookingCars(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getFrontendCars(req: Request, res: Response) {
+export const getFrontendCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
