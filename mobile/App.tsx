@@ -25,7 +25,7 @@ SplashScreen.preventAutoHideAsync()
   .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
   .catch(console.warn) // it's good to explicitly catch and inspect any error
 
-function App() {
+const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
   const responseListener = useRef<Notifications.Subscription>()
   const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)

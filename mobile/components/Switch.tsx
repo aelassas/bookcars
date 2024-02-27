@@ -17,7 +17,7 @@ interface SwitchProps {
   onValueChange?: (value: boolean) => void
 }
 
-function Switch({
+const Switch = ({
   value: switchValue,
   style,
   textStyle,
@@ -25,7 +25,7 @@ function Switch({
   disabled,
   children,
   onValueChange: onSwitchValueChange
-}: SwitchProps) {
+}: SwitchProps) => {
   const [value, setValue] = useState(switchValue)
 
   useEffect(() => {

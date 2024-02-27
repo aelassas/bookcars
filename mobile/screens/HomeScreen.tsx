@@ -13,7 +13,7 @@ import Button from '../components/Button'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
 
-function HomeScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) {
+const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Home'>) => {
   const isFocused = useIsFocused()
 
   const dateOffset = 3

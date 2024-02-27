@@ -21,7 +21,7 @@ interface LocationSelectListProps {
   onFocus?: () => void
 }
 
-function LocationSelectList({
+const LocationSelectList = ({
   selectedItem: listSelectedItem,
   size,
   style,
@@ -33,7 +33,7 @@ function LocationSelectList({
   onFetch,
   onChangeText: listOnChangeText,
   onFocus
-}: LocationSelectListProps) {
+}: LocationSelectListProps) => {
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<AutocompleteOption[]>([])
   const [selectedItem, setSelectedItem] = useState<string>()

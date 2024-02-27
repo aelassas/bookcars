@@ -8,12 +8,11 @@ interface CheckboxProps {
   onChange?: (_checked: boolean) => void
 }
 
-function Checkbox({
+const Checkbox = ({
   indeterminate,
   checked,
   onChange
-}: CheckboxProps) {
-  return (
+}: CheckboxProps) => (
     <Pressable
       onPress={() => {
         if (onChange) {
@@ -30,7 +29,6 @@ function Checkbox({
       />
     </Pressable>
   )
-}
 
 const styles = StyleSheet.create({
   checkbox: {

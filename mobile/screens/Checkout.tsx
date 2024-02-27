@@ -26,7 +26,7 @@ import * as BookingService from '../services/BookingService'
 import * as Env from '../config/env.config'
 import Backdrop from '../components/Backdrop'
 
-function CheckoutScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) {
+const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) => {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)

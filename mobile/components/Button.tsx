@@ -9,13 +9,13 @@ interface ButtonProps {
   onPress?: () => void
 }
 
-function Button({
+const Button = ({
   size,
   color,
   style,
   label,
   onPress: onButtonPress
-}: ButtonProps) {
+}: ButtonProps) => {
   const small = size === 'small'
 
   const onPress = () => {

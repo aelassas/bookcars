@@ -14,11 +14,11 @@ interface MileageFilterProps {
   onChange?: (values: bookcarsTypes.Mileage[]) => void
 }
 
-function MileageFilter({
+const MileageFilter = ({
   visible,
   style,
   onChange
-}: MileageFilterProps) {
+}: MileageFilterProps) => {
   const [limited, setLimited] = useState(true)
   const [unlimited, setUnlimited] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])

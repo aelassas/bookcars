@@ -18,7 +18,7 @@ import Error from '../components/Error'
 import Backdrop from '../components/Backdrop'
 import Header from '../components/Header'
 
-function SignUpScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'SignUp'>) {
+const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignUp'>) => {
   const isFocused = useIsFocused()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')

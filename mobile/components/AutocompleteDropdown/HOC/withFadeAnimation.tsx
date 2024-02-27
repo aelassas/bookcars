@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { Animated, Easing } from 'react-native'
 
 export const withFadeAnimation = (WrappedComponent: () => React.JSX.Element, containerStyle?: object) => {
-  function FadeAnimation(props: object) {
+  const FadeAnimation = (props: object) => {
     const opacityAnimationValue = useRef(new Animated.Value(0)).current
 
     useEffect(() => {

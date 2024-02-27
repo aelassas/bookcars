@@ -9,11 +9,10 @@ interface BookingStatusProps {
   status: bookcarsTypes.BookingStatus
 }
 
-function BookingStatus({
+const BookingStatus = ({
   style,
   status
-}: BookingStatusProps) {
-  return (
+}: BookingStatusProps) => (
     <View
       style={{
         ...styles.container,
@@ -37,7 +36,6 @@ function BookingStatus({
       <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
     </View>
   )
-}
 
 const styles = StyleSheet.create({
   container: {

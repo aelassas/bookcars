@@ -32,10 +32,10 @@ interface TextInputProps {
   onChangeText?: (text: string) => void
 }
 
-function TextInputComponent(
-  props: TextInputProps,
+const TextInputComponent = (
+props: TextInputProps,
   ref: React.ForwardedRef<ReactTextInput>
-) {
+) => {
   const [value, setValue] = useState('')
   const _ref = useRef<ReactTextInput | null>(null)
   const small = props.size === 'small'

@@ -8,12 +8,12 @@ interface LinkProps {
   onPress?: () => void
 }
 
-function Link({
+const Link = ({
   style,
   textStyle,
   label,
   onPress: onLinkPress
-}: LinkProps) {
+}: LinkProps) => {
   const onPress = () => {
     if (onLinkPress) {
       onLinkPress()

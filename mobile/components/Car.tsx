@@ -27,7 +27,7 @@ const getExtraIcon = (extra: number) => (extra === -1 ? 'clear' : extra === 0 ? 
 
 const getExtraColor = (extra: number) => (extra === 0 ? '#1f9201' : extra === -1 ? '#f44336' : 'rgba(0, 0, 0, 0.35)')
 
-function Car({
+const Car = ({
   car,
   fr,
   from,
@@ -35,8 +35,7 @@ function Car({
   pickupLocation,
   dropOffLocation,
   navigation
-}: CarProps) {
-  return (
+}: CarProps) => (
     <View key={car._id} style={styles.carContainer}>
       <View style={styles.car}>
         <Text style={styles.name}>{car.name}</Text>
@@ -148,7 +147,6 @@ function Car({
       </View>
     </View>
   )
-}
 
 const styles = StyleSheet.create({
   carContainer: {

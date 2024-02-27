@@ -7,7 +7,7 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 
-function AboutScreen({ navigation, route }: NativeStackScreenProps<StackParams, 'About'>) {
+const AboutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'About'>) => {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)

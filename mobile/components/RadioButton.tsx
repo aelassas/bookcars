@@ -10,13 +10,13 @@ interface RadioButtonProps {
   onValueChange?: (_checked: boolean) => void
 }
 
-function RadioButton({
+const RadioButton = ({
   checked,
   style,
   textStyle,
   label,
   onValueChange: onRadioButtonValueChange
-}: RadioButtonProps) {
+}: RadioButtonProps) => {
   const onPress = () => {
     if (onRadioButtonValueChange) {
       onRadioButtonValueChange(!checked)

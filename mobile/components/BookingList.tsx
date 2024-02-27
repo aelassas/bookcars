@@ -19,7 +19,7 @@ interface BookingListProps {
   header?: React.ReactElement
 }
 
-function BookingList({
+const BookingList = ({
   companies,
   statuses,
   filter,
@@ -27,7 +27,7 @@ function BookingList({
   booking: bookingId,
   language,
   header
-}: BookingListProps) {
+}: BookingListProps) => {
   const [firstLoad, setFirstLoad] = useState(true)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)

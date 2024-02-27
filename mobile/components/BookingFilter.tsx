@@ -16,12 +16,12 @@ interface BookingFilterProps {
   onSubmit: (filter: bookcarsTypes.Filter) => void
 }
 
-function BookingFilter({
+const BookingFilter = ({
   visible,
   style,
   language,
   onSubmit
-}: BookingFilterProps) {
+}: BookingFilterProps) => {
   const [init, setInit] = useState(false)
   const [from, setFrom] = useState<Date | undefined>(undefined)
   const [to, setTo] = useState<Date | undefined>(undefined)

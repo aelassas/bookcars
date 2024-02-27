@@ -55,6 +55,12 @@
     ],
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
+    "react/function-component-definition": [
+      "warn",
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
     "no-console": "off",
     "curly": "error",
     "@typescript-eslint/no-explicit-any": "off"

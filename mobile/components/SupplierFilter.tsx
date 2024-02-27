@@ -18,12 +18,12 @@ interface SupplierFilterProps {
   onChange?: (checkedSuppliers: string[]) => void
 }
 
-function SupplierFilter({
+const SupplierFilter = ({
   visible,
   style,
   onLoad,
   onChange
-}: SupplierFilterProps) {
+}: SupplierFilterProps) => {
   const [suppliers, setSuppliers] = useState<bookcarsTypes.User[]>([])
   const [checkedSuppliers, setCheckedSuppliers] = useState<string[]>([])
   const [allChecked, setAllChecked] = useState(true)
