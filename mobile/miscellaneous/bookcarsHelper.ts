@@ -2,7 +2,7 @@
 
 import * as bookcarsTypes from './bookcarsTypes'
 
-export function formatNumber(x?: number): string {
+export const formatNumber = (x?: number): string => {
     if (typeof x === 'number') {
         const parts: string[] = String(x).split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
@@ -11,17 +11,11 @@ export function formatNumber(x?: number): string {
     return ''
 }
 
-export function formatDatePart(n: number): string {
-    return n > 9 ? String(n) : `0${n}`
-}
+export const formatDatePart = (n: number): string => (n > 9 ? String(n) : `0${n}`)
 
-export function capitalize(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1)
-}
+export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
 
-export function isDate(date?: Date): boolean {
-    return date instanceof Date && !Number.isNaN(date.valueOf())
-}
+export const isDate = (date?: Date): boolean => date instanceof Date && !Number.isNaN(date.valueOf())
 
 export const joinURL = (part1?: string, part2?: string) => {
     if (!part1 || !part2) {
@@ -71,7 +65,7 @@ export const arrayEqual = (a: any, b: any) => {
 
 export const clone = (obj: any) => (Array.isArray(obj) ? Array.from(obj) : ({ ...obj }))
 
-export function cloneArray<T>(arr: T[]): T[] | undefined | null {
+export const cloneArray = <T>(arr: T[]): T[] | undefined | null => {
     if (typeof arr === 'undefined') {
         return undefined
     }

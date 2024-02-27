@@ -62,7 +62,7 @@ export const getMimeType = (fileName: string) => mime.getType(fileName)
  * @returns {void}
  */
 export const registerPushToken = async (userId: string) => {
-  async function registerForPushNotificationsAsync() {
+  const registerForPushNotificationsAsync = async () => {
     let token
 
     try {

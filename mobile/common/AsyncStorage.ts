@@ -44,7 +44,7 @@ export const getString = async (key: string) => {
  * @param {T} value
  * @returns {void}
  */
-export async function storeObject<T>(key: string, value: T) {
+export const storeObject = async<T>(key: string, value: T) => {
   try {
     const jsonValue = JSON.stringify(value)
     await ReactAsyncStorage.setItem(key, jsonValue)
@@ -62,7 +62,7 @@ export async function storeObject<T>(key: string, value: T) {
  * @param {string} key
  * @returns {T|null}
  */
-export async function getObject<T>(key: string) {
+export const getObject = async<T>(key: string) => {
   try {
     const value = await ReactAsyncStorage.getItem(key)
     const jsonValue = value != null ? JSON.parse(value) as T : null
