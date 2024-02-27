@@ -6,7 +6,7 @@ import * as bookcarsTypes from 'bookcars-types';
  * @param {?number} [x]
  * @returns {string}
  */
-export declare function formatNumber(x?: number): string;
+export declare const formatNumber: (x?: number) => string;
 /**
  * Format a Date number to two digits.
  *
@@ -14,7 +14,7 @@ export declare function formatNumber(x?: number): string;
  * @param {number} n
  * @returns {string}
  */
-export declare function formatDatePart(n: number): string;
+export declare const formatDatePart: (n: number) => string;
 /**
  * Capitalize a string.
  *
@@ -22,7 +22,7 @@ export declare function formatDatePart(n: number): string;
  * @param {string} str
  * @returns {string}
  */
-export declare function capitalize(str: string): string;
+export declare const capitalize: (str: string) => string;
 /**
  * Check if a value is a Date.
  *
@@ -30,7 +30,7 @@ export declare function capitalize(str: string): string;
  * @param {?*} [value]
  * @returns {boolean}
  */
-export declare function isDate(value?: any): boolean;
+export declare const isDate: (value?: any) => boolean;
 /**
  * Join two url parts.
  *
@@ -83,7 +83,7 @@ export declare const clone: (obj: any) => any;
  * @param {T[]} arr
  * @returns {(T[] | undefined | null)}
  */
-export declare function cloneArray<T>(arr: T[]): T[] | undefined | null;
+export declare const cloneArray: <T>(arr: T[]) => T[] | null | undefined;
 /**
  * Check if two filters are equal.
  *

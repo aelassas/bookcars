@@ -31,7 +31,7 @@ const App = () => {
   const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)
 
   useEffect(() => {
-    async function register() {
+    const register = async () => {
       const loggedIn = await UserService.loggedIn()
       if (loggedIn) {
         const currentUser = await UserService.getCurrentUser()

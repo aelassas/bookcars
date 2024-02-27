@@ -8,4 +8,4 @@ declare global {
  *
  * @export
  */
-export declare function disableDevTools(): void;
+export declare const disableDevTools: () => void;

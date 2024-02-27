@@ -7,7 +7,7 @@ import * as bookcarsTypes from 'bookcars-types'
  * @param {?number} [x]
  * @returns {string}
  */
-export function formatNumber(x?: number): string {
+export const formatNumber = (x?: number): string => {
     if (typeof x === 'number') {
         const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
@@ -23,7 +23,7 @@ export function formatNumber(x?: number): string {
  * @param {number} n
  * @returns {string}
  */
-export function formatDatePart(n: number): string {
+export const formatDatePart = (n: number): string => {
     return n > 9 ? String(n) : '0' + n
 }
 
@@ -34,7 +34,7 @@ export function formatDatePart(n: number): string {
  * @param {string} str
  * @returns {string}
  */
-export function capitalize(str: string): string {
+export const capitalize = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
@@ -45,7 +45,7 @@ export function capitalize(str: string): string {
  * @param {?*} [value]
  * @returns {boolean}
  */
-export function isDate(value?: any): boolean {
+export const isDate = (value?: any): boolean => {
     return value instanceof Date && !Number.isNaN(value.valueOf())
 }
 
@@ -151,7 +151,7 @@ export const clone = (obj: any) => {
  * @param {T[]} arr
  * @returns {(T[] | undefined | null)}
  */
-export function cloneArray<T>(arr: T[]): T[] | undefined | null {
+export const cloneArray = <T>(arr: T[]): T[] | undefined | null => {
     if (typeof arr === 'undefined') {
         return undefined
     }

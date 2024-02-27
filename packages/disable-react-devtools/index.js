@@ -3,7 +3,7 @@
  *
  * @export
  */
-export function disableDevTools() {
+export const disableDevTools = () => {
     if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__)
         return;
     Object.keys(window.__REACT_DEVTOOLS_GLOBAL_HOOK__).forEach((k) => {
@@ -13,4 +13,4 @@ export function disableDevTools() {
         window.__REACT_DEVTOOLS_GLOBAL_HOOK__[k] =
             replacement || (() => undefined);
     });
-}
+};

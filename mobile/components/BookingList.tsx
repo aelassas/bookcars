@@ -87,12 +87,14 @@ const BookingList = ({
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    (async function () {
+    const init = async () => {
       if (firstLoad && companies && companies.length > 0 && statuses && statuses.length > 0) {
         await fetchData()
         setFirstLoad(false)
       }
-    }())
+    }
+
+    init()
   }, [firstLoad, companies, statuses]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -108,7 +110,7 @@ const BookingList = ({
   }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    async function init() {
+    const init = async () => {
       try {
         if (bookingId) {
           setLoading(true)

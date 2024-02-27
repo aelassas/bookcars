@@ -46,20 +46,18 @@ const CarList = ({
   const [rows, setRows] = useState<bookcarsTypes.Car[]>([])
   const [page, setPage] = useState(1)
 
-  const _init = async () => {
-    try {
-      const _language = await UserService.getLanguage()
-      i18n.locale = _language
-      setLanguage(_language)
-    } catch (err) {
-      Helper.error(err)
-    }
-  }
-
   useEffect(() => {
-    (async function () {
-      await _init()
-    }())
+    const init = async () => {
+      try {
+        const _language = await UserService.getLanguage()
+        i18n.locale = _language
+        setLanguage(_language)
+      } catch (err) {
+        Helper.error(err)
+      }
+    }
+
+    init()
   }, [])
 
   const fetchData = async (

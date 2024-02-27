@@ -12,7 +12,7 @@ declare global {
  *
  * @export
  */
-export function disableDevTools(): void {
+export const disableDevTools = () => {
   if (!window.__REACT_DEVTOOLS_GLOBAL_HOOK__) return
 
   Object.keys(window.__REACT_DEVTOOLS_GLOBAL_HOOK__).forEach((k) => {
