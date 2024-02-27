@@ -46,7 +46,7 @@ import DatePicker from '../components/DatePicker'
 
 import '../assets/css/booking.css'
 
-function UpdateBooking() {
+const UpdateBooking = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(false)

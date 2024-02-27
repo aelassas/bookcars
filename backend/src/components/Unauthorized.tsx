@@ -7,15 +7,13 @@ interface UnauthorizedProps {
   style?: CSSProperties
 }
 
-function Unauthorized({ style }: UnauthorizedProps) {
-  return (
-    <div className="msg" style={style}>
-      <h2>{strings.UNAUTHORIZED}</h2>
-      <p>
-        <Link href="/">{commonStrings.GO_TO_HOME}</Link>
-      </p>
-    </div>
+const Unauthorized = ({ style }: UnauthorizedProps) => (
+  <div className="msg" style={style}>
+    <h2>{strings.UNAUTHORIZED}</h2>
+    <p>
+      <Link href="/">{commonStrings.GO_TO_HOME}</Link>
+    </p>
+  </div>
   )
-}
 
 export default Unauthorized

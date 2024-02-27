@@ -35,7 +35,7 @@ import FuelPolicyList from '../components/FuelPolicyList'
 import '../assets/css/create-car.css'
 import '../assets/css/update-car.css'
 
-function UpdateCar() {
+const UpdateCar = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [noMatch, setNoMatch] = useState(false)

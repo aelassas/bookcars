@@ -17,13 +17,13 @@ interface GearboxListProps {
   onChange?: (value: string) => void
 }
 
-function GearboxList({
+const GearboxList = ({
   value: gearboxListValue,
   label,
   required,
   variant,
   onChange
-}: GearboxListProps) {
+}: GearboxListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

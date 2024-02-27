@@ -12,10 +12,10 @@ interface FuelFilterProps {
   onChange?: (values: bookcarsTypes.CarType[]) => void
 }
 
-function FuelFilter({
+const FuelFilter = ({
   className,
   onChange
-}: FuelFilterProps) {
+}: FuelFilterProps) => {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
 

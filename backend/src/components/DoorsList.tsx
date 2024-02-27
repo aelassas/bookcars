@@ -15,13 +15,13 @@ interface DoorsListProps {
   onChange?: (value: string) => void
 }
 
-function DoorsList({
+const DoorsList = ({
   value: doorsListValue,
   label,
   required,
   variant,
   onChange
-}: DoorsListProps) {
+}: DoorsListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

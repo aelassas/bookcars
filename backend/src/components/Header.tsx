@@ -50,15 +50,13 @@ interface HeaderProps {
   notificationCount?: number
 }
 
-function ListItemLink(props: any) {
-  return <ListItemButton component="a" {...props} />
-}
+const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
 
-function Header({
+const Header = ({
   user,
   hidden,
   notificationCount: headerNotificationCount
-}: HeaderProps) {
+}: HeaderProps) => {
   const navigate = useNavigate()
   const [lang, setLang] = useState(Helper.getLanguage(Env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)

@@ -15,13 +15,13 @@ interface SeatsListProps {
   onChange?: (value: string) => void
 }
 
-function SeatsList({
+const SeatsList = ({
   value: seatsListValue,
   label,
   required,
   variant,
   onChange
-}: SeatsListProps) {
+}: SeatsListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

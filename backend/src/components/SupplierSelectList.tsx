@@ -17,7 +17,7 @@ interface SupplierSelectListProps {
   onChange?: (values: bookcarsTypes.Option[]) => void
 }
 
-function SupplierSelectList({
+const SupplierSelectList = ({
   value,
   multiple,
   label,
@@ -25,7 +25,7 @@ function SupplierSelectList({
   readOnly,
   variant,
   onChange
-}: SupplierSelectListProps) {
+}: SupplierSelectListProps) => {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Option[]>([])

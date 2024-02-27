@@ -25,7 +25,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/create-company.css'
 
-function CreateCompany() {
+const CreateCompany = () => {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')

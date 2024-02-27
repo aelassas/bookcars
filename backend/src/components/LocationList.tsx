@@ -39,12 +39,12 @@ interface LocationListProps {
   onDelete: (rowCount: number) => void
 }
 
-function LocationList({
+const LocationList = ({
   keyword: locationKeyword,
   reload: locationReload,
   onLoad,
   onDelete
-}: LocationListProps) {
+}: LocationListProps) => {
   const [keyword, setKeyword] = useState(locationKeyword)
   const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)

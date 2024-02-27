@@ -10,7 +10,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/companies.css'
 
-function Companies() {
+const Companies = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)

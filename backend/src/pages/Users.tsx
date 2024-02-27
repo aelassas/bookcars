@@ -11,7 +11,7 @@ import UserList from '../components/UserList'
 
 import '../assets/css/users.css'
 
-function Users() {
+const Users = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [types, setTypes] = useState<bookcarsTypes.UserType[]>()

@@ -17,7 +17,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/change-password.css'
 
-function ChangePassword() {
+const ChangePassword = () => {
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [userId, setUserId] = useState<string>()
   const [newPassword, setNewPassword] = useState('')

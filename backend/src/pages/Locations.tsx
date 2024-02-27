@@ -9,7 +9,7 @@ import InfoBox from '../components/InfoBox'
 
 import '../assets/css/locations.css'
 
-function Locations() {
+const Locations = () => {
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
 

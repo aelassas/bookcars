@@ -19,7 +19,7 @@ import * as SupplierService from '../services/SupplierService'
 
 import '../assets/css/cars.css'
 
-function Cars() {
+const Cars = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])

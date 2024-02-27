@@ -33,7 +33,7 @@ import FuelPolicyList from '../components/FuelPolicyList'
 
 import '../assets/css/create-car.css'
 
-function CreateCar() {
+const CreateCar = () => {
   const navigate = useNavigate()
   const [isCompany, setIsCompany] = useState(false)
   const [loading, setLoading] = useState(false)

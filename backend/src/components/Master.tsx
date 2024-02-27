@@ -19,7 +19,7 @@ interface MasterProps {
   onLoad?: (user?: bookcarsTypes.User) => void
 }
 
-function Master({
+const Master = ({
   user: masterUser,
   strict,
   admin,
@@ -28,7 +28,7 @@ function Master({
   style,
   children,
   onLoad
-}: MasterProps) {
+}: MasterProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
   const [unauthorized, setUnauthorized] = useState(false)

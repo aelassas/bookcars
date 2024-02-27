@@ -18,7 +18,7 @@ import Env from '../config/env.config'
 
 import '../assets/css/create-location.css'
 
-function CreateLocation() {
+const CreateLocation = () => {
   const [visible, setVisible] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])
   const [nameErrors, setNameErrors] = useState<boolean[]>([])

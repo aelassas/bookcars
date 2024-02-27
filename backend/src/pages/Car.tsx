@@ -35,7 +35,7 @@ import * as Helper from '../common/Helper'
 import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car.css'
 
-function Car() {
+const Car = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [error, setError] = useState(false)

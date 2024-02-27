@@ -3,7 +3,7 @@ import Master from '../components/Master'
 
 import '../assets/css/tos.css'
 
-function ToS() {
+const ToS = () => {
   const onLoad = () => {}
 
   return (

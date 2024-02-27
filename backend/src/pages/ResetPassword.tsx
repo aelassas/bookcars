@@ -20,7 +20,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/reset-password.css'
 
-function ResetPassword() {
+const ResetPassword = () => {
   const navigate = useNavigate()
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')

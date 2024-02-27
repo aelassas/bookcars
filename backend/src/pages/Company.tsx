@@ -28,7 +28,7 @@ import NoMatch from './NoMatch'
 
 import '../assets/css/company.css'
 
-function Company() {
+const Company = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [company, setCompany] = useState<bookcarsTypes.User>()

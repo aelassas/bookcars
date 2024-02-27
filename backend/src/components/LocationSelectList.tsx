@@ -16,14 +16,14 @@ interface LocationSelectListProps {
   onChange?: (values: bookcarsTypes.Option[]) => void
 }
 
-function LocationSelectList({
+const LocationSelectList = ({
   value,
   multiple,
   label,
   required,
   variant,
   onChange
-}: LocationSelectListProps) {
+}: LocationSelectListProps) => {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [rows, setRows] = useState<bookcarsTypes.Location[]>([])

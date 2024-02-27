@@ -10,10 +10,10 @@ interface SearchProps {
   onSubmit?: (value: string) => void
 }
 
-function Search({
+const Search = ({
   className,
   onSubmit
-}: SearchProps) {
+}: SearchProps) => {
   const [keyword, setKeyword] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
