@@ -27,7 +27,7 @@ import * as env from '../config/env.config'
  * @param {Response} res
  * @returns {unknown}
  */
-export async function create(req: Request, res: Response) {
+export const create = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
     if (body.booking.additionalDriver) {
@@ -56,7 +56,7 @@ export async function create(req: Request, res: Response) {
  * @param {string} notificationMessage
  * @returns {void}
  */
-async function notifySupplier(user: env.User, bookingId: string, company: env.User, notificationMessage: string) {
+const notifySupplier = async (user: env.User, bookingId: string, company: env.User, notificationMessage: string) => {
   strings.setLanguage(company.language)
 
   // notification
@@ -102,7 +102,7 @@ async function notifySupplier(user: env.User, bookingId: string, company: env.Us
  * @param {Response} res
  * @returns {unknown}
  */
-export async function checkout(req: Request, res: Response) {
+export const checkout = async (req: Request, res: Response) => {
   try {
     let user: env.User | null
     const { body }: { body: bookcarsTypes.CheckoutPayload } = req
@@ -240,7 +240,7 @@ export async function checkout(req: Request, res: Response) {
  * @param {env.Booking} booking
  * @returns {void}
  */
-async function notifyDriver(booking: env.Booking) {
+const notifyDriver = async (booking: env.Booking) => {
   const driver = await User.findById(booking.driver)
   if (!driver) {
     console.log(`Renter ${booking.driver} not found`)
@@ -343,7 +343,7 @@ async function notifyDriver(booking: env.Booking) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function update(req: Request, res: Response) {
+export const update = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpsertBookingPayload } = req
     const booking = await Booking.findById(body.booking._id)
@@ -453,7 +453,7 @@ export async function update(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function updateStatus(req: Request, res: Response) {
+export const updateStatus = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.UpdateStatusPayload } = req
     const { ids: _ids, status } = body
@@ -485,7 +485,7 @@ export async function updateStatus(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function deleteBookings(req: Request, res: Response) {
+export const deleteBookings = async (req: Request, res: Response) => {
   try {
     const { body }: { body: string[] } = req
     const ids = body.map((id) => new mongoose.Types.ObjectId(id))
@@ -515,7 +515,7 @@ export async function deleteBookings(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getBooking(req: Request, res: Response) {
+export const getBooking = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
@@ -601,7 +601,7 @@ export async function getBooking(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function getBookings(req: Request, res: Response) {
+export const getBookings = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
@@ -810,7 +810,7 @@ export async function getBookings(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function hasBookings(req: Request, res: Response) {
+export const hasBookings = async (req: Request, res: Response) => {
   const { driver } = req.params
 
   try {
@@ -841,7 +841,7 @@ export async function hasBookings(req: Request, res: Response) {
  * @param {Response} res
  * @returns {unknown}
  */
-export async function cancelBooking(req: Request, res: Response) {
+export const cancelBooking = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {

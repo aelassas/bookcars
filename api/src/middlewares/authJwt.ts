@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import * as env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as AuthHelper from '../common/AuthHelper'
 
 /**
  * Verify authentication token middleware.
@@ -10,12 +10,12 @@ import * as Helper from '../common/Helper'
  * @param {Response} res
  * @param {NextFunction} next
  */
-function verifyToken(req: Request, res: Response, next: NextFunction) {
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   let token: string
 
-  if (Helper.isBackend(req)) {
+  if (AuthHelper.isBackend(req)) {
     token = req.signedCookies[env.BACKEND_AUTH_COOKIE_NAME] as string // backend
-  } else if (Helper.isFrontend(req)) {
+  } else if (AuthHelper.isFrontend(req)) {
     token = req.signedCookies[env.FRONTEND_AUTH_COOKIE_NAME] as string // frontend
   } else {
     token = req.headers[env.X_ACCESS_TOKEN] as string // mobile app and unit tests

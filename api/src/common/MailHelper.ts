@@ -9,7 +9,7 @@ import * as env from '../config/env.config'
  * @param {nodemailer.SendMailOptions} mailOptions
  * @returns {Promise<unknown>}
  */
-export function sendMail(mailOptions: nodemailer.SendMailOptions) {
+export const sendMail = (mailOptions: nodemailer.SendMailOptions) => {
     const transporterOptions: SMTPTransport.Options = {
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
