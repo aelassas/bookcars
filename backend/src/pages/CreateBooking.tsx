@@ -38,7 +38,7 @@ import DatePicker from '../components/DatePicker'
 
 import '../assets/css/create-booking.css'
 
-function CreateBooking() {
+const CreateBooking = () => {
   const navigate = useNavigate()
   const [isCompany, setIsCompany] = useState(false)
   const [visible, setVisible] = useState(false)

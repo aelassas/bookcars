@@ -14,7 +14,7 @@ import * as SupplierService from '../services/SupplierService'
 
 import '../assets/css/bookings.css'
 
-function Bookings() {
+const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)

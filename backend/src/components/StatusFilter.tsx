@@ -13,11 +13,11 @@ interface StatusFilterProps {
   onChange?: (value: bookcarsTypes.BookingStatus[]) => void
 }
 
-function StatusFilter({
+const StatusFilter = ({
   className,
   collapse,
   onChange
-}: StatusFilterProps) {
+}: StatusFilterProps) => {
   const statuses = Helper.getBookingStatuses()
   const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)

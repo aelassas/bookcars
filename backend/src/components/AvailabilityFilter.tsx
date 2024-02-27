@@ -13,10 +13,10 @@ interface AvailabilityFilterProps {
   onChange?: (values: string[]) => void
 }
 
-function AvailabilityFilter({
+const AvailabilityFilter = ({
   className,
   onChange
-}: AvailabilityFilterProps) {
+}: AvailabilityFilterProps) => {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState<string[]>([
     bookcarsTypes.Availablity.Available,

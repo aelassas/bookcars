@@ -58,7 +58,7 @@ interface CarListProps {
   onDelete?: (rowCount: number) => void
 }
 
-function CarList({
+const CarList = ({
   companies: carCompanies,
   keyword: carKeyword,
   fuel: carFuel,
@@ -76,7 +76,7 @@ function CarList({
   hidePrice,
   onLoad,
   onDelete
-}: CarListProps) {
+}: CarListProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)

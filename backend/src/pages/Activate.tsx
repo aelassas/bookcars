@@ -22,7 +22,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/activate.css'
 
-function Activate() {
+const Activate = () => {
   const navigate = useNavigate()
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')

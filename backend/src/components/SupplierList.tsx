@@ -36,13 +36,13 @@ interface SupplierListProps {
   onDelete?: (rowCount: number) => void
 }
 
-function SupplierList({
+const SupplierList = ({
   user,
   keyword: supplierListKeyword,
   reload: supplierListReload,
   onDelete,
   onLoad
-}: SupplierListProps) {
+}: SupplierListProps) => {
   const [keyword, setKeyword] = useState(supplierListKeyword)
   const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)

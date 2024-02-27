@@ -17,13 +17,13 @@ interface FuelPolicyListProps {
   onChange?: (value: string) => void
 }
 
-function FuelPolicyList({
+const FuelPolicyList = ({
   value: fuelPolicyValue,
   label,
   required,
   variant,
   onChange
-}: FuelPolicyListProps) {
+}: FuelPolicyListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

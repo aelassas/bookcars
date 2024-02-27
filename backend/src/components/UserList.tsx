@@ -44,14 +44,14 @@ interface UserListProps {
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
 }
 
-function UserList({
+const UserList = ({
   types: userListTypes,
   keyword: userListKeyword,
   user: userListUser,
   hideDesktopColumns,
   checkboxSelection,
   onLoad
-}: UserListProps) {
+}: UserListProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
   const [pageSize, setPageSize] = useState(Env.PAGE_SIZE)

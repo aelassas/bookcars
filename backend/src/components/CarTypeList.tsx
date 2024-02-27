@@ -16,13 +16,13 @@ interface CarTypeListProps {
   onChange?: (value: string) => void
 }
 
-function CarTypeList({
+const CarTypeList = ({
   value: carTypeValue,
   required,
   label,
   variant,
   onChange
-}: CarTypeListProps) {
+}: CarTypeListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

@@ -43,7 +43,7 @@ interface AvatarProps {
   onChange?: (param: string) => void,
 }
 
-function Avatar({
+const Avatar = ({
   width,
   height,
   mode,
@@ -58,7 +58,7 @@ function Avatar({
   onValidate,
   onBeforeUpload,
   onChange,
-}: AvatarProps) {
+}: AvatarProps) => {
   const [error, setError] = useState(false)
   const [open, setOpen] = useState(false)
   const [openTypeDialog, setOpenTypeDialog] = useState(false)

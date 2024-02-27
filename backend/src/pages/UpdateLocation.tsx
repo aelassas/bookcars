@@ -22,7 +22,7 @@ import Env from '../config/env.config'
 
 import '../assets/css/update-location.css'
 
-function UpdateLocation() {
+const UpdateLocation = () => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [names, setNames] = useState<bookcarsTypes.LocationName[]>([])

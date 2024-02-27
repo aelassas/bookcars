@@ -55,7 +55,7 @@ interface BookingListProps {
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Booking>
 }
 
-function BookingList({
+const BookingList = ({
   companies: bookingCompanies,
   statuses: bookingStatuses,
   filter: bookingFilter,
@@ -71,7 +71,7 @@ function BookingList({
   loading: bookingLoading,
   checkboxSelection,
   onLoad,
-}: BookingListProps) {
+}: BookingListProps) => {
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)

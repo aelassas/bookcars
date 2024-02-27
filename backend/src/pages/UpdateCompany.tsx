@@ -27,7 +27,7 @@ import Avatar from '../components/Avatar'
 
 import '../assets/css/update-company.css'
 
-function UpdateCompany() {
+const UpdateCompany = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [company, setCompany] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')

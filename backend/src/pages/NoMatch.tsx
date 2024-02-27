@@ -8,7 +8,7 @@ interface NoMatchProps {
   hideHeader?: boolean
 }
 
-function NoMatch({ hideHeader }: NoMatchProps) {
+const NoMatch = ({ hideHeader }: NoMatchProps) => {
   const noMatch = () => (
     <div className="msg">
       <h2>{strings.NO_MATCH}</h2>

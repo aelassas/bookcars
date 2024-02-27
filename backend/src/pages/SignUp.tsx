@@ -20,7 +20,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/signup.css'
 
-function SignUp() {
+const SignUp = () => {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')

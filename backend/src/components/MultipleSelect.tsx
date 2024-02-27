@@ -54,7 +54,7 @@ const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardR
   )
 })
 
-function MultipleSelect({
+const MultipleSelect = ({
   label,
   reference,
   selectedOptions,
@@ -72,7 +72,7 @@ function MultipleSelect({
   onInputChange,
   onClear,
   onOpen
-}: MultipleSelectProps) {
+}: MultipleSelectProps) => {
   const [values, setValues] = useState<any[]>([])
   const [inputValue, setInputValue] = useState('')
 
