@@ -10,10 +10,10 @@ interface DepositFilterProps {
   onChange?: (value: number) => void
 }
 
-function DepositFilter({
+const DepositFilter = ({
   className,
   onChange
-}: DepositFilterProps) {
+}: DepositFilterProps) => {
   const deposit2500Ref = useRef<HTMLInputElement>(null)
   const deposit5000Ref = useRef<HTMLInputElement>(null)
   const deposit7500Ref = useRef<HTMLInputElement>(null)

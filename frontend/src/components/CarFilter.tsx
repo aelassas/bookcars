@@ -18,14 +18,14 @@ interface CarFilterProps {
   onSubmit: bookcarsTypes.CarFilterSubmitEvent
 }
 
-function CarFilter({
+const CarFilter = ({
   from: filterFrom,
   to: filterTo,
   pickupLocation: filterPickupLocation,
   dropOffLocation: filterDropOffLocation,
   className,
   onSubmit
-}: CarFilterProps) {
+}: CarFilterProps) => {
   const _minDate = new Date()
   _minDate.setDate(_minDate.getDate() + 1)
 

@@ -35,6 +35,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .ts,.tsx .",
+    "fix": "eslint --fix .",
     "ncu": "ncu -u -x typescript,date-fns"
   },
   "eslintConfig": {

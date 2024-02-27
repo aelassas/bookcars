@@ -22,7 +22,7 @@ interface StatusListProps {
   onChange?: (value: bookcarsTypes.BookingStatus) => void
 }
 
-function StatusList({
+const StatusList = ({
   value: statusListValue,
   label,
   required,
@@ -30,7 +30,7 @@ function StatusList({
   disabled,
   style,
   onChange
-}: StatusListProps) {
+}: StatusListProps) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {

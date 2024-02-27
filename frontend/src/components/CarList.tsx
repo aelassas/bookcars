@@ -51,7 +51,7 @@ interface CarListProps {
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
-function CarList({
+const CarList = ({
   from,
   to,
   companies,
@@ -69,7 +69,7 @@ function CarList({
   hideCompany,
   loading: carListLoading,
   onLoad
-}: CarListProps) {
+}: CarListProps) => {
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)

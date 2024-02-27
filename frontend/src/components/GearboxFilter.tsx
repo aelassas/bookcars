@@ -12,10 +12,10 @@ interface GearboxFilterProps {
   onChange?: (value: bookcarsTypes.GearboxType[]) => void
 }
 
-function GearboxFilter({
+const GearboxFilter = ({
   className,
   onChange
-}: GearboxFilterProps) {
+}: GearboxFilterProps) => {
   const [allChecked, setAllChecked] = useState(true)
   const [values, setValues] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
 

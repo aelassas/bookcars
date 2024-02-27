@@ -27,7 +27,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/signup.css'
 
-function SignUp() {
+const SignUp = () => {
   const navigate = useNavigate()
   const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')

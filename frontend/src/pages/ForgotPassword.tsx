@@ -19,7 +19,7 @@ import * as Helper from '../common/Helper'
 
 import '../assets/css/forgot-password.css'
 
-function ForgotPassword() {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('')
   const [visible, setVisible] = useState(false)
   const [error, setError] = useState(false)

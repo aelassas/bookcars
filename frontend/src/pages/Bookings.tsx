@@ -12,7 +12,7 @@ import * as SupplierService from '../services/SupplierService'
 
 import '../assets/css/bookings.css'
 
-function Bookings() {
+const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()

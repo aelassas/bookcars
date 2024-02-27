@@ -17,7 +17,7 @@ import * as LangHelper from '../common/LangHelper'
 
 import '../assets/css/signin.css'
 
-function SignIn() {
+const SignIn = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

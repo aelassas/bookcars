@@ -19,35 +19,33 @@ const ChangePassword = lazy(() => import('./pages/ChangePassword'))
 const Contact = lazy(() => import('./pages/Contact'))
 const NoMatch = lazy(() => import('./pages/NoMatch'))
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Suspense fallback={<></>}>
-          <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/activate" element={<Activate />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/cars" element={<Cars />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/tos" element={<ToS />} />
-            <Route path="/contact" element={<Contact />} />
+const App = () => (
+  <Router>
+    <div className="App">
+      <Suspense fallback={<></>}>
+        <Routes>
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/activate" element={<Activate />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/cars" element={<Cars />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/tos" element={<ToS />} />
+          <Route path="/contact" element={<Contact />} />
 
-            <Route path="*" element={<NoMatch />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </Suspense>
+    </div>
+  </Router>
   )
-}
 
 export default App

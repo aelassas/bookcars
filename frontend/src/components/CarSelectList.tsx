@@ -29,7 +29,7 @@ interface CarSelectListProps {
   onChange?: (values: bookcarsTypes.Car[]) => void
 }
 
-function CarSelectList({
+const CarSelectList = ({
   label,
   required,
   multiple,
@@ -39,7 +39,7 @@ function CarSelectList({
   pickupLocation,
   readOnly,
   onChange
-}: CarSelectListProps) {
+}: CarSelectListProps) => {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)

@@ -35,7 +35,7 @@ import Backdrop from '../components/SimpleBackdrop'
 
 import '../assets/css/notifications.css'
 
-function Notifications() {
+const Notifications = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
