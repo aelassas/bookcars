@@ -59,7 +59,6 @@ beforeAll(async () => {
             type: bookcarsTypes.CarType.Diesel,
             gearbox: bookcarsTypes.GearboxType.Automatic,
             aircon: true,
-            // image: IMAGE1,
             seats: 5,
             doors: 4,
             fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
@@ -98,6 +97,9 @@ afterAll(async () => {
 
     // delete the car
     await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
+
+    // delete drivers
+    await User.deleteOne({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
 
     await DatabaseHelper.Close()
 })

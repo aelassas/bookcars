@@ -192,7 +192,6 @@ describe('GET /api/check-location/:id', () => {
             type: bookcarsTypes.CarType.Diesel,
             gearbox: bookcarsTypes.GearboxType.Automatic,
             aircon: true,
-            // image: IMAGE1,
             seats: 5,
             doors: 4,
             fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
