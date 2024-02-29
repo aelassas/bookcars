@@ -10,7 +10,7 @@ const routes = {
   resendLink: '/api/resend-link',
   validateEmail: '/api/validate-email',
   signin: '/api/sign-in/:type',
-  pushToken: '/api/push-token/:userId',
+  getPushToken: '/api/push-token/:userId',
   createPushToken: '/api/create-push-token/:userId/:token',
   deletePushToken: '/api/delete-push-token/:userId',
   validateAccessToken: '/api/validate-access-token',
