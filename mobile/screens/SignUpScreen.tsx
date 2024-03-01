@@ -13,14 +13,14 @@ import Switch from '../components/Switch'
 import * as UserService from '../services/UserService'
 import * as Helper from '../common/Helper'
 import DateTimePicker from '../components/DateTimePicker'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import Error from '../components/Error'
 import Backdrop from '../components/Backdrop'
 import Header from '../components/Header'
 
 const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignUp'>) => {
   const isFocused = useIsFocused()
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -180,7 +180,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
         start: birthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setBirthDateValid(_birthDateValid)
       return _birthDateValid

@@ -20,7 +20,7 @@ import {
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
 import * as CarService from '../services/CarService'
@@ -188,7 +188,7 @@ const Car = () => {
                 />
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                   </span>
                   <span className="car-company-info">{car.company.fullName}</span>
                 </div>
@@ -348,8 +348,8 @@ const Car = () => {
               car={car._id}
               hideCompanyColumn
               hideCarColumn
-              hideDates={Env.isMobile()}
-              checkboxSelection={!Env.isMobile()}
+              hideDates={env.isMobile()}
+              checkboxSelection={!env.isMobile()}
             />
           </div>
         </div>

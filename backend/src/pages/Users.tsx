@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings } from '../lang/users'
 import * as Helper from '../common/Helper'
 import UserTypeFilter from '../components/UserTypeFilter'
@@ -62,8 +62,8 @@ const Users = () => {
               user={user}
               types={types}
               keyword={keyword}
-              checkboxSelection={!Env.isMobile() && admin}
-              hideDesktopColumns={Env.isMobile()}
+              checkboxSelection={!env.isMobile() && admin}
+              hideDesktopColumns={env.isMobile()}
             />
           </div>
         </div>

@@ -18,13 +18,13 @@ import DateTimePicker from '../components/DateTimePicker'
 import Switch from '../components/Switch'
 import Button from '../components/Button'
 import * as Helper from '../common/Helper'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 
 const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -63,7 +63,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
       setUser(_user)
       if (_user.avatar) {
-        setAvatar(bookcarsHelper.joinURL(Env.CDN_USERS, _user.avatar))
+        setAvatar(bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar))
       } else {
         setAvatar(null)
       }
@@ -154,7 +154,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         start: birthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setBirthDateValid(_birthDateValid)
       return _birthDateValid
@@ -291,7 +291,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         if (status === 200) {
                           const _user = await UserService.getUser(user._id)
                           setUser(_user)
-                          const _avatar = bookcarsHelper.joinURL(Env.CDN_USERS, _user.avatar)
+                          const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
                           setAvatar(_avatar)
                         } else {
                           Helper.error()

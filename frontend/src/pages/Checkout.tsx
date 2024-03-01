@@ -25,7 +25,7 @@ import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as BookingService from '../services/BookingService'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
@@ -53,7 +53,7 @@ const Checkout = () => {
   const [to, setTo] = useState<Date>()
   const [visible, setVisible] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [noMatch, setNoMatch] = useState(false)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -740,7 +740,7 @@ const Checkout = () => {
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
+  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
 
   return (
@@ -871,7 +871,7 @@ const Checkout = () => {
                       <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                       <div className="booking-detail-value">
                         <div className="car-company">
-                          <img src={bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: Env.COMPANY_IMAGE_HEIGHT }} />
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: env.COMPANY_IMAGE_HEIGHT }} />
                           <span className="car-company-name">{car.company.fullName}</span>
                         </div>
                       </div>

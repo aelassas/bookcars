@@ -1,6 +1,6 @@
 import * as bookcarsTypes from 'bookcars-types'
 import axiosInstance from './axiosInstance'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 /**
  * Sign up.
@@ -27,7 +27,7 @@ export const signup = (data: bookcarsTypes.SignUpPayload): Promise<number> =>
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
   axiosInstance
     .get(
-      `/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+      `/api/check-token/${env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 
@@ -54,7 +54,7 @@ export const deleteTokens = (userId: string): Promise<number> =>
 export const resend = (email?: string, reset = false): Promise<number> =>
   axiosInstance
     .post(
-      `/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email || '')}/${reset}`
+      `/api/resend/${env.APP_TYPE}/${encodeURIComponent(email || '')}/${reset}`
     )
     .then((res) => res.status)
 
@@ -200,7 +200,7 @@ export const getLanguage = () => {
   if (lang && lang.length === 2) {
     return lang
   }
-  return Env.DEFAULT_LANGUAGE
+  return env.DEFAULT_LANGUAGE
 }
 
 /**

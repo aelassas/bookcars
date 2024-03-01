@@ -11,7 +11,7 @@ import { disableDevTools } from 'disable-react-devtools'
 import * as Helper from './common/Helper'
 import * as UserService from './services/UserService'
 import { strings as commonStrings } from './lang/common'
-import Env from './config/env.config'
+import env from './config/env.config'
 import App from './App'
 
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -26,16 +26,16 @@ if (process.env.REACT_APP_NODE_ENV === 'production') {
   disableDevTools()
 }
 
-let language = Env.DEFAULT_LANGUAGE
+let language = env.DEFAULT_LANGUAGE
 const user = JSON.parse(localStorage.getItem('bc-user') ?? 'null')
 let lang = UserService.getQueryLanguage()
 
 if (lang) {
-  if (!Env.LANGUAGES.includes(lang)) {
+  if (!env.LANGUAGES.includes(lang)) {
     lang = localStorage.getItem('bc-language')
 
-    if (lang && !Env.LANGUAGES.includes(lang)) {
-      lang = Env.DEFAULT_LANGUAGE
+    if (lang && !env.LANGUAGES.includes(lang)) {
+      lang = env.DEFAULT_LANGUAGE
     }
   }
 

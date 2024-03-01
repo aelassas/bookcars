@@ -13,7 +13,7 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import * as NotificationService from '../services/NotificationService'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import Checkbox from '../components/Checkbox'
 
@@ -88,7 +88,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
         const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
         setRows(_rows)
         setTotalRecords(_totalRecords)
-        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
+        setRowCount((page - 1) * env.PAGE_SIZE + _rows.length)
         if (notificationsListRef.current) {
           notificationsListRef.current.scrollTo({ x: 0, y: 0, animated: false })
         }
@@ -125,7 +125,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
   const allChecked = rows.length > 0 && checkedRows.length === rows.length
   const indeterminate = checkedRows.length > 0 && checkedRows.length < rows.length
   const previousPageDisabled = page === 1
-  const nextPageDisabled = (page - 1) * Env.PAGE_SIZE + rows.length >= totalRecords
+  const nextPageDisabled = (page - 1) * env.PAGE_SIZE + rows.length >= totalRecords
 
   return (
     <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} notificationCount={notificationCount} strict>
@@ -355,14 +355,14 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                 ))}
               </ScrollView>
               <View style={styles.footer}>
-                <Text style={styles.rowCount}>{`${(page - 1) * Env.PAGE_SIZE + 1}-${rowCount} ${i18n.t('OF')} ${totalRecords}`}</Text>
+                <Text style={styles.rowCount}>{`${(page - 1) * env.PAGE_SIZE + 1}-${rowCount} ${i18n.t('OF')} ${totalRecords}`}</Text>
                 <View style={styles.footerActions}>
                   <Pressable
                     style={styles.action}
                     disabled={previousPageDisabled}
                     onPress={() => {
                       const _page = page - 1
-                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                      setRowCount(_page < Math.ceil(totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : totalRecords)
                       setPage(_page)
                     }}
                   >
@@ -373,7 +373,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                     disabled={nextPageDisabled}
                     onPress={() => {
                       const _page = page + 1
-                      setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                      setRowCount(_page < Math.ceil(totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : totalRecords)
                       setPage(_page)
                     }}
                   >
@@ -409,7 +409,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                               if (selectedRows.length === rows.length) {
                                 const _page = 1
                                 const _totalRecords = totalRecords - selectedRows.length
-                                setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords)
+                                setRowCount(_page < Math.ceil(_totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : _totalRecords)
 
                                 if (page > 1) {
                                   setPage(1)

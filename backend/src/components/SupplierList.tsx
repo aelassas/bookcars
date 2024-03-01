@@ -18,7 +18,7 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/company-list'
@@ -60,7 +60,7 @@ const SupplierList = ({
     try {
       setLoading(true)
 
-      const data = await SupplierService.getSuppliers(_keyword || '', _page, Env.PAGE_SIZE)
+      const data = await SupplierService.getSuppliers(_keyword || '', _page, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()
@@ -69,18 +69,18 @@ const SupplierList = ({
       const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
       let _rows = []
-      if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+      if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) {
         _rows = _page === 1 ? _data.resultData : [...rows, ..._data.resultData]
       } else {
         _rows = _data.resultData
       }
 
       setRows(_rows)
-      setRowCount((_page - 1) * Env.PAGE_SIZE + _rows.length)
+      setRowCount((_page - 1) * env.PAGE_SIZE + _rows.length)
       setTotalRecords(_totalRecords)
       setFetch(_data.resultData.length > 0)
 
-      if (((Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) && _page === 1) || (Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile())) {
+      if (((env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) && _page === 1) || (env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile())) {
         window.scrollTo(0, 0)
       }
 
@@ -114,7 +114,7 @@ const SupplierList = ({
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (Env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || Env.isMobile()) {
+    if (env.PAGINATION_MODE === Const.PAGINATION_MODE.INFINITE_SCROLL || env.isMobile()) {
       const element = document.querySelector('body')
 
       if (element) {
@@ -122,7 +122,7 @@ const SupplierList = ({
           if (fetch
             && !loading
             && window.scrollY > 0
-            && window.scrollY + window.innerHeight + Env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
+            && window.scrollY + window.innerHeight + env.INFINITE_SCROLL_OFFSET >= document.body.scrollHeight) {
             setLoading(true)
             setPage(page + 1)
           }
@@ -207,7 +207,7 @@ const SupplierList = ({
               <article key={company._id}>
                 <div className="company-item">
                   <div className="company-item-avatar">
-                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} />
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, company.avatar)} alt={company.fullName} />
                   </div>
                   <span className="company-item-title">{company.fullName}</span>
                 </div>
@@ -248,10 +248,10 @@ const SupplierList = ({
           </DialogActions>
         </Dialog>
       </section>
-      {Env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !Env.isMobile() && (
+      {env.PAGINATION_MODE === Const.PAGINATION_MODE.CLASSIC && !env.isMobile() && (
         <Pager
           page={page}
-          pageSize={Env.PAGE_SIZE}
+          pageSize={env.PAGE_SIZE}
           rowCount={rowCount}
           totalRecords={totalRecords}
           onNext={() => setPage(page + 1)}

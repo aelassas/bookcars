@@ -1,6 +1,6 @@
 import axios from 'axios'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
-const axiosInstance = axios.create({ baseURL: Env.API_HOST })
+const axiosInstance = axios.create({ baseURL: env.API_HOST })
 
 export default axiosInstance

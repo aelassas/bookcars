@@ -9,14 +9,14 @@ import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import BookingList from '../components/BookingList'
 import SupplierFilter from '../components/SupplierFilter'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import StatusFilter from '../components/StatusFilter'
 import * as BookingService from '../services/BookingService'
 import BookingFilter from '../components/BookingFilter'
 
 const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Bookings'>) => {
   const isFocused = useIsFocused()
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()

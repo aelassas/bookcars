@@ -33,7 +33,7 @@ import {
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings } from '../lang/header'
 import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
@@ -58,7 +58,7 @@ const Header = ({
   notificationCount: headerNotificationCount
 }: HeaderProps) => {
   const navigate = useNavigate()
-  const [lang, setLang] = useState(Helper.getLanguage(Env.DEFAULT_LANGUAGE))
+  const [lang, setLang] = useState(Helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
@@ -270,7 +270,7 @@ const Header = ({
       onClose={handleLangMenuClose}
     >
       {
-        Env._LANGUAGES.map((language) => (
+        env._LANGUAGES.map((language) => (
           <MenuItem onClick={handleLangMenuClose} data-code={language.code} key={language.code}>
             {language.label}
           </MenuItem>

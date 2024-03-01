@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import * as UserService from './UserService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
@@ -89,7 +89,7 @@ export const getNotifications = async (userId: string, page: number): Promise<bo
   const headers = await UserService.authHeader()
   return axiosInstance
     .get(
-      `/api/notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
+      `/api/notifications/${encodeURIComponent(userId)}/${page}/${env.PAGE_SIZE}`,
       { headers }
     )
     .then((res) => res.data)

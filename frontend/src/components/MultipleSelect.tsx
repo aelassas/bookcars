@@ -12,7 +12,7 @@ import {
 import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 import '../assets/css/multiple-select.css'
 
@@ -188,7 +188,7 @@ const MultipleSelect = ({
                     <>
                       <InputAdornment position="start">
                         {option.image ? (
-                          <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)} className="avatar-small suo" />
+                          <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} className="avatar-small suo" />
                         ) : (
                           <AccountCircle className="avatar-small suo" color="disabled" />
                         )}
@@ -217,9 +217,9 @@ const MultipleSelect = ({
                       <InputAdornment position="start">
                         <div className="company-ia">
                           <img
-                            src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)}
+                            src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                             alt={option.name}
-                            style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
+                            style={{ height: env.COMPANY_IMAGE_HEIGHT }}
                           />
                         </div>
                       </InputAdornment>
@@ -268,10 +268,10 @@ const MultipleSelect = ({
                     <>
                       <InputAdornment position="start">
                         <img
-                          src={bookcarsHelper.joinURL(Env.CDN_CARS, option.image)}
+                          src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
                           alt={option.name}
                           style={{
-                            height: Env.SELECTED_CAR_OPTION_IMAGE_HEIGHT,
+                            height: env.SELECTED_CAR_OPTION_IMAGE_HEIGHT,
                           }}
                         />
                       </InputAdornment>
@@ -300,7 +300,7 @@ const MultipleSelect = ({
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image">
-                  {option.image ? <Avatar src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}
+                  {option.image ? <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}
                 </span>
                 <span className="option-name">{option.name}</span>
               </li>
@@ -310,9 +310,9 @@ const MultipleSelect = ({
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image company-ia">
                   <img
-                    src={bookcarsHelper.joinURL(Env.CDN_USERS, option.image)}
+                    src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                     alt={option.name}
-                    style={{ height: Env.COMPANY_IMAGE_HEIGHT }}
+                    style={{ height: env.COMPANY_IMAGE_HEIGHT }}
                   />
                 </span>
                 <span className="option-name">{option.name}</span>
@@ -332,10 +332,10 @@ const MultipleSelect = ({
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image car-ia">
                   <img
-                    src={bookcarsHelper.joinURL(Env.CDN_CARS, option.image)}
+                    src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
                     alt={option.name}
                     style={{
-                      height: Env.CAR_OPTION_IMAGE_HEIGHT,
+                      height: env.CAR_OPTION_IMAGE_HEIGHT,
                     }}
                   />
                 </span>

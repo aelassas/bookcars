@@ -8,7 +8,7 @@ import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 import BookingStatus from './BookingStatus'
 import Button from './Button'
 import * as Helper from '../common/Helper'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 
 interface BookingProps {
@@ -73,7 +73,7 @@ const Booking = ({
           <Image
             style={styles.companyImg}
             source={{
-              uri: bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar),
+              uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
             }}
           />
           <Text style={styles.companyText}>{supplier.fullName}</Text>
@@ -242,8 +242,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   companyImg: {
-    width: Env.COMPANY_IMAGE_WIDTH,
-    height: Env.COMPANY_IMAGE_HEIGHT,
+    width: env.COMPANY_IMAGE_WIDTH,
+    height: env.COMPANY_IMAGE_HEIGHT,
   },
   companyText: {
     color: '#a1a1a1',

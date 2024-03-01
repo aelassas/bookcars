@@ -13,7 +13,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/company-list'
 import * as SupplierService from '../services/SupplierService'
@@ -153,7 +153,7 @@ const Company = () => {
               ) : (
                 <div className="car-company">
                   <span className="car-company-logo">
-                    <img src={bookcarsHelper.joinURL(Env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: Env.COMPANY_IMAGE_WIDTH }} />
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: env.COMPANY_IMAGE_WIDTH }} />
                   </span>
                   <span className="car-company-info">{company.fullName}</span>
                 </div>

@@ -13,7 +13,7 @@ import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ulStrings } from '../lang/user-list'
 import * as UserService from '../services/UserService'
@@ -201,8 +201,8 @@ const User = () => {
                 user={company ? undefined : user}
                 companies={company ? [user._id as string] : companies}
                 statuses={statuses}
-                hideDates={Env.isMobile()}
-                checkboxSelection={!Env.isMobile()}
+                hideDates={env.isMobile()}
+                checkboxSelection={!env.isMobile()}
                 hideCompanyColumn={company}
               />
             )}

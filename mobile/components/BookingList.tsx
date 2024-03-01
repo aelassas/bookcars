@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-nativ
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as Helper from '../common/Helper'
 import * as BookingService from '../services/BookingService'
@@ -57,7 +57,7 @@ const BookingList = ({
         }
         setLoading(true)
         setFetch(true)
-        const data = await BookingService.getBookings(payload, _page + 1, Env.BOOKINGS_PAGE_SIZE)
+        const data = await BookingService.getBookings(payload, _page + 1, env.BOOKINGS_PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           Helper.error()
@@ -134,7 +134,7 @@ const BookingList = ({
   }, [bookingId])
 
   const _fr = language === 'fr'
-  const numToRender = Math.floor(Env.BOOKINGS_PAGE_SIZE / 2)
+  const numToRender = Math.floor(env.BOOKINGS_PAGE_SIZE / 2)
 
   return (
     <View style={styles.container}>

@@ -30,7 +30,7 @@ import { strings } from '../lang/notifications'
 import Master from '../components/Master'
 import * as NotificationService from '../services/NotificationService'
 import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import Backdrop from '../components/SimpleBackdrop'
 
 import '../assets/css/notifications.css'
@@ -68,7 +68,7 @@ const Notifications = () => {
         }))
         const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
         setTotalRecords(_totalRecords)
-        setRowCount((page - 1) * Env.PAGE_SIZE + _rows.length)
+        setRowCount((page - 1) * env.PAGE_SIZE + _rows.length)
         setRows(_rows)
         if (notificationsListRef.current) {
           notificationsListRef.current.scrollTo(0, 0)
@@ -347,24 +347,24 @@ const Notifications = () => {
               ))}
             </div>
             <div className="footer">
-              {rowCount > -1 && <div className="row-count">{`${(page - 1) * Env.PAGE_SIZE + 1}-${rowCount} ${commonStrings.OF} ${totalRecords}`}</div>}
+              {rowCount > -1 && <div className="row-count">{`${(page - 1) * env.PAGE_SIZE + 1}-${rowCount} ${commonStrings.OF} ${totalRecords}`}</div>}
 
               <div className="actions">
                 <IconButton
                   disabled={page === 1}
                   onClick={() => {
                     const _page = page - 1
-                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                    setRowCount(_page < Math.ceil(totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : totalRecords)
                     setPage(_page)
                   }}
                 >
                   <PreviousPageIcon className="icon" />
                 </IconButton>
                 <IconButton
-                  disabled={(page - 1) * Env.PAGE_SIZE + rows.length >= totalRecords}
+                  disabled={(page - 1) * env.PAGE_SIZE + rows.length >= totalRecords}
                   onClick={() => {
                     const _page = page + 1
-                    setRowCount(_page < Math.ceil(totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : totalRecords)
+                    setRowCount(_page < Math.ceil(totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : totalRecords)
                     setPage(_page)
                   }}
                 >
@@ -401,7 +401,7 @@ const Notifications = () => {
                         if (selectedRows.length === rows.length) {
                           const _page = 1
                           const _totalRecords = totalRecords - selectedRows.length
-                          setRowCount(_page < Math.ceil(_totalRecords / Env.PAGE_SIZE) ? (_page - 1) * Env.PAGE_SIZE + Env.PAGE_SIZE : _totalRecords)
+                          setRowCount(_page < Math.ceil(_totalRecords / env.PAGE_SIZE) ? (_page - 1) * env.PAGE_SIZE + env.PAGE_SIZE : _totalRecords)
 
                           if (page > 1) {
                             setPage(1)

@@ -18,7 +18,7 @@ import NoMatch from './NoMatch'
 import Error from './Error'
 import Backdrop from '../components/SimpleBackdrop'
 import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 import '../assets/css/update-location.css'
 
@@ -123,7 +123,7 @@ const UpdateLocation = () => {
             const _location = await LocationService.getLocation(id)
 
             if (_location && _location.values) {
-              Env._LANGUAGES.forEach((lang) => {
+              env._LANGUAGES.forEach((lang) => {
                 if (_location.values && !_location.values.some((value) => value.language === lang.code)) {
                   _location.values.push({ language: lang.code, name: '' })
                 }
@@ -172,7 +172,7 @@ const UpdateLocation = () => {
             <form onSubmit={handleSubmit}>
               {location.values.map((value, index) => (
                 <FormControl key={value.value} fullWidth margin="dense">
-                  <InputLabel className="required">{Env._LANGUAGES.filter((l) => l.code === value.language)[0].label}</InputLabel>
+                  <InputLabel className="required">{env._LANGUAGES.filter((l) => l.code === value.language)[0].label}</InputLabel>
                   <Input
                     type="text"
                     value={(names[index] && names[index].name) || ''}

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1548" lines-covered="1535" line-rate="0.9915999999999999" branches-valid="529" branches-covered="449" branch-rate="0.8487" timestamp="1709234959110" complexity="0" version="0.1">
+<coverage lines-valid="1548" lines-covered="1540" line-rate="0.9948" branches-valid="529" branches-covered="454" branch-rate="0.8582" timestamp="1709322133478" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -2159,9 +2159,9 @@
         </class>
       </classes>
     </package>
-    <package name="src.models" line-rate="0.8676" branch-rate="0.6785">
+    <package name="src.models" line-rate="0.9411" branch-rate="0.8571">
       <classes>
-        <class name="AdditionalDriver.ts" filename="src\models\AdditionalDriver.ts" line-rate="0.8887999999999999" branch-rate="0.75">
+        <class name="AdditionalDriver.ts" filename="src\models\AdditionalDriver.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="7" signature="()V">
               <lines>
@@ -2181,9 +2181,9 @@
             <line number="31" hits="6" branch="false"/>
             <line number="49" hits="8" branch="false"/>
             <line number="51" hits="8" branch="false"/>
-            <line number="52" hits="10" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="53" hits="0" branch="false"/>
-            <line number="55" hits="10" branch="false"/>
+            <line number="52" hits="10" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="53" hits="1" branch="false"/>
+            <line number="55" hits="9" branch="false"/>
           </lines>
         </class>
         <class name="Booking.ts" filename="src\models\Booking.ts" line-rate="0.8332999999999999" branch-rate="0.5">
@@ -2249,7 +2249,7 @@
             <line number="25" hits="10" branch="false"/>
           </lines>
         </class>
-        <class name="LocationValue.ts" filename="src\models\LocationValue.ts" line-rate="0.8332999999999999" branch-rate="0.5">
+        <class name="LocationValue.ts" filename="src\models\LocationValue.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="10" signature="()V">
               <lines>
@@ -2261,12 +2261,12 @@
             <line number="4" hits="8" branch="false"/>
             <line number="29" hits="8" branch="false"/>
             <line number="31" hits="8" branch="false"/>
-            <line number="32" hits="10" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="33" hits="0" branch="false"/>
-            <line number="35" hits="10" branch="false"/>
+            <line number="32" hits="10" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="33" hits="1" branch="false"/>
+            <line number="35" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="Notification.ts" filename="src\models\Notification.ts" line-rate="0.8332999999999999" branch-rate="0.5">
+        <class name="Notification.ts" filename="src\models\Notification.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="10" signature="()V">
               <lines>
@@ -2278,12 +2278,12 @@
             <line number="4" hits="8" branch="false"/>
             <line number="32" hits="8" branch="false"/>
             <line number="34" hits="8" branch="false"/>
-            <line number="35" hits="10" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="36" hits="0" branch="false"/>
-            <line number="38" hits="10" branch="false"/>
+            <line number="35" hits="10" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="36" hits="1" branch="false"/>
+            <line number="38" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="NotificationCounter.ts" filename="src\models\NotificationCounter.ts" line-rate="0.8332999999999999" branch-rate="0.5">
+        <class name="NotificationCounter.ts" filename="src\models\NotificationCounter.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="10" signature="()V">
               <lines>
@@ -2295,12 +2295,12 @@
             <line number="4" hits="8" branch="false"/>
             <line number="28" hits="8" branch="false"/>
             <line number="30" hits="8" branch="false"/>
-            <line number="31" hits="10" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="32" hits="0" branch="false"/>
-            <line number="34" hits="10" branch="false"/>
+            <line number="31" hits="10" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="32" hits="1" branch="false"/>
+            <line number="34" hits="9" branch="false"/>
           </lines>
         </class>
-        <class name="PushToken.ts" filename="src\models\PushToken.ts" line-rate="0.8332999999999999" branch-rate="0.5">
+        <class name="PushToken.ts" filename="src\models\PushToken.ts" line-rate="1" branch-rate="1">
           <methods>
             <method name="(anonymous_0)" hits="10" signature="()V">
               <lines>
@@ -2312,9 +2312,9 @@
             <line number="4" hits="8" branch="false"/>
             <line number="24" hits="8" branch="false"/>
             <line number="26" hits="8" branch="false"/>
-            <line number="27" hits="10" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="28" hits="0" branch="false"/>
-            <line number="30" hits="10" branch="false"/>
+            <line number="27" hits="10" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="28" hits="1" branch="false"/>
+            <line number="30" hits="9" branch="false"/>
           </lines>
         </class>
         <class name="Token.ts" filename="src\models\Token.ts" line-rate="0.8332999999999999" branch-rate="0.5">

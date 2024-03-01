@@ -4,7 +4,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 import * as Helper from '../common/Helper'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
@@ -39,7 +39,7 @@ const CarList = ({
   header,
   onLoad
 }: CarListProps) => {
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [onScrollEnd, setOnScrollEnd] = useState(false)
   const [loading, setLoading] = useState(true)
   const [fetch, setFetch] = useState(false)
@@ -83,7 +83,7 @@ const CarList = ({
           deposit: _deposit,
         }
 
-        const data = await CarService.getCars(payload, _page, Env.CARS_PAGE_SIZE)
+        const data = await CarService.getCars(payload, _page, env.CARS_PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           Helper.error()
@@ -127,7 +127,7 @@ const CarList = ({
   }, [companies, pickupLocation, fuel, gearbox, mileage, deposit])
 
   const fr = language === 'fr'
-  const numToRender = Math.floor(Env.CARS_PAGE_SIZE / 2)
+  const numToRender = Math.floor(env.CARS_PAGE_SIZE / 2)
 
   return (
     <View style={styles.container}>

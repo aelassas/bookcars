@@ -1,4 +1,4 @@
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 
 export const fr = {
   GENERIC_ERROR: "Une erreur non gérée s'est produite.",
@@ -69,7 +69,7 @@ export const fr = {
   BIRTH_DATE: 'Date de naissance',
   RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
   TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-  BIRTH_DATE_NOT_VALID: `Vous devez avoir au moins ${Env.MINIMUM_AGE} ans.`,
+  BIRTH_DATE_NOT_VALID: `Vous devez avoir au moins ${env.MINIMUM_AGE} ans.`,
   BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
   BIRTH_DATE_NOT_VALID_PART2: 'ans.',
   SUPPLIER: 'Fournisseur',

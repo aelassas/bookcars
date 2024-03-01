@@ -19,7 +19,7 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreen'
 import CarsScreen from '../screens/CarsScreen'
 import * as UserService from '../services/UserService'
 import i18n from '../lang/i18n'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import SettingsScreen from '../screens/SettingsScreen'
 import ChangePasswordScreen from '../screens/ChangePasswordScreen'
 import DrawerContent from './DrawerContent'
@@ -30,7 +30,7 @@ const DrawerNavigator = () => {
   const routes = useNavigationState((state) => state && state.routes)
   const index = useNavigationState((state) => state && state.index)
   const [loggedIn, setLoggedIn] = useState(false)
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   const Drawer = createDrawerNavigator<StackParams>()
   const insets = useSafeAreaInsets()

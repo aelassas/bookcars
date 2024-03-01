@@ -16,7 +16,7 @@ const LANGUAGES = [
   },
 ]
 
-const Env = {
+const env = {
   isMobile: () => window.innerWidth <= 960,
 
   APP_TYPE: bookcarsTypes.AppType.Backend,
@@ -51,4 +51,4 @@ const Env = {
       : Const.PAGINATION_MODE.CLASSIC,
 }
 
-export default Env
+export default env

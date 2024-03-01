@@ -1,5 +1,5 @@
 import LocalizedStrings from 'react-localization'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as LangHelper from '../common/LangHelper'
 
 const strings = new LocalizedStrings({
@@ -70,7 +70,7 @@ const strings = new LocalizedStrings({
     BIRTH_DATE: 'Date de naissance',
     RECAPTCHA_ERROR: 'Veuillez remplir le captcha pour continuer.',
     TOS_ERROR: "Veuillez accepter les conditions générales d'utilisation.",
-    BIRTH_DATE_NOT_VALID: `Vous devez avoir au moins ${Env.MINIMUM_AGE} ans.`,
+    BIRTH_DATE_NOT_VALID: `Vous devez avoir au moins ${env.MINIMUM_AGE} ans.`,
     BIRTH_DATE_NOT_VALID_PART1: 'Le conducteur doit avoir au moins',
     BIRTH_DATE_NOT_VALID_PART2: 'ans.',
     SUPPLIER: 'Fournisseur',
@@ -146,7 +146,7 @@ const strings = new LocalizedStrings({
     BIRTH_DATE: 'Birth date',
     RECAPTCHA_ERROR: 'Fill out the captcha to continue.',
     TOS_ERROR: 'Please accept the Terms of Use.',
-    BIRTH_DATE_NOT_VALID: `You must be at least ${Env.MINIMUM_AGE} years old.`,
+    BIRTH_DATE_NOT_VALID: `You must be at least ${env.MINIMUM_AGE} years old.`,
     BIRTH_DATE_NOT_VALID_PART1: 'The driver must be at least',
     BIRTH_DATE_NOT_VALID_PART2: 'years old.',
     SUPPLIER: 'Supplier',

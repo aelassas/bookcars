@@ -15,7 +15,7 @@ import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-up'
 import * as UserService from '../services/UserService'
@@ -29,7 +29,7 @@ import '../assets/css/signup.css'
 
 const SignUp = () => {
   const navigate = useNavigate()
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [birthDate, setBirthDate] = useState<Date>()
@@ -127,7 +127,7 @@ const SignUp = () => {
     if (date && bookcarsHelper.isDate(date)) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setBirthDateValid(_birthDateValid)
       return _birthDateValid
@@ -194,7 +194,7 @@ const SignUp = () => {
         return
       }
 
-      if (Env.RECAPTCHA_ENABLED && !reCaptchaToken) {
+      if (env.RECAPTCHA_ENABLED && !reCaptchaToken) {
         setPasswordError(false)
         setRecaptchaError(true)
         setPasswordsDontMatch(false)
@@ -365,10 +365,10 @@ const SignUp = () => {
                   />
                 </FormControl>
 
-                {Env.RECAPTCHA_ENABLED && (
+                {env.RECAPTCHA_ENABLED && (
                   <div className="recaptcha">
                     <ReCAPTCHA
-                      sitekey={Env.RECAPTCHA_SITE_KEY || ''}
+                      sitekey={env.RECAPTCHA_SITE_KEY || ''}
                       hl={language}
                       onChange={handleRecaptchaVerify}
                     />
