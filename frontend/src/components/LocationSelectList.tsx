@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import { TextFieldVariants } from '@mui/material'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
 import MultipleSelect from './MultipleSelect'
@@ -51,7 +51,7 @@ const LocationSelectList = ({
     try {
       if (fetch || _page === 1) {
         setLoading(true)
-        const data = await LocationService.getLocations(_keyword, _page, 7) // Env.PAGE_SIZE
+        const data = await LocationService.getLocations(_keyword, _page, 7) // env.PAGE_SIZE
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           return
@@ -96,7 +96,7 @@ const LocationSelectList = ({
       ListboxProps={{
         onScroll: (event) => {
           const listboxNode = event.currentTarget
-          if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
+          if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - env.PAGE_OFFSET) {
             const p = page + 1
             setPage(p)
             fetchData(p, keyword)

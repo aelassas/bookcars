@@ -1,6 +1,6 @@
 import * as bookcarsTypes from 'bookcars-types'
 import axiosInstance from './axiosInstance'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 /**
  * Create a User.
@@ -42,7 +42,7 @@ export const signup = (data: bookcarsTypes.SignUpPayload): Promise<number> =>
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
   axiosInstance
     .get(
-      `/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+      `/api/check-token/${env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 
@@ -112,7 +112,7 @@ export const validateEmail = (data: bookcarsTypes.ValidateEmailPayload): Promise
 export const signin = (data: bookcarsTypes.SignInPayload): Promise<{ status: number, data: bookcarsTypes.User }> =>
   axiosInstance
     .post(
-      `/api/sign-in/${Env.APP_TYPE}`,
+      `/api/sign-in/${env.APP_TYPE}`,
       data,
       { withCredentials: true }
     )
@@ -212,7 +212,7 @@ export const getLanguage = (): string => {
   if (lang && lang.length === 2) {
     return lang
   }
-  return Env.DEFAULT_LANGUAGE
+  return env.DEFAULT_LANGUAGE
 }
 
 /**

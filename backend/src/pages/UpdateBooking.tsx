@@ -21,7 +21,7 @@ import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
 import { strings as bfStrings } from '../lang/booking-filter'
@@ -319,7 +319,7 @@ const UpdateBooking = () => {
     if (date) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setAdditionalDriverBirthDateValid(_birthDateValid)
       return _birthDateValid
@@ -758,7 +758,7 @@ const UpdateBooking = () => {
                       }}
                       language={UserService.getLanguage()}
                     />
-                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && Helper.getBirthDateError(Env.MINIMUM_AGE)) || ''}</FormHelperText>
+                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && Helper.getBirthDateError(env.MINIMUM_AGE)) || ''}</FormHelperText>
                   </FormControl>
                 </>
               )}

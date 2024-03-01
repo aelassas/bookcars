@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import * as LocationService from '../services/LocationService'
 import * as SupplierService from '../services/SupplierService'
@@ -135,7 +135,7 @@ const Cars = () => {
             {!loading && (
               <>
                 <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
-                <SupplierFilter className="filter" companies={allCompanies} onChange={handleSupplierFilterChange} collapse={!Env.isMobile()} />
+                <SupplierFilter className="filter" companies={allCompanies} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
                 <FuelFilter className="filter" onChange={handleFuelFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
                 <MileageFilter className="filter" onChange={handleMileageFilterChange} />

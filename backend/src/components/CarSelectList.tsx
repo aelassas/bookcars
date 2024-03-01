@@ -8,7 +8,7 @@ import {
   TextFieldVariants
 } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as blStrings } from '../lang/booking-list'
@@ -124,7 +124,7 @@ const CarSelectList = ({
 
       setLoading(true)
 
-      const data = await CarService.getBookingCars(_keyword, payload, _page, Env.PAGE_SIZE)
+      const data = await CarService.getBookingCars(_keyword, payload, _page, env.PAGE_SIZE)
       const _cars = _page === 1 ? data : [...cars, ...data]
 
       setCars(_cars)
@@ -159,7 +159,7 @@ const CarSelectList = ({
         ListboxProps={{
           onScroll: (event) => {
             const listboxNode = event.currentTarget
-            if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - Env.PAGE_OFFSET) {
+            if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
               fetchData(p, keyword, currentCompany, currentPickupLocation)

@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import axiosRetry from 'axios-retry'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 
 /**
  * Initialize axios-retry.
@@ -9,10 +9,10 @@ import * as Env from '../config/env.config'
  */
 export const init = (axiosInstance: AxiosInstance) => {
   axiosRetry(axiosInstance, {
-    retries: Env.AXIOS_RETRIES, // number of retries
+    retries: env.AXIOS_RETRIES, // number of retries
     retryDelay: (retryCount) => {
       console.log(`retry attempt: ${retryCount}`)
-      return retryCount * Env.AXIOS_RETRIES_INTERVAL // time interval between retries
+      return retryCount * env.AXIOS_RETRIES_INTERVAL // time interval between retries
     },
     retryCondition: (err) => {
       // if retry condition is not specified, by default idempotent requests are retried

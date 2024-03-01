@@ -7,7 +7,7 @@ import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import Button from './Button'
 import * as Helper from '../common/Helper'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 
 interface CarProps {
@@ -41,7 +41,7 @@ const Car = ({
         <Text style={styles.name}>{car.name}</Text>
 
         <View style={styles.imgView}>
-          <Image style={styles.img} source={{ uri: bookcarsHelper.joinURL(Env.CDN_CARS, car.image) }} />
+          <Image style={styles.img} source={{ uri: bookcarsHelper.joinURL(env.CDN_CARS, car.image) }} />
         </View>
 
         <View style={styles.infos}>
@@ -115,7 +115,7 @@ const Car = ({
             <Image
               style={styles.companyImg}
               source={{
-                uri: bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar),
+                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
               }}
             />
             <Text style={styles.companyText}>{car.company.fullName}</Text>
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
   },
   imgView: {
     width: '100%',
-    height: Env.CAR_IMAGE_HEIGHT,
+    height: env.CAR_IMAGE_HEIGHT,
     alignItems: 'center',
   },
   img: {
-    width: Env.CAR_IMAGE_WIDTH,
-    height: Env.CAR_IMAGE_HEIGHT,
+    width: env.CAR_IMAGE_WIDTH,
+    height: env.CAR_IMAGE_HEIGHT,
   },
   infos: {
     flexDirection: 'row',
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   companyImg: {
-    width: Env.COMPANY_IMAGE_WIDTH,
-    height: Env.COMPANY_IMAGE_HEIGHT,
+    width: env.COMPANY_IMAGE_WIDTH,
+    height: env.COMPANY_IMAGE_HEIGHT,
   },
   companyText: {
     color: '#a1a1a1',

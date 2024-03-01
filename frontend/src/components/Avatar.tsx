@@ -16,7 +16,7 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
@@ -196,7 +196,7 @@ const Avatar = ({
                   </Box>
                 )}
               >
-                <MaterialAvatar src={bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar)} className="avatar" />
+                <MaterialAvatar src={bookcarsHelper.joinURL(env.CDN_USERS, user.avatar)} className="avatar" />
               </Badge>
             </Badge>
           ) : (
@@ -221,7 +221,7 @@ const Avatar = ({
           )}
         </div>
       ) : user.avatar ? (
-        <MaterialAvatar src={bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar)} className={size ? `avatar-${size}` : 'avatar'} />
+        <MaterialAvatar src={bookcarsHelper.joinURL(env.CDN_USERS, user.avatar)} className={size ? `avatar-${size}` : 'avatar'} />
       ) : (
         <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
       )}

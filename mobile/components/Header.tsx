@@ -8,7 +8,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as UserService from '../services/UserService'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 
 interface HeaderProps {
   title?: string
@@ -35,7 +35,7 @@ const Header = ({ title,
       if (currentUser && currentUser._id) {
         const user = await UserService.getUser(currentUser._id)
         if (user.avatar) {
-          setAvatar(bookcarsHelper.joinURL(Env.CDN_USERS, user.avatar))
+          setAvatar(bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
         } else {
           setAvatar('')
         }

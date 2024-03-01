@@ -23,7 +23,7 @@ import RadioButton from '../components/RadioButton'
 import * as CarService from '../services/CarService'
 import * as LocationService from '../services/LocationService'
 import * as BookingService from '../services/BookingService'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import Backdrop from '../components/Backdrop'
 
 const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Checkout'>) => {
@@ -34,7 +34,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [loading, setLoading] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User | null>()
-  const [language, setLanguage] = useState(Env.DEFAULT_LANGUAGE)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -450,7 +450,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         start: birthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setBirthDateValid(_birthDateValid)
       setError(!_birthDateValid)
@@ -471,7 +471,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         start: addtionalDriverBirthDate,
         end: new Date(),
       }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setAdditionalDriverBirthDateValid(_birthDateValid)
       setError(!_birthDateValid)
@@ -975,7 +975,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <Image
                       style={styles.companyImg}
                       source={{
-                        uri: bookcarsHelper.joinURL(Env.CDN_USERS, car.company.avatar),
+                        uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
                       }}
                     />
                     <Text style={styles.companyText}>{car.company.fullName}</Text>
@@ -1339,8 +1339,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   companyImg: {
-    width: Env.COMPANY_IMAGE_WIDTH,
-    height: Env.COMPANY_IMAGE_HEIGHT,
+    width: env.COMPANY_IMAGE_WIDTH,
+    height: env.COMPANY_IMAGE_HEIGHT,
   },
   companyText: {
     color: '#a1a1a1',

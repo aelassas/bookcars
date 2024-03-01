@@ -4,7 +4,7 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import * as Helper from '../common/Helper'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as SupplierService from '../services/SupplierService'
 import Link from './Link'
@@ -93,7 +93,7 @@ const SupplierFilter = ({
                     <Image
                       style={styles.image}
                       source={{
-                        uri: bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar),
+                        uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
                       }}
                     />
                   </Switch>
@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   image: {
-    width: Env.COMPANY_IMAGE_WIDTH,
-    height: Env.COMPANY_IMAGE_HEIGHT,
+    width: env.COMPANY_IMAGE_WIDTH,
+    height: env.COMPANY_IMAGE_HEIGHT,
   },
   link: {
     marginTop: 10,

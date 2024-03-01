@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import Accordion from './Accordion'
 
@@ -108,7 +108,7 @@ const SupplierFilter = ({
         <Accordion
           title={commonStrings.SUPPLIER}
           collapse={collapse}
-          offsetHeight={Math.floor((suppliers.length / 2) * Env.COMPANY_IMAGE_HEIGHT)}
+          offsetHeight={Math.floor((suppliers.length / 2) * env.COMPANY_IMAGE_HEIGHT)}
           className={`${className ? `${className} ` : ''}company-filter`}
         >
           <ul className="company-list">
@@ -128,7 +128,7 @@ const SupplierFilter = ({
                   role="button"
                   tabIndex={0}
                 >
-                  <img src={bookcarsHelper.joinURL(Env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+                  <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
                 </span>
               </li>
             ))}

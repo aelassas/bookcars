@@ -2,7 +2,7 @@ import { Platform } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as Localization from 'expo-localization'
 import axiosInstance from './axiosInstance'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import * as AsyncStorage from '../common/AsyncStorage'
 import * as ToastHelper from '../common/ToastHelper'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
@@ -47,7 +47,7 @@ export const signup = (data: bookcarsTypes.FrontendSignUpPayload): Promise<numbe
 export const checkToken = (userId: string, email: string, token: string): Promise<number> =>
   axiosInstance
     .get(
-      `/api/check-token/${Env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
+      `/api/check-token/${env.APP_TYPE}/${encodeURIComponent(userId)}/${encodeURIComponent(email)}/${encodeURIComponent(token)}`
     )
     .then((res) => res.status)
 
@@ -72,7 +72,7 @@ export const deleteTokens = (userId: string): Promise<number> =>
 export const resend = (email: string, reset = false): Promise<number> =>
   axiosInstance
     .post(
-      `/api/resend/${Env.APP_TYPE}/${encodeURIComponent(email)}/${reset}`
+      `/api/resend/${env.APP_TYPE}/${encodeURIComponent(email)}/${reset}`
     )
     .then((res) => res.status)
 
@@ -220,7 +220,7 @@ export const validateAccessToken = async (): Promise<number> => {
       null,
       {
         headers,
-        timeout: Env.AXIOS_TIMEOUT,
+        timeout: env.AXIOS_TIMEOUT,
       }
     )
     .then((res) => res.status)
@@ -276,7 +276,7 @@ export const getLanguage = async () => {
     return lang
   }
 
-  lang = Localization.locale.includes('fr') ? 'fr' : Env.DEFAULT_LANGUAGE
+  lang = Localization.locale.includes('fr') ? 'fr' : env.DEFAULT_LANGUAGE
   return lang
 }
 

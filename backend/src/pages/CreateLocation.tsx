@@ -14,7 +14,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-location'
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 import '../assets/css/create-location.css'
 
@@ -76,7 +76,7 @@ const CreateLocation = () => {
             {' '}
           </h1>
           <form onSubmit={handleSubmit}>
-            {Env._LANGUAGES.map((language, index) => (
+            {env._LANGUAGES.map((language, index) => (
               <FormControl key={language.code} fullWidth margin="dense">
                 <InputLabel className="required">{language.label}</InputLabel>
                 <Input

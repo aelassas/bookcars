@@ -27,7 +27,7 @@ import { format } from 'date-fns'
 import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/booking-list'
@@ -75,7 +75,7 @@ const BookingList = ({
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : Env.BOOKINGS_PAGE_SIZE)
+  const [pageSize, setPageSize] = useState(env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : env.BOOKINGS_PAGE_SIZE)
   const [columns, setColumns] = useState<GridColDef<bookcarsTypes.Booking>[]>([])
   const [rows, setRows] = useState<bookcarsTypes.Booking[]>([])
   const [rowCount, setRowCount] = useState(0)
@@ -92,7 +92,7 @@ const BookingList = ({
   const [openDeleteDialog, setopenDeleteDialog] = useState(false)
   const [offset, setOffset] = useState(0)
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-    pageSize: Env.BOOKINGS_PAGE_SIZE,
+    pageSize: env.BOOKINGS_PAGE_SIZE,
     page: 0,
   })
   const [init, setInit] = useState(true)
@@ -105,7 +105,7 @@ const BookingList = ({
 
   const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
     try {
-      const _pageSize = Env.isMobile() ? Env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
+      const _pageSize = env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
       if (companies && statuses) {
         setLoading(true)
@@ -129,7 +129,7 @@ const BookingList = ({
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
 
-        if (Env.isMobile()) {
+        if (env.isMobile()) {
           const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
           setRows(_rows)
           setRowCount(totalRecords)
@@ -320,7 +320,7 @@ const BookingList = ({
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
           <Link href={`/supplier?c=${(row.company as bookcarsTypes.User)._id}`} className="cell-company">
-            <img src={bookcarsHelper.joinURL(Env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
+            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
           </Link>
         ),
         valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.User>) => value?.fullName,
@@ -355,7 +355,7 @@ const BookingList = ({
   }, [bookingLoggedUser])
 
   useEffect(() => {
-    if (Env.isMobile()) {
+    if (env.isMobile()) {
       const element: HTMLDivElement | null = (containerClassName
         ? document.querySelector(`.${containerClassName}`)
         : document.querySelector('div.bookings'))
@@ -367,7 +367,7 @@ const BookingList = ({
 
             if (
               target.scrollTop > 0
-              && target.offsetHeight + target.scrollTop + Env.INFINITE_SCROLL_OFFSET >= target.scrollHeight
+              && target.offsetHeight + target.scrollTop + env.INFINITE_SCROLL_OFFSET >= target.scrollHeight
             ) {
               setLoading(true)
               setPage(page + 1)
@@ -432,7 +432,7 @@ const BookingList = ({
 
   const handleConfirmDelete = async () => {
     try {
-      if (Env.isMobile()) {
+      if (env.isMobile()) {
         const ids = [selectedId]
 
         const _status = await BookingService.deleteBookings(ids)
@@ -472,7 +472,7 @@ const BookingList = ({
   const _fr = language === 'fr'
   const _locale = _fr ? dfnsFR : dfnsENUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = Env.COMPANY_IMAGE_HEIGHT + 10
+  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
 
   return (
     <div className="bs-list">
@@ -488,7 +488,7 @@ const BookingList = ({
               </CardContent>
             </Card>
           )
-        ) : Env.isMobile() ? (
+        ) : env.isMobile() ? (
           <>
             {rows.map((booking, index) => {
               const from = new Date(booking.from)
@@ -532,7 +532,7 @@ const BookingList = ({
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
                       <div className="car-company">
-                        <img src={bookcarsHelper.joinURL(Env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
+                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
                         <span className="car-company-name">{(booking.company as bookcarsTypes.User).fullName}</span>
                       </div>
                     </div>
@@ -632,10 +632,10 @@ const BookingList = ({
             loading={loading}
             initialState={{
               pagination: {
-                paginationModel: { pageSize: Env.BOOKINGS_PAGE_SIZE },
+                paginationModel: { pageSize: env.BOOKINGS_PAGE_SIZE },
               },
             }}
-            pageSizeOptions={[Env.BOOKINGS_PAGE_SIZE, 50, 100]}
+            pageSizeOptions={[env.BOOKINGS_PAGE_SIZE, 50, 100]}
             pagination
             paginationMode="server"
             paginationModel={paginationModel}

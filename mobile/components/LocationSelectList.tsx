@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown/AutocompleteDropdown'
 import * as LocationService from '../services/LocationService'
 import * as Helper from '../common/Helper'
@@ -58,7 +58,7 @@ const LocationSelectList = ({
     try {
       setLoading(true)
 
-      const data = await LocationService.getLocations(text, 1, Env.PAGE_SIZE)
+      const data = await LocationService.getLocations(text, 1, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
         Helper.error()

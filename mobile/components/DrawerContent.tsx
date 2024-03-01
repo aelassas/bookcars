@@ -16,7 +16,7 @@ import { CommonActions, DrawerActions } from '@react-navigation/routers'
 import { useNavigation, RouteProp } from '@react-navigation/native'
 
 import i18n from '../lang/i18n'
-import * as Env from '../config/env.config'
+import * as env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
@@ -166,7 +166,7 @@ const DrawerContent = ({
         {openLanguageMenu && (
           <View style={styles.languageMenu}>
             {
-              Env.LANGUAGES.map((lang) => (
+              env.LANGUAGES.map((lang) => (
                 <Pressable
                   key={lang.code}
                   style={lang.code === language ? styles.languageMenuSelectedItem : styles.languageMenuItem}

@@ -13,7 +13,7 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/create-car'
@@ -63,7 +63,7 @@ const UpdateCar = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState('')
   const [fullInsurance, setFullInsurance] = useState('')
   const [additionalDriver, setAdditionalDriver] = useState('')
-  const [minimumAge, setMinimumAge] = useState(String(Env.MINIMUM_AGE))
+  const [minimumAge, setMinimumAge] = useState(String(env.MINIMUM_AGE))
   const [minimumAgeValid, setMinimumAgeValid] = useState(true)
   const [formError, setFormError] = useState(false)
   const [deposit, setDeposit] = useState('')
@@ -104,7 +104,7 @@ const UpdateCar = () => {
   const validateMinimumAge = (age: string, updateState = true) => {
     if (age) {
       const _age = Number.parseInt(age, 10)
-      const _minimumAgeValid = _age >= Env.MINIMUM_AGE && _age <= 99
+      const _minimumAgeValid = _age >= env.MINIMUM_AGE && _age <= 99
       if (updateState) {
         setMinimumAgeValid(_minimumAgeValid)
       }

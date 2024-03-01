@@ -14,7 +14,7 @@ import validator from 'validator'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-company'
 import * as SupplierService from '../services/SupplierService'
@@ -150,7 +150,7 @@ const UpdateCompany = () => {
   const handleResendActivationLink = async () => {
     if (company) {
       try {
-        const status = await UserService.resend(company.email, false, Env.APP_TYPE)
+        const status = await UserService.resend(company.email, false, env.APP_TYPE)
 
         if (status === 200) {
           Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)

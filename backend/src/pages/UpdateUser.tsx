@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-company'
 import { strings as cuStrings } from '../lang/create-user'
@@ -140,7 +140,7 @@ const UpdateUser = () => {
     if (date && bookcarsHelper.isDate(date) && type === bookcarsTypes.RecordType.User) {
       const now = new Date()
       const sub = intervalToDuration({ start: date, end: now }).years ?? 0
-      const _birthDateValid = sub >= Env.MINIMUM_AGE
+      const _birthDateValid = sub >= env.MINIMUM_AGE
 
       setBirthDateValid(_birthDateValid)
       return _birthDateValid
@@ -397,7 +397,7 @@ const UpdateUser = () => {
                         setBirthDateValid(_birthDateValid)
                       }
                     }}
-                    language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                    language={(user && user.language) || env.DEFAULT_LANGUAGE}
                   />
                   <FormHelperText error={!birthDateValid}>{(!birthDateValid && commonStrings.BIRTH_DATE_NOT_VALID) || ''}</FormHelperText>
                 </FormControl>

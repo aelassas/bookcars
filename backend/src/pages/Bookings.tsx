@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings } from '../lang/bookings'
 import * as Helper from '../common/Helper'
 import BookingList from '../components/BookingList'
@@ -87,9 +87,9 @@ const Bookings = () => {
                 />
                 <BookingFilter
                   onSubmit={handleBookingFilterSubmit}
-                  language={(user && user.language) || Env.DEFAULT_LANGUAGE}
+                  language={(user && user.language) || env.DEFAULT_LANGUAGE}
                   className="cl-booking-filter"
-                  collapse={!Env.isMobile()}
+                  collapse={!env.isMobile()}
                 />
               </>
             )}
@@ -104,8 +104,8 @@ const Bookings = () => {
               statuses={statuses}
               filter={filter}
               loading={loadingCompanies}
-              hideDates={Env.isMobile()}
-              checkboxSelection={!Env.isMobile()}
+              hideDates={env.isMobile()}
+              checkboxSelection={!env.isMobile()}
             />
           </div>
         </div>

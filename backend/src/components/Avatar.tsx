@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import * as Helper from '../common/Helper'
 import * as UserService from '../services/UserService'
@@ -346,9 +346,9 @@ const Avatar = ({
 
   const cdn = () => {
     if (type === bookcarsTypes.RecordType.Car) {
-      return mode === 'create' ? Env.CDN_TEMP_CARS : Env.CDN_CARS
+      return mode === 'create' ? env.CDN_TEMP_CARS : env.CDN_CARS
     }
-    return mode === 'create' ? Env.CDN_TEMP_USERS : Env.CDN_USERS
+    return mode === 'create' ? env.CDN_TEMP_USERS : env.CDN_USERS
   }
 
   useEffect(() => {
@@ -374,9 +374,9 @@ const Avatar = ({
     }
   }, [record, type, mode])
 
-  const companyImageStyle = { width: Env.COMPANY_IMAGE_WIDTH }
+  const companyImageStyle = { width: env.COMPANY_IMAGE_WIDTH }
 
-  const carImageStyle = { width: Env.CAR_IMAGE_WIDTH }
+  const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
 
   const userAvatar = avatar ? <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} /> : <></>
 

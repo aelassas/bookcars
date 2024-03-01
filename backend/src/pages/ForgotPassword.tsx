@@ -16,7 +16,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
 import NoMatch from './NoMatch'
 import * as Helper from '../common/Helper'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 import '../assets/css/forgot-password.css'
 
@@ -83,7 +83,7 @@ const ForgotPassword = () => {
         return
       }
 
-      const status = await UserService.resend(email, true, Env.APP_TYPE)
+      const status = await UserService.resend(email, true, env.APP_TYPE)
       if (status === 200) {
         setError(false)
         setEmailValid(true)

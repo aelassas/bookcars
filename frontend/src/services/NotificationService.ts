@@ -1,6 +1,6 @@
 import * as bookcarsTypes from 'bookcars-types'
 import axiosInstance from './axiosInstance'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 /**
  * Get NotificationCounter by UserID.
@@ -78,7 +78,7 @@ export const deleteNotifications = (userId: string, ids: string[]): Promise<numb
 export const getNotifications = (userId: string, page: number): Promise<bookcarsTypes.Result<bookcarsTypes.Notification>> => (
   axiosInstance
     .get(
-      `/api/Notifications/${encodeURIComponent(userId)}/${page}/${Env.PAGE_SIZE}`,
+      `/api/Notifications/${encodeURIComponent(userId)}/${page}/${env.PAGE_SIZE}`,
       { withCredentials: true }
     )
     .then((res) => res.data)

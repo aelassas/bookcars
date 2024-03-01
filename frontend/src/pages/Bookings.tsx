@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 import * as Helper from '../common/Helper'
 import BookingList from '../components/BookingList'
 import SupplierFilter from '../components/SupplierFilter'
@@ -61,7 +61,7 @@ const Bookings = () => {
             <div>
               <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="cl-company-filter" />
               <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
-              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || Env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!Env.isMobile()} />
+              <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile()} />
             </div>
           </div>
           <div className="col-2">
@@ -74,7 +74,7 @@ const Bookings = () => {
               statuses={statuses}
               filter={filter}
               loading={loadingCompanies}
-              hideDates={Env.isMobile()}
+              hideDates={env.isMobile()}
               checkboxSelection={false}
             />
           </div>

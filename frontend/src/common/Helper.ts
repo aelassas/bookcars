@@ -3,7 +3,7 @@ import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
-import Env from '../config/env.config'
+import env from '../config/env.config'
 
 /**
  * Get language.
@@ -11,7 +11,7 @@ import Env from '../config/env.config'
  * @param {string} code
  * @returns {*}
  */
-export const getLanguage = (code: string) => Env._LANGUAGES.find((l) => l.code === code)
+export const getLanguage = (code: string) => env._LANGUAGES.find((l) => l.code === code)
 
 /**
  * Toast info message.
