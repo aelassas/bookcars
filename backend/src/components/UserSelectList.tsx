@@ -4,7 +4,7 @@ import * as bookcarsHelper from 'bookcars-helper'
 import { TextFieldVariants } from '@mui/material'
 import env from '../config/env.config'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import MultipleSelect from './MultipleSelect'
 
 interface UserSelectListProps {
@@ -53,7 +53,7 @@ const UserSelectList = ({
 
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -67,7 +67,7 @@ const UserSelectList = ({
         onFetch()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }

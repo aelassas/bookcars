@@ -18,7 +18,7 @@ import { strings as rpStrings } from '../lang/reset-password'
 import { strings as mStrings } from '../lang/master'
 import { strings } from '../lang/activate'
 import NoMatch from './NoMatch'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/activate.css'
 
@@ -78,16 +78,16 @@ const Activate = () => {
           if (_status === 200) {
             navigate('/')
           } else {
-            Helper.error()
+            helper.error()
           }
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -102,12 +102,12 @@ const Activate = () => {
       const status = await UserService.resend(email, false)
 
       if (status === 200) {
-        Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
+        helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

@@ -17,7 +17,7 @@ import * as LocationService from '../services/LocationService'
 import NoMatch from './NoMatch'
 import Error from './Error'
 import Backdrop from '../components/SimpleBackdrop'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import env from '../config/env.config'
 
 import '../assets/css/update-location.css'
@@ -34,14 +34,14 @@ const UpdateLocation = () => {
 
   const _error = () => {
     setLoading(false)
-    Helper.error()
+    helper.error()
   }
 
   const checkName = () => {
     let _nameChanged = false
 
     if (!location || !location.values) {
-      Helper.error()
+      helper.error()
       return _nameChanged
     }
 
@@ -62,7 +62,7 @@ const UpdateLocation = () => {
 
     try {
       if (!location || !location.values) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -101,13 +101,13 @@ const UpdateLocation = () => {
           }
 
           setLocation(bookcarsHelper.clone(location))
-          Helper.info(strings.LOCATION_UPDATED)
+          helper.info(strings.LOCATION_UPDATED)
         } else {
           _error()
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -143,7 +143,7 @@ const UpdateLocation = () => {
               setNoMatch(true)
             }
           } catch (err) {
-            Helper.error(err)
+            helper.error(err)
             setLoading(false)
             setError(true)
             setVisible(false)

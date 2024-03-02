@@ -11,7 +11,7 @@ import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 import Switch from '../components/Switch'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import DateTimePicker from '../components/DateTimePicker'
 import * as env from '../config/env.config'
 import Error from '../components/Error'
@@ -127,7 +127,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           setEmailValid(true)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setEmailError(false)
           setEmailValid(true)
           return false
@@ -245,7 +245,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
   }
 
   const error = (err?: unknown) => {
-    Helper.error(err)
+    helper.error(err)
     setLoading(false)
   }
 

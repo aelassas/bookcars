@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import * as env from '../config/env.config'
 import { AutocompleteDropdown, AutocompleteOption } from './AutocompleteDropdown/AutocompleteDropdown'
 import * as LocationService from '../services/LocationService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 interface LocationSelectListProps {
   selectedItem?: string
@@ -61,7 +61,7 @@ const LocationSelectList = ({
       const data = await LocationService.getLocations(text, 1, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -74,7 +74,7 @@ const LocationSelectList = ({
         onFetch()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }

@@ -19,7 +19,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-company'
 import * as SupplierService from '../services/SupplierService'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
@@ -68,7 +68,7 @@ const UpdateCompany = () => {
           setError(false)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           return true
         }
       } else {
@@ -143,7 +143,7 @@ const UpdateCompany = () => {
         setAvatarError(false)
       }
     } else {
-      Helper.error()
+      helper.error()
     }
   }
 
@@ -153,12 +153,12 @@ const UpdateCompany = () => {
         const status = await UserService.resend(company.email, false, env.APP_TYPE)
 
         if (status === 200) {
-          Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
+          helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
         } else {
-          Helper.error()
+          helper.error()
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     }
   }
@@ -191,7 +191,7 @@ const UpdateCompany = () => {
               setNoMatch(true)
             }
           } catch (err) {
-            Helper.error(err)
+            helper.error(err)
             setLoading(false)
             setError(true)
             setVisible(false)
@@ -228,7 +228,7 @@ const UpdateCompany = () => {
       }
 
       if (!company) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -246,16 +246,16 @@ const UpdateCompany = () => {
       if (status === 200) {
         company.fullName = fullName
         setCompany(bookcarsHelper.clone(company))
-        Helper.info(commonStrings.UPDATED)
+        helper.info(commonStrings.UPDATED)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
-  const admin = Helper.admin(user)
+  const admin = helper.admin(user)
 
   return (
     <Master onLoad={onLoad} strict user={user}>

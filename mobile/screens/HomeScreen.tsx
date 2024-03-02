@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Master from '../components/Master'
 import Switch from '../components/Switch'
 import Button from '../components/Button'
@@ -122,37 +122,37 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     blurLocations()
 
     if (!pickupLocation) {
-      Helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
+      helper.toast(i18n.t('PICKUP_LOCATION_EMPTY'))
       return
     }
 
     if (!dropOffLocation) {
-      Helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
+      helper.toast(i18n.t('DROP_OFF_LOCATION_EMPTY'))
       return
     }
 
     if (!fromDate) {
-      Helper.toast(i18n.t('FROM_DATE_EMPTY'))
+      helper.toast(i18n.t('FROM_DATE_EMPTY'))
       return
     }
 
     if (!fromTime) {
-      Helper.toast(i18n.t('FROM_TIME_EMPTY'))
+      helper.toast(i18n.t('FROM_TIME_EMPTY'))
       return
     }
 
     if (!toDate) {
-      Helper.toast(i18n.t('TO_DATE_EMPTY'))
+      helper.toast(i18n.t('TO_DATE_EMPTY'))
       return
     }
 
     if (!toTime) {
-      Helper.toast(i18n.t('TO_TIME_EMPTY'))
+      helper.toast(i18n.t('TO_TIME_EMPTY'))
       return
     }
 
-    const from = Helper.dateTime(fromDate, fromTime)
-    const to = Helper.dateTime(toDate, toTime)
+    const from = helper.dateTime(fromDate, fromTime)
+    const to = helper.dateTime(toDate, toTime)
 
     const params = {
       pickupLocation,

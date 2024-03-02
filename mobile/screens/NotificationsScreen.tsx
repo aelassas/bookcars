@@ -14,7 +14,7 @@ import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import * as NotificationService from '../services/NotificationService'
 import * as env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Checkbox from '../components/Checkbox'
 
 const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Notifications'>) => {
@@ -78,7 +78,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
         const data = await NotificationService.getNotifications(user._id, page)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
-          Helper.error()
+          helper.error()
           return
         }
         const _rows = _data.resultData.map((row) => ({
@@ -94,7 +94,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
         }
         setLoading(false)
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     }
   }, [user, page])
@@ -176,10 +176,10 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                                   setRows(bookcarsHelper.clone(rows))
                                   setNotificationCount(notificationCount - _rows.length)
                                 } else {
-                                  Helper.error()
+                                  helper.error()
                                 }
                               } else {
-                                Helper.error()
+                                helper.error()
                               }
                             } catch (err) {
                               await UserService.signout(navigation)
@@ -206,13 +206,13 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                                   setRows(bookcarsHelper.clone(rows))
                                   setNotificationCount(notificationCount + _rows.length)
                                 } else {
-                                  Helper.error()
+                                  helper.error()
                                 }
                               } else {
-                                Helper.error()
+                                helper.error()
                               }
                             } catch (err) {
-                              Helper.error(err)
+                              helper.error(err)
                             }
                           }}
                         >
@@ -283,7 +283,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                                       setNotificationCount(notificationCount - 1)
                                       navigate()
                                     } else {
-                                      Helper.error()
+                                      helper.error()
                                     }
                                   } else {
                                     navigate()
@@ -308,10 +308,10 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                                     setRows(bookcarsHelper.clone(rows))
                                     setNotificationCount(notificationCount - 1)
                                   } else {
-                                    Helper.error()
+                                    helper.error()
                                   }
                                 } catch (err) {
-                                  Helper.error(err)
+                                  helper.error(err)
                                 }
                               }}
                             >
@@ -329,7 +329,7 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                                     setRows(bookcarsHelper.clone(rows))
                                     setNotificationCount(notificationCount + 1)
                                   } else {
-                                    Helper.error()
+                                    helper.error()
                                   }
                                 } catch (err) {
                                   await UserService.signout(navigation)
@@ -430,13 +430,13 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
                               setNotificationCount(notificationCount - selectedRows.length)
                               setOpenDeleteDialog(false)
                             } else {
-                              Helper.error()
+                              helper.error()
                             }
                           } else {
-                            Helper.error()
+                            helper.error()
                           }
                         } catch (err) {
-                          Helper.error(err)
+                          helper.error(err)
                         }
                       }}
                     >

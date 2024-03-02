@@ -14,8 +14,8 @@ import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
 import PushToken from '../models/PushToken'
 import AdditionalDriver from '../models/AdditionalDriver'
-import * as Helper from '../common/Helper'
-import * as MailHelper from '../common/MailHelper'
+import * as helper from '../common/helper'
+import * as mailHelper from '../common/mailHelper'
 import * as env from '../config/env.config'
 
 /**
@@ -85,12 +85,12 @@ const notifySupplier = async (user: env.User, bookingId: string, company: env.Us
     html: `<p>
     ${strings.HELLO}${company.fullName},<br><br>
     ${message}<br><br>
-    ${Helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
+    ${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
     ${strings.REGARDS}<br>
     </p>`,
   }
 
-  await MailHelper.sendMail(mailOptions)
+  await mailHelper.sendMail(mailOptions)
 }
 
 /**
@@ -133,11 +133,11 @@ export const checkout = async (req: Request, res: Response) => {
         html: `<p>
         ${strings.HELLO}${user.fullName},<br><br>
         ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
-        ${Helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${strings.REGARDS}<br>
         </p>`,
       }
-      await MailHelper.sendMail(mailOptions)
+      await mailHelper.sendMail(mailOptions)
 
       body.booking.driver = user._id.toString()
     } else {
@@ -215,7 +215,7 @@ export const checkout = async (req: Request, res: Response) => {
         ${strings.REGARDS}<br>
         </p>`,
     }
-    await MailHelper.sendMail(mailOptions)
+    await mailHelper.sendMail(mailOptions)
 
     // Notify supplier
     const supplier = await User.findById(booking.company)
@@ -275,11 +275,11 @@ const notifyDriver = async (booking: env.Booking) => {
     html: `<p>
     ${strings.HELLO}${driver.fullName},<br><br>
     ${message}<br><br>
-    ${Helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
+    ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
     ${strings.REGARDS}<br>
     </p>`,
   }
-  await MailHelper.sendMail(mailOptions)
+  await mailHelper.sendMail(mailOptions)
 
   // push notification
   const pushToken = await PushToken.findOne({ user: driver._id })
@@ -643,7 +643,7 @@ export const getBookings = async (req: Request, res: Response) => {
         $match.$and.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
       }
       if (keyword) {
-        const isObjectId = Helper.isValidObjectId(keyword)
+        const isObjectId = helper.isValidObjectId(keyword)
         if (isObjectId) {
           $match.$and.push({
             _id: { $eq: new mongoose.Types.ObjectId(keyword) },

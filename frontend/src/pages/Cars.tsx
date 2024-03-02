@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as LocationService from '../services/LocationService'
 import * as SupplierService from '../services/SupplierService'
 import Master from '../components/Master'
@@ -123,7 +123,7 @@ const Cars = () => {
         setVisible(true)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

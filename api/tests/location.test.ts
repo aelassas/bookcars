@@ -3,8 +3,8 @@ import request from 'supertest'
 import { v1 as uuid } from 'uuid'
 import * as bookcarsTypes from 'bookcars-types'
 import app from '../src/app'
-import * as DatabaseHelper from '../src/common/DatabaseHelper'
-import * as TestHelper from './TestHelper'
+import * as databaseHelper from '../src/common/databaseHelper'
+import * as testHelper from './testHelper'
 import * as env from '../src/config/env.config'
 import LocationValue from '../src/models/LocationValue'
 import Location from '../src/models/Location'
@@ -27,8 +27,8 @@ let LOCATION_NAMES: bookcarsTypes.LocationName[] = [
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect()) {
-        await TestHelper.initialize()
+    if (await databaseHelper.Connect()) {
+        await testHelper.initialize()
     }
 })
 
@@ -36,8 +36,8 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.close()
-    await DatabaseHelper.Close()
+    await testHelper.close()
+    await databaseHelper.Close()
 })
 
 //
@@ -46,9 +46,9 @@ afterAll(async () => {
 
 describe('POST /api/validate-location', () => {
     it('should validate a location', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
-        const language = TestHelper.LANGUAGE
+        const language = testHelper.LANGUAGE
         const name = uuid()
         const locationValue = new LocationValue({ language, value: name })
         await locationValue.save()
@@ -75,13 +75,13 @@ describe('POST /api/validate-location', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/create-location', () => {
     it('should create a location', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.LocationName[] = LOCATION_NAMES
         let res = await request(app)
@@ -97,13 +97,13 @@ describe('POST /api/create-location', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('PUT /api/update-location/:id', () => {
     it('should update a location', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         LOCATION_NAMES = [
             {
@@ -127,7 +127,7 @@ describe('PUT /api/update-location/:id', () => {
         expect(res.body.values?.length).toBe(3)
 
         res = await request(app)
-            .put(`/api/update-location/${TestHelper.GetRandromObjectIdAsString()}`)
+            .put(`/api/update-location/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(LOCATION_NAMES)
         expect(res.statusCode).toBe(204)
@@ -137,7 +137,7 @@ describe('PUT /api/update-location/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
@@ -151,7 +151,7 @@ describe('GET /api/location/:id/:language', () => {
         expect(res.body?.name).toBe(LOCATION_NAMES.filter((v) => v.language === language)[0].name)
 
         res = await request(app)
-            .get(`/api/location/${TestHelper.GetRandromObjectIdAsString()}/${language}`)
+            .get(`/api/location/${testHelper.GetRandromObjectIdAsString()}/${language}`)
         expect(res.statusCode).toBe(204)
 
         res = await request(app)
@@ -165,22 +165,22 @@ describe('GET /api/locations/:page/:size/:language', () => {
         const language = 'en'
 
         let res = await request(app)
-            .get(`/api/locations/${TestHelper.PAGE}/${TestHelper.SIZE}/${language}?s=${LOCATION_NAMES[0].name}`)
+            .get(`/api/locations/${testHelper.PAGE}/${testHelper.SIZE}/${language}?s=${LOCATION_NAMES[0].name}`)
         expect(res.statusCode).toBe(200)
         expect(res.body.length).toBe(1)
 
         res = await request(app)
-            .get(`/api/locations/unknown/${TestHelper.SIZE}/${language}`)
+            .get(`/api/locations/unknown/${testHelper.SIZE}/${language}`)
         expect(res.statusCode).toBe(400)
     })
 })
 
 describe('GET /api/check-location/:id', () => {
     it('should check a location', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
-        const supplierName = TestHelper.getSupplierName()
-        const supplierId = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        const supplierName = testHelper.getSupplierName()
+        const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
         const car = new Car({
             name: 'BMW X1',
             company: supplierId,
@@ -210,7 +210,7 @@ describe('GET /api/check-location/:id', () => {
         expect(res.statusCode).toBe(200)
 
         await Car.deleteOne({ _id: car._id })
-        await TestHelper.deleteSupplier(supplierId)
+        await testHelper.deleteSupplier(supplierId)
         res = await request(app)
             .get(`/api/check-location/${LOCATION_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
@@ -221,13 +221,13 @@ describe('GET /api/check-location/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('DELETE /api/delete-location/:id', () => {
     it('should delete a location', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let location = await Location.findById(LOCATION_ID)
         expect(location).not.toBeNull()
@@ -248,6 +248,6 @@ describe('DELETE /api/delete-location/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })

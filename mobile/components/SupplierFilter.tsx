@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as SupplierService from '../services/SupplierService'
@@ -43,10 +43,10 @@ const SupplierFilter = ({
           onLoad(_checkedSuppliers)
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

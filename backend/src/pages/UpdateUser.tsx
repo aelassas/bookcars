@@ -24,7 +24,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-company'
 import { strings as cuStrings } from '../lang/create-user'
 import { strings } from '../lang/update-user'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import * as SupplierService from '../services/SupplierService'
 import NoMatch from './NoMatch'
@@ -75,7 +75,7 @@ const UpdateUser = () => {
         setError(false)
         return false
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
         return true
       }
     } else {
@@ -201,12 +201,12 @@ const UpdateUser = () => {
       const status = await UserService.resend(email, false, type === bookcarsTypes.RecordType.User ? 'frontend' : 'backend')
 
       if (status === 200) {
-        Helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
+        helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -224,7 +224,7 @@ const UpdateUser = () => {
             if (_user) {
               setLoggedUser(_loggedUser)
               setUser(_user)
-              setAdmin(Helper.admin(_loggedUser))
+              setAdmin(helper.admin(_loggedUser))
               setType(_user.type || '')
               setEmail(_user.email || '')
               setAvatar(_user.avatar || '')
@@ -241,7 +241,7 @@ const UpdateUser = () => {
               setNoMatch(true)
             }
           } catch (err) {
-            Helper.error(err)
+            helper.error(err)
             setLoading(false)
             setVisible(false)
           }
@@ -261,7 +261,7 @@ const UpdateUser = () => {
       e.preventDefault()
 
       if (!user) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -314,14 +314,14 @@ const UpdateUser = () => {
         user.fullName = fullName
         user.type = type
         setUser(user)
-        Helper.info(commonStrings.UPDATED)
+        helper.info(commonStrings.UPDATED)
       } else {
-        Helper.error()
+        helper.error()
 
         setError(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -365,9 +365,9 @@ const UpdateUser = () => {
                 <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
                   <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
-                    <MenuItem value={bookcarsTypes.RecordType.Admin}>{Helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.Company}>{Helper.getUserType(bookcarsTypes.UserType.Company)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.User}>{Helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Company}>{helper.getUserType(bookcarsTypes.UserType.Company)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
                   </Select>
                 </FormControl>
               )}

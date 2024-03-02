@@ -16,7 +16,7 @@ import TextInput from '../components/TextInput'
 import DateTimePicker from '../components/DateTimePicker'
 import Switch from '../components/Switch'
 import Link from '../components/Link'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Error from '../components/Error'
 import Button from '../components/Button'
 import RadioButton from '../components/RadioButton'
@@ -277,7 +277,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const _to = new Date(route.params.to)
       setTo(_to)
 
-      const _price = Helper.price(_car, _from, _to)
+      const _price = helper.price(_car, _from, _to)
       setPrice(_price)
 
       const included = (val: number) => val === 0
@@ -349,7 +349,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           setError(true)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setEmailInfo(true)
           setEmailError(false)
           setEmailValid(true)
@@ -625,7 +625,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setCancellation(checked)
     setPrice(_price)
   }
@@ -639,7 +639,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setAmendments(checked)
     setPrice(_price)
   }
@@ -653,7 +653,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setCollisionDamageWaiver(checked)
     setPrice(_price)
   }
@@ -667,7 +667,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setTheftProtection(checked)
     setPrice(_price)
   }
@@ -681,7 +681,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance: checked,
       additionalDriver,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setFullInsurance(checked)
     setPrice(_price)
   }
@@ -695,21 +695,21 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       fullInsurance,
       additionalDriver: checked,
     }
-    const _price = Helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
+    const _price = helper.price(car as bookcarsTypes.Car, from as Date, to as Date, options)
     setAdditionalDriver(checked)
     setPrice(_price)
     setAdManuallyChecked(checked)
   }
 
   const _error = (err?: unknown) => {
-    Helper.error(err)
+    helper.error(err)
     setLoading(false)
   }
 
   const onPressBook = async () => {
     try {
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -889,7 +889,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={cancellation}
                       onValueChange={onCancellationChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -900,7 +900,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={amendments}
                       onValueChange={onAmendmentsChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -911,7 +911,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={collisionDamageWaiver}
                       onValueChange={onCollisionDamageWaiverChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -922,7 +922,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={theftProtection}
                       onValueChange={onTheftProtectionChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -933,7 +933,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={fullInsurance}
                       onValueChange={onFullInsuranceChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -944,7 +944,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={additionalDriver}
                       onValueChange={onAdditionalDriverChange}
                     />
-                    <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
                   </View>
                 </View>
 
@@ -956,7 +956,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
                   <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
                   <Text style={styles.detailText}>
-                    {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+                    {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
                     format(to, _format, { locale }),
                   )})`}
                   </Text>
@@ -1038,7 +1038,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       label={i18n.t('BIRTH_DATE')}
                       value={birthDate}
                       error={birthDateRequired || !birthDateValid}
-                      helperText={(birthDateRequired && i18n.t('REQUIRED')) || (!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      helperText={(birthDateRequired && i18n.t('REQUIRED')) || (!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={onChangeBirthDate}
                       backgroundColor="#fbfbfb"
                     />
@@ -1108,7 +1108,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       label={i18n.t('BIRTH_DATE')}
                       value={addtionalDriverBirthDate}
                       error={adRequired && (additionalDriverBirthDateRequired || !additionalDriverBirthDateValid)}
-                      helperText={(adRequired && additionalDriverBirthDateRequired && i18n.t('REQUIRED')) || (adRequired && !additionalDriverBirthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}
+                      helperText={(adRequired && additionalDriverBirthDateRequired && i18n.t('REQUIRED')) || (adRequired && !additionalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}
                       onChange={(date: Date | undefined) => {
                         setAdditionalDriverBirthDate(date)
                         setAdditionalDriverBirthDateRequired(false)

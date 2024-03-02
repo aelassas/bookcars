@@ -11,7 +11,7 @@ import Link from '../components/Link'
 import i18n from '../lang/i18n'
 import Error from '../components/Error'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Switch from '../components/Switch'
 import Header from '../components/Header'
 
@@ -82,7 +82,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           setEmailValid(true)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setEmailError(false)
           setEmailValid(true)
           return false
@@ -164,7 +164,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
           setPasswordError(false)
           setBlacklisted(true)
         } else {
-          await Helper.registerPushToken(res.data._id as string)
+          await helper.registerPushToken(res.data._id as string)
 
           setPasswordError(false)
           setBlacklisted(false)
@@ -176,7 +176,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
         setBlacklisted(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

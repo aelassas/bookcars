@@ -7,7 +7,7 @@ import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 
@@ -132,7 +132,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
         return true
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
     return false
   }
@@ -158,7 +158,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
   const onPressUpdate = async () => {
     try {
       if (!user || !user._id) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -179,9 +179,9 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
 
       if (status === 200) {
         clear()
-        Helper.toast(i18n.t('PASSWORD_UPDATE'))
+        helper.toast(i18n.t('PASSWORD_UPDATE'))
       } else {
-        Helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
+        helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
       }
     } catch (err) {
       await UserService.signout(navigation, false, true)

@@ -18,7 +18,7 @@ import { strings } from '../lang/settings'
 import * as UserService from '../services/UserService'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/settings.css'
 
@@ -81,15 +81,15 @@ const Settings = () => {
 
         if (status === 200) {
           setUser(user)
-          Helper.info(strings.SETTINGS_UPDATED)
+          helper.info(strings.SETTINGS_UPDATED)
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -109,7 +109,7 @@ const Settings = () => {
       e.preventDefault()
 
       if (!user) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -129,19 +129,19 @@ const Settings = () => {
       const status = await UserService.updateUser(data)
 
       if (status === 200) {
-        Helper.info(strings.SETTINGS_UPDATED)
+        helper.info(strings.SETTINGS_UPDATED)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
   const onLoad = (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
-      setAdmin(Helper.admin(_user))
+      setAdmin(helper.admin(_user))
       setFullName(_user.fullName)
       setPhone(_user.phone || '')
       setLocation(_user.location || '')

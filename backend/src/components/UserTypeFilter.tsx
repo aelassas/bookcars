@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/user-type-filter.css'
 
@@ -15,7 +15,7 @@ const UserTypeFilter = ({
   className,
   onChange
 }: UserTypeFilterProps) => {
-  const userTypes = Helper.getUserTypes()
+  const userTypes = helper.getUserTypes()
   const [checkedUserTypes, setCheckedUserTypes] = useState<bookcarsTypes.UserType[]>(userTypes.map((user) => user.value))
   const [allChecked, setAllChecked] = useState(true)
   const refs = useRef<(HTMLInputElement)[]>([])
@@ -105,7 +105,7 @@ const UserTypeFilter = ({
               role="button"
               tabIndex={0}
             >
-              {Helper.getUserType(userType.value)}
+              {helper.getUserType(userType.value)}
             </span>
           </li>
         ))}

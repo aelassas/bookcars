@@ -3,7 +3,7 @@ import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import BookingList from '../components/BookingList'
 import SupplierFilter from '../components/SupplierFilter'
 import StatusFilter from '../components/StatusFilter'
@@ -16,7 +16,7 @@ const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()
-  const [statuses, setStatuses] = useState(Helper.getBookingStatuses().map((status) => status.value))
+  const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
   const [loadingCompanies, setLoadingCompanies] = useState(true)
   const [offset, setOffset] = useState(0)

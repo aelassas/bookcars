@@ -14,7 +14,7 @@ import { strings } from '../lang/sign-in'
 import * as UserService from '../services/UserService'
 import Header from '../components/Header'
 import Error from '../components/Error'
-import * as LangHelper from '../common/LangHelper'
+import * as langHelper from '../common/langHelper'
 
 import '../assets/css/signin.css'
 
@@ -88,7 +88,7 @@ const SignIn = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        LangHelper.setLanguage(strings)
+        langHelper.setLanguage(strings)
 
         const currentUser = UserService.getCurrentUser()
 

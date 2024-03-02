@@ -15,7 +15,7 @@ import { strings as blStrings } from '../lang/booking-list'
 import { strings } from '../lang/booking-car-list'
 import * as CarService from '../services/CarService'
 import MultipleSelect from './MultipleSelect'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 interface CarSelectListProps {
   label?: string
@@ -133,7 +133,7 @@ const CarSelectList = ({
       setInit(true)
       setLoading(false)
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }

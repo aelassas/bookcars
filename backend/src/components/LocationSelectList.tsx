@@ -4,7 +4,7 @@ import * as bookcarsHelper from 'bookcars-helper'
 import { TextFieldVariants } from '@mui/material'
 import env from '../config/env.config'
 import * as LocationService from '../services/LocationService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import MultipleSelect from './MultipleSelect'
 
 interface LocationSelectListProps {
@@ -60,7 +60,7 @@ const LocationSelectList = ({
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }

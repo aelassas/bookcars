@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 interface BookingStatusProps {
   style: object
@@ -33,7 +33,7 @@ const BookingStatus = ({
                       : 'transparent',
       }}
     >
-      <Text style={styles.text}>{Helper.getBookingStatus(status)}</Text>
+      <Text style={styles.text}>{helper.getBookingStatus(status)}</Text>
     </View>
   )
 

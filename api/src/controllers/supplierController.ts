@@ -11,7 +11,7 @@ import Notification from '../models/Notification'
 import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 /**
  * Validate Supplier by fullname.
@@ -54,7 +54,7 @@ export const update = async (req: Request, res: Response) => {
   const { _id } = body
 
   try {
-    if (!Helper.isValidObjectId(_id)) {
+    if (!helper.isValidObjectId(_id)) {
       throw new Error('body._id is not valid')
     }
     const supplier = await User.findById(_id)
@@ -110,7 +110,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
       if (supplier.avatar) {
         const avatar = path.join(env.CDN_USERS, supplier.avatar)
-        if (await Helper.exists(avatar)) {
+        if (await helper.exists(avatar)) {
           await fs.unlink(avatar)
         }
 
@@ -124,7 +124,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
         for (const car of cars) {
           if (car.image) {
             const image = path.join(env.CDN_CARS, car.image)
-            if (await Helper.exists(image)) {
+            if (await helper.exists(image)) {
               await fs.unlink(image)
             }
           }

@@ -13,7 +13,7 @@ import locationRoutes from './routes/locationRoutes'
 import notificationRoutes from './routes/notificationRoutes'
 import carRoutes from './routes/carRoutes'
 import userRoutes from './routes/userRoutes'
-import * as Helper from './common/Helper'
+import * as helper from './common/helper'
 
 const app: Express = express()
 
@@ -51,9 +51,9 @@ app.use('/', userRoutes)
 
 strings.setLanguage(env.DEFAULT_LANGUAGE)
 
-Helper.mkdir(env.CDN_USERS)
-Helper.mkdir(env.CDN_TEMP_USERS)
-Helper.mkdir(env.CDN_CARS)
-Helper.mkdir(env.CDN_TEMP_CARS)
+helper.mkdir(env.CDN_USERS)
+helper.mkdir(env.CDN_TEMP_USERS)
+helper.mkdir(env.CDN_CARS)
+helper.mkdir(env.CDN_TEMP_CARS)
 
 export default app

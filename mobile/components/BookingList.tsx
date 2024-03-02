@@ -5,7 +5,7 @@ import { enUS, fr } from 'date-fns/locale'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as BookingService from '../services/BookingService'
 import Booking from './Booking'
 
@@ -60,7 +60,7 @@ const BookingList = ({
         const data = await BookingService.getBookings(payload, _page + 1, env.BOOKINGS_PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
-          Helper.error()
+          helper.error()
           return
         }
         const _rows = _page === 0 ? _data.resultData : [...rows, ..._data.resultData]
@@ -72,7 +72,7 @@ const BookingList = ({
         setFetch(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -124,7 +124,7 @@ const BookingList = ({
           setLoading(false)
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     }
 
@@ -218,7 +218,7 @@ const BookingList = ({
                   try {
                     const row = rows.find((r) => r._id === selectedId)
                     if (!row) {
-                      Helper.error()
+                      helper.error()
                       return
                     }
 
@@ -233,12 +233,12 @@ const BookingList = ({
                       setSelectedId('')
                       setCancelRequestProcessing(false)
                     } else {
-                      Helper.error()
+                      helper.error()
                       setCancelRequestProcessing(false)
                       setOpenCancelDialog(false)
                     }
                   } catch (err) {
-                    Helper.error(err)
+                    helper.error(err)
                     setCancelRequestProcessing(false)
                     setOpenCancelDialog(false)
                   }

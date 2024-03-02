@@ -13,7 +13,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/change-password'
 import * as UserService from '../services/UserService'
 import Backdrop from '../components/SimpleBackdrop'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/change-password.css'
 
@@ -43,7 +43,7 @@ const ChangePassword = () => {
   }
 
   const error = () => {
-    Helper.error(null, strings.PASSWORD_UPDATE_ERROR)
+    helper.error(null, strings.PASSWORD_UPDATE_ERROR)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLElement>) => {
@@ -87,7 +87,7 @@ const ChangePassword = () => {
           setCurrentPassword('')
           setNewPassword('')
           setConfirmPassword('')
-          Helper.info(strings.PASSWORD_UPDATE)
+          helper.info(strings.PASSWORD_UPDATE)
         } else {
           error()
         }
@@ -104,7 +104,7 @@ const ChangePassword = () => {
         submit()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

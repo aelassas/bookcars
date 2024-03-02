@@ -4,7 +4,7 @@ import * as Localization from 'expo-localization'
 import axiosInstance from './axiosInstance'
 import * as env from '../config/env.config'
 import * as AsyncStorage from '../common/AsyncStorage'
-import * as ToastHelper from '../common/ToastHelper'
+import * as toastHelper from '../common/toastHelper'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 /**
@@ -297,7 +297,7 @@ export const updateLanguage = async (data: bookcarsTypes.UpdateLanguagePayload) 
           user.language = data.language
           await AsyncStorage.storeObject('bc-user', user)
         } else {
-          ToastHelper.error()
+          toastHelper.error()
         }
       }
       return res.status

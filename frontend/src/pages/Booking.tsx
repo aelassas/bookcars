@@ -12,7 +12,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
 import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as csStrings } from '../lang/cars'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Master from '../components/Master'
 import * as UserService from '../services/UserService'
 import * as BookingService from '../services/BookingService'
@@ -76,13 +76,13 @@ const Booking = () => {
         if (_car && from && to) {
           const _booking = bookcarsHelper.clone(booking)
           _booking.car = _car
-          const _price = Helper.price(_car, from, to, _booking)
+          const _price = helper.price(_car, from, to, _booking)
 
           setBooking(_booking)
           setPrice(_price)
           setCar(newCar)
         } else {
-          Helper.error()
+          helper.error()
         }
       } else if (!newCar) {
         setPrice(0)
@@ -91,7 +91,7 @@ const Booking = () => {
         setCar(newCar)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -103,7 +103,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.cancellation = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -119,7 +119,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.amendments = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -135,7 +135,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.collisionDamageWaiver = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -151,7 +151,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.theftProtection = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -167,7 +167,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.fullInsurance = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -183,7 +183,7 @@ const Booking = () => {
     if (booking && booking.car) {
       booking.additionalDriver = e.target.checked
 
-      const _price = Helper.price(
+      const _price = helper.price(
         booking.car as bookcarsTypes.Car,
         new Date(booking.from),
         new Date(booking.to),
@@ -200,7 +200,7 @@ const Booking = () => {
       e.preventDefault()
 
       if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -226,12 +226,12 @@ const Booking = () => {
       const _status = await BookingService.update(payload)
 
       if (_status === 200) {
-        Helper.info(commonStrings.UPDATED)
+        helper.info(commonStrings.UPDATED)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -364,7 +364,7 @@ const Booking = () => {
                     if (_from) {
                       booking.from = _from
 
-                      const _price = Helper.price(
+                      const _price = helper.price(
                         booking.car as bookcarsTypes.Car,
                         new Date(booking.from),
                         new Date(booking.to),
@@ -391,7 +391,7 @@ const Booking = () => {
                     if (_to) {
                       booking.to = _to
 
-                      const _price = Helper.price(
+                      const _price = helper.price(
                         booking.car as bookcarsTypes.Car,
                         new Date(booking.from),
                         new Date(booking.to),
@@ -484,7 +484,7 @@ const Booking = () => {
           <div className="col-2">
             <div className="col-2-header">
               <div className="price">
-                <span className="price-days">{Helper.getDays(days)}</span>
+                <span className="price-days">{helper.getDays(days)}</span>
                 <span className="price-main">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
                 <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price || 0) / days)} ${commonStrings.CURRENCY}`}</span>
               </div>

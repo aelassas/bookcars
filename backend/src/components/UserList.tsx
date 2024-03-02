@@ -30,7 +30,7 @@ import * as bookcarsHelper from 'bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/user-list'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 
 import '../assets/css/user-list.css'
@@ -88,7 +88,7 @@ const UserList = ({
         const data = await UserService.getUsers(payload, keyword || '', _page + 1, pageSize)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
-          Helper.error()
+          helper.error()
           return
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
@@ -102,7 +102,7 @@ const UserList = ({
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }
@@ -224,7 +224,7 @@ const UserList = ({
         field: 'type',
         headerName: commonStrings.TYPE,
         flex: 1,
-        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.User, bookcarsTypes.UserType>) => <span className={`bs us-${value?.toLowerCase()}`}>{Helper.getUserType(value)}</span>,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.User, bookcarsTypes.UserType>) => <span className={`bs us-${value?.toLowerCase()}`}>{helper.getUserType(value)}</span>,
         valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
       },
       {
@@ -327,10 +327,10 @@ const UserList = ({
           setRows(rows.filter((row) => row._id !== selectedId))
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
     }
