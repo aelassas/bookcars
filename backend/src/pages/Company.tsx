@@ -17,7 +17,7 @@ import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/company-list'
 import * as SupplierService from '../services/SupplierService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Master from '../components/Master'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
@@ -69,13 +69,13 @@ const Company = () => {
         if (status === 200) {
           navigate('/suppliers')
         } else {
-          Helper.error()
+          helper.error()
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     } else {
-      Helper.error()
+      helper.error()
     }
   }
 

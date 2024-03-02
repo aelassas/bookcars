@@ -27,7 +27,7 @@ import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/locations'
 import * as LocationService from '../services/LocationService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Pager from './Pager'
 
 import '../assets/css/location-list.css'
@@ -66,7 +66,7 @@ const LocationList = ({
       const data = await LocationService.getLocations(_keyword || '', _page, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
-        Helper.error()
+        helper.error()
         return
       }
       const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
@@ -92,7 +92,7 @@ const LocationList = ({
         onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
       setInit(false)
@@ -149,10 +149,10 @@ const LocationList = ({
       } else if (status === 200) {
         setOpenInfoDialog(true)
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -184,19 +184,19 @@ const LocationList = ({
             onDelete(_rowCount)
           }
         } else {
-          Helper.error()
+          helper.error()
           setLocationId('')
           setLocationIndex(-1)
           setLoading(false)
         }
       } else {
-        Helper.error()
+        helper.error()
         setOpenDeleteDialog(false)
         setLocationId('')
         setLocationIndex(-1)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

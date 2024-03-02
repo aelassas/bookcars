@@ -2,7 +2,7 @@ import process from 'node:process'
 import { Document, Types } from 'mongoose'
 import { CookieOptions } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 /**
  * Get environment variable value.
@@ -35,7 +35,7 @@ export const PORT = Number.parseInt(__env__('BC_PORT', false, '4002'), 10)
  *
  * @type {boolean}
  */
-export const HTTPS = Helper.StringToBoolean(__env__('BC_HTTPS'))
+export const HTTPS = helper.StringToBoolean(__env__('BC_HTTPS'))
 
 /**
  * Private SSL key filepath.
@@ -63,7 +63,7 @@ export const DB_URI = __env__('BC_DB_URI', false, 'mongodb://127.0.0.1:27017/boo
  *
  * @type {boolean}
  */
-export const DB_SSL = Helper.StringToBoolean(__env__('BC_DB_SSL', false, 'false'))
+export const DB_SSL = helper.StringToBoolean(__env__('BC_DB_SSL', false, 'false'))
 
 /**
  * MongoDB SSL certificate filepath.
@@ -84,7 +84,7 @@ export const DB_SSL_CA = __env__('BC_DB_SSL_CA', DB_SSL)
  *
  * @type {boolean}
  */
-export const DB_DEBUG = Helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
+export const DB_DEBUG = helper.StringToBoolean(__env__('BC_DB_DEBUG', false, 'false'))
 
 /**
  * Cookie secret. It should at least be 32 characters long, but the longer the better.

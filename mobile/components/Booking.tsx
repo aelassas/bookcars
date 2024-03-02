@@ -7,7 +7,7 @@ import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
 import BookingStatus from './BookingStatus'
 import Button from './Button'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 
@@ -54,7 +54,7 @@ const Booking = ({
 
         <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
         <Text style={styles.detailText}>
-          {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
+          {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
             format(to, _format, { locale }),
           )})`}
         </Text>
@@ -87,7 +87,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('CANCELLATION')}</Text>
-                  <Text style={styles.extraText}>{Helper.getCancellationOption(car.cancellation, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, fr, true)}</Text>
                 </View>
               )}
 
@@ -95,7 +95,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('AMENDMENTS')}</Text>
-                  <Text style={styles.extraText}>{Helper.getAmendmentsOption(car.amendments, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, fr, true)}</Text>
                 </View>
               )}
 
@@ -103,7 +103,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('COLLISION_DAMAGE_WAVER')}</Text>
-                  <Text style={styles.extraText}>{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr, true)}</Text>
                 </View>
               )}
 
@@ -111,7 +111,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('THEFT_PROTECTION')}</Text>
-                  <Text style={styles.extraText}>{Helper.getTheftProtectionOption(car.theftProtection, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, fr, true)}</Text>
                 </View>
               )}
 
@@ -119,7 +119,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('FULL_INSURANCE')}</Text>
-                  <Text style={styles.extraText}>{Helper.getFullInsuranceOption(car.fullInsurance, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, fr, true)}</Text>
                 </View>
               )}
 
@@ -127,7 +127,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
-                  <Text style={styles.extraText}>{Helper.getAdditionalDriverOption(car.additionalDriver, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, fr, true)}</Text>
                 </View>
               )}
             </View>

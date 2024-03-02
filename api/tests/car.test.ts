@@ -4,11 +4,11 @@ import * as bookcarsTypes from 'bookcars-types'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
-import * as DatabaseHelper from '../src/common/DatabaseHelper'
+import * as databaseHelper from '../src/common/databaseHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
-import * as TestHelper from './TestHelper'
-import * as Helper from '../src/common/Helper'
+import * as testHelper from './testHelper'
+import * as helper from '../src/common/helper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 
@@ -30,18 +30,18 @@ let CAR_ID: string
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect()) {
-        await TestHelper.initialize()
+    if (await databaseHelper.Connect()) {
+        await testHelper.initialize()
 
         // create two suppliers
-        const supplierName1 = TestHelper.getSupplierName()
-        SUPPLIER1_ID = await TestHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
-        const supplierName2 = TestHelper.getSupplierName()
-        SUPPLIER2_ID = await TestHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName2)
+        const supplierName1 = testHelper.getSupplierName()
+        SUPPLIER1_ID = await testHelper.createSupplier(`${supplierName1}@test.bookcars.ma`, supplierName1)
+        const supplierName2 = testHelper.getSupplierName()
+        SUPPLIER2_ID = await testHelper.createSupplier(`${supplierName2}@test.bookcars.ma`, supplierName2)
 
         // create two locations
-        LOCATION1_ID = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
-        LOCATION2_ID = await TestHelper.createLocation('Location 2 EN', 'Location 2 FR')
+        LOCATION1_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
+        LOCATION2_ID = await testHelper.createLocation('Location 2 EN', 'Location 2 FR')
     }
 })
 
@@ -49,17 +49,17 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.close()
+    await testHelper.close()
 
     // delete suppliers
-    await TestHelper.deleteSupplier(SUPPLIER1_ID)
-    await TestHelper.deleteSupplier(SUPPLIER2_ID)
+    await testHelper.deleteSupplier(SUPPLIER1_ID)
+    await testHelper.deleteSupplier(SUPPLIER2_ID)
 
     // delete locations
-    await TestHelper.deleteLocation(LOCATION1_ID)
-    await TestHelper.deleteLocation(LOCATION2_ID)
+    await testHelper.deleteLocation(LOCATION1_ID)
+    await testHelper.deleteLocation(LOCATION2_ID)
 
-    await DatabaseHelper.Close()
+    await databaseHelper.Close()
 })
 
 //
@@ -68,10 +68,10 @@ afterAll(async () => {
 
 describe('POST /api/create-car', () => {
     it('should create a car', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-        if (!await Helper.exists(tempImage)) {
+        if (!await helper.exists(tempImage)) {
             fs.copyFile(IMAGE1_PATH, tempImage)
         }
         const payload: bookcarsTypes.CreateCarPayload = {
@@ -124,13 +124,13 @@ describe('POST /api/create-car', () => {
             .send({ image: 'image.jpg' })
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('PUT /api/update-car', () => {
     it('should update a car', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.UpdateCarPayload = {
             _id: CAR_ID,
@@ -182,7 +182,7 @@ describe('PUT /api/update-car', () => {
         expect(car.fullInsurance).toBe(210)
         expect(car.additionalDriver).toBe(220)
 
-        payload._id = TestHelper.GetRandromObjectIdAsString()
+        payload._id = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .put('/api/update-car')
             .set(env.X_ACCESS_TOKEN, token)
@@ -194,27 +194,27 @@ describe('PUT /api/update-car', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/delete-car-image/:id', () => {
     it('should delete a car image', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const car = await Car.findById(CAR_ID)
         const image = path.join(env.CDN_CARS, car?.image as string)
-        let imageExists = await Helper.exists(image)
+        let imageExists = await helper.exists(image)
         expect(imageExists).toBeTruthy()
         let res = await request(app)
             .post(`/api/delete-car-image/${CAR_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
-        imageExists = await Helper.exists(image)
+        imageExists = await helper.exists(image)
         expect(imageExists).toBeFalsy()
 
         res = await request(app)
-            .post(`/api/delete-car-image/${TestHelper.GetRandromObjectIdAsString()}`)
+            .post(`/api/delete-car-image/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
@@ -223,13 +223,13 @@ describe('POST /api/delete-car-image/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/create-car-image', () => {
     it('should create a car image', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
             .post('/api/create-car-image')
@@ -238,7 +238,7 @@ describe('POST /api/create-car-image', () => {
         expect(res.statusCode).toBe(200)
         const filename = res.body as string
         const filePath = path.resolve(env.CDN_TEMP_CARS, filename)
-        const imageExists = await Helper.exists(filePath)
+        const imageExists = await helper.exists(filePath)
         expect(imageExists).toBeTruthy()
         await fs.unlink(filePath)
 
@@ -247,13 +247,13 @@ describe('POST /api/create-car-image', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/update-car-image/:id', () => {
     it('should update a car image', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
             .post(`/api/update-car-image/${CAR_ID}`)
@@ -261,7 +261,7 @@ describe('POST /api/update-car-image/:id', () => {
             .attach('image', IMAGE2_PATH)
         expect(res.statusCode).toBe(200)
         const filename = res.body as string
-        const imageExists = await Helper.exists(path.resolve(env.CDN_CARS, filename))
+        const imageExists = await helper.exists(path.resolve(env.CDN_CARS, filename))
         expect(imageExists).toBeTruthy()
         const car = await Car.findById(CAR_ID)
         expect(car).not.toBeNull()
@@ -273,7 +273,7 @@ describe('POST /api/update-car-image/:id', () => {
         expect(res.statusCode).toBe(400)
 
         res = await request(app)
-            .post(`/api/update-car-image/${TestHelper.GetRandromObjectIdAsString()}`)
+            .post(`/api/update-car-image/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
             .attach('image', IMAGE1_PATH)
         expect(res.statusCode).toBe(204)
@@ -290,23 +290,23 @@ describe('POST /api/update-car-image/:id', () => {
             .attach('image', IMAGE1_PATH)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/delete-temp-car-image/:image', () => {
     it('should delete a temporary car image', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const tempImage = path.join(env.CDN_TEMP_CARS, IMAGE1)
-        if (!await Helper.exists(tempImage)) {
+        if (!await helper.exists(tempImage)) {
             fs.copyFile(IMAGE1_PATH, tempImage)
         }
         let res = await request(app)
             .post(`/api/delete-temp-car-image/${IMAGE1}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
-        const tempImageExists = await Helper.exists(tempImage)
+        const tempImageExists = await helper.exists(tempImage)
         expect(tempImageExists).toBeFalsy()
 
         res = await request(app)
@@ -314,30 +314,30 @@ describe('POST /api/delete-temp-car-image/:image', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('GET /api/car/:id/:language', () => {
     it('should return a car', async () => {
         let res = await request(app)
-            .get(`/api/car/${CAR_ID}/${TestHelper.LANGUAGE}`)
+            .get(`/api/car/${CAR_ID}/${testHelper.LANGUAGE}`)
         expect(res.statusCode).toBe(200)
         expect(res.body.name).toBe('BMW X5')
 
         res = await request(app)
-            .get(`/api/car/${TestHelper.GetRandromObjectIdAsString()}/${TestHelper.LANGUAGE}`)
+            .get(`/api/car/${testHelper.GetRandromObjectIdAsString()}/${testHelper.LANGUAGE}`)
         expect(res.statusCode).toBe(204)
 
         res = await request(app)
-            .get(`/api/car/0/${TestHelper.LANGUAGE}`)
+            .get(`/api/car/0/${testHelper.LANGUAGE}`)
         expect(res.statusCode).toBe(400)
     })
 })
 
 describe('POST /api/cars/:page/:size', () => {
     it('should return cars', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetCarsPayload = {
             companies: [SUPPLIER2_ID],
@@ -349,20 +349,20 @@ describe('POST /api/cars/:page/:size', () => {
         }
 
         let res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
         payload.mileage = [bookcarsTypes.Mileage.Unlimited]
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -370,7 +370,7 @@ describe('POST /api/cars/:page/:size', () => {
 
         payload.mileage = [bookcarsTypes.Mileage.Limited]
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -378,7 +378,7 @@ describe('POST /api/cars/:page/:size', () => {
 
         payload.mileage = []
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -387,7 +387,7 @@ describe('POST /api/cars/:page/:size', () => {
         payload.mileage = [bookcarsTypes.Mileage.Limited]
         payload.deposit = 12000
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -395,7 +395,7 @@ describe('POST /api/cars/:page/:size', () => {
 
         payload.availability = [bookcarsTypes.Availablity.Available]
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -403,7 +403,7 @@ describe('POST /api/cars/:page/:size', () => {
 
         payload.availability = [bookcarsTypes.Availablity.Unavailable]
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -411,38 +411,38 @@ describe('POST /api/cars/:page/:size', () => {
 
         payload.availability = []
         res = await request(app)
-            .post(`/api/cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBe(0)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/booking-cars/:page/:size', () => {
     it('should return booking cars', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetBookingCarsPayload = {
             company: SUPPLIER2_ID,
             pickupLocation: LOCATION2_ID,
         }
         let res = await request(app)
-            .post(`/api/booking-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/booking-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body.length).toBeGreaterThan(0)
 
         res = await request(app)
-            .post(`/api/booking-cars/unknown/${TestHelper.SIZE}`)
+            .post(`/api/booking-cars/unknown/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
@@ -457,32 +457,32 @@ describe('POST /api/frontend-cars/:page/:size', () => {
             deposit: -1,
         }
         let res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
         res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
         expect(res.statusCode).toBe(400)
 
         payload.mileage = [bookcarsTypes.Mileage.Unlimited]
         res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBe(0)
 
         payload.mileage = [bookcarsTypes.Mileage.Limited]
         res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
         payload.mileage = []
         res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBe(0)
@@ -490,7 +490,7 @@ describe('POST /api/frontend-cars/:page/:size', () => {
         payload.mileage = [bookcarsTypes.Mileage.Limited]
         payload.deposit = 12000
         res = await request(app)
-            .post(`/api/frontend-cars/${TestHelper.PAGE}/${TestHelper.SIZE}`)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
@@ -499,7 +499,7 @@ describe('POST /api/frontend-cars/:page/:size', () => {
 
 describe('GET /api/check-car/:id', () => {
     it('should check a car', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
             .get(`/api/check-car/${CAR_ID}`)
@@ -509,7 +509,7 @@ describe('GET /api/check-car/:id', () => {
         const booking = new Booking({
             company: SUPPLIER1_ID,
             car: CAR_ID,
-            driver: TestHelper.getUserId(),
+            driver: testHelper.getUserId(),
             pickupLocation: LOCATION1_ID,
             dropOffLocation: LOCATION1_ID,
             from: new Date(2024, 2, 1),
@@ -540,13 +540,13 @@ describe('GET /api/check-car/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('DELETE /api/delete-car/:id', () => {
     it('should delete a car', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
             .delete(`/api/delete-car/${CAR_ID}`)
@@ -554,7 +554,7 @@ describe('DELETE /api/delete-car/:id', () => {
         expect(res.statusCode).toBe(200)
 
         res = await request(app)
-            .delete(`/api/delete-car/${TestHelper.GetRandromObjectIdAsString()}`)
+            .delete(`/api/delete-car/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
@@ -568,6 +568,6 @@ describe('DELETE /api/delete-car/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })

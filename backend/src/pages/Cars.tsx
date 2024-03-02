@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
 import Master from '../components/Master'
@@ -73,7 +73,7 @@ const Cars = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
-    setAdmin(Helper.admin(_user))
+    setAdmin(helper.admin(_user))
     const _allCompanies = await SupplierService.getAllSuppliers()
     const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
     setAllCompanies(_allCompanies)

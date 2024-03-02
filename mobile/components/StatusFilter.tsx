@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import i18n from '../lang/i18n'
 import Accordion from './Accordion'
 import BookingStatus from './BookingStatus'
@@ -24,10 +24,10 @@ const StatusFilter = ({
   onChange
 }: StatusFilterProps) => {
   const [statuses, setStatuses] = useState<bookcarsTypes.StatusFilterItem[]>(
-    Helper.getBookingStatuses().map((status) => ({ ...status, checked: true }))
+    helper.getBookingStatuses().map((status) => ({ ...status, checked: true }))
   )
   const [checkedStatuses, setCheckedStatuses] = useState(
-    Helper.getBookingStatuses().map((status) => status.value)
+    helper.getBookingStatuses().map((status) => status.value)
   )
   const [allChecked, setAllChecked] = useState(true)
 

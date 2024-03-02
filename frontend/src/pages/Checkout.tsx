@@ -30,7 +30,7 @@ import * as BookingService from '../services/BookingService'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/checkout'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import * as LocationService from '../services/LocationService'
@@ -132,7 +132,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setCancellation(_cancellation)
       setPrice(_price)
@@ -150,7 +150,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setAmendments(_amendments)
       setPrice(_price)
@@ -168,7 +168,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setTheftProtection(_theftProtection)
       setPrice(_price)
@@ -186,7 +186,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setCollisionDamageWaiver(_collisionDamageWaiver)
       setPrice(_price)
@@ -204,7 +204,7 @@ const Checkout = () => {
         fullInsurance: _fullInsurance,
         additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setFullInsurance(_fullInsurance)
       setPrice(_price)
@@ -222,7 +222,7 @@ const Checkout = () => {
         fullInsurance,
         additionalDriver: _additionalDriver,
       }
-      const _price = Helper.price(car, from, to, options)
+      const _price = helper.price(car, from, to, options)
 
       setAdditionalDriver(_additionalDriver)
       setPrice(_price)
@@ -260,7 +260,7 @@ const Checkout = () => {
           setEmailInfo(false)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setEmailRegitered(false)
           setEmailValid(true)
           setEmailInfo(true)
@@ -511,7 +511,7 @@ const Checkout = () => {
       e.preventDefault()
 
       if (!car || !pickupLocation || !dropOffLocation || !from || !to) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -645,10 +645,10 @@ const Checkout = () => {
         setSuccess(true)
       } else {
         setLoading(false)
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -715,7 +715,7 @@ const Checkout = () => {
         return
       }
 
-      const _price = Helper.price(_car, _from, _to)
+      const _price = helper.price(_car, _from, _to)
 
       const included = (val: number) => val === 0
 
@@ -733,7 +733,7 @@ const Checkout = () => {
       setAdditionalDriver(included(_car.additionalDriver))
       setVisible(true)
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -768,7 +768,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.CANCELLATION}</span>
-                            <span className="booking-option-value">{Helper.getCancellationOption(car.cancellation, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, _fr)}</span>
                           </span>
                         )}
                       />
@@ -781,7 +781,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
-                            <span className="booking-option-value">{Helper.getAmendmentsOption(car.amendments, _fr)}</span>
+                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, _fr)}</span>
                           </span>
                         )}
                       />
@@ -794,7 +794,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="booking-option-value">{Helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
                           </span>
                         )}
                       />
@@ -807,7 +807,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="booking-option-value">{Helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
                           </span>
                         )}
                       />
@@ -820,7 +820,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
-                            <span className="booking-option-value">{Helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
                           </span>
                         )}
                       />
@@ -833,7 +833,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="booking-option-value">{Helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
+                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
                           </span>
                         )}
                       />
@@ -850,7 +850,7 @@ const Checkout = () => {
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.DAYS}</span>
                       <div className="booking-detail-value">
-                        {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
+                        {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
                           format(from, _format, { locale: _locale }),
                         )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}
                       </div>
@@ -940,7 +940,7 @@ const Checkout = () => {
                           }}
                           language={language}
                         />
-                        <FormHelperText error={!birthDateValid}>{(!birthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                        <FormHelperText error={!birthDateValid}>{(!birthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
                       <div className="booking-tos">
                         <table>
@@ -1037,7 +1037,7 @@ const Checkout = () => {
                           }}
                           language={language}
                         />
-                        <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && Helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
+                        <FormHelperText error={!addiontalDriverBirthDateValid}>{(!addiontalDriverBirthDateValid && helper.getBirthDateError(car.minimumAge)) || ''}</FormHelperText>
                       </FormControl>
                     </div>
                   </div>

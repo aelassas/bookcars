@@ -16,7 +16,7 @@ import { strings as cpStrings } from '../lang/change-password'
 import { strings as rpStrings } from '../lang/reset-password'
 import Error from './Error'
 import NoMatch from './NoMatch'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/reset-password.css'
 
@@ -76,16 +76,16 @@ const ResetPassword = () => {
           if (_status === 200) {
             navigate('/')
           } else {
-            Helper.error()
+            helper.error()
           }
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

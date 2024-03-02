@@ -17,7 +17,7 @@ import { useNavigation, RouteProp } from '@react-navigation/native'
 
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
@@ -66,7 +66,7 @@ const DrawerContent = ({
         await UserService.setLanguage(__language)
         setLanguage(__language)
         const route = props.state.routes[index]
-        Helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation)
+        helper.navigate(route as RouteProp<StackParams, keyof StackParams>, navigation)
       }
 
       const currentUser = await UserService.getCurrentUser()
@@ -80,13 +80,13 @@ const DrawerContent = ({
         if (status === 200) {
           await setLang(_language)
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
         await setLang(_language)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

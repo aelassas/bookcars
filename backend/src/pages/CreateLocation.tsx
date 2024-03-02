@@ -13,7 +13,7 @@ import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-location'
 import * as LocationService from '../services/LocationService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import env from '../config/env.config'
 
 import '../assets/css/create-location.css'
@@ -52,13 +52,13 @@ const CreateLocation = () => {
             names[i].name = ''
           }
           setNames(bookcarsHelper.cloneArray(names) as bookcarsTypes.LocationName[])
-          Helper.info(strings.LOCATION_CREATED)
+          helper.info(strings.LOCATION_CREATED)
         } else {
-          Helper.error()
+          helper.error()
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

@@ -15,7 +15,7 @@ import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
 import NoMatch from './NoMatch'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import env from '../config/env.config'
 
 import '../assets/css/forgot-password.css'
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
           setEmailValid(true)
           return true
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setError(false)
           setEmailValid(true)
           return false

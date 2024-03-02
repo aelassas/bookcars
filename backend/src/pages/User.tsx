@@ -17,7 +17,7 @@ import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ulStrings } from '../lang/user-list'
 import * as UserService from '../services/UserService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Master from '../components/Master'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
@@ -29,7 +29,7 @@ import '../assets/css/user.css'
 
 const User = () => {
   const navigate = useNavigate()
-  const statuses = Helper.getBookingStatuses().map((status) => status.value)
+  const statuses = helper.getBookingStatuses().map((status) => status.value)
 
   const [loggedUser, setLoggedUser] = useState<bookcarsTypes.User>()
   const [user, setUser] = useState<bookcarsTypes.User>()
@@ -71,14 +71,14 @@ const User = () => {
         if (status === 200) {
           navigate('/users')
         } else {
-          Helper.error()
+          helper.error()
           setLoading(false)
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -106,7 +106,7 @@ const User = () => {
                 setLoading(false)
               }
 
-              const admin = Helper.admin(_loggedUser)
+              const admin = helper.admin(_loggedUser)
               if (admin) {
                 const _companies = await SupplierService.getAllSuppliers()
                 const companyIds = bookcarsHelper.flattenCompanies(_companies)
@@ -119,7 +119,7 @@ const User = () => {
               setNoMatch(true)
             }
           } catch (err) {
-            Helper.error(err)
+            helper.error(err)
             setLoading(false)
             setVisible(false)
           }

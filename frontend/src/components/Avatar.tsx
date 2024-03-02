@@ -17,7 +17,7 @@ import {
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
 
@@ -48,7 +48,7 @@ const Avatar = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !user) {
-      Helper.error()
+      helper.error()
       return
     }
 
@@ -59,7 +59,7 @@ const Avatar = ({
     const { _id } = user
 
     if (!_id) {
-      Helper.error()
+      helper.error()
       return
     }
 
@@ -80,13 +80,13 @@ const Avatar = ({
               onChange(_user)
             }
           } else {
-            Helper.error()
+            helper.error()
           }
         } else {
-          Helper.error()
+          helper.error()
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     }
 
@@ -121,14 +121,14 @@ const Avatar = ({
   const handleDelete = async () => {
     try {
       if (!user) {
-        Helper.error()
+        helper.error()
         return
       }
 
       const { _id } = user
 
       if (!_id) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -144,13 +144,13 @@ const Avatar = ({
           }
           closeDialog()
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

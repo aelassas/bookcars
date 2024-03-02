@@ -17,7 +17,7 @@ import TextInput from '../components/TextInput'
 import DateTimePicker from '../components/DateTimePicker'
 import Switch from '../components/Switch'
 import Button from '../components/Button'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import * as env from '../config/env.config'
 
 const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Settings'>) => {
@@ -186,7 +186,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const onPressSave = async () => {
     try {
       if (!user || !user._id || !birthDate) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -218,12 +218,12 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       const status = await UserService.updateUser(data)
 
       if (status === 200) {
-        Helper.toast(i18n.t('SETTINGS_UPDATED'))
+        helper.toast(i18n.t('SETTINGS_UPDATED'))
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -265,7 +265,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     onPress={async () => {
                       try {
                         if (!user || !user._id) {
-                          Helper.error()
+                          helper.error()
                           return
                         }
 
@@ -283,8 +283,8 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                         }
 
                         const { uri } = pickerResult.assets[0]
-                        const name = Helper.getFileName(uri)
-                        const type = Helper.getMimeType(name)
+                        const name = helper.getFileName(uri)
+                        const type = helper.getMimeType(name)
                         const image: BlobInfo = { uri, name, type }
                         const status = await UserService.updateAvatar(user._id, image)
 
@@ -294,10 +294,10 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                           const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
                           setAvatar(_avatar)
                         } else {
-                          Helper.error()
+                          helper.error()
                         }
                       } catch (err) {
-                        Helper.error(err)
+                        helper.error(err)
                       }
                     }}
                   >
@@ -385,13 +385,13 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                           setAvatar(null)
                           setOpenDeleteDialog(false)
                         } else {
-                          Helper.error()
+                          helper.error()
                         }
                       } else {
-                        Helper.error()
+                        helper.error()
                       }
                     } catch (err) {
-                      Helper.error(err)
+                      helper.error(err)
                     }
                   }}
                 >

@@ -1,5 +1,5 @@
 import LocalizedStrings from 'react-localization'
-import * as LangHelper from '../common/LangHelper'
+import * as langHelper from '../common/langHelper'
 import { strings as commonStrings } from '../lang/common'
 
 const strings = new LocalizedStrings({
@@ -125,5 +125,5 @@ const strings = new LocalizedStrings({
   },
 })
 
-LangHelper.setLanguage(strings)
+langHelper.setLanguage(strings)
 export { strings }

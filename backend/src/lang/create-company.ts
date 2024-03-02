@@ -1,6 +1,6 @@
 import LocalizedStrings from 'react-localization'
 import env from '../config/env.config'
-import * as LangHelper from '../common/LangHelper'
+import * as langHelper from '../common/langHelper'
 
 const strings = new LocalizedStrings({
   fr: {
@@ -17,5 +17,5 @@ const strings = new LocalizedStrings({
   },
 })
 
-LangHelper.setLanguage(strings)
+langHelper.setLanguage(strings)
 export { strings }

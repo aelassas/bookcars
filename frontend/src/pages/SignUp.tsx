@@ -23,7 +23,7 @@ import Master from '../components/Master'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import DatePicker from '../components/DatePicker'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/signup.css'
 
@@ -78,7 +78,7 @@ const SignUp = () => {
           setError(false)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           setEmailError(false)
           setEmailValid(true)
           return false
@@ -249,7 +249,7 @@ const SignUp = () => {
         setTosError(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
       setPasswordError(false)
       setRecaptchaError(false)
       setPasswordsDontMatch(false)

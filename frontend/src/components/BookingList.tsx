@@ -33,7 +33,7 @@ import { fr as dfnsFR, enUS as dfnsENUS } from 'date-fns/locale'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import * as BookingService from '../services/BookingService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import { strings } from '../lang/booking-list'
 import { strings as csStrings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
@@ -124,7 +124,7 @@ const BookingList = ({
         )
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
-          Helper.error()
+          helper.error()
           return
         }
         const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
@@ -152,7 +152,7 @@ const BookingList = ({
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
       setInit(false)
@@ -235,7 +235,7 @@ const BookingList = ({
         field: 'status',
         headerName: strings.STATUS,
         flex: 1,
-        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <span className={`bs bs-${value?.toLowerCase()}`}>{Helper.getBookingStatus(value)}</span>,
+        renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <span className={`bs bs-${value?.toLowerCase()}`}>{helper.getBookingStatus(value)}</span>,
         valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => value,
       },
       {
@@ -368,15 +368,15 @@ const BookingList = ({
           setSelectedId('')
           setCancelRequestProcessing(false)
         } else {
-          Helper.error()
+          helper.error()
         }
       } else {
-        Helper.error()
+        helper.error()
         setOpenCancelDialog(false)
         setCancelRequestProcessing(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
       setOpenCancelDialog(false)
       setCancelRequestProcessing(false)
     }
@@ -413,7 +413,7 @@ const BookingList = ({
               return (
                 <div key={booking._id} className="booking-details">
                   <div className={`bs bs-${booking.status}`}>
-                    <span>{Helper.getBookingStatus(booking.status)}</span>
+                    <span>{helper.getBookingStatus(booking.status)}</span>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.CAR}</span>
@@ -422,7 +422,7 @@ const BookingList = ({
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DAYS}</span>
                     <div className="booking-detail-value">
-                      {`${Helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
+                      {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(
                         format(from, _format, { locale: _locale }),
                       )} - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`}
                     </div>
@@ -457,7 +457,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.CANCELLATION}</span>
-                            <span className="extra-text">{Helper.getCancellationOption(_bookingCar.cancellation, _fr)}</span>
+                            <span className="extra-text">{helper.getCancellationOption(_bookingCar.cancellation, _fr)}</span>
                           </div>
                         )}
 
@@ -465,7 +465,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.AMENDMENTS}</span>
-                            <span className="extra-text">{Helper.getAmendmentsOption(_bookingCar.amendments, _fr)}</span>
+                            <span className="extra-text">{helper.getAmendmentsOption(_bookingCar.amendments, _fr)}</span>
                           </div>
                         )}
 
@@ -473,7 +473,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="extra-text">{Helper.getCollisionDamageWaiverOption(_bookingCar.collisionDamageWaiver, days, _fr)}</span>
+                            <span className="extra-text">{helper.getCollisionDamageWaiverOption(_bookingCar.collisionDamageWaiver, days, _fr)}</span>
                           </div>
                         )}
 
@@ -481,7 +481,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="extra-text">{Helper.getTheftProtectionOption(_bookingCar.theftProtection, days, _fr)}</span>
+                            <span className="extra-text">{helper.getTheftProtectionOption(_bookingCar.theftProtection, days, _fr)}</span>
                           </div>
                         )}
 
@@ -489,7 +489,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.FULL_INSURANCE}</span>
-                            <span className="extra-text">{Helper.getFullInsuranceOption(_bookingCar.fullInsurance, days, _fr)}</span>
+                            <span className="extra-text">{helper.getFullInsuranceOption(_bookingCar.fullInsurance, days, _fr)}</span>
                           </div>
                         )}
 
@@ -497,7 +497,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="extra-text">{Helper.getAdditionalDriverOption(_bookingCar.additionalDriver, days)}</span>
+                            <span className="extra-text">{helper.getAdditionalDriverOption(_bookingCar.additionalDriver, days)}</span>
                           </div>
                         )}
                       </div>

@@ -21,7 +21,7 @@ import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/create-company.css'
 
@@ -63,7 +63,7 @@ const CreateCompany = () => {
         setFullNameError(true)
         return false
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
         return true
       }
     } else {
@@ -100,7 +100,7 @@ const CreateCompany = () => {
           setEmailValid(true)
           return false
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
           return true
         }
       } else {
@@ -230,7 +230,7 @@ const CreateCompany = () => {
         setError(true)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

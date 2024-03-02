@@ -37,8 +37,8 @@ import { strings as commonStrings } from '../lang/common'
 import * as UserService from '../services/UserService'
 import * as NotificationService from '../services/NotificationService'
 import Avatar from './Avatar'
-import * as LangHelper from '../common/LangHelper'
-import * as Helper from '../common/Helper'
+import * as langHelper from '../common/langHelper'
+import * as helper from '../common/helper'
 
 import '../assets/css/header.css'
 
@@ -58,7 +58,7 @@ const Header = ({
   notificationCount: headerNotificationCount
 }: HeaderProps) => {
   const navigate = useNavigate()
-  const [lang, setLang] = useState(Helper.getLanguage(env.DEFAULT_LANGUAGE))
+  const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
@@ -120,7 +120,7 @@ const Header = ({
 
     const { code } = event.currentTarget.dataset
     if (code) {
-      setLang(Helper.getLanguage(code))
+      setLang(helper.getLanguage(code))
       const currentLang = UserService.getLanguage()
       if (isSignedIn && user) {
         // Update user language
@@ -178,9 +178,9 @@ const Header = ({
   }
 
   useEffect(() => {
-    const language = LangHelper.getLanguage()
-    setLang(Helper.getLanguage(language))
-    LangHelper.setLanguage(strings, language)
+    const language = langHelper.getLanguage()
+    setLang(helper.getLanguage(language))
+    langHelper.setLanguage(strings, language)
   }, [])
 
   useEffect(() => {

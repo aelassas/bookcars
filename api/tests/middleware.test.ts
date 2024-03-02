@@ -1,22 +1,22 @@
 import 'dotenv/config'
 import request from 'supertest'
 import * as bookcarsTypes from 'bookcars-types'
-import * as DatabaseHelper from '../src/common/DatabaseHelper'
+import * as databaseHelper from '../src/common/databaseHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
-import * as TestHelper from './TestHelper'
+import * as testHelper from './testHelper'
 
-const { ADMIN_EMAIL } = TestHelper
-const { USER_EMAIL } = TestHelper
+const { ADMIN_EMAIL } = testHelper
+const { USER_EMAIL } = testHelper
 let USER_ID: string
 
 //
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect()) {
-        await TestHelper.initialize()
-        USER_ID = TestHelper.getUserId()
+    if (await databaseHelper.Connect()) {
+        await testHelper.initialize()
+        USER_ID = testHelper.getUserId()
     }
 })
 
@@ -24,15 +24,15 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.close()
-    await DatabaseHelper.Close()
+    await testHelper.close()
+    await databaseHelper.Close()
 })
 
 describe('GET /api/user/:id', () => {
     it('should authenticate through backend HttpOnly cookie', async () => {
         const payload: bookcarsTypes.SignInPayload = {
             email: ADMIN_EMAIL,
-            password: TestHelper.PASSWORD,
+            password: testHelper.PASSWORD,
         }
 
         let res = await request(app)
@@ -62,7 +62,7 @@ describe('GET /api/user/:id', () => {
     it('should authenticate through frontend HttpOnly cookie', async () => {
         const payload: bookcarsTypes.SignInPayload = {
             email: USER_EMAIL,
-            password: TestHelper.PASSWORD,
+            password: testHelper.PASSWORD,
         }
 
         let res = await request(app)
@@ -90,7 +90,7 @@ describe('GET /api/user/:id', () => {
 
 describe('GET /api/user/:id', () => {
     it('should authenticate through request header', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const res = await request(app)
             .get(`/api/user/${USER_ID}`)
@@ -98,19 +98,19 @@ describe('GET /api/user/:id', () => {
         expect(res.statusCode).toBe(200)
         expect(res.body.email).toBe(USER_EMAIL)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('PATCH /api/user/:id', () => {
     it('should revoke access to PATCH method', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const res = await request(app)
             .patch(`/api/user/${USER_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(405)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })

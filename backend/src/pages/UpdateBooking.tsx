@@ -27,7 +27,7 @@ import { strings as blStrings } from '../lang/booking-list'
 import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/booking'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Master from '../components/Master'
 import * as UserService from '../services/UserService'
 import * as BookingService from '../services/BookingService'
@@ -108,21 +108,21 @@ const UpdateBooking = () => {
           if (_car) {
             const _booking = bookcarsHelper.clone(booking)
             _booking.car = _car
-            Helper.price(
+            helper.price(
               _booking,
               _car,
               (_price) => {
                 setPrice(_price)
               },
               (err) => {
-                Helper.error(err)
+                helper.error(err)
               },
             )
 
             setBooking(_booking)
             setCar(newCar)
           } else {
-            Helper.error()
+            helper.error()
           }
         } else if (!newCar) {
           setPrice(0)
@@ -131,7 +131,7 @@ const UpdateBooking = () => {
           setCar(newCar)
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     },
     [car, booking],
@@ -145,7 +145,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.cancellation = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -154,7 +154,7 @@ const UpdateBooking = () => {
           setCancellation(booking.cancellation || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
@@ -164,7 +164,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.amendments = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -173,7 +173,7 @@ const UpdateBooking = () => {
           setAmendments(booking.amendments || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
@@ -183,7 +183,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.collisionDamageWaiver = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -192,7 +192,7 @@ const UpdateBooking = () => {
           setCollisionDamageWaiver(booking.collisionDamageWaiver || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
@@ -202,7 +202,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.theftProtection = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -211,7 +211,7 @@ const UpdateBooking = () => {
           setTheftProtection(booking.theftProtection || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
@@ -221,7 +221,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.fullInsurance = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -230,7 +230,7 @@ const UpdateBooking = () => {
           setFullInsurance(booking.fullInsurance || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
@@ -240,7 +240,7 @@ const UpdateBooking = () => {
     if (booking) {
       booking.additionalDriver = e.target.checked
 
-      Helper.price(
+      helper.price(
         booking,
         booking.car as bookcarsTypes.Car,
         (_price) => {
@@ -249,14 +249,14 @@ const UpdateBooking = () => {
           setAdditionalDriver(booking.additionalDriver || false)
         },
         (err) => {
-          Helper.error(err)
+          helper.error(err)
         },
       )
     }
   }
 
   const toastErr = (err?: unknown, hideLoading?: boolean): void => {
-    Helper.error(err)
+    helper.error(err)
     if (hideLoading) {
       setLoading(false)
     }
@@ -283,10 +283,10 @@ const UpdateBooking = () => {
           toastErr(true)
         }
       } catch (err) {
-        Helper.error(err)
+        helper.error(err)
       }
     } else {
-      Helper.error()
+      helper.error()
     }
   }
 
@@ -332,7 +332,7 @@ const UpdateBooking = () => {
     try {
       e.preventDefault()
 
-      const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+      const additionalDriverSet = helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
       if (additionalDriverSet) {
         const emailValid = _validateEmail(addtionalDriverEmail)
@@ -352,7 +352,7 @@ const UpdateBooking = () => {
       }
 
       if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -379,7 +379,7 @@ const UpdateBooking = () => {
       let _additionalDriver: bookcarsTypes.AdditionalDriver
       if (additionalDriverSet) {
         if (!addtionalDriverBirthDate) {
-          Helper.error()
+          helper.error()
           return
         }
         _additionalDriver = {
@@ -406,12 +406,12 @@ const UpdateBooking = () => {
           setAdditionalDriverPhone('')
           setAdditionalDriverBirthDate(undefined)
         }
-        Helper.info(commonStrings.UPDATED)
+        helper.info(commonStrings.UPDATED)
       } else {
         toastErr()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -428,7 +428,7 @@ const UpdateBooking = () => {
             const _booking = await BookingService.getBooking(id)
 
             if (_booking) {
-              if (!Helper.admin(_user) && (_booking.company as bookcarsTypes.User)._id !== _user._id) {
+              if (!helper.admin(_user) && (_booking.company as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -565,7 +565,7 @@ const UpdateBooking = () => {
                     if (date) {
                       booking.from = date
 
-                      Helper.price(
+                      helper.price(
                         booking,
                         booking.car as bookcarsTypes.Car,
                         (_price) => {
@@ -603,7 +603,7 @@ const UpdateBooking = () => {
                     if (date) {
                       booking.to = date
 
-                      Helper.price(
+                      helper.price(
                         booking,
                         booking.car as bookcarsTypes.Car,
                         (_price) => {
@@ -635,7 +635,7 @@ const UpdateBooking = () => {
                   control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
                   label={csStrings.CANCELLATION}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'cancellation')}
+                  disabled={!helper.carOptionAvailable(car, 'cancellation')}
                 />
               </FormControl>
 
@@ -644,7 +644,7 @@ const UpdateBooking = () => {
                   control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
                   label={csStrings.AMENDMENTS}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'amendments')}
+                  disabled={!helper.carOptionAvailable(car, 'amendments')}
                 />
               </FormControl>
 
@@ -653,7 +653,7 @@ const UpdateBooking = () => {
                   control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
                   label={csStrings.THEFT_PROTECTION}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
+                  disabled={!helper.carOptionAvailable(car, 'theftProtection')}
                 />
               </FormControl>
 
@@ -662,7 +662,7 @@ const UpdateBooking = () => {
                   control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
                   label={csStrings.COLLISION_DAMAGE_WAVER}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
+                  disabled={!helper.carOptionAvailable(car, 'collisionDamageWaiver')}
                 />
               </FormControl>
 
@@ -671,7 +671,7 @@ const UpdateBooking = () => {
                   control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
                   label={csStrings.FULL_INSURANCE}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
+                  disabled={!helper.carOptionAvailable(car, 'fullInsurance')}
                 />
               </FormControl>
 
@@ -680,11 +680,11 @@ const UpdateBooking = () => {
                   control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
                   label={csStrings.ADDITIONAL_DRIVER}
                   className="checkbox-fcl"
-                  disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
+                  disabled={!helper.carOptionAvailable(car, 'additionalDriver')}
                 />
               </FormControl>
 
-              {Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
+              {helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
                 <>
                   <div className="info">
                     <DriverIcon />
@@ -758,7 +758,7 @@ const UpdateBooking = () => {
                       }}
                       language={UserService.getLanguage()}
                     />
-                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && Helper.getBirthDateError(env.MINIMUM_AGE)) || ''}</FormHelperText>
+                    <FormHelperText error={!additionalDriverBirthDateValid}>{(!additionalDriverBirthDateValid && helper.getBirthDateError(env.MINIMUM_AGE)) || ''}</FormHelperText>
                   </FormControl>
                 </>
               )}
@@ -781,7 +781,7 @@ const UpdateBooking = () => {
           <div className="col-2">
             <div className="col-2-header">
               <div className="price">
-                <span className="price-days">{Helper.getDays(days)}</span>
+                <span className="price-days">{helper.getDays(days)}</span>
                 <span className="price-main">{`${bookcarsHelper.formatNumber(price ?? 0)} ${commonStrings.CURRENCY}`}</span>
                 <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price ?? 0) / days)} ${commonStrings.CURRENCY}`}</span>
               </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Accordion from '../components/Accordion'
 
 import '../assets/css/status-filter.css'
@@ -18,7 +18,7 @@ const StatusFilter = ({
   collapse,
   onChange
 }: StatusFilterProps) => {
-  const statuses = Helper.getBookingStatuses()
+  const statuses = helper.getBookingStatuses()
   const [checkedStatuses, setCheckedStatuses] = useState(statuses.map((status) => status.value))
   const [allChecked, setAllChecked] = useState(true)
 
@@ -114,7 +114,7 @@ const StatusFilter = ({
                 role="button"
                 tabIndex={0}
               >
-                {Helper.getBookingStatus(status.value)}
+                {helper.getBookingStatus(status.value)}
               </span>
             </li>
           ))}

@@ -5,7 +5,7 @@ import { strings } from '../lang/master'
 import Header from './Header'
 import * as UserService from '../services/UserService'
 import Unauthorized from '../components/Unauthorized'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import { useInit } from '../common/customHooks'
 
 interface MasterProps {
@@ -106,15 +106,15 @@ const Master = ({
 
         const status = await UserService.resendLink(data)
         if (status === 200) {
-          Helper.info(strings.VALIDATION_EMAIL_SENT)
+          helper.info(strings.VALIDATION_EMAIL_SENT)
         } else {
-          Helper.error(null, strings.VALIDATION_EMAIL_ERROR)
+          helper.error(null, strings.VALIDATION_EMAIL_ERROR)
         }
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err, strings.VALIDATION_EMAIL_ERROR)
+      helper.error(err, strings.VALIDATION_EMAIL_ERROR)
     }
   }
 

@@ -6,7 +6,7 @@ import { strings } from '../lang/companies'
 import Search from '../components/Search'
 import SupplierList from '../components/SupplierList'
 import InfoBox from '../components/InfoBox'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/companies.css'
 
@@ -33,7 +33,7 @@ const Companies = () => {
     setUser(_user)
   }
 
-  const admin = Helper.admin(user)
+  const admin = helper.admin(user)
 
   return (
     <Master onLoad={onLoad} strict>

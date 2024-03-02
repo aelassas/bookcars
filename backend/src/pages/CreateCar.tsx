@@ -19,7 +19,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/create-car'
 import * as CarService from '../services/CarService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
@@ -241,10 +241,10 @@ const CreateCar = () => {
       if (car && car._id) {
         navigate('/cars')
       } else {
-        Helper.error()
+        helper.error()
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

@@ -6,7 +6,7 @@ import { RouteProp } from '@react-navigation/native'
 import * as UserService from '../services/UserService'
 import Button from '../components/Button'
 import i18n from '../lang/i18n'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Header from '../components/Header'
 import * as NotificationService from '../services/NotificationService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
@@ -59,7 +59,7 @@ const Master = ({
       }
 
       if (_reload && route) {
-        Helper.navigate(route, navigation)
+        helper.navigate(route, navigation)
       } else {
         setLoading(false)
       }
@@ -108,7 +108,7 @@ const Master = ({
         await exit(false)
       }
     } catch (err) {
-      Helper.error(err, false)
+      helper.error(err, false)
       await exit(true)
     }
   }
@@ -131,13 +131,13 @@ const Master = ({
         const status = await UserService.resendLink(data)
 
         if (status === 200) {
-          Helper.toast(i18n.t('VALIDATION_EMAIL_SENT'))
+          helper.toast(i18n.t('VALIDATION_EMAIL_SENT'))
         } else {
-          Helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'))
+          helper.toast(i18n.t('VALIDATION_EMAIL_ERROR'))
         }
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 

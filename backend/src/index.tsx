@@ -8,7 +8,7 @@ import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
 import { frFR, enUS } from '@mui/x-date-pickers/locales'
 import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid'
 import { disableDevTools } from 'disable-react-devtools'
-import * as Helper from './common/Helper'
+import * as helper from './common/helper'
 import * as UserService from './services/UserService'
 import { strings as commonStrings } from './lang/common'
 import env from './config/env.config'
@@ -53,7 +53,7 @@ if (lang) {
         if (status === 200) {
           const _status = await UserService.updateLanguage(data)
           if (_status !== 200) {
-            Helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
+            helper.error(null, commonStrings.CHANGE_LANGUAGE_ERROR)
           }
         }
 
@@ -65,7 +65,7 @@ if (lang) {
     UserService.setLanguage(language)
     commonStrings.setLanguage(language)
   } catch (err) {
-    Helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
+    helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
   }
 }
 

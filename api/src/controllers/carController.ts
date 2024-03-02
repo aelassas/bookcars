@@ -9,7 +9,7 @@ import Booking from '../models/Booking'
 import Car from '../models/Car'
 import strings from '../config/app.config'
 import * as env from '../config/env.config'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 /**
  * Create a Car.
@@ -35,7 +35,7 @@ export const create = async (req: Request, res: Response) => {
     if (car.image) {
       const image = path.join(env.CDN_TEMP_CARS, body.image)
 
-      if (await Helper.exists(image)) {
+      if (await helper.exists(image)) {
         const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
         const newPath = path.join(env.CDN_CARS, filename)
 
@@ -70,7 +70,7 @@ export const update = async (req: Request, res: Response) => {
   const { _id } = body
 
   try {
-    if (!Helper.isValidObjectId(_id)) {
+    if (!helper.isValidObjectId(_id)) {
       throw new Error('body._id is not valid')
     }
     const car = await Car.findById(_id)
@@ -181,7 +181,7 @@ export const deleteCar = async (req: Request, res: Response) => {
 
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await Helper.exists(image)) {
+        if (await helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -211,7 +211,7 @@ export const createImage = async (req: Request, res: Response) => {
       throw new Error('[car.createImage] req.file not found')
     }
 
-    const filename = `${Helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
+    const filename = `${helper.getFilenameWithoutExtension(req.file.originalname)}_${uuid()}_${Date.now()}${path.extname(req.file.originalname)}`
     const filepath = path.join(env.CDN_TEMP_CARS, filename)
 
     await fs.writeFile(filepath, req.file.buffer)
@@ -248,7 +248,7 @@ export const updateImage = async (req: Request, res: Response) => {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await Helper.exists(image)) {
+        if (await helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -288,7 +288,7 @@ export const deleteImage = async (req: Request, res: Response) => {
     if (car) {
       if (car.image) {
         const image = path.join(env.CDN_CARS, car.image)
-        if (await Helper.exists(image)) {
+        if (await helper.exists(image)) {
           await fs.unlink(image)
         }
       }
@@ -319,7 +319,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
   try {
     const imageFile = path.join(env.CDN_TEMP_CARS, image)
-    if (!await Helper.exists(imageFile)) {
+    if (!await helper.exists(imageFile)) {
       throw new Error(`[car.deleteTempImage] temp image ${imageFile} not found`)
     }
 

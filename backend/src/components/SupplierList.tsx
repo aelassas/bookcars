@@ -23,7 +23,7 @@ import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/company-list'
 import * as SupplierService from '../services/SupplierService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import Pager from './Pager'
 
 import '../assets/css/company-list.css'
@@ -63,7 +63,7 @@ const SupplierList = ({
       const data = await SupplierService.getSuppliers(_keyword || '', _page, env.PAGE_SIZE)
       const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
       if (!_data) {
-        Helper.error()
+        helper.error()
         return
       }
       const _totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
@@ -88,7 +88,7 @@ const SupplierList = ({
         onLoad({ rows: _data.resultData, rowCount: _totalRecords })
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     } finally {
       setLoading(false)
       setInit(false)
@@ -161,20 +161,20 @@ const SupplierList = ({
             onDelete(_rowCount)
           }
         } else {
-          Helper.error()
+          helper.error()
           setCompanyId('')
           setCompanyIndex(-1)
           setLoading(false)
         }
       } else {
-        Helper.error()
+        helper.error()
         setOpenDeleteDialog(false)
         setCompanyId('')
         setCompanyIndex(-1)
         setLoading(false)
       }
     } catch (err) {
-      Helper.error(err)
+      helper.error(err)
     }
   }
 
@@ -184,7 +184,7 @@ const SupplierList = ({
     setCompanyIndex(-1)
   }
 
-  const admin = Helper.admin(user)
+  const admin = helper.admin(user)
 
   return (
     <>

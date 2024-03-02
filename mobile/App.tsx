@@ -8,7 +8,7 @@ import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
 import DrawerNavigator from './components/DrawerNavigator'
-import * as Helper from './common/Helper'
+import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
 
@@ -36,9 +36,9 @@ const App = () => {
       if (loggedIn) {
         const currentUser = await UserService.getCurrentUser()
         if (currentUser?._id) {
-          await Helper.registerPushToken(currentUser._id)
+          await helper.registerPushToken(currentUser._id)
         } else {
-          Helper.error()
+          helper.error()
         }
       }
     }
@@ -62,7 +62,7 @@ const App = () => {
           }
         }
       } catch (err) {
-        Helper.error(err, false)
+        helper.error(err, false)
       }
     })
 

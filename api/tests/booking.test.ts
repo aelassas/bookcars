@@ -4,8 +4,8 @@ import * as bookcarsTypes from 'bookcars-types'
 import { v1 as uuid } from 'uuid'
 import mongoose from 'mongoose'
 import app from '../src/app'
-import * as DatabaseHelper from '../src/common/DatabaseHelper'
-import * as TestHelper from './TestHelper'
+import * as databaseHelper from '../src/common/databaseHelper'
+import * as testHelper from './testHelper'
 import Car from '../src/models/Car'
 import Booking from '../src/models/Booking'
 import AdditionalDriver from '../src/models/AdditionalDriver'
@@ -34,18 +34,18 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await DatabaseHelper.Connect()) {
-        await TestHelper.initialize()
+    if (await databaseHelper.Connect()) {
+        await testHelper.initialize()
 
         // create a supplier
-        const supplierName = TestHelper.getSupplierName()
-        SUPPLIER_ID = await TestHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        const supplierName = testHelper.getSupplierName()
+        SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
 
         // get user id
-        DRIVER1_ID = TestHelper.getUserId()
+        DRIVER1_ID = testHelper.getUserId()
 
         // create a location
-        LOCATION_ID = await TestHelper.createLocation('Location 1 EN', 'Location 1 FR')
+        LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
 
         // create car
         const payload: bookcarsTypes.CreateCarPayload = {
@@ -87,13 +87,13 @@ beforeAll(async () => {
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-    await TestHelper.close()
+    await testHelper.close()
 
     // delete the supplier
-    await TestHelper.deleteSupplier(SUPPLIER_ID)
+    await testHelper.deleteSupplier(SUPPLIER_ID)
 
     // delete the location
-    await TestHelper.deleteLocation(LOCATION_ID)
+    await testHelper.deleteLocation(LOCATION_ID)
 
     // delete the car
     await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
@@ -101,7 +101,7 @@ afterAll(async () => {
     // delete drivers
     await User.deleteOne({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
 
-    await DatabaseHelper.Close()
+    await databaseHelper.Close()
 })
 
 //
@@ -110,7 +110,7 @@ afterAll(async () => {
 
 describe('POST /api/create-booking', () => {
     it('should create a booking', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.UpsertBookingPayload = {
             booking: {
@@ -147,7 +147,7 @@ describe('POST /api/create-booking', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
@@ -185,8 +185,8 @@ describe('POST /api/checkout', () => {
 
         payload.driver = {
             fullName: 'driver',
-            email: TestHelper.GetRandomEmail(),
-            language: TestHelper.LANGUAGE,
+            email: testHelper.GetRandomEmail(),
+            language: testHelper.LANGUAGE,
         }
         res = await request(app)
             .post('/api/checkout')
@@ -198,7 +198,7 @@ describe('POST /api/checkout', () => {
 
         payload.driver = undefined
         payload.additionalDriver = {
-            email: TestHelper.GetRandomEmail(),
+            email: testHelper.GetRandomEmail(),
             fullName: 'Addtional Driver',
             birthDate: new Date(1980, 2, 25),
             phone: '01010101',
@@ -211,35 +211,35 @@ describe('POST /api/checkout', () => {
         expect(additionalDrivers.length).toBe(1)
 
         payload.additionalDriver = undefined
-        payload.booking!.car = TestHelper.GetRandromObjectIdAsString()
+        payload.booking!.car = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
         expect(res.statusCode).toBe(204)
 
         payload.booking!.car = CAR1_ID
-        payload.booking!.pickupLocation = TestHelper.GetRandromObjectIdAsString()
+        payload.booking!.pickupLocation = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
         expect(res.statusCode).toBe(204)
 
         payload.booking!.pickupLocation = LOCATION_ID
-        payload.booking!.dropOffLocation = TestHelper.GetRandromObjectIdAsString()
+        payload.booking!.dropOffLocation = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
         expect(res.statusCode).toBe(204)
 
         payload.booking!.dropOffLocation = LOCATION_ID
-        payload.booking!.company = TestHelper.GetRandromObjectIdAsString()
+        payload.booking!.company = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
         expect(res.statusCode).toBe(204)
 
         payload.booking!.company = SUPPLIER_ID
-        payload.booking!.driver = TestHelper.GetRandromObjectIdAsString()
+        payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
@@ -260,7 +260,7 @@ describe('POST /api/checkout', () => {
 
 describe('POST /api/update-booking', () => {
     it('should update a booking', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         ADDITIONAL_DRIVER.fullName = 'Additional Driver 2'
         const payload: bookcarsTypes.UpsertBookingPayload = {
@@ -298,7 +298,7 @@ describe('POST /api/update-booking', () => {
 
         const booking = await Booking.findById(BOOKING_ID)
         expect(booking).not.toBeNull()
-        booking!._additionalDriver = TestHelper.GetRandromObjectId()
+        booking!._additionalDriver = testHelper.GetRandromObjectId()
         await booking?.save()
         res = await request(app)
             .put('/api/update-booking')
@@ -329,7 +329,7 @@ describe('POST /api/update-booking', () => {
         const deleteRes = await AdditionalDriver.deleteOne({ email: ADDITIONAL_DRIVER_EMAIL })
         expect(deleteRes.deletedCount).toBe(1)
 
-        payload.booking._id = TestHelper.GetRandromObjectIdAsString()
+        payload.booking._id = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .put('/api/update-booking')
             .set(env.X_ACCESS_TOKEN, token)
@@ -340,7 +340,7 @@ describe('POST /api/update-booking', () => {
         payload.booking._id = BOOKING_ID
         payload.booking.status = bookcarsTypes.BookingStatus.Cancelled
         payload.additionalDriver = undefined
-        payload.booking.driver = TestHelper.GetRandromObjectIdAsString()
+        payload.booking.driver = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .put('/api/update-booking')
             .set(env.X_ACCESS_TOKEN, token)
@@ -373,13 +373,13 @@ describe('POST /api/update-booking', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/update-booking-status', () => {
     it('should update booking status', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.UpdateStatusPayload = {
             ids: [BOOKING_ID],
@@ -398,37 +398,37 @@ describe('POST /api/update-booking-status', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('GET /api/booking/:id/:language', () => {
     it('should get a booking', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
-            .get(`/api/booking/${BOOKING_ID}/${TestHelper.LANGUAGE}`)
+            .get(`/api/booking/${BOOKING_ID}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
         expect(res.body.car._id).toBe(CAR2_ID)
 
         res = await request(app)
-            .get(`/api/booking/${TestHelper.GetRandromObjectIdAsString()}/${TestHelper.LANGUAGE}`)
+            .get(`/api/booking/${testHelper.GetRandromObjectIdAsString()}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
         res = await request(app)
-            .get(`/api/booking/${uuid()}/${TestHelper.LANGUAGE}`)
+            .get(`/api/booking/${uuid()}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/bookings/:page/:size/:language', () => {
     it('should get bookings', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetBookingsPayload = {
             companies: [SUPPLIER_ID],
@@ -438,14 +438,14 @@ describe('POST /api/bookings/:page/:size/:language', () => {
                 dropOffLocation: LOCATION_ID,
                 from: new Date(2024, 2, 1),
                 to: new Date(1990, 2, 4),
-                keyword: TestHelper.USER_FULL_NAME,
+                keyword: testHelper.USER_FULL_NAME,
             },
-            user: TestHelper.getUserId(),
+            user: testHelper.getUserId(),
             car: CAR2_ID,
         }
 
         let res = await request(app)
-            .post(`/api/bookings/${TestHelper.PAGE}/${TestHelper.SIZE}/${TestHelper.LANGUAGE}`)
+            .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
@@ -453,24 +453,24 @@ describe('POST /api/bookings/:page/:size/:language', () => {
 
         payload.filter!.keyword = BOOKING_ID
         res = await request(app)
-            .post(`/api/bookings/${TestHelper.PAGE}/${TestHelper.SIZE}/${TestHelper.LANGUAGE}`)
+            .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBe(1)
 
         res = await request(app)
-            .post(`/api/bookings/${TestHelper.PAGE}/${TestHelper.SIZE}/${TestHelper.LANGUAGE}`)
+            .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('GET /api/has-bookings/:driver', () => {
     it("should check driver's bookings", async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         let res = await request(app)
             .get(`/api/has-bookings/${DRIVER1_ID}`)
@@ -489,13 +489,13 @@ describe('GET /api/has-bookings/:driver', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('POST /api/cancel-booking/:id', () => {
     it('should cancel a booking', async () => {
-        const token = await TestHelper.signinAsUser()
+        const token = await testHelper.signinAsUser()
 
         let booking = await Booking.findById(BOOKING_ID)
         expect(booking?.cancelRequest).toBeFalsy()
@@ -508,7 +508,7 @@ describe('POST /api/cancel-booking/:id', () => {
         expect(booking?.cancelRequest).toBeTruthy()
 
         res = await request(app)
-            .post(`/api/cancel-booking/${TestHelper.GetRandromObjectIdAsString()}`)
+            .post(`/api/cancel-booking/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(204)
 
@@ -517,13 +517,13 @@ describe('POST /api/cancel-booking/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })
 
 describe('DELETE /api/delete-bookings', () => {
     it('should delete bookings', async () => {
-        const token = await TestHelper.signinAsAdmin()
+        const token = await testHelper.signinAsAdmin()
 
         const drivers = [DRIVER1_ID, DRIVER2_ID]
         let bookings = await Booking.find({ driver: { $in: drivers } })
@@ -544,6 +544,6 @@ describe('DELETE /api/delete-bookings', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
-        await TestHelper.signout(token)
+        await testHelper.signout(token)
     })
 })

@@ -27,7 +27,7 @@ import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/create-booking'
 import * as UserService from '../services/UserService'
 import * as BookingService from '../services/BookingService'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 import SupplierSelectList from '../components/SupplierSelectList'
 import UserSelectList from '../components/UserSelectList'
 import LocationSelectList from '../components/LocationSelectList'
@@ -87,7 +87,7 @@ const CreateBooking = () => {
       if (_car) {
         setCar(_car)
       } else {
-        Helper.error()
+        helper.error()
       }
     }
   }, [])
@@ -162,11 +162,11 @@ const CreateBooking = () => {
     e.preventDefault()
 
     if (!car || !from || !to || !status) {
-      Helper.error()
+      helper.error()
       return
     }
 
-    const additionalDriverSet = Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
+    const additionalDriverSet = helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
     if (additionalDriverSet) {
       const emailValid = _validateEmail(addtionalDriverEmail)
@@ -205,7 +205,7 @@ const CreateBooking = () => {
     let _additionalDriver: bookcarsTypes.AdditionalDriver
     if (additionalDriverSet) {
       if (!addtionalDriverBirthDate) {
-        Helper.error()
+        helper.error()
         return
       }
 
@@ -217,7 +217,7 @@ const CreateBooking = () => {
       }
     }
 
-    Helper.price(
+    helper.price(
       booking,
       null,
       async (price) => {
@@ -231,14 +231,14 @@ const CreateBooking = () => {
           if (_booking && _booking._id) {
             navigate('/')
           } else {
-            Helper.error()
+            helper.error()
           }
         } catch (err) {
-          Helper.error(err)
+          helper.error(err)
         }
       },
       (err) => {
-        Helper.error(err)
+        helper.error(err)
       },
     )
   }
@@ -363,7 +363,7 @@ const CreateBooking = () => {
                 control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
                 label={csStrings.CANCELLATION}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'cancellation')}
+                disabled={!helper.carOptionAvailable(car, 'cancellation')}
               />
             </FormControl>
 
@@ -372,7 +372,7 @@ const CreateBooking = () => {
                 control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
                 label={csStrings.AMENDMENTS}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'amendments')}
+                disabled={!helper.carOptionAvailable(car, 'amendments')}
               />
             </FormControl>
 
@@ -381,7 +381,7 @@ const CreateBooking = () => {
                 control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
                 label={csStrings.THEFT_PROTECTION}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'theftProtection')}
+                disabled={!helper.carOptionAvailable(car, 'theftProtection')}
               />
             </FormControl>
 
@@ -390,7 +390,7 @@ const CreateBooking = () => {
                 control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
                 label={csStrings.COLLISION_DAMAGE_WAVER}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'collisionDamageWaiver')}
+                disabled={!helper.carOptionAvailable(car, 'collisionDamageWaiver')}
               />
             </FormControl>
 
@@ -399,7 +399,7 @@ const CreateBooking = () => {
                 control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
                 label={csStrings.FULL_INSURANCE}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'fullInsurance')}
+                disabled={!helper.carOptionAvailable(car, 'fullInsurance')}
               />
             </FormControl>
 
@@ -408,11 +408,11 @@ const CreateBooking = () => {
                 control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
                 label={csStrings.ADDITIONAL_DRIVER}
                 className="checkbox-fcl"
-                disabled={!Helper.carOptionAvailable(car, 'additionalDriver')}
+                disabled={!helper.carOptionAvailable(car, 'additionalDriver')}
               />
             </FormControl>
 
-            {Helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
+            {helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver && (
               <>
                 <div className="info">
                   <DriverIcon />
@@ -490,7 +490,7 @@ const CreateBooking = () => {
                   <FormHelperText
                     error={!additionalDriverBirthDateValid}
                   >
-                    {(!additionalDriverBirthDateValid && Helper.getBirthDateError(env.MINIMUM_AGE)) || ''}
+                    {(!additionalDriverBirthDateValid && helper.getBirthDateError(env.MINIMUM_AGE)) || ''}
                   </FormHelperText>
                 </FormControl>
               </>

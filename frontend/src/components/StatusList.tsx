@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import { strings as commonStrings } from '../lang/common'
-import * as Helper from '../common/Helper'
+import * as helper from '../common/helper'
 
 import '../assets/css/status-list.css'
 
@@ -51,7 +51,7 @@ const StatusList = ({
     <div style={style}>
       {disabled ? (
         <span className={`bs-s-sv bs-s-${value}`} style={{ marginTop: 5 }}>
-          {Helper.getBookingStatus(value as bookcarsTypes.BookingStatus)}
+          {helper.getBookingStatus(value as bookcarsTypes.BookingStatus)}
         </span>
       ) : (
         <>
@@ -63,7 +63,7 @@ const StatusList = ({
             variant={variant || 'standard'}
             required={required}
             fullWidth
-            renderValue={(_value) => <span className={`bs-s-sv bs-s-${_value}`}>{Helper.getBookingStatus(_value as bookcarsTypes.BookingStatus)}</span>}
+            renderValue={(_value) => <span className={`bs-s-sv bs-s-${_value}`}>{helper.getBookingStatus(_value as bookcarsTypes.BookingStatus)}</span>}
           >
             <MenuItem value={bookcarsTypes.BookingStatus.Void} className="bs-s bs-s-void">
               {commonStrings.BOOKING_STATUS_VOID}
