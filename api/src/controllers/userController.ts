@@ -33,13 +33,6 @@ const getStatusMessage = (lang: string, msg: string) => (
 )
 
 /**
- * Generate user token.
- *
- * @returns {string}
- */
-const generateToken = () => `${uuid()}-${Date.now()}`
-
-/**
  * Sign Up.
  *
  * @async
@@ -78,7 +71,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     }
 
     // generate token and save
-    const token = new Token({ user: user._id, token: generateToken() })
+    const token = new Token({ user: user._id, token: helper.generateToken() })
 
     await token.save()
 
@@ -173,7 +166,7 @@ export const create = async (req: Request, res: Response) => {
     }
 
     // generate token and save
-    const token = new Token({ user: user._id, token: generateToken() })
+    const token = new Token({ user: user._id, token: helper.generateToken() })
     await token.save()
 
     // Send email
@@ -312,7 +305,7 @@ export const resend = async (req: Request, res: Response) => {
       await user.save()
 
       // generate token and save
-      const token = new Token({ user: user._id, token: generateToken() })
+      const token = new Token({ user: user._id, token: helper.generateToken() })
       await token.save()
 
       // Send email
@@ -732,7 +725,7 @@ export const resendLink = async (req: Request, res: Response) => {
 
     // send verification link
     // generate token and save
-    const token = new Token({ user: user._id, token: generateToken() })
+    const token = new Token({ user: user._id, token: helper.generateToken() })
     await token.save()
 
     // Send email

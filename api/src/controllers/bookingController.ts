@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
-import { v1 as uuid } from 'uuid'
 import { Expo, ExpoPushMessage } from 'expo-server-sdk'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
@@ -121,7 +120,7 @@ export const checkout = async (req: Request, res: Response) => {
       user = new User(driver)
       await user.save()
 
-      const token = new Token({ user: user._id, token: uuid() })
+      const token = new Token({ user: user._id, token: helper.generateToken() })
       await token.save()
 
       strings.setLanguage(user.language)
