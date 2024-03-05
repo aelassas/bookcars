@@ -12,6 +12,7 @@ import AdditionalDriver from '../src/models/AdditionalDriver'
 import User from '../src/models/User'
 import * as env from '../src/config/env.config'
 import PushToken from '../src/models/PushToken'
+import Token from '../src/models/Token'
 
 let SUPPLIER_ID: string
 let DRIVER1_ID: string
@@ -195,6 +196,10 @@ describe('POST /api/checkout', () => {
         const driver2 = await User.findOne({ email: payload.driver.email })
         expect(driver2).not.toBeNull()
         DRIVER2_ID = driver2?.id
+        const token = await Token.findOne({ user: DRIVER2_ID })
+        expect(token).not.toBeNull()
+        expect(token?.token.length).toBeGreaterThan(0)
+        await token?.deleteOne()
 
         payload.driver = undefined
         payload.additionalDriver = {

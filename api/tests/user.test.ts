@@ -87,6 +87,9 @@ describe('POST /api/sign-up', () => {
         expect(user?.language).toBe(payload.language)
         expect(user?.birthDate).toStrictEqual(payload.birthDate)
         expect(user?.phone).toBe(payload.phone)
+        const token = await Token.findOne({ user: USER1_ID })
+        expect(token).not.toBeNull()
+        expect(token?.token.length).toBeGreaterThan(0)
 
         res = await request(app)
             .post('/api/sign-up')
@@ -120,6 +123,9 @@ describe('POST /api/admin-sign-up', () => {
         expect(user?.language).toBe(payload.language)
         expect(user?.birthDate).toStrictEqual(payload.birthDate)
         expect(user?.phone).toBe(payload.phone)
+        const token = await Token.findOne({ user: ADMIN_ID })
+        expect(token).not.toBeNull()
+        expect(token?.token.length).toBeGreaterThan(0)
     })
 })
 
@@ -157,6 +163,10 @@ describe('POST /api/create-user', () => {
         expect(user?.phone).toBe(payload.phone)
         expect(user?.location).toBe(payload.location)
         expect(user?.bio).toBe(payload.bio)
+        const userToken = await Token.findOne({ user: USER2_ID })
+        expect(userToken).not.toBeNull()
+        expect(userToken?.token.length).toBeGreaterThan(0)
+        await userToken?.deleteOne()
 
         payload.avatar = 'unknown.jpg'
         res = await request(app)
@@ -297,28 +307,6 @@ describe('GET /api/confirm-email/:email/:token', () => {
     })
 })
 
-describe('DELETE /api/delete-tokens/:userId', () => {
-    it("should delete user's tokens", async () => {
-        let userTokens = await Token.find({ user: USER1_ID })
-        expect(userTokens.length).toBeGreaterThan(0)
-
-        let res = await request(app)
-            .delete(`/api/delete-tokens/${USER1_ID}`)
-        expect(res.statusCode).toBe(200)
-
-        userTokens = await Token.find({ user: USER1_ID })
-        expect(userTokens.length).toBe(0)
-
-        res = await request(app)
-            .delete(`/api/delete-tokens/${USER1_ID}`)
-        expect(res.statusCode).toBe(400)
-
-        res = await request(app)
-            .delete('/api/delete-tokens/0')
-        expect(res.statusCode).toBe(400)
-    })
-})
-
 describe('POST /api/resend/:type/:email/:reset', () => {
     it('should resend validation email', async () => {
         let user = await User.findById(USER1_ID)
@@ -343,6 +331,77 @@ describe('POST /api/resend/:type/:email/:reset', () => {
 
         res = await request(app)
             .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/unknown/${reset}`)
+        expect(res.statusCode).toBe(400)
+    })
+})
+
+describe('POST /api/resend-link', () => {
+    it('should resend activation link', async () => {
+        const token = await testHelper.signinAsAdmin()
+
+        const payload: bookcarsTypes.ResendLinkPayload = {
+            email: USER1_EMAIL,
+        }
+
+        let res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+
+        const user = await User.findById(USER1_ID)
+        expect(user).not.toBeNull()
+        user!.verified = true
+        await user?.save()
+        res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+
+        payload.email = testHelper.GetRandomEmail()
+        res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
+        payload.email = USER1_EMAIL
+        user!.verified = false
+        await user?.save()
+        res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+
+        payload.email = 'unknown'
+        res = await request(app)
+            .post('/api/resend-link')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(400)
+
+        await testHelper.signout(token)
+    })
+})
+
+describe('DELETE /api/delete-tokens/:userId', () => {
+    it("should delete user's tokens", async () => {
+        let userTokens = await Token.find({ user: USER1_ID })
+        expect(userTokens.length).toBeGreaterThan(0)
+        let res = await request(app)
+            .delete(`/api/delete-tokens/${USER1_ID}`)
+        expect(res.statusCode).toBe(200)
+        userTokens = await Token.find({ user: USER1_ID })
+        expect(userTokens.length).toBe(0)
+
+        res = await request(app)
+            .delete(`/api/delete-tokens/${USER1_ID}`)
+        expect(res.statusCode).toBe(400)
+
+        res = await request(app)
+            .delete('/api/delete-tokens/0')
         expect(res.statusCode).toBe(400)
     })
 })
@@ -530,57 +589,6 @@ describe('POST /api/validate-access-token', () => {
             .post('/api/validate-access-token')
 
         expect(res.statusCode).toBe(403)
-    })
-})
-
-describe('POST /api/resend-link', () => {
-    it('should resend activation link', async () => {
-        const token = await testHelper.signinAsAdmin()
-
-        const payload: bookcarsTypes.ResendLinkPayload = {
-            email: USER1_EMAIL,
-        }
-
-        let res = await request(app)
-            .post('/api/resend-link')
-            .set(env.X_ACCESS_TOKEN, token)
-            .send(payload)
-        expect(res.statusCode).toBe(200)
-
-        const user = await User.findById(USER1_ID)
-        expect(user).not.toBeNull()
-        user!.verified = true
-        await user?.save()
-        res = await request(app)
-            .post('/api/resend-link')
-            .set(env.X_ACCESS_TOKEN, token)
-            .send(payload)
-        expect(res.statusCode).toBe(200)
-
-        payload.email = testHelper.GetRandomEmail()
-        res = await request(app)
-            .post('/api/resend-link')
-            .set(env.X_ACCESS_TOKEN, token)
-            .send(payload)
-        expect(res.statusCode).toBe(400)
-
-        payload.email = USER1_EMAIL
-        user!.verified = false
-        await user?.save()
-        res = await request(app)
-            .post('/api/resend-link')
-            .set(env.X_ACCESS_TOKEN, token)
-            .send(payload)
-        expect(res.statusCode).toBe(200)
-
-        payload.email = 'unknown'
-        res = await request(app)
-            .post('/api/resend-link')
-            .set(env.X_ACCESS_TOKEN, token)
-            .send(payload)
-        expect(res.statusCode).toBe(400)
-
-        await testHelper.signout(token)
     })
 })
 

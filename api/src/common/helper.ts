@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import mongoose from 'mongoose'
 import validator from 'validator'
+import { v1 as uuid } from 'uuid'
 
 /**
  * Convert string to boolean.
@@ -115,3 +116,10 @@ export const isValidObjectId = (id?: string) => mongoose.isValidObjectId(id)
  * @returns {boolean}
  */
 export const isValidEmail = (email?: string) => !!email && validator.isEmail(email)
+
+/**
+ * Generate user token.
+ *
+ * @returns {string}
+ */
+export const generateToken = () => `${uuid()}-${Date.now()}`
