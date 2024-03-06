@@ -51,7 +51,7 @@ const DrawerContent = ({
   props
 }: DrawerContentProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
-  const [openLanguageMenu, setopenLanguageMenu] = useState(false)
+  const [openLanguageMenu, setOpenLanguageMenu] = useState(false)
   const [language, setLanguage] = useState(drawerLanguage)
   const ref = useRef<ScrollView>(null)
 
@@ -156,7 +156,7 @@ const DrawerContent = ({
           style={styles.languageButton}
           hitSlop={15}
           onPress={() => {
-            setopenLanguageMenu(!openLanguageMenu)
+            setOpenLanguageMenu((prev) => !prev)
           }}
         >
           <MaterialIcons style={styles.languageIcon} name="language" size={24} color="rgba(0, 0, 0, 0.54)" />
@@ -173,7 +173,7 @@ const DrawerContent = ({
                   onPress={async () => {
                     if (lang.code !== language) {
                       await updateLanguage(lang.code)
-                      setopenLanguageMenu(false)
+                      setOpenLanguageMenu(false)
                     }
                   }}
                 >
