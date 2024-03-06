@@ -106,7 +106,7 @@ const Accordion = ({
                 useNativeDriver: true,
               }).start()
             }
-            setOpen(!open)
+            setOpen((prev) => !prev)
           }}
         >
           <View style={styles.titleContainer}>
