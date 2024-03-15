@@ -78,7 +78,7 @@ describe('POST /api/sign-up', () => {
             .post('/api/sign-up')
             .send(payload)
         expect(res.statusCode).toBe(200)
-        const user = await User.findOne({ email: USER1_EMAIL })
+        let user = await User.findOne({ email: USER1_EMAIL })
         expect(user).not.toBeNull()
         USER1_ID = user?.id
         expect(user?.type).toBe(bookcarsTypes.UserType.User)
@@ -90,6 +90,17 @@ describe('POST /api/sign-up', () => {
         const token = await Token.findOne({ user: USER1_ID })
         expect(token).not.toBeNull()
         expect(token?.token.length).toBeGreaterThan(0)
+
+        const email = testHelper.GetRandomEmail()
+        payload.email = email
+        payload.avatar = `${uuid()}.jpg`
+        res = await request(app)
+            .post('/api/sign-up')
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        user = await User.findOne({ email })
+        expect(user).not.toBeNull()
+        await user?.deleteOne()
 
         res = await request(app)
             .post('/api/sign-up')
@@ -152,7 +163,7 @@ describe('POST /api/create-user', () => {
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
-        const user = await User.findOne({ email: USER2_EMAIL })
+        let user = await User.findOne({ email: USER2_EMAIL })
         expect(user).not.toBeNull()
         USER2_ID = user?.id
         expect(user?.type).toBe(bookcarsTypes.UserType.User)
@@ -168,6 +179,19 @@ describe('POST /api/create-user', () => {
         expect(userToken?.token.length).toBeGreaterThan(0)
         await userToken?.deleteOne()
 
+        let email = testHelper.GetRandomEmail()
+        payload.email = email
+        payload.avatar = undefined
+        res = await request(app)
+            .post('/api/create-user')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        user = await User.findOne({ email })
+        expect(user).not.toBeNull()
+        await user?.deleteOne()
+
+        payload.email = USER2_EMAIL
         payload.avatar = 'unknown.jpg'
         res = await request(app)
             .post('/api/create-user')
@@ -181,7 +205,7 @@ describe('POST /api/create-user', () => {
         expect(res.statusCode).toBe(400)
 
         payload.avatar = AVATAR1
-        const email = testHelper.GetRandomEmail()
+        email = testHelper.GetRandomEmail()
         payload.email = email
         payload.password = 'password'
         res = await request(app)
@@ -620,6 +644,26 @@ describe('POST /api/update-user', () => {
         expect(user?.location).toBe(payload.location)
         expect(user?.bio).toBe(payload.bio)
         expect(user?.payLater).toBeFalsy()
+
+        const { fullName, payLater } = (user!)
+        payload!.fullName = ''
+        payload!.birthDate = undefined
+        payload!.type = undefined
+        payload.payLater = undefined
+        res = await request(app)
+            .post('/api/update-user')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        user = await User.findById(USER1_ID)
+        expect(user).not.toBeNull()
+        expect(user?.type).toBe(bookcarsTypes.UserType.Company)
+        expect(user?.fullName).toBe(fullName)
+        expect(user?.birthDate).toBeUndefined()
+        expect(user?.phone).toBe(payload.phone)
+        expect(user?.location).toBe(payload.location)
+        expect(user?.bio).toBe(payload.bio)
+        expect(user?.payLater).toBe(payLater)
 
         payload._id = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
