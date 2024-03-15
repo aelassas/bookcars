@@ -578,7 +578,7 @@ describe('DELETE /api/delete-car/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
 
-        const car = new Car({
+        let car = new Car({
             name: 'BMW X1',
             company: SUPPLIER1_ID,
             minimumAge: 21,
@@ -590,6 +590,35 @@ describe('DELETE /api/delete-car/:id', () => {
             gearbox: bookcarsTypes.GearboxType.Automatic,
             aircon: true,
             image: '',
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        res = await request(app)
+            .delete(`/api/delete-car/${car.id}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+
+        car = new Car({
+            name: 'BMW X1',
+            company: SUPPLIER1_ID,
+            minimumAge: 21,
+            locations: [testHelper.GetRandromObjectId()],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: `${uuid()}.jpg`,
             seats: 5,
             doors: 4,
             fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
