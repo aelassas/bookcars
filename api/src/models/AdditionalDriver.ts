@@ -48,12 +48,4 @@ const additionalDriverSchema = new Schema<env.AdditionalDriver>(
 
 const AdditionalDriver = model<env.AdditionalDriver>('AdditionalDriver', additionalDriverSchema)
 
-AdditionalDriver.on('index', (err) => {
-  if (err) {
-    console.error('AdditionalDriver index error: %s', err)
-  } else {
-    console.info('AdditionalDriver indexing complete')
-  }
-})
-
 export default AdditionalDriver
