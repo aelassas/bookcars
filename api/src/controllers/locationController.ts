@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
 import * as env from '../config/env.config'
-import strings from '../config/app.config'
+import i18n from '../lang/i18n'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
@@ -31,8 +31,8 @@ export const validate = async (req: Request, res: Response) => {
     })
     return locationValue ? res.sendStatus(204) : res.sendStatus(200)
   } catch (err) {
-    console.error(`[location.validate]  ${strings.DB_ERROR} ${name}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -64,8 +64,8 @@ export const create = async (req: Request, res: Response) => {
     await location.save()
     return res.send(location)
   } catch (err) {
-    console.error(`[location.create] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -108,8 +108,8 @@ export const update = async (req: Request, res: Response) => {
     console.error('[location.update] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.update] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -136,8 +136,8 @@ export const deleteLocation = async (req: Request, res: Response) => {
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[location.delete] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -164,8 +164,8 @@ export const getLocation = async (req: Request, res: Response) => {
     console.error('[location.getLocation] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.getLocation] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.getLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -224,8 +224,8 @@ export const getLocations = async (req: Request, res: Response) => {
 
     return res.json(locations)
   } catch (err) {
-    console.error(`[location.getLocations] ${strings.DB_ERROR} ${req.query.s}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.getLocations] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -255,7 +255,7 @@ export const checkLocation = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.checkLocation] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[location.checkLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
