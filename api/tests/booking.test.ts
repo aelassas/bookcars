@@ -143,6 +143,14 @@ describe('POST /api/create-booking', () => {
         expect(additionalDriver).not.toBeNull()
         ADDITIONAL_DRIVER_ID = additionalDriver?.id
 
+        payload.booking!.additionalDriver = false
+        res = await request(app)
+            .post('/api/create-booking')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        payload.booking!.additionalDriver = true
+
         res = await request(app)
             .post('/api/create-booking')
             .set(env.X_ACCESS_TOKEN, token)
@@ -155,7 +163,7 @@ describe('POST /api/create-booking', () => {
 describe('POST /api/checkout', () => {
     it('should checkout', async () => {
         let bookings = await Booking.find({ driver: DRIVER1_ID })
-        expect(bookings.length).toBe(1)
+        expect(bookings.length).toBe(2)
 
         const payload: bookcarsTypes.CheckoutPayload = {
             booking: {
