@@ -293,13 +293,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
         supplier = await User.findById(supplierId)
         expect(supplier).not.toBeNull()
-        avatarName = 'avatar1.jpg'
-        avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
-        avatar = path.join(env.CDN_USERS, avatarName)
-        if (!await helper.exists(avatar)) {
-            fs.copyFile(avatarPath, avatar)
-        }
-        supplier!.avatar = avatarName
+        supplier!.avatar = `${uuid()}.jpg`
         await supplier?.save()
         locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         car = new Car({
@@ -313,7 +307,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
             type: bookcarsTypes.CarType.Diesel,
             gearbox: bookcarsTypes.GearboxType.Automatic,
             aircon: true,
-            image: '0',
+            image: '',
             seats: 5,
             doors: 4,
             fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
