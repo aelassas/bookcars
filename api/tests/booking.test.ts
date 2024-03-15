@@ -184,6 +184,25 @@ describe('POST /api/checkout', () => {
         bookings = await Booking.find({ driver: DRIVER1_ID })
         expect(bookings.length).toBeGreaterThan(1)
 
+        const driver = await User.findOne({ _id: DRIVER1_ID })
+        driver!.language = 'fr'
+        await driver?.save()
+        res = await request(app)
+            .post('/api/checkout')
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        bookings = await Booking.find({ driver: DRIVER1_ID })
+        expect(bookings.length).toBeGreaterThan(2)
+
+        payload.booking!.additionalDriver = false
+        res = await request(app)
+            .post('/api/checkout')
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        bookings = await Booking.find({ driver: DRIVER1_ID })
+        expect(bookings.length).toBeGreaterThan(3)
+        payload.booking!.additionalDriver = true
+
         payload.driver = {
             fullName: 'driver',
             email: testHelper.GetRandomEmail(),
@@ -395,7 +414,15 @@ describe('POST /api/update-booking-status', () => {
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
         expect(res.statusCode).toBe(200)
-        const booking = await Booking.findById(BOOKING_ID)
+        let booking = await Booking.findById(BOOKING_ID)
+        expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
+
+        res = await request(app)
+            .post('/api/update-booking-status')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        booking = await Booking.findById(BOOKING_ID)
         expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Reserved)
 
         res = await request(app)
@@ -450,6 +477,20 @@ describe('POST /api/bookings/:page/:size/:language', () => {
         }
 
         let res = await request(app)
+            .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        expect(res.body[0].resultData.length).toBe(1)
+
+        payload.user = undefined
+        payload.car = undefined
+        payload.filter!.from = undefined
+        payload.filter!.to = undefined
+        payload.filter!.pickupLocation = undefined
+        payload.filter!.dropOffLocation = undefined
+        payload.filter!.keyword = undefined
+        res = await request(app)
             .post(`/api/bookings/${testHelper.PAGE}/${testHelper.SIZE}/${testHelper.LANGUAGE}`)
             .set(env.X_ACCESS_TOKEN, token)
             .send(payload)
