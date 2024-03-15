@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1491" lines-covered="1490" line-rate="0.9993000000000001" branches-valid="466" branches-covered="456" branch-rate="0.9784999999999999" timestamp="1710544310175" complexity="0" version="0.1">
+<coverage lines-valid="1491" lines-covered="1490" line-rate="0.9993000000000001" branches-valid="466" branches-covered="457" branch-rate="0.9806" timestamp="1710544468905" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -53,14 +53,14 @@
       <classes>
         <class name="authHelper.ts" filename="src\common\authHelper.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="304" signature="()V">
+            <method name="(anonymous_0)" hits="305" signature="()V">
               <lines>
-                <line number="12" hits="304"/>
+                <line number="12" hits="305"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="302" signature="()V">
+            <method name="(anonymous_1)" hits="303" signature="()V">
               <lines>
-                <line number="21" hits="302"/>
+                <line number="21" hits="303"/>
               </lines>
             </method>
             <method name="(anonymous_2)" hits="113" signature="()V">
@@ -70,8 +70,8 @@
             </method>
           </methods>
           <lines>
-            <line number="12" hits="304" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="21" hits="302" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="12" hits="305" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="21" hits="303" branch="true" condition-coverage="100% (2/2)"/>
             <line number="29" hits="8" branch="false"/>
             <line number="30" hits="113" branch="true" condition-coverage="100% (2/2)"/>
             <line number="32" hits="1" branch="false"/>
@@ -320,7 +320,7 @@
         </class>
       </classes>
     </package>
-    <package name="src.controllers" line-rate="0.9991" branch-rate="0.9786">
+    <package name="src.controllers" line-rate="0.9991" branch-rate="0.9809">
       <classes>
         <class name="bookingController.ts" filename="src\controllers\bookingController.ts" line-rate="0.9963" branch-rate="0.99">
           <methods>
@@ -1425,7 +1425,7 @@
             <line number="266" hits="1" branch="false"/>
           </lines>
         </class>
-        <class name="userController.ts" filename="src\controllers\userController.ts" line-rate="1" branch-rate="0.9567">
+        <class name="userController.ts" filename="src\controllers\userController.ts" line-rate="1" branch-rate="0.9621">
           <methods>
             <method name="(anonymous_0)" hits="7" signature="()V">
               <lines>
@@ -1547,9 +1547,9 @@
                 <line number="967" hits="6"/>
               </lines>
             </method>
-            <method name="(anonymous_24)" hits="4" signature="()V">
+            <method name="(anonymous_24)" hits="5" signature="()V">
               <lines>
-                <line number="1014" hits="4"/>
+                <line number="1014" hits="5"/>
               </lines>
             </method>
             <method name="(anonymous_25)" hits="2" signature="()V">
@@ -1950,17 +1950,17 @@
             <line number="1000" hits="1" branch="false"/>
             <line number="1001" hits="1" branch="false"/>
             <line number="1014" hits="8" branch="false"/>
-            <line number="1015" hits="4" branch="false"/>
-            <line number="1017" hits="4" branch="false"/>
-            <line number="1018" hits="4" branch="false"/>
-            <line number="1020" hits="3" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="1021" hits="2" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="1015" hits="5" branch="false"/>
+            <line number="1017" hits="5" branch="false"/>
+            <line number="1018" hits="5" branch="false"/>
+            <line number="1020" hits="4" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="1021" hits="3" branch="true" condition-coverage="100% (2/2)"/>
             <line number="1022" hits="2" branch="false"/>
             <line number="1023" hits="2" branch="true" condition-coverage="100% (2/2)"/>
             <line number="1024" hits="1" branch="false"/>
-            <line number="1027" hits="2" branch="false"/>
-            <line number="1029" hits="2" branch="false"/>
-            <line number="1030" hits="2" branch="false"/>
+            <line number="1027" hits="3" branch="false"/>
+            <line number="1029" hits="3" branch="false"/>
+            <line number="1030" hits="3" branch="false"/>
             <line number="1033" hits="1" branch="false"/>
             <line number="1034" hits="1" branch="false"/>
             <line number="1036" hits="1" branch="false"/>
@@ -2101,45 +2101,45 @@
       <classes>
         <class name="allowedMethods.ts" filename="src\middlewares\allowedMethods.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="367" signature="()V">
+            <method name="(anonymous_0)" hits="368" signature="()V">
               <lines>
-                <line number="20" hits="367"/>
+                <line number="20" hits="368"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="8" hits="8" branch="false"/>
-            <line number="21" hits="367" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="21" hits="368" branch="true" condition-coverage="100% (2/2)"/>
             <line number="22" hits="1" branch="false"/>
-            <line number="26" hits="366" branch="false"/>
+            <line number="26" hits="367" branch="false"/>
           </lines>
         </class>
         <class name="authJwt.ts" filename="src\middlewares\authJwt.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="191" signature="()V">
+            <method name="(anonymous_0)" hits="192" signature="()V">
               <lines>
-                <line number="13" hits="191"/>
+                <line number="13" hits="192"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="190" signature="()V">
+            <method name="(anonymous_1)" hits="191" signature="()V">
               <lines>
-                <line number="26" hits="190"/>
+                <line number="26" hits="191"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="13" hits="8" branch="false"/>
-            <line number="16" hits="191" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="16" hits="192" branch="true" condition-coverage="100% (2/2)"/>
             <line number="17" hits="1" branch="false"/>
-            <line number="18" hits="190" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="18" hits="191" branch="true" condition-coverage="100% (2/2)"/>
             <line number="19" hits="1" branch="false"/>
-            <line number="21" hits="189" branch="false"/>
-            <line number="24" hits="191" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="26" hits="190" branch="false"/>
-            <line number="27" hits="190" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="21" hits="190" branch="false"/>
+            <line number="24" hits="192" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="26" hits="191" branch="false"/>
+            <line number="27" hits="191" branch="true" condition-coverage="100% (2/2)"/>
             <line number="29" hits="1" branch="false"/>
             <line number="30" hits="1" branch="false"/>
-            <line number="33" hits="189" branch="false"/>
+            <line number="33" hits="190" branch="false"/>
             <line number="38" hits="1" branch="false"/>
           </lines>
         </class>
@@ -2254,17 +2254,17 @@
         </class>
         <class name="User.ts" filename="src\models\User.ts" line-rate="1" branch-rate="1">
           <methods>
-            <method name="(anonymous_0)" hits="36" signature="()V">
+            <method name="(anonymous_0)" hits="38" signature="()V">
               <lines>
-                <line number="24" hits="36"/>
+                <line number="24" hits="38"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="6" hits="8" branch="false"/>
-            <line number="26" hits="36" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="26" hits="38" branch="true" condition-coverage="100% (2/2)"/>
             <line number="27" hits="1" branch="false"/>
-            <line number="31" hits="35" branch="false"/>
+            <line number="31" hits="37" branch="false"/>
             <line number="110" hits="8" branch="false"/>
           </lines>
         </class>

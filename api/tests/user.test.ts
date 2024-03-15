@@ -904,6 +904,13 @@ describe('POST /api/delete-avatar/:userId', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
 
+        user!.avatar = undefined
+        await user?.save()
+        res = await request(app)
+            .post(`/api/delete-avatar/${USER1_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+
         res = await request(app)
             .post(`/api/delete-avatar/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
