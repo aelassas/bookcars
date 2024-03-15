@@ -828,12 +828,22 @@ describe('POST /api/update-avatar/:userId', () => {
             .attach('image', AVATAR2_PATH)
         expect(res.statusCode).toBe(200)
         const filename = res.body as string
-        const avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+        let avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
         expect(avatarExists).toBeTruthy()
         const user = await User.findById(USER1_ID)
         expect(user).not.toBeNull()
         expect(user?.avatar).toBeDefined()
         expect(user?.avatar).not.toBeNull()
+
+        user!.avatar = `${uuid()}.jpg`
+        await user?.save()
+        res = await request(app)
+            .post(`/api/update-avatar/${USER1_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .attach('image', AVATAR2_PATH)
+        expect(res.statusCode).toBe(200)
+        avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+        expect(avatarExists).toBeTruthy()
 
         res = await request(app)
             .post(`/api/update-avatar/${USER1_ID}`)
@@ -876,6 +886,13 @@ describe('POST /api/delete-avatar/:userId', () => {
         user = await User.findById(USER1_ID)
         expect(user).not.toBeNull()
         expect(user?.avatar).toBeUndefined()
+
+        user!.avatar = `${uuid()}.jpg`
+        await user?.save()
+        res = await request(app)
+            .post(`/api/delete-avatar/${USER1_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
 
         res = await request(app)
             .post(`/api/delete-avatar/${testHelper.GetRandromObjectIdAsString()}`)
@@ -1042,6 +1059,14 @@ describe('POST /api/users/:page/:size', () => {
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(3)
 
+        payload.user = ''
+        res = await request(app)
+            .post(`/api/users/${testHelper.PAGE}/${testHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        expect(res.body[0].resultData.length).toBeGreaterThan(3)
+
         res = await request(app)
             .post(`/api/users/unknown/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
@@ -1057,6 +1082,9 @@ describe('POST /api/delete-users', () => {
         const token = await testHelper.signinAsAdmin()
 
         let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID]
+        const user1 = await User.findById(USER1_ID)
+        user1!.avatar = `${uuid}.jpg`
+        await user1?.save()
         let users = await User.find({ _id: { $in: payload } })
         expect(users.length).toBe(3)
         let res = await request(app)
@@ -1083,7 +1111,7 @@ describe('POST /api/delete-users', () => {
         if (!await helper.exists(image)) {
             fs.copyFile(imagePath, image)
         }
-        const car = new Car({
+        let car = new Car({
             name: 'BMW X1',
             company: supplierId,
             minimumAge: 21,
@@ -1095,6 +1123,54 @@ describe('POST /api/delete-users', () => {
             gearbox: bookcarsTypes.GearboxType.Automatic,
             aircon: true,
             image: imageName,
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        car = new Car({
+            name: 'BMW X1',
+            company: supplierId,
+            minimumAge: 21,
+            locations: [locationId],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: undefined,
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        car = new Car({
+            name: 'BMW X1',
+            company: supplierId,
+            minimumAge: 21,
+            locations: [locationId],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: `${uuid()}.jpg`,
             seats: 5,
             doors: 4,
             fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,

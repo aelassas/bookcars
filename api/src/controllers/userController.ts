@@ -950,7 +950,7 @@ export const createAvatar = async (req: Request, res: Response) => {
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(`[user.createAvatar] ${i18n.t('DB_ERROR')} ${req.file && req.file.originalname}`, err)
+    console.error(`[user.createAvatar] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -977,7 +977,7 @@ export const updateAvatar = async (req: Request, res: Response) => {
     const user = await User.findById(userId)
 
     if (user) {
-      if (user.avatar && !user.avatar.startsWith('http')) {
+      if (user.avatar) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
 
         if (await helper.exists(avatar)) {
@@ -1018,7 +1018,7 @@ export const deleteAvatar = async (req: Request, res: Response) => {
     const user = await User.findById(userId)
 
     if (user) {
-      if (user.avatar && !user.avatar.startsWith('http')) {
+      if (user.avatar) {
         const avatar = path.join(env.CDN_USERS, user.avatar)
         if (await helper.exists(avatar)) {
           await fs.unlink(avatar)
@@ -1193,8 +1193,8 @@ export const getUsers = async (req: Request, res: Response) => {
       ],
     }
 
-    if ($match.$and && userId) {
-      $match.$and.push({ _id: { $ne: new mongoose.Types.ObjectId(userId) } })
+    if (userId) {
+      $match.$and!.push({ _id: { $ne: new mongoose.Types.ObjectId(userId) } })
     }
 
     const users = await User.aggregate(
