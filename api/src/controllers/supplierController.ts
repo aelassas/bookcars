@@ -257,12 +257,10 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    if (data.length > 0) {
-      data = data.map((supplier) => {
-        const { _id, fullName, avatar } = supplier
-        return { _id, fullName, avatar }
-      })
-    }
+    data = data.map((supplier) => {
+      const { _id, fullName, avatar } = supplier
+      return { _id, fullName, avatar }
+    })
 
     return res.json(data)
   } catch (err) {
