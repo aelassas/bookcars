@@ -845,6 +845,16 @@ describe('POST /api/update-avatar/:userId', () => {
         avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
         expect(avatarExists).toBeTruthy()
 
+        user!.avatar = undefined
+        await user?.save()
+        res = await request(app)
+            .post(`/api/update-avatar/${USER1_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .attach('image', AVATAR2_PATH)
+        expect(res.statusCode).toBe(200)
+        avatarExists = await helper.exists(path.resolve(env.CDN_USERS, filename))
+        expect(avatarExists).toBeTruthy()
+
         res = await request(app)
             .post(`/api/update-avatar/${USER1_ID}`)
             .set(env.X_ACCESS_TOKEN, token)
