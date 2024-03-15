@@ -28,12 +28,4 @@ const locationValueSchema = new Schema<env.LocationValue>(
 
 const LocationValue = model<env.LocationValue>('LocationValue', locationValueSchema)
 
-LocationValue.on('index', (err) => {
-  if (err) {
-    console.error('LocationValue index error: %s', err)
-  } else {
-    console.info('LocationValue indexing complete')
-  }
-})
-
 export default LocationValue

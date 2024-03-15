@@ -115,12 +115,4 @@ const carSchema = new Schema<env.Car>(
 
 const Car = model<env.Car>('Car', carSchema)
 
-Car.on('index', (err) => {
-  if (err) {
-    console.error('Car index error: %s', err)
-  } else {
-    console.info('Car indexing complete')
-  }
-})
-
 export default Car

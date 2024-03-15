@@ -143,14 +143,14 @@ export const X_ACCESS_TOKEN = 'x-access-token'
 export const JWT_SECRET = __env__('BC_JWT_SECRET', false, 'BookCars')
 
 /**
- * JWT expiration in seconds. Dedault is 86400 seconds (1 day).
+ * JWT expiration in seconds. Default is 86400 seconds (1 day).
  *
  * @type {number}
  */
 export const JWT_EXPIRE_AT = Number.parseInt(__env__('BC_JWT_EXPIRE_AT', false, '86400'), 10)
 
 /**
- * Validation Token expiration in seconds. Dedault is 86400 seconds (1 day).
+ * Validation Token expiration in seconds. Default is 86400 seconds (1 day).
  *
  * @type {number}
  */

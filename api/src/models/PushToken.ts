@@ -23,12 +23,4 @@ const pushTokenSchema = new Schema<env.PushToken>(
 
 const PushToken = model<env.PushToken>('PushToken', pushTokenSchema)
 
-PushToken.on('index', (err) => {
-  if (err) {
-    console.error('PushToken index error: %s', err)
-  } else {
-    console.info('PushToken indexing complete')
-  }
-})
-
 export default PushToken
