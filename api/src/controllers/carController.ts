@@ -355,19 +355,17 @@ export const getCar = async (req: Request, res: Response) => {
       .lean()
 
     if (car) {
-      if (car.company) {
-        const {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        } = car.company
-        car.company = {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        }
+      const {
+        _id,
+        fullName,
+        avatar,
+        payLater,
+      } = car.company
+      car.company = {
+        _id,
+        fullName,
+        avatar,
+        payLater,
       }
 
       for (const location of car.locations) {
@@ -435,7 +433,7 @@ export const getCars = async (req: Request, res: Response) => {
       $match.$and!.push({ deposit: { $lte: deposit } })
     }
 
-    if (availability) {
+    if (Array.isArray(availability)) {
       if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
         $match.$and!.push({ available: true })
       } else if (availability.length === 1
@@ -493,10 +491,8 @@ export const getCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      if (car.company) {
-        const { _id, fullName, avatar } = car.company
-        car.company = { _id, fullName, avatar }
-      }
+      const { _id, fullName, avatar } = car.company
+      car.company = { _id, fullName, avatar }
     }
 
     return res.json(data)
@@ -643,10 +639,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      if (car.company) {
-        const { _id, fullName, avatar } = car.company
-        car.company = { _id, fullName, avatar }
-      }
+      const { _id, fullName, avatar } = car.company
+      car.company = { _id, fullName, avatar }
     }
 
     return res.json(data)

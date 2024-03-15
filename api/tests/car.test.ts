@@ -380,6 +380,17 @@ describe('POST /api/cars/:page/:size', () => {
         expect(res.statusCode).toBe(200)
         expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
+        payload.fuel = undefined
+        payload.gearbox = undefined
+        payload.mileage = undefined
+        payload.availability = undefined
+        res = await request(app)
+            .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
         res = await request(app)
             .post(`/api/cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .set(env.X_ACCESS_TOKEN, token)
@@ -482,6 +493,13 @@ describe('POST /api/frontend-cars/:page/:size', () => {
             deposit: -1,
         }
         let res = await request(app)
+            .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        expect(res.body[0].resultData.length).toBeGreaterThan(0)
+
+        payload.mileage = undefined
+        res = await request(app)
             .post(`/api/frontend-cars/${testHelper.PAGE}/${testHelper.SIZE}`)
             .send(payload)
         expect(res.statusCode).toBe(200)
