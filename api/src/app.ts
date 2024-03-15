@@ -3,7 +3,7 @@ import compression from 'compression'
 import helmet from 'helmet'
 import nocache from 'nocache'
 import cookieParser from 'cookie-parser'
-import strings from './config/app.config'
+import i18n from './lang/i18n'
 import * as env from './config/env.config'
 import cors from './middlewares/cors'
 import allowedMethods from './middlewares/allowedMethods'
@@ -49,7 +49,7 @@ app.use('/', notificationRoutes)
 app.use('/', carRoutes)
 app.use('/', userRoutes)
 
-strings.setLanguage(env.DEFAULT_LANGUAGE)
+i18n.locale = env.DEFAULT_LANGUAGE
 
 helper.mkdir(env.CDN_USERS)
 helper.mkdir(env.CDN_TEMP_USERS)

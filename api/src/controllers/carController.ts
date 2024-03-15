@@ -7,7 +7,7 @@ import { Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
-import strings from '../config/app.config'
+import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 
@@ -25,8 +25,8 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      console.error(`[car.create] ${strings.CAR_IMAGE_REQUIRED} ${body}`)
-      return res.status(400).send(strings.CAR_IMAGE_REQUIRED)
+      console.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
+      return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
     }
 
     const car = new Car(body)
@@ -44,15 +44,15 @@ export const create = async (req: Request, res: Response) => {
         await car.save()
       } else {
         await Car.deleteOne({ _id: car._id })
-        console.error(strings.CAR_IMAGE_NOT_FOUND, body)
-        return res.status(400).send(strings.CAR_IMAGE_NOT_FOUND)
+        console.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
+        return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
       }
     }
 
     return res.json(car)
   } catch (err) {
-    console.error(`[car.create] ${strings.DB_ERROR} ${body}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -127,8 +127,8 @@ export const update = async (req: Request, res: Response) => {
     console.error('[car.update] Car not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.update] ${strings.DB_ERROR} ${_id}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -157,8 +157,8 @@ export const checkCar = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.check] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -191,8 +191,8 @@ export const deleteCar = async (req: Request, res: Response) => {
     }
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.delete] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -217,8 +217,8 @@ export const createImage = async (req: Request, res: Response) => {
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(`[car.createImage] ${strings.DB_ERROR}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -265,8 +265,8 @@ export const updateImage = async (req: Request, res: Response) => {
     console.error('[car.updateImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.updateImage] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -300,8 +300,8 @@ export const deleteImage = async (req: Request, res: Response) => {
     console.error('[car.deleteImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.deleteImage] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -327,8 +327,8 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
     res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.deleteTempImage] ${strings.DB_ERROR} ${image}`, err)
-    res.status(400).send(strings.ERROR + err)
+    console.error(`[car.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
+    res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -381,8 +381,8 @@ export const getCar = async (req: Request, res: Response) => {
     console.error('[car.getCar] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.getCar] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -507,8 +507,8 @@ export const getCars = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getCars] ${strings.DB_ERROR} ${req.query.s}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -551,8 +551,8 @@ export const getBookingCars = async (req: Request, res: Response) => {
 
     return res.json(cars)
   } catch (err) {
-    console.error(`[car.getBookingCars] ${strings.DB_ERROR} ${req.query.s}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -661,7 +661,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getFrontendCars] ${strings.DB_ERROR} ${req.query.s}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

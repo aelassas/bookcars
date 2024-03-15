@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
-import strings from '../config/app.config'
+import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import User from '../models/User'
 import NotificationCounter from '../models/NotificationCounter'
@@ -35,8 +35,8 @@ export const validate = async (req: Request, res: Response) => {
     })
     return user ? res.sendStatus(204) : res.sendStatus(200)
   } catch (err) {
-    console.error(`[supplier.validate] ${strings.DB_ERROR} ${fullName}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.validate] ${i18n.t('DB_ERROR')} ${fullName}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -86,8 +86,8 @@ export const update = async (req: Request, res: Response) => {
     console.error('[supplier.update] Supplier not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[supplier.update] ${strings.DB_ERROR} ${_id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -135,8 +135,8 @@ export const deleteSupplier = async (req: Request, res: Response) => {
     }
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[supplier.delete] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -181,8 +181,8 @@ export const getSupplier = async (req: Request, res: Response) => {
       payLater,
     })
   } catch (err) {
-    console.error(`[supplier.getSupplier] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -233,8 +233,8 @@ export const getSuppliers = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[supplier.getSuppliers] ${strings.DB_ERROR} ${req.query.s}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -266,7 +266,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[supplier.getAllSuppliers] ${strings.DB_ERROR}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[supplier.getAllSuppliers] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

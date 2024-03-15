@@ -7,7 +7,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { CookieOptions, Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
-import strings from '../config/app.config'
+import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import User from '../models/User'
 import Booking from '../models/Booking'
@@ -76,25 +76,25 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     await token.save()
 
     // Send email
-    strings.setLanguage(user.language)
+    i18n.locale = user.language
 
     const mailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
-      subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+      subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
         `<p>
-        ${strings.HELLO}${user.fullName},<br><br>
-        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${i18n.t('HELLO')}${user.fullName},<br><br>
+        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
         http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${strings.REGARDS}<br>
+        ${i18n.t('REGARDS')}<br>
         </p>`,
     }
     await mailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.signup] ${strings.DB_ERROR} ${body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.signup] ${i18n.t('DB_ERROR')} ${body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -170,29 +170,29 @@ export const create = async (req: Request, res: Response) => {
     await token.save()
 
     // Send email
-    strings.setLanguage(user.language)
+    i18n.locale = user.language
 
     const mailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
-      subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+      subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
         `<p>
-        ${strings.HELLO}${user.fullName},<br><br>
-        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${i18n.t('HELLO')}${user.fullName},<br><br>
+        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
         ${helper.joinURL(
           user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
           'activate',
         )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${strings.REGARDS}<br>
+        ${i18n.t('REGARDS')}<br>
         </p>`,
     }
 
     await mailHelper.sendMail(mailOptions)
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.create] ${strings.DB_ERROR} ${body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.create] ${i18n.t('DB_ERROR')} ${body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -240,8 +240,8 @@ export const checkToken = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.checkToken] ${strings.DB_ERROR} ${req.params}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.checkToken] ${i18n.t('DB_ERROR')} ${req.params}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -268,8 +268,8 @@ export const deleteTokens = async (req: Request, res: Response) => {
 
     return res.sendStatus(400)
   } catch (err) {
-    console.error(`[user.deleteTokens] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.deleteTokens] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -309,23 +309,23 @@ export const resend = async (req: Request, res: Response) => {
       await token.save()
 
       // Send email
-      strings.setLanguage(user.language)
+      i18n.locale = user.language
 
       const reset = req.params.reset === 'true'
 
       const mailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
-        subject: reset ? strings.PASSWORD_RESET_SUBJECT : strings.ACCOUNT_ACTIVATION_SUBJECT,
+        subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
         html:
           `<p>
-          ${strings.HELLO}${user.fullName},<br><br>  
-          ${reset ? strings.PASSWORD_RESET_LINK : strings.ACCOUNT_ACTIVATION_LINK}<br><br>  
+          ${i18n.t('HELLO')}${user.fullName},<br><br>  
+          ${reset ? i18n.t('PASSWORD_RESET_LINK') : i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>  
           ${helper.joinURL(
             user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
             reset ? 'reset-password' : 'activate',
           )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-          ${strings.REGARDS}<br>
+          ${i18n.t('REGARDS')}<br>
           </p>`,
       }
 
@@ -335,8 +335,8 @@ export const resend = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.resend] ${strings.DB_ERROR} ${email}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.resend] ${i18n.t('DB_ERROR')} ${email}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -379,8 +379,8 @@ export const activate = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.activate] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.activate] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -488,8 +488,8 @@ export const signin = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.signin] ${strings.DB_ERROR} ${email}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.signin] ${i18n.t('DB_ERROR')} ${email}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -534,8 +534,8 @@ export const getPushToken = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.pushToken] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.pushToken] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -569,8 +569,8 @@ export const createPushToken = async (req: Request, res: Response) => {
 
     return res.status(400).send('Push Token already exists.')
   } catch (err) {
-    console.error(`[user.createPushToken] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.createPushToken] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -594,8 +594,8 @@ export const deletePushToken = async (req: Request, res: Response) => {
     await PushToken.deleteMany({ user: userId })
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.deletePushToken] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.deletePushToken] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -626,8 +626,8 @@ export const validateEmail = async (req: Request, res: Response) => {
     // email does not exist in db (can be added)
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.validateEmail] ${strings.DB_ERROR} ${email}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.validateEmail] ${i18n.t('DB_ERROR')} ${email}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -661,23 +661,23 @@ export const confirmEmail = async (req: Request, res: Response) => {
 
     if (!user) {
       console.error('[user.confirmEmail] User not found', req.params)
-      return res.status(204).send(strings.ACCOUNT_ACTIVATION_LINK_ERROR)
+      return res.status(204).send(i18n.t('ACCOUNT_ACTIVATION_LINK_ERROR'))
     }
 
-    strings.setLanguage(user.language)
+    i18n.locale = user.language
     const token = await Token.findOne({ user: user._id, token: _token })
 
     // token is not found into database i.e. token may have expired
     if (!token) {
-      console.error(strings.ACCOUNT_ACTIVATION_LINK_EXPIRED, req.params)
-      return res.status(400).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_LINK_EXPIRED))
+      console.error(i18n.t('ACCOUNT_ACTIVATION_LINK_EXPIRED'), req.params)
+      return res.status(400).send(getStatusMessage(user.language, i18n.t('ACCOUNT_ACTIVATION_LINK_EXPIRED')))
     }
 
     // if token is found then check valid user
     // not valid user
     if (user.verified) {
       // user is already verified
-      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
+      return res.status(200).send(getStatusMessage(user.language, i18n.t('ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED')))
     }
 
     // verify user
@@ -685,10 +685,10 @@ export const confirmEmail = async (req: Request, res: Response) => {
     user.verified = true
     user.verifiedAt = new Date()
     await user.save()
-    return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_SUCCESS))
+    return res.status(200).send(getStatusMessage(user.language, i18n.t('ACCOUNT_ACTIVATION_SUCCESS')))
   } catch (err) {
-    console.error(`[user.confirmEmail] ${strings.DB_ERROR} ${req.params}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.confirmEmail] ${i18n.t('DB_ERROR')} ${req.params}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -715,12 +715,12 @@ export const resendLink = async (req: Request, res: Response) => {
     // user is not found into database
     if (!user) {
       console.error('[user.resendLink] User not found:', email)
-      return res.status(400).send(getStatusMessage(env.DEFAULT_LANGUAGE, strings.ACCOUNT_ACTIVATION_RESEND_ERROR))
+      return res.status(400).send(getStatusMessage(env.DEFAULT_LANGUAGE, i18n.t('ACCOUNT_ACTIVATION_RESEND_ERROR')))
     }
 
     if (user.verified) {
       // user has been already verified
-      return res.status(200).send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED))
+      return res.status(200).send(getStatusMessage(user.language, i18n.t('ACCOUNT_ACTIVATION_ACCOUNT_VERIFIED')))
     }
 
     // send verification link
@@ -729,27 +729,27 @@ export const resendLink = async (req: Request, res: Response) => {
     await token.save()
 
     // Send email
-    strings.setLanguage(user.language)
+    i18n.locale = user.language
     const mailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
-      subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+      subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
       html:
         `<p>
-        ${strings.HELLO}${user.fullName},<br><br>
-        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${i18n.t('HELLO')}${user.fullName},<br><br>
+        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
         http${env.HTTPS ? 's' : ''}://${req.headers.host}/api/confirm-email/${user.email}/${token.token}<br><br>
-        ${strings.REGARDS}<br>
+        ${i18n.t('REGARDS')}<br>
         </p>`,
     }
 
     await mailHelper.sendMail(mailOptions)
     return res
       .status(200)
-      .send(getStatusMessage(user.language, strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1 + user.email + strings.ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2))
+      .send(getStatusMessage(user.language, i18n.t('ACCOUNT_ACTIVATION_EMAIL_SENT_PART_1') + user.email + i18n.t('ACCOUNT_ACTIVATION_EMAIL_SENT_PART_2')))
   } catch (err) {
-    console.error(`[user.resendLink] ${strings.DB_ERROR} ${email}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.resendLink] ${i18n.t('DB_ERROR')} ${email}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -809,8 +809,8 @@ export const update = async (req: Request, res: Response) => {
     await user.save()
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.update] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -846,8 +846,8 @@ export const updateEmailNotifications = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.updateEmailNotifications] ${strings.DB_ERROR} ${body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.updateEmailNotifications] ${i18n.t('DB_ERROR')} ${body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -879,8 +879,8 @@ export const updateLanguage = async (req: Request, res: Response) => {
     await user.save()
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.updateLanguage] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.updateLanguage] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -924,8 +924,8 @@ export const getUser = async (req: Request, res: Response) => {
 
     return res.json(user)
   } catch (err) {
-    console.error(`[user.getUser] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.getUser] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -950,8 +950,8 @@ export const createAvatar = async (req: Request, res: Response) => {
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(`[user.createAvatar] ${strings.DB_ERROR} ${req.file && req.file.originalname}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.createAvatar] ${i18n.t('DB_ERROR')} ${req.file && req.file.originalname}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -997,8 +997,8 @@ export const updateAvatar = async (req: Request, res: Response) => {
     console.error('[user.updateAvatar] User not found:', userId)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.updateAvatar] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.updateAvatar] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1033,8 +1033,8 @@ export const deleteAvatar = async (req: Request, res: Response) => {
     console.error('[user.deleteAvatar] User not found:', userId)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.deleteAvatar] ${strings.DB_ERROR} ${userId}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.deleteAvatar] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1060,8 +1060,8 @@ export const deleteTempAvatar = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.deleteTempAvatar] ${strings.DB_ERROR} ${avatar}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.deleteTempAvatar] ${i18n.t('DB_ERROR')} ${avatar}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1119,8 +1119,8 @@ export const changePassword = async (req: Request, res: Response) => {
 
     return _changePassword()
   } catch (err) {
-    console.error(`[user.changePassword] ${strings.DB_ERROR} ${_id}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.changePassword] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1159,8 +1159,8 @@ export const checkPassword = async (req: Request, res: Response) => {
     console.error('[user.checkPassword] User not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[user.checkPassword] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[user.checkPassword] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -1235,8 +1235,8 @@ export const getUsers = async (req: Request, res: Response) => {
 
     return res.json(users)
   } catch (err) {
-    console.error(`[user.getUsers] ${strings.DB_ERROR}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.getUsers] ${i18n.t('DB_ERROR')}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -1293,7 +1293,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[user.delete] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[user.delete] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

@@ -3,7 +3,7 @@ import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage } from 'expo-server-sdk'
 import { Request, Response } from 'express'
 import * as bookcarsTypes from 'bookcars-types'
-import strings from '../config/app.config'
+import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
 import User from '../models/User'
 import Token from '../models/Token'
@@ -40,8 +40,8 @@ export const create = async (req: Request, res: Response) => {
     await booking.save()
     return res.json(booking)
   } catch (err) {
-    console.error(`[booking.create] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -56,7 +56,7 @@ export const create = async (req: Request, res: Response) => {
  * @returns {void}
  */
 const notifySupplier = async (user: env.User, bookingId: string, company: env.User, notificationMessage: string) => {
-  strings.setLanguage(company.language)
+  i18n.locale = company.language
 
   // notification
   const message = `${user.fullName} ${notificationMessage} ${bookingId}.`
@@ -82,10 +82,10 @@ const notifySupplier = async (user: env.User, bookingId: string, company: env.Us
     to: company.email,
     subject: message,
     html: `<p>
-    ${strings.HELLO}${company.fullName},<br><br>
+    ${i18n.t('HELLO')}${company.fullName},<br><br>
     ${message}<br><br>
     ${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
-    ${strings.REGARDS}<br>
+    ${i18n.t('REGARDS')}<br>
     </p>`,
   }
 
@@ -123,17 +123,17 @@ export const checkout = async (req: Request, res: Response) => {
       const token = new Token({ user: user._id, token: helper.generateToken() })
       await token.save()
 
-      strings.setLanguage(user.language)
+      i18n.locale = user.language
 
       const mailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
-        subject: strings.ACCOUNT_ACTIVATION_SUBJECT,
+        subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
         html: `<p>
-        ${strings.HELLO}${user.fullName},<br><br>
-        ${strings.ACCOUNT_ACTIVATION_LINK}<br><br>
+        ${i18n.t('HELLO')}${user.fullName},<br><br>
+        ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
         ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
-        ${strings.REGARDS}<br>
+        ${i18n.t('REGARDS')}<br>
         </p>`,
       }
       await mailHelper.sendMail(mailOptions)
@@ -151,7 +151,7 @@ export const checkout = async (req: Request, res: Response) => {
     let language = env.DEFAULT_LANGUAGE
     if (user.language) {
       language = user.language
-      strings.setLanguage(user.language)
+      i18n.locale = user.language
     }
 
     // additionalDriver
@@ -198,20 +198,20 @@ export const checkout = async (req: Request, res: Response) => {
     const mailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
-      subject: `${strings.BOOKING_CONFIRMED_SUBJECT_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_SUBJECT_PART2}`,
+      subject: `${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART2')}`,
       html:
         `<p>
-        ${strings.HELLO}${user.fullName},<br><br>
-        ${!body.payLater ? `${strings.BOOKING_CONFIRMED_PART1} ${booking._id} ${strings.BOOKING_CONFIRMED_PART2}`
+        ${i18n.t('HELLO')}${user.fullName},<br><br>
+        ${!body.payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
           + '<br><br>' : ''}
-        ${strings.BOOKING_CONFIRMED_PART3}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART4}${pickupLocationName}${strings.BOOKING_CONFIRMED_PART5}`
-        + `${from} ${strings.BOOKING_CONFIRMED_PART6}`
-        + `${car.name}${strings.BOOKING_CONFIRMED_PART7}`
-        + `<br><br>${strings.BOOKING_CONFIRMED_PART8}<br><br>`
-        + `${strings.BOOKING_CONFIRMED_PART9}${car.company.fullName}${strings.BOOKING_CONFIRMED_PART10}${dropOffLocationName}${strings.BOOKING_CONFIRMED_PART11}`
-        + `${to} ${strings.BOOKING_CONFIRMED_PART12}`
-        + `<br><br>${strings.BOOKING_CONFIRMED_PART13}<br><br>${strings.BOOKING_CONFIRMED_PART14}${env.FRONTEND_HOST}<br><br>
-        ${strings.REGARDS}<br>
+        ${i18n.t('BOOKING_CONFIRMED_PART3')}${car.company.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
+        + `${from} ${i18n.t('BOOKING_CONFIRMED_PART6')}`
+        + `${car.name}${i18n.t('BOOKING_CONFIRMED_PART7')}`
+        + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART8')}<br><br>`
+        + `${i18n.t('BOOKING_CONFIRMED_PART9')}${car.company.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
+        + `${to} ${i18n.t('BOOKING_CONFIRMED_PART12')}`
+        + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART13')}<br><br>${i18n.t('BOOKING_CONFIRMED_PART14')}${env.FRONTEND_HOST}<br><br>
+        ${i18n.t('REGARDS')}<br>
         </p>`,
     }
     await mailHelper.sendMail(mailOptions)
@@ -222,13 +222,13 @@ export const checkout = async (req: Request, res: Response) => {
       console.log(`Supplier ${booking.company} not found`)
       return res.sendStatus(204)
     }
-    strings.setLanguage(supplier.language)
-    await notifySupplier(user, booking._id.toString(), supplier, strings.BOOKING_NOTIFICATION)
+    i18n.locale = supplier.language
+    await notifySupplier(user, booking._id.toString(), supplier, i18n.t('BOOKING_NOTIFICATION'))
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.book]  ${strings.ERROR}`, err)
-    return res.status(400).send(strings.ERROR + err)
+    console.error(`[booking.book]  ${i18n.t('ERROR')}`, err)
+    return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
 
@@ -246,10 +246,10 @@ const notifyDriver = async (booking: env.Booking) => {
     return
   }
   if (driver.language) {
-    strings.setLanguage(driver.language)
+    i18n.locale = driver.language
   }
 
-  const message = `${strings.BOOKING_UPDATED_NOTIFICATION_PART1} ${booking._id} ${strings.BOOKING_UPDATED_NOTIFICATION_PART2}`
+  const message = `${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART1')} ${booking._id} ${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART2')}`
   const notification = new Notification({
     user: driver._id,
     message,
@@ -272,10 +272,10 @@ const notifyDriver = async (booking: env.Booking) => {
     to: driver.email,
     subject: message,
     html: `<p>
-    ${strings.HELLO}${driver.fullName},<br><br>
+    ${i18n.t('HELLO')}${driver.fullName},<br><br>
     ${message}<br><br>
     ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
-    ${strings.REGARDS}<br>
+    ${i18n.t('REGARDS')}<br>
     </p>`,
   }
   await mailHelper.sendMail(mailOptions)
@@ -438,8 +438,8 @@ export const update = async (req: Request, res: Response) => {
     console.error('[booking.update] Booking not found:', body.booking._id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.update]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.update]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -470,8 +470,8 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.updateStatus]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.updateStatus]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -500,8 +500,8 @@ export const deleteBookings = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.deleteBookings]  ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.deleteBookings]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -586,8 +586,8 @@ export const getBooking = async (req: Request, res: Response) => {
     console.error('[booking.getBooking] Booking not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.getBooking]  ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.getBooking]  ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -795,8 +795,8 @@ export const getBookings = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[booking.getBookings] ${strings.DB_ERROR} ${req.body}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.getBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -826,8 +826,8 @@ export const hasBookings = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.hasBookings] ${strings.DB_ERROR} ${driver}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.hasBookings] ${i18n.t('DB_ERROR')} ${driver}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
 
@@ -856,14 +856,14 @@ export const cancelBooking = async (req: Request, res: Response) => {
       await booking.save()
 
       // Notify supplier
-      await notifySupplier(booking.driver, booking._id.toString(), booking.company, strings.CANCEL_BOOKING_NOTIFICATION)
+      await notifySupplier(booking.driver, booking._id.toString(), booking.company, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
 
       return res.sendStatus(200)
     }
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.cancelBooking] ${strings.DB_ERROR} ${id}`, err)
-    return res.status(400).send(strings.DB_ERROR + err)
+    console.error(`[booking.cancelBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
