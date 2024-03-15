@@ -413,38 +413,36 @@ export const getCars = async (req: Request, res: Response) => {
       $and: [{ name: { $regex: keyword, $options: options } }, { company: { $in: companies } }],
     }
 
-    if ($match.$and) {
-      if (fuel) {
-        $match.$and.push({ type: { $in: fuel } })
-      }
+    if (fuel) {
+      $match.$and!.push({ type: { $in: fuel } })
+    }
 
-      if (gearbox) {
-        $match.$and.push({ gearbox: { $in: gearbox } })
-      }
+    if (gearbox) {
+      $match.$and!.push({ gearbox: { $in: gearbox } })
+    }
 
-      if (mileage) {
-        if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
-          $match.$and.push({ mileage: { $gt: -1 } })
-        } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
-          $match.$and.push({ mileage: -1 })
-        } else if (mileage.length === 0) {
-          return res.json([{ resultData: [], pageInfo: [] }])
-        }
+    if (mileage) {
+      if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
+        $match.$and!.push({ mileage: { $gt: -1 } })
+      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
+        $match.$and!.push({ mileage: -1 })
+      } else if (mileage.length === 0) {
+        return res.json([{ resultData: [], pageInfo: [] }])
       }
+    }
 
-      if (deposit && deposit > -1) {
-        $match.$and.push({ deposit: { $lte: deposit } })
-      }
+    if (deposit && deposit > -1) {
+      $match.$and!.push({ deposit: { $lte: deposit } })
+    }
 
-      if (availability) {
-        if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
-          $match.$and.push({ available: true })
-        } else if (availability.length === 1
-          && availability[0] === bookcarsTypes.Availablity.Unavailable) {
-          $match.$and.push({ available: false })
-        } else if (availability.length === 0) {
-          return res.json([{ resultData: [], pageInfo: [] }])
-        }
+    if (availability) {
+      if (availability.length === 1 && availability[0] === bookcarsTypes.Availablity.Available) {
+        $match.$and!.push({ available: true })
+      } else if (availability.length === 1
+        && availability[0] === bookcarsTypes.Availablity.Unavailable) {
+        $match.$and!.push({ available: false })
+      } else if (availability.length === 0) {
+        return res.json([{ resultData: [], pageInfo: [] }])
       }
     }
 
@@ -494,12 +492,10 @@ export const getCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    if (data.length > 0) {
-      for (const car of data[0].resultData) {
-        if (car.company) {
-          const { _id, fullName, avatar } = car.company
-          car.company = { _id, fullName, avatar }
-        }
+    for (const car of data[0].resultData) {
+      if (car.company) {
+        const { _id, fullName, avatar } = car.company
+        car.company = { _id, fullName, avatar }
       }
     }
 
@@ -586,20 +582,18 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       ],
     }
 
-    if ($match.$and) {
-      if (mileage) {
-        if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
-          $match.$and.push({ mileage: { $gt: -1 } })
-        } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
-          $match.$and.push({ mileage: -1 })
-        } else if (mileage.length === 0) {
-          return res.json([{ resultData: [], pageInfo: [] }])
-        }
+    if (mileage) {
+      if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Limited) {
+        $match.$and!.push({ mileage: { $gt: -1 } })
+      } else if (mileage.length === 1 && mileage[0] === bookcarsTypes.Mileage.Unlimited) {
+        $match.$and!.push({ mileage: -1 })
+      } else if (mileage.length === 0) {
+        return res.json([{ resultData: [], pageInfo: [] }])
       }
+    }
 
-      if (deposit && deposit > -1) {
-        $match.$and.push({ deposit: { $lte: deposit } })
-      }
+    if (deposit && deposit > -1) {
+      $match.$and!.push({ deposit: { $lte: deposit } })
     }
 
     const data = await Car.aggregate(

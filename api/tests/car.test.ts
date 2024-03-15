@@ -221,6 +221,13 @@ describe('POST /api/delete-car-image/:id', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
 
+        car!.image = `${uuid()}.jpg`
+        await car?.save()
+        res = await request(app)
+            .post(`/api/delete-car-image/${CAR_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+
         res = await request(app)
             .post(`/api/delete-car-image/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
