@@ -4,6 +4,7 @@ import * as bookcarsTypes from 'bookcars-types'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
+import { v1 as uuid } from 'uuid'
 import * as databaseHelper from '../src/common/databaseHelper'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
@@ -213,6 +214,13 @@ describe('POST /api/delete-car-image/:id', () => {
         imageExists = await helper.exists(image)
         expect(imageExists).toBeFalsy()
 
+        car!.image = ''
+        await car?.save()
+        res = await request(app)
+            .post(`/api/delete-car-image/${CAR_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+
         res = await request(app)
             .post(`/api/delete-car-image/${testHelper.GetRandromObjectIdAsString()}`)
             .set(env.X_ACCESS_TOKEN, token)
@@ -266,6 +274,16 @@ describe('POST /api/update-car-image/:id', () => {
         const car = await Car.findById(CAR_ID)
         expect(car).not.toBeNull()
         expect(car?.image).toBe(filename)
+
+        car!.image = `${uuid()}.jpg`
+        await car?.save()
+        res = await request(app)
+            .post(`/api/update-car-image/${CAR_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+            .attach('image', IMAGE2_PATH)
+        expect(res.statusCode).toBe(200)
+        car!.image = filename
+        await car?.save()
 
         res = await request(app)
             .post(`/api/update-car-image/${CAR_ID}`)
@@ -550,6 +568,35 @@ describe('DELETE /api/delete-car/:id', () => {
 
         let res = await request(app)
             .delete(`/api/delete-car/${CAR_ID}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+
+        const car = new Car({
+            name: 'BMW X1',
+            company: SUPPLIER1_ID,
+            minimumAge: 21,
+            locations: [testHelper.GetRandromObjectId()],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: '',
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        res = await request(app)
+            .delete(`/api/delete-car/${car.id}`)
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(200)
 
