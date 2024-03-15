@@ -32,21 +32,19 @@ export const create = async (req: Request, res: Response) => {
     const car = new Car(body)
     await car.save()
 
-    if (car.image) {
-      const image = path.join(env.CDN_TEMP_CARS, body.image)
+    const image = path.join(env.CDN_TEMP_CARS, body.image)
 
-      if (await helper.exists(image)) {
-        const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
-        const newPath = path.join(env.CDN_CARS, filename)
+    if (await helper.exists(image)) {
+      const filename = `${car._id}_${Date.now()}${path.extname(body.image)}`
+      const newPath = path.join(env.CDN_CARS, filename)
 
-        await fs.rename(image, newPath)
-        car.image = filename
-        await car.save()
-      } else {
-        await Car.deleteOne({ _id: car._id })
-        console.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
-        return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
-      }
+      await fs.rename(image, newPath)
+      car.image = filename
+      await car.save()
+    } else {
+      await Car.deleteOne({ _id: car._id })
+      console.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
+      return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
     }
 
     return res.json(car)
@@ -650,12 +648,10 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    if (data.length > 0) {
-      for (const car of data[0].resultData) {
-        if (car.company) {
-          const { _id, fullName, avatar } = car.company
-          car.company = { _id, fullName, avatar }
-        }
+    for (const car of data[0].resultData) {
+      if (car.company) {
+        const { _id, fullName, avatar } = car.company
+        car.company = { _id, fullName, avatar }
       }
     }
 
