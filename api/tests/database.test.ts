@@ -10,7 +10,7 @@ describe('Connect to database', () => {
     })
 })
 
-describe('Fail to Connect to database', () => {
+describe('Fail to connect to database', () => {
     it('should fail connecting to database', async () => {
         const res = await databaseHelper.Connect('wrong-uri', true, false)
         expect(res).toBeFalsy()
