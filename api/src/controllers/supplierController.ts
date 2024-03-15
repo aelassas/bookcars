@@ -224,12 +224,10 @@ export const getSuppliers = async (req: Request, res: Response) => {
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
     )
 
-    if (data.length > 0) {
-      data[0].resultData = data[0].resultData.map((supplier: env.User) => {
-        const { _id, fullName, avatar } = supplier
-        return { _id, fullName, avatar }
-      })
-    }
+    data[0].resultData = data[0].resultData.map((supplier: env.User) => {
+      const { _id, fullName, avatar } = supplier
+      return { _id, fullName, avatar }
+    })
 
     return res.json(data)
   } catch (err) {
