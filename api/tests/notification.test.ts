@@ -16,7 +16,7 @@ let NOTIFICATION2_ID: string
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-    if (await databaseHelper.Connect()) {
+    if (await databaseHelper.Connect(env.DB_URI, false, false)) {
         await testHelper.initialize()
         ADMIN_USER_ID = testHelper.getAdminUserId()
         const supplierName = testHelper.getSupplierName()

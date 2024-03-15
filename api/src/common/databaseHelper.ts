@@ -6,13 +6,15 @@ import * as env from '../config/env.config'
  *
  * @export
  * @async
+ * @param {string} uri
+ * @param {boolean} ssl
  * @param {boolean} debug
  * @returns {Promise<boolean>}
  */
-export const Connect = async (debug: boolean = false): Promise<boolean> => {
+export const Connect = async (uri: string, ssl: boolean, debug: boolean): Promise<boolean> => {
     let options: ConnectOptions = {}
 
-    if (env.DB_SSL) {
+    if (ssl) {
         options = {
             tls: true,
             tlsCertificateKeyFile: env.DB_SSL_CERT,
@@ -24,7 +26,7 @@ export const Connect = async (debug: boolean = false): Promise<boolean> => {
     mongoose.Promise = globalThis.Promise
 
     try {
-        await mongoose.connect(env.DB_URI, options)
+        await mongoose.connect(uri, options)
         console.log('Database is connected')
         return true
     } catch (err) {

@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import * as bookcarsTypes from 'bookcars-types'
+import * as env from '../src/config/env.config'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as mailHelper from '../src/common/mailHelper'
 import * as testHelper from './testHelper'
@@ -19,7 +20,7 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 
 describe('Test AdditionalDriver phone validation', () => {
     it('should test AdditionalDriver phone validation', async () => {
-        await databaseHelper.Connect()
+        await databaseHelper.Connect(env.DB_URI, false, false)
         let res = true
         try {
             const additionalDriver = new AdditionalDriver(ADDITIONAL_DRIVER)
@@ -35,7 +36,7 @@ describe('Test AdditionalDriver phone validation', () => {
 
 describe('Test User phone validation', () => {
     it('should test User phone validation', async () => {
-        await databaseHelper.Connect()
+        await databaseHelper.Connect(env.DB_URI, false, false)
         let res = true
         const USER: bookcarsTypes.User = {
             email: testHelper.GetRandomEmail(),
@@ -66,7 +67,7 @@ describe('Test User phone validation', () => {
 
 describe('Test email sending error', () => {
     it('should test email sending error', async () => {
-        await databaseHelper.Connect()
+        await databaseHelper.Connect(env.DB_URI, false, false)
         let res = true
         try {
             await mailHelper.sendMail({
