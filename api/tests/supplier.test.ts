@@ -3,6 +3,7 @@ import request from 'supertest'
 import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
+import { v1 as uuid } from 'uuid'
 import * as bookcarsTypes from 'bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
@@ -41,11 +42,8 @@ beforeAll(async () => {
 //
 afterAll(async () => {
     await testHelper.close()
-
-    // delete suppliers
     await testHelper.deleteSupplier(SUPPLIER1_ID)
     await testHelper.deleteSupplier(SUPPLIER2_ID)
-
     await databaseHelper.Close()
 })
 
@@ -163,6 +161,12 @@ describe('GET /api/suppliers/:page/:size', () => {
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
 
+        res = await request(app)
+            .get(`/api/suppliers/${testHelper.PAGE}/${testHelper.SIZE}?s=${uuid()}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+        expect(res.body[0].resultData.length).toBe(0)
+
         await testHelper.signout(token)
     })
 })
@@ -186,22 +190,22 @@ describe('DELETE /api/delete-supplier/:id', () => {
     it('should delete a supplier', async () => {
         const token = await testHelper.signinAsAdmin()
 
-        const supplierName = testHelper.getSupplierName()
-        const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        let supplierName = testHelper.getSupplierName()
+        let supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
         let supplier = await User.findById(supplierId)
         expect(supplier).not.toBeNull()
-        const avatarName = 'avatar1.jpg'
-        const avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
-        const avatar = path.join(env.CDN_USERS, avatarName)
+        let avatarName = 'avatar1.jpg'
+        let avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+        let avatar = path.join(env.CDN_USERS, avatarName)
         if (!await helper.exists(avatar)) {
             fs.copyFile(avatarPath, avatar)
         }
         supplier!.avatar = avatarName
         await supplier?.save()
-        const locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
+        let locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         const carImageName = 'bmw-x1.jpg'
         const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
-        const car = new Car({
+        let car = new Car({
             name: 'BMW X1',
             company: supplierId,
             minimumAge: 21,
@@ -272,6 +276,108 @@ describe('DELETE /api/delete-supplier/:id', () => {
             .delete('/api/delete-supplier/0')
             .set(env.X_ACCESS_TOKEN, token)
         expect(res.statusCode).toBe(400)
+
+        supplierName = testHelper.getSupplierName()
+        supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        supplier = await User.findById(supplierId)
+        expect(supplier).not.toBeNull()
+        await supplier?.save()
+        res = await request(app)
+            .delete(`/api/delete-supplier/${supplierId}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+        supplier = await User.findById(supplierId)
+        expect(supplier).toBeNull()
+
+        supplierName = testHelper.getSupplierName()
+        supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        supplier = await User.findById(supplierId)
+        expect(supplier).not.toBeNull()
+        avatarName = 'avatar1.jpg'
+        avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+        avatar = path.join(env.CDN_USERS, avatarName)
+        if (!await helper.exists(avatar)) {
+            fs.copyFile(avatarPath, avatar)
+        }
+        supplier!.avatar = avatarName
+        await supplier?.save()
+        locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
+        car = new Car({
+            name: 'BMW X1',
+            company: supplierId,
+            minimumAge: 21,
+            locations: [locationId],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: '0',
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        res = await request(app)
+            .delete(`/api/delete-supplier/${supplierId}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+        supplier = await User.findById(supplierId)
+        expect(supplier).toBeNull()
+        await testHelper.deleteLocation(locationId)
+
+        supplierName = testHelper.getSupplierName()
+        supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+        supplier = await User.findById(supplierId)
+        expect(supplier).not.toBeNull()
+        avatarName = 'avatar1.jpg'
+        avatarPath = path.resolve(__dirname, `./img/${avatarName}`)
+        avatar = path.join(env.CDN_USERS, avatarName)
+        if (!await helper.exists(avatar)) {
+            fs.copyFile(avatarPath, avatar)
+        }
+        supplier!.avatar = avatarName
+        await supplier?.save()
+        locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
+        car = new Car({
+            name: 'BMW X1',
+            company: supplierId,
+            minimumAge: 21,
+            locations: [locationId],
+            price: 780,
+            deposit: 9500,
+            available: false,
+            type: bookcarsTypes.CarType.Diesel,
+            gearbox: bookcarsTypes.GearboxType.Automatic,
+            aircon: true,
+            image: `${uuid()}.jpg`,
+            seats: 5,
+            doors: 4,
+            fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+            mileage: -1,
+            cancellation: 0,
+            amendments: 0,
+            theftProtection: 90,
+            collisionDamageWaiver: 120,
+            fullInsurance: 200,
+            additionalDriver: 200,
+        })
+        await car.save()
+        res = await request(app)
+            .delete(`/api/delete-supplier/${supplierId}`)
+            .set(env.X_ACCESS_TOKEN, token)
+        expect(res.statusCode).toBe(200)
+        supplier = await User.findById(supplierId)
+        expect(supplier).toBeNull()
+        await testHelper.deleteLocation(locationId)
 
         await testHelper.signout(token)
     })
