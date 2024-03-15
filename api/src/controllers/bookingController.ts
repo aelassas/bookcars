@@ -148,11 +148,8 @@ export const checkout = async (req: Request, res: Response) => {
       return res.sendStatus(204)
     }
 
-    let language = env.DEFAULT_LANGUAGE
-    if (user.language) {
-      language = user.language
-      i18n.locale = user.language
-    }
+    const { language } = user
+    i18n.locale = language
 
     // additionalDriver
     if (body.booking.additionalDriver && body.additionalDriver) {
@@ -245,9 +242,8 @@ const notifyDriver = async (booking: env.Booking) => {
     console.log(`Renter ${booking.driver} not found`)
     return
   }
-  if (driver.language) {
-    i18n.locale = driver.language
-  }
+
+  i18n.locale = driver.language
 
   const message = `${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART1')} ${booking._id} ${i18n.t('BOOKING_UPDATED_NOTIFICATION_PART2')}`
   const notification = new Notification({
@@ -548,33 +544,18 @@ export const getBooking = async (req: Request, res: Response) => {
     if (booking) {
       const { language } = req.params
 
-      if (booking.company) {
-        const {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        } = booking.company
-        booking.company = {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        }
+      booking.company = {
+        _id: booking.company._id,
+        fullName: booking.company.fullName,
+        avatar: booking.company.avatar,
+        payLater: booking.company.payLater,
       }
-      if (booking.car.company) {
-        const {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        } = booking.car.company
-        booking.car.company = {
-          _id,
-          fullName,
-          avatar,
-          payLater,
-        }
+
+      booking.car.company = {
+        _id: booking.car.company._id,
+        fullName: booking.car.company.fullName,
+        avatar: booking.car.company.avatar,
+        payLater: booking.car.company.payLater,
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
@@ -622,41 +603,39 @@ export const getBookings = async (req: Request, res: Response) => {
       $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
     }
 
-    if ($match.$and) {
-      if (user) {
-        $match.$and.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
-      }
-      if (car) {
-        $match.$and.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
-      }
-      if (from) {
-        $match.$and.push({ from: { $gte: from } })
-      } // $from > from
-      if (to) {
-        $match.$and.push({ to: { $lte: to } })
-      } // $to < to
-      if (pickupLocation) {
-        $match.$and.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
-      }
-      if (dropOffLocation) {
-        $match.$and.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
-      }
-      if (keyword) {
-        const isObjectId = helper.isValidObjectId(keyword)
-        if (isObjectId) {
-          $match.$and.push({
-            _id: { $eq: new mongoose.Types.ObjectId(keyword) },
-          })
-        } else {
-          keyword = escapeStringRegexp(keyword)
-          $match.$and.push({
-            $or: [
-              { 'company.fullName': { $regex: keyword, $options: options } },
-              { 'driver.fullName': { $regex: keyword, $options: options } },
-              { 'car.name': { $regex: keyword, $options: options } },
-            ],
-          })
-        }
+    if (user) {
+      $match.$and!.push({ 'driver._id': { $eq: new mongoose.Types.ObjectId(user) } })
+    }
+    if (car) {
+      $match.$and!.push({ 'car._id': { $eq: new mongoose.Types.ObjectId(car) } })
+    }
+    if (from) {
+      $match.$and!.push({ from: { $gte: from } })
+    } // $from > from
+    if (to) {
+      $match.$and!.push({ to: { $lte: to } })
+    } // $to < to
+    if (pickupLocation) {
+      $match.$and!.push({ 'pickupLocation._id': { $eq: new mongoose.Types.ObjectId(pickupLocation) } })
+    }
+    if (dropOffLocation) {
+      $match.$and!.push({ 'dropOffLocation._id': { $eq: new mongoose.Types.ObjectId(dropOffLocation) } })
+    }
+    if (keyword) {
+      const isObjectId = helper.isValidObjectId(keyword)
+      if (isObjectId) {
+        $match.$and!.push({
+          _id: { $eq: new mongoose.Types.ObjectId(keyword) },
+        })
+      } else {
+        keyword = escapeStringRegexp(keyword)
+        $match.$and!.push({
+          $or: [
+            { 'company.fullName': { $regex: keyword, $options: options } },
+            { 'driver.fullName': { $regex: keyword, $options: options } },
+            { 'car.name': { $regex: keyword, $options: options } },
+          ],
+        })
       }
     }
 
@@ -784,13 +763,11 @@ export const getBookings = async (req: Request, res: Response) => {
       },
     ])
 
-    if (data.length > 0) {
-      const bookings: env.BookingInfo[] = data[0].resultData
+    const bookings: env.BookingInfo[] = data[0].resultData
 
-      for (const booking of bookings) {
-        const { _id, fullName, avatar } = booking.company
-        booking.company = { _id, fullName, avatar }
-      }
+    for (const booking of bookings) {
+      const { _id, fullName, avatar } = booking.company
+      booking.company = { _id, fullName, avatar }
     }
 
     return res.json(data)
