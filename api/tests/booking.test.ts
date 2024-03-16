@@ -192,6 +192,7 @@ describe('POST /api/checkout', () => {
         bookings = await Booking.find({ driver: DRIVER1_ID })
         expect(bookings.length).toBeGreaterThan(1)
 
+        payload.payLater = false
         const driver = await User.findOne({ _id: DRIVER1_ID })
         driver!.language = 'fr'
         await driver?.save()
@@ -201,6 +202,7 @@ describe('POST /api/checkout', () => {
         expect(res.statusCode).toBe(200)
         bookings = await Booking.find({ driver: DRIVER1_ID })
         expect(bookings.length).toBeGreaterThan(2)
+        payload.payLater = true
 
         payload.booking!.additionalDriver = false
         res = await request(app)
