@@ -381,7 +381,17 @@ describe('POST /api/update-booking', () => {
 
         payload.booking.driver = DRIVER1_ID
         payload.booking.status = bookcarsTypes.BookingStatus.Void
-        let pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]' })
+        let pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[qQ8j_gFiDjl4MKuFxBYLW3]' })
+        await pushToken.save()
+        res = await request(app)
+            .put('/api/update-booking')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        await PushToken.deleteOne({ _id: pushToken._id })
+
+        payload.booking.status = bookcarsTypes.BookingStatus.Deposit
+        pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]' })
         await pushToken.save()
         res = await request(app)
             .put('/api/update-booking')

@@ -314,13 +314,21 @@ const notifyDriver = async (booking: env.Booking) => {
       // time, which nicely spreads the load out over time:
       for (const chunk of chunks) {
         try {
-          const ticketChunk = await expo.sendPushNotificationsAsync(chunk)
+          const ticketChunks = await expo.sendPushNotificationsAsync(chunk)
 
-          tickets.push(...ticketChunk)
+          tickets.push(...ticketChunks)
+
           // NOTE: If a ticket contains an error code in ticket.details.error, you
           // must handle it appropriately. The error codes are listed in the Expo
           // documentation:
           // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
+          for (const ticketChunk of ticketChunks) {
+            if (ticketChunk.status === 'ok') {
+              console.log(`Push notification sent: ${ticketChunk.id}`)
+            } else {
+              throw new Error(ticketChunk.message)
+            }
+          }
         } catch (error) {
           console.error(error)
         }
