@@ -45,7 +45,7 @@ BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MI
 
 ## Contents
 
-1. [Overview and Screenshots](https://github.com/aelassas/bookcars/wiki/Overview)
+1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
@@ -55,11 +55,14 @@ BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MI
 6. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
    2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
-8. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
-9. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
-10. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
-11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
-12. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
+7. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+8. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
+   1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
+   2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
+   3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
+9. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
+10. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+11. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 
 ## License
 
