@@ -1100,7 +1100,7 @@ describe('POST /api/delete-users', () => {
 
         let payload: string[] = [USER1_ID, USER2_ID, ADMIN_ID]
         const user1 = await User.findById(USER1_ID)
-        user1!.avatar = `${uuid}.jpg`
+        user1!.avatar = `${uuid()}.jpg`
         await user1?.save()
         let users = await User.find({ _id: { $in: payload } })
         expect(users.length).toBe(3)
