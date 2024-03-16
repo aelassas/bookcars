@@ -148,7 +148,7 @@ describe('POST /api/create-user', () => {
         if (!await helper.exists(tempAvatar)) {
             fs.copyFile(AVATAR1_PATH, tempAvatar)
         }
-        const payload: bookcarsTypes.CreateUserPayload = {
+        let payload: bookcarsTypes.CreateUserPayload = {
             email: USER2_EMAIL,
             fullName: 'user2',
             language: testHelper.LANGUAGE,
@@ -178,6 +178,34 @@ describe('POST /api/create-user', () => {
         expect(userToken).not.toBeNull()
         expect(userToken?.token.length).toBeGreaterThan(0)
         await userToken?.deleteOne()
+
+        payload = {
+            email: testHelper.GetRandomEmail(),
+            fullName: 'admin',
+            language: testHelper.LANGUAGE,
+            birthDate: new Date(1992, 5, 25),
+            phone: '09090909',
+            location: 'location',
+            bio: 'bio',
+            avatar: AVATAR1,
+            type: bookcarsTypes.UserType.Admin,
+        }
+        res = await request(app)
+            .post('/api/create-user')
+            .set(env.X_ACCESS_TOKEN, token)
+            .send(payload)
+        expect(res.statusCode).toBe(200)
+        user = await User.findOne({ email: payload.email })
+        expect(user).not.toBeNull()
+        expect(user?.type).toBe(payload.type)
+        expect(user?.email).toBe(payload.email)
+        expect(user?.fullName).toBe(payload.fullName)
+        expect(user?.language).toBe(payload.language)
+        expect(user?.birthDate).toStrictEqual(payload.birthDate)
+        expect(user?.phone).toBe(payload.phone)
+        expect(user?.location).toBe(payload.location)
+        expect(user?.bio).toBe(payload.bio)
+        await user?.deleteOne()
 
         let email = testHelper.GetRandomEmail()
         payload.email = email
@@ -337,11 +365,19 @@ describe('POST /api/resend/:type/:email/:reset', () => {
         expect(user).not.toBeNull()
         user!.active = true
         await user!.save()
-        const reset = true
+        let reset = true
         let res = await request(app)
             .post(`/api/resend/${bookcarsTypes.AppType.Frontend}/${USER1_EMAIL}/${reset}`)
         expect(res.statusCode).toBe(200)
         user = await User.findById(USER1_ID)
+        expect(user).not.toBeNull()
+        expect(user?.active).toBeFalsy()
+
+        reset = false
+        res = await request(app)
+            .post(`/api/resend/${bookcarsTypes.AppType.Backend}/${ADMIN_EMAIL}/${reset}`)
+        expect(res.statusCode).toBe(200)
+        user = await User.findById(ADMIN_ID)
         expect(user).not.toBeNull()
         expect(user?.active).toBeFalsy()
 
