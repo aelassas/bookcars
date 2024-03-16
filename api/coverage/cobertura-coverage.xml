@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1491" lines-covered="1490" line-rate="0.9993000000000001" branches-valid="466" branches-covered="457" branch-rate="0.9806" timestamp="1710569059651" complexity="0" version="0.1">
+<coverage lines-valid="1491" lines-covered="1490" line-rate="0.9993000000000001" branches-valid="466" branches-covered="457" branch-rate="0.9806" timestamp="1710581037299" complexity="0" version="0.1">
   <sources>
     <source>C:\dev\bookcars\src\api</source>
   </sources>
@@ -1317,9 +1317,9 @@
                 <line number="198" hits="3"/>
               </lines>
             </method>
-            <method name="(anonymous_6)" hits="6" signature="()V">
+            <method name="(anonymous_6)" hits="14" signature="()V">
               <lines>
-                <line number="227" hits="6"/>
+                <line number="227" hits="14"/>
               </lines>
             </method>
             <method name="(anonymous_7)" hits="2" signature="()V">
@@ -1327,9 +1327,9 @@
                 <line number="248" hits="2"/>
               </lines>
             </method>
-            <method name="(anonymous_8)" hits="6" signature="()V">
+            <method name="(anonymous_8)" hits="14" signature="()V">
               <lines>
-                <line number="258" hits="6"/>
+                <line number="258" hits="14"/>
               </lines>
             </method>
           </methods>
@@ -1409,8 +1409,8 @@
             <line number="203" hits="3" branch="false"/>
             <line number="205" hits="3" branch="false"/>
             <line number="227" hits="2" branch="false"/>
-            <line number="228" hits="6" branch="false"/>
-            <line number="229" hits="6" branch="false"/>
+            <line number="228" hits="14" branch="false"/>
+            <line number="229" hits="14" branch="false"/>
             <line number="232" hits="2" branch="false"/>
             <line number="234" hits="1" branch="false"/>
             <line number="235" hits="1" branch="false"/>
@@ -1418,8 +1418,8 @@
             <line number="249" hits="2" branch="false"/>
             <line number="250" hits="2" branch="false"/>
             <line number="258" hits="1" branch="false"/>
-            <line number="259" hits="6" branch="false"/>
-            <line number="260" hits="6" branch="false"/>
+            <line number="259" hits="14" branch="false"/>
+            <line number="260" hits="14" branch="false"/>
             <line number="263" hits="1" branch="false"/>
             <line number="265" hits="1" branch="false"/>
             <line number="266" hits="1" branch="false"/>
