@@ -42,8 +42,11 @@ beforeAll(async () => {
 //
 afterAll(async () => {
     await testHelper.close()
+
+    // delete suppliers
     await testHelper.deleteSupplier(SUPPLIER1_ID)
     await testHelper.deleteSupplier(SUPPLIER2_ID)
+
     await databaseHelper.Close()
 })
 
