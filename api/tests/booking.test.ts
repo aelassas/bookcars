@@ -381,7 +381,7 @@ describe('POST /api/update-booking', () => {
 
         payload.booking.driver = DRIVER1_ID
         payload.booking.status = bookcarsTypes.BookingStatus.Void
-        let pushToken = new PushToken({ user: payload.booking.driver, token: uuid() })
+        let pushToken = new PushToken({ user: payload.booking.driver, token: 'ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]' })
         await pushToken.save()
         res = await request(app)
             .put('/api/update-booking')
