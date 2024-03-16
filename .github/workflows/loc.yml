@@ -4,12 +4,12 @@ name: Lines of Code
 jobs:
   loc_job:
     runs-on: ubuntu-latest
-    name: Test Run
+    name: Run
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Launch the local action
+      - name: Create the badge
         uses: shadowmoose/GHA-LoC-Badge@1.0.0
         id: badge
         with:
