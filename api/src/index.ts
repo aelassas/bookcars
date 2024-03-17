@@ -2,7 +2,7 @@ import 'dotenv/config'
 import process from 'node:process'
 import fs from 'node:fs/promises'
 import http from 'node:http'
-import https from 'node:https'
+import https, { ServerOptions } from 'node:https'
 import * as env from './config/env.config'
 import * as databaseHelper from './common/databaseHelper'
 import app from './app'
@@ -14,7 +14,7 @@ if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
         https.globalAgent.maxSockets = Number.POSITIVE_INFINITY
         const privateKey = await fs.readFile(env.PRIVATE_KEY, 'utf8')
         const certificate = await fs.readFile(env.CERTIFICATE, 'utf8')
-        const credentials = { key: privateKey, cert: certificate }
+        const credentials: ServerOptions = { key: privateKey, cert: certificate }
         server = https.createServer(credentials, app)
 
         server.listen(env.PORT, () => {
