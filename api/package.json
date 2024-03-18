@@ -29,7 +29,7 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.11",
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.11.28",
     "@types/nodemailer": "^6.4.14",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
@@ -50,7 +50,7 @@
     "i18n-js": "^4.4.3",
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.2.1",
+    "mongoose": "^8.2.2",
     "multer": "^1.4.5-lts.1",
     "nocache": "^4.0.0",
     "nodemailer": "^6.9.12",
@@ -67,7 +67,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
     "nodemon": "^3.1.0",
-    "npm-check-updates": "^16.14.15",
+    "npm-check-updates": "^16.14.17",
     "tsx": "^4.7.1"
   }
 }
