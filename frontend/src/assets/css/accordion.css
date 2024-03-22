@@ -14,7 +14,7 @@ div.accordion-container span.accordion {
   display: inline-block;
   width: 100%;
   text-align: center;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgb(0 0 0 / 60%);
   font-weight: 400;
   font-size: 13px;
   line-height: 2em;
@@ -24,10 +24,7 @@ div.accordion-container span.accordion {
 
 div.accordion-container span.accordion-active {
   border-bottom: 1px solid #dadada;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+  border-radius: 5px 5px 0 0;
 }
 
 div.accordion-container span.accordion-active,
@@ -35,7 +32,7 @@ div.accordion-container span.accordion:hover {
   background: #fafafa;
 }
 
-div.accordion-container span.accordion:after {
+div.accordion-container span.accordion::after {
   content: '';
   border-top: 5px solid transparent;
   border-left: 5px solid #000;
@@ -45,7 +42,7 @@ div.accordion-container span.accordion:after {
   margin: 7px 7px 0;
 }
 
-div.accordion-container span.accordion-active:after {
+div.accordion-container span.accordion-active::after {
   transform: rotate(90deg);
 }
 

@@ -7,7 +7,7 @@ section.car-list .empty-list {
 
 /* Device width is between 500px and 960px */
 
-@media only screen and (min-width: 500px) and (max-width: 960px) {
+@media only screen and (width >= 500px) and (width <= 960px) {
   section.car-list {
     max-width: 480px;
   }
@@ -15,7 +15,7 @@ section.car-list .empty-list {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   section.car-list article {
     position: relative;
     background: #fff;
@@ -109,7 +109,7 @@ section.car-list .empty-list {
   }
 
   section.car-list article div.car-info ul.extras-list .extra-info {
-    color: rgba(0, 0, 0, 0.35);
+    color: rgb(0 0 0 / 35%);
   }
 
   section.car-list article div.price {
@@ -193,7 +193,7 @@ section.car-list .empty-list {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   section.car-list {
     padding-top: 10px;
   }
@@ -333,7 +333,7 @@ section.car-list .empty-list {
   }
 
   section.car-list article div.car-info ul.extras-list .extra-info {
-    color: rgba(0, 0, 0, 0.35);
+    color: rgb(0 0 0 / 35%);
   }
 
   section.car-list article div.car-info ul.extras-list span.car-info-list-text {

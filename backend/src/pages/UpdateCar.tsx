@@ -33,7 +33,6 @@ import DoorsList from '../components/DoorsList'
 import FuelPolicyList from '../components/FuelPolicyList'
 
 import '../assets/css/create-car.css'
-import '../assets/css/update-car.css'
 
 const UpdateCar = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()

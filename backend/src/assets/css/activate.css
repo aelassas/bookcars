@@ -52,7 +52,7 @@ div.resend {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   .activate-form {
     margin-top: 40px;
     width: 330px;
@@ -70,7 +70,7 @@ div.resend {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   .activate-form {
     margin-top: 40px;
     width: 450px;

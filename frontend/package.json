@@ -36,6 +36,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .ts,.tsx .",
     "fix": "eslint --fix .",
+    "stylelint": "stylelint \"**/*.css\"",
+    "stylelint:fix": "stylelint \"**/*.css\" --fix",
     "ncu": "ncu -u -x typescript,date-fns"
   },
   "eslintConfig": {
@@ -59,6 +61,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-airbnb": "^19.0.4",
-    "npm-check-updates": "^16.14.17"
+    "npm-check-updates": "^16.14.17",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard": "^36.0.0"
   }
 }

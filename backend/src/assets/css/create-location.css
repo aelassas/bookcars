@@ -12,7 +12,7 @@
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   .location-form {
     margin-top: 45px !important;
     margin-left: calc(50% - 180px) !important;
@@ -24,7 +24,7 @@
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   .location-form {
     margin-top: 45px !important;
     margin-left: calc(50% - 275px) !important;

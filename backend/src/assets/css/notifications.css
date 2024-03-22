@@ -37,12 +37,40 @@ div.notifications div.header-container div.header {
   max-width: 680px;
 }
 
+div.notifications div.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 54px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  border-top: 1px solid #ddd;
+  padding: 5px 10px 5px 0;
+}
+
+div.notifications div.footer div.row-count {
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 7px;
+}
+
+div.notifications div.footer div.actions {
+  display: flex;
+  flex-direction: row;
+}
+
+div.notifications div.footer div.actions .icon {
+  font-size: 16px;
+  width: 24px;
+}
+
 div.notifications div.notifications-list {
   position: absolute;
-  top: 55px;
-  right: 0;
-  bottom: 55px;
-  left: 0;
+  inset: 55px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -99,44 +127,13 @@ div.notifications div.notifications-list div.notification-container div.notifica
   margin-left: 5px;
 }
 
-div.notifications div.footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 54px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  border-top: 1px solid #ddd;
-  padding: 5px 10px 5px 0;
-}
-
-div.notifications div.footer div.row-count {
-  font-size: 14px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-right: 7px;
-}
-
-div.notifications div.footer div.actions {
-  display: flex;
-  flex-direction: row;
-}
-
-div.notifications div.footer div.actions .icon {
-  font-size: 16px;
-  width: 24px;
-}
-
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   div.notifications {
     top: 56px;
   }
 }
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   div.notifications {
     top: 64px;
   }
