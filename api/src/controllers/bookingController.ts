@@ -224,7 +224,7 @@ export const checkout = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.book]  ${i18n.t('ERROR')}`, err)
+    console.error(`[booking.book] ${i18n.t('ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -442,7 +442,7 @@ export const update = async (req: Request, res: Response) => {
     console.error('[booking.update] Booking not found:', body.booking._id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.update]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    console.error(`[booking.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -474,7 +474,7 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.updateStatus]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    console.error(`[booking.updateStatus] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -504,7 +504,7 @@ export const deleteBookings = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.deleteBookings]  ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    console.error(`[booking.deleteBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -575,7 +575,7 @@ export const getBooking = async (req: Request, res: Response) => {
     console.error('[booking.getBooking] Booking not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.getBooking]  ${i18n.t('DB_ERROR')} ${id}`, err)
+    console.error(`[booking.getBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
