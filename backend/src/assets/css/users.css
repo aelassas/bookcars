@@ -7,7 +7,7 @@ div.users {
 
 /* Device width is lower than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   div.users {
     top: 56px;
   }
@@ -38,16 +38,13 @@ div.users {
 
   div.users div.col-2 {
     position: absolute;
-    top: 90px;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 90px 0 0;
   }
 }
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   div.users {
     top: 64px;
   }
@@ -75,9 +72,6 @@ div.users {
 
   div.users div.col-2 {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 300px;
+    inset: 0 0 0 300px;
   }
 }

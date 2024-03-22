@@ -25,7 +25,7 @@ section.car-list article .btn-book {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   section.car-list article {
     position: relative;
     background: #fff;
@@ -93,7 +93,7 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.car div.car-company span.car-company-info {
-    color: rgba(0, 0, 0, 0.6);
+    color: rgb(0 0 0 / 60%);
     font-size: 0.9em;
     line-height: 1em;
     white-space: nowrap;
@@ -118,7 +118,7 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.car-info ul.extras-list .extra-info {
-    color: rgba(0, 0, 0, 0.35);
+    color: rgb(0 0 0 / 35%);
   }
 
   section.car-list article div.price {
@@ -189,18 +189,6 @@ section.car-list article .btn-book {
     width: 100%;
   }
 
-  section.car-list article div.car-info ul.extras-list .available {
-    color: #1f9201;
-  }
-
-  section.car-list article div.car-info ul.extras-list .unavailable {
-    color: #f44336;
-  }
-
-  section.car-list article div.car-info ul.extras-list .extra-info {
-    color: rgba(0, 0, 0, 0.35);
-  }
-
   section.car-list article div.car-info ul.extras-list span.car-info-list-text {
     vertical-align: super;
     margin-left: 3px;
@@ -236,7 +224,7 @@ section.car-list article .btn-book {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   section.car-list {
     padding-top: 10px;
   }
@@ -306,7 +294,7 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.car div.car-company span.car-company-info {
-    color: rgba(0, 0, 0, 0.6);
+    color: rgb(0 0 0 / 60%);
     font-size: 0.9em;
     line-height: 1em;
     white-space: nowrap;
@@ -392,7 +380,7 @@ section.car-list article .btn-book {
   }
 
   section.car-list article div.car-info ul.extras-list .extra-info {
-    color: rgba(0, 0, 0, 0.35);
+    color: rgb(0 0 0 / 35%);
   }
 
   section.car-list article div.car-info ul.extras-list span.car-info-list-text {

@@ -13,7 +13,7 @@ div.info-box .info-box-icon {
 }
 
 div.info-box span.info-box-text {
-  color: rgba(0, 0, 0, 0.63);
+  color: rgb(0 0 0 / 63%);
   position: relative;
   left: 90px;
   font-size: 17px;

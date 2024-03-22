@@ -39,11 +39,11 @@ div.booking div.payment-options {
 
 div.booking div.payment-options span.payment-info {
   margin-left: 10px;
-  color: rgba(0, 0, 0, 0.55);
+  color: rgb(0 0 0 / 55%);
   font-size: 13px;
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   div.booking div.payment-options span.payment-button {
     display: flex;
     flex-direction: column;
@@ -63,7 +63,7 @@ div.booking div.booking-options span.booking-option-label::after {
 }
 
 div.booking div.booking-options span.booking-option-value {
-  color: rgba(0, 0, 0, 0.55);
+  color: rgb(0 0 0 / 55%);
 }
 
 div.booking div.booking-details {
@@ -82,7 +82,7 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value {
 }
 
 div.booking div.booking-details div.booking-detail div.booking-detail-value {
-  color: rgba(0, 0, 0, 0.55);
+  color: rgb(0 0 0 / 55%);
 }
 
 div.booking div.booking-details div.booking-detail span.booking-detail-title {
@@ -96,7 +96,7 @@ div.booking div.booking-details div.booking-detail div.booking-detail-value div.
 }
 
 div.booking div.booking-details div.booking-detail div.booking-detail-value span.car-company-name {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;
   white-space: nowrap;
@@ -126,6 +126,18 @@ div.booking div.payment {
   padding: 25px;
   background-color: #e5efe5;
   border: 1px solid #d9d8d9;
+}
+
+div.booking div.payment div.secure-payment-info {
+  display: flex;
+  justify-content: center;
+  color: #1c8901;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+div.booking div.payment div.secure-payment-info .secure-payment-lock {
+  height: 16px;
 }
 
 div.booking div.payment div.cost {
@@ -179,18 +191,6 @@ div.booking div.payment div.secure-payment-logo {
   margin-bottom: 5px;
 }
 
-div.booking div.payment div.secure-payment-info {
-  display: flex;
-  justify-content: center;
-  color: #1c8901;
-  font-size: 13px;
-  margin-top: 5px;
-}
-
-div.booking div.payment div.secure-payment-info .secure-payment-lock {
-  height: 16px;
-}
-
 div.booking div.booking-buttons {
   display: inline-block;
   width: 100%;
@@ -227,7 +227,7 @@ div.booking .btn-cancel {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   div.booking .booking-form {
     padding: 30px;
     margin: 10px;
@@ -251,7 +251,7 @@ div.booking .btn-cancel {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   div.booking .booking-form {
     margin: 45px 0 20px calc(50% - 350px);
     width: 700px;

@@ -24,7 +24,7 @@ div.user div.col-1 .user-actions {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   div.user {
     top: 56px;
     overflow: auto;
@@ -51,7 +51,7 @@ div.user div.col-1 .user-actions {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   div.user {
     top: 64px;
     overflow: auto;
@@ -76,10 +76,7 @@ div.user div.col-1 .user-actions {
 
   div.user div.col-2 {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 300px;
+    inset: 0 0 0 300px;
     overflow: auto;
   }
 }

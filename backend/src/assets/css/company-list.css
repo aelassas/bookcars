@@ -68,7 +68,7 @@ section.company-list article .company-actions button {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   section.company-list article {
     width: 550px;
     margin-left: calc(50% - 275px);

@@ -5,7 +5,7 @@ div.update-company .resend-activation-link {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <= 960px) {
   .company-form-update {
     margin-top: 45px !important;
     margin-left: calc(50% - 180px) !important;
@@ -17,7 +17,7 @@ div.update-company .resend-activation-link {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >= 960px) {
   .company-form-update {
     margin-top: 45px !important;
     margin-left: calc(50% - 275px) !important;

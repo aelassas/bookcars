@@ -2,6 +2,7 @@ div.bs-list {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 div.bs-list .data-grid {
@@ -11,10 +12,6 @@ div.bs-list .data-grid {
 div.bs-list .empty-list {
   text-align: center;
   width: 250px;
-}
-
-div.bs-list {
-  width: 100%;
 }
 
 div.bs-list div.cell-company {
@@ -90,7 +87,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value {
   display: table-row;
   line-height: 25px;
   font-size: 13px;
-  color: rgba(0, 0, 0, 0.47);
+  color: rgb(0 0 0 / 47%);
 }
 
 div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
@@ -98,7 +95,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   font-weight: 700;
   width: 250px;
   font-size: 15px;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgb(0 0 0 / 87%);
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company {
@@ -115,7 +112,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
 }
 
 div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-company-name {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;
   white-space: nowrap;
@@ -125,7 +122,7 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value span
 div.bs-list div.booking-details div.booking-detail div.booking-price {
   font-size: 17px;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgb(0 0 0 / 87%);
 }
 
 div.bs-list div.booking-details div.bs {
@@ -194,9 +191,8 @@ div.bs-list div.extras div.extra span.extra-title {
 }
 
 div.bs-list div.extras div.extra span.extra-text {
-  font-size: 13px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.47);
+  color: rgb(0 0 0 / 47%);
 }
 
 div.bs-list div.bs-buttons {
@@ -210,7 +206,7 @@ div.bs-list div.bs-buttons button {
   margin-bottom: 5px;
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (width <=960px) {
   div.bs-list {
     max-width: 480px;
   }
@@ -220,13 +216,10 @@ div.bs-list div.bs-buttons button {
   }
 }
 
-@media only screen and (min-width: 960px) {
+@media only screen and (width >=960px) {
   div.bs-list {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 0;
     overflow-y: auto;
   }
 
