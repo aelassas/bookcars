@@ -3,11 +3,11 @@
 |**Supported Platforms**| ![iOS](https://img.shields.io/badge/iOS-4630EB.svg?logo=APPLE&labelColor=999999&logoColor=fff) ![Android](https://img.shields.io/badge/Android-4630EB.svg?&logo=ANDROID&labelColor=A4C639&logoColor=fff) ![Web](https://img.shields.io/badge/web-4630EB.svg?logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff) |
 | --------------------- | ----------- |
 | **Lines of Code**     | [![loc](https://raw.githubusercontent.com/aelassas/bookcars/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml) |
-| **CodeFactor**        | [![CodeFactor](https://www.codefactor.io/repository/github/aelassas/bookcars/badge)](https://www.codefactor.io/repository/github/aelassas/bookcars) |
 | **API**               | [![API CI](https://github.com/aelassas/bookcars/actions/workflows/api.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/api.yml) |
 | **Backend**           | [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml) |
 | **Frontend**          | [![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml) |
 | **Mobile App**        | [![Mobile CI](https://github.com/aelassas/bookcars/actions/workflows/mobile.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/mobile.yml) |
+| **Code Quality** | [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a58f69939c384aa59d1d73d636847030)](https://app.codacy.com/gh/aelassas/bookcars/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) |
 | **Coverage**          | [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) |
 
 BookCars is an open-source and cross-platform car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
