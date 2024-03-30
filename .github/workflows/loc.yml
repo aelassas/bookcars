@@ -16,7 +16,7 @@ jobs:
           debug: true
           directory: ./
           badge: ./output/badge.svg
-          ignore: 'cobertura-coverage.xml|package-lock.json|README.md'
+          ignore: 'cobertura-coverage.xml|package-lock.json|README.md|LICENSE|.github'
 
       - name: Print the output
         run: |
