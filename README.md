@@ -2,7 +2,6 @@
 
 |**Supported Platforms**| ![iOS](https://img.shields.io/badge/iOS-4630EB.svg?logo=APPLE&labelColor=999999&logoColor=fff) ![Android](https://img.shields.io/badge/Android-4630EB.svg?&logo=ANDROID&labelColor=A4C639&logoColor=fff) ![Web](https://img.shields.io/badge/web-4630EB.svg?logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff) |
 | --------------------- | ----------- |
-| **Lines of Code**     | [![loc](https://raw.githubusercontent.com/aelassas/bookcars/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml) |
 | **API**               | [![API CI](https://github.com/aelassas/bookcars/actions/workflows/api.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/api.yml) |
 | **Backend**           | [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml) |
 | **Frontend**          | [![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml) |
@@ -44,7 +43,7 @@ BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MI
 
 ## Contents
 
-1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
+1. [Overview and Screenshots](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
