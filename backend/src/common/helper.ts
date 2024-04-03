@@ -20,7 +20,7 @@ export const getLanguage = (code: string) => env._LANGUAGES.find((l) => l.code =
  * @param {string} message
  */
 export const info = (message: string) => {
-  toast(message, { type: 'info' })
+  toast.info(message)
 }
 
 /**
@@ -34,9 +34,9 @@ export const error = (err?: unknown, message?: string) => {
     console.error(err)
   }
   if (message) {
-    toast(message, { type: 'error' })
+    toast.error(message)
   } else {
-    toast(commonStrings.GENERIC_ERROR, { type: 'error' })
+    toast.error(commonStrings.GENERIC_ERROR)
   }
 }
 
