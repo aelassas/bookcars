@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   OutlinedInput,
   InputLabel,
@@ -45,6 +46,8 @@ import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/checkout.css'
 
 const Checkout = () => {
+  const location = useLocation()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
@@ -657,38 +660,26 @@ const Checkout = () => {
     setAuthenticated(_user !== undefined)
     setLanguage(UserService.getLanguage())
 
-    let carId
-    let _car
-    let pickupLocationId
-    let _pickupLocation
-    let dropOffLocationId
-    let _dropOffLocation
-    let _from
-    let _to
+    const { state } = location
+    if (!state) {
+      setNoMatch(true)
+      return
+    }
 
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('c')) {
-      carId = params.get('c')
-    }
-    if (params.has('p')) {
-      pickupLocationId = params.get('p')
-    }
-    if (params.has('d')) {
-      dropOffLocationId = params.get('d')
-    }
-    if (params.has('f')) {
-      const val = params.get('f')
-      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
-    if (params.has('t')) {
-      const val = params.get('t')
-      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
+    const { carId } = state
+    const { pickupLocationId } = state
+    const { dropOffLocationId } = state
+    const { from: _from } = state
+    const { to: _to } = state
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setNoMatch(true)
       return
     }
+
+    let _car
+    let _pickupLocation
+    let _dropOffLocation
 
     try {
       _car = await CarService.getCar(carId)

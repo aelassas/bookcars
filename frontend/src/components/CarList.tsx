@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Tooltip,
@@ -70,6 +71,8 @@ const CarList = ({
   loading: carListLoading,
   onLoad
 }: CarListProps) => {
+  const navigate = useNavigate()
+
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -391,10 +394,20 @@ const CarList = ({
               {!hidePrice && (
                 <div className="action">
                   <Button
-                    type="submit"
                     variant="contained"
                     className="btn-book btn-margin-bottom"
-                    href={`/checkout?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${(from as Date).getTime()}&t=${(to as Date).getTime()}`}
+                    // href={`/checkout?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${(from as Date).getTime()}&t=${(to as Date).getTime()}`}
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          carId: car._id,
+                          pickupLocationId: pickupLocation,
+                          dropOffLocationId: dropOffLocation,
+                          from,
+                          to
+                        }
+                      })
+                    }}
                   >
                     {strings.BOOK}
                   </Button>
