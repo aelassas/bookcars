@@ -18,7 +18,7 @@ import CarList from '../components/CarList'
 
 import '../assets/css/cars.css'
 
-const Cars = () => {
+const Search = () => {
   const location = useLocation()
 
   const [visible, setVisible] = useState(false)
@@ -158,4 +158,4 @@ const Cars = () => {
   )
 }
 
-export default Cars
+export default Search

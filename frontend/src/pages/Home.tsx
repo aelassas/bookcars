@@ -82,7 +82,7 @@ const Home = () => {
       return
     }
 
-    navigate('/cars', {
+    navigate('/search', {
       state: {
         pickupLocationId: pickupLocation,
         dropOffLocationId: dropOffLocation,
