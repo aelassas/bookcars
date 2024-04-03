@@ -82,7 +82,14 @@ const Home = () => {
       return
     }
 
-    navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`)
+    navigate('/cars', {
+      state: {
+        pickupLocationId: pickupLocation,
+        dropOffLocationId: dropOffLocation,
+        from,
+        to
+      }
+    })
   }
 
   const onLoad = () => { }

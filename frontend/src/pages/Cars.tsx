@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import env from '../config/env.config'
@@ -18,6 +19,8 @@ import CarList from '../components/CarList'
 import '../assets/css/cars.css'
 
 const Cars = () => {
+  const location = useLocation()
+
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
@@ -60,27 +63,16 @@ const Cars = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    let pickupLocationId
-    let dropOffLocationId
-    let _pickupLocation
-    let _dropOffLocation
-    let _from
-    let _to
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('p')) {
-      pickupLocationId = params.get('p')
+    const { state } = location
+    if (!state) {
+      setNoMatch(true)
+      return
     }
-    if (params.has('d')) {
-      dropOffLocationId = params.get('d')
-    }
-    if (params.has('f')) {
-      const val = params.get('f')
-      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
-    if (params.has('t')) {
-      const val = params.get('t')
-      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
+
+    const { pickupLocationId } = state
+    const { dropOffLocationId } = state
+    const { from: _from } = state
+    const { to: _to } = state
 
     if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setLoading(false)
@@ -88,6 +80,8 @@ const Cars = () => {
       return
     }
 
+    let _pickupLocation
+    let _dropOffLocation
     try {
       _pickupLocation = await LocationService.getLocation(pickupLocationId)
 
