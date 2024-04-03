@@ -396,7 +396,6 @@ const CarList = ({
                   <Button
                     variant="contained"
                     className="btn-book btn-margin-bottom"
-                    // href={`/checkout?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${(from as Date).getTime()}&t=${(to as Date).getTime()}`}
                     onClick={() => {
                       navigate('/checkout', {
                         state: {
