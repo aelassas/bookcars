@@ -82,7 +82,7 @@ jobs:
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
         BC_EXPO_ACCESS_TOKEN: ${{ vars.BC_EXPO_ACCESS_TOKEN }}
-    #- name: Upload coverage reports to Codecov
-    #  uses: codecov/codecov-action@v4
-    #  with:
-    #    token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+       token: ${{ secrets.CODECOV_TOKEN }}
