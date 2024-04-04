@@ -26,8 +26,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: './api/package-lock.json'
+        # cache: 'npm'
+        # cache-dependency-path: './api/package-lock.json'
     - name: test API
       run: |
            cd ./api
