@@ -60,19 +60,19 @@ jobs:
       env:
         NODE_ENV: ${{ vars.NODE_ENV }}
         BC_HTTPS: ${{ vars.BC_HTTPS }}
-        BC_DB_URI: ${{ vars.BC_DB_URI }}
+        BC_DB_URI: ${{ secrets.BC_DB_URI }}
         BC_DB_SSL: ${{ vars.BC_DB_SSL }}
         BC_DB_DEBUG: ${{ vars.BC_DB_DEBUG }}
-        BC_COOKIE_SECRET: ${{ vars.BC_COOKIE_SECRET }}
+        BC_COOKIE_SECRET: ${{ secrets.BC_COOKIE_SECRET }}
         BC_AUTH_COOKIE_DOMAIN: ${{ vars.BC_AUTH_COOKIE_DOMAIN }}
-        BC_JWT_SECRET: ${{ vars.BC_JWT_SECRET }}
+        BC_JWT_SECRET: ${{ secrets.BC_JWT_SECRET }}
         BC_JWT_EXPIRE_AT: ${{ vars.BC_JWT_EXPIRE_AT }}
         BC_TOKEN_EXPIRE_AT: ${{ vars.BC_TOKEN_EXPIRE_AT }}
-        BC_SMTP_HOST: ${{ vars.BC_SMTP_HOST }}
-        BC_SMTP_PORT: ${{ vars.BC_SMTP_PORT }}
-        BC_SMTP_USER: ${{ vars.BC_SMTP_USER }}
-        BC_SMTP_PASS: ${{ vars.BC_SMTP_PASS }}
-        BC_SMTP_FROM: ${{ vars.BC_SMTP_FROM }}
+        BC_SMTP_HOST: ${{ secrets.BC_SMTP_HOST }}
+        BC_SMTP_PORT: ${{ secrets.BC_SMTP_PORT }}
+        BC_SMTP_USER: ${{ secrets.BC_SMTP_USER }}
+        BC_SMTP_PASS: ${{ secrets.BC_SMTP_PASS }}
+        BC_SMTP_FROM: ${{ secrets.BC_SMTP_FROM }}
         BC_DEFAULT_LANGUAGE: ${{ vars.BC_DEFAULT_LANGUAGE }}
         BC_CDN_USERS: ${{ vars.BC_CDN_USERS }}
         BC_CDN_TEMP_USERS: ${{ vars.BC_CDN_TEMP_USERS }}
@@ -81,7 +81,7 @@ jobs:
         BC_BACKEND_HOST: ${{ vars.BC_BACKEND_HOST }}
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
-        BC_EXPO_ACCESS_TOKEN: ${{ vars.BC_EXPO_ACCESS_TOKEN }}
+        BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
       with:
