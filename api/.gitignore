@@ -19,4 +19,3 @@ npm-debug.log*
 
 # jest
 /coverage
-!/coverage/cobertura-coverage.xml
