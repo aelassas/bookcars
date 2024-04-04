@@ -10,10 +10,11 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
-
+    environment: TEST
+    
     strategy:
       matrix:
         node-version: [lts/*]
