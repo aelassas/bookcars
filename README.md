@@ -1,4 +1,4 @@
-[![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) 
+[![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) [![Latest Release](https://img.shields.io/github/v/release/aelassas/bookcars?label=release&logo=github)](https://github.com/aelassas/bookcars/releases/latest)
 
 [![Cover](https://bookcars.github.io/content/cover-small.jpg)](https://bookcars.github.io)
 
