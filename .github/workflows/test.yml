@@ -87,4 +87,4 @@ jobs:
       with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: cobertura-coverage.xml
-          directory: ./api
+          directory: ./api/coverage
