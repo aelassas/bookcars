@@ -34,19 +34,16 @@ import '../assets/css/location-list.css'
 
 interface LocationListProps {
   keyword?: string
-  reload?: boolean
   onLoad: bookcarsTypes.DataEvent<bookcarsTypes.Location>
   onDelete: (rowCount: number) => void
 }
 
 const LocationList = ({
   keyword: locationKeyword,
-  reload: locationReload,
   onLoad,
   onDelete
 }: LocationListProps) => {
   const [keyword, setKeyword] = useState(locationKeyword)
-  const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
@@ -105,13 +102,6 @@ const LocationList = ({
     }
     setKeyword(locationKeyword || '')
   }, [locationKeyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (locationReload && !reload) {
-      fetchData(1, '')
-    }
-    setReload(locationReload || false)
-  }, [locationReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetchData(page, keyword)

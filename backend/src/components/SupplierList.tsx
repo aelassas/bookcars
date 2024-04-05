@@ -31,7 +31,6 @@ import '../assets/css/company-list.css'
 interface SupplierListProps {
   user?: bookcarsTypes.User
   keyword?: string
-  reload?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
   onDelete?: (rowCount: number) => void
 }
@@ -39,12 +38,10 @@ interface SupplierListProps {
 const SupplierList = ({
   user,
   keyword: supplierListKeyword,
-  reload: supplierListReload,
   onDelete,
   onLoad
 }: SupplierListProps) => {
   const [keyword, setKeyword] = useState(supplierListKeyword)
-  const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
@@ -101,13 +98,6 @@ const SupplierList = ({
     }
     setKeyword(supplierListKeyword || '')
   }, [supplierListKeyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (supplierListReload && !reload) {
-      fetchData(1, '')
-    }
-    setReload(supplierListReload || false)
-  }, [supplierListReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetchData(page, keyword)
