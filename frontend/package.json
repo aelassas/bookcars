@@ -4,14 +4,14 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.13",
-    "@mui/material": "^5.15.13",
-    "@mui/x-data-grid": "^6.19.6",
-    "@mui/x-date-pickers": "^6.19.7",
-    "@types/node": "^20.11.28",
-    "@types/react": "^18.2.67",
-    "@types/react-dom": "^18.2.22",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/x-data-grid": "^7.1.1",
+    "@mui/x-date-pickers": "^7.1.1",
+    "@types/node": "^20.12.4",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24",
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/validator": "^13.11.9",
     "axios": "^1.6.8",
@@ -61,8 +61,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-airbnb": "^19.0.4",
-    "npm-check-updates": "^16.14.17",
-    "stylelint": "^16.2.1",
+    "npm-check-updates": "^16.14.18",
+    "stylelint": "^16.3.1",
     "stylelint-config-standard": "^36.0.0"
   }
 }

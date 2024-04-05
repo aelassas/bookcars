@@ -15,10 +15,13 @@ div.bs-list .empty-list {
 }
 
 div.bs-list div.cell-company {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   width: 60px;
   height: 30px;
+  position: relative;
+  vertical-align: middle;
+
 }
 
 div.bs-list div.cell-company img {
@@ -31,6 +34,10 @@ div.bs-list span.bs {
   width: 80px;
   text-align: center;
   color: #fff;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  align-items: center;
 }
 
 div.bs-list span.bs-void {
