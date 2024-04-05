@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   DataGrid,
-  frFR,
-  enUS,
   GridColDef,
   GridRenderCellParams,
-  GridValueGetterParams
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -206,26 +203,26 @@ const UserList = ({
             </Link>
           )
         },
-        valueGetter: (params: any) => params.value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'email',
         headerName: commonStrings.EMAIL,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'phone',
         headerName: commonStrings.PHONE,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'type',
         headerName: commonStrings.TYPE,
         flex: 1,
         renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.User, bookcarsTypes.UserType>) => <span className={`bs us-${value?.toLowerCase()}`}>{helper.getUserType(value)}</span>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'action',
@@ -354,7 +351,6 @@ const UserList = ({
           paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
           onRowSelectionModelChange={(_selectedIds) => {
             setSelectedIds(Array.from(new Set(_selectedIds)).map((id) => id.toString()))
             setReloadColumns(true)
