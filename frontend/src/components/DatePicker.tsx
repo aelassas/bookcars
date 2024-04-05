@@ -51,7 +51,6 @@ const DatePicker = ({
           }
         }}
         minDate={minDate}
-        defaultCalendarMonth={minDate}
         slotProps={{
           textField: {
             variant: variant || 'standard',
