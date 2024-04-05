@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify'
 
 import { frFR as corefrFR, enUS as coreenUS } from '@mui/material/locale'
 import { frFR, enUS } from '@mui/x-date-pickers/locales'
-import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid'
+import { frFR as dataGridfrFR, enUS as dataGridenUS } from '@mui/x-data-grid/locales'
 import { disableDevTools } from 'disable-react-devtools'
 import * as helper from './common/helper'
 import * as UserService from './services/UserService'

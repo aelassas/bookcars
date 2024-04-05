@@ -10,8 +10,9 @@ div.bs-list {
 }
 
 div.bs-list a.cell-company {
-  display: flex;
-  align-items: center;
+  display: inline-flex;
+  position: relative;
+  vertical-align: middle;
   width: 60px;
   height: 30px;
 }
@@ -26,6 +27,10 @@ div.bs-list span.bs {
   width: 80px;
   text-align: center;
   color: #fff;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  align-items: center;
 }
 
 div.bs-list span.bs-void {
@@ -201,14 +206,14 @@ div.bs-list div.bs-buttons button {
   margin-bottom: 5px;
 }
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.bs-list {
     width: calc(100% - 20px);
     max-width: 480px;
   }
 }
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.bs-list {
     position: absolute;
     inset: 0;

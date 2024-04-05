@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import {
   DataGrid,
-  frFR,
-  enUS,
   GridPaginationModel,
   GridColDef,
   GridRowId,
-  GridValueGetterParams,
   GridRenderCellParams
 } from '@mui/x-data-grid'
 import {
@@ -217,33 +214,33 @@ const BookingList = ({
         headerName: strings.DRIVER,
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/user?u=${(row.driver as bookcarsTypes.User)._id}`}>{value}</Link>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.User>) => value?.fullName,
+        valueGetter: (value: bookcarsTypes.User) => value?.fullName,
       },
       {
         field: 'from',
         headerName: commonStrings.FROM,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => getDate(value),
+        valueGetter: (value: string) => getDate(value),
       },
       {
         field: 'to',
         headerName: commonStrings.TO,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => getDate(value),
+        valueGetter: (value: string) => getDate(value),
       },
       {
         field: 'price',
         headerName: strings.PRICE,
         flex: 1,
         renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <span className="bp">{value}</span>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, number>) => `${bookcarsHelper.formatNumber(value)} ${commonStrings.CURRENCY}`,
+        valueGetter: (value: number) => `${bookcarsHelper.formatNumber(value)} ${commonStrings.CURRENCY}`,
       },
       {
         field: 'status',
         headerName: strings.STATUS,
         flex: 1,
         renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, bookcarsTypes.BookingStatus>) => <span className={`bs bs-${value?.toLowerCase()}`}>{helper.getBookingStatus(value)}</span>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'action',
@@ -309,7 +306,7 @@ const BookingList = ({
         headerName: strings.CAR,
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <Link href={`/car?cr=${(row.car as bookcarsTypes.Car)._id}`}>{value}</Link>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.Car>) => value?.name,
+        valueGetter: (value: bookcarsTypes.Car) => value?.name,
       })
     }
 
@@ -323,7 +320,7 @@ const BookingList = ({
             <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
           </Link>
         ),
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.Booking, bookcarsTypes.User>) => value?.fullName,
+        valueGetter: (value: bookcarsTypes.User) => value?.fullName,
       })
     }
 
@@ -640,10 +637,6 @@ const BookingList = ({
             paginationMode="server"
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            localeText={(loggedUser.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
-            // slots={{
-            //   noRowsOverlay: () => '',
-            // }}
             onRowSelectionModelChange={(_selectedIds) => {
               setSelectedIds(Array.from(new Set(_selectedIds)).map((id) => id.toString()))
             }}

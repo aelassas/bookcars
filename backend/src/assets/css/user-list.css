@@ -15,6 +15,10 @@ div.us-list span.bs {
   width: 80px;
   text-align: center;
   color: #fff;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  align-items: center;
 }
 
 div.us-list span.us-admin {
@@ -34,8 +38,7 @@ div.us-list span.bp {
 }
 
 div.us-list a.us-user {
-  display: flex;
-  align-items: center;
+  display: inline-flex;
 }
 
 div.us-list span.us-avatar {
@@ -47,6 +50,8 @@ div.us-list span.us-avatar {
 div.us-list span.us-avatar img {
   max-width: 100%;
   max-height: 100%;
+  position: relative;
+  vertical-align: middle;
 }
 
 div.us-list .us-blacklisted,
