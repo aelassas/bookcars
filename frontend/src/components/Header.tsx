@@ -39,14 +39,14 @@ import * as NotificationService from '../services/NotificationService'
 import Avatar from './Avatar'
 import * as langHelper from '../common/langHelper'
 import * as helper from '../common/helper'
+import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 
 import '../assets/css/header.css'
 
 interface HeaderProps {
-  user?: bookcarsTypes.User
-  hidden?: boolean
-  hideSignin?: boolean
-  notificationCount?: number
+  user?: bookcarsTypes.User,
+  hidden?: boolean,
+  hideSignin?: boolean,
 }
 
 const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
@@ -55,16 +55,16 @@ const Header = ({
   user,
   hidden,
   hideSignin,
-  notificationCount: headerNotificationCount
 }: HeaderProps) => {
   const navigate = useNavigate()
+  const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
+
   const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
-  const [notificationCount, setNotificationCount] = useState(0)
   const [loading, setIsLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -197,17 +197,7 @@ const Header = ({
         setIsLoaded(true)
       }
     }
-  }, [hidden, user])
-
-  useEffect(() => {
-    if (!hidden) {
-      if (headerNotificationCount) {
-        setNotificationCount(headerNotificationCount)
-      } else {
-        setNotificationCount(0)
-      }
-    }
-  }, [hidden, headerNotificationCount])
+  }, [hidden, user, setNotificationCount])
 
   const menuId = 'primary-account-menu'
   const renderMenu = (

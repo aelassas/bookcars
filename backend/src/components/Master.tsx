@@ -13,7 +13,6 @@ interface MasterProps {
   strict?: boolean
   admin?: boolean
   hideHeader?: boolean
-  notificationCount?: number
   style?: CSSProperties
   children: ReactNode
   onLoad?: (user?: bookcarsTypes.User) => void
@@ -24,7 +23,6 @@ const Master = ({
   strict,
   admin,
   hideHeader,
-  notificationCount,
   style,
   children,
   onLoad
@@ -120,7 +118,7 @@ const Master = ({
 
   return (
     <>
-      <Header user={user} hidden={hideHeader || loading} notificationCount={notificationCount} />
+      <Header user={user} hidden={hideHeader || loading} />
       {((!user && !loading) || (user && user.verified) || !strict) && !unauthorized ? (
         <div className="content" style={style}>
           {children}
