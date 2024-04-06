@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useContext, useMemo, useState } from '
 
 // Create context
 export interface GlobalContextType {
-  notificationCount: number,
+  notificationCount: number
   setNotificationCount: React.Dispatch<React.SetStateAction<number>>
 }
 

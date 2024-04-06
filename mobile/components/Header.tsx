@@ -12,11 +12,11 @@ import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 import * as NotificationService from '../services/NotificationService'
 
 interface HeaderProps {
-  title?: string,
-  hideTitle?: boolean,
-  loggedIn?: boolean,
-  reload?: boolean,
-  _avatar?: string | null,
+  title?: string
+  hideTitle?: boolean
+  loggedIn?: boolean
+  reload?: boolean
+  _avatar?: string | null
 }
 
 const Header = ({ title,

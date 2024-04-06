@@ -7,7 +7,7 @@ import * as helper from '../common/helper'
 import '../assets/css/user-type-filter.css'
 
 interface UserTypeFilterProps {
-  className?: string,
+  className?: string
   onChange?: (types: bookcarsTypes.UserType[]) => void
 }
 

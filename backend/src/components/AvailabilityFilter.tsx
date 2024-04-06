@@ -9,7 +9,7 @@ import * as helper from '../common/helper'
 import '../assets/css/availability-filter.css'
 
 interface AvailabilityFilterProps {
-  className?: string,
+  className?: string
   onChange?: (values: string[]) => void
 }
 

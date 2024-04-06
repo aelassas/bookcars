@@ -16,9 +16,9 @@ import Checkbox from '../components/Checkbox'
 import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 
 interface NotificationListProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-  user?: bookcarsTypes.User,
-  locale: Locale,
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  user?: bookcarsTypes.User
+  locale: Locale
 }
 
 const NotificationList = ({ user, locale, navigation }: NotificationListProps) => {
