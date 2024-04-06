@@ -8,7 +8,6 @@ import Button from '../components/Button'
 import i18n from '../lang/i18n'
 import * as helper from '../common/helper'
 import Header from '../components/Header'
-import * as NotificationService from '../services/NotificationService'
 import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
 
 interface MasterProps {
@@ -16,7 +15,6 @@ interface MasterProps {
   strict?: boolean
   route?: RouteProp<StackParams, keyof StackParams>,
   reload?: boolean
-  notificationCount?: number
   style?: object
   title?: string
   hideTitle?: boolean
@@ -30,7 +28,6 @@ const Master = ({
   strict,
   route,
   reload,
-  notificationCount: mNotificationCount,
   style,
   title,
   hideTitle,
@@ -41,7 +38,6 @@ const Master = ({
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)
-  const [notificationCount, setNotificationCount] = useState(0)
 
   const exit = async (_reload = false) => {
     if (strict) {
@@ -87,9 +83,6 @@ const Master = ({
               return
             }
 
-            const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id)
-            setNotificationCount(notificationCounter.count)
-
             setLoggedIn(true)
             setUser(_user)
             setLoading(false)
@@ -119,10 +112,6 @@ const Master = ({
     }
   }, [reload]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    setNotificationCount(mNotificationCount ?? 0)
-  }, [mNotificationCount])
-
   const handleResend = async () => {
     try {
       if (user) {
@@ -143,7 +132,7 @@ const Master = ({
 
   return (
     <View style={{ ...styles.container, ...style }}>
-      <Header title={title} hideTitle={hideTitle} loggedIn={loggedIn} notificationCount={notificationCount} reload={reload} _avatar={avatar} />
+      <Header title={title} hideTitle={hideTitle} loggedIn={loggedIn} reload={reload} _avatar={avatar} />
       {(!loading
         && ((!user && !strict) || (user && user.verified) ? (
           children

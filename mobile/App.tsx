@@ -11,6 +11,7 @@ import DrawerNavigator from './components/DrawerNavigator'
 import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
+import { GlobalProvider } from './context/GlobalContext'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -93,16 +94,18 @@ const App = () => {
   }
 
   return (
-    <SafeAreaProvider>
-      <Provider>
-        <RootSiblingParent>
-          <NavigationContainer ref={navigationRef} onReady={onReady}>
-            <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-            <DrawerNavigator />
-          </NavigationContainer>
-        </RootSiblingParent>
-      </Provider>
-    </SafeAreaProvider>
+    <GlobalProvider>
+      <SafeAreaProvider>
+        <Provider>
+          <RootSiblingParent>
+            <NavigationContainer ref={navigationRef} onReady={onReady}>
+              <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+              <DrawerNavigator />
+            </NavigationContainer>
+          </RootSiblingParent>
+        </Provider>
+      </SafeAreaProvider>
+    </GlobalProvider>
   )
 }
 

@@ -4,17 +4,17 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { Avatar, Badge } from 'react-native-paper'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-
-import * as UserService from '../services/UserService'
 import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
 
+import * as UserService from '../services/UserService'
 import * as env from '../config/env.config'
+import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
+import * as NotificationService from '../services/NotificationService'
 
 interface HeaderProps {
   title?: string
   hideTitle?: boolean
   loggedIn?: boolean
-  notificationCount?: number
   reload?: boolean
   _avatar?: string | null
 }
@@ -22,28 +22,34 @@ interface HeaderProps {
 const Header = ({ title,
   hideTitle,
   loggedIn,
-  notificationCount,
   reload,
   _avatar
 }: HeaderProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
   const [avatar, setAvatar] = useState<string | null | undefined>(null)
+  const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
 
   useEffect(() => {
     const init = async () => {
       const currentUser = await UserService.getCurrentUser()
       if (currentUser && currentUser._id) {
         const user = await UserService.getUser(currentUser._id)
+
         if (user.avatar) {
           setAvatar(bookcarsHelper.joinURL(env.CDN_USERS, user.avatar))
         } else {
           setAvatar('')
         }
+
+        const notificationCounter = await NotificationService.getNotificationCounter(currentUser._id)
+        setNotificationCount(notificationCounter.count)
       }
     }
 
-    init()
-  }, [reload])
+    if (reload) {
+      init()
+    }
+  }, [reload, setNotificationCount])
 
   useEffect(() => {
     setAvatar(_avatar)
@@ -62,7 +68,7 @@ const Header = ({ title,
       {loggedIn && (
         <View style={styles.actions}>
           <Pressable style={styles.notifications} onPress={() => navigation.navigate('Notifications', {})}>
-            {typeof notificationCount !== 'undefined' && notificationCount > 0 && (
+            {notificationCount > 0 && (
               <Badge style={styles.badge} size={18}>
                 {notificationCount}
               </Badge>
