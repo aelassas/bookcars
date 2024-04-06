@@ -26,8 +26,9 @@ const Header = ({ title,
   _avatar
 }: HeaderProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParams, keyof StackParams>>()
-  const [avatar, setAvatar] = useState<string | null | undefined>(null)
   const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
+
+  const [avatar, setAvatar] = useState<string | null | undefined>(null)
 
   useEffect(() => {
     const init = async () => {
