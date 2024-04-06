@@ -9,11 +9,11 @@ import { strings as commonStrings } from '../lang/common'
 import '../assets/css/pager.css'
 
 interface PagerProps {
-  page: number,
-  pageSize: number,
-  totalRecords: number,
-  rowCount: number,
-  onNext: () => void,
+  page: number
+  pageSize: number
+  totalRecords: number
+  rowCount: number
+  onNext: () => void
   onPrevious: () => void
 }
 

@@ -27,20 +27,20 @@ import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 
 interface AvatarProps {
-  width?: number,
-  height?: number,
-  mode?: 'create' | 'update',
-  type?: string,
-  record?: bookcarsTypes.User | bookcarsTypes.Car | null,
-  size: 'small' | 'medium' | 'large',
-  readonly?: boolean,
-  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-  className?: string,
-  verified?: boolean,
-  hideDelete?: boolean,
-  onValidate?: (valid: boolean) => void,
-  onBeforeUpload?: () => void,
-  onChange?: (param: string) => void,
+  width?: number
+  height?: number
+  mode?: 'create' | 'update'
+  type?: string
+  record?: bookcarsTypes.User | bookcarsTypes.Car | null
+  size: 'small' | 'medium' | 'large'
+  readonly?: boolean
+  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
+  className?: string
+  verified?: boolean
+  hideDelete?: boolean
+  onValidate?: (valid: boolean) => void
+  onBeforeUpload?: () => void
+  onChange?: (param: string) => void
 }
 
 const Avatar = ({

@@ -9,11 +9,11 @@ import MultipleSelect from './MultipleSelect'
 
 interface SupplierSelectListProps {
   value?: bookcarsTypes.Option | bookcarsTypes.Option[]
-  multiple?: boolean,
-  label?: string,
-  required?: boolean,
-  readOnly?: boolean,
-  variant?: TextFieldVariants,
+  multiple?: boolean
+  label?: string
+  required?: boolean
+  readOnly?: boolean
+  variant?: TextFieldVariants
   onChange?: (values: bookcarsTypes.Option[]) => void
 }
 

@@ -46,8 +46,8 @@ import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 import '../assets/css/header.css'
 
 interface HeaderProps {
-  user?: bookcarsTypes.User,
-  hidden?: boolean,
+  user?: bookcarsTypes.User
+  hidden?: boolean
 }
 
 const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />

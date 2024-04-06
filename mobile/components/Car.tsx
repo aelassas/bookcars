@@ -11,13 +11,13 @@ import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 
 interface CarProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-  fr: boolean,
-  car: bookcarsTypes.Car,
-  from: Date,
-  to: Date,
-  pickupLocation: string,
-  dropOffLocation: string,
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  fr: boolean
+  car: bookcarsTypes.Car
+  from: Date
+  to: Date
+  pickupLocation: string
+  dropOffLocation: string
 }
 
 const iconSize = 24
