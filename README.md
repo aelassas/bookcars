@@ -2,6 +2,25 @@
 
 [![Cover](https://bookcars.github.io/content/cover-small.jpg)](https://bookcars.github.io)
 
+## Live Demo
+
+### Frontend
+* URL: http://bookcars.ddns.net:3002/
+* Login: jdoe@bookcars.ma
+* Password: B00kC4r5
+
+### Mobile App
+* Android: [Download APK from expo.dev](https://expo.dev/artifacts/eas/xasafR9tPVN9EH3KPPmciC.apk)
+* Login: jdoe@bookcars.ma
+* Password: B00kC4r5
+
+### Backend
+* URL: http://bookcars.ddns.net:3001/
+* Login: admin@bookcars.ma
+* Password: B00kC4r5
+
+## BookCars
+
 BookCars is an open-source and cross-platform car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
