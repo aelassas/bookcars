@@ -34,9 +34,9 @@ interface MultipleSelectProps {
   readOnly?: boolean
   callbackFromMultipleSelect?: (newValue: any, _key: string, _reference: any) => void
   onFocus?: React.FocusEventHandler<HTMLDivElement>
-  onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
+  onInputChange?: (event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void
   onClear?: () => void
-  onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
+  onOpen?: (event: React.SyntheticEvent<Element, Event>) => void
 }
 
 const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardRef((props, ref) => {
