@@ -124,8 +124,7 @@ const Master = ({
           {children}
         </div>
       ) : (
-        !loading
-        && !unauthorized && (
+        !loading && !unauthorized && (
           <div className="validate-email">
             <span>{strings.VALIDATE_EMAIL}</span>
             <Button type="button" variant="contained" size="small" className="btn-primary btn-resend" onClick={handleResend}>
