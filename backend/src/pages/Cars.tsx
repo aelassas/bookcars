@@ -23,7 +23,7 @@ const Cars = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -37,8 +37,8 @@ const Cars = () => {
     setKeyword(newKeyword)
   }
 
-  const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
+  const handleSupplierFilterChange = (newSuppliers: string[]) => {
+    setSuppliers(newSuppliers)
   }
 
   const handleCarListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Car> = (data) => {
@@ -77,7 +77,7 @@ const Cars = () => {
     const _allSuppliers = await SupplierService.getAllSuppliers()
     const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
     setAllSuppliers(_allSuppliers)
-    setCompanies(_suppliers)
+    setSuppliers(_suppliers)
     setLoading(false)
   }
 
@@ -95,7 +95,7 @@ const Cars = () => {
 
               {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
 
-              <SupplierFilter companies={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
+              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
 
               {rowCount > -1 && (
                 <>
@@ -111,7 +111,7 @@ const Cars = () => {
           <div className="col-2">
             <CarList
               user={user}
-              companies={companies}
+              suppliers={suppliers}
               fuel={fuel}
               gearbox={gearbox}
               mileage={mileage}

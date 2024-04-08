@@ -19,10 +19,10 @@ const Bookings = () => {
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
-  const [loadingCompanies, setLoadingCompanies] = useState(true)
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Bookings = () => {
   }, [user])
 
   const handleSupplierFilterChange = (_suppliers: string[]) => {
-    setCompanies(_suppliers)
+    setSuppliers(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -52,14 +52,14 @@ const Bookings = () => {
       setUser(_user)
       setAdmin(_admin)
       setLeftPanel(!_admin)
-      setLoadingCompanies(_admin)
+      setLoadingSuppliers(_admin)
 
       const _allSuppliers = _admin ? await SupplierService.getAllSuppliers() : []
       const _suppliers = _admin ? bookcarsHelper.flattenSuppliers(_allSuppliers) : [_user._id ?? '']
       setAllSuppliers(_allSuppliers)
-      setCompanies(_suppliers)
+      setSuppliers(_suppliers)
       setLeftPanel(true)
-      setLoadingCompanies(false)
+      setLoadingSuppliers(false)
     }
   }
 
@@ -76,7 +76,7 @@ const Bookings = () => {
                 {admin
                   && (
                   <SupplierFilter
-                    companies={allSuppliers}
+                    suppliers={allSuppliers}
                     onChange={handleSupplierFilterChange}
                     className="cl-supplier-filter"
                   />
@@ -100,10 +100,10 @@ const Bookings = () => {
               offset={offset}
               language={user.language}
               loggedUser={user}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               filter={filter}
-              loading={loadingCompanies}
+              loading={loadingSuppliers}
               hideDates={env.isMobile()}
               checkboxSelection={!env.isMobile()}
             />

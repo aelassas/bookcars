@@ -28,15 +28,15 @@ const Search = () => {
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [deposit, setDeposit] = useState(-1)
 
-  const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
+  const handleSupplierFilterChange = (newSuppliers: string[]) => {
+    setSuppliers(newSuppliers)
   }
 
   const handleCarFilterSubmit = (filter: bookcarsTypes.CarFilter) => {
@@ -111,7 +111,7 @@ const Search = () => {
       setFrom(_from)
       setTo(_to)
       setAllSuppliers(_allSuppliers)
-      setCompanies(_suppliers)
+      setSuppliers(_suppliers)
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)
@@ -123,13 +123,13 @@ const Search = () => {
 
   return (
     <Master onLoad={onLoad} strict={false}>
-      {visible && companies && pickupLocation && dropOffLocation && from && to && (
+      {visible && suppliers && pickupLocation && dropOffLocation && from && to && (
         <div className="cars">
           <div className="col-1">
             {!loading && (
               <>
                 <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
-                <SupplierFilter className="filter" companies={allSuppliers} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
+                <SupplierFilter className="filter" suppliers={allSuppliers} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
                 <FuelFilter className="filter" onChange={handleFuelFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
                 <MileageFilter className="filter" onChange={handleMileageFilterChange} />
@@ -139,7 +139,7 @@ const Search = () => {
           </div>
           <div className="col-2">
             <CarList
-              companies={companies}
+              suppliers={suppliers}
               fuel={fuel}
               gearbox={gearbox}
               mileage={mileage}

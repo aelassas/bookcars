@@ -39,7 +39,7 @@ import env from '../config/env.config'
 import '../assets/css/booking-list.css'
 
 interface BookingListProps {
-  companies?: string[]
+  suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter | null
   car?: string
@@ -56,7 +56,7 @@ interface BookingListProps {
 }
 
 const BookingList = ({
-  companies: bookingCompanies,
+  suppliers: bookingSuppliers,
   statuses: bookingStatuses,
   filter: bookingFilter,
   car: bookingCar,
@@ -79,7 +79,7 @@ const BookingList = ({
   const [rowCount, setRowCount] = useState(0)
   const [fetch, setFetch] = useState(false)
   const [selectedId, setSelectedId] = useState('')
-  const [companies, setCompanies] = useState<string[] | undefined>(bookingCompanies)
+  const [suppliers, setSuppliers] = useState<string[] | undefined>(bookingSuppliers)
   const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
   const [car, setCar] = useState<string>(bookingCar || '')
@@ -103,11 +103,11 @@ const BookingList = ({
     try {
       const _pageSize = env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-      if (companies && statuses) {
+      if (suppliers && statuses) {
         setLoading(true)
 
         const payload: bookcarsTypes.GetBookingsPayload = {
-          companies,
+          suppliers,
           statuses,
           filter: filter || undefined,
           car,
@@ -157,8 +157,8 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    setCompanies(bookingCompanies)
-  }, [bookingCompanies])
+    setSuppliers(bookingSuppliers)
+  }, [bookingSuppliers])
 
   useEffect(() => {
     setStatuses(bookingStatuses)
@@ -181,13 +181,13 @@ const BookingList = ({
   }, [bookingUser])
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       fetchData(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       if (page === 0) {
         fetchData(0, user)
       } else {
@@ -296,7 +296,7 @@ const BookingList = ({
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
           <div className="cell-supplier">
-            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
+            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value} />
           </div>
         ),
         valueGetter: (value: bookcarsTypes.User) => value?.fullName,
@@ -307,7 +307,7 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       const _columns = getColumns()
       setColumns(_columns)
 
@@ -319,7 +319,7 @@ const BookingList = ({
         setPaginationModel(_paginationModel)
       }
     }
-  }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [suppliers, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (env.isMobile()) {
@@ -382,7 +382,7 @@ const BookingList = ({
   const _fr = language === 'fr'
   const _locale = _fr ? dfnsFR : dfnsENUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
+  const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
   return (
     <div className="bs-list">
@@ -402,7 +402,7 @@ const BookingList = ({
           <>
             {rows.map((booking) => {
               const _bookingCar = booking.car as bookcarsTypes.Car
-              const bookingSupplier = booking.company as bookcarsTypes.User
+              const bookingSupplier = booking.supplier as bookcarsTypes.User
               const from = new Date(booking.from)
               const to = new Date(booking.to)
               const days = bookcarsHelper.days(from, to)

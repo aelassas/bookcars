@@ -219,7 +219,7 @@ const MultipleSelect = ({
                           <img
                             src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                             alt={option.name}
-                            style={{ height: env.COMPANY_IMAGE_HEIGHT }}
+                            style={{ height: env.SUPPLIER_IMAGE_HEIGHT }}
                           />
                         </div>
                       </InputAdornment>
@@ -312,7 +312,7 @@ const MultipleSelect = ({
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                     alt={option.name}
-                    style={{ height: env.COMPANY_IMAGE_HEIGHT }}
+                    style={{ height: env.SUPPLIER_IMAGE_HEIGHT }}
                   />
                 </span>
                 <span className="option-name">{option.name}</span>

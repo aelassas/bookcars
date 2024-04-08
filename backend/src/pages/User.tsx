@@ -37,7 +37,7 @@ const User = () => {
   const [loading, setLoading] = useState(true)
   const [noMatch, setNoMatch] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const User = () => {
 
             if (_user) {
               const setState = (_suppliers: string[]) => {
-                setCompanies(_suppliers)
+                setSuppliers(_suppliers)
                 setLoggedUser(_loggedUser)
                 setUser(_user)
                 setVisible(true)
@@ -134,7 +134,7 @@ const User = () => {
     }
   }
 
-  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.company))
+  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.supplier))
   const supplier = user && user.type === bookcarsTypes.RecordType.Supplier
 
   return (
@@ -199,7 +199,7 @@ const User = () => {
                 offset={offset}
                 loggedUser={loggedUser}
                 user={supplier ? undefined : user}
-                companies={supplier ? [user._id as string] : companies}
+                suppliers={supplier ? [user._id as string] : suppliers}
                 statuses={statuses}
                 hideDates={env.isMobile()}
                 checkboxSelection={!env.isMobile()}

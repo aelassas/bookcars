@@ -10,7 +10,7 @@ const carSchema = new Schema<env.Car>(
       index: true,
       trim: true,
     },
-    company: {
+    supplier: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
       ref: 'User',

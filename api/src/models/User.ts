@@ -5,7 +5,7 @@ import * as env from '../config/env.config'
 
 const userSchema = new Schema<env.User>(
   {
-    company: {
+    supplier: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },

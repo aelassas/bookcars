@@ -1,7 +1,7 @@
 export var UserType;
 (function (UserType) {
     UserType["Admin"] = "admin";
-    UserType["Supplier"] = "company";
+    UserType["Supplier"] = "supplier";
     UserType["User"] = "user";
 })(UserType || (UserType = {}));
 export var AppType;
@@ -46,7 +46,7 @@ export var Availablity;
 export var RecordType;
 (function (RecordType) {
     RecordType["Admin"] = "admin";
-    RecordType["Supplier"] = "company";
+    RecordType["Supplier"] = "supplier";
     RecordType["User"] = "user";
     RecordType["Car"] = "car";
     RecordType["Location"] = "location";

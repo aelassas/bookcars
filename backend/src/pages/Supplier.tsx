@@ -32,7 +32,7 @@ const Supplier = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [supplier, setSupplier] = useState<bookcarsTypes.User>()
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -106,7 +106,7 @@ const Supplier = () => {
 
             if (_supplier) {
               setSupplier(_supplier)
-              setCompanies([_supplier._id as string])
+              setSuppliers([_supplier._id as string])
               setVisible(true)
               setLoading(false)
             } else {
@@ -133,7 +133,7 @@ const Supplier = () => {
 
   return (
     <Master onLoad={onLoad} user={user} strict>
-      {visible && supplier && companies && (
+      {visible && supplier && suppliers && (
         <div className="supplier">
           <div className="col-1">
             <section className="supplier-avatar-sec">
@@ -153,7 +153,7 @@ const Supplier = () => {
               ) : (
                 <div className="car-supplier">
                   <span className="car-supplier-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} style={{ width: env.COMPANY_IMAGE_WIDTH }} />
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} style={{ width: env.SUPPLIER_IMAGE_WIDTH }} />
                   </span>
                   <span className="car-supplier-info">{supplier.fullName}</span>
                 </div>
@@ -200,7 +200,7 @@ const Supplier = () => {
           <div className="col-2">
             <CarList
               user={user}
-              companies={companies}
+              suppliers={suppliers}
               keyword=""
               reload={false}
               onLoad={handleCarListLoad}

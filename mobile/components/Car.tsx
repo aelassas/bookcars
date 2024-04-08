@@ -115,10 +115,10 @@ const Car = ({
             <Image
               style={styles.supplierImg}
               source={{
-                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
+                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
               }}
             />
-            <Text style={styles.supplierText}>{car.company.fullName}</Text>
+            <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
           </View>
 
           <View style={styles.price}>
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   supplierImg: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
   supplierText: {
     color: '#a1a1a1',

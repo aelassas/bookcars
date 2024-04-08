@@ -6,7 +6,7 @@
 
 export enum UserType {
     Admin = 'admin',
-    Supplier = 'company',
+    Supplier = 'supplier',
     User = 'user',
 }
 
@@ -51,7 +51,7 @@ export enum Availablity {
 
 export enum RecordType {
     Admin = 'admin',
-    Supplier = 'company',
+    Supplier = 'supplier',
     User = 'user',
     Car = 'car',
     Location = 'location'
@@ -59,7 +59,7 @@ export enum RecordType {
 
 export interface Booking {
     _id?: string
-    company: string | User
+    supplier: string | User
     car: string | Car
     driver?: string | User
     pickupLocation: string | Location
@@ -94,7 +94,7 @@ export interface Filter {
 }
 
 export interface GetBookingsPayload {
-    companies: string[]
+    suppliers: string[]
     statuses: string[]
     user?: string
     car?: string
@@ -129,7 +129,7 @@ export interface UpdateSupplierPayload {
 
 export interface CreateCarPayload {
     name: string
-    company: string
+    supplier: string
     minimumAge: number
     locations: string[]
     price: number
@@ -156,7 +156,7 @@ export interface UpdateCarPayload extends CreateCarPayload {
 }
 
 export interface GetCarsPayload {
-    companies: string[]
+    suppliers: string[]
     fuel?: string[]
     gearbox?: string[]
     mileage?: string[]
@@ -196,7 +196,7 @@ export interface CreateUserPayload {
     verified?: boolean
     blacklisted?: boolean
     payLater?: boolean
-    company?: string
+    supplier?: string
 }
 
 export interface UpdateUserPayload extends CreateUserPayload {
@@ -259,7 +259,7 @@ export interface UpdateStatusPayload {
 
 export interface User {
     _id?: string
-    company?: User | string
+    supplier?: User | string
     fullName: string
     email?: string
     phone?: string
@@ -301,7 +301,7 @@ export interface Location {
 export interface Car {
     _id: string
     name: string
-    company: User
+    supplier: User
     minimumAge: number
     locations: Location[]
     price: number
@@ -330,7 +330,7 @@ export interface Data<T> {
 }
 
 export interface GetBookingCarsPayload {
-    company: string
+    supplier: string
     pickupLocation: string
 }
 

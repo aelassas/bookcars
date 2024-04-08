@@ -109,7 +109,7 @@ const CarSelectList = ({
 
   const fetchData = async (_page: number, _keyword: string, _supplier: string, _pickupLocation: string) => {
     try {
-      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _supplier, pickupLocation: _pickupLocation }
+      const payload: bookcarsTypes.GetBookingCarsPayload = { supplier: _supplier, pickupLocation: _pickupLocation }
 
       if (closeDialog) {
         setCloseDialog(false)

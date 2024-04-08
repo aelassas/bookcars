@@ -58,7 +58,7 @@ const SupplierFilter = ({
     visible && suppliers.length > 1 && (
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
-          <View style={styles.companies}>
+          <View style={styles.suppliers}>
             {suppliers.map((supplier) => (
               supplier._id && typeof supplier.checked !== 'undefined'
               && (
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 480,
   },
-  companies: {
+  suppliers: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   image: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
   link: {
     marginTop: 10,

@@ -43,7 +43,7 @@ const Car = () => {
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [offset, setOffset] = useState(0)
   const [openInfoDialog, setOpenInfoDialog] = useState(false)
 
@@ -125,15 +125,15 @@ const Car = () => {
               try {
                 const _suppliers = await SupplierService.getAllSuppliers()
                 const supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
-                setCompanies(supplierIds)
+                setSuppliers(supplierIds)
                 setCar(_car)
                 setVisible(true)
                 setLoading(false)
               } catch (err) {
                 helper.error(err)
               }
-            } else if (_car.company._id === _user._id) {
-              setCompanies([_user._id as string])
+            } else if (_car.supplier._id === _user._id) {
+              setSuppliers([_user._id as string])
               setCar(_car)
               setVisible(true)
               setLoading(false)
@@ -160,13 +160,13 @@ const Car = () => {
     }
   }
 
-  const edit = user && car && car.company && (user.type === bookcarsTypes.RecordType.Admin || user._id === car.company._id)
+  const edit = user && car && car.supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === car.supplier._id)
   const statuses = helper.getBookingStatuses().map((status) => status.value)
   const fr = (user && user.language === 'fr') || false
 
   return (
     <Master onLoad={onLoad} strict>
-      {visible && car && car.company && (
+      {visible && car && car.supplier && (
         <div className="car">
           <div className="col-1">
             <section className="car-sec">
@@ -188,9 +188,9 @@ const Car = () => {
                 />
                 <div className="car-supplier">
                   <span className="car-supplier-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                   </span>
-                  <span className="car-supplier-info">{car.company.fullName}</span>
+                  <span className="car-supplier-info">{car.supplier.fullName}</span>
                 </div>
               </div>
               <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
@@ -343,7 +343,7 @@ const Car = () => {
               containerClassName="car"
               offset={offset}
               loggedUser={user}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               car={car._id}
               hideSupplierColumn

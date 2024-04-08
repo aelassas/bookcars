@@ -111,7 +111,7 @@ const CarSelectList = ({
         return
       }
 
-      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _supplier, pickupLocation: _pickupLocation }
+      const payload: bookcarsTypes.GetBookingCarsPayload = { supplier: _supplier, pickupLocation: _pickupLocation }
 
       if (closeDialog) {
         setCloseDialog(false)

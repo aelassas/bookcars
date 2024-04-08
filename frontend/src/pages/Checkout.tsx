@@ -605,7 +605,7 @@ const Checkout = () => {
       }
 
       const booking: bookcarsTypes.Booking = {
-        company: car.company._id as string,
+        supplier: car.supplier._id as string,
         car: car._id,
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id,
@@ -731,7 +731,7 @@ const Checkout = () => {
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
+  const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
 
   return (
@@ -862,8 +862,8 @@ const Checkout = () => {
                       <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                       <div className="booking-detail-value">
                         <div className="car-supplier">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: env.COMPANY_IMAGE_HEIGHT }} />
-                          <span className="car-supplier-name">{car.company.fullName}</span>
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                          <span className="car-supplier-name">{car.supplier.fullName}</span>
                         </div>
                       </div>
                     </div>
@@ -1034,7 +1034,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {car.company.payLater && (
+                {car.supplier.payLater && (
                   <div className="payment-options-container">
                     <div className="booking-info">
                       <PaymentOptionsIcon />
@@ -1074,7 +1074,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {(!car.company.payLater || !payLater) && (
+                {(!car.supplier.payLater || !payLater) && (
                   <div className="payment">
                     <div className="cost">
                       <div className="secure-payment-label">

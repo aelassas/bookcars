@@ -358,7 +358,7 @@ const UpdateBooking = () => {
 
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
-        company: supplier._id,
+        supplier: supplier._id,
         car: car._id,
         driver: driver._id,
         pickupLocation: pickupLocation._id,
@@ -428,7 +428,7 @@ const UpdateBooking = () => {
             const _booking = await BookingService.getBooking(id)
 
             if (_booking) {
-              if (!helper.admin(_user) && (_booking.company as bookcarsTypes.User)._id !== _user._id) {
+              if (!helper.admin(_user) && (_booking.supplier as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -439,7 +439,7 @@ const UpdateBooking = () => {
               setLoading(false)
               setVisible(true)
               setIsSupplier(_user.type === bookcarsTypes.RecordType.Supplier)
-              const cmp = _booking.company as bookcarsTypes.User
+              const cmp = _booking.supplier as bookcarsTypes.User
               setSupplier({
                 _id: cmp._id as string,
                 name: cmp.fullName,

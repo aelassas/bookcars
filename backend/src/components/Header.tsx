@@ -23,7 +23,7 @@ import {
   Language as LanguageIcon,
   Settings as SettingsIcon,
   Dashboard as DashboardIcon,
-  CorporateFare as CompaniesIcon,
+  CorporateFare as SuppliersIcon,
   LocationOn as LocationsIcon,
   DirectionsCar as CarsIcon,
   People as UsersIcon,
@@ -286,7 +286,7 @@ const Header = ({
                   <ListItemText primary={strings.DASHBOARD} />
                 </ListItemLink>
                 <ListItemLink href="/suppliers">
-                  <ListItemIcon><CompaniesIcon /></ListItemIcon>
+                  <ListItemIcon><SuppliersIcon /></ListItemIcon>
                   <ListItemText primary={strings.COMPANIES} />
                 </ListItemLink>
                 <ListItemLink href="/locations">

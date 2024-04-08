@@ -8,14 +8,14 @@ import Accordion from './Accordion'
 import '../assets/css/supplier-filter.css'
 
 interface SupplierFilterProps {
-  companies: bookcarsTypes.User[]
+  suppliers: bookcarsTypes.User[]
   collapse?: boolean
   className?: string
   onChange?: (value: string[]) => void
 }
 
 const SupplierFilter = ({
-  companies,
+  suppliers: suupliesFromProps,
   collapse,
   className,
   onChange
@@ -26,9 +26,9 @@ const SupplierFilter = ({
   const refs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    setSuppliers(companies)
-    setCheckedSuppliers(bookcarsHelper.flattenSuppliers(companies))
-  }, [companies])
+    setSuppliers(suupliesFromProps)
+    setCheckedSuppliers(bookcarsHelper.flattenSuppliers(suupliesFromProps))
+  }, [suupliesFromProps])
 
   useEffect(() => {
     if (suppliers.length > 0) {
@@ -108,7 +108,7 @@ const SupplierFilter = ({
         <Accordion
           title={commonStrings.SUPPLIER}
           collapse={collapse}
-          offsetHeight={Math.floor((suppliers.length / 2) * env.COMPANY_IMAGE_HEIGHT)}
+          offsetHeight={Math.floor((suppliers.length / 2) * env.SUPPLIER_IMAGE_HEIGHT)}
           className={`${className ? `${className} ` : ''}supplier-filter`}
         >
           <ul className="supplier-list">

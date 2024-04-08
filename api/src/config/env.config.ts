@@ -263,7 +263,7 @@ export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
  * @extends {Document}
  */
 export interface User extends Document {
-    company?: Types.ObjectId
+    supplier?: Types.ObjectId
     fullName: string
     email: string
     phone?: string
@@ -291,7 +291,7 @@ export interface User extends Document {
  */
 export interface UserInfo {
     _id?: Types.ObjectId
-    company?: Types.ObjectId
+    supplier?: Types.ObjectId
     fullName: string
     email?: string
     phone?: string
@@ -334,7 +334,7 @@ export interface AdditionalDriver {
  */
 export interface Booking extends Document {
     _id: Types.ObjectId
-    company: Types.ObjectId
+    supplier: Types.ObjectId
     car: Types.ObjectId
     driver: Types.ObjectId
     pickupLocation: Types.ObjectId
@@ -363,7 +363,7 @@ export interface Booking extends Document {
  */
 export interface Car extends Document {
     name: string
-    company: Types.ObjectId
+    supplier: Types.ObjectId
     minimumAge: number
     locations: Types.ObjectId[]
     price: number
@@ -395,7 +395,7 @@ export interface Car extends Document {
 export interface CarInfo {
     _id?: Types.ObjectId
     name: string
-    company: UserInfo
+    supplier: UserInfo
     minimumAge: number
     locations: Types.ObjectId[]
     price: number
@@ -426,7 +426,7 @@ export interface CarInfo {
  */
 export interface BookingInfo {
     _id?: Types.ObjectId
-    company: UserInfo
+    supplier: UserInfo
     car: Car
     driver: UserInfo
     pickupLocation: Types.ObjectId

@@ -21,7 +21,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [visible, setVisible] = useState(false)
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [hasBookings, setHasBookings] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [statuses, setStatuses] = useState<string[]>([])
   const [filter, setFilter] = useState<bookcarsTypes.Filter>()
 
@@ -29,7 +29,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     try {
       setVisible(false)
       setUser(undefined)
-      setCompanies([])
+      setSuppliers([])
       setFilter(undefined)
 
       const _language = await UserService.getLanguage()
@@ -75,12 +75,12 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
     setReload(false)
   }
 
-  const onLoadCompanies = (_companies: string[]) => {
-    setCompanies(_companies)
+  const onLoadSuppliers = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
   }
 
-  const onChangeCompanies = (_companies: string[]) => {
-    setCompanies(_companies)
+  const onChangeSuppliers = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
   }
 
   const onLoadStatuses = (_statuses: string[]) => {
@@ -101,7 +101,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         <BookingList
           user={user._id}
           language={language}
-          companies={companies}
+          suppliers={suppliers}
           statuses={statuses}
           filter={filter}
           header={(
@@ -109,8 +109,8 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               <SupplierFilter
                 style={styles.filter}
                 visible={hasBookings}
-                onLoad={onLoadCompanies}
-                onChange={onChangeCompanies}
+                onLoad={onLoadSuppliers}
+                onChange={onChangeSuppliers}
               />
               <StatusFilter
                 style={styles.filter}

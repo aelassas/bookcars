@@ -328,7 +328,7 @@ const UpdateUser = () => {
   const supplier = type === bookcarsTypes.RecordType.Supplier
   const driver = type === bookcarsTypes.RecordType.User
   const activate = admin
-    || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User && user.company as string === loggedUser._id)
+    || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User && user.supplier as string === loggedUser._id)
 
   return (
     <Master onLoad={onLoad} user={loggedUser} strict>
