@@ -96,7 +96,7 @@ const UpdateCar = () => {
     setName(e.target.value)
   }
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
@@ -263,7 +263,7 @@ const UpdateCar = () => {
             const _car = await CarService.getCar(id)
 
             if (_car) {
-              if (_user.type === bookcarsTypes.RecordType.Company && _user._id !== _car.company._id) {
+              if (_user.type === bookcarsTypes.RecordType.Supplier && _user._id !== _car.company._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -365,7 +365,7 @@ const UpdateCar = () => {
                     required
                     value={supplier}
                     variant="standard"
-                    onChange={handleCompanyChange}
+                    onChange={handleSupplierChange}
                   />
                 </FormControl>
               )}

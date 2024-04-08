@@ -54,7 +54,7 @@ const UpdateBooking = () => {
   const [error, setError] = useState(false)
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
-  const [isCompany, setIsCompany] = useState(false)
+  const [isSupplier, setIsSupplier] = useState(false)
   const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [price, setPrice] = useState<number>()
@@ -80,7 +80,7 @@ const UpdateBooking = () => {
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
@@ -438,7 +438,7 @@ const UpdateBooking = () => {
               setPrice(_booking.price)
               setLoading(false)
               setVisible(true)
-              setIsCompany(_user.type === bookcarsTypes.RecordType.Company)
+              setIsSupplier(_user.type === bookcarsTypes.RecordType.Supplier)
               const cmp = _booking.company as bookcarsTypes.User
               setSupplier({
                 _id: cmp._id as string,
@@ -507,13 +507,13 @@ const UpdateBooking = () => {
         <div className="booking">
           <div className="col-1">
             <form onSubmit={handleSubmit}>
-              {!isCompany && (
+              {!isSupplier && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList
                     label={blStrings.SUPPLIER}
                     required
                     variant="standard"
-                    onChange={handleCompanyChange}
+                    onChange={handleSupplierChange}
                     value={supplier}
                   />
                 </FormControl>
@@ -549,7 +549,7 @@ const UpdateBooking = () => {
 
               <CarSelectList
                 label={blStrings.CAR}
-                company={(supplier && supplier._id) || ''}
+                supplier={(supplier && supplier._id) || ''}
                 pickupLocation={(pickupLocation && pickupLocation._id) || ''}
                 onChange={handleCarSelectListChange}
                 required

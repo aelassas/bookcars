@@ -45,7 +45,7 @@ interface BookingListProps {
   containerClassName?: string
   hideDates?: boolean
   hideCarColumn?: boolean
-  hideCompanyColumn?: boolean
+  hideSupplierColumn?: boolean
   language?: string
   loading?: boolean
   checkboxSelection?: boolean
@@ -63,7 +63,7 @@ const BookingList = ({
   containerClassName,
   hideDates,
   hideCarColumn,
-  hideCompanyColumn,
+  hideSupplierColumn,
   language,
   loading: bookingLoading,
   checkboxSelection,
@@ -310,9 +310,9 @@ const BookingList = ({
       })
     }
 
-    if (helper.admin(loggedUser) && !hideCompanyColumn) {
+    if (helper.admin(loggedUser) && !hideSupplierColumn) {
       _columns.unshift({
-        field: 'company',
+        field: 'supplier',
         headerName: commonStrings.SUPPLIER,
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (

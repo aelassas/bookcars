@@ -35,7 +35,7 @@ import '../assets/css/create-car.css'
 
 const CreateCar = () => {
   const navigate = useNavigate()
-  const [isCompany, setIsCompany] = useState(false)
+  const [isSupplier, setIsSupplier] = useState(false)
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -94,7 +94,7 @@ const CreateCar = () => {
     setName(e.target.value)
   }
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
@@ -110,9 +110,9 @@ const CreateCar = () => {
       }
       return _minimumAgeValid
     }
-      setMinimumAgeValid(true)
-      setFormError(false)
-      return true
+    setMinimumAgeValid(true)
+    setFormError(false)
+    return true
   }
 
   const handleMinimumAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,9 +252,9 @@ const CreateCar = () => {
     if (user && user.verified) {
       setVisible(true)
 
-      if (user.type === bookcarsTypes.RecordType.Company) {
+      if (user.type === bookcarsTypes.RecordType.Supplier) {
         setSupplier(user._id as string)
-        setIsCompany(true)
+        setIsSupplier(true)
       }
     }
   }
@@ -292,13 +292,13 @@ const CreateCar = () => {
               <Input type="text" required value={name} autoComplete="off" onChange={handleNameChange} />
             </FormControl>
 
-            {!isCompany && (
+            {!isSupplier && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
                   label={strings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
+                  onChange={handleSupplierChange}
                 />
               </FormControl>
             )}

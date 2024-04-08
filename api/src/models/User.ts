@@ -86,7 +86,7 @@ const userSchema = new Schema<env.User>(
       type: String,
       enum: [
         bookcarsTypes.UserType.Admin,
-        bookcarsTypes.UserType.Company,
+        bookcarsTypes.UserType.Supplier,
         bookcarsTypes.UserType.User,
       ],
       default: bookcarsTypes.UserType.User,

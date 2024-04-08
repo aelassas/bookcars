@@ -165,7 +165,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (type === bookcarsTypes.RecordType.Company && !multiple && values.length === 1 && values[0]) {
+          if (type === bookcarsTypes.RecordType.Supplier && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -269,7 +269,7 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Company) {
+          } if (type === bookcarsTypes.RecordType.Supplier) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
                 <span className="option-image supplier-ia">

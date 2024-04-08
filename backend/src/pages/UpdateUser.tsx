@@ -89,7 +89,7 @@ const UpdateUser = () => {
 
     setType(e.target.value)
 
-    if (_type === bookcarsTypes.RecordType.Company) {
+    if (_type === bookcarsTypes.RecordType.Supplier) {
       await validateFullName(fullName)
     } else {
       setFullNameError(false)
@@ -105,7 +105,7 @@ const UpdateUser = () => {
   }
 
   const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    if (type === bookcarsTypes.RecordType.Company) {
+    if (type === bookcarsTypes.RecordType.Supplier) {
       await validateFullName(e.target.value)
     } else {
       setFullNameError(false)
@@ -176,7 +176,7 @@ const UpdateUser = () => {
     setUser(_user)
     setAvatar(_avatar)
 
-    if (_avatar !== null && type === bookcarsTypes.RecordType.Company) {
+    if (_avatar !== null && type === bookcarsTypes.RecordType.Supplier) {
       setAvatarError(false)
     }
   }
@@ -265,7 +265,7 @@ const UpdateUser = () => {
         return
       }
 
-      if (type === bookcarsTypes.RecordType.Company) {
+      if (type === bookcarsTypes.RecordType.Supplier) {
         const fullNameValid = await validateFullName(fullName, false)
 
         if (!fullNameValid) {
@@ -285,7 +285,7 @@ const UpdateUser = () => {
         return
       }
 
-      if (type === bookcarsTypes.RecordType.Company && !avatar) {
+      if (type === bookcarsTypes.RecordType.Supplier && !avatar) {
         setAvatarError(true)
         setError(false)
         return
@@ -304,7 +304,7 @@ const UpdateUser = () => {
         birthDate,
       }
 
-      if (type === bookcarsTypes.RecordType.Company) {
+      if (type === bookcarsTypes.RecordType.Supplier) {
         data.payLater = payLater
       }
 
@@ -325,10 +325,10 @@ const UpdateUser = () => {
     }
   }
 
-  const supplier = type === bookcarsTypes.RecordType.Company
+  const supplier = type === bookcarsTypes.RecordType.Supplier
   const driver = type === bookcarsTypes.RecordType.User
   const activate = admin
-    || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Company && user.type === bookcarsTypes.RecordType.User && user.company as string === loggedUser._id)
+    || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User && user.company as string === loggedUser._id)
 
   return (
     <Master onLoad={onLoad} user={loggedUser} strict>
@@ -351,7 +351,7 @@ const UpdateUser = () => {
                 onChange={onAvatarChange}
                 color="disabled"
                 className="avatar-ctn"
-                hideDelete={type === bookcarsTypes.RecordType.Company}
+                hideDelete={type === bookcarsTypes.RecordType.Supplier}
               />
 
               {supplier && (
@@ -366,7 +366,7 @@ const UpdateUser = () => {
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
                   <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
                     <MenuItem value={bookcarsTypes.RecordType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.Company}>{helper.getUserType(bookcarsTypes.UserType.Company)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Supplier}>{helper.getUserType(bookcarsTypes.UserType.Supplier)}</MenuItem>
                     <MenuItem value={bookcarsTypes.RecordType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
                   </Select>
                 </FormControl>

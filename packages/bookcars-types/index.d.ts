@@ -1,6 +1,6 @@
 export declare enum UserType {
     Admin = "admin",
-    Company = "company",
+    Supplier = "company",
     User = "user"
 }
 export declare enum AppType {
@@ -37,7 +37,7 @@ export declare enum Availablity {
 }
 export declare enum RecordType {
     Admin = "admin",
-    Company = "company",
+    Supplier = "company",
     User = "user",
     Car = "car",
     Location = "location"

@@ -346,7 +346,7 @@ const Car = () => {
               companies={companies}
               statuses={statuses}
               car={car._id}
-              hideCompanyColumn
+              hideSupplierColumn
               hideCarColumn
               hideDates={env.isMobile()}
               checkboxSelection={!env.isMobile()}

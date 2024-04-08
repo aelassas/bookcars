@@ -264,7 +264,7 @@ const UpdateSupplier = () => {
           <Paper className="supplier-form-update" elevation={10}>
             <form onSubmit={handleSubmit}>
               <Avatar
-                type={bookcarsTypes.RecordType.Company}
+                type={bookcarsTypes.RecordType.Supplier}
                 mode="update"
                 record={supplier}
                 size="large"
