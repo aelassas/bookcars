@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/create-company'
+import { strings } from '../lang/create-supplier'
 import * as UserService from '../services/UserService'
 import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
@@ -23,7 +23,7 @@ import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import * as helper from '../common/helper'
 
-import '../assets/css/create-company.css'
+import '../assets/css/create-supplier.css'
 
 const CreateCompany = () => {
   const navigate = useNavigate()

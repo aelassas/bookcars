@@ -5,7 +5,7 @@ import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import Accordion from './Accordion'
 
-import '../assets/css/company-filter.css'
+import '../assets/css/supplier-filter.css'
 
 interface SupplierFilterProps {
   companies: bookcarsTypes.User[]

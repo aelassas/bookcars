@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from 'bookcars-types'
 import Master from '../components/Master'
-import { strings } from '../lang/companies'
+import { strings } from '../lang/suppliers'
 import Search from '../components/Search'
 import SupplierList from '../components/SupplierList'
 import InfoBox from '../components/InfoBox'
 import * as helper from '../common/helper'
 
-import '../assets/css/companies.css'
+import '../assets/css/suppliers.css'
 
-const Companies = () => {
+const Suppliers = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(-1)
@@ -77,4 +77,4 @@ const Companies = () => {
   )
 }
 
-export default Companies
+export default Suppliers

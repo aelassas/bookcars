@@ -16,7 +16,7 @@ import * as bookcarsHelper from 'bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import { strings as ccStrings } from '../lang/create-company'
+import { strings as ccStrings } from '../lang/create-supplier'
 import * as SupplierService from '../services/SupplierService'
 import * as UserService from '../services/UserService'
 import * as helper from '../common/helper'
@@ -25,9 +25,9 @@ import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '../components/Avatar'
 
-import '../assets/css/update-company.css'
+import '../assets/css/update-supplier.css'
 
-const UpdateCompany = () => {
+const UpdateSupplier = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [company, setCompany] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
@@ -361,4 +361,4 @@ const UpdateCompany = () => {
   )
 }
 
-export default UpdateCompany
+export default UpdateSupplier
