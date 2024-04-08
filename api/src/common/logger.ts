@@ -42,3 +42,11 @@ export const error = (message: string, err?: unknown) => {
     logger.error(message)
   }
 }
+
+export const debug = (message: string, obj?: any) => {
+  if (obj) {
+    logger.debug(`${message} ${JSON.stringify(obj)}`)
+  } else {
+    logger.debug(message)
+  }
+}
