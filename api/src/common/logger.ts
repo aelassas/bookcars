@@ -1,10 +1,9 @@
 import winston, { format, transports } from 'winston'
 
 const logFormat = format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
-const level = process.env.NODE_ENV === 'production' ? 'info' : 'debug'
 
 const logger = winston.createLogger({
-  level,
+  level: 'info',
   format: format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     format.errors({ stack: true }),
@@ -18,8 +17,12 @@ const logger = winston.createLogger({
         logFormat,
       ),
     }),
+    //
+    // - Write all logs with importance level of `error` or less to `logs/error.log`
+    // - Write all logs with importance level of `info` or less to `logs/all.log`
+    //
     new transports.File({ filename: 'logs/error.log', level: 'error', format: logFormat }),
-    new transports.File({ filename: 'logs/all.log', level, format: logFormat }),
+    new transports.File({ filename: 'logs/all.log', level: 'info', format: logFormat }),
   ],
 })
 
@@ -36,13 +39,5 @@ export const error = (message: string, err?: unknown) => {
     logger.error(`${message} ${err.message} ${err.stack}`)
   } else {
     logger.error(message)
-  }
-}
-
-export const debug = (message: string, obj?: any) => {
-  if (obj) {
-    logger.debug(`${message} ${JSON.stringify(obj)}`)
-  } else {
-    logger.debug(message)
   }
 }
