@@ -7,10 +7,10 @@ const Activate = lazy(() => import('./pages/Activate'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const SignUp = lazy(() => import('./pages/SignUp'))
-const Companies = lazy(() => import('./pages/Companies'))
-const Company = lazy(() => import('./pages/Company'))
-const CreateCompany = lazy(() => import('./pages/CreateCompany'))
-const UpdateCompany = lazy(() => import('./pages/UpdateCompany'))
+const Suppliers = lazy(() => import('./pages/Suppliers'))
+const Supplier = lazy(() => import('./pages/Supplier'))
+const CreateSupplier = lazy(() => import('./pages/CreateSupplier'))
+const UpdateSupplier = lazy(() => import('./pages/UpdateSupplier'))
 const Locations = lazy(() => import('./pages/Locations'))
 const CreateLocation = lazy(() => import('./pages/CreateLocation'))
 const UpdateLocation = lazy(() => import('./pages/UpdateLocation'))
@@ -45,10 +45,10 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/" element={<Bookings />} />
-            <Route path="/suppliers" element={<Companies />} />
-            <Route path="/supplier" element={<Company />} />
-            <Route path="/create-supplier" element={<CreateCompany />} />
-            <Route path="/update-supplier" element={<UpdateCompany />} />
+            <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/supplier" element={<Supplier />} />
+            <Route path="/create-supplier" element={<CreateSupplier />} />
+            <Route path="/update-supplier" element={<UpdateSupplier />} />
             <Route path="/locations" element={<Locations />} />
             <Route path="/create-location" element={<CreateLocation />} />
             <Route path="/update-location" element={<UpdateLocation />} />

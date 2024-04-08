@@ -15,7 +15,7 @@ import * as bookcarsTypes from 'bookcars-types'
 import * as bookcarsHelper from 'bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import { strings as clStrings } from '../lang/company-list'
+import { strings as clStrings } from '../lang/supplier-list'
 import * as SupplierService from '../services/SupplierService'
 import * as helper from '../common/helper'
 import Master from '../components/Master'
@@ -26,7 +26,7 @@ import InfoBox from '../components/InfoBox'
 import Error from './Error'
 import NoMatch from './NoMatch'
 
-import '../assets/css/company.css'
+import '../assets/css/supplier.css'
 
 const Company = () => {
   const navigate = useNavigate()
