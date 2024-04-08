@@ -186,7 +186,7 @@ const CreateBooking = () => {
     }
 
     const booking: bookcarsTypes.Booking = {
-      supplier: supplier,
+      supplier,
       car: car._id,
       driver,
       pickupLocation,
