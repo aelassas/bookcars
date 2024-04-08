@@ -18,7 +18,7 @@ const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
@@ -34,8 +34,8 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (_companies: string[]) => {
-    setCompanies(_companies)
+  const handleSupplierFilterChange = (_suppliers: string[]) => {
+    setCompanies(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -54,10 +54,10 @@ const Bookings = () => {
       setLeftPanel(!_admin)
       setLoadingCompanies(_admin)
 
-      const _allCompanies = _admin ? await SupplierService.getAllSuppliers() : []
-      const _companies = _admin ? bookcarsHelper.flattenCompanies(_allCompanies) : [_user._id ?? '']
-      setAllCompanies(_allCompanies)
-      setCompanies(_companies)
+      const _allSuppliers = _admin ? await SupplierService.getAllSuppliers() : []
+      const _suppliers = _admin ? bookcarsHelper.flattenSuppliers(_allSuppliers) : [_user._id ?? '']
+      setAllSuppliers(_allSuppliers)
+      setCompanies(_suppliers)
       setLeftPanel(true)
       setLoadingCompanies(false)
     }
@@ -76,9 +76,9 @@ const Bookings = () => {
                 {admin
                   && (
                   <SupplierFilter
-                    companies={allCompanies}
+                    companies={allSuppliers}
                     onChange={handleSupplierFilterChange}
-                    className="cl-company-filter"
+                    className="cl-supplier-filter"
                   />
 )}
                 <StatusFilter

@@ -42,7 +42,7 @@ const CreateBooking = () => {
   const navigate = useNavigate()
   const [isCompany, setIsCompany] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [company, setCompany] = useState('')
+  const [supplier, setSupplier] = useState('')
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [driver, setDriver] = useState('')
   const [pickupLocation, setPickupLocation] = useState('')
@@ -66,7 +66,7 @@ const CreateBooking = () => {
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
   const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0]._id : '')
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const handleDriverChange = (values: bookcarsTypes.Option[]) => {
@@ -186,7 +186,7 @@ const CreateBooking = () => {
     }
 
     const booking: bookcarsTypes.Booking = {
-      company,
+      company: supplier,
       car: car._id,
       driver,
       pickupLocation,
@@ -248,7 +248,7 @@ const CreateBooking = () => {
       setVisible(true)
 
       if (user.type === bookcarsTypes.RecordType.Company) {
-        setCompany(user._id as string)
+        setSupplier(user._id as string)
         setIsCompany(true)
       }
     }
@@ -267,7 +267,7 @@ const CreateBooking = () => {
             {!isCompany && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
-                  label={blStrings.COMPANY}
+                  label={blStrings.SUPPLIER}
                   required
                   variant="standard"
                   onChange={handleCompanyChange}
@@ -302,7 +302,7 @@ const CreateBooking = () => {
 
             <CarSelectList
               label={blStrings.CAR}
-              company={company}
+              company={supplier}
               pickupLocation={pickupLocation}
               onChange={handleCarSelectListChange}
               required

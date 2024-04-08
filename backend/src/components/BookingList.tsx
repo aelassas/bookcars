@@ -316,7 +316,7 @@ const BookingList = ({
         headerName: commonStrings.SUPPLIER,
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
-          <Link href={`/supplier?c=${(row.company as bookcarsTypes.User)._id}`} className="cell-company">
+          <Link href={`/supplier?c=${(row.company as bookcarsTypes.User)._id}`} className="cell-supplier">
             <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
           </Link>
         ),
@@ -528,9 +528,9 @@ const BookingList = ({
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
-                      <div className="car-company">
+                      <div className="car-supplier">
                         <img src={bookcarsHelper.joinURL(env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
-                        <span className="car-company-name">{(booking.company as bookcarsTypes.User).fullName}</span>
+                        <span className="car-supplier-name">{(booking.company as bookcarsTypes.User).fullName}</span>
                       </div>
                     </div>
                   </div>

@@ -475,7 +475,7 @@ export const getUserTypes = () => [
   },
   {
     value: bookcarsTypes.UserType.Company,
-    label: commonStrings.RECORD_TYPE_COMPANY,
+    label: commonStrings.RECORD_TYPE_SUPPLIER,
   },
   {
     value: bookcarsTypes.UserType.User,
@@ -495,7 +495,7 @@ export const getUserType = (status?: bookcarsTypes.UserType) => {
       return commonStrings.RECORD_TYPE_ADMIN
 
     case bookcarsTypes.UserType.Company:
-      return commonStrings.RECORD_TYPE_COMPANY
+      return commonStrings.RECORD_TYPE_SUPPLIER
 
     case bookcarsTypes.UserType.User:
       return commonStrings.RECORD_TYPE_USER

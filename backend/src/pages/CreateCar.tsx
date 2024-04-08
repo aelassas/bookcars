@@ -42,7 +42,7 @@ const CreateCar = () => {
   const [imageSizeError, setImageSizeError] = useState(false)
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
+  const [supplier, setSupplier] = useState('')
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
@@ -95,7 +95,7 @@ const CreateCar = () => {
   }
 
   const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0]._id : '')
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const validateMinimumAge = (age: string, updateState = true) => {
@@ -214,7 +214,7 @@ const CreateCar = () => {
 
       const data = {
         name,
-        company,
+        company: supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
@@ -253,7 +253,7 @@ const CreateCar = () => {
       setVisible(true)
 
       if (user.type === bookcarsTypes.RecordType.Company) {
-        setCompany(user._id as string)
+        setSupplier(user._id as string)
         setIsCompany(true)
       }
     }
@@ -295,7 +295,7 @@ const CreateCar = () => {
             {!isCompany && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
-                  label={strings.COMPANY}
+                  label={strings.SUPPLIER}
                   required
                   variant="standard"
                   onChange={handleCompanyChange}

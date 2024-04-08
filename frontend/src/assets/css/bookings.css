@@ -26,13 +26,13 @@ div.bookings {
     padding-top: 15px;
   }
 
-  div.bookings div.col-1 .cl-company-filter label.accordion,
+  div.bookings div.col-1 .cl-supplier-filter label.accordion,
   div.bookings div.col-1 .cl-status-filter label.accordion,
   div.bookings div.col-1 .cl-booking-filter label.accordion {
     background: #fff;
   }
 
-  div.bookings div.col-1 .cl-company-filter,
+  div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
     margin: 10px;
@@ -72,13 +72,13 @@ div.bookings {
     overflow: auto;
   }
 
-  div.bookings div.col-1 .cl-company-filter label.accordion,
+  div.bookings div.col-1 .cl-supplier-filter label.accordion,
   div.bookings div.col-1 .cl-status-filter label.accordion,
   div.bookings div.col-1 .cl-booking-filter label.accordion {
     background: #fafafa;
   }
 
-  div.bookings div.col-1 .cl-company-filter,
+  div.bookings div.col-1 .cl-supplier-filter,
   div.bookings div.col-1 .cl-status-filter,
   div.bookings div.col-1 .cl-booking-filter {
     margin: 10px 10px 10px 0;

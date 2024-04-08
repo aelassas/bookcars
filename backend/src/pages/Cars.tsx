@@ -22,7 +22,7 @@ import '../assets/css/cars.css'
 const Cars = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
@@ -74,10 +74,10 @@ const Cars = () => {
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
     setAdmin(helper.admin(_user))
-    const _allCompanies = await SupplierService.getAllSuppliers()
-    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
-    setAllCompanies(_allCompanies)
-    setCompanies(_companies)
+    const _allSuppliers = await SupplierService.getAllSuppliers()
+    const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
+    setAllSuppliers(_allSuppliers)
+    setCompanies(_suppliers)
     setLoading(false)
   }
 
@@ -95,7 +95,7 @@ const Cars = () => {
 
               {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
 
-              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="filter" />
+              <SupplierFilter companies={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
 
               {rowCount > -1 && (
                 <>

@@ -179,10 +179,10 @@ export const filterEqual = (a, b) => {
 /**
  * Flatten Supplier array.
  *
- * @param {bookcarsTypes.User[]} companies
+ * @param {bookcarsTypes.User[]} suppliers
  * @returns {string[]}
  */
-export const flattenCompanies = (companies) => companies.map((company) => company._id ?? '');
+export const flattenSuppliers = (suppliers) => suppliers.map((supplier) => supplier._id ?? '');
 /**
  * Get number of days between two dates.
  *

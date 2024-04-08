@@ -1,10 +1,10 @@
-div.company-filter {
+div.supplier-filter {
   margin: 10px 0;
   font-size: 13px;
   text-align: center;
 }
 
-div.company-filter ul.company-list {
+div.supplier-filter ul.supplier-list {
   list-style-type: none;
   font-size: 13px;
   margin: 15px 0 0;
@@ -13,7 +13,7 @@ div.company-filter ul.company-list {
   width: 250px;
 }
 
-div.company-filter ul.company-list li {
+div.supplier-filter ul.supplier-list li {
   margin-bottom: 12px;
   margin-left: 15px;
   margin-right: 20px;
@@ -24,7 +24,7 @@ div.company-filter ul.company-list li {
   height: 32px;
 }
 
-div.company-filter ul.company-list li span {
+div.supplier-filter ul.supplier-list li span {
   border-radius: 3px;
   border: 1px solid #d9d9d9;
   box-shadow: none;
@@ -42,23 +42,23 @@ div.company-filter ul.company-list li span {
   align-items: center;
 }
 
-div.company-filter ul.company-list li span img {
+div.supplier-filter ul.supplier-list li span img {
   margin: 0;
   max-width: 100%;
   max-height: 100%;
 }
 
-div.company-filter ul.company-list li input[type='checkbox'] {
+div.supplier-filter ul.supplier-list li input[type='checkbox'] {
   cursor: pointer;
   display: inline-flex;
 }
 
-div.company-filter div.filter-actions {
+div.supplier-filter div.filter-actions {
   text-align: center;
   padding-bottom: 10px;
 }
 
-div.company-filter div.filter-actions span.uncheckall {
+div.supplier-filter div.filter-actions span.uncheckall {
   text-decoration: underline;
   cursor: pointer;
   color: #0064c8;

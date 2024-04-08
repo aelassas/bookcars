@@ -861,9 +861,9 @@ const Checkout = () => {
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                       <div className="booking-detail-value">
-                        <div className="car-company">
+                        <div className="car-supplier">
                           <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: env.COMPANY_IMAGE_HEIGHT }} />
-                          <span className="car-company-name">{car.company.fullName}</span>
+                          <span className="car-supplier-name">{car.company.fullName}</span>
                         </div>
                       </div>
                     </div>

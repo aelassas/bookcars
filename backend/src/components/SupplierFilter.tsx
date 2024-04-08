@@ -27,7 +27,7 @@ const SupplierFilter = ({
 
   useEffect(() => {
     setSuppliers(companies)
-    setCheckedSuppliers(bookcarsHelper.flattenCompanies(companies))
+    setCheckedSuppliers(bookcarsHelper.flattenSuppliers(companies))
   }, [companies])
 
   useEffect(() => {
@@ -41,16 +41,16 @@ const SupplierFilter = ({
   }, [suppliers])
 
   const handleCheckCompanyChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
-    const companyId = e.currentTarget.getAttribute('data-id') as string
+    const supplierId = e.currentTarget.getAttribute('data-id') as string
 
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      checkedSuppliers.push(companyId)
+      checkedSuppliers.push(supplierId)
 
       if (checkedSuppliers.length === suppliers.length) {
         setAllChecked(true)
       }
     } else {
-      const index = checkedSuppliers.indexOf(companyId)
+      const index = checkedSuppliers.indexOf(supplierId)
       checkedSuppliers.splice(index, 1)
 
       if (checkedSuppliers.length === 0) {
@@ -84,12 +84,12 @@ const SupplierFilter = ({
         }
       })
 
-      const companyIds = bookcarsHelper.flattenCompanies(suppliers)
+      const supplierIds = bookcarsHelper.flattenSuppliers(suppliers)
       setAllChecked(true)
-      setCheckedSuppliers(companyIds)
+      setCheckedSuppliers(supplierIds)
 
       if (onChange) {
-        onChange(bookcarsHelper.clone(companyIds))
+        onChange(bookcarsHelper.clone(supplierIds))
       }
     }
   }
@@ -109,9 +109,9 @@ const SupplierFilter = ({
           title={commonStrings.SUPPLIER}
           collapse={collapse}
           offsetHeight={Math.floor((suppliers.length / 2) * env.COMPANY_IMAGE_HEIGHT)}
-          className={`${className ? `${className} ` : ''}company-filter`}
+          className={`${className ? `${className} ` : ''}supplier-filter`}
         >
-          <ul className="company-list">
+          <ul className="supplier-list">
             {suppliers.map((supplier, index) => (
               <li key={supplier._id}>
                 <input
@@ -120,7 +120,7 @@ const SupplierFilter = ({
                   }}
                   type="checkbox"
                   data-id={supplier._id}
-                  className="company-checkbox"
+                  className="supplier-checkbox"
                   onChange={handleCheckCompanyChange}
                 />
                 <span

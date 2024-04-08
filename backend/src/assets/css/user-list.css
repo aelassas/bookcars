@@ -5,7 +5,7 @@ div.us-list {
   padding: 0;
 }
 
-div.us-list a.cell-company {
+div.us-list a.cell-supplier {
   display: flex;
   align-items: center;
 }
@@ -25,7 +25,7 @@ div.us-list span.us-admin {
   background: #121212;
 }
 
-div.us-list span.us-company {
+div.us-list span.us-supplier {
   background: #e98003;
 }
 

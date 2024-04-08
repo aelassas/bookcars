@@ -98,8 +98,8 @@ const User = () => {
             const _user = await UserService.getUser(id)
 
             if (_user) {
-              const setState = (_companies: string[]) => {
-                setCompanies(_companies)
+              const setState = (_suppliers: string[]) => {
+                setCompanies(_suppliers)
                 setLoggedUser(_loggedUser)
                 setUser(_user)
                 setVisible(true)
@@ -108,9 +108,9 @@ const User = () => {
 
               const admin = helper.admin(_loggedUser)
               if (admin) {
-                const _companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(_companies)
-                setState(companyIds)
+                const _suppliers = await SupplierService.getAllSuppliers()
+                const supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+                setState(supplierIds)
               } else {
                 setState([_loggedUser._id as string])
               }
@@ -152,7 +152,7 @@ const User = () => {
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"
-                className={company ? 'company-avatar' : 'user-avatar'}
+                className={company ? 'supplier-avatar' : 'user-avatar'}
                 readonly
                 verified
               />

@@ -325,7 +325,7 @@ const UpdateUser = () => {
     }
   }
 
-  const company = type === bookcarsTypes.RecordType.Company
+  const supplier = type === bookcarsTypes.RecordType.Company
   const driver = type === bookcarsTypes.RecordType.User
   const activate = admin
     || (loggedUser && user && loggedUser.type === bookcarsTypes.RecordType.Company && user.type === bookcarsTypes.RecordType.User && user.company as string === loggedUser._id)
@@ -354,7 +354,7 @@ const UpdateUser = () => {
                 hideDelete={type === bookcarsTypes.RecordType.Company}
               />
 
-              {company && (
+              {supplier && (
                 <div className="info">
                   <InfoIcon />
                   <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
@@ -362,7 +362,7 @@ const UpdateUser = () => {
               )}
 
               {admin && (
-                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                <FormControl fullWidth margin="dense" style={{ marginTop: supplier ? 0 : 39 }}>
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
                   <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
                     <MenuItem value={bookcarsTypes.RecordType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
@@ -375,7 +375,7 @@ const UpdateUser = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                 <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" value={fullName} />
-                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -403,7 +403,7 @@ const UpdateUser = () => {
                 </FormControl>
               )}
 
-              {company && (
+              {supplier && (
                 <FormControl component="fieldset" style={{ marginTop: 15 }}>
                   <FormControlLabel
                     control={(

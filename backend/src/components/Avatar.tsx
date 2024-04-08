@@ -374,7 +374,7 @@ const Avatar = ({
     }
   }, [record, type, mode])
 
-  const companyImageStyle = { width: env.COMPANY_IMAGE_WIDTH }
+  const supplierImageStyle = { width: env.COMPANY_IMAGE_WIDTH }
 
   const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
 
@@ -389,7 +389,7 @@ const Avatar = ({
           type === bookcarsTypes.RecordType.Car ? (
             <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
           ) : type === bookcarsTypes.RecordType.Company ? (
-            <div className="company-avatar-readonly">
+            <div className="supplier-avatar-readonly">
               <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
             </div>
           ) : verified && avatarRecord && avatarRecord.verified ? (
@@ -438,7 +438,7 @@ const Avatar = ({
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              className={type === bookcarsTypes.RecordType.Company ? 'company-avatar' : ''}
+              className={type === bookcarsTypes.RecordType.Company ? 'supplier-avatar' : ''}
               badgeContent={(
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                   <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
@@ -452,7 +452,7 @@ const Avatar = ({
                   <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
                 </div>
               ) : type === bookcarsTypes.RecordType.Company ? (
-                <img style={companyImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
+                <img style={supplierImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
               ) : (
                 <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} />
               )}
@@ -464,7 +464,7 @@ const Avatar = ({
           type === bookcarsTypes.RecordType.Car ? (
             <CarIcon style={carImageStyle} color={color || 'inherit'} />
           ) : type === bookcarsTypes.RecordType.Company ? (
-            <CompanyIcon style={companyImageStyle} color={color || 'inherit'} />
+            <CompanyIcon style={supplierImageStyle} color={color || 'inherit'} />
           ) : verified && avatarRecord && avatarRecord.verified ? (
             <Badge
               overlap="circular"
