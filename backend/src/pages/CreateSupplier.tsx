@@ -236,11 +236,11 @@ const CreateCompany = () => {
 
   return (
     <Master onLoad={onLoad} strict admin>
-      <div className="create-company">
-        <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="company-form-title">
+      <div className="create-supplier">
+        <Paper className="supplier-form" elevation={10} style={visible ? {} : { display: 'none' }}>
+          <h1 className="supplier-form-title">
             {' '}
-            {strings.CREATE_COMPANY_HEADING}
+            {strings.CREATE_SUPPLIER_HEADING}
             {' '}
           </h1>
           <form onSubmit={handleSubmit}>
@@ -272,7 +272,7 @@ const CreateCompany = () => {
                 onChange={handleFullNameChange}
                 autoComplete="off"
               />
-              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
+              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">

@@ -1,50 +1,50 @@
-div.companies {
+div.suppliers {
   display: flex;
 }
 
-div.companies .search {
+div.suppliers .search {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-div.companies .info-box {
+div.suppliers .info-box {
   background-color: #fff;
 }
 
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <= 960px) {
-  div.companies {
+  div.suppliers {
     flex-direction: column;
   }
 
-  div.companies div.col-1 {
+  div.suppliers div.col-1 {
     width: 100%;
     padding: 15px;
     display: flex;
     justify-content: center;
   }
 
-  div.companies div.col-1 div.col-1-container {
+  div.suppliers div.col-1 div.col-1-container {
     width: 100%;
     max-width: 480px;
   }
 
-  div.companies .sc-search {
+  div.suppliers .sc-search {
     width: 80%;
   }
 
-  div.companies .new-company {
+  div.suppliers .new-supplier {
     margin: 20px 5px 5px 0;
     width: 100%;
   }
 
-  div.companies div.col-1 .company-count {
+  div.suppliers div.col-1 .supplier-count {
     display: none;
   }
 
-  div.companies div.col-2 {
+  div.suppliers div.col-2 {
     margin-top: 3px;
     padding: 1px;
     display: flex;
@@ -55,27 +55,27 @@ div.companies .info-box {
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >= 960px) {
-  div.companies {
+  div.suppliers {
     flex-direction: row;
   }
 
-  div.companies div.col-1 {
+  div.suppliers div.col-1 {
     width: 300px;
     margin-left: 20px;
   }
 
-  div.companies div.col-2 {
+  div.suppliers div.col-2 {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
   }
 
-  div.companies .search {
+  div.suppliers .search {
     margin-top: 15px;
   }
 
-  div.companies .new-company {
+  div.suppliers .new-supplier {
     margin: 10px 5px 0 0;
     width: 100%;
   }

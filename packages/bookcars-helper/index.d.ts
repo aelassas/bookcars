@@ -95,10 +95,10 @@ export declare const filterEqual: (a?: bookcarsTypes.Filter | null, b?: bookcars
 /**
  * Flatten Supplier array.
  *
- * @param {bookcarsTypes.User[]} companies
+ * @param {bookcarsTypes.User[]} suppliers
  * @returns {string[]}
  */
-export declare const flattenCompanies: (companies: bookcarsTypes.User[]) => string[];
+export declare const flattenSuppliers: (suppliers: bookcarsTypes.User[]) => string[];
 /**
  * Get number of days between two dates.
  *

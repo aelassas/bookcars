@@ -45,7 +45,7 @@ const UpdateCar = () => {
   const [imageSizeError, setImageSizeError] = useState(false)
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
-  const [company, setCompany] = useState<bookcarsTypes.Option>()
+  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
@@ -97,7 +97,7 @@ const UpdateCar = () => {
   }
 
   const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0] : undefined)
+    setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
   const validateMinimumAge = (age: string, updateState = true) => {
@@ -209,7 +209,7 @@ const UpdateCar = () => {
         return
       }
 
-      if (!car || !company) {
+      if (!car || !supplier) {
         helper.error()
         return
       }
@@ -217,7 +217,7 @@ const UpdateCar = () => {
       const data = {
         _id: car._id,
         name,
-        company: company._id,
+        company: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
@@ -269,7 +269,7 @@ const UpdateCar = () => {
                 return
               }
 
-              const _company = {
+              const _supplier = {
                 _id: _car.company._id as string,
                 name: _car.company.fullName,
                 image: _car.company.avatar,
@@ -278,7 +278,7 @@ const UpdateCar = () => {
               setCar(_car)
               setImageRequired(!_car.image)
               setName(_car.name)
-              setCompany(_company)
+              setSupplier(_supplier)
               setMinimumAge(_car.minimumAge.toString())
               const lcs: bookcarsTypes.Option[] = []
               for (const loc of _car.locations) {
@@ -361,9 +361,9 @@ const UpdateCar = () => {
               {admin && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList
-                    label={strings.COMPANY}
+                    label={strings.SUPPLIER}
                     required
-                    value={company}
+                    value={supplier}
                     variant="standard"
                     onChange={handleCompanyChange}
                   />

@@ -31,7 +31,7 @@ import '../assets/css/supplier.css'
 const Company = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [company, setCompany] = useState<bookcarsTypes.User>()
+  const [supplier, setSupplier] = useState<bookcarsTypes.User>()
   const [companies, setCompanies] = useState<string[]>([])
   const [error, setError] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -45,7 +45,7 @@ const Company = () => {
   }
 
   const onAvatarChange = (avatar: string) => {
-    if (user && company && user._id === company._id) {
+    if (user && supplier && user._id === supplier._id) {
       const _user = bookcarsHelper.clone(user)
       _user.avatar = avatar
 
@@ -60,11 +60,11 @@ const Company = () => {
   }
 
   const handleConfirmDelete = async () => {
-    if (company) {
+    if (supplier) {
       try {
         setOpenDeleteDialog(false)
 
-        const status = await SupplierService.deleteSupplier(company._id as string)
+        const status = await SupplierService.deleteSupplier(supplier._id as string)
 
         if (status === 200) {
           navigate('/suppliers')
@@ -102,11 +102,11 @@ const Company = () => {
         const id = params.get('c')
         if (id && id !== '') {
           try {
-            const _company = await SupplierService.getSupplier(id)
+            const _supplier = await SupplierService.getSupplier(id)
 
-            if (_company) {
-              setCompany(_company)
-              setCompanies([_company._id as string])
+            if (_supplier) {
+              setSupplier(_supplier)
+              setCompanies([_supplier._id as string])
               setVisible(true)
               setLoading(false)
             } else {
@@ -129,17 +129,17 @@ const Company = () => {
     }
   }
 
-  const edit = user && company && (user.type === bookcarsTypes.RecordType.Admin || user._id === company._id)
+  const edit = user && supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === supplier._id)
 
   return (
     <Master onLoad={onLoad} user={user} strict>
-      {visible && company && companies && (
-        <div className="company">
+      {visible && supplier && companies && (
+        <div className="supplier">
           <div className="col-1">
-            <section className="company-avatar-sec">
+            <section className="supplier-avatar-sec">
               {edit ? (
                 <Avatar
-                  record={company}
+                  record={supplier}
                   type={bookcarsTypes.RecordType.Company}
                   mode="update"
                   size="large"
@@ -148,48 +148,48 @@ const Company = () => {
                   onChange={onAvatarChange}
                   readonly={!edit}
                   color="disabled"
-                  className="company-avatar"
+                  className="supplier-avatar"
                 />
               ) : (
-                <div className="car-company">
-                  <span className="car-company-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, company.avatar)} alt={company.fullName} style={{ width: env.COMPANY_IMAGE_WIDTH }} />
+                <div className="car-supplier">
+                  <span className="car-supplier-logo">
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} style={{ width: env.COMPANY_IMAGE_WIDTH }} />
                   </span>
-                  <span className="car-company-info">{company.fullName}</span>
+                  <span className="car-supplier-info">{supplier.fullName}</span>
                 </div>
               )}
             </section>
             {edit && (
-              <Typography variant="h4" className="company-name">
-                {company.fullName}
+              <Typography variant="h4" className="supplier-name">
+                {supplier.fullName}
               </Typography>
             )}
-            {company.bio && company.bio !== '' && (
-              <Typography variant="h6" className="company-info">
-                {company.bio}
+            {supplier.bio && supplier.bio !== '' && (
+              <Typography variant="h6" className="supplier-info">
+                {supplier.bio}
               </Typography>
             )}
-            {company.location && company.location !== '' && (
-              <Typography variant="h6" className="company-info">
-                {company.location}
+            {supplier.location && supplier.location !== '' && (
+              <Typography variant="h6" className="supplier-info">
+                {supplier.location}
               </Typography>
             )}
-            {company.phone && company.phone !== '' && (
-              <Typography variant="h6" className="company-info">
-                {company.phone}
+            {supplier.phone && supplier.phone !== '' && (
+              <Typography variant="h6" className="supplier-info">
+                {supplier.phone}
               </Typography>
             )}
-            <div className="company-actions">
+            <div className="supplier-actions">
               {edit && (
                 <Tooltip title={commonStrings.UPDATE}>
-                  <IconButton href={`/update-supplier?c=${company._id}`}>
+                  <IconButton href={`/update-supplier?c=${supplier._id}`}>
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
               )}
               {edit && (
                 <Tooltip title={commonStrings.DELETE}>
-                  <IconButton data-id={company._id} onClick={handleDelete}>
+                  <IconButton data-id={supplier._id} onClick={handleDelete}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
@@ -212,7 +212,7 @@ const Company = () => {
       )}
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
         <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
-        <DialogContent>{clStrings.DELETE_COMPANY}</DialogContent>
+        <DialogContent>{clStrings.DELETE_SUPPLIER}</DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
             {commonStrings.CANCEL}

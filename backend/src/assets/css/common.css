@@ -105,7 +105,7 @@
   margin-left: 8px;
 }
 
-.company-avatar-readonly {
+.supplier-avatar-readonly {
   width: 64px;
   height: 32px;
   display: flex;
@@ -113,7 +113,7 @@
   align-items: center;
 }
 
-.company-avatar {
+.supplier-avatar {
   width: 150px;
   height: 75px;
   display: flex;
@@ -121,8 +121,8 @@
   align-items: center;
 }
 
-.company-avatar-readonly img,
-.company-avatar img {
+.supplier-avatar-readonly img,
+.supplier-avatar img {
   max-width: 100%;
   max-height: 100%;
 }

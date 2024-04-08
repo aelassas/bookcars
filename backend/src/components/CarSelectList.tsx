@@ -105,19 +105,19 @@ const CarSelectList = ({
     }
   }
 
-  const fetchData = async (_page: number, _keyword: string, _company: string, _pickupLocation: string) => {
+  const fetchData = async (_page: number, _keyword: string, _supplier: string, _pickupLocation: string) => {
     try {
       if (!_pickupLocation) {
         return
       }
 
-      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _company, pickupLocation: _pickupLocation }
+      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _supplier, pickupLocation: _pickupLocation }
 
       if (closeDialog) {
         setCloseDialog(false)
       }
 
-      if (_company === '-1' || _pickupLocation === '-1') {
+      if (_supplier === '-1' || _pickupLocation === '-1') {
         setOpenDialog(true)
         return
       }
@@ -197,9 +197,9 @@ const CarSelectList = ({
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent className="dialog-content">
           {currentCompany === '-1' && currentPickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
+            `${strings.REQUIRED_FIELDS}${blStrings.SUPPLIER} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
           ) : currentCompany === '-1' ? (
-            `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
+            `${strings.REQUIRED_FIELD}${blStrings.SUPPLIER}`
           ) : currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
           ) : (

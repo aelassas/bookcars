@@ -215,7 +215,7 @@ const MultipleSelect = ({
                   startAdornment: (
                     <>
                       <InputAdornment position="start">
-                        <div className="company-ia">
+                        <div className="supplier-ia">
                           <img
                             src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                             alt={option.name}
@@ -308,7 +308,7 @@ const MultipleSelect = ({
           } if (type === bookcarsTypes.RecordType.Company) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className="option-image company-ia">
+                <span className="option-image supplier-ia">
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                     alt={option.name}

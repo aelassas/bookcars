@@ -41,9 +41,9 @@ const SupplierSelectList = ({
     }
   }, [value, multiple, selectedOptions])
 
-  const getCompanies = (companies: bookcarsTypes.User[]): bookcarsTypes.Option[] =>
-    companies.map((company) => {
-      const { _id, fullName, avatar } = company
+  const getSuppliers = (suppliers: bookcarsTypes.User[]): bookcarsTypes.Option[] =>
+    suppliers.map((supplier) => {
+      const { _id, fullName, avatar } = supplier
       return { _id: _id as string, name: fullName, image: avatar }
     })
 
@@ -57,7 +57,7 @@ const SupplierSelectList = ({
         return
       }
       const totalRecords = Array.isArray(_data.pageInfo) && _data.pageInfo.length > 0 ? _data.pageInfo[0].totalRecords : 0
-      const _rows = _page === 1 ? getCompanies(_data.resultData) : [...rows, ...getCompanies(_data.resultData)]
+      const _rows = _page === 1 ? getSuppliers(_data.resultData) : [...rows, ...getSuppliers(_data.resultData)]
 
       setRows(_rows)
       setFetch(_data.resultData.length > 0)

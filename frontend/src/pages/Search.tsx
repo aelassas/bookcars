@@ -27,7 +27,7 @@ const Search = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
@@ -103,15 +103,15 @@ const Search = () => {
         return
       }
 
-      const _allCompanies = await SupplierService.getAllSuppliers()
-      const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
+      const _allSuppliers = await SupplierService.getAllSuppliers()
+      const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
 
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
-      setAllCompanies(_allCompanies)
-      setCompanies(_companies)
+      setAllSuppliers(_allSuppliers)
+      setCompanies(_suppliers)
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)
@@ -129,7 +129,7 @@ const Search = () => {
             {!loading && (
               <>
                 <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
-                <SupplierFilter className="filter" companies={allCompanies} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
+                <SupplierFilter className="filter" companies={allSuppliers} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
                 <FuelFilter className="filter" onChange={handleFuelFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
                 <MileageFilter className="filter" onChange={handleMileageFilterChange} />

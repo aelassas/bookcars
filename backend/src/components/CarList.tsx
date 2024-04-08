@@ -376,11 +376,11 @@ const CarList = ({
                   <div className="car">
                     <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                     {!hideCompany && (
-                      <div className="car-company">
-                        <span className="car-company-logo">
+                      <div className="car-supplier">
+                        <span className="car-supplier-logo">
                           <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                         </span>
-                        <a href={`/supplier?c=${car.company._id}`} className="car-company-info">
+                        <a href={`/supplier?c=${car.company._id}`} className="car-supplier-info">
                           {car.company.fullName}
                         </a>
                       </div>

@@ -113,7 +113,7 @@ const CarList = ({
 
   const fetchData = async (
     _page: number,
-    _companies?: string[],
+    _suppliers?: string[],
     _pickupLocation?: string,
     _fuel?: string[],
     _gearbox?: string[],
@@ -123,7 +123,7 @@ const CarList = ({
     try {
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: _companies ?? [],
+        companies: _suppliers ?? [],
         pickupLocation: _pickupLocation,
         fuel: _fuel,
         gearbox: _gearbox,
@@ -260,11 +260,11 @@ const CarList = ({
               <div className="car">
                 <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                 {!hideCompany && (
-                  <div className="car-company">
-                    <span className="car-company-logo">
+                  <div className="car-supplier">
+                    <span className="car-supplier-logo">
                       <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                     </span>
-                    <span className="car-company-info">{car.company.fullName}</span>
+                    <span className="car-supplier-info">{car.company.fullName}</span>
                   </div>
                 )}
               </div>

@@ -1,18 +1,18 @@
-section.company-list .empty-list {
+section.supplier-list .empty-list {
   margin-top: 15px;
   text-align: center;
   width: 250px;
   margin-left: calc(50% - 125px);
 }
 
-section.company-list {
+section.supplier-list {
   padding-top: 10px;
   margin: 0 10px;
   width: 100%;
   max-width: 480px;
 }
 
-section.company-list article {
+section.supplier-list article {
   position: relative;
   background: #fff;
   border: 1px solid #ddd;
@@ -24,13 +24,13 @@ section.company-list article {
   height: 85px;
 }
 
-section.company-list article .company-item {
+section.supplier-list article .supplier-item {
   position: absolute;
   left: 15px;
   top: 25px;
 }
 
-section.company-list article .company-item .company-item-avatar {
+section.supplier-list article .supplier-item .supplier-item-avatar {
   float: left;
   display: inline;
   margin-top: 3px;
@@ -39,12 +39,12 @@ section.company-list article .company-item .company-item-avatar {
   height: 34px;
 }
 
-section.company-list article .company-item .company-item-avatar img {
+section.supplier-list article .supplier-item .supplier-item-avatar img {
   max-width: 100%;
   max-height: 100%;
 }
 
-section.company-list article .company-item .company-item-title {
+section.supplier-list article .supplier-item .supplier-item-title {
   display: inline;
   font-size: 1.7em;
   margin-left: 20px;
@@ -55,26 +55,26 @@ section.company-list article .company-item .company-item-title {
   word-break: break-word;
 }
 
-section.company-list article .company-actions {
+section.supplier-list article .supplier-actions {
   position: absolute;
   right: 10px;
   width: 160px;
 }
 
-section.company-list article .company-actions a,
-section.company-list article .company-actions button {
+section.supplier-list article .supplier-actions a,
+section.supplier-list article .supplier-actions button {
   float: right;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >= 960px) {
-  section.company-list article {
+  section.supplier-list article {
     width: 550px;
     margin-left: calc(50% - 275px);
   }
 
-  section.company-list article .company-item {
+  section.supplier-list article .supplier-item {
     width: 370px;
   }
 }

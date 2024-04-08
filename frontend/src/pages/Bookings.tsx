@@ -14,7 +14,7 @@ import '../assets/css/bookings.css'
 
 const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
   const [companies, setCompanies] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
@@ -30,8 +30,8 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (_companies: string[]) => {
-    setCompanies(_companies)
+  const handleSupplierFilterChange = (_suppliers: string[]) => {
+    setCompanies(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -46,10 +46,10 @@ const Bookings = () => {
     setUser(_user)
     setLoadingCompanies(true)
 
-    const _allCompanies = await SupplierService.getAllSuppliers()
-    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
-    setAllCompanies(_allCompanies)
-    setCompanies(_companies)
+    const _allSuppliers = await SupplierService.getAllSuppliers()
+    const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
+    setAllSuppliers(_allSuppliers)
+    setCompanies(_suppliers)
     setLoadingCompanies(false)
   }
 
@@ -59,7 +59,7 @@ const Bookings = () => {
         <div className="bookings">
           <div className="col-1">
             <div>
-              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="cl-company-filter" />
+              <SupplierFilter companies={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
               <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
               <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile()} />
             </div>

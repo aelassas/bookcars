@@ -38,7 +38,7 @@ const Suppliers = () => {
   return (
     <Master onLoad={onLoad} strict>
       {user && (
-        <div className="companies">
+        <div className="suppliers">
           <div className="col-1">
             <div className="col-1-container">
               <Search className="search" onSubmit={handleSearch} />
@@ -47,18 +47,18 @@ const Suppliers = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  className="btn-primary new-company"
+                  className="btn-primary new-supplier"
                   size="small"
                   href="/create-supplier"
                 >
-                  {strings.NEW_COMPANY}
+                  {strings.NEW_SUPPLIER}
                 </Button>
               )}
 
               {rowCount > 0 && (
               <InfoBox
-                value={`${rowCount} ${rowCount > 1 ? strings.COMPANIES : strings.COMPANY}`}
-                className="company-count"
+                value={`${rowCount} ${rowCount > 1 ? strings.SUPPLIERS : strings.SUPPLIER}`}
+                className="supplier-count"
               />
 )}
             </div>

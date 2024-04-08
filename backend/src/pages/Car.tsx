@@ -123,9 +123,9 @@ const Car = () => {
           if (_car) {
             if (_user.type === bookcarsTypes.RecordType.Admin) {
               try {
-                const _companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(_companies)
-                setCompanies(companyIds)
+                const _suppliers = await SupplierService.getAllSuppliers()
+                const supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+                setCompanies(supplierIds)
                 setCar(_car)
                 setVisible(true)
                 setLoading(false)
@@ -186,11 +186,11 @@ const Car = () => {
                   color="disabled"
                   className="avatar-ctn"
                 />
-                <div className="car-company">
-                  <span className="car-company-logo">
+                <div className="car-supplier">
+                  <span className="car-supplier-logo">
                     <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
                   </span>
-                  <span className="car-company-info">{car.company.fullName}</span>
+                  <span className="car-supplier-info">{car.company.fullName}</span>
                 </div>
               </div>
               <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
