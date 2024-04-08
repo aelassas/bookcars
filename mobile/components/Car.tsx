@@ -111,14 +111,14 @@ const Car = ({
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.company}>
+          <View style={styles.supplier}>
             <Image
-              style={styles.companyImg}
+              style={styles.supplierImg}
               source={{
                 uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
               }}
             />
-            <Text style={styles.companyText}>{car.company.fullName}</Text>
+            <Text style={styles.supplierText}>{car.company.fullName}</Text>
           </View>
 
           <View style={styles.price}>
@@ -221,17 +221,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  company: {
+  supplier: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
   },
-  companyImg: {
+  supplierImg: {
     width: env.COMPANY_IMAGE_WIDTH,
     height: env.COMPANY_IMAGE_HEIGHT,
   },
-  companyText: {
+  supplierText: {
     color: '#a1a1a1',
     fontSize: 12,
     marginLeft: 5,

@@ -971,14 +971,14 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Text style={styles.detailText}>{`${car.name} (${car.price} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
-                  <View style={styles.company}>
+                  <View style={styles.supplier}>
                     <Image
-                      style={styles.companyImg}
+                      style={styles.supplierImg}
                       source={{
                         uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
                       }}
                     />
-                    <Text style={styles.companyText}>{car.company.fullName}</Text>
+                    <Text style={styles.supplierText}>{car.company.fullName}</Text>
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
@@ -1333,16 +1333,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
-  company: {
+  supplier: {
     flexDirection: 'row',
     marginBottom: 10,
     alignItems: 'center',
   },
-  companyImg: {
+  supplierImg: {
     width: env.COMPANY_IMAGE_WIDTH,
     height: env.COMPANY_IMAGE_HEIGHT,
   },
-  companyText: {
+  supplierText: {
     color: '#a1a1a1',
     fontSize: 10,
     marginLeft: 5,

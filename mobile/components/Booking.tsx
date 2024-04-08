@@ -69,14 +69,14 @@ const Booking = ({
         <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CAR_CURRENCY')})`}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
-        <View style={styles.company}>
+        <View style={styles.supplier}>
           <Image
-            style={styles.companyImg}
+            style={styles.supplierImg}
             source={{
               uri: bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar),
             }}
           />
-          <Text style={styles.companyText}>{supplier.fullName}</Text>
+          <Text style={styles.supplierText}>{supplier.fullName}</Text>
         </View>
 
         {(booking.cancellation || booking.amendments || booking.collisionDamageWaiver || booking.theftProtection || booking.fullInsurance || booking.additionalDriver) && (
@@ -236,16 +236,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
   },
-  company: {
+  supplier: {
     flexDirection: 'row',
     marginBottom: 10,
     alignItems: 'center',
   },
-  companyImg: {
+  supplierImg: {
     width: env.COMPANY_IMAGE_WIDTH,
     height: env.COMPANY_IMAGE_HEIGHT,
   },
-  companyText: {
+  supplierText: {
     color: '#a1a1a1',
     fontSize: 10,
     marginLeft: 5,
