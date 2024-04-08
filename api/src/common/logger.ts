@@ -1,8 +1,7 @@
 import winston, { format, transports } from 'winston'
 
-const production = process.env.NODE_ENV === 'production'
 const logFormat = format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
-const level = production ? 'info' : 'debug'
+const level = process.env.NODE_ENV === 'production' ? 'info' : 'debug'
 
 const logger = winston.createLogger({
   level,
