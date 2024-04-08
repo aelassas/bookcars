@@ -47,7 +47,7 @@ interface CarListProps {
   booking?: bookcarsTypes.Booking
   className?: string
   hidePrice?: boolean
-  hideCompany?: boolean
+  hideSupplier?: boolean
   loading?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
@@ -67,7 +67,7 @@ const CarList = ({
   booking,
   className,
   hidePrice,
-  hideCompany,
+  hideSupplier,
   loading: carListLoading,
   onLoad
 }: CarListProps) => {
@@ -259,7 +259,7 @@ const CarList = ({
               </div>
               <div className="car">
                 <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-                {!hideCompany && (
+                {!hideSupplier && (
                   <div className="car-supplier">
                     <span className="car-supplier-logo">
                       <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />

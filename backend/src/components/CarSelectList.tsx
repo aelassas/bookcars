@@ -23,7 +23,7 @@ interface CarSelectListProps {
   multiple?: boolean
   variant?: TextFieldVariants
   value?: bookcarsTypes.Car
-  company: string
+  supplier: string
   pickupLocation: string
   onChange?: (values: bookcarsTypes.Car[]) => void
 }
@@ -34,14 +34,14 @@ const CarSelectList = ({
   multiple,
   variant,
   value,
-  company,
+  supplier,
   pickupLocation,
   onChange
 }: CarSelectListProps) => {
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)
-  const [currentCompany, setCurrentCompany] = useState('-1')
+  const [currentSupplier, setCurrentSupplier] = useState('-1')
   const [currentPickupLocation, setCurrentPickupLocation] = useState('-1')
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
@@ -60,10 +60,10 @@ const CarSelectList = ({
   }, [value])
 
   useEffect(() => {
-    if (company && currentCompany !== company) {
-      setCurrentCompany(company || '-1')
+    if (supplier && currentSupplier !== supplier) {
+      setCurrentSupplier(supplier || '-1')
 
-      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
+      if (currentSupplier !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -74,13 +74,13 @@ const CarSelectList = ({
         }
       }
     }
-  }, [currentCompany, company, currentPickupLocation, onChange])
+  }, [currentSupplier, supplier, currentPickupLocation, onChange])
 
   useEffect(() => {
     if (pickupLocation && currentPickupLocation !== pickupLocation) {
       setCurrentPickupLocation(pickupLocation || '-1')
 
-      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
+      if (currentSupplier !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -91,7 +91,7 @@ const CarSelectList = ({
         }
       }
     }
-  }, [currentPickupLocation, currentCompany, pickupLocation, onChange])
+  }, [currentPickupLocation, currentSupplier, pickupLocation, onChange])
 
   useEffect(() => {
     if (currentPickupLocation !== pickupLocation) {
@@ -162,7 +162,7 @@ const CarSelectList = ({
             if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
-              fetchData(p, keyword, currentCompany, currentPickupLocation)
+              fetchData(p, keyword, currentSupplier, currentPickupLocation)
             }
           },
         }}
@@ -171,7 +171,7 @@ const CarSelectList = ({
             const p = 1
             setCars([])
             setPage(p)
-            fetchData(p, keyword, currentCompany, currentPickupLocation)
+            fetchData(p, keyword, currentSupplier, currentPickupLocation)
           }
         }}
         onInputChange={(event: React.SyntheticEvent<Element, Event>) => {
@@ -181,7 +181,7 @@ const CarSelectList = ({
             setCars([])
             setPage(1)
             setKeyword(_value)
-            fetchData(1, _value, currentCompany, currentPickupLocation)
+            fetchData(1, _value, currentSupplier, currentPickupLocation)
           }
         }}
         onClear={() => {
@@ -189,16 +189,16 @@ const CarSelectList = ({
           setPage(1)
           setKeyword('')
           setFetch(true)
-          fetchData(1, '', currentCompany, currentPickupLocation)
+          fetchData(1, '', currentSupplier, currentPickupLocation)
         }}
       />
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent className="dialog-content">
-          {currentCompany === '-1' && currentPickupLocation === '-1' ? (
+          {currentSupplier === '-1' && currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELDS}${blStrings.SUPPLIER} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
-          ) : currentCompany === '-1' ? (
+          ) : currentSupplier === '-1' ? (
             `${strings.REQUIRED_FIELD}${blStrings.SUPPLIER}`
           ) : currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`

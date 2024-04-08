@@ -25,7 +25,7 @@ import * as helper from '../common/helper'
 
 import '../assets/css/create-supplier.css'
 
-const CreateCompany = () => {
+const CreateSupplier = () => {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -217,7 +217,7 @@ const CreateCompany = () => {
         location,
         bio,
         language: UserService.getLanguage(),
-        type: bookcarsTypes.RecordType.Company,
+        type: bookcarsTypes.RecordType.Supplier,
         avatar,
         payLater,
       }
@@ -245,7 +245,7 @@ const CreateCompany = () => {
           </h1>
           <form onSubmit={handleSubmit}>
             <Avatar
-              type={bookcarsTypes.RecordType.Company}
+              type={bookcarsTypes.RecordType.Supplier}
               mode="create"
               record={null}
               size="large"
@@ -349,4 +349,4 @@ const CreateCompany = () => {
   )
 }
 
-export default CreateCompany
+export default CreateSupplier

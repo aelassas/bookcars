@@ -675,7 +675,7 @@ describe('POST /api/update-user', () => {
       phone: '09090908',
       location: 'location1-1',
       bio: 'bio1-1',
-      type: bookcarsTypes.UserType.Company,
+      type: bookcarsTypes.UserType.Supplier,
       payLater: false,
     }
     let res = await request(app)
@@ -685,7 +685,7 @@ describe('POST /api/update-user', () => {
     expect(res.statusCode).toBe(200)
     let user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
-    expect(user?.type).toBe(bookcarsTypes.UserType.Company)
+    expect(user?.type).toBe(bookcarsTypes.UserType.Supplier)
     expect(user?.fullName).toBe(payload.fullName)
     expect(user?.birthDate).toStrictEqual(payload.birthDate)
     expect(user?.phone).toBe(payload.phone)
@@ -705,7 +705,7 @@ describe('POST /api/update-user', () => {
     expect(res.statusCode).toBe(200)
     user = await User.findById(USER1_ID)
     expect(user).not.toBeNull()
-    expect(user?.type).toBe(bookcarsTypes.UserType.Company)
+    expect(user?.type).toBe(bookcarsTypes.UserType.Supplier)
     expect(user?.fullName).toBe(fullName)
     expect(user?.birthDate).toBeUndefined()
     expect(user?.phone).toBe(payload.phone)
@@ -1115,7 +1115,7 @@ describe('POST /api/users/:page/:size', () => {
 
     const payload: bookcarsTypes.GetUsersBody = {
       user: testHelper.getAdminUserId(),
-      types: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Company, bookcarsTypes.UserType.User],
+      types: [bookcarsTypes.UserType.Admin, bookcarsTypes.UserType.Supplier, bookcarsTypes.UserType.User],
     }
     let res = await request(app)
       .post(`/api/users/${testHelper.PAGE}/${testHelper.SIZE}`)

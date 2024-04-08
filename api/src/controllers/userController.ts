@@ -1268,7 +1268,7 @@ export const deleteUsers = async (req: Request, res: Response) => {
           }
         }
 
-        if (user.type === bookcarsTypes.UserType.Company) {
+        if (user.type === bookcarsTypes.UserType.Supplier) {
           const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
           await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
           await Booking.deleteMany({ company: id })

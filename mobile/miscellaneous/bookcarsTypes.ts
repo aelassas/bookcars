@@ -6,7 +6,7 @@
 
 export enum UserType {
     Admin = 'admin',
-    Company = 'company',
+    Supplier = 'company',
     User = 'user',
 }
 
@@ -51,7 +51,7 @@ export enum Availablity {
 
 export enum RecordType {
     Admin = 'admin',
-    Company = 'company',
+    Supplier = 'company',
     User = 'user',
     Car = 'car',
     Location = 'location'

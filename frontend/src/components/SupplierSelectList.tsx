@@ -42,8 +42,8 @@ const SupplierSelectList = ({
   }, [value, multiple, selectedOptions])
 
   const getCompanies = (companies: bookcarsTypes.User[]): bookcarsTypes.Option[] =>
-    companies.map((company) => {
-      const { _id, fullName, avatar } = company
+    companies.map((supplier) => {
+      const { _id, fullName, avatar } = supplier
       return { _id: _id as string, name: fullName, image: avatar }
     })
 
@@ -88,7 +88,7 @@ const SupplierSelectList = ({
       required={required || false}
       readOnly={readOnly}
       multiple={multiple}
-      type={bookcarsTypes.RecordType.Company}
+      type={bookcarsTypes.RecordType.Supplier}
       variant={variant || 'standard'}
       ListboxProps={{
         onScroll: (event) => {

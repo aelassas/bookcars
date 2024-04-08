@@ -134,8 +134,8 @@ const User = () => {
     }
   }
 
-  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Company && loggedUser._id === user.company))
-  const company = user && user.type === bookcarsTypes.RecordType.Company
+  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.company))
+  const supplier = user && user.type === bookcarsTypes.RecordType.Supplier
 
   return (
     <Master onLoad={onLoad} strict>
@@ -152,7 +152,7 @@ const User = () => {
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"
-                className={company ? 'supplier-avatar' : 'user-avatar'}
+                className={supplier ? 'supplier-avatar' : 'user-avatar'}
                 readonly
                 verified
               />
@@ -193,17 +193,17 @@ const User = () => {
             </div>
           </div>
           <div className="col-2">
-            {(edit || !company) && (
+            {(edit || supplier) && (
               <BookingList
                 containerClassName="user"
                 offset={offset}
                 loggedUser={loggedUser}
-                user={company ? undefined : user}
-                companies={company ? [user._id as string] : companies}
+                user={supplier ? undefined : user}
+                companies={supplier ? [user._id as string] : companies}
                 statuses={statuses}
                 hideDates={env.isMobile()}
                 checkboxSelection={!env.isMobile()}
-                hideCompanyColumn={company}
+                hideSupplierColumn={supplier}
               />
             )}
           </div>

@@ -117,7 +117,7 @@ export const createSupplier = async (email: string, fullName: string) => {
         fullName,
         language: LANGUAGE,
         password: passwordHash,
-        type: bookcarsTypes.UserType.Company,
+        type: bookcarsTypes.UserType.Supplier,
     }
     const supplier = new User(body)
     await supplier.save()

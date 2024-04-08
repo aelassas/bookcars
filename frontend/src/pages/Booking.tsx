@@ -53,7 +53,7 @@ const Booking = () => {
   const [minDate, setMinDate] = useState<Date>()
   const edit = false
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
@@ -314,7 +314,7 @@ const Booking = () => {
                   label={blStrings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
+                  onChange={handleSupplierChange}
                   value={supplier}
                   readOnly={!edit}
                 />
@@ -346,7 +346,7 @@ const Booking = () => {
 
               <CarSelectList
                 label={blStrings.CAR}
-                company={(supplier && supplier._id) || ''}
+                supplier={(supplier && supplier._id) || ''}
                 pickupLocation={(pickupLocation && pickupLocation._id) || ''}
                 onChange={handleCarSelectListChange}
                 required

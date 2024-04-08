@@ -25,7 +25,7 @@ const Suppliers = () => {
     }
   }
 
-  const handleCompanyDelete = (_rowCount: number) => {
+  const handleSupplierDelete = (_rowCount: number) => {
     setRowCount(_rowCount)
   }
 
@@ -68,7 +68,7 @@ const Suppliers = () => {
               user={user}
               keyword={keyword}
               onLoad={handleSupplierListLoad}
-              onDelete={handleCompanyDelete}
+              onDelete={handleSupplierDelete}
             />
           </div>
         </div>

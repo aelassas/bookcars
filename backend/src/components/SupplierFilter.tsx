@@ -40,7 +40,7 @@ const SupplierFilter = ({
     }
   }, [suppliers])
 
-  const handleCheckCompanyChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+  const handleCheckSupplierChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
     const supplierId = e.currentTarget.getAttribute('data-id') as string
 
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
@@ -94,12 +94,12 @@ const SupplierFilter = ({
     }
   }
 
-  const handleCompanyClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleSupplierClick = (e: React.MouseEvent<HTMLElement>) => {
     const checkbox = e.currentTarget.previousSibling as HTMLInputElement
     checkbox.checked = !checkbox.checked
     const event = e
     event.currentTarget = checkbox
-    handleCheckCompanyChange(event)
+    handleCheckSupplierChange(event)
   }
 
   return (
@@ -121,10 +121,10 @@ const SupplierFilter = ({
                   type="checkbox"
                   data-id={supplier._id}
                   className="supplier-checkbox"
-                  onChange={handleCheckCompanyChange}
+                  onChange={handleCheckSupplierChange}
                 />
                 <span
-                  onClick={handleCompanyClick}
+                  onClick={handleSupplierClick}
                   role="button"
                   tabIndex={0}
                 >

@@ -40,7 +40,7 @@ import '../assets/css/create-booking.css'
 
 const CreateBooking = () => {
   const navigate = useNavigate()
-  const [isCompany, setIsCompany] = useState(false)
+  const [isSupplier, setIsSupplier] = useState(false)
   const [visible, setVisible] = useState(false)
   const [supplier, setSupplier] = useState('')
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -65,7 +65,7 @@ const CreateBooking = () => {
   const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
@@ -247,9 +247,9 @@ const CreateBooking = () => {
     if (user) {
       setVisible(true)
 
-      if (user.type === bookcarsTypes.RecordType.Company) {
+      if (user.type === bookcarsTypes.RecordType.Supplier) {
         setSupplier(user._id as string)
-        setIsCompany(true)
+        setIsSupplier(true)
       }
     }
   }
@@ -264,13 +264,13 @@ const CreateBooking = () => {
             {' '}
           </h1>
           <form onSubmit={handleSubmit}>
-            {!isCompany && (
+            {!isSupplier && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
                   label={blStrings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
+                  onChange={handleSupplierChange}
                 />
               </FormControl>
             )}
@@ -302,7 +302,7 @@ const CreateBooking = () => {
 
             <CarSelectList
               label={blStrings.CAR}
-              company={supplier}
+              supplier={supplier}
               pickupLocation={pickupLocation}
               onChange={handleCarSelectListChange}
               required

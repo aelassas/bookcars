@@ -14,7 +14,7 @@ import {
   AccountCircle,
   PhotoCamera as PhotoCameraIcon,
   BrokenImageTwoTone as DeleteIcon,
-  CorporateFare as CompanyIcon,
+  CorporateFare as SupplierIcon,
   DirectionsCar as CarIcon,
   Check as VerifiedIcon,
 } from '@mui/icons-material'
@@ -107,7 +107,7 @@ const Avatar = ({
 
     reader.onloadend = async () => {
       if (type === bookcarsTypes.RecordType.Admin
-        || type === bookcarsTypes.RecordType.Company
+        || type === bookcarsTypes.RecordType.Supplier
         || type === bookcarsTypes.RecordType.User) {
         if (mode === 'create') {
           const createAvatar = async () => {
@@ -257,7 +257,7 @@ const Avatar = ({
 
   const handleDelete = async () => {
     try {
-      if (type === bookcarsTypes.RecordType.Admin || type === bookcarsTypes.RecordType.Company || type === bookcarsTypes.RecordType.User) {
+      if (type === bookcarsTypes.RecordType.Admin || type === bookcarsTypes.RecordType.Supplier || type === bookcarsTypes.RecordType.User) {
         if (avatarRecord && mode === 'update') {
           const { _id } = avatarRecord
 
@@ -388,7 +388,7 @@ const Avatar = ({
         readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
-          ) : type === bookcarsTypes.RecordType.Company ? (
+          ) : type === bookcarsTypes.RecordType.Supplier ? (
             <div className="supplier-avatar-readonly">
               <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
             </div>
@@ -438,7 +438,7 @@ const Avatar = ({
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              className={type === bookcarsTypes.RecordType.Company ? 'supplier-avatar' : ''}
+              className={type === bookcarsTypes.RecordType.Supplier ? 'supplier-avatar' : ''}
               badgeContent={(
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                   <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
@@ -451,7 +451,7 @@ const Avatar = ({
                 <div className="car-avatar">
                   <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
                 </div>
-              ) : type === bookcarsTypes.RecordType.Company ? (
+              ) : type === bookcarsTypes.RecordType.Supplier ? (
                 <img style={supplierImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
               ) : (
                 <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} />
@@ -463,8 +463,8 @@ const Avatar = ({
         : readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <CarIcon style={carImageStyle} color={color || 'inherit'} />
-          ) : type === bookcarsTypes.RecordType.Company ? (
-            <CompanyIcon style={supplierImageStyle} color={color || 'inherit'} />
+          ) : type === bookcarsTypes.RecordType.Supplier ? (
+            <SupplierIcon style={supplierImageStyle} color={color || 'inherit'} />
           ) : verified && avatarRecord && avatarRecord.verified ? (
             <Badge
               overlap="circular"
@@ -510,8 +510,8 @@ const Avatar = ({
             >
               {type === bookcarsTypes.RecordType.Car ? (
                 <CarIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
-              ) : type === bookcarsTypes.RecordType.Company ? (
-                <CompanyIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+              ) : type === bookcarsTypes.RecordType.Supplier ? (
+                <SupplierIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
               ) : (
                 <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
               )}

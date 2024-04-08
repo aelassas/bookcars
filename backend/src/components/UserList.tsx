@@ -142,7 +142,7 @@ const UserList = ({
           let userAvatar
 
           if (__user.avatar) {
-            if (__user.type === bookcarsTypes.RecordType.Company) {
+            if (__user.type === bookcarsTypes.RecordType.Supplier) {
               userAvatar = <img src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} alt={row.fullName} />
             } else {
               const avatar = <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} className="avatar-small" />

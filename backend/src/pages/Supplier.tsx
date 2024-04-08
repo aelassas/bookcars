@@ -28,7 +28,7 @@ import NoMatch from './NoMatch'
 
 import '../assets/css/supplier.css'
 
-const Company = () => {
+const Supplier = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [supplier, setSupplier] = useState<bookcarsTypes.User>()
@@ -140,7 +140,7 @@ const Company = () => {
               {edit ? (
                 <Avatar
                   record={supplier}
-                  type={bookcarsTypes.RecordType.Company}
+                  type={bookcarsTypes.RecordType.Supplier}
                   mode="update"
                   size="large"
                   hideDelete
@@ -205,7 +205,7 @@ const Company = () => {
               reload={false}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
-              hideCompany
+              hideSupplier
             />
           </div>
         </div>
@@ -229,4 +229,4 @@ const Company = () => {
   )
 }
 
-export default Company
+export default Supplier
