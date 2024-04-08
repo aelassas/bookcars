@@ -76,7 +76,7 @@ export const update = async (req: Request, res: Response) => {
 
     if (car) {
       const {
-        company,
+        supplier,
         name,
         minimumAge,
         available,
@@ -98,7 +98,7 @@ export const update = async (req: Request, res: Response) => {
         additionalDriver,
       } = body
 
-      car.company = new mongoose.Types.ObjectId(company)
+      car.supplier = new mongoose.Types.ObjectId(supplier)
       car.minimumAge = minimumAge
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
@@ -345,7 +345,7 @@ export const getCar = async (req: Request, res: Response) => {
 
   try {
     const car = await Car.findById(id)
-      .populate<{ company: env.UserInfo }>('company')
+      .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ locations: env.LocationInfo[] }>({
         path: 'locations',
         populate: {
@@ -361,8 +361,8 @@ export const getCar = async (req: Request, res: Response) => {
         fullName,
         avatar,
         payLater,
-      } = car.company
-      car.company = {
+      } = car.supplier
+      car.supplier = {
         _id,
         fullName,
         avatar,
@@ -397,7 +397,7 @@ export const getCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       fuel,
       gearbox,
@@ -409,7 +409,7 @@ export const getCars = async (req: Request, res: Response) => {
     const options = 'i'
 
     const $match: mongoose.FilterQuery<any> = {
-      $and: [{ name: { $regex: keyword, $options: options } }, { company: { $in: companies } }],
+      $and: [{ name: { $regex: keyword, $options: options } }, { supplier: { $in: suppliers } }],
     }
 
     if (fuel) {
@@ -451,7 +451,7 @@ export const getCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$company' },
+            let: { userId: '$supplier' },
             pipeline: [
               {
                 $match: {
@@ -459,10 +459,10 @@ export const getCars = async (req: Request, res: Response) => {
                 },
               },
             ],
-            as: 'company',
+            as: 'supplier',
           },
         },
-        { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
         {
           $lookup: {
             from: 'Location',
@@ -492,8 +492,8 @@ export const getCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.company
-      car.company = { _id, fullName, avatar }
+      const { _id, fullName, avatar } = car.supplier
+      car.supplier = { _id, fullName, avatar }
     }
 
     return res.json(data)
@@ -515,7 +515,7 @@ export const getCars = async (req: Request, res: Response) => {
 export const getBookingCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingCarsPayload } = req
-    const company = new mongoose.Types.ObjectId(body.company)
+    const supplier = new mongoose.Types.ObjectId(body.supplier)
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -527,7 +527,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
         {
           $match: {
             $and: [
-              { company: { $eq: company } },
+              { supplier: { $eq: supplier } },
               { locations: pickupLocation },
               { available: true }, { name: { $regex: keyword, $options: options } },
             ],
@@ -561,7 +561,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const {
       fuel,
@@ -572,7 +572,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     const $match: mongoose.FilterQuery<any> = {
       $and: [
-        { company: { $in: companies } },
+        { supplier: { $in: suppliers } },
         { locations: pickupLocation },
         { available: true }, { type: { $in: fuel } },
         { gearbox: { $in: gearbox } },
@@ -599,7 +599,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$company' },
+            let: { userId: '$supplier' },
             pipeline: [
               {
                 $match: {
@@ -607,10 +607,10 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                 },
               },
             ],
-            as: 'company',
+            as: 'supplier',
           },
         },
-        { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
         {
           $lookup: {
             from: 'Location',
@@ -640,8 +640,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.company
-      car.company = { _id, fullName, avatar }
+      const { _id, fullName, avatar } = car.supplier
+      car.supplier = { _id, fullName, avatar }
     }
 
     return res.json(data)

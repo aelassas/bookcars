@@ -214,7 +214,7 @@ const CreateCar = () => {
 
       const data = {
         name,
-        company: supplier,
+        supplier: supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),

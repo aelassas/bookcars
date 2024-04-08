@@ -34,7 +34,7 @@ const Booking = ({
   const to = new Date(booking.to)
   const days = bookcarsHelper.days(from, to)
   const car = booking.car as bookcarsTypes.Car
-  const supplier = booking.company as bookcarsTypes.User
+  const supplier = booking.supplier as bookcarsTypes.User
 
   const today = new Date()
   today.setHours(0)
@@ -242,8 +242,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   supplierImg: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
   supplierText: {
     color: '#a1a1a1',

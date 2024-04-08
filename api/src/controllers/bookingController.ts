@@ -52,38 +52,38 @@ export const create = async (req: Request, res: Response) => {
  * @async
  * @param {env.User} user
  * @param {string} bookingId
- * @param {env.User} company
+ * @param {env.User} supplier
  * @param {string} notificationMessage
  * @returns {void}
  */
-const notifySupplier = async (user: env.User, bookingId: string, company: env.User, notificationMessage: string) => {
-  i18n.locale = company.language
+const notifySupplier = async (user: env.User, bookingId: string, supplier: env.User, notificationMessage: string) => {
+  i18n.locale = supplier.language
 
   // notification
   const message = `${user.fullName} ${notificationMessage} ${bookingId}.`
   const notification = new Notification({
-    user: company._id,
+    user: supplier._id,
     message,
     booking: bookingId,
   })
 
   await notification.save()
-  let counter = await NotificationCounter.findOne({ user: company._id })
+  let counter = await NotificationCounter.findOne({ user: supplier._id })
   if (counter && typeof counter.count !== 'undefined') {
     counter.count += 1
     await counter.save()
   } else {
-    counter = new NotificationCounter({ user: company._id, count: 1 })
+    counter = new NotificationCounter({ user: supplier._id, count: 1 })
     await counter.save()
   }
 
   // mail
   const mailOptions = {
     from: env.SMTP_FROM,
-    to: company.email,
+    to: supplier.email,
     subject: message,
     html: `<p>
-    ${i18n.t('HELLO')}${company.fullName},<br><br>
+    ${i18n.t('HELLO')}${supplier.fullName},<br><br>
     ${message}<br><br>
     ${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
@@ -174,7 +174,7 @@ export const checkout = async (req: Request, res: Response) => {
     }
     const from = booking.from.toLocaleString(locale, options)
     const to = booking.to.toLocaleString(locale, options)
-    const car = await Car.findById(booking.car).populate<{ company: env.User }>('company')
+    const car = await Car.findById(booking.car).populate<{ supplier: env.User }>('supplier')
     if (!car) {
       logger.info(`Car ${booking.car} not found`)
       return res.sendStatus(204)
@@ -202,11 +202,11 @@ export const checkout = async (req: Request, res: Response) => {
         ${i18n.t('HELLO')}${user.fullName},<br><br>
         ${!body.payLater ? `${i18n.t('BOOKING_CONFIRMED_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_PART2')}`
           + '<br><br>' : ''}
-        ${i18n.t('BOOKING_CONFIRMED_PART3')}${car.company.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
+        ${i18n.t('BOOKING_CONFIRMED_PART3')}${car.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART4')}${pickupLocationName}${i18n.t('BOOKING_CONFIRMED_PART5')}`
         + `${from} ${i18n.t('BOOKING_CONFIRMED_PART6')}`
         + `${car.name}${i18n.t('BOOKING_CONFIRMED_PART7')}`
         + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART8')}<br><br>`
-        + `${i18n.t('BOOKING_CONFIRMED_PART9')}${car.company.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
+        + `${i18n.t('BOOKING_CONFIRMED_PART9')}${car.supplier.fullName}${i18n.t('BOOKING_CONFIRMED_PART10')}${dropOffLocationName}${i18n.t('BOOKING_CONFIRMED_PART11')}`
         + `${to} ${i18n.t('BOOKING_CONFIRMED_PART12')}`
         + `<br><br>${i18n.t('BOOKING_CONFIRMED_PART13')}<br><br>${i18n.t('BOOKING_CONFIRMED_PART14')}${env.FRONTEND_HOST}<br><br>
         ${i18n.t('REGARDS')}<br>
@@ -215,9 +215,9 @@ export const checkout = async (req: Request, res: Response) => {
     await mailHelper.sendMail(mailOptions)
 
     // Notify supplier
-    const supplier = await User.findById(booking.company)
+    const supplier = await User.findById(booking.supplier)
     if (!supplier) {
-      logger.info(`Supplier ${booking.company} not found`)
+      logger.info(`Supplier ${booking.supplier} not found`)
       return res.sendStatus(204)
     }
     i18n.locale = supplier.language
@@ -391,7 +391,7 @@ export const update = async (req: Request, res: Response) => {
       }
 
       const {
-        company,
+        supplier,
         car,
         driver,
         pickupLocation,
@@ -410,7 +410,7 @@ export const update = async (req: Request, res: Response) => {
 
       const previousStatus = booking.status
 
-      booking.company = new mongoose.Types.ObjectId(company as string)
+      booking.supplier = new mongoose.Types.ObjectId(supplier as string)
       booking.car = new mongoose.Types.ObjectId(car as string)
       booking.driver = new mongoose.Types.ObjectId(driver as string)
       booking.pickupLocation = new mongoose.Types.ObjectId(pickupLocation as string)
@@ -524,11 +524,11 @@ export const getBooking = async (req: Request, res: Response) => {
 
   try {
     const booking = await Booking.findById(id)
-      .populate<{ company: env.UserInfo }>('company')
+      .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ car: env.CarInfo }>({
         path: 'car',
         populate: {
-          path: 'company',
+          path: 'supplier',
           model: 'User',
         },
       })
@@ -553,18 +553,18 @@ export const getBooking = async (req: Request, res: Response) => {
     if (booking) {
       const { language } = req.params
 
-      booking.company = {
-        _id: booking.company._id,
-        fullName: booking.company.fullName,
-        avatar: booking.company.avatar,
-        payLater: booking.company.payLater,
+      booking.supplier = {
+        _id: booking.supplier._id,
+        fullName: booking.supplier.fullName,
+        avatar: booking.supplier.avatar,
+        payLater: booking.supplier.payLater,
       }
 
-      booking.car.company = {
-        _id: booking.car.company._id,
-        fullName: booking.car.company.fullName,
-        avatar: booking.car.company.avatar,
-        payLater: booking.car.company.payLater,
+      booking.car.supplier = {
+        _id: booking.car.supplier._id,
+        fullName: booking.car.supplier.fullName,
+        avatar: booking.car.supplier.avatar,
+        payLater: booking.car.supplier.payLater,
       }
 
       booking.pickupLocation.name = booking.pickupLocation.values.filter((value) => value.language === language)[0].value
@@ -595,7 +595,7 @@ export const getBookings = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetBookingsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       statuses,
       user,
@@ -609,7 +609,7 @@ export const getBookings = async (req: Request, res: Response) => {
     const options = 'i'
 
     const $match: mongoose.FilterQuery<any> = {
-      $and: [{ 'company._id': { $in: companies } }, { status: { $in: statuses } }],
+      $and: [{ 'supplier._id': { $in: suppliers } }, { status: { $in: statuses } }],
     }
 
     if (user) {
@@ -640,7 +640,7 @@ export const getBookings = async (req: Request, res: Response) => {
         keyword = escapeStringRegexp(keyword)
         $match.$and!.push({
           $or: [
-            { 'company.fullName': { $regex: keyword, $options: options } },
+            { 'supplier.fullName': { $regex: keyword, $options: options } },
             { 'driver.fullName': { $regex: keyword, $options: options } },
             { 'car.name': { $regex: keyword, $options: options } },
           ],
@@ -654,16 +654,16 @@ export const getBookings = async (req: Request, res: Response) => {
       {
         $lookup: {
           from: 'User',
-          let: { companyId: '$company' },
+          let: { supplierId: '$supplier' },
           pipeline: [
             {
-              $match: { $expr: { $eq: ['$_id', '$$companyId'] } },
+              $match: { $expr: { $eq: ['$_id', '$$supplierId'] } },
             },
           ],
-          as: 'company',
+          as: 'supplier',
         },
       },
-      { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+      { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
       {
         $lookup: {
           from: 'Car',
@@ -775,8 +775,8 @@ export const getBookings = async (req: Request, res: Response) => {
     const bookings: env.BookingInfo[] = data[0].resultData
 
     for (const booking of bookings) {
-      const { _id, fullName, avatar } = booking.company
-      booking.company = { _id, fullName, avatar }
+      const { _id, fullName, avatar } = booking.supplier
+      booking.supplier = { _id, fullName, avatar }
     }
 
     return res.json(data)
@@ -834,7 +834,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
       .findOne({
         _id: new mongoose.Types.ObjectId(id),
       })
-      .populate<{ company: env.User }>('company')
+      .populate<{ supplier: env.User }>('supplier')
       .populate<{ driver: env.User }>('driver')
 
     if (booking && booking.cancellation && !booking.cancelRequest) {
@@ -842,7 +842,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
       await booking.save()
 
       // Notify supplier
-      await notifySupplier(booking.driver, booking._id.toString(), booking.company, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
+      await notifySupplier(booking.driver, booking._id.toString(), booking.supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
 
       return res.sendStatus(200)
     }

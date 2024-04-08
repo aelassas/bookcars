@@ -374,7 +374,7 @@ const Avatar = ({
     }
   }, [record, type, mode])
 
-  const supplierImageStyle = { width: env.COMPANY_IMAGE_WIDTH }
+  const supplierImageStyle = { width: env.SUPPLIER_IMAGE_WIDTH }
 
   const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
 

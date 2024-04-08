@@ -15,10 +15,10 @@ import '../assets/css/bookings.css'
 const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
-  const [loadingCompanies, setLoadingCompanies] = useState(true)
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Bookings = () => {
   }, [user])
 
   const handleSupplierFilterChange = (_suppliers: string[]) => {
-    setCompanies(_suppliers)
+    setSuppliers(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -44,13 +44,13 @@ const Bookings = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
-    setLoadingCompanies(true)
+    setLoadingSuppliers(true)
 
     const _allSuppliers = await SupplierService.getAllSuppliers()
     const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
     setAllSuppliers(_allSuppliers)
-    setCompanies(_suppliers)
-    setLoadingCompanies(false)
+    setSuppliers(_suppliers)
+    setLoadingSuppliers(false)
   }
 
   return (
@@ -59,7 +59,7 @@ const Bookings = () => {
         <div className="bookings">
           <div className="col-1">
             <div>
-              <SupplierFilter companies={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
+              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
               <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
               <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile()} />
             </div>
@@ -70,10 +70,10 @@ const Bookings = () => {
               offset={offset}
               user={user}
               language={user.language}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               filter={filter}
-              loading={loadingCompanies}
+              loading={loadingSuppliers}
               hideDates={env.isMobile()}
               checkboxSelection={false}
             />

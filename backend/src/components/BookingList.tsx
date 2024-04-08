@@ -35,7 +35,7 @@ import StatusList from './StatusList'
 import '../assets/css/booking-list.css'
 
 interface BookingListProps {
-  companies?: string[]
+  suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter | null
   car?: string
@@ -53,7 +53,7 @@ interface BookingListProps {
 }
 
 const BookingList = ({
-  companies: bookingCompanies,
+  suppliers: bookingSuppliers,
   statuses: bookingStatuses,
   filter: bookingFilter,
   car: bookingCar,
@@ -80,7 +80,7 @@ const BookingList = ({
   const [selectedId, setSelectedId] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [companies, setCompanies] = useState<string[] | undefined>(bookingCompanies)
+  const [suppliers, setSuppliers] = useState<string[] | undefined>(bookingSuppliers)
   const [statuses, setStatuses] = useState<string[] | undefined>(bookingStatuses)
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [filter, setFilter] = useState<bookcarsTypes.Filter | undefined | null>(bookingFilter)
@@ -104,10 +104,10 @@ const BookingList = ({
     try {
       const _pageSize = env.isMobile() ? env.BOOKINGS_MOBILE_PAGE_SIZE : pageSize
 
-      if (companies && statuses) {
+      if (suppliers && statuses) {
         setLoading(true)
         const payload: bookcarsTypes.GetBookingsPayload = {
-          companies,
+          suppliers,
           statuses,
           filter: filter || undefined,
           car,
@@ -157,8 +157,8 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    setCompanies(bookingCompanies)
-  }, [bookingCompanies])
+    setSuppliers(bookingSuppliers)
+  }, [bookingSuppliers])
 
   useEffect(() => {
     setStatuses(bookingStatuses)
@@ -181,13 +181,13 @@ const BookingList = ({
   }, [bookingUser])
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       fetchData(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       if (page === 0) {
         fetchData(0, user)
       } else {
@@ -316,8 +316,8 @@ const BookingList = ({
         headerName: commonStrings.SUPPLIER,
         flex: 1,
         renderCell: ({ row, value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => (
-          <Link href={`/supplier?c=${(row.company as bookcarsTypes.User)._id}`} className="cell-supplier">
-            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.company as bookcarsTypes.User).avatar)} alt={value} />
+          <Link href={`/supplier?c=${(row.supplier as bookcarsTypes.User)._id}`} className="cell-supplier">
+            <img src={bookcarsHelper.joinURL(env.CDN_USERS, (row.supplier as bookcarsTypes.User).avatar)} alt={value} />
           </Link>
         ),
         valueGetter: (value: bookcarsTypes.User) => value?.fullName,
@@ -328,7 +328,7 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    if (companies && statuses) {
+    if (suppliers && statuses) {
       const _columns = getColumns()
       setColumns(_columns)
 
@@ -340,7 +340,7 @@ const BookingList = ({
         setPaginationModel(_paginationModel)
       }
     }
-  }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [suppliers, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const _columns = getColumns()
@@ -469,7 +469,7 @@ const BookingList = ({
   const _fr = language === 'fr'
   const _locale = _fr ? dfnsFR : dfnsENUS
   const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
+  const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
 
   return (
     <div className="bs-list">
@@ -529,8 +529,8 @@ const BookingList = ({
                     <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                     <div className="booking-detail-value">
                       <div className="car-supplier">
-                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, (booking.company as bookcarsTypes.User).avatar)} alt={(booking.company as bookcarsTypes.User).fullName} />
-                        <span className="car-supplier-name">{(booking.company as bookcarsTypes.User).fullName}</span>
+                        <img src={bookcarsHelper.joinURL(env.CDN_USERS, (booking.supplier as bookcarsTypes.User).avatar)} alt={(booking.supplier as bookcarsTypes.User).fullName} />
+                        <span className="car-supplier-name">{(booking.supplier as bookcarsTypes.User).fullName}</span>
                       </div>
                     </div>
                   </div>

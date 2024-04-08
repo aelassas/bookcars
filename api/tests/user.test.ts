@@ -1178,7 +1178,7 @@ describe('POST /api/delete-users', () => {
     }
     let car = new Car({
       name: 'BMW X1',
-      company: supplierId,
+      supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
       price: 780,
@@ -1202,7 +1202,7 @@ describe('POST /api/delete-users', () => {
     await car.save()
     car = new Car({
       name: 'BMW X1',
-      company: supplierId,
+      supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
       price: 780,
@@ -1226,7 +1226,7 @@ describe('POST /api/delete-users', () => {
     await car.save()
     car = new Car({
       name: 'BMW X1',
-      company: supplierId,
+      supplier: supplierId,
       minimumAge: 21,
       locations: [locationId],
       price: 780,
@@ -1256,7 +1256,7 @@ describe('POST /api/delete-users', () => {
     })
     await additionalDriver.save()
     const booking = new Booking({
-      company: supplierId,
+      supplier: supplierId,
       car: car._id,
       driver: USER1_ID,
       pickupLocation: locationId,

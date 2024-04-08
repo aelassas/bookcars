@@ -1,6 +1,6 @@
 export declare enum UserType {
     Admin = "admin",
-    Supplier = "company",
+    Supplier = "supplier",
     User = "user"
 }
 export declare enum AppType {
@@ -37,14 +37,14 @@ export declare enum Availablity {
 }
 export declare enum RecordType {
     Admin = "admin",
-    Supplier = "company",
+    Supplier = "supplier",
     User = "user",
     Car = "car",
     Location = "location"
 }
 export interface Booking {
     _id?: string;
-    company: string | User;
+    supplier: string | User;
     car: string | Car;
     driver?: string | User;
     pickupLocation: string | Location;
@@ -76,7 +76,7 @@ export interface Filter {
     dropOffLocation?: string;
 }
 export interface GetBookingsPayload {
-    companies: string[];
+    suppliers: string[];
     statuses: string[];
     user?: string;
     car?: string;
@@ -106,7 +106,7 @@ export interface UpdateSupplierPayload {
 }
 export interface CreateCarPayload {
     name: string;
-    company: string;
+    supplier: string;
     minimumAge: number;
     locations: string[];
     price: number;
@@ -131,7 +131,7 @@ export interface UpdateCarPayload extends CreateCarPayload {
     _id: string;
 }
 export interface GetCarsPayload {
-    companies: string[];
+    suppliers: string[];
     fuel?: string[];
     gearbox?: string[];
     mileage?: string[];
@@ -166,7 +166,7 @@ export interface CreateUserPayload {
     verified?: boolean;
     blacklisted?: boolean;
     payLater?: boolean;
-    company?: string;
+    supplier?: string;
 }
 export interface UpdateUserPayload extends CreateUserPayload {
     _id: string;
@@ -217,7 +217,7 @@ export interface UpdateStatusPayload {
 }
 export interface User {
     _id?: string;
-    company?: User | string;
+    supplier?: User | string;
     fullName: string;
     email?: string;
     phone?: string;
@@ -255,7 +255,7 @@ export interface Location {
 export interface Car {
     _id: string;
     name: string;
-    company: User;
+    supplier: User;
     minimumAge: number;
     locations: Location[];
     price: number;
@@ -282,7 +282,7 @@ export interface Data<T> {
     rowCount: number;
 }
 export interface GetBookingCarsPayload {
-    company: string;
+    supplier: string;
     pickupLocation: string;
 }
 export interface Notification {

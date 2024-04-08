@@ -35,7 +35,7 @@ import '../assets/css/car-list.css'
 interface CarListProps {
   from?: Date
   to?: Date
-  companies?: string[]
+  suppliers?: string[]
   pickupLocation?: string
   dropOffLocation?: string
   fuel?: string[]
@@ -55,7 +55,7 @@ interface CarListProps {
 const CarList = ({
   from,
   to,
-  companies,
+  suppliers,
   pickupLocation,
   dropOffLocation,
   fuel,
@@ -123,7 +123,7 @@ const CarList = ({
     try {
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: _suppliers ?? [],
+        suppliers: _suppliers ?? [],
         pickupLocation: _pickupLocation,
         fuel: _fuel,
         gearbox: _gearbox,
@@ -168,9 +168,9 @@ const CarList = ({
   }
 
   useEffect(() => {
-    if (companies) {
-      if (companies.length > 0) {
-        fetchData(page, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+    if (suppliers) {
+      if (suppliers.length > 0) {
+        fetchData(page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -181,7 +181,7 @@ const CarList = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
+  }, [page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
 
   useEffect(() => {
     if (cars) {
@@ -196,14 +196,14 @@ const CarList = ({
 
   useEffect(() => {
     setPage(1)
-  }, [companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
+  }, [suppliers, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
 
   useEffect(() => {
     if (reload) {
       setPage(1)
-      fetchData(1, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+      fetchData(1, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload, companies, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [reload, suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
 
   const getExtraIcon = (option: string, extra: number) => {
     let available = false
@@ -262,9 +262,9 @@ const CarList = ({
                 {!hideSupplier && (
                   <div className="car-supplier">
                     <span className="car-supplier-logo">
-                      <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                      <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                     </span>
-                    <span className="car-supplier-info">{car.company.fullName}</span>
+                    <span className="car-supplier-info">{car.supplier.fullName}</span>
                   </div>
                 )}
               </div>

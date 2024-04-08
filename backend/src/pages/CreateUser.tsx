@@ -286,7 +286,7 @@ const CreateUser = () => {
         avatar,
         birthDate,
         language,
-        company: supplier,
+        supplier: supplier,
       }
 
       if (type === bookcarsTypes.RecordType.Supplier) {

@@ -815,7 +815,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       }
 
       const booking: bookcarsTypes.Booking = {
-        company: car.company._id as string,
+        supplier: car.supplier._id as string,
         car: car._id as string,
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id as string,
@@ -975,10 +975,10 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <Image
                       style={styles.supplierImg}
                       source={{
-                        uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
+                        uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
                       }}
                     />
-                    <Text style={styles.supplierText}>{car.company.fullName}</Text>
+                    <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
@@ -1120,7 +1120,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
                 )}
 
-                {car.company.payLater && (
+                {car.supplier.payLater && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
                       <MaterialIcons name="settings" size={iconSize} color={iconColor} />
@@ -1147,7 +1147,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
                 )}
 
-                {(!car.company.payLater || !payLater) && (
+                {(!car.supplier.payLater || !payLater) && (
                   <View style={styles.payment}>
                     <View style={styles.paymentHeader}>
                       <View style={styles.securePaymentInfo}>
@@ -1339,8 +1339,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   supplierImg: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
   supplierText: {
     color: '#a1a1a1',

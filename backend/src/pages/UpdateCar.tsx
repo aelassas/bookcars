@@ -217,7 +217,7 @@ const UpdateCar = () => {
       const data = {
         _id: car._id,
         name,
-        company: supplier._id,
+        supplier: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
@@ -263,16 +263,16 @@ const UpdateCar = () => {
             const _car = await CarService.getCar(id)
 
             if (_car) {
-              if (_user.type === bookcarsTypes.RecordType.Supplier && _user._id !== _car.company._id) {
+              if (_user.type === bookcarsTypes.RecordType.Supplier && _user._id !== _car.supplier._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
               }
 
               const _supplier = {
-                _id: _car.company._id as string,
-                name: _car.company.fullName,
-                image: _car.company.avatar,
+                _id: _car.supplier._id as string,
+                name: _car.supplier.fullName,
+                image: _car.supplier.avatar,
               }
 
               setCar(_car)

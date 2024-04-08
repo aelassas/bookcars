@@ -206,7 +206,7 @@ const Booking = () => {
 
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
-        company: supplier._id,
+        supplier: supplier._id,
         car: car._id,
         driver: driver._id,
         pickupLocation: pickupLocation._id,
@@ -249,7 +249,7 @@ const Booking = () => {
             setPrice(_booking.price)
             setLoading(false)
             setVisible(true)
-            const cmp = _booking.company as bookcarsTypes.User
+            const cmp = _booking.supplier as bookcarsTypes.User
             setSupplier({
               _id: cmp._id as string,
               name: cmp.fullName,

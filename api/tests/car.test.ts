@@ -77,7 +77,7 @@ describe('POST /api/create-car', () => {
         }
         const payload: bookcarsTypes.CreateCarPayload = {
             name: 'BMW X1',
-            company: SUPPLIER1_ID,
+            supplier: SUPPLIER1_ID,
             minimumAge: 21,
             locations: [LOCATION1_ID],
             price: 780,
@@ -136,7 +136,7 @@ describe('PUT /api/update-car', () => {
         const payload: bookcarsTypes.UpdateCarPayload = {
             _id: CAR_ID,
             name: 'BMW X5',
-            company: SUPPLIER2_ID,
+            supplier: SUPPLIER2_ID,
             minimumAge: 23,
             locations: [LOCATION2_ID],
             price: 980,
@@ -163,7 +163,7 @@ describe('PUT /api/update-car', () => {
         expect(res.statusCode).toBe(200)
         const car = res.body
         expect(car.name).toBe('BMW X5')
-        expect(car.company).toBe(SUPPLIER2_ID)
+        expect(car.supplier).toBe(SUPPLIER2_ID)
         expect(car.minimumAge).toBe(23)
         expect(car.locations).toStrictEqual([LOCATION2_ID])
         expect(car.price).toBe(980)
@@ -365,7 +365,7 @@ describe('POST /api/cars/:page/:size', () => {
         const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetCarsPayload = {
-            companies: [SUPPLIER2_ID],
+            suppliers: [SUPPLIER2_ID],
             fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
             gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
             mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
@@ -462,7 +462,7 @@ describe('POST /api/booking-cars/:page/:size', () => {
         const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetBookingCarsPayload = {
-            company: SUPPLIER2_ID,
+            supplier: SUPPLIER2_ID,
             pickupLocation: LOCATION2_ID,
         }
         let res = await request(app)
@@ -485,7 +485,7 @@ describe('POST /api/booking-cars/:page/:size', () => {
 describe('POST /api/frontend-cars/:page/:size', () => {
     it('should return frontend cars', async () => {
         const payload: bookcarsTypes.GetCarsPayload = {
-            companies: [SUPPLIER2_ID],
+            suppliers: [SUPPLIER2_ID],
             pickupLocation: LOCATION2_ID,
             fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
             gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
@@ -550,7 +550,7 @@ describe('GET /api/check-car/:id', () => {
         expect(res.statusCode).toBe(204)
 
         const booking = new Booking({
-            company: SUPPLIER1_ID,
+            supplier: SUPPLIER1_ID,
             car: CAR_ID,
             driver: testHelper.getUserId(),
             pickupLocation: LOCATION1_ID,
@@ -598,7 +598,7 @@ describe('DELETE /api/delete-car/:id', () => {
 
         let car = new Car({
             name: 'BMW X1',
-            company: SUPPLIER1_ID,
+            supplier: SUPPLIER1_ID,
             minimumAge: 21,
             locations: [testHelper.GetRandromObjectId()],
             price: 780,
@@ -627,7 +627,7 @@ describe('DELETE /api/delete-car/:id', () => {
 
         car = new Car({
             name: 'BMW X1',
-            company: SUPPLIER1_ID,
+            supplier: SUPPLIER1_ID,
             minimumAge: 21,
             locations: [testHelper.GetRandromObjectId()],
             price: 780,

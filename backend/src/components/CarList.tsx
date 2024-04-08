@@ -39,7 +39,7 @@ import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car-list.css'
 
 interface CarListProps {
-  companies?: string[]
+  suppliers?: string[]
   keyword?: string
   fuel?: string[]
   gearbox?: string[]
@@ -59,7 +59,7 @@ interface CarListProps {
 }
 
 const CarList = ({
-  companies: carCompanies,
+  suppliers: carSuppliers,
   keyword: carKeyword,
   fuel: carFuel,
   gearbox: carGearbox,
@@ -110,7 +110,7 @@ const CarList = ({
 
   const fetchData = async (
     _page: number,
-    companies?: string[],
+    suppliers?: string[],
     keyword?: string,
     fuel?: string[],
     gearbox?: string[],
@@ -122,7 +122,7 @@ const CarList = ({
       setLoading(true)
 
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: companies ?? [],
+        suppliers: suppliers ?? [],
         fuel,
         gearbox,
         mileage,
@@ -166,11 +166,11 @@ const CarList = ({
   }
 
   useEffect(() => {
-    if (carCompanies) {
-      if (carCompanies.length > 0) {
+    if (carSuppliers) {
+      if (carSuppliers.length > 0) {
         fetchData(
           page,
-          carCompanies,
+          carSuppliers,
           carKeyword,
           carFuel,
           carGearbox,
@@ -190,7 +190,7 @@ const CarList = ({
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     page,
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -214,7 +214,7 @@ const CarList = ({
   useEffect(() => {
     setPage(1)
   }, [
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -228,7 +228,7 @@ const CarList = ({
       setPage(1)
       fetchData(
         1,
-        carCompanies,
+        carSuppliers,
         carKeyword,
         carFuel,
         carGearbox,
@@ -239,7 +239,7 @@ const CarList = ({
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reload,
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -367,7 +367,7 @@ const CarList = ({
               </Card>
             )
             : rows.map((car, index) => {
-              const edit = admin || car.company._id === user._id
+              const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
                   <div className="name">
@@ -378,10 +378,10 @@ const CarList = ({
                     {!hideSupplier && (
                       <div className="car-supplier">
                         <span className="car-supplier-logo">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                         </span>
-                        <a href={`/supplier?c=${car.company._id}`} className="car-supplier-info">
-                          {car.company.fullName}
+                        <a href={`/supplier?c=${car.supplier._id}`} className="car-supplier-info">
+                          {car.supplier.fullName}
                         </a>
                       </div>
                     )}

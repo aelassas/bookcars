@@ -183,7 +183,7 @@ describe('GET /api/check-location/:id', () => {
         const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
         const car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [LOCATION_ID],
             price: 780,

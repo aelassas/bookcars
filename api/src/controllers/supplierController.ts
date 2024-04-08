@@ -117,11 +117,11 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
         await NotificationCounter.deleteMany({ user: id })
         await Notification.deleteMany({ user: id })
-        const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+        const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
-        await Booking.deleteMany({ company: id })
-        const cars = await Car.find({ company: id })
-        await Car.deleteMany({ company: id })
+        await Booking.deleteMany({ supplier: id })
+        const cars = await Car.find({ supplier: id })
+        await Car.deleteMany({ supplier: id })
         for (const car of cars) {
           if (car.image) {
             const image = path.join(env.CDN_CARS, car.image)

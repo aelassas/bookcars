@@ -210,7 +210,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
         let car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,
@@ -244,7 +244,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         })
         await additionalDriver.save()
         const booking = new Booking({
-            company: supplierId,
+            supplier: supplierId,
             car: car._id,
             driver: testHelper.getUserId(),
             pickupLocation: locationId,
@@ -301,7 +301,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,
@@ -346,7 +346,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,

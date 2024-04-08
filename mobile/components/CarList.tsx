@@ -14,7 +14,7 @@ interface CarListProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   from?: Date
   to?: Date
-  companies?: string[]
+  suppliers?: string[]
   pickupLocation?: string
   dropOffLocation?: string
   fuel?: string[]
@@ -29,7 +29,7 @@ const CarList = ({
   navigation,
   from,
   to,
-  companies,
+  suppliers,
   pickupLocation,
   dropOffLocation,
   fuel,
@@ -62,7 +62,7 @@ const CarList = ({
 
   const fetchData = async (
     _page: number,
-    _companies?: string[],
+    _suppliers?: string[],
     _pickupLocation?: string,
     _fuel?: string[],
     _gearbox?: string[],
@@ -70,12 +70,12 @@ const CarList = ({
     _deposit?: number
   ) => {
     try {
-      if (_companies && _companies.length > 0) {
+      if (_suppliers && _suppliers.length > 0) {
         setLoading(true)
         setFetch(true)
 
         const payload = {
-          companies: _companies,
+          suppliers: _suppliers,
           pickupLocation: _pickupLocation,
           fuel: _fuel,
           gearbox: _gearbox,
@@ -109,9 +109,9 @@ const CarList = ({
   }
 
   useEffect(() => {
-    if (companies) {
-      if (companies.length > 0) {
-        fetchData(page, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+    if (suppliers) {
+      if (suppliers.length > 0) {
+        fetchData(page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -120,11 +120,11 @@ const CarList = ({
         }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, companies, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
 
   useEffect(() => {
     setPage(1)
-  }, [companies, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
 
   const fr = language === 'fr'
   const numToRender = Math.floor(env.CARS_PAGE_SIZE / 2)

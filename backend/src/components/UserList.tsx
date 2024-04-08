@@ -237,7 +237,7 @@ const UserList = ({
           }
 
           const __user = row
-          return _user.type === bookcarsTypes.RecordType.Admin || __user.company === _user._id ? (
+          return _user.type === bookcarsTypes.RecordType.Admin || __user.supplier === _user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
                 <IconButton href={`update-user?u=${row._id}`}>
