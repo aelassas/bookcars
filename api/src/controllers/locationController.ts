@@ -7,6 +7,7 @@ import i18n from '../lang/i18n'
 import Location from '../models/Location'
 import LocationValue from '../models/LocationValue'
 import Car from '../models/Car'
+import * as logger from '../common/logger'
 
 /**
  * Validate a Location name with language code.
@@ -31,7 +32,7 @@ export const validate = async (req: Request, res: Response) => {
     })
     return locationValue ? res.sendStatus(204) : res.sendStatus(200)
   } catch (err) {
-    console.error(`[location.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
+    logger.error(`[location.validate]  ${i18n.t('DB_ERROR')} ${name}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -64,7 +65,7 @@ export const create = async (req: Request, res: Response) => {
     await location.save()
     return res.send(location)
   } catch (err) {
-    console.error(`[location.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[location.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -105,10 +106,10 @@ export const update = async (req: Request, res: Response) => {
       return res.json(location)
     }
 
-    console.error('[location.update] Location not found:', id)
+    logger.error('[location.update] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[location.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -129,14 +130,14 @@ export const deleteLocation = async (req: Request, res: Response) => {
     const location = await Location.findById(id)
     if (!location) {
       const msg = `[location.delete] Location ${id} not found`
-      console.log(msg)
+      logger.info(msg)
       return res.status(204).send(msg)
     }
     await Location.deleteOne({ _id: id })
     await LocationValue.deleteMany({ _id: { $in: location.values } })
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[location.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[location.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -161,10 +162,10 @@ export const getLocation = async (req: Request, res: Response) => {
       const l = { ...location, name }
       return res.json(l)
     }
-    console.error('[location.getLocation] Location not found:', id)
+    logger.error('[location.getLocation] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.getLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[location.getLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -224,7 +225,7 @@ export const getLocations = async (req: Request, res: Response) => {
 
     return res.json(locations)
   } catch (err) {
-    console.error(`[location.getLocations] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[location.getLocations] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -255,7 +256,7 @@ export const checkLocation = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[location.checkLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[location.checkLocation] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

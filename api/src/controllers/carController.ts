@@ -10,6 +10,7 @@ import Car from '../models/Car'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import * as helper from '../common/helper'
+import * as logger from '../common/logger'
 
 /**
  * Create a Car.
@@ -25,7 +26,7 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      console.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
+      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
       return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
     }
 
@@ -43,13 +44,13 @@ export const create = async (req: Request, res: Response) => {
       await car.save()
     } else {
       await Car.deleteOne({ _id: car._id })
-      console.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
+      logger.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
       return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
     }
 
     return res.json(car)
   } catch (err) {
-    console.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
+    logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -122,10 +123,10 @@ export const update = async (req: Request, res: Response) => {
       return res.json(car)
     }
 
-    console.error('[car.update] Car not found:', _id)
+    logger.error('[car.update] Car not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    logger.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -155,7 +156,7 @@ export const checkCar = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -189,7 +190,7 @@ export const deleteCar = async (req: Request, res: Response) => {
     }
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -215,7 +216,7 @@ export const createImage = async (req: Request, res: Response) => {
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -235,7 +236,7 @@ export const updateImage = async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       const msg = '[car.updateImage] req.file not found'
-      console.error(msg)
+      logger.error(msg)
       return res.status(400).send(msg)
     }
 
@@ -260,10 +261,10 @@ export const updateImage = async (req: Request, res: Response) => {
       return res.json(filename)
     }
 
-    console.error('[car.updateImage] Car not found:', id)
+    logger.error('[car.updateImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -295,10 +296,10 @@ export const deleteImage = async (req: Request, res: Response) => {
       await car.save()
       return res.sendStatus(200)
     }
-    console.error('[car.deleteImage] Car not found:', id)
+    logger.error('[car.deleteImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -325,7 +326,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
     res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
+    logger.error(`[car.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -374,10 +375,10 @@ export const getCar = async (req: Request, res: Response) => {
 
       return res.json(car)
     }
-    console.error('[car.getCar] Car not found:', id)
+    logger.error('[car.getCar] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -497,7 +498,7 @@ export const getCars = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -541,7 +542,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
 
     return res.json(cars)
   } catch (err) {
-    console.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -645,7 +646,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
