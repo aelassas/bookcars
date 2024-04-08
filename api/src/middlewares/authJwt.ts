@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import * as env from '../config/env.config'
 import * as authHelper from '../common/authHelper'
+import * as logger from '../common/logger'
 
 /**
  * Verify authentication token middleware.
@@ -26,7 +27,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, env.JWT_SECRET, (err) => {
       if (err) {
         // Token not valid!
-        console.log(err)
+        logger.info('Token not valid', err)
         res.status(401).send({ message: 'Unauthorized!' })
       } else {
         // Token valid!

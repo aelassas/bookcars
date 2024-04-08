@@ -58,7 +58,8 @@
     "supertest": "^6.3.4",
     "typescript": "^5.4.4",
     "uuid": "^9.0.1",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.5.0",

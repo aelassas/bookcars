@@ -16,6 +16,7 @@ import AdditionalDriver from '../models/AdditionalDriver'
 import * as helper from '../common/helper'
 import * as mailHelper from '../common/mailHelper'
 import * as env from '../config/env.config'
+import * as logger from '../common/logger'
 
 /**
  * Create a Booking.
@@ -40,7 +41,7 @@ export const create = async (req: Request, res: Response) => {
     await booking.save()
     return res.json(booking)
   } catch (err) {
-    console.error(`[booking.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[booking.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -108,7 +109,7 @@ export const checkout = async (req: Request, res: Response) => {
     const { driver } = body
 
     if (!body.booking) {
-      console.log('booking not found', body)
+      logger.info('booking not found', body)
       return res.sendStatus(400)
     }
 
@@ -144,7 +145,7 @@ export const checkout = async (req: Request, res: Response) => {
     }
 
     if (!user) {
-      console.log('Driver not found', body)
+      logger.info('Driver not found', body)
       return res.sendStatus(204)
     }
 
@@ -175,19 +176,19 @@ export const checkout = async (req: Request, res: Response) => {
     const to = booking.to.toLocaleString(locale, options)
     const car = await Car.findById(booking.car).populate<{ company: env.User }>('company')
     if (!car) {
-      console.log(`Car ${booking.car} not found`)
+      logger.info(`Car ${booking.car} not found`)
       return res.sendStatus(204)
     }
     const pickupLocation = await Location.findById(booking.pickupLocation).populate<{ values: env.LocationValue[] }>('values')
     if (!pickupLocation) {
-      console.log(`Pickup location ${booking.pickupLocation} not found`)
+      logger.info(`Pickup location ${booking.pickupLocation} not found`)
       return res.sendStatus(204)
     }
 
     const pickupLocationName = pickupLocation.values.filter((value) => value.language === language)[0].value
     const dropOffLocation = await Location.findById(booking.dropOffLocation).populate<{ values: env.LocationValue[] }>('values')
     if (!dropOffLocation) {
-      console.log(`Drop-off location ${booking.pickupLocation} not found`)
+      logger.info(`Drop-off location ${booking.pickupLocation} not found`)
       return res.sendStatus(204)
     }
     const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
@@ -216,7 +217,7 @@ export const checkout = async (req: Request, res: Response) => {
     // Notify supplier
     const supplier = await User.findById(booking.company)
     if (!supplier) {
-      console.log(`Supplier ${booking.company} not found`)
+      logger.info(`Supplier ${booking.company} not found`)
       return res.sendStatus(204)
     }
     i18n.locale = supplier.language
@@ -224,7 +225,7 @@ export const checkout = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.book] ${i18n.t('ERROR')}`, err)
+    logger.error(`[booking.book] ${i18n.t('ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -239,7 +240,7 @@ export const checkout = async (req: Request, res: Response) => {
 const notifyDriver = async (booking: env.Booking) => {
   const driver = await User.findById(booking.driver)
   if (!driver) {
-    console.log(`Renter ${booking.driver} not found`)
+    logger.info(`Renter ${booking.driver} not found`)
     return
   }
 
@@ -283,7 +284,7 @@ const notifyDriver = async (booking: env.Booking) => {
     const expo = new Expo({ accessToken: env.EXPO_ACCESS_TOKEN })
 
     if (!Expo.isExpoPushToken(token)) {
-      console.log(`Push token ${token} is not a valid Expo push token.`)
+      logger.info(`Push token ${token} is not a valid Expo push token.`)
       return
     }
 
@@ -324,13 +325,13 @@ const notifyDriver = async (booking: env.Booking) => {
           // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
           for (const ticketChunk of ticketChunks) {
             if (ticketChunk.status === 'ok') {
-              console.log(`Push notification sent: ${ticketChunk.id}`)
+              logger.info(`Push notification sent: ${ticketChunk.id}`)
             } else {
               throw new Error(ticketChunk.message)
             }
           }
         } catch (error) {
-          console.error(error)
+          logger.error('Error while sending push notification', error)
         }
       }
     })()
@@ -368,7 +369,7 @@ export const update = async (req: Request, res: Response) => {
           const additionalDriver = await AdditionalDriver.findOne({ _id: booking._additionalDriver })
           if (!additionalDriver) {
             const msg = `Additional Driver ${booking._additionalDriver} not found`
-            console.log(msg)
+            logger.info(msg)
             return res.status(204).send(msg)
           }
           additionalDriver.fullName = fullName
@@ -439,10 +440,10 @@ export const update = async (req: Request, res: Response) => {
       return res.json(booking)
     }
 
-    console.error('[booking.update] Booking not found:', body.booking._id)
+    logger.error('[booking.update] Booking not found:', body.booking._id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[booking.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -474,7 +475,7 @@ export const updateStatus = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.updateStatus] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[booking.updateStatus] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -504,7 +505,7 @@ export const deleteBookings = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[booking.deleteBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[booking.deleteBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -572,10 +573,10 @@ export const getBooking = async (req: Request, res: Response) => {
       return res.json(booking)
     }
 
-    console.error('[booking.getBooking] Booking not found:', id)
+    logger.error('[booking.getBooking] Booking not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.getBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[booking.getBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -780,7 +781,7 @@ export const getBookings = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[booking.getBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[booking.getBookings] ${i18n.t('DB_ERROR')} ${req.body}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -811,7 +812,7 @@ export const hasBookings = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.hasBookings] ${i18n.t('DB_ERROR')} ${driver}`, err)
+    logger.error(`[booking.hasBookings] ${i18n.t('DB_ERROR')} ${driver}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -848,7 +849,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[booking.cancelBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[booking.cancelBooking] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

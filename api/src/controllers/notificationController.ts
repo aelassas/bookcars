@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import i18n from '../lang/i18n'
 import Notification from '../models/Notification'
 import NotificationCounter from '../models/NotificationCounter'
+import * as logger from '../common/logger'
 
 /**
  * Get NotificationCounter by UserID.
@@ -25,7 +26,7 @@ export const notificationCounter = async (req: Request, res: Response) => {
     await cnt.save()
     return res.json(cnt)
   } catch (err) {
-    console.error(`[notification.notificationCounter] ${i18n.t('DB_ERROR')} ${userId}`, err)
+    logger.error(`[notification.notificationCounter] ${i18n.t('DB_ERROR')} ${userId}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -63,7 +64,7 @@ export const getNotifications = async (req: Request, res: Response) => {
 
     return res.json(notifications)
   } catch (err) {
-    console.error(`[notification.getNotifications] ${i18n.t('DB_ERROR')} ${_userId}`, err)
+    logger.error(`[notification.getNotifications] ${i18n.t('DB_ERROR')} ${_userId}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -97,7 +98,7 @@ export const markAsRead = async (req: Request, res: Response) => {
     // const result = await bulk.execute()
 
     // if (result.modifiedCount !== length) {
-    //   console.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`)
+    //   logger.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`)
     //   return res.status(400).send(i18n.t('DB_ERROR'))
     // }
 
@@ -110,7 +111,7 @@ export const markAsRead = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[notification.markAsRead] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -144,7 +145,7 @@ export const markAsUnRead = async (req: Request, res: Response) => {
     // const result = await bulk.execute()
 
     // if (result.modifiedCount !== length) {
-    //   console.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`)
+    //   logger.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`)
     //   return res.status(400).send(i18n.t('DB_ERROR'))
     // }
 
@@ -157,7 +158,7 @@ export const markAsUnRead = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[notification.markAsUnRead] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -194,7 +195,7 @@ export const deleteNotifications = async (req: Request, res: Response) => {
 
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[notification.deleteNotifications] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[notification.deleteNotifications] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
