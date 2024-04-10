@@ -10,7 +10,7 @@
 * Password: B00kC4r5
 
 ### Mobile App
-* Android: [Download APK](https://expo.dev/artifacts/eas/xasafR9tPVN9EH3KPPmciC.apk)
+* Android: [Download APK](https://expo.dev/artifacts/eas/4qmEvpUZCZEAekkeGEr6yV.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
