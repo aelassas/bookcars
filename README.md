@@ -95,20 +95,6 @@ BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MI
 10. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 11. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
 
-## Continuous Integration
-
-| **CI**            | Status      |
-| ----------------- | ----------- |
-| **API**           | [![API CI](https://github.com/aelassas/bookcars/actions/workflows/api.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/api.yml) |
-| **Backend**       | [![Backend CI](https://github.com/aelassas/bookcars/actions/workflows/backend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/backend.yml) |
-| **Frontend**      | [![Frontend CI](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/frontend.yml) |
-| **Mobile App**    | [![Mobile CI](https://github.com/aelassas/bookcars/actions/workflows/mobile.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/mobile.yml) |
-| **All**           | [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) |
-| **Unit tests**    |  [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) |
-| **Coverage**      | [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=TXD8SM1QHB)](https://codecov.io/gh/aelassas/bookcars) |
-| **Lines of Code** | [![loc](https://raw.githubusercontent.com/aelassas/bookcars/loc/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/loc.yml) |
-| **CodeFactor**    | [![CodeFactor](https://www.codefactor.io/repository/github/aelassas/bookcars/badge)](https://www.codefactor.io/repository/github/aelassas/bookcars) |
-
 ## License
 
 BookCars is [MIT licensed](https://github.com/aelassas/bookcars/blob/main/LICENSE).
