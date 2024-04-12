@@ -15,7 +15,8 @@
     "build:ios:preview": "cross-env EAS_NO_VCS=1 eas build --profile preview --platform android",
     "ts:check": "tsc",
     "lint": "eslint --ext .ts,.tsx .",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix .",
+    "ncu": "ncu -u -x eslint && npm i && expo install --fix && npm prune"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -32,7 +33,7 @@
     "axios": "^1.6.8",
     "axios-retry": "^4.1.0",
     "date-fns": "^3.6.0",
-    "expo": "~50.0.14",
+    "expo": "~50.0.15",
     "expo-asset": "~9.0.2",
     "expo-constants": "~15.4.5",
     "expo-device": "~5.9.3",
@@ -61,16 +62,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
-    "@types/react": "~18.2.74",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
+    "@types/react": "~18.2.77",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.4.4"
+    "npm-check-updates": "^16.14.18",
+    "typescript": "^5.4.5"
   },
   "private": true
 }
