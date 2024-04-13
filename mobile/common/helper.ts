@@ -8,8 +8,8 @@ import { RouteProp } from '@react-navigation/native'
 import mime from 'mime'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import * as toastHelper from './toastHelper'
 
 /**

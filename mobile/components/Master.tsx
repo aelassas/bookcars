@@ -8,7 +8,7 @@ import Button from '../components/Button'
 import i18n from '../lang/i18n'
 import * as helper from '../common/helper'
 import Header from '../components/Header'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 interface MasterProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>

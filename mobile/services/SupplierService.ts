@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 /**
  * Get all suppliers.

@@ -17,8 +17,8 @@ import {
   Clear as UncheckIcon,
   Info as InfoIcon,
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import Const from '../config/const'
 import * as helper from '../common/helper'

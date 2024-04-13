@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, FlatList, ActivityIndicator } from 'react-native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 import * as helper from '../common/helper'
 import * as env from '../config/env.config'

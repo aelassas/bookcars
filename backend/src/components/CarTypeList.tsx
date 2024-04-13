@@ -5,7 +5,7 @@ import {
   MenuItem,
   SelectChangeEvent
 } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/cars'
 
 interface CarTypeListProps {

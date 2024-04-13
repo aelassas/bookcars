@@ -1,6 +1,6 @@
 import validator from 'validator'
 import { Schema, model } from 'mongoose'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 
 const userSchema = new Schema<env.User>(

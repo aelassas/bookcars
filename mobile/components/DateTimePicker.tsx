@@ -4,7 +4,7 @@ import ReactDateTimePicker from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
 import { MaterialIcons } from '@expo/vector-icons'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsHelper from ':bookcars-helper'
 
 interface DateTimePickerProps {
   value?: Date

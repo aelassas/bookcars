@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf dist && tsc && babel dist -d dist",
+    "build": "rimraf dist && tsc -b && babel dist -d dist",
     "start": "npm run build && node dist/src",
     "test": "rimraf coverage && cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "lint": "eslint --ext .ts .",
@@ -36,8 +36,8 @@
     "@types/validator": "^13.11.9",
     "babel-jest": "^29.7.0",
     "babel-plugin-add-import-extension": "^1.6.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "bcrypt": "^5.1.1",
-    "bookcars-types": "file:../packages/bookcars-types",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

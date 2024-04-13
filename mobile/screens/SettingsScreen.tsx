@@ -7,8 +7,8 @@ import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react
 import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'

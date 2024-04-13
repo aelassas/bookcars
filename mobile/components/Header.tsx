@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation, DrawerActions } from '@react-navigation/native'
 import { Avatar, Badge } from 'react-native-paper'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import * as UserService from '../services/UserService'
 import * as env from '../config/env.config'

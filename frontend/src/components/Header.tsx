@@ -30,7 +30,7 @@ import {
   EventSeat as BookingsIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import env from '../config/env.config'
 import { strings } from '../lang/header'
 import { strings as commonStrings } from '../lang/common'

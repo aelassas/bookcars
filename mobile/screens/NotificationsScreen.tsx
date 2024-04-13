@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
