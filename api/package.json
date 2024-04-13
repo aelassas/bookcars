@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf dist && tsc -b && babel dist -d dist",
+    "build": "rimraf dist && tsc --build --verbose && babel dist -d dist",
     "start": "npm run build && node dist/src",
     "test": "rimraf coverage && cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "lint": "eslint --ext .ts .",

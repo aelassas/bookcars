@@ -27,9 +27,9 @@
     "validator": "^13.11.0"
   },
   "scripts": {
-    "start": "tsc -b && craco start",
-    "build": "tsc -b && craco build",
-    "test": "tsc -b && craco test",
+    "start": "tsc --build --verbose && craco start",
+    "build": "tsc --build --verbose && craco build",
+    "test": "tsc --build --verbose && craco test",
     "eject": "craco eject",
     "lint": "eslint --ext .ts,.tsx .",
     "fix": "eslint --fix .",

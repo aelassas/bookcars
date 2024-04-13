@@ -1,4 +1,4 @@
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 
 /**
  * Format a number.
