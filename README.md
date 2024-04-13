@@ -92,6 +92,7 @@ You can also install the Android App by directly downloading the APK and install
 9. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
 10. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
 11. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
+12. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
 ## License
 
