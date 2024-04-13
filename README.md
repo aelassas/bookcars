@@ -72,7 +72,7 @@ You can also install the Android App by directly downloading the APK and install
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
-## Contents
+## Resources
 
 1. [Overview](https://github.com/aelassas/bookcars/wiki/Overview)
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
