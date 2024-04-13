@@ -6,7 +6,7 @@
 
 # Xcode
 #
-build/
+/mobile/build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -26,7 +26,7 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
-build/
+/mobile/build/
 .idea
 .gradle
 local.properties
@@ -35,11 +35,11 @@ local.properties
 
 # node.js
 #
-node_modules/
+/**/node_modules/
 npm-debug.log
 
 # BUCK
-buck-out/
+/mobile/buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
@@ -48,15 +48,10 @@ buck-out/
 *.jsbundle
 
 # CocoaPods
-/ios/Pods/
-
-# Expo
-.expo/
-web-build/
-dist/
+/mobile/ios/Pods/
 
 # misc
-.env
+!.env
 .env.local
 .env.development
 .env.development.local
@@ -73,8 +68,13 @@ yarn-error.log*
 web-build/
 dist/
 
-google-services.json
-/**/google-services.json
+!google-services.json
+!/**/google-services.json
+
+!/bookcars-types/index.js
+!/bookcars-types/index.d.ts
+!/bookcars-helper/index.js
+!/bookcars-helper/index.d.ts
 
 # @end expo-cli
 
@@ -82,10 +82,8 @@ google-services.json
 .yarn/
 
 # build
-*.apk
+/mobile/*.apk
 /**/*.apk
 
-android/
-ios/
-
-%ProgramData%/
+/mobile/android/
+/mobile/ios/
