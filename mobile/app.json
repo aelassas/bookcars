@@ -43,6 +43,9 @@
     },
     "updates": {
       "url": "https://exp.host/@aelassas/bookcars"
-    }
+    },
+    "experiments": {
+      "tsconfigPaths": true
+     }
   }
 }

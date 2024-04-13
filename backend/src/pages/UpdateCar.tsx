@@ -11,7 +11,7 @@ import {
   FormHelperText
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'

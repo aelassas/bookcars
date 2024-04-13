@@ -18,9 +18,21 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      ":bookcars-types": ["../packages/bookcars-types"],
+      ":bookcars-helper": ["../packages/bookcars-helper"],
+      ":disable-react-devtools": ["../packages/disable-react-devtools"]
+    }
   },
   "include": [
     "src"
+  ],
+  "references": [
+    { "path": "../packages/bookcars-types" },
+    { "path": "../packages/bookcars-helper" },
+    { "path": "../packages/disable-react-devtools" }
   ]
 }

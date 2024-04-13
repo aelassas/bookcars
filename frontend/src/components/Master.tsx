@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/master'
 import Header from '../components/Header'
 import * as UserService from '../services/UserService'

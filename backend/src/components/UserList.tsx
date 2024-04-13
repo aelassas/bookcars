@@ -22,8 +22,8 @@ import {
   Delete as DeleteIcon,
   AccountCircle, Check as VerifiedIcon
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/user-list'

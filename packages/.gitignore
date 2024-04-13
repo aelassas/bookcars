@@ -6,12 +6,14 @@ npm-debug.log*
 
 # TypeScript
 /**/*.tsbuildinfo
+/**/*.d.ts
+
+# JavaScript
+/**/*.js
 
 # misc
 /**/.DS_Store
 /**/.DS_Store?
-/**/.env
-/**/.env.docker
 
 # eslint
 /**/.eslintcache

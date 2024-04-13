@@ -21,7 +21,7 @@ import {
   Delete as DeleteIcon,
   LocationOn as LocationIcon
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import env from '../config/env.config'
 import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'

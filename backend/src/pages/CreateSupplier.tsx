@@ -12,7 +12,7 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-supplier'

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import * as helper from '../common/helper'

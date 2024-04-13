@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import * as helper from '../common/helper'
 import * as env from '../config/env.config'

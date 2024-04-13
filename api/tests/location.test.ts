@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import request from 'supertest'
 import { v1 as uuid } from 'uuid'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'

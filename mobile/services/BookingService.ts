@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance'
 import * as UserService from './UserService'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 /**
  * Complete the checkout process and create the booking.

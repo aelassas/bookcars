@@ -9,7 +9,7 @@ import {
   Link
 } from '@mui/material'
 import validator from 'validator'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'

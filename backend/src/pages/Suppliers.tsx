@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import { strings } from '../lang/suppliers'
 import Search from '../components/Search'

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import * as helper from '../common/helper'
 import i18n from '../lang/i18n'

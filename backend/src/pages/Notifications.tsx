@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import NotificationList from '../components/NotificationList'
 
