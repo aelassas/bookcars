@@ -21,6 +21,7 @@ const Home = () => {
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [minDate, setMinDate] = useState(_minDate)
+  const [maxDate, setMaxDate] = useState<Date>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [sameLocation, setSameLocation] = useState(true)
@@ -35,6 +36,10 @@ const Home = () => {
 
     const _to = new Date(_from)
     _to.setDate(_to.getDate() + 3)
+
+    const _maxDate = new Date(_to)
+    _maxDate.setDate(_maxDate.getDate() - 1)
+    setMaxDate(_maxDate)
 
     const __minDate = new Date(_from)
     __minDate.setDate(__minDate.getDate() + 1)
@@ -112,6 +117,7 @@ const Home = () => {
                   label={commonStrings.FROM}
                   value={from}
                   minDate={new Date()}
+                  maxDate={maxDate}
                   variant="outlined"
                   required
                   onChange={(date) => {
@@ -140,7 +146,15 @@ const Home = () => {
                   variant="outlined"
                   required
                   onChange={(date) => {
-                    setTo(date || undefined)
+                    if (date) {
+                      setTo(date)
+                      const _maxDate = new Date(date)
+                      _maxDate.setDate(_maxDate.getDate() - 1)
+                      setMaxDate(_maxDate)
+                    } else {
+                      setTo(undefined)
+                      setMaxDate(undefined)
+                    }
                   }}
                   language={UserService.getLanguage()}
                 />

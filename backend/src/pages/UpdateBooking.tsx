@@ -63,6 +63,8 @@ const UpdateBooking = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Option>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [minDate, setMinDate] = useState<Date>()
+  const [maxDate, setMaxDate] = useState<Date>()
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
@@ -70,7 +72,6 @@ const UpdateBooking = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState<Date>()
   const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
   const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
   const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
@@ -463,8 +464,13 @@ const UpdateBooking = () => {
                 name: dol.name || '',
               })
               setFrom(new Date(_booking.from))
-              setMinDate(new Date(_booking.from))
+              const _minDate = new Date(_booking.from)
+              _minDate.setDate(_minDate.getDate() + 1)
+              setMinDate(_minDate)
               setTo(new Date(_booking.to))
+              const _maxDate = new Date(_booking.to)
+              _maxDate.setDate(_maxDate.getDate() - 1)
+              setMaxDate(_maxDate)
               setStatus(_booking.status)
               setCancellation(_booking.cancellation || false)
               setAmendments(_booking.amendments || false)
@@ -560,6 +566,7 @@ const UpdateBooking = () => {
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
+                  maxDate={maxDate}
                   required
                   onChange={(date) => {
                     if (date) {
@@ -610,11 +617,18 @@ const UpdateBooking = () => {
                           setBooking(booking)
                           setPrice(_price)
                           setTo(date)
+
+                          const _maxDate = new Date(date)
+                          _maxDate.setDate(_maxDate.getDate() - 1)
+                          setMaxDate(_maxDate)
                         },
                         (err) => {
                           toastErr(err)
                         },
                       )
+                    } else {
+                      setTo(undefined)
+                      setMaxDate(undefined)
                     }
                   }}
                   language={UserService.getLanguage()}

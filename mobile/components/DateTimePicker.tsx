@@ -17,6 +17,7 @@ interface DateTimePickerProps {
   style?: object
   helperText?: string
   minDate?: Date
+  maxDate?: Date
   readOnly?: boolean
   hideClearButton?: boolean
   onPress?: () => void
@@ -34,6 +35,7 @@ const DateTimePicker = ({
   style,
   helperText,
   minDate,
+  maxDate,
   readOnly,
   hideClearButton,
   onPress,
@@ -153,6 +155,7 @@ const DateTimePicker = ({
             mode={mode}
             value={value || now}
             minimumDate={minDate}
+            maximumDate={maxDate}
             onChange={(event, date) => {
               setShow(false)
               if (event.type === 'set' && date) {
