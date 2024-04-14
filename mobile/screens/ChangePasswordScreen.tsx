@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, View, TextInput as ReactTextInput } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as bookcarsTypes from ':bookcars-types'
+// import * as bookcarsTypes from ':bookcars-types'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import * as helper from '../common/helper'
+// import * as helper from '../common/helper'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
 
@@ -15,7 +15,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
   const isFocused = useIsFocused()
   const [reload, setReload] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [user, setUser] = useState<bookcarsTypes.User>()
+  // const [user, setUser] = useState<bookcarsTypes.User>()
   const [currentPassword, setCurrentPassword] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -68,7 +68,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
         return
       }
 
-      setUser(_user)
+      // setUser(_user)
       setVisible(true)
     } catch (err) {
       await UserService.signout(navigation, false, true)
@@ -88,54 +88,54 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
     setReload(false)
   }
 
-  const validatePassword = async () => {
-    try {
-      if (user && user._id) {
-        if (!currentPassword) {
-          setCurrentPasswordRequired(true)
-          setCurrentPasswordError(false)
-          return false
-        }
+  // const validatePassword = async () => {
+  //   try {
+  //     if (user && user._id) {
+  //       if (!currentPassword) {
+  //         setCurrentPasswordRequired(true)
+  //         setCurrentPasswordError(false)
+  //         return false
+  //       }
 
-        const status = await UserService.checkPassword(user._id, currentPassword)
+  //       const status = await UserService.checkPassword(user._id, currentPassword)
 
-        if (status !== 200) {
-          setCurrentPasswordRequired(false)
-          setCurrentPasswordError(true)
-          return false
-        }
+  //       if (status !== 200) {
+  //         setCurrentPasswordRequired(false)
+  //         setCurrentPasswordError(true)
+  //         return false
+  //       }
 
-        if (!password) {
-          setPasswordRequired(true)
-          setPasswordLengthError(false)
-          return false
-        }
+  //       if (!password) {
+  //         setPasswordRequired(true)
+  //         setPasswordLengthError(false)
+  //         return false
+  //       }
 
-        if (password.length < 6) {
-          setPasswordLengthError(true)
-          setPasswordRequired(false)
-          return false
-        }
+  //       if (password.length < 6) {
+  //         setPasswordLengthError(true)
+  //         setPasswordRequired(false)
+  //         return false
+  //       }
 
-        if (!confirmPassword) {
-          setConfirmPasswordRequired(true)
-          setConfirmPasswordError(false)
-          return false
-        }
+  //       if (!confirmPassword) {
+  //         setConfirmPasswordRequired(true)
+  //         setConfirmPasswordError(false)
+  //         return false
+  //       }
 
-        if (password !== confirmPassword) {
-          setConfirmPasswordError(true)
-          setConfirmPasswordRequired(false)
-          return false
-        }
+  //       if (password !== confirmPassword) {
+  //         setConfirmPasswordError(true)
+  //         setConfirmPasswordRequired(false)
+  //         return false
+  //       }
 
-        return true
-      }
-    } catch (err) {
-      helper.error(err)
-    }
-    return false
-  }
+  //       return true
+  //     }
+  //   } catch (err) {
+  //     helper.error(err)
+  //   }
+  //   return false
+  // }
 
   const onChangeCurrentPassword = (text: string) => {
     setCurrentPassword(text)
@@ -156,36 +156,36 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
   }
 
   const onPressUpdate = async () => {
-    try {
-      if (!user || !user._id) {
-        helper.error()
-        return
-      }
+    // try {
+    // if (!user || !user._id) {
+    //   helper.error()
+    //   return
+    // }
 
-      const passwordValid = await validatePassword()
+    // const passwordValid = await validatePassword()
 
-      if (!passwordValid) {
-        return
-      }
+    // if (!passwordValid) {
+    //   return
+    // }
 
-      const data: bookcarsTypes.ChangePasswordPayload = {
-        _id: user._id,
-        password: currentPassword,
-        newPassword: password,
-        strict: true,
-      }
+    // const data: bookcarsTypes.ChangePasswordPayload = {
+    //   _id: user._id,
+    //   password: currentPassword,
+    //   newPassword: password,
+    //   strict: true,
+    // }
 
-      const status = await UserService.changePassword(data)
+    // const status = await UserService.changePassword(data)
 
-      if (status === 200) {
-        clear()
-        helper.toast(i18n.t('PASSWORD_UPDATE'))
-      } else {
-        helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
-      }
-    } catch (err) {
-      await UserService.signout(navigation, false, true)
-    }
+    // if (status === 200) {
+    //   clear()
+    //   helper.toast(i18n.t('PASSWORD_UPDATE'))
+    // } else {
+    //   helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
+    // }
+    // } catch (err) {
+    //   helper.error(err)
+    // }
   }
 
   return (

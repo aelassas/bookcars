@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, ScrollView, View, Pressable, ActivityIndicator } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
+// import { Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
 import { Locale, format } from 'date-fns'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
@@ -28,8 +28,8 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
   const [page, setPage] = useState(1)
   const [rows, setRows] = useState<bookcarsTypes.Notification[]>([])
   const [totalRecords, setTotalRecords] = useState(-1)
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [selectedRows, setSelectedRows] = useState<bookcarsTypes.Notification[]>([])
+  // const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  // const [selectedRows, setSelectedRows] = useState<bookcarsTypes.Notification[]>([])
   const [rowCount, setRowCount] = useState(-1)
 
   const notificationsListRef = useRef<ScrollView>(null)
@@ -167,7 +167,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                       <MaterialIcons name="markunread" size={24} color={iconColor} />
                     </Pressable>
                   )}
-                  <Pressable
+                  {/* <Pressable
                     style={styles.action}
                     onPress={() => {
                       setSelectedRows(checkedRows)
@@ -175,7 +175,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                     }}
                   >
                     <MaterialIcons name="delete" size={24} color={iconColor} />
-                  </Pressable>
+                  </Pressable> */}
                 </View>
               )}
             </View>
@@ -287,7 +287,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                           <MaterialIcons name="markunread" size={24} color={iconColor} />
                         </Pressable>
                       )}
-                      <Pressable
+                      {/* <Pressable
                         style={styles.action}
                         onPress={() => {
                           setSelectedRows([row])
@@ -295,7 +295,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                         }}
                       >
                         <MaterialIcons name="delete" size={24} color={iconColor} />
-                      </Pressable>
+                      </Pressable> */}
                     </View>
                   </View>
                 </View>
@@ -330,7 +330,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
             </View>
           </View>
 
-          <Portal>
+          {/* <Portal>
             <Dialog visible={openDeleteDialog} dismissable={false}>
               <Dialog.Title style={styles.dialogTitleContent}>{i18n.t('CONFIRM_TITLE')}</Dialog.Title>
               <Dialog.Content style={styles.dialogContent}>
@@ -392,7 +392,7 @@ const NotificationList = ({ user, locale, navigation }: NotificationListProps) =
                 </NativeButton>
               </Dialog.Actions>
             </Dialog>
-          </Portal>
+          </Portal> */}
         </>
       )}
     </>
