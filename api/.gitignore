@@ -12,6 +12,7 @@ npm-debug.log*
 .DS_Store
 .DS_Store?
 .env
+.env.development
 .env.docker
 .env.oraclecloud
 
