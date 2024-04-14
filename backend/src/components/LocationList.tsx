@@ -222,11 +222,11 @@ const LocationList = ({
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={commonStrings.DELETE}>
+                    {/* <Tooltip title={commonStrings.DELETE}>
                       <IconButton edge="end" data-id={location._id} data-index={index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 )}
               >

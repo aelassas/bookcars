@@ -189,7 +189,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                         </IconButton>
                       </Tooltip>
                     )}
-                    <Tooltip title={strings.DELETE_ALL}>
+                    {/* <Tooltip title={strings.DELETE_ALL}>
                       <IconButton
                         onClick={() => {
                           setSelectedRows(checkedRows)
@@ -198,7 +198,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                       >
                         <DeleteIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 )}
               </div>
@@ -318,7 +318,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                             </IconButton>
                           </Tooltip>
                         )}
-                        <Tooltip title={commonStrings.DELETE}>
+                        {/* <Tooltip title={commonStrings.DELETE}>
                           <IconButton
                             onClick={() => {
                               setSelectedRows([row])
@@ -327,7 +327,7 @@ const NotificationList = ({ user }: NotificationListProps) => {
                           >
                             <DeleteIcon />
                           </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                       </div>
                     </div>
                   </div>

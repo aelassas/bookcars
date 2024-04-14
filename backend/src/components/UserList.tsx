@@ -244,11 +244,11 @@ const UserList = ({
                   <EditIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={commonStrings.DELETE}>
+              {/* <Tooltip title={commonStrings.DELETE}>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </div>
           ) : (
             <></>
@@ -257,7 +257,7 @@ const UserList = ({
         renderHeader: () => (selectedIds.length > 0 ? (
           <div>
             <div style={{ width: 40, display: 'inline-block' }} />
-            <Tooltip title={strings.DELETE_SELECTION}>
+            {/* <Tooltip title={strings.DELETE_SELECTION}>
               <IconButton
                 onClick={() => {
                   setOpenDeleteDialog(true)
@@ -265,7 +265,7 @@ const UserList = ({
               >
                 <DeleteIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         ) : (
           <></>
