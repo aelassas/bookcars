@@ -58,6 +58,7 @@ dist/
 # misc
 .env
 .env.local
+.env.dev
 .env.development
 .env.development.local
 .env.test.local
