@@ -49,6 +49,8 @@ const CreateBooking = () => {
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [minDate, setMinDate] = useState<Date>()
+  const [maxDate, setMaxDate] = useState<Date>()
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
@@ -56,7 +58,6 @@ const CreateBooking = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState<Date>()
   const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
   const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
   const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
@@ -312,6 +313,7 @@ const CreateBooking = () => {
               <DateTimePicker
                 label={commonStrings.FROM}
                 value={from}
+                maxDate={maxDate}
                 required
                 onChange={(date) => {
                   if (date) {
@@ -339,7 +341,15 @@ const CreateBooking = () => {
                 minDate={minDate}
                 required
                 onChange={(date) => {
-                  setTo(date || undefined)
+                  if (date) {
+                    const _maxDate = new Date(date)
+                    _maxDate.setDate(_maxDate.getDate() - 1)
+                    setMaxDate(_maxDate)
+                    setTo(date)
+                  } else {
+                    setMaxDate(undefined)
+                    setTo(undefined)
+                  }
                 }}
                 language={UserService.getLanguage()}
               />
