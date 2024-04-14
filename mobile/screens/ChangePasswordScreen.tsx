@@ -184,7 +184,7 @@ const ChangePasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
         helper.toast(i18n.t('PASSWORD_UPDATE_ERROR'))
       }
     } catch (err) {
-      await UserService.signout(navigation, false, true)
+      helper.error(err)
     }
   }
 
