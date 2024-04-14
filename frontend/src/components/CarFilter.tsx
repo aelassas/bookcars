@@ -32,6 +32,7 @@ const CarFilter = ({
   const [from, setFrom] = useState<Date | undefined>(filterFrom)
   const [to, setTo] = useState<Date | undefined>(filterTo)
   const [minDate, setMinDate] = useState<Date>()
+  const [maxDate, setMaxDate] = useState<Date>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location | null | undefined>(filterPickupLocation)
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location | null | undefined>(filterDropOffLocation)
   const [sameLocation, setSameLocation] = useState(filterPickupLocation === filterDropOffLocation)
@@ -43,6 +44,14 @@ const CarFilter = ({
       setMinDate(__minDate)
     }
   }, [filterFrom])
+
+  useEffect(() => {
+    if (filterTo) {
+      const __maxDate = new Date(filterTo)
+      __maxDate.setDate(__maxDate.getDate() - 1)
+      setMaxDate(__maxDate)
+    }
+  }, [filterTo])
 
   const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
     const _pickupLocation = (values.length > 0 && values[0]) || null
@@ -113,6 +122,7 @@ const CarFilter = ({
             label={commonStrings.FROM}
             value={from}
             minDate={new Date()}
+            maxDate={maxDate}
             variant="standard"
             required
             onChange={(date) => {
@@ -141,7 +151,15 @@ const CarFilter = ({
             variant="standard"
             required
             onChange={(date) => {
-              setTo(date || undefined)
+              if (date) {
+                setTo(date)
+                const _maxDate = new Date(date)
+                _maxDate.setDate(_maxDate.getDate() - 1)
+                setMaxDate(_maxDate)
+              } else {
+                setTo(undefined)
+                setMaxDate(undefined)
+              }
             }}
             language={UserService.getLanguage()}
           />
