@@ -12,7 +12,7 @@ import i18n from '../lang/i18n'
 
 interface CarProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
-  fr: boolean
+  language: string
   car: bookcarsTypes.Car
   from: Date
   to: Date
@@ -29,13 +29,16 @@ const getExtraColor = (extra: number) => (extra === 0 ? '#1f9201' : extra === -1
 
 const Car = ({
   car,
-  fr,
+  language,
   from,
   to,
   pickupLocation,
   dropOffLocation,
   navigation
-}: CarProps) => (
+}: CarProps) => {
+  const fr = bookcarsHelper.isFrench(language)
+
+  return (
     <View key={car._id} style={styles.carContainer}>
       <View style={styles.car}>
         <Text style={styles.name}>{car.name}</Text>
@@ -70,7 +73,7 @@ const Car = ({
 
         <View style={styles.infos}>
           <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage)}`}</Text>
+          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</Text>
         </View>
 
         <View style={styles.infos}>
@@ -81,32 +84,32 @@ const Car = ({
         <View style={styles.extras}>
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCancellation(car.cancellation, fr)}</Text>
+            <Text style={styles.text}>{helper.getCancellation(car.cancellation, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAmendments(car.amendments, fr)}</Text>
+            <Text style={styles.text}>{helper.getAmendments(car.amendments, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, fr)}</Text>
+            <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+            <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, fr)}</Text>
+            <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
+            <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, language)}</Text>
           </View>
         </View>
 
@@ -123,8 +126,8 @@ const Car = ({
 
           <View style={styles.price}>
             <Text style={styles.priceSecondary}>{helper.getDays(bookcarsHelper.days(from, to))}</Text>
-            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatNumber(helper.price(car, from, to))} ${i18n.t('CURRENCY')}`}</Text>
-            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CURRENCY')}`}</Text>
+            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(helper.price(car, from, to), i18n.t('CURRENCY'), language)}`}</Text>
+            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}`}</Text>
           </View>
         </View>
 
@@ -147,6 +150,7 @@ const Car = ({
       </View>
     </View>
   )
+}
 
 const styles = StyleSheet.create({
   carContainer: {

@@ -4,16 +4,18 @@ import * as bookcarsTypes from ':bookcars-types'
  * Format a number.
  *
  * @export
- * @param {?number} [x]
+ * @param {number} x
+ * @param {string} language ISO 639-1 language code
  * @returns {string}
  */
-export const formatNumber = (x?: number): string => {
-    if (typeof x === 'number') {
-        const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-        return parts.join('.')
-    }
-    return ''
+export const formatNumber = (x: number, language: string): string => {
+  if (typeof x === 'number') {
+    const parts: string[] = String(x % 1 !== 0 ? x.toFixed(2) : x).split('.')
+    const separator = language === 'en' ? ',' : ' '
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator)
+    return parts.join('.')
+  }
+  return ''
 }
 
 /**
@@ -24,7 +26,7 @@ export const formatNumber = (x?: number): string => {
  * @returns {string}
  */
 export const formatDatePart = (n: number): string => {
-    return n > 9 ? String(n) : '0' + n
+  return n > 9 ? String(n) : '0' + n
 }
 
 /**
@@ -35,7 +37,7 @@ export const formatDatePart = (n: number): string => {
  * @returns {string}
  */
 export const capitalize = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 /**
@@ -46,7 +48,7 @@ export const capitalize = (str: string): string => {
  * @returns {boolean}
  */
 export const isDate = (value?: any): boolean => {
-    return value instanceof Date && !Number.isNaN(value.valueOf())
+  return value instanceof Date && !Number.isNaN(value.valueOf())
 }
 
 /**
@@ -57,19 +59,19 @@ export const isDate = (value?: any): boolean => {
  * @returns {string}
  */
 export const joinURL = (part1?: string, part2?: string) => {
-    if (!part1 || !part2) {
-        const msg = '[joinURL] part undefined'
-        console.log(msg)
-        throw new Error(msg)
-    }
+  if (!part1 || !part2) {
+    const msg = '[joinURL] part undefined'
+    console.log(msg)
+    throw new Error(msg)
+  }
 
-    if (part1.charAt(part1.length - 1) === '/') {
-        part1 = part1.substring(0, part1.length - 1)
-    }
-    if (part2.charAt(0) === '/') {
-        part2 = part2.substring(1)
-    }
-    return part1 + '/' + part2
+  if (part1.charAt(part1.length - 1) === '/') {
+    part1 = part1.substring(0, part1.length - 1)
+  }
+  if (part2.charAt(0) === '/') {
+    part2 = part2.substring(1)
+  }
+  return part1 + '/' + part2
 }
 
 /**
@@ -79,7 +81,7 @@ export const joinURL = (part1?: string, part2?: string) => {
  * @returns {boolean}
  */
 export const isInteger = (val: string) => {
-    return /^\d+$/.test(val)
+  return /^\d+$/.test(val)
 }
 
 /**
@@ -89,7 +91,7 @@ export const isInteger = (val: string) => {
  * @returns {boolean}
  */
 export const isYear = (val: string) => {
-    return /^\d{2}$/.test(val)
+  return /^\d{2}$/.test(val)
 }
 
 /**
@@ -99,7 +101,7 @@ export const isYear = (val: string) => {
  * @returns {boolean}
  */
 export const isCvv = (val: string) => {
-    return /^\d{3,4}$/.test(val)
+  return /^\d{3,4}$/.test(val)
 }
 
 /**
@@ -110,27 +112,27 @@ export const isCvv = (val: string) => {
  * @returns {boolean}
  */
 export const arrayEqual = (a: any, b: any) => {
-    if (a === b) {
-        return true
-    }
-    if (a == null || b == null) {
-        return false
-    }
-    if (a.length !== b.length) {
-        return false
-    }
-
-    // If you don't care about the order of the elements inside
-    // the array, you should sort both arrays here.
-    // Please note that calling sort on an array will modify that array.
-    // you might want to clone your array first.
-
-    for (let i = 0; i < a.length; i += 1) {
-        if (a[i] !== b[i]) {
-            return false
-        }
-    }
+  if (a === b) {
     return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
+  if (a.length !== b.length) {
+    return false
+  }
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) {
+      return false
+    }
+  }
+  return true
 }
 
 /**
@@ -140,7 +142,7 @@ export const arrayEqual = (a: any, b: any) => {
  * @returns {*}
  */
 export const clone = (obj: any) => {
-    return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
+  return Array.isArray(obj) ? Array.from(obj) : Object.assign({}, obj)
 }
 
 /**
@@ -152,13 +154,13 @@ export const clone = (obj: any) => {
  * @returns {(T[] | undefined | null)}
  */
 export const cloneArray = <T>(arr: T[]): T[] | undefined | null => {
-    if (typeof arr === 'undefined') {
-        return undefined
-    }
-    if (arr == null) {
-        return null
-    }
-    return [...arr]
+  if (typeof arr === 'undefined') {
+    return undefined
+  }
+  if (arr == null) {
+    return null
+  }
+  return [...arr]
 }
 
 /**
@@ -169,30 +171,30 @@ export const cloneArray = <T>(arr: T[]): T[] | undefined | null => {
  * @returns {boolean}
  */
 export const filterEqual = (a?: bookcarsTypes.Filter | null, b?: bookcarsTypes.Filter | null) => {
-    if (a === b) {
-        return true
-    }
-    if (a == null || b == null) {
-        return false
-    }
-
-    if (a.from !== b.from) {
-        return false
-    }
-    if (a.to !== b.to) {
-        return false
-    }
-    if (a.pickupLocation !== b.pickupLocation) {
-        return false
-    }
-    if (a.dropOffLocation !== b.dropOffLocation) {
-        return false
-    }
-    if (a.keyword !== b.keyword) {
-        return false
-    }
-
+  if (a === b) {
     return true
+  }
+  if (a == null || b == null) {
+    return false
+  }
+
+  if (a.from !== b.from) {
+    return false
+  }
+  if (a.to !== b.to) {
+    return false
+  }
+  if (a.pickupLocation !== b.pickupLocation) {
+    return false
+  }
+  if (a.dropOffLocation !== b.dropOffLocation) {
+    return false
+  }
+  if (a.keyword !== b.keyword) {
+    return false
+  }
+
+  return true
 }
 
 /**
@@ -202,7 +204,7 @@ export const filterEqual = (a?: bookcarsTypes.Filter | null, b?: bookcarsTypes.F
  * @returns {string[]}
  */
 export const flattenSuppliers = (suppliers: bookcarsTypes.User[]): string[] =>
-    suppliers.map((supplier) => supplier._id ?? '')
+  suppliers.map((supplier) => supplier._id ?? '')
 
 /**
  * Get number of days between two dates.
@@ -212,4 +214,32 @@ export const flattenSuppliers = (suppliers: bookcarsTypes.User[]): string[] =>
  * @returns {number}
  */
 export const days = (from?: Date, to?: Date) =>
-    (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
+  (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
+
+
+/**
+ * Format price
+ *
+ * @param {number} price
+ * @param {string} currency
+ * @param {string} language ISO 639-1 language code
+ * @returns {boolean}
+ */
+export const formatPrice = (price: number, currency: string, language: string) => {
+  const formatedPrice = formatNumber(price, language)
+
+  if (currency === '$') {
+    return `$${formatedPrice}`
+  }
+
+  return `${formatedPrice} ${currency}`
+}
+
+
+/**
+ * Check whether language is french
+ *
+ * @param {string} language
+ * @returns {boolean}
+ */
+export const isFrench = (language?: string) => language === 'fr'

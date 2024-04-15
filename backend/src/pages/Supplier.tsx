@@ -39,6 +39,7 @@ const Supplier = () => {
   const [noMatch, setNoMatch] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [rowCount, setRowCount] = useState(-1)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   const onBeforeUpload = () => {
     setLoading(true)
@@ -95,6 +96,7 @@ const Supplier = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
+    setLanguage(_user?.language as string)
 
     if (_user && _user.verified) {
       const params = new URLSearchParams(window.location.search)
@@ -203,6 +205,7 @@ const Supplier = () => {
               suppliers={suppliers}
               keyword=""
               reload={false}
+              language={language}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
               hideSupplier

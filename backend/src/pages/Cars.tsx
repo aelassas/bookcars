@@ -3,6 +3,7 @@ import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '../common/helper'
+import env from '../config/env.config'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
 import Master from '../components/Master'
@@ -32,6 +33,7 @@ const Cars = () => {
   const [mileage, setMileage] = useState<string[]>([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [availability, setAvailability] = useState<string[]>([bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable])
   const [deposit, setDeposit] = useState(-1)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
@@ -73,6 +75,7 @@ const Cars = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
+    setLanguage(_user?.language as string)
     setAdmin(helper.admin(_user))
     const _allSuppliers = await SupplierService.getAllSuppliers()
     const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
@@ -119,6 +122,7 @@ const Cars = () => {
               availability={availability}
               keyword={keyword}
               loading={loading}
+              language={language}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
             />
