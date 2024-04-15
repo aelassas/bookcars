@@ -216,7 +216,6 @@ export const flattenSuppliers = (suppliers: bookcarsTypes.User[]): string[] =>
 export const days = (from?: Date, to?: Date) =>
   (from && to && Math.ceil((to.getTime() - from.getTime()) / (1000 * 3600 * 24))) || 0
 
-
 /**
  * Format price
  *
@@ -234,7 +233,6 @@ export const formatPrice = (price: number, currency: string, language: string) =
 
   return `${formatedPrice} ${currency}`
 }
-
 
 /**
  * Check whether language is french
