@@ -211,123 +211,138 @@ export const getFuelPolicyTooltip = (fuelPolicy: string) => {
  * Get mileage label.
  *
  * @param {number} mileage
+ * @param {string} language
  * @returns {string}
  */
-export const getMileage = (mileage: number) => {
+export const getMileage = (mileage: number, language: string) => {
   if (mileage === -1) {
     return strings.UNLIMITED
   }
-  return `${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
+  return `${bookcarsHelper.formatNumber(mileage, language)} ${strings.MILEAGE_UNIT}`
 }
 
 /**
  * Get mileage tooltip.
  *
  * @param {number} mileage
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getMileageTooltip = (mileage: number, fr: boolean) => {
+export const getMileageTooltip = (mileage: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (mileage === -1) {
     return `${strings.MILEAGE} ${strings.UNLIMITED.toLocaleLowerCase()}.`
   }
-  return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage)} ${strings.MILEAGE_UNIT}`
+  return `${strings.MILEAGE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(mileage, language)} ${strings.MILEAGE_UNIT}`
 }
 
 /**
  * Get additional driver label.
  *
  * @param {number} additionalDriver
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getAdditionalDriver = (additionalDriver: number, fr: boolean) => {
+export const getAdditionalDriver = (additionalDriver: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (additionalDriver === -1) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
   } if (additionalDriver === 0) {
     return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${strings.INCLUDED}`
   }
-  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY}`
+  return `${strings.ADDITIONAL_DRIVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
  * Get full insurance label.
  *
  * @param {number} fullInsurance
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getFullInsurance = (fullInsurance: number, fr: boolean) => {
+export const getFullInsurance = (fullInsurance: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (fullInsurance === -1) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
   } if (fullInsurance === 0) {
     return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY}`
+  return `${strings.FULL_INSURANCE}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
  * Get collision damage waiver label.
  *
  * @param {number} collisionDamageWaiver
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getCollisionDamageWaiver = (collisionDamageWaiver: number, fr: boolean) => {
+export const getCollisionDamageWaiver = (collisionDamageWaiver: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (collisionDamageWaiver === -1) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
   } if (collisionDamageWaiver === 0) {
     return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY}`
+  return `${strings.COLLISION_DAMAGE_WAVER}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
  * Get theft protection label.
  *
  * @param {number} theftProtection
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getTheftProtection = (theftProtection: number, fr: boolean) => {
+export const getTheftProtection = (theftProtection: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (theftProtection === -1) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
   } if (theftProtection === 0) {
     return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY}`
+  return `${strings.THEFT_PROTECTION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`
 }
 
 /**
  * Get amendments label.
  *
  * @param {number} amendments
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getAmendments = (amendments: number, fr: boolean) => {
+export const getAmendments = (amendments: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (amendments === -1) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}${fr ? 's' : ''}`
   } if (amendments === 0) {
     return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'es' : ''}`
   }
-  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
+  return `${strings.AMENDMENTS}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
 }
 
 /**
  * Get cancellation label.
  *
  * @param {number} cancellation
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getCancellation = (cancellation: number, fr: boolean) => {
+export const getCancellation = (cancellation: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (cancellation === -1) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.UNAVAILABLE}`
   } if (cancellation === 0) {
     return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
+  return `${strings.CANCELLATION}${fr ? ' : ' : ': '}${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -451,32 +466,36 @@ export const getDaysShort = (days: number) => `${days} ${strings.PRICE_DAYS_PART
  * Get cancellation option label.
  *
  * @param {number} cancellation
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getCancellationOption = (cancellation: number, fr: boolean) => {
+export const getCancellationOption = (cancellation: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (cancellation === -1) {
     return strings.UNAVAILABLE
   } if (cancellation === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatNumber(cancellation)} ${commonStrings.CURRENCY}`
+  return `+ ${bookcarsHelper.formatPrice(cancellation, commonStrings.CURRENCY, language)}`
 }
 
 /**
  * Get amendments option label.
  *
  * @param {number} amendments
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getAmendmentsOption = (amendments: number, fr: boolean) => {
+export const getAmendmentsOption = (amendments: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (amendments === -1) {
     return `${strings.UNAVAILABLE}${fr ? 's' : ''}`
   } if (amendments === 0) {
     return `${strings.INCLUDED}${fr ? 'es' : ''}`
   }
-  return `+ ${bookcarsHelper.formatNumber(amendments)} ${commonStrings.CURRENCY}`
+  return `+ ${bookcarsHelper.formatPrice(amendments, commonStrings.CURRENCY, language)}`
 }
 
 /**
@@ -484,16 +503,18 @@ export const getAmendmentsOption = (amendments: number, fr: boolean) => {
  *
  * @param {number} theftProtection
  * @param {number} days
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getTheftProtectionOption = (theftProtection: number, days: number, fr: boolean) => {
+export const getTheftProtectionOption = (theftProtection: number, days: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (theftProtection === -1) {
     return strings.UNAVAILABLE
   } if (theftProtection === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatNumber(theftProtection * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(theftProtection)} ${strings.CAR_CURRENCY})`
+  return `+ ${bookcarsHelper.formatPrice(theftProtection * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(theftProtection, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -501,16 +522,18 @@ export const getTheftProtectionOption = (theftProtection: number, days: number, 
  *
  * @param {number} collisionDamageWaiver
  * @param {number} days
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, fr: boolean) => {
+export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, days: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (collisionDamageWaiver === -1) {
     return strings.UNAVAILABLE
   } if (collisionDamageWaiver === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatNumber(collisionDamageWaiver * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(collisionDamageWaiver)} ${strings.CAR_CURRENCY})`
+  return `+ ${bookcarsHelper.formatPrice(collisionDamageWaiver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(collisionDamageWaiver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -518,16 +541,18 @@ export const getCollisionDamageWaiverOption = (collisionDamageWaiver: number, da
  *
  * @param {number} fullInsurance
  * @param {number} days
- * @param {boolean} fr
+ * @param {string} language
  * @returns {string}
  */
-export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: boolean) => {
+export const getFullInsuranceOption = (fullInsurance: number, days: number, language: string) => {
+  const fr = bookcarsHelper.isFrench(language)
+
   if (fullInsurance === -1) {
     return strings.UNAVAILABLE
   } if (fullInsurance === 0) {
     return `${strings.INCLUDED}${fr ? 'e' : ''}`
   }
-  return `+ ${bookcarsHelper.formatNumber(fullInsurance * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(fullInsurance)} ${strings.CAR_CURRENCY})`
+  return `+ ${bookcarsHelper.formatPrice(fullInsurance * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(fullInsurance, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**
@@ -535,15 +560,16 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, fr: 
  *
  * @param {number} additionalDriver
  * @param {number} days
+ * @param {string} language
  * @returns {string}
  */
-export const getAdditionalDriverOption = (additionalDriver: number, days: number) => {
+export const getAdditionalDriverOption = (additionalDriver: number, days: number, language: string) => {
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
   } if (additionalDriver === 0) {
     return strings.INCLUDED
   }
-  return `+ ${bookcarsHelper.formatNumber(additionalDriver * days)} ${commonStrings.CURRENCY} (${bookcarsHelper.formatNumber(additionalDriver)} ${strings.CAR_CURRENCY})`
+  return `+ ${bookcarsHelper.formatPrice(additionalDriver * days, commonStrings.CURRENCY, language)} (${bookcarsHelper.formatPrice(additionalDriver, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`
 }
 
 /**

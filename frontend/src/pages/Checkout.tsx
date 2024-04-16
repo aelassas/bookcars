@@ -759,7 +759,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.CANCELLATION}</span>
-                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, language)}</span>
                           </span>
                         )}
                       />
@@ -772,7 +772,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
-                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, _fr)}</span>
+                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, language)}</span>
                           </span>
                         )}
                       />
@@ -785,7 +785,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</span>
                           </span>
                         )}
                       />
@@ -798,7 +798,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, language)}</span>
                           </span>
                         )}
                       />
@@ -811,7 +811,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
-                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</span>
                           </span>
                         )}
                       />
@@ -824,7 +824,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
+                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</span>
                           </span>
                         )}
                       />
@@ -856,7 +856,7 @@ const Checkout = () => {
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.CAR}</span>
-                      <div className="booking-detail-value">{`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}</div>
+                      <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
@@ -869,7 +869,7 @@ const Checkout = () => {
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.COST}</span>
-                      <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
+                      <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
                     </div>
                   </div>
                 </div>
@@ -1083,7 +1083,7 @@ const Checkout = () => {
                       </div>
                       <div className="secure-payment-cost">
                         <span className="cost-title">{strings.COST}</span>
-                        <span className="cost-value">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
+                        <span className="cost-value">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</span>
                       </div>
                     </div>
 

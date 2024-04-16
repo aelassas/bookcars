@@ -12,6 +12,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
 import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as csStrings } from '../lang/cars'
+import env from '../config/env.config'
 import * as helper from '../common/helper'
 import Master from '../components/Master'
 import * as UserService from '../services/UserService'
@@ -33,6 +34,7 @@ const Booking = () => {
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
   const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
@@ -237,6 +239,7 @@ const Booking = () => {
 
   const onLoad = async () => {
     setLoading(true)
+    setLanguage(UserService.getLanguage())
 
     const params = new URLSearchParams(window.location.search)
     if (params.has('b')) {
@@ -485,8 +488,8 @@ const Booking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price || 0) / days)} ${commonStrings.CURRENCY}`}</span>
+                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(Math.floor((price as number) / days), commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList
