@@ -645,8 +645,6 @@ export const getFullInsuranceOption = (fullInsurance: number, days: number, lang
  * @returns {string}
  */
 export const getAdditionalDriverOption = (additionalDriver: number, days: number, language: string, hidePlus: boolean) => {
-  const fr = bookcarsHelper.isFrench(language)
-
   if (additionalDriver === -1) {
     return strings.UNAVAILABLE
   } if (additionalDriver === 0) {
