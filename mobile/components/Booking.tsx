@@ -14,7 +14,7 @@ import i18n from '../lang/i18n'
 interface BookingProps {
   booking: bookcarsTypes.Booking
   locale: Locale
-  fr: boolean
+  language: string
   onCancel: () => void
 }
 
@@ -27,7 +27,7 @@ const extraIconSize = 16
 const Booking = ({
   booking,
   locale,
-  fr,
+  language,
   onCancel
 }: BookingProps) => {
   const from = new Date(booking.from)
@@ -66,7 +66,7 @@ const Booking = ({
         <Text style={styles.detailText}>{(booking.dropOffLocation as bookcarsTypes.Location).name}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-        <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CAR_CURRENCY')})`}</Text>
+        <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)})`}</Text>
 
         <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
         <View style={styles.supplier}>
@@ -87,7 +87,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('CANCELLATION')}</Text>
-                  <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, language, true)}</Text>
                 </View>
               )}
 
@@ -95,7 +95,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('AMENDMENTS')}</Text>
-                  <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, language, true)}</Text>
                 </View>
               )}
 
@@ -103,7 +103,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('COLLISION_DAMAGE_WAVER')}</Text>
-                  <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language, true)}</Text>
                 </View>
               )}
 
@@ -111,7 +111,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('THEFT_PROTECTION')}</Text>
-                  <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, language, true)}</Text>
                 </View>
               )}
 
@@ -119,7 +119,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('FULL_INSURANCE')}</Text>
-                  <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, language, true)}</Text>
                 </View>
               )}
 
@@ -127,7 +127,7 @@ const Booking = ({
                 <View style={styles.extra}>
                   <MaterialIcons style={styles.extraIcon} name="check" size={extraIconSize} color={extraIconColor} />
                   <Text style={styles.extraTitle}>{i18n.t('ADDITIONAL_DRIVER')}</Text>
-                  <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, fr, true)}</Text>
+                  <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, language, true)}</Text>
                 </View>
               )}
             </View>
@@ -135,7 +135,7 @@ const Booking = ({
         )}
 
         <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-        <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatNumber(booking.price)} ${i18n.t('CURRENCY')}`}</Text>
+        <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(booking.price as number, i18n.t('CURRENCY'), language)}`}</Text>
 
         {booking.cancellation
           && !booking.cancelRequest

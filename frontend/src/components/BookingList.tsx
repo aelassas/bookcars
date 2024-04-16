@@ -226,7 +226,7 @@ const BookingList = ({
         headerName: strings.PRICE,
         flex: 1,
         renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.Booking, string>) => <span className="bp">{value}</span>,
-        valueGetter: (value: number) => `${bookcarsHelper.formatNumber(value)} ${commonStrings.CURRENCY}`,
+        valueGetter: (value: number) => bookcarsHelper.formatPrice(value, commonStrings.CURRENCY, language as string),
       },
       {
         field: 'status',
@@ -414,7 +414,7 @@ const BookingList = ({
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.CAR}</span>
-                    <div className="booking-detail-value">{`${_bookingCar.name} (${bookcarsHelper.formatNumber(_bookingCar.price)} ${csStrings.CAR_CURRENCY})`}</div>
+                    <div className="booking-detail-value">{`${_bookingCar.name} (${bookcarsHelper.formatPrice(_bookingCar.price, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY})`}</div>
                   </div>
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.DAYS}</span>
@@ -454,7 +454,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.CANCELLATION}</span>
-                            <span className="extra-text">{helper.getCancellationOption(_bookingCar.cancellation, _fr)}</span>
+                            <span className="extra-text">{helper.getCancellationOption(_bookingCar.cancellation, language as string)}</span>
                           </div>
                         )}
 
@@ -462,7 +462,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.AMENDMENTS}</span>
-                            <span className="extra-text">{helper.getAmendmentsOption(_bookingCar.amendments, _fr)}</span>
+                            <span className="extra-text">{helper.getAmendmentsOption(_bookingCar.amendments, language as string)}</span>
                           </div>
                         )}
 
@@ -470,7 +470,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="extra-text">{helper.getCollisionDamageWaiverOption(_bookingCar.collisionDamageWaiver, days, _fr)}</span>
+                            <span className="extra-text">{helper.getCollisionDamageWaiverOption(_bookingCar.collisionDamageWaiver, days, language as string)}</span>
                           </div>
                         )}
 
@@ -478,7 +478,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="extra-text">{helper.getTheftProtectionOption(_bookingCar.theftProtection, days, _fr)}</span>
+                            <span className="extra-text">{helper.getTheftProtectionOption(_bookingCar.theftProtection, days, language as string)}</span>
                           </div>
                         )}
 
@@ -486,7 +486,7 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.FULL_INSURANCE}</span>
-                            <span className="extra-text">{helper.getFullInsuranceOption(_bookingCar.fullInsurance, days, _fr)}</span>
+                            <span className="extra-text">{helper.getFullInsuranceOption(_bookingCar.fullInsurance, days, language as string)}</span>
                           </div>
                         )}
 
@@ -494,14 +494,14 @@ const BookingList = ({
                           <div className="extra">
                             <CheckIcon className="extra-icon" />
                             <span className="extra-title">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="extra-text">{helper.getAdditionalDriverOption(_bookingCar.additionalDriver, days)}</span>
+                            <span className="extra-text">{helper.getAdditionalDriverOption(_bookingCar.additionalDriver, days, language as string)}</span>
                           </div>
                         )}
                       </div>
                     )}
                   <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                     <span className="booking-detail-title">{strings.COST}</span>
-                    <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(booking.price)} ${commonStrings.CURRENCY}`}</div>
+                    <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(booking.price as number, commonStrings.CURRENCY, language as string)}</div>
                   </div>
 
                   <div className="bs-buttons">

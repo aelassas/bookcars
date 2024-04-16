@@ -126,7 +126,6 @@ const CarList = ({
     setPage(1)
   }, [suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
 
-  const fr = language === 'fr'
   const numToRender = Math.floor(env.CARS_PAGE_SIZE / 2)
 
   return (
@@ -144,7 +143,7 @@ const CarList = ({
           renderItem={({ item: car }) => (
             <Car
               car={car}
-              fr={fr}
+              language={language}
               from={from}
               to={to}
               pickupLocation={pickupLocation}

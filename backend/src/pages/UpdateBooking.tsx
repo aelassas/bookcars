@@ -80,6 +80,7 @@ const UpdateBooking = () => {
   const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0] : undefined)
@@ -419,6 +420,7 @@ const UpdateBooking = () => {
   const onLoad = async (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
+      setLanguage(UserService.getLanguage())
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
@@ -796,8 +798,8 @@ const UpdateBooking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{`${bookcarsHelper.formatNumber(price ?? 0)} ${commonStrings.CURRENCY}`}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price ?? 0) / days)} ${commonStrings.CURRENCY}`}</span>
+                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(Math.floor((price as number) / days), commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList
@@ -805,6 +807,7 @@ const UpdateBooking = () => {
               user={user}
               booking={booking}
               cars={((car && [booking.car]) as bookcarsTypes.Car[]) || []}
+              language={language}
               hidePrice
             />
           </div>
