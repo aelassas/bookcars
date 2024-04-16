@@ -95,8 +95,10 @@ const BookingList = ({
   const [cancelRequestProcessing, setCancelRequestProcessing] = useState(false)
 
   useEffect(() => {
-    setPage(paginationModel.page)
-    setPageSize(paginationModel.pageSize)
+    if (!env.isMobile()) {
+      setPage(paginationModel.page)
+      setPageSize(paginationModel.pageSize)
+    }
   }, [paginationModel])
 
   const fetchData = async (_page: number, _user?: bookcarsTypes.User) => {
@@ -181,13 +183,13 @@ const BookingList = ({
   }, [bookingUser])
 
   useEffect(() => {
-    if (suppliers && statuses) {
+    if (suppliers && statuses && user) {
       fetchData(page, user)
     }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (suppliers && statuses) {
+    if (suppliers && statuses && user) {
       if (page === 0) {
         fetchData(0, user)
       } else {
@@ -307,7 +309,7 @@ const BookingList = ({
   }
 
   useEffect(() => {
-    if (suppliers && statuses) {
+    if (suppliers && statuses && user) {
       const _columns = getColumns()
       setColumns(_columns)
 
