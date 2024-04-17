@@ -39,12 +39,12 @@ BookCars is user-friendly, straightforward, secure against XSS, XST, CSRF and MI
 ## Live Demo
 
 ### Frontend
-* URL: http://bookcars.ddns.net:3002/
+* URL: http://bookcars.v6.rocks:3002/
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
 ### Backend
-* URL: http://bookcars.ddns.net:3001/
+* URL: http://bookcars.v6.rocks:3001/
 * Login: admin@bookcars.ma
 * Password: B00kC4r5
 
