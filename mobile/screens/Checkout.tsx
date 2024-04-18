@@ -864,8 +864,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const iconSize = 18
   const iconColor = '#000'
-  const _fr = language === 'fr'
-  const _format = `eee d LLLL yyyy ${_fr ? 'kk:mm' : 'p'}`
+  const _fr = bookcarsHelper.isFrench(language)
+  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const days = bookcarsHelper.days(from, to)
 
   return (
