@@ -57,7 +57,7 @@ const DateTimePicker = ({
             required,
           },
           actionBar: {
-            actions: ['accept', 'cancel', 'today', 'clear'],
+            actions: ['accept', 'cancel', 'clear'],
           },
         }}
       />
