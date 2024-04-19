@@ -16,6 +16,7 @@ import {
   Info as InfoIcon,
   Person as DriverIcon
 } from '@mui/icons-material'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
@@ -81,6 +82,8 @@ const UpdateBooking = () => {
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
   const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
     setSupplier(values.length > 0 ? values[0] : undefined)
@@ -358,6 +361,10 @@ const UpdateBooking = () => {
         return
       }
 
+      if (fromError || toError) {
+        return
+      }
+
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
         supplier: supplier._id,
@@ -585,18 +592,22 @@ const UpdateBooking = () => {
                           const _minDate = new Date(date)
                           _minDate.setDate(_minDate.getDate() + 1)
                           setMinDate(_minDate)
-
-                          if (to && to.getTime() <= date.getTime()) {
-                            setTo(undefined)
-                          }
+                          setFromError(false)
                         },
                         (err) => {
                           toastErr(err)
                         },
                       )
                     } else {
-                      setMinDate(undefined)
                       setFrom(undefined)
+                      setMinDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setFromError(true)
+                    } else {
+                      setFromError(false)
                     }
                   }}
                   language={UserService.getLanguage()}
@@ -623,6 +634,7 @@ const UpdateBooking = () => {
                           const _maxDate = new Date(date)
                           _maxDate.setDate(_maxDate.getDate() - 1)
                           setMaxDate(_maxDate)
+                          setToError(false)
                         },
                         (err) => {
                           toastErr(err)
@@ -631,6 +643,13 @@ const UpdateBooking = () => {
                     } else {
                       setTo(undefined)
                       setMaxDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setToError(true)
+                    } else {
+                      setToError(false)
                     }
                   }}
                   language={UserService.getLanguage()}

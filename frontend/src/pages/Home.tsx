@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { FormControl, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
@@ -25,6 +26,8 @@ const Home = () => {
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [sameLocation, setSameLocation] = useState(true)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
   useEffect(() => {
     const _from = new Date()
@@ -83,7 +86,7 @@ const Home = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!pickupLocation || !dropOffLocation || !from || !to) {
+    if (!pickupLocation || !dropOffLocation || !from || !to || fromError || toError) {
       return
     }
 
@@ -116,24 +119,28 @@ const Home = () => {
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
-                  minDate={new Date()}
+                  minDate={_minDate}
                   maxDate={maxDate}
                   variant="outlined"
                   required
                   onChange={(date) => {
                     if (date) {
-                      if (to && to.getTime() <= date.getTime()) {
-                        setTo(undefined)
-                      }
-
                       const __minDate = new Date(date)
                       __minDate.setDate(date.getDate() + 1)
+                      setFrom(date)
                       setMinDate(__minDate)
+                      setFromError(false)
                     } else {
+                      setFrom(undefined)
                       setMinDate(_minDate)
                     }
-
-                    setFrom(date || undefined)
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setFromError(true)
+                    } else {
+                      setFromError(false)
+                    }
                   }}
                   language={UserService.getLanguage()}
                 />
@@ -147,13 +154,21 @@ const Home = () => {
                   required
                   onChange={(date) => {
                     if (date) {
-                      setTo(date)
                       const _maxDate = new Date(date)
                       _maxDate.setDate(_maxDate.getDate() - 1)
+                      setTo(date)
                       setMaxDate(_maxDate)
+                      setToError(false)
                     } else {
                       setTo(undefined)
                       setMaxDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setToError(true)
+                    } else {
+                      setToError(false)
                     }
                   }}
                   language={UserService.getLanguage()}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FormControl, Button } from '@mui/material'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
@@ -36,6 +37,8 @@ const CarFilter = ({
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location | null | undefined>(filterPickupLocation)
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location | null | undefined>(filterDropOffLocation)
   const [sameLocation, setSameLocation] = useState(filterPickupLocation === filterDropOffLocation)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
   useEffect(() => {
     if (filterFrom) {
@@ -78,7 +81,7 @@ const CarFilter = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!pickupLocation || !dropOffLocation || !from || !to) {
+    if (!pickupLocation || !dropOffLocation || !from || !to || fromError || toError) {
       return
     }
 
@@ -121,24 +124,28 @@ const CarFilter = ({
           <DateTimePicker
             label={commonStrings.FROM}
             value={from}
-            minDate={new Date()}
+            minDate={_minDate}
             maxDate={maxDate}
             variant="standard"
             required
             onChange={(date) => {
               if (date) {
-                if (to && to.getTime() <= date.getTime()) {
-                  setTo(undefined)
-                }
-
                 const __minDate = new Date(date)
                 __minDate.setDate(date.getDate() + 1)
+                setFrom(date)
                 setMinDate(__minDate)
+                setFromError(false)
               } else {
+                setFrom(undefined)
                 setMinDate(_minDate)
               }
-
-              setFrom(date || undefined)
+            }}
+            onError={(err: DateTimeValidationError) => {
+              if (err) {
+                setFromError(true)
+              } else {
+                setFromError(false)
+              }
             }}
             language={UserService.getLanguage()}
           />
@@ -152,13 +159,21 @@ const CarFilter = ({
             required
             onChange={(date) => {
               if (date) {
-                setTo(date)
                 const _maxDate = new Date(date)
                 _maxDate.setDate(_maxDate.getDate() - 1)
+                setTo(date)
                 setMaxDate(_maxDate)
+                setToError(false)
               } else {
                 setTo(undefined)
                 setMaxDate(undefined)
+              }
+            }}
+            onError={(err: DateTimeValidationError) => {
+              if (err) {
+                setToError(true)
+              } else {
+                setToError(false)
               }
             }}
             language={UserService.getLanguage()}
