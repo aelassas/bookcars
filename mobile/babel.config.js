@@ -14,6 +14,16 @@ module.exports = function (api) {
           allowUndefined: false,
         },
       ],
+      [
+        "module-resolver",
+        {
+          "root": ['./'],
+          "alias": {
+            ":bookcars-types": "../packages/bookcars-types",
+            ":bookcars-helper": "../packages/bookcars-helper"
+          }
+        }
+      ],
       'react-native-reanimated/plugin',
     ],
   }

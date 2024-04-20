@@ -1,5 +1,6 @@
 import mongoose, { ConnectOptions } from 'mongoose'
 import * as env from '../config/env.config'
+import * as logger from './logger'
 
 /**
  * Connect to database.
@@ -27,10 +28,10 @@ export const Connect = async (uri: string, ssl: boolean, debug: boolean): Promis
 
     try {
         await mongoose.connect(uri, options)
-        console.log('Database is connected')
+        logger.info('Database is connected')
         return true
     } catch (err) {
-        console.error('Cannot connect to the database:', err)
+        logger.error('Cannot connect to the database:', err)
         return false
     }
 }

@@ -5,12 +5,12 @@ import {
   MenuItem,
   SelectChangeEvent
 } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/cars'
 
 interface CarTypeListProps {
-  value?: string,
-  required?: boolean,
+  value?: string
+  required?: boolean
   label?: string
   variant?: 'filled' | 'standard' | 'outlined'
   onChange?: (value: string) => void

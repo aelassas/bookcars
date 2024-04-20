@@ -17,12 +17,13 @@ import {
   Clear as UncheckIcon,
   LocationOn as LocationIcon,
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
+import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import * as SupplierService from '../services/SupplierService'
 import Backdrop from '../components/SimpleBackdrop'
@@ -43,9 +44,10 @@ const Car = () => {
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [offset, setOffset] = useState(0)
   const [openInfoDialog, setOpenInfoDialog] = useState(false)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   useEffect(() => {
     if (visible) {
@@ -112,6 +114,7 @@ const Car = () => {
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setLoading(true)
     setUser(_user)
+    setLanguage(UserService.getLanguage())
 
     const params = new URLSearchParams(window.location.search)
     if (_user && _user.verified && params.has('cr')) {
@@ -123,17 +126,17 @@ const Car = () => {
           if (_car) {
             if (_user.type === bookcarsTypes.RecordType.Admin) {
               try {
-                const _companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(_companies)
-                setCompanies(companyIds)
+                const _suppliers = await SupplierService.getAllSuppliers()
+                const supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+                setSuppliers(supplierIds)
                 setCar(_car)
                 setVisible(true)
                 setLoading(false)
               } catch (err) {
                 helper.error(err)
               }
-            } else if (_car.company._id === _user._id) {
-              setCompanies([_user._id as string])
+            } else if (_car.supplier._id === _user._id) {
+              setSuppliers([_user._id as string])
               setCar(_car)
               setVisible(true)
               setLoading(false)
@@ -160,13 +163,13 @@ const Car = () => {
     }
   }
 
-  const edit = user && car && car.company && (user.type === bookcarsTypes.RecordType.Admin || user._id === car.company._id)
+  const edit = user && car && car.supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === car.supplier._id)
   const statuses = helper.getBookingStatuses().map((status) => status.value)
   const fr = (user && user.language === 'fr') || false
 
   return (
     <Master onLoad={onLoad} strict>
-      {visible && car && car.company && (
+      {visible && car && car.supplier && (
         <div className="car">
           <div className="col-1">
             <section className="car-sec">
@@ -186,14 +189,14 @@ const Car = () => {
                   color="disabled"
                   className="avatar-ctn"
                 />
-                <div className="car-company">
-                  <span className="car-company-logo">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                <div className="car-supplier">
+                  <span className="car-supplier-logo">
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                   </span>
-                  <span className="car-company-info">{car.company.fullName}</span>
+                  <span className="car-supplier-info">{car.supplier.fullName}</span>
                 </div>
               </div>
-              <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>
+              <div className="price">{`${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}${commonStrings.DAILY}`}</div>
               <div className="car-info">
                 <ul className="car-info-list">
                   <li className="car-type">
@@ -238,10 +241,10 @@ const Car = () => {
                     </li>
                   )}
                   <li className="mileage">
-                    <Tooltip title={helper.getMileageTooltip(car.mileage, fr)} placement="left">
+                    <Tooltip title={helper.getMileageTooltip(car.mileage, language)} placement="left">
                       <div className="car-info-list-item">
                         <MileageIcon />
-                        <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage)}`}</span>
+                        <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</span>
                       </div>
                     </Tooltip>
                   </li>
@@ -264,53 +267,53 @@ const Car = () => {
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, fr)} placement="left">
+                    <Tooltip title={car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, language)} placement="left">
                       <div className="car-info-list-item">
                         {car.cancellation > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getCancellation(car.cancellation, fr)}</span>
+                        <span className="car-info-list-text">{helper.getCancellation(car.cancellation, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, fr)} placement="left">
+                    <Tooltip title={car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, language)} placement="left">
                       <div className="car-info-list-item">
                         {car.amendments > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getAmendments(car.amendments, fr)}</span>
+                        <span className="car-info-list-text">{helper.getAmendments(car.amendments, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, fr)} placement="left">
+                    <Tooltip title={car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, language)} placement="left">
                       <div className="car-info-list-item">
                         {car.theftProtection > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, fr)}</span>
+                        <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
                     <Tooltip
-                      title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                      title={car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}
                       placement="left"
                     >
                       <div className="car-info-list-item">
                         {car.collisionDamageWaiver > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                        <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, fr)} placement="left">
+                    <Tooltip title={car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, language)} placement="left">
                       <div className="car-info-list-item">
                         {car.fullInsurance > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                        <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={helper.getAdditionalDriver(car.additionalDriver, fr)} placement="left">
+                    <Tooltip title={helper.getAdditionalDriver(car.additionalDriver, language)} placement="left">
                       <div className="car-info-list-item">
                         {car.additionalDriver > -1 ? <CheckIcon /> : <UncheckIcon />}
-                        <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                        <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
@@ -343,10 +346,10 @@ const Car = () => {
               containerClassName="car"
               offset={offset}
               loggedUser={user}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               car={car._id}
-              hideCompanyColumn
+              hideSupplierColumn
               hideCarColumn
               hideDates={env.isMobile()}
               checkboxSelection={!env.isMobile()}

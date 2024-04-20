@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import Accordion from './Accordion'
 
-import '../assets/css/company-filter.css'
+import '../assets/css/supplier-filter.css'
 
 interface SupplierFilterProps {
-  companies: bookcarsTypes.User[]
+  suppliers: bookcarsTypes.User[]
   collapse?: boolean
   className?: string
   onChange?: (value: string[]) => void
 }
 
 const SupplierFilter = ({
-  companies,
+  suppliers: suppliersFromProps,
   collapse,
   className,
   onChange
@@ -26,9 +26,9 @@ const SupplierFilter = ({
   const refs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    setSuppliers(companies)
-    setCheckedSuppliers(bookcarsHelper.flattenCompanies(companies))
-  }, [companies])
+    setSuppliers(suppliersFromProps)
+    setCheckedSuppliers(bookcarsHelper.flattenSuppliers(suppliersFromProps))
+  }, [suppliersFromProps])
 
   useEffect(() => {
     if (suppliers.length > 0) {
@@ -40,17 +40,17 @@ const SupplierFilter = ({
     }
   }, [suppliers])
 
-  const handleCheckCompanyChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
-    const companyId = e.currentTarget.getAttribute('data-id') as string
+  const handleCheckSupplierChange = (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>) => {
+    const supplierId = e.currentTarget.getAttribute('data-id') as string
 
     if ('checked' in e.currentTarget && e.currentTarget.checked) {
-      checkedSuppliers.push(companyId)
+      checkedSuppliers.push(supplierId)
 
       if (checkedSuppliers.length === suppliers.length) {
         setAllChecked(true)
       }
     } else {
-      const index = checkedSuppliers.indexOf(companyId)
+      const index = checkedSuppliers.indexOf(supplierId)
       checkedSuppliers.splice(index, 1)
 
       if (checkedSuppliers.length === 0) {
@@ -84,22 +84,22 @@ const SupplierFilter = ({
         }
       })
 
-      const companyIds = bookcarsHelper.flattenCompanies(suppliers)
+      const supplierIds = bookcarsHelper.flattenSuppliers(suppliers)
       setAllChecked(true)
-      setCheckedSuppliers(companyIds)
+      setCheckedSuppliers(supplierIds)
 
       if (onChange) {
-        onChange(bookcarsHelper.clone(companyIds))
+        onChange(bookcarsHelper.clone(supplierIds))
       }
     }
   }
 
-  const handleCompanyClick = (e: React.MouseEvent<HTMLElement>) => {
+  const handleSupplierClick = (e: React.MouseEvent<HTMLElement>) => {
     const checkbox = e.currentTarget.previousSibling as HTMLInputElement
     checkbox.checked = !checkbox.checked
     const event = e
     event.currentTarget = checkbox
-    handleCheckCompanyChange(event)
+    handleCheckSupplierChange(event)
   }
 
   return (
@@ -108,10 +108,10 @@ const SupplierFilter = ({
         <Accordion
           title={commonStrings.SUPPLIER}
           collapse={collapse}
-          offsetHeight={Math.floor((suppliers.length / 2) * env.COMPANY_IMAGE_HEIGHT)}
-          className={`${className ? `${className} ` : ''}company-filter`}
+          offsetHeight={Math.floor((suppliers.length / 2) * env.SUPPLIER_IMAGE_HEIGHT)}
+          className={`${className ? `${className} ` : ''}supplier-filter`}
         >
-          <ul className="company-list">
+          <ul className="supplier-list">
             {suppliers.map((supplier, index) => (
               <li key={supplier._id}>
                 <input
@@ -120,11 +120,11 @@ const SupplierFilter = ({
                   }}
                   type="checkbox"
                   data-id={supplier._id}
-                  className="company-checkbox"
-                  onChange={handleCheckCompanyChange}
+                  className="supplier-checkbox"
+                  onChange={handleCheckSupplierChange}
                 />
                 <span
-                  onClick={handleCompanyClick}
+                  onClick={handleSupplierClick}
                   role="button"
                   tabIndex={0}
                 >

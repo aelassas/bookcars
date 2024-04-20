@@ -68,7 +68,7 @@ section.car-list article .btn-book {
     max-height: 75%;
   }
 
-  section.car-list article div.car div.car-company {
+  section.car-list article div.car div.car-supplier {
     display: flex;
     align-items: center;
     position: absolute;
@@ -76,7 +76,7 @@ section.car-list article .btn-book {
     left: 7px;
   }
 
-  section.car-list article div.car div.car-company span.car-company-logo {
+  section.car-list article div.car div.car-supplier span.car-supplier-logo {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
     width: 62px;
@@ -87,12 +87,12 @@ section.car-list article .btn-book {
     justify-content: center;
   }
 
-  section.car-list article div.car div.car-company span.car-company-logo img {
+  section.car-list article div.car div.car-supplier span.car-supplier-logo img {
     max-width: 100%;
     max-height: 100%;
   }
 
-  section.car-list article div.car div.car-company span.car-company-info {
+  section.car-list article div.car div.car-supplier span.car-supplier-info {
     color: rgb(0 0 0 / 60%);
     font-size: 0.9em;
     line-height: 1em;
@@ -270,14 +270,14 @@ section.car-list article .btn-book {
     max-height: 100%;
   }
 
-  section.car-list article div.car div.car-company {
+  section.car-list article div.car div.car-supplier {
     display: flex;
     align-items: center;
     position: absolute;
     bottom: 20px;
   }
 
-  section.car-list article div.car div.car-company span.car-company-logo {
+  section.car-list article div.car div.car-supplier span.car-supplier-logo {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
     width: 62px;
@@ -288,12 +288,12 @@ section.car-list article .btn-book {
     justify-content: center;
   }
 
-  section.car-list article div.car div.car-company span.car-company-logo img {
+  section.car-list article div.car div.car-supplier span.car-supplier-logo img {
     max-width: 100%;
     max-height: 100%;
   }
 
-  section.car-list article div.car div.car-company span.car-company-info {
+  section.car-list article div.car div.car-supplier span.car-supplier-info {
     color: rgb(0 0 0 / 60%);
     font-size: 0.9em;
     line-height: 1em;

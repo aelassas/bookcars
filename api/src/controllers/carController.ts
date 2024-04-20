@@ -4,12 +4,13 @@ import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { Request, Response } from 'express'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import * as helper from '../common/helper'
+import * as logger from '../common/logger'
 
 /**
  * Create a Car.
@@ -25,7 +26,7 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      console.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
+      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
       return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
     }
 
@@ -43,13 +44,13 @@ export const create = async (req: Request, res: Response) => {
       await car.save()
     } else {
       await Car.deleteOne({ _id: car._id })
-      console.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
+      logger.error(i18n.t('CAR_IMAGE_NOT_FOUND'), body)
       return res.status(400).send(i18n.t('CAR_IMAGE_NOT_FOUND'))
     }
 
     return res.json(car)
   } catch (err) {
-    console.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
+    logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -75,7 +76,7 @@ export const update = async (req: Request, res: Response) => {
 
     if (car) {
       const {
-        company,
+        supplier,
         name,
         minimumAge,
         available,
@@ -97,7 +98,7 @@ export const update = async (req: Request, res: Response) => {
         additionalDriver,
       } = body
 
-      car.company = new mongoose.Types.ObjectId(company)
+      car.supplier = new mongoose.Types.ObjectId(supplier)
       car.minimumAge = minimumAge
       car.locations = locations.map((l) => new mongoose.Types.ObjectId(l))
       car.name = name
@@ -122,10 +123,10 @@ export const update = async (req: Request, res: Response) => {
       return res.json(car)
     }
 
-    console.error('[car.update] Car not found:', _id)
+    logger.error('[car.update] Car not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    logger.error(`[car.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -155,7 +156,7 @@ export const checkCar = async (req: Request, res: Response) => {
 
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.check] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -189,7 +190,7 @@ export const deleteCar = async (req: Request, res: Response) => {
     }
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -215,7 +216,7 @@ export const createImage = async (req: Request, res: Response) => {
     await fs.writeFile(filepath, req.file.buffer)
     return res.json(filename)
   } catch (err) {
-    console.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[car.createImage] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -235,7 +236,7 @@ export const updateImage = async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       const msg = '[car.updateImage] req.file not found'
-      console.error(msg)
+      logger.error(msg)
       return res.status(400).send(msg)
     }
 
@@ -260,10 +261,10 @@ export const updateImage = async (req: Request, res: Response) => {
       return res.json(filename)
     }
 
-    console.error('[car.updateImage] Car not found:', id)
+    logger.error('[car.updateImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.updateImage] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -295,10 +296,10 @@ export const deleteImage = async (req: Request, res: Response) => {
       await car.save()
       return res.sendStatus(200)
     }
-    console.error('[car.deleteImage] Car not found:', id)
+    logger.error('[car.deleteImage] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.deleteImage] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -325,7 +326,7 @@ export const deleteTempImage = async (req: Request, res: Response) => {
 
     res.sendStatus(200)
   } catch (err) {
-    console.error(`[car.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
+    logger.error(`[car.deleteTempImage] ${i18n.t('DB_ERROR')} ${image}`, err)
     res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -344,7 +345,7 @@ export const getCar = async (req: Request, res: Response) => {
 
   try {
     const car = await Car.findById(id)
-      .populate<{ company: env.UserInfo }>('company')
+      .populate<{ supplier: env.UserInfo }>('supplier')
       .populate<{ locations: env.LocationInfo[] }>({
         path: 'locations',
         populate: {
@@ -360,8 +361,8 @@ export const getCar = async (req: Request, res: Response) => {
         fullName,
         avatar,
         payLater,
-      } = car.company
-      car.company = {
+      } = car.supplier
+      car.supplier = {
         _id,
         fullName,
         avatar,
@@ -374,10 +375,10 @@ export const getCar = async (req: Request, res: Response) => {
 
       return res.json(car)
     }
-    console.error('[car.getCar] Car not found:', id)
+    logger.error('[car.getCar] Car not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[car.getCar] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
@@ -396,7 +397,7 @@ export const getCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
       fuel,
       gearbox,
@@ -408,7 +409,7 @@ export const getCars = async (req: Request, res: Response) => {
     const options = 'i'
 
     const $match: mongoose.FilterQuery<any> = {
-      $and: [{ name: { $regex: keyword, $options: options } }, { company: { $in: companies } }],
+      $and: [{ name: { $regex: keyword, $options: options } }, { supplier: { $in: suppliers } }],
     }
 
     if (fuel) {
@@ -450,7 +451,7 @@ export const getCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$company' },
+            let: { userId: '$supplier' },
             pipeline: [
               {
                 $match: {
@@ -458,10 +459,10 @@ export const getCars = async (req: Request, res: Response) => {
                 },
               },
             ],
-            as: 'company',
+            as: 'supplier',
           },
         },
-        { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
         {
           $lookup: {
             from: 'Location',
@@ -491,13 +492,13 @@ export const getCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.company
-      car.company = { _id, fullName, avatar }
+      const { _id, fullName, avatar } = car.supplier
+      car.supplier = { _id, fullName, avatar }
     }
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -514,7 +515,7 @@ export const getCars = async (req: Request, res: Response) => {
 export const getBookingCars = async (req: Request, res: Response) => {
   try {
     const { body }: { body: bookcarsTypes.GetBookingCarsPayload } = req
-    const company = new mongoose.Types.ObjectId(body.company)
+    const supplier = new mongoose.Types.ObjectId(body.supplier)
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const keyword = escapeStringRegexp(String(req.query.s || ''))
     const options = 'i'
@@ -526,7 +527,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
         {
           $match: {
             $and: [
-              { company: { $eq: company } },
+              { supplier: { $eq: supplier } },
               { locations: pickupLocation },
               { available: true }, { name: { $regex: keyword, $options: options } },
             ],
@@ -541,7 +542,7 @@ export const getBookingCars = async (req: Request, res: Response) => {
 
     return res.json(cars)
   } catch (err) {
-    console.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getBookingCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -560,7 +561,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     const { body }: { body: bookcarsTypes.GetCarsPayload } = req
     const page = Number.parseInt(req.params.page, 10)
     const size = Number.parseInt(req.params.size, 10)
-    const companies = body.companies.map((id) => new mongoose.Types.ObjectId(id))
+    const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const {
       fuel,
@@ -571,7 +572,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
 
     const $match: mongoose.FilterQuery<any> = {
       $and: [
-        { company: { $in: companies } },
+        { supplier: { $in: suppliers } },
         { locations: pickupLocation },
         { available: true }, { type: { $in: fuel } },
         { gearbox: { $in: gearbox } },
@@ -598,7 +599,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
         {
           $lookup: {
             from: 'User',
-            let: { userId: '$company' },
+            let: { userId: '$supplier' },
             pipeline: [
               {
                 $match: {
@@ -606,10 +607,10 @@ export const getFrontendCars = async (req: Request, res: Response) => {
                 },
               },
             ],
-            as: 'company',
+            as: 'supplier',
           },
         },
-        { $unwind: { path: '$company', preserveNullAndEmptyArrays: false } },
+        { $unwind: { path: '$supplier', preserveNullAndEmptyArrays: false } },
         {
           $lookup: {
             from: 'Location',
@@ -639,13 +640,13 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     )
 
     for (const car of data[0].resultData) {
-      const { _id, fullName, avatar } = car.company
-      car.company = { _id, fullName, avatar }
+      const { _id, fullName, avatar } = car.supplier
+      car.supplier = { _id, fullName, avatar }
     }
 
     return res.json(data)
   } catch (err) {
-    console.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

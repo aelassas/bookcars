@@ -23,5 +23,5 @@
         "!**/dist/**",
         "!**/tests/**"
     ],
-    "testTimeout": 20000
+    "testTimeout": 40000
 }

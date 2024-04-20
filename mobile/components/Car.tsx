@@ -2,8 +2,8 @@ import React, { memo } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StyleSheet, Text, View, Image } from 'react-native'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import Button from './Button'
 import * as helper from '../common/helper'
@@ -11,13 +11,13 @@ import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 
 interface CarProps {
-  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>,
-  fr: boolean,
-  car: bookcarsTypes.Car,
-  from: Date,
-  to: Date,
-  pickupLocation: string,
-  dropOffLocation: string,
+  navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
+  language: string
+  car: bookcarsTypes.Car
+  from: Date
+  to: Date
+  pickupLocation: string
+  dropOffLocation: string
 }
 
 const iconSize = 24
@@ -29,13 +29,16 @@ const getExtraColor = (extra: number) => (extra === 0 ? '#1f9201' : extra === -1
 
 const Car = ({
   car,
-  fr,
+  language,
   from,
   to,
   pickupLocation,
   dropOffLocation,
   navigation
-}: CarProps) => (
+}: CarProps) => {
+  const fr = bookcarsHelper.isFrench(language)
+
+  return (
     <View key={car._id} style={styles.carContainer}>
       <View style={styles.car}>
         <Text style={styles.name}>{car.name}</Text>
@@ -70,7 +73,7 @@ const Car = ({
 
         <View style={styles.infos}>
           <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage)}`}</Text>
+          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</Text>
         </View>
 
         <View style={styles.infos}>
@@ -81,50 +84,50 @@ const Car = ({
         <View style={styles.extras}>
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCancellation(car.cancellation, fr)}</Text>
+            <Text style={styles.text}>{helper.getCancellation(car.cancellation, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAmendments(car.amendments, fr)}</Text>
+            <Text style={styles.text}>{helper.getAmendments(car.amendments, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, fr)}</Text>
+            <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</Text>
+            <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, fr)}</Text>
+            <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, language)}</Text>
           </View>
 
           <View style={styles.extra}>
             <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, fr)}</Text>
+            <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, language)}</Text>
           </View>
         </View>
 
         <View style={styles.footer}>
-          <View style={styles.company}>
+          <View style={styles.supplier}>
             <Image
-              style={styles.companyImg}
+              style={styles.supplierImg}
               source={{
-                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
+                uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
               }}
             />
-            <Text style={styles.companyText}>{car.company.fullName}</Text>
+            <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
           </View>
 
           <View style={styles.price}>
             <Text style={styles.priceSecondary}>{helper.getDays(bookcarsHelper.days(from, to))}</Text>
-            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatNumber(helper.price(car, from, to))} ${i18n.t('CURRENCY')}`}</Text>
-            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatNumber(car.price)} ${i18n.t('CURRENCY')}`}</Text>
+            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(helper.price(car, from, to), i18n.t('CURRENCY'), language)}`}</Text>
+            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}`}</Text>
           </View>
         </View>
 
@@ -147,6 +150,7 @@ const Car = ({
       </View>
     </View>
   )
+}
 
 const styles = StyleSheet.create({
   carContainer: {
@@ -221,17 +225,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  company: {
+  supplier: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
   },
-  companyImg: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+  supplierImg: {
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
-  companyText: {
+  supplierText: {
     color: '#a1a1a1',
     fontSize: 12,
     marginLeft: 5,

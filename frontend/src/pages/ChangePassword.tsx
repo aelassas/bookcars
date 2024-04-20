@@ -7,7 +7,7 @@ import {
   FormHelperText,
   Button
 } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/change-password'

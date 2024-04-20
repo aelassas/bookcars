@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import * as helper from '../common/helper'
@@ -14,11 +14,11 @@ import '../assets/css/bookings.css'
 
 const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
-  const [loadingCompanies, setLoadingCompanies] = useState(true)
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -30,8 +30,8 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (_companies: string[]) => {
-    setCompanies(_companies)
+  const handleSupplierFilterChange = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -44,13 +44,13 @@ const Bookings = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
-    setLoadingCompanies(true)
+    setLoadingSuppliers(true)
 
-    const _allCompanies = await SupplierService.getAllSuppliers()
-    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
-    setAllCompanies(_allCompanies)
-    setCompanies(_companies)
-    setLoadingCompanies(false)
+    const _allSuppliers = await SupplierService.getAllSuppliers()
+    const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
+    setAllSuppliers(_allSuppliers)
+    setSuppliers(_suppliers)
+    setLoadingSuppliers(false)
   }
 
   return (
@@ -59,7 +59,7 @@ const Bookings = () => {
         <div className="bookings">
           <div className="col-1">
             <div>
-              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="cl-company-filter" />
+              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="cl-supplier-filter" />
               <StatusFilter onChange={handleStatusFilterChange} className="cl-status-filter" />
               <BookingFilter onSubmit={handleBookingFilterSubmit} language={(user && user.language) || env.DEFAULT_LANGUAGE} className="cl-booking-filter" collapse={!env.isMobile()} />
             </div>
@@ -70,10 +70,10 @@ const Bookings = () => {
               offset={offset}
               user={user}
               language={user.language}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               filter={filter}
-              loading={loadingCompanies}
+              loading={loadingSuppliers}
               hideDates={env.isMobile()}
               checkboxSelection={false}
             />

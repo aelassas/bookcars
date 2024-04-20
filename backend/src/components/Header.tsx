@@ -23,7 +23,7 @@ import {
   Language as LanguageIcon,
   Settings as SettingsIcon,
   Dashboard as DashboardIcon,
-  CorporateFare as CompaniesIcon,
+  CorporateFare as SuppliersIcon,
   LocationOn as LocationsIcon,
   DirectionsCar as CarsIcon,
   People as UsersIcon,
@@ -32,7 +32,7 @@ import {
   ExitToApp as SignoutIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import env from '../config/env.config'
 import { strings } from '../lang/header'
 import { strings as commonStrings } from '../lang/common'
@@ -41,13 +41,13 @@ import * as NotificationService from '../services/NotificationService'
 import Avatar from './Avatar'
 import * as langHelper from '../common/langHelper'
 import * as helper from '../common/helper'
+import { useGlobalContext, GlobalContextType } from '../context/GlobalContext'
 
 import '../assets/css/header.css'
 
 interface HeaderProps {
   user?: bookcarsTypes.User
   hidden?: boolean
-  notificationCount?: number
 }
 
 const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
@@ -55,16 +55,16 @@ const ListItemLink = (props: any) => <ListItemButton component="a" {...props} />
 const Header = ({
   user,
   hidden,
-  notificationCount: headerNotificationCount
 }: HeaderProps) => {
   const navigate = useNavigate()
+  const { notificationCount, setNotificationCount } = useGlobalContext() as GlobalContextType
+
   const [lang, setLang] = useState(helper.getLanguage(env.DEFAULT_LANGUAGE))
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [langAnchorEl, setLangAnchorEl] = useState<HTMLElement | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<HTMLElement | null>(null)
   const [sideAnchorEl, setSideAnchorEl] = useState<HTMLElement | null>(null)
   const [isSignedIn, setIsSignedIn] = useState(false)
-  const [notificationCount, setNotificationCount] = useState(0)
   const [loading, setIsLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -198,17 +198,7 @@ const Header = ({
         setIsLoaded(true)
       }
     }
-  }, [hidden, user])
-
-  useEffect(() => {
-    if (!hidden) {
-      if (headerNotificationCount) {
-        setNotificationCount(headerNotificationCount)
-      } else {
-        setNotificationCount(0)
-      }
-    }
-  }, [hidden, headerNotificationCount])
+  }, [hidden, user, setNotificationCount])
 
   const menuId = 'primary-account-menu'
   const renderMenu = (
@@ -296,7 +286,7 @@ const Header = ({
                   <ListItemText primary={strings.DASHBOARD} />
                 </ListItemLink>
                 <ListItemLink href="/suppliers">
-                  <ListItemIcon><CompaniesIcon /></ListItemIcon>
+                  <ListItemIcon><SuppliersIcon /></ListItemIcon>
                   <ListItemText primary={strings.COMPANIES} />
                 </ListItemLink>
                 <ListItemLink href="/locations">

@@ -106,7 +106,7 @@ const ForgotPasswordScreen = ({ navigation, route }: NativeStackScreenProps<Stac
 
   return (
     <View style={styles.master}>
-      <Header title={i18n.t('FORGOT_PASSWORD')} hideTitle={false} loggedIn={false} notificationCount={0} />
+      <Header title={i18n.t('FORGOT_PASSWORD')} hideTitle={false} loggedIn={false} />
 
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
         {sent && (

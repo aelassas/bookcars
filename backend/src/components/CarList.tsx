@@ -24,8 +24,8 @@ import {
   Delete as DeleteIcon,
   Info as InfoIcon,
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
@@ -39,7 +39,7 @@ import DoorsIcon from '../assets/img/car-door.png'
 import '../assets/css/car-list.css'
 
 interface CarListProps {
-  companies?: string[]
+  suppliers?: string[]
   keyword?: string
   fuel?: string[]
   gearbox?: string[]
@@ -52,14 +52,15 @@ interface CarListProps {
   booking?: bookcarsTypes.Booking
   className?: string
   loading?: boolean
-  hideCompany?: boolean
+  hideSupplier?: boolean
   hidePrice?: boolean
+  language?: string
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
   onDelete?: (rowCount: number) => void
 }
 
 const CarList = ({
-  companies: carCompanies,
+  suppliers: carSuppliers,
   keyword: carKeyword,
   fuel: carFuel,
   gearbox: carGearbox,
@@ -72,8 +73,9 @@ const CarList = ({
   booking,
   className,
   loading: carLoading,
-  hideCompany,
+  hideSupplier,
   hidePrice,
+  language,
   onLoad,
   onDelete
 }: CarListProps) => {
@@ -110,7 +112,7 @@ const CarList = ({
 
   const fetchData = async (
     _page: number,
-    companies?: string[],
+    suppliers?: string[],
     keyword?: string,
     fuel?: string[],
     gearbox?: string[],
@@ -122,7 +124,7 @@ const CarList = ({
       setLoading(true)
 
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: companies ?? [],
+        suppliers: suppliers ?? [],
         fuel,
         gearbox,
         mileage,
@@ -166,11 +168,11 @@ const CarList = ({
   }
 
   useEffect(() => {
-    if (carCompanies) {
-      if (carCompanies.length > 0) {
+    if (carSuppliers) {
+      if (carSuppliers.length > 0) {
         fetchData(
           page,
-          carCompanies,
+          carSuppliers,
           carKeyword,
           carFuel,
           carGearbox,
@@ -190,7 +192,7 @@ const CarList = ({
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     page,
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -214,7 +216,7 @@ const CarList = ({
   useEffect(() => {
     setPage(1)
   }, [
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -228,7 +230,7 @@ const CarList = ({
       setPage(1)
       fetchData(
         1,
-        carCompanies,
+        carSuppliers,
         carKeyword,
         carFuel,
         carGearbox,
@@ -239,7 +241,7 @@ const CarList = ({
     } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     reload,
-    carCompanies,
+    carSuppliers,
     carKeyword,
     carFuel,
     carGearbox,
@@ -349,7 +351,7 @@ const CarList = ({
   }
 
   const admin = helper.admin(user)
-  const fr = (user && user.language === 'fr') || false
+  const fr = bookcarsHelper.isFrench(language)
 
   return (
     (user && (
@@ -367,7 +369,7 @@ const CarList = ({
               </Card>
             )
             : rows.map((car, index) => {
-              const edit = admin || car.company._id === user._id
+              const edit = admin || car.supplier._id === user._id
               return (
                 <article key={car._id}>
                   <div className="name">
@@ -375,13 +377,13 @@ const CarList = ({
                   </div>
                   <div className="car">
                     <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-                    {!hideCompany && (
-                      <div className="car-company">
-                        <span className="car-company-logo">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                    {!hideSupplier && (
+                      <div className="car-supplier">
+                        <span className="car-supplier-logo">
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                         </span>
-                        <a href={`/supplier?c=${car.company._id}`} className="car-company-info">
-                          {car.company.fullName}
+                        <a href={`/supplier?c=${car.supplier._id}`} className="car-supplier-info">
+                          {car.supplier.fullName}
                         </a>
                       </div>
                     )}
@@ -430,10 +432,10 @@ const CarList = ({
                         </li>
                       )}
                       <li className="mileage">
-                        <Tooltip title={helper.getMileageTooltip(car.mileage, fr)} placement="left">
+                        <Tooltip title={helper.getMileageTooltip(car.mileage, language as string)} placement="left">
                           <div className="car-info-list-item">
                             <MileageIcon />
-                            <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage)}`}</span>
+                            <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language as string)}`}</span>
                           </div>
                         </Tooltip>
                       </li>
@@ -458,64 +460,64 @@ const CarList = ({
                         </li>
                       )}
                       <li>
-                        <Tooltip title={booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, fr)} placement="left">
+                        <Tooltip title={booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, language as string)} placement="left">
                           <div className="car-info-list-item">
                             {getExtraIcon('cancellation', car.cancellation)}
-                            <span className="car-info-list-text">{helper.getCancellation(car.cancellation, fr)}</span>
+                            <span className="car-info-list-text">{helper.getCancellation(car.cancellation, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                       <li>
-                        <Tooltip title={booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, fr)} placement="left">
+                        <Tooltip title={booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, language as string)} placement="left">
                           <div className="car-info-list-item">
                             {getExtraIcon('amendments', car.amendments)}
-                            <span className="car-info-list-text">{helper.getAmendments(car.amendments, fr)}</span>
+                            <span className="car-info-list-text">{helper.getAmendments(car.amendments, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                       <li>
                         <Tooltip
                           title={
-                            booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)
+                            booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language as string)
                           }
                           placement="left"
                         >
                           <div className="car-info-list-item">
                             {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
-                            <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                            <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                       <li>
                         <Tooltip
-                          title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, fr)}
+                          title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, language as string)}
                           placement="left"
                         >
                           <div className="car-info-list-item">
                             {getExtraIcon('theftProtection', car.theftProtection)}
-                            <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, fr)}</span>
+                            <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                       <li>
-                        <Tooltip title={booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, fr)} placement="left">
+                        <Tooltip title={booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, language as string)} placement="left">
                           <div className="car-info-list-item">
                             {getExtraIcon('fullInsurance', car.fullInsurance)}
-                            <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                            <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                       <li>
-                        <Tooltip title={booking ? '' : helper.getAdditionalDriver(car.additionalDriver, fr)} placement="left">
+                        <Tooltip title={booking ? '' : helper.getAdditionalDriver(car.additionalDriver, language as string)} placement="left">
                           <div className="car-info-list-item">
                             {getExtraIcon('additionalDriver', car.additionalDriver)}
-                            <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                            <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, language as string)}</span>
                           </div>
                         </Tooltip>
                       </li>
                     </ul>
                   </div>
-                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatNumber(car.price)} ${strings.CAR_CURRENCY}`}</div>}
+                  {!hidePrice && <div className="price">{`${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language as string)}${commonStrings.DAILY}`}</div>}
                   <div className="action">
                     {edit && (
                       <>

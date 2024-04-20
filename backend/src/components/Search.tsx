@@ -6,7 +6,7 @@ import { strings as commonStrings } from '../lang/common'
 import '../assets/css/search.css'
 
 interface SearchProps {
-  className?: string,
+  className?: string
   onSubmit?: (value: string) => void
 }
 

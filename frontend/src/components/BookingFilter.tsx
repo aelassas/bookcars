@@ -6,8 +6,8 @@ import {
   IconButton
 } from '@mui/material'
 import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/booking-filter'
 import LocationSelectList from './LocationSelectList'
@@ -17,9 +17,9 @@ import Accordion from '../components/Accordion'
 import '../assets/css/booking-filter.css'
 
 interface BookingFilterProps {
-  collapse?: boolean,
-  className?: string,
-  language?: string,
+  collapse?: boolean
+  className?: string
+  language?: string
   onSubmit?: (filter: bookcarsTypes.Filter | null) => void
 }
 

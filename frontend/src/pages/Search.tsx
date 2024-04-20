@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import { useLocation } from 'react-router-dom'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import * as helper from '../common/helper'
 import * as LocationService from '../services/LocationService'
@@ -17,23 +18,25 @@ import CarList from '../components/CarList'
 
 import '../assets/css/cars.css'
 
-const Cars = () => {
+const Search = () => {
+  const location = useLocation()
+
   const [visible, setVisible] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Location>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [loading, setLoading] = useState(true)
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [deposit, setDeposit] = useState(-1)
 
-  const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
+  const handleSupplierFilterChange = (newSuppliers: string[]) => {
+    setSuppliers(newSuppliers)
   }
 
   const handleCarFilterSubmit = (filter: bookcarsTypes.CarFilter) => {
@@ -60,27 +63,16 @@ const Cars = () => {
   }
 
   const onLoad = async (user?: bookcarsTypes.User) => {
-    let pickupLocationId
-    let dropOffLocationId
-    let _pickupLocation
-    let _dropOffLocation
-    let _from
-    let _to
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('p')) {
-      pickupLocationId = params.get('p')
+    const { state } = location
+    if (!state) {
+      setNoMatch(true)
+      return
     }
-    if (params.has('d')) {
-      dropOffLocationId = params.get('d')
-    }
-    if (params.has('f')) {
-      const val = params.get('f')
-      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
-    if (params.has('t')) {
-      const val = params.get('t')
-      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
+
+    const { pickupLocationId } = state
+    const { dropOffLocationId } = state
+    const { from: _from } = state
+    const { to: _to } = state
 
     if (!pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setLoading(false)
@@ -88,6 +80,8 @@ const Cars = () => {
       return
     }
 
+    let _pickupLocation
+    let _dropOffLocation
     try {
       _pickupLocation = await LocationService.getLocation(pickupLocationId)
 
@@ -109,15 +103,15 @@ const Cars = () => {
         return
       }
 
-      const _allCompanies = await SupplierService.getAllSuppliers()
-      const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
+      const _allSuppliers = await SupplierService.getAllSuppliers()
+      const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
 
       setPickupLocation(_pickupLocation)
       setDropOffLocation(_dropOffLocation)
       setFrom(_from)
       setTo(_to)
-      setAllCompanies(_allCompanies)
-      setCompanies(_companies)
+      setAllSuppliers(_allSuppliers)
+      setSuppliers(_suppliers)
       setLoading(false)
       if (!user || (user && user.verified)) {
         setVisible(true)
@@ -129,13 +123,13 @@ const Cars = () => {
 
   return (
     <Master onLoad={onLoad} strict={false}>
-      {visible && companies && pickupLocation && dropOffLocation && from && to && (
+      {visible && suppliers && pickupLocation && dropOffLocation && from && to && (
         <div className="cars">
           <div className="col-1">
             {!loading && (
               <>
                 <CarFilter className="filter" pickupLocation={pickupLocation} dropOffLocation={dropOffLocation} from={from} to={to} onSubmit={handleCarFilterSubmit} />
-                <SupplierFilter className="filter" companies={allCompanies} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
+                <SupplierFilter className="filter" suppliers={allSuppliers} onChange={handleSupplierFilterChange} collapse={!env.isMobile()} />
                 <FuelFilter className="filter" onChange={handleFuelFilterChange} />
                 <GearboxFilter className="filter" onChange={handleGearboxFilterChange} />
                 <MileageFilter className="filter" onChange={handleMileageFilterChange} />
@@ -145,7 +139,7 @@ const Cars = () => {
           </div>
           <div className="col-2">
             <CarList
-              companies={companies}
+              suppliers={suppliers}
               fuel={fuel}
               gearbox={gearbox}
               mileage={mileage}
@@ -164,4 +158,4 @@ const Cars = () => {
   )
 }
 
-export default Cars
+export default Search

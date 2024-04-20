@@ -10,8 +10,8 @@ import {
   AutocompleteInputChangeReason
 } from '@mui/material'
 import { LocationOn as LocationIcon, AccountCircle } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 
 import '../assets/css/multiple-select.css'
@@ -37,9 +37,9 @@ interface MultipleSelectProps {
   freeSolo?: boolean
   callbackFromMultipleSelect?: (newValue: any, _key: string, _reference: any) => void
   onFocus?: React.FocusEventHandler<HTMLDivElement>
-  onInputChange?: ((event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void) | undefined
+  onInputChange?: (event: React.SyntheticEvent<Element, Event>, value?: string, reason?: AutocompleteInputChangeReason) => void
   onClear?: () => void
-  onOpen?: ((event: React.SyntheticEvent<Element, Event>) => void) | undefined
+  onOpen?: (event: React.SyntheticEvent<Element, Event>) => void
 }
 
 const ListBox: React.ComponentType<React.HTMLAttributes<HTMLElement>> = forwardRef((props, ref) => {
@@ -201,7 +201,7 @@ const MultipleSelect = ({
             )
           }
 
-          if (type === bookcarsTypes.RecordType.Company && !multiple && values.length === 1 && values[0]) {
+          if (type === bookcarsTypes.RecordType.Supplier && !multiple && values.length === 1 && values[0]) {
             const option = values[0]
 
             return (
@@ -215,11 +215,11 @@ const MultipleSelect = ({
                   startAdornment: (
                     <>
                       <InputAdornment position="start">
-                        <div className="company-ia">
+                        <div className="supplier-ia">
                           <img
                             src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                             alt={option.name}
-                            style={{ height: env.COMPANY_IMAGE_HEIGHT }}
+                            style={{ height: env.SUPPLIER_IMAGE_HEIGHT }}
                           />
                         </div>
                       </InputAdornment>
@@ -305,14 +305,14 @@ const MultipleSelect = ({
                 <span className="option-name">{option.name}</span>
               </li>
             )
-          } if (type === bookcarsTypes.RecordType.Company) {
+          } if (type === bookcarsTypes.RecordType.Supplier) {
             return (
               <li {...props} className={`${props.className} ms-option`}>
-                <span className="option-image company-ia">
+                <span className="option-image supplier-ia">
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
                     alt={option.name}
-                    style={{ height: env.COMPANY_IMAGE_HEIGHT }}
+                    style={{ height: env.SUPPLIER_IMAGE_HEIGHT }}
                   />
                 </span>
                 <span className="option-name">{option.name}</span>

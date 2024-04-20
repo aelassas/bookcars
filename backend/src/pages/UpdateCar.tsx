@@ -11,7 +11,7 @@ import {
   FormHelperText
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -45,7 +45,7 @@ const UpdateCar = () => {
   const [imageSizeError, setImageSizeError] = useState(false)
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
-  const [company, setCompany] = useState<bookcarsTypes.Option>()
+  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
@@ -96,8 +96,8 @@ const UpdateCar = () => {
     setName(e.target.value)
   }
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0] : undefined)
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
   const validateMinimumAge = (age: string, updateState = true) => {
@@ -209,7 +209,7 @@ const UpdateCar = () => {
         return
       }
 
-      if (!car || !company) {
+      if (!car || !supplier) {
         helper.error()
         return
       }
@@ -217,7 +217,7 @@ const UpdateCar = () => {
       const data = {
         _id: car._id,
         name,
-        company: company._id,
+        supplier: supplier._id,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
@@ -263,22 +263,22 @@ const UpdateCar = () => {
             const _car = await CarService.getCar(id)
 
             if (_car) {
-              if (_user.type === bookcarsTypes.RecordType.Company && _user._id !== _car.company._id) {
+              if (_user.type === bookcarsTypes.RecordType.Supplier && _user._id !== _car.supplier._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
               }
 
-              const _company = {
-                _id: _car.company._id as string,
-                name: _car.company.fullName,
-                image: _car.company.avatar,
+              const _supplier = {
+                _id: _car.supplier._id as string,
+                name: _car.supplier.fullName,
+                image: _car.supplier.avatar,
               }
 
               setCar(_car)
               setImageRequired(!_car.image)
               setName(_car.name)
-              setCompany(_company)
+              setSupplier(_supplier)
               setMinimumAge(_car.minimumAge.toString())
               const lcs: bookcarsTypes.Option[] = []
               for (const loc of _car.locations) {
@@ -361,11 +361,11 @@ const UpdateCar = () => {
               {admin && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList
-                    label={strings.COMPANY}
+                    label={strings.SUPPLIER}
                     required
-                    value={company}
+                    value={supplier}
                     variant="standard"
-                    onChange={handleCompanyChange}
+                    onChange={handleSupplierChange}
                   />
                 </FormControl>
               )}

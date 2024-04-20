@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings } from '../lang/bookings'
@@ -18,11 +18,11 @@ const Bookings = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [leftPanel, setLeftPanel] = useState(false)
   const [admin, setAdmin] = useState(false)
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [statuses, setStatuses] = useState(helper.getBookingStatuses().map((status) => status.value))
   const [filter, setFilter] = useState<bookcarsTypes.Filter | null>()
-  const [loadingCompanies, setLoadingCompanies] = useState(true)
+  const [loadingSuppliers, setLoadingSuppliers] = useState(true)
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -34,8 +34,8 @@ const Bookings = () => {
     }
   }, [user])
 
-  const handleSupplierFilterChange = (_companies: string[]) => {
-    setCompanies(_companies)
+  const handleSupplierFilterChange = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
   }
 
   const handleStatusFilterChange = (_statuses: bookcarsTypes.BookingStatus[]) => {
@@ -52,14 +52,14 @@ const Bookings = () => {
       setUser(_user)
       setAdmin(_admin)
       setLeftPanel(!_admin)
-      setLoadingCompanies(_admin)
+      setLoadingSuppliers(_admin)
 
-      const _allCompanies = _admin ? await SupplierService.getAllSuppliers() : []
-      const _companies = _admin ? bookcarsHelper.flattenCompanies(_allCompanies) : [_user._id ?? '']
-      setAllCompanies(_allCompanies)
-      setCompanies(_companies)
+      const _allSuppliers = _admin ? await SupplierService.getAllSuppliers() : []
+      const _suppliers = _admin ? bookcarsHelper.flattenSuppliers(_allSuppliers) : [_user._id ?? '']
+      setAllSuppliers(_allSuppliers)
+      setSuppliers(_suppliers)
       setLeftPanel(true)
-      setLoadingCompanies(false)
+      setLoadingSuppliers(false)
     }
   }
 
@@ -76,9 +76,9 @@ const Bookings = () => {
                 {admin
                   && (
                   <SupplierFilter
-                    companies={allCompanies}
+                    suppliers={allSuppliers}
                     onChange={handleSupplierFilterChange}
-                    className="cl-company-filter"
+                    className="cl-supplier-filter"
                   />
 )}
                 <StatusFilter
@@ -100,10 +100,10 @@ const Bookings = () => {
               offset={offset}
               language={user.language}
               loggedUser={user}
-              companies={companies}
+              suppliers={suppliers}
               statuses={statuses}
               filter={filter}
-              loading={loadingCompanies}
+              loading={loadingSuppliers}
               hideDates={env.isMobile()}
               checkboxSelection={!env.isMobile()}
             />

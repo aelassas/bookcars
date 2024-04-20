@@ -6,8 +6,8 @@ import { MaterialIcons } from '@expo/vector-icons'
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
@@ -815,7 +815,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       }
 
       const booking: bookcarsTypes.Booking = {
-        company: car.company._id as string,
+        supplier: car.supplier._id as string,
         car: car._id as string,
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id as string,
@@ -864,8 +864,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
   const iconSize = 18
   const iconColor = '#000'
-  const _fr = language === 'fr'
-  const _format = `eee d LLLL yyyy ${_fr ? 'kk:mm' : 'p'}`
+  const _fr = bookcarsHelper.isFrench(language)
+  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const days = bookcarsHelper.days(from, to)
 
   return (
@@ -889,7 +889,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={cancellation}
                       onValueChange={onCancellationChange}
                     />
-                    <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getCancellationOption(car.cancellation, language)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -900,7 +900,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={amendments}
                       onValueChange={onAmendmentsChange}
                     />
-                    <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getAmendmentsOption(car.amendments, language)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -911,7 +911,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={collisionDamageWaiver}
                       onValueChange={onCollisionDamageWaiverChange}
                     />
-                    <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -922,7 +922,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={theftProtection}
                       onValueChange={onTheftProtectionChange}
                     />
-                    <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getTheftProtectionOption(car.theftProtection, days, language)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -933,7 +933,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={fullInsurance}
                       onValueChange={onFullInsuranceChange}
                     />
-                    <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</Text>
                   </View>
 
                   <View style={styles.extra}>
@@ -944,7 +944,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                       value={additionalDriver}
                       onValueChange={onAdditionalDriverChange}
                     />
-                    <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, _fr)}</Text>
+                    <Text style={styles.extraText}>{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</Text>
                   </View>
                 </View>
 
@@ -957,8 +957,8 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Text style={styles.detailTitle}>{i18n.t('DAYS')}</Text>
                   <Text style={styles.detailText}>
                     {`${helper.getDaysShort(bookcarsHelper.days(from, to))} (${bookcarsHelper.capitalize(format(from, _format, { locale }))} - ${bookcarsHelper.capitalize(
-                    format(to, _format, { locale }),
-                  )})`}
+                      format(to, _format, { locale }),
+                    )})`}
                   </Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('PICKUP_LOCATION')}</Text>
@@ -968,21 +968,21 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Text style={styles.detailText}>{dropOffLocation.name}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('CAR')}</Text>
-                  <Text style={styles.detailText}>{`${car.name} (${car.price} ${i18n.t('CAR_CURRENCY')})`}</Text>
+                  <Text style={styles.detailText}>{`${car.name} (${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}${i18n.t('DAILY')})`}</Text>
 
                   <Text style={styles.detailTitle}>{i18n.t('SUPPLIER')}</Text>
-                  <View style={styles.company}>
+                  <View style={styles.supplier}>
                     <Image
-                      style={styles.companyImg}
+                      style={styles.supplierImg}
                       source={{
-                        uri: bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar),
+                        uri: bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar),
                       }}
                     />
-                    <Text style={styles.companyText}>{car.company.fullName}</Text>
+                    <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
                   </View>
 
                   <Text style={styles.detailTitle}>{i18n.t('COST')}</Text>
-                  <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatNumber(price)} ${i18n.t('CURRENCY')}`}</Text>
+                  <Text style={styles.detailTextBold}>{`${bookcarsHelper.formatPrice(price, i18n.t('CURRENCY'), language)}`}</Text>
                 </View>
 
                 {!authenticated && (
@@ -1120,7 +1120,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
                 )}
 
-                {car.company.payLater && (
+                {car.supplier.payLater && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
                       <MaterialIcons name="settings" size={iconSize} color={iconColor} />
@@ -1147,7 +1147,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
                 )}
 
-                {(!car.company.payLater || !payLater) && (
+                {(!car.supplier.payLater || !payLater) && (
                   <View style={styles.payment}>
                     <View style={styles.paymentHeader}>
                       <View style={styles.securePaymentInfo}>
@@ -1157,7 +1157,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
                       <View style={styles.securePaymentInfo}>
                         <Text style={styles.totalText}>{i18n.t('COST')}</Text>
-                        <Text style={styles.costText}>{`${bookcarsHelper.formatNumber(price)} ${i18n.t('CURRENCY')}`}</Text>
+                        <Text style={styles.costText}>{`${bookcarsHelper.formatPrice(price, i18n.t('CURRENCY'), language)}`}</Text>
                       </View>
                     </View>
 
@@ -1333,16 +1333,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
-  company: {
+  supplier: {
     flexDirection: 'row',
     marginBottom: 10,
     alignItems: 'center',
   },
-  companyImg: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+  supplierImg: {
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
-  companyText: {
+  supplierText: {
     color: '#a1a1a1',
     fontSize: 10,
     marginLeft: 5,

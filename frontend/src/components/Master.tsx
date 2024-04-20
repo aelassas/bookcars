@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/master'
 import Header from '../components/Header'
 import * as UserService from '../services/UserService'
@@ -11,7 +11,6 @@ interface MasterProps {
   user?: bookcarsTypes.User
   strict?: boolean
   hideSignin?: boolean
-  notificationCount?: number
   children: ReactNode
   onLoad?: (user?: bookcarsTypes.User) => void
 }
@@ -20,7 +19,6 @@ const Master = ({
   user: masterUser,
   strict,
   hideSignin,
-  notificationCount,
   children,
   onLoad
 }: MasterProps) => {
@@ -104,7 +102,7 @@ const Master = ({
 
   return (
     <>
-      <Header user={user} hidden={loading} hideSignin={hideSignin} notificationCount={notificationCount} />
+      <Header user={user} hidden={loading} hideSignin={hideSignin} />
       {(!user && !loading) || (user && user.verified) ? (
         <div className="content">{children}</div>
       ) : (

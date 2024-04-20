@@ -16,22 +16,21 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import Const from '../config/const'
 import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/company-list'
+import { strings } from '../lang/supplier-list'
 import * as SupplierService from '../services/SupplierService'
 import * as helper from '../common/helper'
 import Pager from './Pager'
 
-import '../assets/css/company-list.css'
+import '../assets/css/supplier-list.css'
 
 interface SupplierListProps {
   user?: bookcarsTypes.User
   keyword?: string
-  reload?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.User>
   onDelete?: (rowCount: number) => void
 }
@@ -39,12 +38,10 @@ interface SupplierListProps {
 const SupplierList = ({
   user,
   keyword: supplierListKeyword,
-  reload: supplierListReload,
   onDelete,
   onLoad
 }: SupplierListProps) => {
   const [keyword, setKeyword] = useState(supplierListKeyword)
-  const [reload, setReload] = useState(false)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(false)
@@ -53,8 +50,8 @@ const SupplierList = ({
   const [totalRecords, setTotalRecords] = useState(0)
   const [page, setPage] = useState(1)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [companyId, setCompanyId] = useState('')
-  const [companyIndex, setCompanyIndex] = useState(-1)
+  const [supplierId, setSupplierId] = useState('')
+  const [supplierIndex, setSupplierIndex] = useState(-1)
 
   const fetchData = async (_page: number, _keyword?: string) => {
     try {
@@ -103,13 +100,6 @@ const SupplierList = ({
   }, [supplierListKeyword, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (supplierListReload && !reload) {
-      fetchData(1, '')
-    }
-    setReload(supplierListReload || false)
-  }, [supplierListReload, reload]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     fetchData(page, keyword)
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -132,29 +122,29 @@ const SupplierList = ({
   }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
-    const _companyId = e.currentTarget.getAttribute('data-id') as string
-    const _companyIndex = Number(e.currentTarget.getAttribute('data-index') as string)
+    const _supplierId = e.currentTarget.getAttribute('data-id') as string
+    const _supplierIndex = Number(e.currentTarget.getAttribute('data-index') as string)
 
     setOpenDeleteDialog(true)
-    setCompanyId(_companyId)
-    setCompanyIndex(_companyIndex)
+    setSupplierId(_supplierId)
+    setSupplierIndex(_supplierIndex)
   }
 
   const handleConfirmDelete = async () => {
     try {
-      if (companyId !== '' && companyIndex > -1) {
+      if (supplierId !== '' && supplierIndex > -1) {
         setLoading(false)
         setOpenDeleteDialog(false)
-        const status = await SupplierService.deleteSupplier(companyId)
+        const status = await SupplierService.deleteSupplier(supplierId)
         if (status === 200) {
           const _rowCount = rowCount - 1
-          rows.splice(companyIndex, 1)
+          rows.splice(supplierIndex, 1)
 
           setRows(rows)
           setRowCount(_rowCount)
           setTotalRecords(totalRecords - 1)
-          setCompanyId('')
-          setCompanyIndex(-1)
+          setSupplierId('')
+          setSupplierIndex(-1)
           setLoading(false)
 
           if (onDelete) {
@@ -162,15 +152,15 @@ const SupplierList = ({
           }
         } else {
           helper.error()
-          setCompanyId('')
-          setCompanyIndex(-1)
+          setSupplierId('')
+          setSupplierIndex(-1)
           setLoading(false)
         }
       } else {
         helper.error()
         setOpenDeleteDialog(false)
-        setCompanyId('')
-        setCompanyIndex(-1)
+        setSupplierId('')
+        setSupplierIndex(-1)
         setLoading(false)
       }
     } catch (err) {
@@ -180,15 +170,15 @@ const SupplierList = ({
 
   const handleCancelDelete = () => {
     setOpenDeleteDialog(false)
-    setCompanyId('')
-    setCompanyIndex(-1)
+    setSupplierId('')
+    setSupplierIndex(-1)
   }
 
   const admin = helper.admin(user)
 
   return (
     <>
-      <section className="company-list">
+      <section className="supplier-list">
         {rows.length === 0
           ? !init
           && !loading
@@ -199,35 +189,35 @@ const SupplierList = ({
               </CardContent>
             </Card>
           )
-          : rows.map((company, index) => {
-            const edit = admin || (user && user._id === company._id)
+          : rows.map((supplier, index) => {
+            const edit = admin || (user && user._id === supplier._id)
             const canDelete = admin
 
             return (
-              <article key={company._id}>
-                <div className="company-item">
-                  <div className="company-item-avatar">
-                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, company.avatar)} alt={company.fullName} />
+              <article key={supplier._id}>
+                <div className="supplier-item">
+                  <div className="supplier-item-avatar">
+                    <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
                   </div>
-                  <span className="company-item-title">{company.fullName}</span>
+                  <span className="supplier-item-title">{supplier.fullName}</span>
                 </div>
-                <div className="company-actions">
+                <div className="supplier-actions">
                   {canDelete && (
                     <Tooltip title={commonStrings.DELETE}>
-                      <IconButton data-id={company._id} data-index={index} onClick={handleDelete}>
+                      <IconButton data-id={supplier._id} data-index={index} onClick={handleDelete}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   )}
                   {edit && (
                     <Tooltip title={commonStrings.UPDATE}>
-                      <IconButton href={`/update-supplier?c=${company._id}`}>
+                      <IconButton href={`/update-supplier?c=${supplier._id}`}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
                   )}
-                  <Tooltip title={strings.VIEW_COMPANY}>
-                    <IconButton href={`/supplier?c=${company._id}`}>
+                  <Tooltip title={strings.VIEW_SUPPLIER}>
+                    <IconButton href={`/supplier?c=${supplier._id}`}>
                       <ViewIcon />
                     </IconButton>
                   </Tooltip>
@@ -237,7 +227,7 @@ const SupplierList = ({
           })}
         <Dialog disableEscapeKeyDown maxWidth="xs" open={openDeleteDialog}>
           <DialogTitle className="dialog-header">{commonStrings.CONFIRM_TITLE}</DialogTitle>
-          <DialogContent>{strings.DELETE_COMPANY}</DialogContent>
+          <DialogContent>{strings.DELETE_SUPPLIER}</DialogContent>
           <DialogActions className="dialog-actions">
             <Button onClick={handleCancelDelete} variant="contained" className="btn-secondary">
               {commonStrings.CANCEL}

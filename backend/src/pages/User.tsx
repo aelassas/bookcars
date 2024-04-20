@@ -11,8 +11,8 @@ import {
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ulStrings } from '../lang/user-list'
@@ -37,7 +37,7 @@ const User = () => {
   const [loading, setLoading] = useState(true)
   const [noMatch, setNoMatch] = useState(false)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [offset, setOffset] = useState(0)
 
   useEffect(() => {
@@ -98,8 +98,8 @@ const User = () => {
             const _user = await UserService.getUser(id)
 
             if (_user) {
-              const setState = (_companies: string[]) => {
-                setCompanies(_companies)
+              const setState = (_suppliers: string[]) => {
+                setSuppliers(_suppliers)
                 setLoggedUser(_loggedUser)
                 setUser(_user)
                 setVisible(true)
@@ -108,9 +108,9 @@ const User = () => {
 
               const admin = helper.admin(_loggedUser)
               if (admin) {
-                const _companies = await SupplierService.getAllSuppliers()
-                const companyIds = bookcarsHelper.flattenCompanies(_companies)
-                setState(companyIds)
+                const _suppliers = await SupplierService.getAllSuppliers()
+                const supplierIds = bookcarsHelper.flattenSuppliers(_suppliers)
+                setState(supplierIds)
               } else {
                 setState([_loggedUser._id as string])
               }
@@ -134,8 +134,8 @@ const User = () => {
     }
   }
 
-  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Company && loggedUser._id === user.company))
-  const company = user && user.type === bookcarsTypes.RecordType.Company
+  const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.supplier))
+  const supplier = user && user.type === bookcarsTypes.RecordType.Supplier
 
   return (
     <Master onLoad={onLoad} strict>
@@ -152,7 +152,7 @@ const User = () => {
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"
-                className={company ? 'company-avatar' : 'user-avatar'}
+                className={supplier ? 'supplier-avatar' : 'user-avatar'}
                 readonly
                 verified
               />
@@ -193,17 +193,17 @@ const User = () => {
             </div>
           </div>
           <div className="col-2">
-            {(edit || !company) && (
+            {(edit || supplier) && (
               <BookingList
                 containerClassName="user"
                 offset={offset}
                 loggedUser={loggedUser}
-                user={company ? undefined : user}
-                companies={company ? [user._id as string] : companies}
+                user={supplier ? undefined : user}
+                suppliers={supplier ? [user._id as string] : suppliers}
                 statuses={statuses}
                 hideDates={env.isMobile()}
                 checkboxSelection={!env.isMobile()}
-                hideCompanyColumn={company}
+                hideSupplierColumn={supplier}
               />
             )}
           </div>

@@ -1,9 +1,9 @@
 import request from 'supertest'
 import cookieParser from 'cookie-parser'
 import bcrypt from 'bcrypt'
-import * as bookcarsTypes from 'bookcars-types'
 import { v1 as uuid } from 'uuid'
 import mongoose from 'mongoose'
+import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as env from '../src/config/env.config'
 import User from '../src/models/User'
@@ -117,7 +117,7 @@ export const createSupplier = async (email: string, fullName: string) => {
         fullName,
         language: LANGUAGE,
         password: passwordHash,
-        type: bookcarsTypes.UserType.Company,
+        type: bookcarsTypes.UserType.Supplier,
     }
     const supplier = new User(body)
     await supplier.save()

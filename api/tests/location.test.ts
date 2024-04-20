@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import request from 'supertest'
 import { v1 as uuid } from 'uuid'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
@@ -183,7 +183,7 @@ describe('GET /api/check-location/:id', () => {
         const supplierId = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
         const car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [LOCATION_ID],
             price: 780,

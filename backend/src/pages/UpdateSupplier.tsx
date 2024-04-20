@@ -11,12 +11,12 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import { strings as ccStrings } from '../lang/create-company'
+import { strings as ccStrings } from '../lang/create-supplier'
 import * as SupplierService from '../services/SupplierService'
 import * as UserService from '../services/UserService'
 import * as helper from '../common/helper'
@@ -25,11 +25,11 @@ import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Avatar from '../components/Avatar'
 
-import '../assets/css/update-company.css'
+import '../assets/css/update-supplier.css'
 
-const UpdateCompany = () => {
+const UpdateSupplier = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
-  const [company, setCompany] = useState<bookcarsTypes.User>()
+  const [supplier, setSupplier] = useState<bookcarsTypes.User>()
   const [fullName, setFullName] = useState('')
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
@@ -54,8 +54,8 @@ const UpdateCompany = () => {
   }
 
   const validateFullName = async (_fullName: string) => {
-    if (company && _fullName) {
-      if (company.fullName !== _fullName) {
+    if (supplier && _fullName) {
+      if (supplier.fullName !== _fullName) {
         try {
           const status = await SupplierService.validate({ fullName: _fullName })
 
@@ -126,18 +126,18 @@ const UpdateCompany = () => {
   }
 
   const onAvatarChange = (_avatar: string) => {
-    if (company && user) {
-      const _company = bookcarsHelper.clone(company)
-      _company.avatar = _avatar
+    if (supplier && user) {
+      const _supplier = bookcarsHelper.clone(supplier)
+      _supplier.avatar = _avatar
 
-      if (user._id === company._id) {
+      if (user._id === supplier._id) {
         const _user = bookcarsHelper.clone(user)
         _user.avatar = _avatar
         setUser(_user)
       }
 
       setLoading(false)
-      setCompany(_company)
+      setSupplier(_supplier)
 
       if (_avatar) {
         setAvatarError(false)
@@ -148,9 +148,9 @@ const UpdateCompany = () => {
   }
 
   const handleResendActivationLink = async () => {
-    if (company) {
+    if (supplier) {
       try {
-        const status = await UserService.resend(company.email, false, env.APP_TYPE)
+        const status = await UserService.resend(supplier.email, false, env.APP_TYPE)
 
         if (status === 200) {
           helper.info(commonStrings.ACTIVATION_EMAIL_SENT)
@@ -173,17 +173,17 @@ const UpdateCompany = () => {
         const id = params.get('c')
         if (id && id !== '') {
           try {
-            const _company = await SupplierService.getSupplier(id)
+            const _supplier = await SupplierService.getSupplier(id)
 
-            if (_company) {
-              setCompany(_company)
-              setEmail(_company.email || '')
-              setAvatar(_company.avatar || '')
-              setFullName(_company.fullName || '')
-              setPhone(_company.phone || '')
-              setLocation(_company.location || '')
-              setBio(_company.bio || '')
-              setPayLater(_company.payLater || false)
+            if (_supplier) {
+              setSupplier(_supplier)
+              setEmail(_supplier.email || '')
+              setAvatar(_supplier.avatar || '')
+              setFullName(_supplier.fullName || '')
+              setPhone(_supplier.phone || '')
+              setLocation(_supplier.location || '')
+              setBio(_supplier.bio || '')
+              setPayLater(_supplier.payLater || false)
               setVisible(true)
               setLoading(false)
             } else {
@@ -227,13 +227,13 @@ const UpdateCompany = () => {
         return
       }
 
-      if (!company) {
+      if (!supplier) {
         helper.error()
         return
       }
 
       const data: bookcarsTypes.UpdateSupplierPayload = {
-        _id: company._id as string,
+        _id: supplier._id as string,
         fullName,
         phone,
         location,
@@ -244,8 +244,8 @@ const UpdateCompany = () => {
       const status = await SupplierService.update(data)
 
       if (status === 200) {
-        company.fullName = fullName
-        setCompany(bookcarsHelper.clone(company))
+        supplier.fullName = fullName
+        setSupplier(bookcarsHelper.clone(supplier))
         helper.info(commonStrings.UPDATED)
       } else {
         helper.error()
@@ -260,13 +260,13 @@ const UpdateCompany = () => {
   return (
     <Master onLoad={onLoad} strict user={user}>
       {visible && (
-        <div className="update-company">
-          <Paper className="company-form-update company-form-wrapper" elevation={10}>
+        <div className="update-supplier">
+          <Paper className="supplier-form-update" elevation={10}>
             <form onSubmit={handleSubmit}>
               <Avatar
-                type={bookcarsTypes.RecordType.Company}
+                type={bookcarsTypes.RecordType.Supplier}
                 mode="update"
-                record={company}
+                record={supplier}
                 size="large"
                 readonly={false}
                 hideDelete
@@ -284,7 +284,7 @@ const UpdateCompany = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                 <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" value={fullName} />
-                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -336,7 +336,7 @@ const UpdateCompany = () => {
                 </FormControl>
               )}
               <div className="buttons">
-                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${company && company._id}`}>
+                <Button type="submit" variant="contained" className="btn-primary btn-margin btn-margin-bottom" size="small" href={`/change-password?u=${supplier && supplier._id}`}>
                   {commonStrings.RESET_PASSWORD}
                 </Button>
                 <Button type="submit" variant="contained" className="btn-primary btn-margin-bottom" size="small">
@@ -361,4 +361,4 @@ const UpdateCompany = () => {
   )
 }
 
-export default UpdateCompany
+export default UpdateSupplier

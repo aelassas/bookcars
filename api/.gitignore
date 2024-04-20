@@ -12,11 +12,16 @@ npm-debug.log*
 .DS_Store
 .DS_Store?
 .env
+.env.dev
+.env.development
 .env.docker
+.env.oraclecloud
 
 # eslint
 .eslintcache
 
 # jest
 /coverage
-!/coverage/cobertura-coverage.xml
+
+# logs
+/logs

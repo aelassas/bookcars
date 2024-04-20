@@ -9,14 +9,15 @@ div.bs-list {
   width: 100%;
 }
 
-div.bs-list a.cell-company {
-  display: flex;
-  align-items: center;
+div.bs-list a.cell-supplier {
+  display: inline-flex;
+  position: relative;
+  vertical-align: middle;
   width: 60px;
   height: 30px;
 }
 
-div.bs-list a.cell-company img {
+div.bs-list a.cell-supplier img {
   max-width: 100%;
   max-height: 100%;
 }
@@ -26,6 +27,10 @@ div.bs-list span.bs {
   width: 80px;
   text-align: center;
   color: #fff;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  align-items: center;
 }
 
 div.bs-list span.bs-void {
@@ -93,7 +98,7 @@ div.bs-list div.booking-details div.booking-detail span.booking-detail-title {
   color: rgb(0 0 0 / 87%);
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
@@ -101,12 +106,12 @@ div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.
   height: 30px;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-company img {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value div.car-supplier img {
   max-width: 100%;
   max-height: 100%;
 }
 
-div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-company-name {
+div.bs-list div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;
@@ -201,14 +206,14 @@ div.bs-list div.bs-buttons button {
   margin-bottom: 5px;
 }
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.bs-list {
     width: calc(100% - 20px);
     max-width: 480px;
   }
 }
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.bs-list {
     position: absolute;
     inset: 0;

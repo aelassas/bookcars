@@ -1,0 +1,91 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    environment: TEST
+    
+    strategy:
+      matrix:
+        node-version: [lts/*]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        # cache: 'npm'
+        # cache-dependency-path: './api/package-lock.json'
+    - name: test API
+      run: |
+           cd ./api
+           touch .env
+           echo NODE_ENV=$NODE_ENV >> .env
+           echo BC_HTTPS=$BC_HTTPS >> .env
+           echo BC_DB_URI=$BC_DB_URI >> .env
+           echo BC_DB_SSL=$BC_DB_SSL >> .env
+           echo BC_COOKIE_SECRET=$BC_COOKIE_SECRET >> .env
+           echo BC_AUTH_COOKIE_DOMAIN=$BC_AUTH_COOKIE_DOMAIN >> .env
+           echo BC_JWT_SECRET=$BC_JWT_SECRET >> .env
+           echo BC_JWT_EXPIRE_AT=$BC_JWT_EXPIRE_AT >> .env
+           echo BC_TOKEN_EXPIRE_AT=$BC_TOKEN_EXPIRE_AT >> .env
+           echo BC_SMTP_HOST=$BC_SMTP_HOST >> .env
+           echo BC_SMTP_PORT=$BC_SMTP_PORT >> .env
+           echo BC_SMTP_USER=$BC_SMTP_USER >> .env
+           echo BC_SMTP_PASS=$BC_SMTP_PASS >> .env
+           echo BC_SMTP_FROM=$BC_SMTP_FROM >> .env
+           echo BC_DEFAULT_LANGUAGE=$BC_DEFAULT_LANGUAGE >> .env
+           echo BC_CDN_USERS=$BC_CDN_USERS >> .env
+           echo BC_CDN_TEMP_USERS=$BC_CDN_TEMP_USERS >> .env
+           echo BC_CDN_CARS=$BC_CDN_CARS >> .env
+           echo BC_CDN_TEMP_CARS=$BC_CDN_TEMP_CARS >> .env
+           echo BC_BACKEND_HOST=$BC_BACKEND_HOST >> .env
+           echo BC_FRONTEND_HOST=$BC_FRONTEND_HOST >> .env
+           echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
+           echo BC_EXPO_ACCESS_TOKEN=$BC_EXPO_ACCESS_TOKEN >> .env
+           npm install
+           npm test
+      env:
+        NODE_ENV: ${{ vars.NODE_ENV }}
+        BC_HTTPS: ${{ vars.BC_HTTPS }}
+        BC_DB_URI: ${{ secrets.BC_DB_URI }}
+        BC_DB_SSL: ${{ vars.BC_DB_SSL }}
+        BC_DB_DEBUG: ${{ vars.BC_DB_DEBUG }}
+        BC_COOKIE_SECRET: ${{ secrets.BC_COOKIE_SECRET }}
+        BC_AUTH_COOKIE_DOMAIN: ${{ vars.BC_AUTH_COOKIE_DOMAIN }}
+        BC_JWT_SECRET: ${{ secrets.BC_JWT_SECRET }}
+        BC_JWT_EXPIRE_AT: ${{ vars.BC_JWT_EXPIRE_AT }}
+        BC_TOKEN_EXPIRE_AT: ${{ vars.BC_TOKEN_EXPIRE_AT }}
+        BC_SMTP_HOST: ${{ secrets.BC_SMTP_HOST }}
+        BC_SMTP_PORT: ${{ secrets.BC_SMTP_PORT }}
+        BC_SMTP_USER: ${{ secrets.BC_SMTP_USER }}
+        BC_SMTP_PASS: ${{ secrets.BC_SMTP_PASS }}
+        BC_SMTP_FROM: ${{ secrets.BC_SMTP_FROM }}
+        BC_DEFAULT_LANGUAGE: ${{ vars.BC_DEFAULT_LANGUAGE }}
+        BC_CDN_USERS: ${{ vars.BC_CDN_USERS }}
+        BC_CDN_TEMP_USERS: ${{ vars.BC_CDN_TEMP_USERS }}
+        BC_CDN_CARS: ${{ vars.BC_CDN_CARS }}
+        BC_CDN_TEMP_CARS: ${{ vars.BC_CDN_TEMP_CARS }}
+        BC_BACKEND_HOST: ${{ vars.BC_BACKEND_HOST }}
+        BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
+        BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
+        BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: cobertura-coverage.xml
+          directory: ./api/coverage
+          fail_ci_if_error: true

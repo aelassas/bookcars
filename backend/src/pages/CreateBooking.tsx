@@ -13,11 +13,12 @@ import {
   Info as InfoIcon,
   Person as DriverIcon
 } from '@mui/icons-material'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -40,15 +41,17 @@ import '../assets/css/create-booking.css'
 
 const CreateBooking = () => {
   const navigate = useNavigate()
-  const [isCompany, setIsCompany] = useState(false)
+  const [isSupplier, setIsSupplier] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [company, setCompany] = useState('')
+  const [supplier, setSupplier] = useState('')
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [driver, setDriver] = useState('')
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [minDate, setMinDate] = useState<Date>()
+  const [maxDate, setMaxDate] = useState<Date>()
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
@@ -56,7 +59,6 @@ const CreateBooking = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState<Date>()
   const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
   const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
   const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
@@ -64,9 +66,11 @@ const CreateBooking = () => {
   const [additionalDriverEmailValid, setAdditionalDriverEmailValid] = useState(true)
   const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0]._id : '')
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const handleDriverChange = (values: bookcarsTypes.Option[]) => {
@@ -166,6 +170,10 @@ const CreateBooking = () => {
       return
     }
 
+    if (fromError || toError) {
+      return
+    }
+
     const additionalDriverSet = helper.carOptionAvailable(car, 'additionalDriver') && additionalDriver
 
     if (additionalDriverSet) {
@@ -186,7 +194,7 @@ const CreateBooking = () => {
     }
 
     const booking: bookcarsTypes.Booking = {
-      company,
+      supplier,
       car: car._id,
       driver,
       pickupLocation,
@@ -247,9 +255,9 @@ const CreateBooking = () => {
     if (user) {
       setVisible(true)
 
-      if (user.type === bookcarsTypes.RecordType.Company) {
-        setCompany(user._id as string)
-        setIsCompany(true)
+      if (user.type === bookcarsTypes.RecordType.Supplier) {
+        setSupplier(user._id as string)
+        setIsSupplier(true)
       }
     }
   }
@@ -264,13 +272,13 @@ const CreateBooking = () => {
             {' '}
           </h1>
           <form onSubmit={handleSubmit}>
-            {!isCompany && (
+            {!isSupplier && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
-                  label={blStrings.COMPANY}
+                  label={blStrings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
+                  onChange={handleSupplierChange}
                 />
               </FormControl>
             )}
@@ -302,7 +310,7 @@ const CreateBooking = () => {
 
             <CarSelectList
               label={blStrings.CAR}
-              company={company}
+              supplier={supplier}
               pickupLocation={pickupLocation}
               onChange={handleCarSelectListChange}
               required
@@ -312,21 +320,26 @@ const CreateBooking = () => {
               <DateTimePicker
                 label={commonStrings.FROM}
                 value={from}
+                maxDate={maxDate}
                 required
                 onChange={(date) => {
                   if (date) {
-                    if (to && to.getTime() <= date.getTime()) {
-                      setTo(undefined)
-                    }
-
                     const _minDate = new Date(date)
                     _minDate.setDate(_minDate.getDate() + 1)
+                    setFrom(date)
                     setMinDate(_minDate)
+                    setFromError(false)
                   } else {
+                    setFrom(undefined)
                     setMinDate(undefined)
                   }
-
-                  setFrom(date || undefined)
+                }}
+                onError={(err: DateTimeValidationError) => {
+                  if (err) {
+                    setFromError(true)
+                  } else {
+                    setFromError(false)
+                  }
                 }}
                 language={UserService.getLanguage()}
               />
@@ -339,7 +352,23 @@ const CreateBooking = () => {
                 minDate={minDate}
                 required
                 onChange={(date) => {
-                  setTo(date || undefined)
+                  if (date) {
+                    const _maxDate = new Date(date)
+                    _maxDate.setDate(_maxDate.getDate() - 1)
+                    setTo(date)
+                    setMaxDate(_maxDate)
+                    setToError(false)
+                  } else {
+                    setTo(undefined)
+                    setMaxDate(undefined)
+                  }
+                }}
+                onError={(err: DateTimeValidationError) => {
+                  if (err) {
+                    setToError(true)
+                  } else {
+                    setToError(false)
+                  }
                 }}
                 language={UserService.getLanguage()}
               />

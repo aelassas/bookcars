@@ -16,12 +16,12 @@ import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
-import { strings as ccStrings } from '../lang/create-company'
+import { strings as ccStrings } from '../lang/create-supplier'
 import { strings } from '../lang/create-user'
 import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
@@ -93,7 +93,7 @@ const CreateUser = () => {
 
     setType(_type)
 
-    if (_type === bookcarsTypes.RecordType.Company) {
+    if (_type === bookcarsTypes.RecordType.Supplier) {
       await validateFullName(fullName)
     } else {
       setFullNameError(false)
@@ -101,7 +101,7 @@ const CreateUser = () => {
   }
 
   const handleFullNameBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    if (type === bookcarsTypes.RecordType.Company) {
+    if (type === bookcarsTypes.RecordType.Supplier) {
       await validateFullName(e.target.value)
     } else {
       setFullNameError(false)
@@ -205,7 +205,7 @@ const CreateUser = () => {
     setLoading(false)
     setAvatar(_avatar)
 
-    if (_avatar !== null && type === bookcarsTypes.RecordType.Company) {
+    if (_avatar !== null && type === bookcarsTypes.RecordType.Supplier) {
       setAvatarError(false)
     }
   }
@@ -242,7 +242,7 @@ const CreateUser = () => {
         return
       }
 
-      if (type === bookcarsTypes.RecordType.Company) {
+      if (type === bookcarsTypes.RecordType.Supplier) {
         const fullNameValid = await validateFullName(fullName)
 
         if (!fullNameValid) {
@@ -267,14 +267,14 @@ const CreateUser = () => {
         return
       }
 
-      if (type === bookcarsTypes.RecordType.Company && !avatar) {
+      if (type === bookcarsTypes.RecordType.Supplier && !avatar) {
         setAvatarError(true)
         setError(false)
         return
       }
 
       const language = UserService.getLanguage()
-      const company = admin ? undefined : user._id
+      const supplier = admin ? undefined : user._id
 
       const data: bookcarsTypes.CreateUserPayload = {
         email,
@@ -286,10 +286,10 @@ const CreateUser = () => {
         avatar,
         birthDate,
         language,
-        company,
+        supplier,
       }
 
-      if (type === bookcarsTypes.RecordType.Company) {
+      if (type === bookcarsTypes.RecordType.Supplier) {
         data.payLater = payLater
       }
 
@@ -305,7 +305,7 @@ const CreateUser = () => {
     }
   }
 
-  const company = type === bookcarsTypes.RecordType.Company
+  const supplier = type === bookcarsTypes.RecordType.Supplier
   const driver = type === bookcarsTypes.RecordType.User
 
   return (
@@ -331,7 +331,7 @@ const CreateUser = () => {
                 className="avatar-ctn"
               />
 
-              {company && (
+              {supplier && (
                 <div className="info">
                   <InfoIcon />
                   <span>{ccStrings.RECOMMENDED_IMAGE_SIZE}</span>
@@ -339,11 +339,11 @@ const CreateUser = () => {
               )}
 
               {admin && (
-                <FormControl fullWidth margin="dense" style={{ marginTop: company ? 0 : 39 }}>
+                <FormControl fullWidth margin="dense" style={{ marginTop: supplier ? 0 : 39 }}>
                   <InputLabel className="required">{commonStrings.TYPE}</InputLabel>
                   <Select label={commonStrings.TYPE} value={type} onChange={handleUserTypeChange} variant="standard" required fullWidth>
                     <MenuItem value={bookcarsTypes.RecordType.Admin}>{helper.getUserType(bookcarsTypes.UserType.Admin)}</MenuItem>
-                    <MenuItem value={bookcarsTypes.RecordType.Company}>{helper.getUserType(bookcarsTypes.UserType.Company)}</MenuItem>
+                    <MenuItem value={bookcarsTypes.RecordType.Supplier}>{helper.getUserType(bookcarsTypes.UserType.Supplier)}</MenuItem>
                     <MenuItem value={bookcarsTypes.RecordType.User}>{helper.getUserType(bookcarsTypes.UserType.User)}</MenuItem>
                   </Select>
                 </FormControl>
@@ -352,7 +352,7 @@ const CreateUser = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel className="required">{commonStrings.FULL_NAME}</InputLabel>
                 <Input id="full-name" type="text" error={fullNameError} required onBlur={handleFullNameBlur} onChange={handleFullNameChange} autoComplete="off" />
-                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
+                <FormHelperText error={fullNameError}>{(fullNameError && ccStrings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
               </FormControl>
 
               <FormControl fullWidth margin="dense">
@@ -400,7 +400,7 @@ const CreateUser = () => {
                 <Input id="bio" type="text" onChange={handleBioChange} autoComplete="off" />
               </FormControl>
 
-              {company && (
+              {supplier && (
                 <FormControl component="fieldset" style={{ marginTop: 15 }}>
                   <FormControlLabel
                     control={(

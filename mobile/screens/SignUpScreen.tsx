@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { intervalToDuration } from 'date-fns'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import validator from 'validator'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 import i18n from '../lang/i18n'
 import TextInput from '../components/TextInput'
@@ -289,7 +289,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 
       setLoading(true)
 
-      const data: bookcarsTypes.FrontendSignUpPayload = {
+      const data: bookcarsTypes.SignUpPayload = {
         email,
         phone,
         password,
@@ -318,7 +318,7 @@ const SignUpScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 
   return (
     <View style={styles.master}>
-      <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} notificationCount={0} />
+      <Header title={i18n.t('SIGN_UP_TITLE')} hideTitle={false} loggedIn={false} />
 
       {language && (
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>

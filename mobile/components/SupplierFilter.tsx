@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import * as helper from '../common/helper'
 import * as env from '../config/env.config'
@@ -36,7 +36,7 @@ const SupplierFilter = ({
           ...supplier,
           checked: true,
         }))
-        const _checkedSuppliers = bookcarsHelper.flattenCompanies(_suppliers)
+        const _checkedSuppliers = bookcarsHelper.flattenSuppliers(_suppliers)
         setSuppliers(_suppliers)
         setCheckedSuppliers(_checkedSuppliers)
         if (onLoad) {
@@ -58,11 +58,11 @@ const SupplierFilter = ({
     visible && suppliers.length > 1 && (
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
-          <View style={styles.companies}>
+          <View style={styles.suppliers}>
             {suppliers.map((supplier) => (
               supplier._id && typeof supplier.checked !== 'undefined'
               && (
-                <View key={supplier._id} style={styles.company}>
+                <View key={supplier._id} style={styles.supplier}>
                   <Switch
                     value={supplier.checked}
                     onValueChange={(checked) => {
@@ -120,7 +120,7 @@ const SupplierFilter = ({
                 })
                 setAllChecked(true)
                 setSuppliers(bookcarsHelper.clone(suppliers))
-                _checkedSuppliers = bookcarsHelper.clone(bookcarsHelper.flattenCompanies(suppliers))
+                _checkedSuppliers = bookcarsHelper.clone(bookcarsHelper.flattenSuppliers(suppliers))
                 setCheckedSuppliers(_checkedSuppliers)
 
                 if (onChange) {
@@ -144,20 +144,20 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 480,
   },
-  companies: {
+  suppliers: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     width: 300,
   },
-  company: {
+  supplier: {
     width: '50%',
     marginBottom: 7,
   },
   image: {
-    width: env.COMPANY_IMAGE_WIDTH,
-    height: env.COMPANY_IMAGE_HEIGHT,
+    width: env.SUPPLIER_IMAGE_WIDTH,
+    height: env.SUPPLIER_IMAGE_HEIGHT,
   },
   link: {
     marginTop: 10,

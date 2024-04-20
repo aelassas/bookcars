@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 
 const carSchema = new Schema<env.Car>(
@@ -10,7 +10,7 @@ const carSchema = new Schema<env.Car>(
       index: true,
       trim: true,
     },
-    company: {
+    supplier: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
       ref: 'User',

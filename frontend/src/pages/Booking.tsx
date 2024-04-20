@@ -6,12 +6,13 @@ import {
   Button
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
 import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as csStrings } from '../lang/cars'
+import env from '../config/env.config'
 import * as helper from '../common/helper'
 import Master from '../components/Master'
 import * as UserService from '../services/UserService'
@@ -33,9 +34,10 @@ const Booking = () => {
   const [loading, setLoading] = useState(false)
   const [noMatch, setNoMatch] = useState(false)
   const [error, setError] = useState(false)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
-  const [company, setCompany] = useState<bookcarsTypes.Option>()
+  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [price, setPrice] = useState<number>()
   const [driver, setDriver] = useState<bookcarsTypes.Option>()
@@ -53,8 +55,8 @@ const Booking = () => {
   const [minDate, setMinDate] = useState<Date>()
   const edit = false
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0] : undefined)
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
   const handlePickupLocationChange = (values: bookcarsTypes.Option[]) => {
@@ -199,14 +201,14 @@ const Booking = () => {
     try {
       e.preventDefault()
 
-      if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
+      if (!booking || !supplier || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
         helper.error()
         return
       }
 
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
-        company: company._id,
+        supplier: supplier._id,
         car: car._id,
         driver: driver._id,
         pickupLocation: pickupLocation._id,
@@ -237,6 +239,7 @@ const Booking = () => {
 
   const onLoad = async () => {
     setLoading(true)
+    setLanguage(UserService.getLanguage())
 
     const params = new URLSearchParams(window.location.search)
     if (params.has('b')) {
@@ -249,8 +252,8 @@ const Booking = () => {
             setPrice(_booking.price)
             setLoading(false)
             setVisible(true)
-            const cmp = _booking.company as bookcarsTypes.User
-            setCompany({
+            const cmp = _booking.supplier as bookcarsTypes.User
+            setSupplier({
               _id: cmp._id as string,
               name: cmp.fullName,
               image: cmp.avatar,
@@ -311,11 +314,11 @@ const Booking = () => {
             <form onSubmit={handleSubmit}>
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
-                  label={blStrings.COMPANY}
+                  label={blStrings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
-                  value={company}
+                  onChange={handleSupplierChange}
+                  value={supplier}
                   readOnly={!edit}
                 />
               </FormControl>
@@ -346,7 +349,7 @@ const Booking = () => {
 
               <CarSelectList
                 label={blStrings.CAR}
-                company={(company && company._id) || ''}
+                supplier={(supplier && supplier._id) || ''}
                 pickupLocation={(pickupLocation && pickupLocation._id) || ''}
                 onChange={handleCarSelectListChange}
                 required
@@ -485,8 +488,8 @@ const Booking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price || 0) / days)} ${commonStrings.CURRENCY}`}</span>
+                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(Math.floor((price as number) / days), commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList

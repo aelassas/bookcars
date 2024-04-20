@@ -90,12 +90,12 @@ div.booking div.booking-details div.booking-detail span.booking-detail-title {
   width: 250px;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value div.car-company {
+div.booking div.booking-details div.booking-detail div.booking-detail-value div.car-supplier {
   display: flex;
   align-items: center;
 }
 
-div.booking div.booking-details div.booking-detail div.booking-detail-value span.car-company-name {
+div.booking div.booking-details div.booking-detail div.booking-detail-value span.car-supplier-name {
   color: rgb(0 0 0 / 60%);
   font-size: 0.9em;
   line-height: 1em;

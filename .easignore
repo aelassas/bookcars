@@ -1,0 +1,90 @@
+# OSX
+#
+.DS_Store
+.DS_Store?
+/**/.DS_Store
+
+# Xcode
+#
+/mobile/build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IntelliJ
+#
+/mobile/build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+
+# node.js
+#
+/**/node_modules/
+npm-debug.log
+
+# BUCK
+/mobile/buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/mobile/ios/Pods/
+
+# misc
+!.env
+.env.local
+.env.dev
+.env.development
+.env.development.local
+.env.test.local
+.env.production.local
+.env.oraclecloud
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Expo
+.expo/
+web-build/
+dist/
+
+!google-services.json
+!/**/google-services.json
+
+!/bookcars-types/index.js
+!/bookcars-types/index.d.ts
+!/bookcars-helper/index.js
+!/bookcars-helper/index.d.ts
+
+# @end expo-cli
+
+# yarn
+.yarn/
+
+# build
+/mobile/*.apk
+/**/*.apk
+
+/mobile/android/
+/mobile/ios/

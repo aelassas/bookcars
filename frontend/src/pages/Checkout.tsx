@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   OutlinedInput,
   InputLabel,
@@ -23,8 +24,8 @@ import {
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import * as BookingService from '../services/BookingService'
 import { strings as commonStrings } from '../lang/common'
@@ -45,6 +46,8 @@ import SecurePayment from '../assets/img/secure-payment.png'
 import '../assets/css/checkout.css'
 
 const Checkout = () => {
+  const location = useLocation()
+
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [pickupLocation, setPickupLocation] = useState<bookcarsTypes.Location>()
@@ -602,7 +605,7 @@ const Checkout = () => {
       }
 
       const booking: bookcarsTypes.Booking = {
-        company: car.company._id as string,
+        supplier: car.supplier._id as string,
         car: car._id,
         driver: authenticated ? user?._id : undefined,
         pickupLocation: pickupLocation._id,
@@ -657,38 +660,26 @@ const Checkout = () => {
     setAuthenticated(_user !== undefined)
     setLanguage(UserService.getLanguage())
 
-    let carId
-    let _car
-    let pickupLocationId
-    let _pickupLocation
-    let dropOffLocationId
-    let _dropOffLocation
-    let _from
-    let _to
+    const { state } = location
+    if (!state) {
+      setNoMatch(true)
+      return
+    }
 
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('c')) {
-      carId = params.get('c')
-    }
-    if (params.has('p')) {
-      pickupLocationId = params.get('p')
-    }
-    if (params.has('d')) {
-      dropOffLocationId = params.get('d')
-    }
-    if (params.has('f')) {
-      const val = params.get('f')
-      _from = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
-    if (params.has('t')) {
-      const val = params.get('t')
-      _to = val && bookcarsHelper.isInteger(val) && new Date(Number.parseInt(val, 10))
-    }
+    const { carId } = state
+    const { pickupLocationId } = state
+    const { dropOffLocationId } = state
+    const { from: _from } = state
+    const { to: _to } = state
 
     if (!carId || !pickupLocationId || !dropOffLocationId || !_from || !_to) {
       setNoMatch(true)
       return
     }
+
+    let _car
+    let _pickupLocation
+    let _dropOffLocation
 
     try {
       _car = await CarService.getCar(carId)
@@ -739,8 +730,8 @@ const Checkout = () => {
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
-  const _format = _fr ? 'eee d LLL kk:mm' : 'eee, d LLL, kk:mm'
-  const bookingDetailHeight = env.COMPANY_IMAGE_HEIGHT + 10
+  const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
+  const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
 
   return (
@@ -768,7 +759,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.CANCELLATION}</span>
-                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCancellationOption(car.cancellation, language)}</span>
                           </span>
                         )}
                       />
@@ -781,7 +772,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.AMENDMENTS}</span>
-                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, _fr)}</span>
+                            <span className="booking-option-value">{helper.getAmendmentsOption(car.amendments, language)}</span>
                           </span>
                         )}
                       />
@@ -794,7 +785,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.COLLISION_DAMAGE_WAVER}</span>
-                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getCollisionDamageWaiverOption(car.collisionDamageWaiver, days, language)}</span>
                           </span>
                         )}
                       />
@@ -807,7 +798,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.THEFT_PROTECTION}</span>
-                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getTheftProtectionOption(car.theftProtection, days, language)}</span>
                           </span>
                         )}
                       />
@@ -820,7 +811,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.FULL_INSURANCE}</span>
-                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, _fr)}</span>
+                            <span className="booking-option-value">{helper.getFullInsuranceOption(car.fullInsurance, days, language)}</span>
                           </span>
                         )}
                       />
@@ -833,7 +824,7 @@ const Checkout = () => {
                         label={(
                           <span>
                             <span className="booking-option-label">{csStrings.ADDITIONAL_DRIVER}</span>
-                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days)}</span>
+                            <span className="booking-option-value">{helper.getAdditionalDriverOption(car.additionalDriver, days, language)}</span>
                           </span>
                         )}
                       />
@@ -865,20 +856,20 @@ const Checkout = () => {
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.CAR}</span>
-                      <div className="booking-detail-value">{`${car.name} (${car.price} ${csStrings.CAR_CURRENCY})`}</div>
+                      <div className="booking-detail-value">{`${car.name} (${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}${commonStrings.DAILY})`}</div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{commonStrings.SUPPLIER}</span>
                       <div className="booking-detail-value">
-                        <div className="car-company">
-                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} style={{ height: env.COMPANY_IMAGE_HEIGHT }} />
-                          <span className="car-company-name">{car.company.fullName}</span>
+                        <div className="car-supplier">
+                          <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} style={{ height: env.SUPPLIER_IMAGE_HEIGHT }} />
+                          <span className="car-supplier-name">{car.supplier.fullName}</span>
                         </div>
                       </div>
                     </div>
                     <div className="booking-detail" style={{ height: bookingDetailHeight }}>
                       <span className="booking-detail-title">{strings.COST}</span>
-                      <div className="booking-detail-value booking-price">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</div>
+                      <div className="booking-detail-value booking-price">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</div>
                     </div>
                   </div>
                 </div>
@@ -1043,7 +1034,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {car.company.payLater && (
+                {car.supplier.payLater && (
                   <div className="payment-options-container">
                     <div className="booking-info">
                       <PaymentOptionsIcon />
@@ -1083,7 +1074,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {(!car.company.payLater || !payLater) && (
+                {(!car.supplier.payLater || !payLater) && (
                   <div className="payment">
                     <div className="cost">
                       <div className="secure-payment-label">
@@ -1092,7 +1083,7 @@ const Checkout = () => {
                       </div>
                       <div className="secure-payment-cost">
                         <span className="cost-title">{strings.COST}</span>
-                        <span className="cost-value">{`${bookcarsHelper.formatNumber(price)} ${commonStrings.CURRENCY}`}</span>
+                        <span className="cost-value">{bookcarsHelper.formatPrice(price, commonStrings.CURRENCY, language)}</span>
                       </div>
                     </div>
 

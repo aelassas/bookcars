@@ -4,10 +4,9 @@ import * as langHelper from '../common/langHelper'
 const strings = new LocalizedStrings({
   fr: {
     CAR: 'Voiture',
-    COMPANY: 'Fournisseur',
+    SUPPLIER: 'Fournisseur',
     DRIVER: 'Conducteur',
     PRICE: 'Prix',
-    CURRENCY: 'DH',
     STATUS: 'Statut',
     UPDATE_SELECTION: 'Modifier la sélection',
     DELETE_SELECTION: 'Supprimer la sélection',
@@ -21,10 +20,9 @@ const strings = new LocalizedStrings({
   },
   en: {
     CAR: 'Car',
-    COMPANY: 'Supplier',
+    SUPPLIER: 'Supplier',
     DRIVER: 'Driver',
     PRICE: 'Price',
-    CURRENCY: 'DH',
     STATUS: 'Status',
     UPDATE_SELECTION: 'Edit selection',
     DELETE_SELECTION: 'Delete selection',

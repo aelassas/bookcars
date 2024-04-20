@@ -4,7 +4,7 @@ import ReactDateTimePicker from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 import { enUS, fr } from 'date-fns/locale'
 import { MaterialIcons } from '@expo/vector-icons'
-import * as bookcarsHelper from '../miscellaneous/bookcarsHelper'
+import * as bookcarsHelper from ':bookcars-helper'
 
 interface DateTimePickerProps {
   value?: Date
@@ -17,6 +17,7 @@ interface DateTimePickerProps {
   style?: object
   helperText?: string
   minDate?: Date
+  maxDate?: Date
   readOnly?: boolean
   hideClearButton?: boolean
   onPress?: () => void
@@ -34,6 +35,7 @@ const DateTimePicker = ({
   style,
   helperText,
   minDate,
+  maxDate,
   readOnly,
   hideClearButton,
   onPress,
@@ -153,6 +155,7 @@ const DateTimePicker = ({
             mode={mode}
             value={value || now}
             minimumDate={minDate}
+            maximumDate={maxDate}
             onChange={(event, date) => {
               setShow(false)
               if (event.type === 'set' && date) {

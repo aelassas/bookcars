@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-native'
 import { Paragraph, Dialog, Portal, Button as NativeButton } from 'react-native-paper'
 import { enUS, fr } from 'date-fns/locale'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import i18n from '../lang/i18n'
 import * as helper from '../common/helper'
@@ -10,7 +10,7 @@ import * as BookingService from '../services/BookingService'
 import Booking from './Booking'
 
 interface BookingListProps {
-  companies?: string[]
+  suppliers?: string[]
   statuses?: string[]
   filter?: bookcarsTypes.Filter
   user: string
@@ -20,7 +20,7 @@ interface BookingListProps {
 }
 
 const BookingList = ({
-  companies,
+  suppliers,
   statuses,
   filter,
   user,
@@ -43,14 +43,14 @@ const BookingList = ({
 
   const fetchData = async (reset = false) => {
     try {
-      if (companies && statuses && companies.length > 0 && statuses.length > 0) {
+      if (suppliers && statuses && suppliers.length > 0 && statuses.length > 0) {
         let _page = page
         if (reset) {
           _page = 0
           setPage(0)
         }
         const payload: bookcarsTypes.GetBookingsPayload = {
-          companies,
+          suppliers,
           statuses,
           filter,
           user,
@@ -88,18 +88,18 @@ const BookingList = ({
 
   useEffect(() => {
     const init = async () => {
-      if (firstLoad && companies && companies.length > 0 && statuses && statuses.length > 0) {
+      if (firstLoad && suppliers && suppliers.length > 0 && statuses && statuses.length > 0) {
         await fetchData()
         setFirstLoad(false)
       }
     }
 
     init()
-  }, [firstLoad, companies, statuses]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [firstLoad, suppliers, statuses]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!firstLoad) {
-      if (companies && statuses) {
+      if (suppliers && statuses) {
         if (page > 0) {
           fetchData(true)
         } else {
@@ -107,7 +107,7 @@ const BookingList = ({
         }
       }
     }
-  }, [companies, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [suppliers, statuses, filter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const init = async () => {
@@ -133,7 +133,6 @@ const BookingList = ({
     }
   }, [bookingId])
 
-  const _fr = language === 'fr'
   const numToRender = Math.floor(env.BOOKINGS_PAGE_SIZE / 2)
 
   return (
@@ -151,7 +150,7 @@ const BookingList = ({
           <Booking
             booking={booking}
             locale={locale}
-            fr={_fr}
+            language={language as string}
             onCancel={() => {
               setSelectedId(booking._id as string)
               setOpenCancelDialog(true)
@@ -161,7 +160,7 @@ const BookingList = ({
         keyExtractor={(item) => item._id as string}
         onEndReached={() => setOnScrollEnd(true)}
         onMomentumScrollEnd={() => {
-          if (onScrollEnd && fetch && companies) {
+          if (onScrollEnd && fetch && suppliers) {
             setPage(page + 1)
           }
           setOnScrollEnd(false)

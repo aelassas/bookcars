@@ -22,7 +22,7 @@ div.car section.car-sec div.car-info ul.locations-list span.car-info-list-text {
   margin-left: 3px;
 }
 
-div.car section.car-sec div.car-img div.car-company span.car-company-logo {
+div.car section.car-sec div.car-img div.car-supplier span.car-supplier-logo {
   width: 60px;
   height: 30px;
   display: flex;
@@ -33,7 +33,7 @@ div.car section.car-sec div.car-img div.car-company span.car-company-logo {
   border-radius: 3px;
 }
 
-div.car section.car-sec div.car-img div.car-company span.car-company-logo img {
+div.car section.car-sec div.car-img div.car-supplier span.car-supplier-logo img {
   max-width: 100%;
   max-height: 100%;
 }
@@ -62,13 +62,13 @@ div.car section.car-sec div.car-img div.car-company span.car-company-logo img {
     text-align: center;
   }
 
-  div.car section.car-sec div.car-img div.car-company {
+  div.car section.car-sec div.car-img div.car-supplier {
     display: flex;
     align-items: center;
     margin-left: 5px;
   }
 
-  div.car section.car-sec div.car-img div.car-company span.car-company-info {
+  div.car section.car-sec div.car-img div.car-supplier span.car-supplier-info {
     color: #a8a8a8;
     display: inline-block;
     font-size: 0.9em;
@@ -200,13 +200,13 @@ div.car section.car-sec div.car-img div.car-company span.car-company-logo img {
     text-align: center;
   }
 
-  div.car section.car-sec div.car-img div.car-company {
+  div.car section.car-sec div.car-img div.car-supplier {
     display: flex;
     align-items: center;
     margin-left: 5px;
   }
 
-  div.car section.car-sec div.car-img div.car-company span.car-company-info {
+  div.car section.car-sec div.car-img div.car-supplier span.car-supplier-info {
     color: #a8a8a8;
     display: inline-block;
     font-size: 0.9em;

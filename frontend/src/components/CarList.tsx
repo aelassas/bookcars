@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Tooltip,
@@ -16,8 +17,8 @@ import {
   Clear as UncheckIcon,
   Info as InfoIcon,
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import Const from '../config/const'
 import * as helper from '../common/helper'
@@ -34,7 +35,7 @@ import '../assets/css/car-list.css'
 interface CarListProps {
   from?: Date
   to?: Date
-  companies?: string[]
+  suppliers?: string[]
   pickupLocation?: string
   dropOffLocation?: string
   fuel?: string[]
@@ -46,7 +47,7 @@ interface CarListProps {
   booking?: bookcarsTypes.Booking
   className?: string
   hidePrice?: boolean
-  hideCompany?: boolean
+  hideSupplier?: boolean
   loading?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
@@ -54,7 +55,7 @@ interface CarListProps {
 const CarList = ({
   from,
   to,
-  companies,
+  suppliers,
   pickupLocation,
   dropOffLocation,
   fuel,
@@ -66,10 +67,12 @@ const CarList = ({
   booking,
   className,
   hidePrice,
-  hideCompany,
+  hideSupplier,
   loading: carListLoading,
   onLoad
 }: CarListProps) => {
+  const navigate = useNavigate()
+
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [init, setInit] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -110,7 +113,7 @@ const CarList = ({
 
   const fetchData = async (
     _page: number,
-    _companies?: string[],
+    _suppliers?: string[],
     _pickupLocation?: string,
     _fuel?: string[],
     _gearbox?: string[],
@@ -120,7 +123,7 @@ const CarList = ({
     try {
       setLoading(true)
       const payload: bookcarsTypes.GetCarsPayload = {
-        companies: _companies ?? [],
+        suppliers: _suppliers ?? [],
         pickupLocation: _pickupLocation,
         fuel: _fuel,
         gearbox: _gearbox,
@@ -165,9 +168,9 @@ const CarList = ({
   }
 
   useEffect(() => {
-    if (companies) {
-      if (companies.length > 0) {
-        fetchData(page, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+    if (suppliers) {
+      if (suppliers.length > 0) {
+        fetchData(page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -178,7 +181,7 @@ const CarList = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
+  }, [page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
 
   useEffect(() => {
     if (cars) {
@@ -193,14 +196,14 @@ const CarList = ({
 
   useEffect(() => {
     setPage(1)
-  }, [companies, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
+  }, [suppliers, pickupLocation, fuel, gearbox, mileage, deposit, from, to])
 
   useEffect(() => {
     if (reload) {
       setPage(1)
-      fetchData(1, companies, pickupLocation, fuel, gearbox, mileage, deposit)
+      fetchData(1, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload, companies, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [reload, suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
 
   const getExtraIcon = (option: string, extra: number) => {
     let available = false
@@ -256,12 +259,12 @@ const CarList = ({
               </div>
               <div className="car">
                 <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
-                {!hideCompany && (
-                  <div className="car-company">
-                    <span className="car-company-logo">
-                      <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.company.avatar)} alt={car.company.fullName} />
+                {!hideSupplier && (
+                  <div className="car-supplier">
+                    <span className="car-supplier-logo">
+                      <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                     </span>
-                    <span className="car-company-info">{car.company.fullName}</span>
+                    <span className="car-supplier-info">{car.supplier.fullName}</span>
                   </div>
                 )}
               </div>
@@ -309,10 +312,10 @@ const CarList = ({
                     </li>
                   )}
                   <li className="mileage">
-                    <Tooltip title={helper.getMileageTooltip(car.mileage, fr)} placement="left">
+                    <Tooltip title={helper.getMileageTooltip(car.mileage, language)} placement="left">
                       <div className="car-info-list-item">
                         <MileageIcon />
-                        <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage)}`}</span>
+                        <span className="car-info-list-text">{`${strings.MILEAGE}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</span>
                       </div>
                     </Tooltip>
                   </li>
@@ -328,53 +331,53 @@ const CarList = ({
 
                 <ul className="extras-list">
                   <li>
-                    <Tooltip title={booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, fr)} placement="left">
+                    <Tooltip title={booking ? '' : car.cancellation > -1 ? strings.CANCELLATION_TOOLTIP : helper.getCancellation(car.cancellation, language)} placement="left">
                       <div className="car-info-list-item">
                         {getExtraIcon('cancellation', car.cancellation)}
-                        <span className="car-info-list-text">{helper.getCancellation(car.cancellation, fr)}</span>
+                        <span className="car-info-list-text">{helper.getCancellation(car.cancellation, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, fr)} placement="left">
+                    <Tooltip title={booking ? '' : car.amendments > -1 ? strings.AMENDMENTS_TOOLTIP : helper.getAmendments(car.amendments, language)} placement="left">
                       <div className="car-info-list-item">
                         {getExtraIcon('amendments', car.amendments)}
-                        <span className="car-info-list-text">{helper.getAmendments(car.amendments, fr)}</span>
+                        <span className="car-info-list-text">{helper.getAmendments(car.amendments, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
                     <Tooltip
-                      title={booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}
+                      title={booking ? '' : car.collisionDamageWaiver > -1 ? strings.COLLISION_DAMAGE_WAVER_TOOLTIP : helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}
                       placement="left"
                     >
                       <div className="car-info-list-item">
                         {getExtraIcon('collisionDamageWaiver', car.collisionDamageWaiver)}
-                        <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, fr)}</span>
+                        <span className="car-info-list-text">{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, fr)} placement="left">
+                    <Tooltip title={booking ? '' : car.theftProtection > -1 ? strings.THEFT_PROTECTION_TOOLTIP : helper.getTheftProtection(car.theftProtection, language)} placement="left">
                       <div className="car-info-list-item">
                         {getExtraIcon('theftProtection', car.theftProtection)}
-                        <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, fr)}</span>
+                        <span className="car-info-list-text">{helper.getTheftProtection(car.theftProtection, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, fr)} placement="left">
+                    <Tooltip title={booking ? '' : car.fullInsurance > -1 ? strings.FULL_INSURANCE_TOOLTIP : helper.getFullInsurance(car.fullInsurance, language)} placement="left">
                       <div className="car-info-list-item">
                         {getExtraIcon('fullInsurance', car.fullInsurance)}
-                        <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, fr)}</span>
+                        <span className="car-info-list-text">{helper.getFullInsurance(car.fullInsurance, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title={booking ? '' : helper.getAdditionalDriver(car.additionalDriver, fr)} placement="left">
+                    <Tooltip title={booking ? '' : helper.getAdditionalDriver(car.additionalDriver, language)} placement="left">
                       <div className="car-info-list-item">
                         {getExtraIcon('additionalDriver', car.additionalDriver)}
-                        <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, fr)}</span>
+                        <span className="car-info-list-text">{helper.getAdditionalDriver(car.additionalDriver, language)}</span>
                       </div>
                     </Tooltip>
                   </li>
@@ -384,17 +387,26 @@ const CarList = ({
               {!hidePrice && (
                 <div className="price">
                   <span className="price-days">{helper.getDays(days)}</span>
-                  <span className="price-main">{`${bookcarsHelper.formatNumber(helper.price(car, from as Date, to as Date))} ${commonStrings.CURRENCY}`}</span>
-                  <span className="price-day">{`${strings.PRICE_PER_DAY} ${car.price} ${commonStrings.CURRENCY}`}</span>
+                  <span className="price-main">{bookcarsHelper.formatPrice(helper.price(car, from as Date, to as Date), commonStrings.CURRENCY, language)}</span>
+                  <span className="price-day">{`${strings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(car.price, commonStrings.CURRENCY, language)}`}</span>
                 </div>
               )}
               {!hidePrice && (
                 <div className="action">
                   <Button
-                    type="submit"
                     variant="contained"
                     className="btn-book btn-margin-bottom"
-                    href={`/checkout?c=${car._id}&p=${pickupLocation}&d=${dropOffLocation}&f=${(from as Date).getTime()}&t=${(to as Date).getTime()}`}
+                    onClick={() => {
+                      navigate('/checkout', {
+                        state: {
+                          carId: car._id,
+                          pickupLocationId: pickupLocation,
+                          dropOffLocationId: dropOffLocation,
+                          from,
+                          to
+                        }
+                      })
+                    }}
                   >
                     {strings.BOOK}
                   </Button>

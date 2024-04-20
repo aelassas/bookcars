@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings } from '../lang/users'
@@ -29,7 +29,7 @@ const Users = () => {
     const _admin = helper.admin(_user)
     const _types = _admin
       ? helper.getUserTypes().map((userType) => userType.value)
-      : [bookcarsTypes.UserType.Company, bookcarsTypes.UserType.User]
+      : [bookcarsTypes.UserType.Supplier, bookcarsTypes.UserType.User]
 
     setUser(_user)
     setAdmin(_admin)

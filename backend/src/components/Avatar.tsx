@@ -14,12 +14,12 @@ import {
   AccountCircle,
   PhotoCamera as PhotoCameraIcon,
   BrokenImageTwoTone as DeleteIcon,
-  CorporateFare as CompanyIcon,
+  CorporateFare as SupplierIcon,
   DirectionsCar as CarIcon,
   Check as VerifiedIcon,
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import * as helper from '../common/helper'
@@ -27,20 +27,20 @@ import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 
 interface AvatarProps {
-  width?: number,
-  height?: number,
-  mode?: 'create' | 'update',
-  type?: string,
-  record?: bookcarsTypes.User | bookcarsTypes.Car | null,
-  size: 'small' | 'medium' | 'large',
-  readonly?: boolean,
-  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
-  className?: string,
-  verified?: boolean,
-  hideDelete?: boolean,
-  onValidate?: (valid: boolean) => void,
-  onBeforeUpload?: () => void,
-  onChange?: (param: string) => void,
+  width?: number
+  height?: number
+  mode?: 'create' | 'update'
+  type?: string
+  record?: bookcarsTypes.User | bookcarsTypes.Car | null
+  size: 'small' | 'medium' | 'large'
+  readonly?: boolean
+  color?: 'disabled' | 'action' | 'inherit' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
+  className?: string
+  verified?: boolean
+  hideDelete?: boolean
+  onValidate?: (valid: boolean) => void
+  onBeforeUpload?: () => void
+  onChange?: (param: string) => void
 }
 
 const Avatar = ({
@@ -107,7 +107,7 @@ const Avatar = ({
 
     reader.onloadend = async () => {
       if (type === bookcarsTypes.RecordType.Admin
-        || type === bookcarsTypes.RecordType.Company
+        || type === bookcarsTypes.RecordType.Supplier
         || type === bookcarsTypes.RecordType.User) {
         if (mode === 'create') {
           const createAvatar = async () => {
@@ -257,7 +257,7 @@ const Avatar = ({
 
   const handleDelete = async () => {
     try {
-      if (type === bookcarsTypes.RecordType.Admin || type === bookcarsTypes.RecordType.Company || type === bookcarsTypes.RecordType.User) {
+      if (type === bookcarsTypes.RecordType.Admin || type === bookcarsTypes.RecordType.Supplier || type === bookcarsTypes.RecordType.User) {
         if (avatarRecord && mode === 'update') {
           const { _id } = avatarRecord
 
@@ -374,7 +374,7 @@ const Avatar = ({
     }
   }, [record, type, mode])
 
-  const companyImageStyle = { width: env.COMPANY_IMAGE_WIDTH }
+  const supplierImageStyle = { width: env.SUPPLIER_IMAGE_WIDTH }
 
   const carImageStyle = { width: env.CAR_IMAGE_WIDTH }
 
@@ -388,8 +388,8 @@ const Avatar = ({
         readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <img style={carImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
-          ) : type === bookcarsTypes.RecordType.Company ? (
-            <div className="company-avatar-readonly">
+          ) : type === bookcarsTypes.RecordType.Supplier ? (
+            <div className="supplier-avatar-readonly">
               <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
             </div>
           ) : verified && avatarRecord && avatarRecord.verified ? (
@@ -438,7 +438,7 @@ const Avatar = ({
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              className={type === bookcarsTypes.RecordType.Company ? 'company-avatar' : ''}
+              className={type === bookcarsTypes.RecordType.Supplier ? 'supplier-avatar' : ''}
               badgeContent={(
                 <Tooltip title={commonStrings.UPLOAD_IMAGE}>
                   <Box borderRadius="50%" className="avatar-action-box" onClick={handleUpload}>
@@ -451,8 +451,8 @@ const Avatar = ({
                 <div className="car-avatar">
                   <img src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && (avatarRecord as bookcarsTypes.Car).name} />
                 </div>
-              ) : type === bookcarsTypes.RecordType.Company ? (
-                <img style={companyImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
+              ) : type === bookcarsTypes.RecordType.Supplier ? (
+                <img style={supplierImageStyle} src={bookcarsHelper.joinURL(cdn(), avatar)} alt={avatarRecord && avatarRecord.fullName} />
               ) : (
                 <MaterialAvatar src={bookcarsHelper.joinURL(cdn(), avatar)} className={size ? `avatar-${size}` : 'avatar'} />
               )}
@@ -463,8 +463,8 @@ const Avatar = ({
         : readonly ? (
           type === bookcarsTypes.RecordType.Car ? (
             <CarIcon style={carImageStyle} color={color || 'inherit'} />
-          ) : type === bookcarsTypes.RecordType.Company ? (
-            <CompanyIcon style={companyImageStyle} color={color || 'inherit'} />
+          ) : type === bookcarsTypes.RecordType.Supplier ? (
+            <SupplierIcon style={supplierImageStyle} color={color || 'inherit'} />
           ) : verified && avatarRecord && avatarRecord.verified ? (
             <Badge
               overlap="circular"
@@ -510,8 +510,8 @@ const Avatar = ({
             >
               {type === bookcarsTypes.RecordType.Car ? (
                 <CarIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
-              ) : type === bookcarsTypes.RecordType.Company ? (
-                <CompanyIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
+              ) : type === bookcarsTypes.RecordType.Supplier ? (
+                <SupplierIcon className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
               ) : (
                 <AccountCircle className={size ? `avatar-${size}` : 'avatar'} color={color || 'inherit'} />
               )}

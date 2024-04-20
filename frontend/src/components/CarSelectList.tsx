@@ -7,7 +7,7 @@ import {
   Button,
   TextFieldVariants
 } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as bfStrings } from '../lang/booking-filter'
@@ -23,7 +23,7 @@ interface CarSelectListProps {
   multiple?: boolean
   variant?: TextFieldVariants
   value?: bookcarsTypes.Car
-  company: string
+  supplier: string
   pickupLocation: string
   readOnly?: boolean
   onChange?: (values: bookcarsTypes.Car[]) => void
@@ -35,7 +35,7 @@ const CarSelectList = ({
   multiple,
   variant,
   value,
-  company,
+  supplier,
   pickupLocation,
   readOnly,
   onChange
@@ -43,7 +43,7 @@ const CarSelectList = ({
   const [init, setInit] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetch, setFetch] = useState(true)
-  const [currentCompany, setCurrentCompany] = useState('-1')
+  const [currentSupplier, setCurrentSupplier] = useState('-1')
   const [currentPickupLocation, setCurrentPickupLocation] = useState('-1')
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
@@ -62,10 +62,10 @@ const CarSelectList = ({
   }, [value])
 
   useEffect(() => {
-    if (company && currentCompany !== company) {
-      setCurrentCompany(company || '-1')
+    if (supplier && currentSupplier !== supplier) {
+      setCurrentSupplier(supplier || '-1')
 
-      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
+      if (currentSupplier !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -76,13 +76,13 @@ const CarSelectList = ({
         }
       }
     }
-  }, [currentCompany, company, currentPickupLocation, onChange])
+  }, [currentSupplier, supplier, currentPickupLocation, onChange])
 
   useEffect(() => {
     if (pickupLocation && currentPickupLocation !== pickupLocation) {
       setCurrentPickupLocation(pickupLocation || '-1')
 
-      if (currentCompany !== '-1' && currentPickupLocation !== '-1') {
+      if (currentSupplier !== '-1' && currentPickupLocation !== '-1') {
         setReload(true)
         setSelectedOptions([])
         setPage(1)
@@ -93,7 +93,7 @@ const CarSelectList = ({
         }
       }
     }
-  }, [currentPickupLocation, currentCompany, pickupLocation, onChange])
+  }, [currentPickupLocation, currentSupplier, pickupLocation, onChange])
 
   useEffect(() => {
     if (currentPickupLocation !== pickupLocation) {
@@ -107,15 +107,15 @@ const CarSelectList = ({
     }
   }
 
-  const fetchData = async (_page: number, _keyword: string, _company: string, _pickupLocation: string) => {
+  const fetchData = async (_page: number, _keyword: string, _supplier: string, _pickupLocation: string) => {
     try {
-      const payload: bookcarsTypes.GetBookingCarsPayload = { company: _company, pickupLocation: _pickupLocation }
+      const payload: bookcarsTypes.GetBookingCarsPayload = { supplier: _supplier, pickupLocation: _pickupLocation }
 
       if (closeDialog) {
         setCloseDialog(false)
       }
 
-      if (_company === '-1' || _pickupLocation === '-1') {
+      if (_supplier === '-1' || _pickupLocation === '-1') {
         setOpenDialog(true)
         return
       }
@@ -161,7 +161,7 @@ const CarSelectList = ({
             if (fetch && !loading && listboxNode.scrollTop + listboxNode.clientHeight >= listboxNode.scrollHeight - env.PAGE_OFFSET) {
               const p = page + 1
               setPage(p)
-              fetchData(p, keyword, currentCompany, currentPickupLocation)
+              fetchData(p, keyword, currentSupplier, currentPickupLocation)
             }
           },
         }}
@@ -170,7 +170,7 @@ const CarSelectList = ({
             const p = 1
             setCars([])
             setPage(p)
-            fetchData(p, keyword, currentCompany, currentPickupLocation)
+            fetchData(p, keyword, currentSupplier, currentPickupLocation)
           }
         }}
         onInputChange={(event: React.SyntheticEvent<Element, Event>) => {
@@ -180,7 +180,7 @@ const CarSelectList = ({
             setCars([])
             setPage(1)
             setKeyword(_value)
-            fetchData(1, _value, currentCompany, currentPickupLocation)
+            fetchData(1, _value, currentSupplier, currentPickupLocation)
           }
         }}
         onClear={() => {
@@ -188,17 +188,17 @@ const CarSelectList = ({
           setPage(1)
           setKeyword('')
           setFetch(true)
-          fetchData(1, '', currentCompany, currentPickupLocation)
+          fetchData(1, '', currentSupplier, currentPickupLocation)
         }}
       />
 
       <Dialog disableEscapeKeyDown maxWidth="xs" open={openDialog}>
         <DialogTitle className="dialog-header">{commonStrings.INFO}</DialogTitle>
         <DialogContent className="dialog-content">
-          {currentCompany === '-1' && currentPickupLocation === '-1' ? (
-            `${strings.REQUIRED_FIELDS}${blStrings.COMPANY} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
-          ) : currentCompany === '-1' ? (
-            `${strings.REQUIRED_FIELD}${blStrings.COMPANY}`
+          {currentSupplier === '-1' && currentPickupLocation === '-1' ? (
+            `${strings.REQUIRED_FIELDS}${blStrings.SUPPLIER} ${commonStrings.AND} ${bfStrings.PICKUP_LOCATION}`
+          ) : currentSupplier === '-1' ? (
+            `${strings.REQUIRED_FIELD}${blStrings.SUPPLIER}`
           ) : currentPickupLocation === '-1' ? (
             `${strings.REQUIRED_FIELD}${bfStrings.PICKUP_LOCATION}`
           ) : (

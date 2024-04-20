@@ -1,17 +1,25 @@
 {
-    "presets": [
-        [
-            "@babel/preset-env",
-            {
-                "modules": false,
-                "targets": {
-                    "node": "current"
-                }
-            }
-        ],
-        "@babel/preset-typescript"
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "node": "current"
+        }
+      }
     ],
-    "plugins": [
-        "add-import-extension"
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    "add-import-extension",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          ":bookcars-types": "../packages/bookcars-types"
+        }
+      }
     ]
+  ]
 }

@@ -1,12 +1,10 @@
 import LocalizedStrings from 'react-localization'
 import * as langHelper from '../common/langHelper'
-import { strings as commonStrings } from '../lang/common'
 
 const strings = new LocalizedStrings({
   fr: {
     NEW_CAR: 'Nouvelle voiture',
     DELETE_CAR: 'Êtes-vous sûr de vouloir supprimer cette voiture ?',
-    CAR_CURRENCY: ` ${commonStrings.CURRENCY}/jour`,
     FUEL_POLICY: 'Politique carburant',
     DIESEL: 'Diesel',
     GASOLINE: 'Essence',
@@ -66,7 +64,6 @@ const strings = new LocalizedStrings({
   en: {
     NEW_CAR: 'New car',
     DELETE_CAR: 'Are you sure you want to delete this car?',
-    CAR_CURRENCY: ` ${commonStrings.CURRENCY}/day`,
     FUEL_POLICY: 'Fuel policy',
     DIESEL: 'Diesel',
     GASOLINE: 'Gasoline',

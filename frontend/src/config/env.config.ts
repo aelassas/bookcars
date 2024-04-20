@@ -1,4 +1,4 @@
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Const from './const'
 
 //
@@ -32,8 +32,8 @@ const env = {
   CDN_CARS: process.env.REACT_APP_BC_CDN_CARS,
   PAGE_OFFSET: 200,
   INFINITE_SCROLL_OFFSET: 40,
-  COMPANY_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_COMPANY_IMAGE_WIDTH), 10) || 60,
-  COMPANY_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_COMPANY_IMAGE_HEIGHT), 10) || 30,
+  SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,
+  SUPPLIER_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_SUPPLIER_IMAGE_HEIGHT), 10) || 30,
   CAR_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_CAR_IMAGE_WIDTH), 10) || 300,
   CAR_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_CAR_IMAGE_HEIGHT), 10) || 200,
   CAR_OPTION_IMAGE_HEIGHT: 85,

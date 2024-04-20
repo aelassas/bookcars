@@ -3,10 +3,10 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 import '../assets/css/accordion.css'
 
 interface AccordionProps {
-  title?: string,
-  className?: string,
-  collapse?: boolean,
-  offsetHeight?: number,
+  title?: string
+  className?: string
+  collapse?: boolean
+  offsetHeight?: number
   children: ReactNode
 }
 

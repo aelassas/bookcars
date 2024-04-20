@@ -4,7 +4,7 @@ import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
 import { v1 as uuid } from 'uuid'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
 import app from '../src/app'
@@ -210,7 +210,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         const carImagePath = path.resolve(__dirname, `./img/${carImageName}`)
         let car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,
@@ -244,7 +244,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         })
         await additionalDriver.save()
         const booking = new Booking({
-            company: supplierId,
+            supplier: supplierId,
             car: car._id,
             driver: testHelper.getUserId(),
             pickupLocation: locationId,
@@ -301,7 +301,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,
@@ -346,7 +346,7 @@ describe('DELETE /api/delete-supplier/:id', () => {
         locationId = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
         car = new Car({
             name: 'BMW X1',
-            company: supplierId,
+            supplier: supplierId,
             minimumAge: 21,
             locations: [locationId],
             price: 780,

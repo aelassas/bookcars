@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   DataGrid,
-  frFR,
-  enUS,
   GridColDef,
   GridRenderCellParams,
-  GridValueGetterParams
 } from '@mui/x-data-grid'
 import {
   Tooltip,
@@ -25,8 +22,8 @@ import {
   Delete as DeleteIcon,
   AccountCircle, Check as VerifiedIcon
 } from '@mui/icons-material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/user-list'
@@ -145,7 +142,7 @@ const UserList = ({
           let userAvatar
 
           if (__user.avatar) {
-            if (__user.type === bookcarsTypes.RecordType.Company) {
+            if (__user.type === bookcarsTypes.RecordType.Supplier) {
               userAvatar = <img src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} alt={row.fullName} />
             } else {
               const avatar = <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, row.avatar)} className="avatar-small" />
@@ -206,26 +203,26 @@ const UserList = ({
             </Link>
           )
         },
-        valueGetter: (params: any) => params.value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'email',
         headerName: commonStrings.EMAIL,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'phone',
         headerName: commonStrings.PHONE,
         flex: 1,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'type',
         headerName: commonStrings.TYPE,
         flex: 1,
         renderCell: ({ value }: GridRenderCellParams<bookcarsTypes.User, bookcarsTypes.UserType>) => <span className={`bs us-${value?.toLowerCase()}`}>{helper.getUserType(value)}</span>,
-        valueGetter: ({ value }: GridValueGetterParams<bookcarsTypes.User, string>) => value,
+        valueGetter: (value: string) => value,
       },
       {
         field: 'action',
@@ -240,7 +237,7 @@ const UserList = ({
           }
 
           const __user = row
-          return _user.type === bookcarsTypes.RecordType.Admin || __user.company === _user._id ? (
+          return _user.type === bookcarsTypes.RecordType.Admin || __user.supplier === _user._id ? (
             <div>
               <Tooltip title={commonStrings.UPDATE}>
                 <IconButton href={`update-user?u=${row._id}`}>
@@ -354,7 +351,6 @@ const UserList = ({
           paginationMode="server"
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          localeText={(user.language === 'fr' ? frFR : enUS).components.MuiDataGrid.defaultProps.localeText}
           onRowSelectionModelChange={(_selectedIds) => {
             setSelectedIds(Array.from(new Set(_selectedIds)).map((id) => id.toString()))
             setReloadColumns(true)

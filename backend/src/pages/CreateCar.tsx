@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { Info as InfoIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
@@ -35,14 +35,14 @@ import '../assets/css/create-car.css'
 
 const CreateCar = () => {
   const navigate = useNavigate()
-  const [isCompany, setIsCompany] = useState(false)
+  const [isSupplier, setIsSupplier] = useState(false)
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSizeError, setImageSizeError] = useState(false)
   const [image, setImage] = useState('')
   const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
+  const [supplier, setSupplier] = useState('')
   const [locations, setLocations] = useState<bookcarsTypes.Option[]>([])
   const [available, setAvailable] = useState(false)
   const [type, setType] = useState('')
@@ -94,8 +94,8 @@ const CreateCar = () => {
     setName(e.target.value)
   }
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0]._id : '')
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0]._id : '')
   }
 
   const validateMinimumAge = (age: string, updateState = true) => {
@@ -110,9 +110,9 @@ const CreateCar = () => {
       }
       return _minimumAgeValid
     }
-      setMinimumAgeValid(true)
-      setFormError(false)
-      return true
+    setMinimumAgeValid(true)
+    setFormError(false)
+    return true
   }
 
   const handleMinimumAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,7 +214,7 @@ const CreateCar = () => {
 
       const data = {
         name,
-        company,
+        supplier,
         minimumAge: Number.parseInt(minimumAge, 10),
         locations: locations.map((l) => l._id),
         price: Number(price),
@@ -252,9 +252,9 @@ const CreateCar = () => {
     if (user && user.verified) {
       setVisible(true)
 
-      if (user.type === bookcarsTypes.RecordType.Company) {
-        setCompany(user._id as string)
-        setIsCompany(true)
+      if (user.type === bookcarsTypes.RecordType.Supplier) {
+        setSupplier(user._id as string)
+        setIsSupplier(true)
       }
     }
   }
@@ -292,13 +292,13 @@ const CreateCar = () => {
               <Input type="text" required value={name} autoComplete="off" onChange={handleNameChange} />
             </FormControl>
 
-            {!isCompany && (
+            {!isSupplier && (
               <FormControl fullWidth margin="dense">
                 <SupplierSelectList
-                  label={strings.COMPANY}
+                  label={strings.SUPPLIER}
                   required
                   variant="standard"
-                  onChange={handleCompanyChange}
+                  onChange={handleSupplierChange}
                 />
               </FormControl>
             )}

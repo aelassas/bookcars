@@ -16,11 +16,12 @@ import {
   Info as InfoIcon,
   Person as DriverIcon
 } from '@mui/icons-material'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as blStrings } from '../lang/booking-list'
@@ -54,8 +55,8 @@ const UpdateBooking = () => {
   const [error, setError] = useState(false)
   const [booking, setBooking] = useState<bookcarsTypes.Booking>()
   const [visible, setVisible] = useState(false)
-  const [isCompany, setIsCompany] = useState(false)
-  const [company, setCompany] = useState<bookcarsTypes.Option>()
+  const [isSupplier, setIsSupplier] = useState(false)
+  const [supplier, setSupplier] = useState<bookcarsTypes.Option>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
   const [price, setPrice] = useState<number>()
   const [driver, setDriver] = useState<bookcarsTypes.Option>()
@@ -63,6 +64,8 @@ const UpdateBooking = () => {
   const [dropOffLocation, setDropOffLocation] = useState<bookcarsTypes.Option>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
+  const [minDate, setMinDate] = useState<Date>()
+  const [maxDate, setMaxDate] = useState<Date>()
   const [status, setStatus] = useState<bookcarsTypes.BookingStatus>()
   const [cancellation, setCancellation] = useState(false)
   const [amendments, setAmendments] = useState(false)
@@ -70,7 +73,6 @@ const UpdateBooking = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [minDate, setMinDate] = useState<Date>()
   const [additionalDriverfullName, setAdditionalDriverFullName] = useState('')
   const [addtionalDriverEmail, setAdditionalDriverEmail] = useState('')
   const [additionalDriverPhone, setAdditionalDriverPhone] = useState('')
@@ -79,9 +81,12 @@ const UpdateBooking = () => {
   const [additionalDriverPhoneValid, setAdditionalDriverPhoneValid] = useState(true)
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
-  const handleCompanyChange = (values: bookcarsTypes.Option[]) => {
-    setCompany(values.length > 0 ? values[0] : undefined)
+  const handleSupplierChange = (values: bookcarsTypes.Option[]) => {
+    setSupplier(values.length > 0 ? values[0] : undefined)
   }
 
   const handleDriverChange = (values: bookcarsTypes.Option[]) => {
@@ -351,14 +356,18 @@ const UpdateBooking = () => {
         }
       }
 
-      if (!booking || !company || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
+      if (!booking || !supplier || !car || !driver || !pickupLocation || !dropOffLocation || !from || !to || !status) {
         helper.error()
+        return
+      }
+
+      if (fromError || toError) {
         return
       }
 
       const _booking: bookcarsTypes.Booking = {
         _id: booking._id,
-        company: company._id,
+        supplier: supplier._id,
         car: car._id,
         driver: driver._id,
         pickupLocation: pickupLocation._id,
@@ -418,6 +427,7 @@ const UpdateBooking = () => {
   const onLoad = async (_user?: bookcarsTypes.User) => {
     if (_user) {
       setUser(_user)
+      setLanguage(UserService.getLanguage())
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
@@ -428,7 +438,7 @@ const UpdateBooking = () => {
             const _booking = await BookingService.getBooking(id)
 
             if (_booking) {
-              if (!helper.admin(_user) && (_booking.company as bookcarsTypes.User)._id !== _user._id) {
+              if (!helper.admin(_user) && (_booking.supplier as bookcarsTypes.User)._id !== _user._id) {
                 setLoading(false)
                 setNoMatch(true)
                 return
@@ -438,9 +448,9 @@ const UpdateBooking = () => {
               setPrice(_booking.price)
               setLoading(false)
               setVisible(true)
-              setIsCompany(_user.type === bookcarsTypes.RecordType.Company)
-              const cmp = _booking.company as bookcarsTypes.User
-              setCompany({
+              setIsSupplier(_user.type === bookcarsTypes.RecordType.Supplier)
+              const cmp = _booking.supplier as bookcarsTypes.User
+              setSupplier({
                 _id: cmp._id as string,
                 name: cmp.fullName,
                 image: cmp.avatar,
@@ -463,8 +473,13 @@ const UpdateBooking = () => {
                 name: dol.name || '',
               })
               setFrom(new Date(_booking.from))
-              setMinDate(new Date(_booking.from))
+              const _minDate = new Date(_booking.from)
+              _minDate.setDate(_minDate.getDate() + 1)
+              setMinDate(_minDate)
               setTo(new Date(_booking.to))
+              const _maxDate = new Date(_booking.to)
+              _maxDate.setDate(_maxDate.getDate() - 1)
+              setMaxDate(_maxDate)
               setStatus(_booking.status)
               setCancellation(_booking.cancellation || false)
               setAmendments(_booking.amendments || false)
@@ -507,14 +522,14 @@ const UpdateBooking = () => {
         <div className="booking">
           <div className="col-1">
             <form onSubmit={handleSubmit}>
-              {!isCompany && (
+              {!isSupplier && (
                 <FormControl fullWidth margin="dense">
                   <SupplierSelectList
-                    label={blStrings.COMPANY}
+                    label={blStrings.SUPPLIER}
                     required
                     variant="standard"
-                    onChange={handleCompanyChange}
-                    value={company}
+                    onChange={handleSupplierChange}
+                    value={supplier}
                   />
                 </FormControl>
               )}
@@ -549,7 +564,7 @@ const UpdateBooking = () => {
 
               <CarSelectList
                 label={blStrings.CAR}
-                company={(company && company._id) || ''}
+                supplier={(supplier && supplier._id) || ''}
                 pickupLocation={(pickupLocation && pickupLocation._id) || ''}
                 onChange={handleCarSelectListChange}
                 required
@@ -560,6 +575,7 @@ const UpdateBooking = () => {
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
+                  maxDate={maxDate}
                   required
                   onChange={(date) => {
                     if (date) {
@@ -576,18 +592,22 @@ const UpdateBooking = () => {
                           const _minDate = new Date(date)
                           _minDate.setDate(_minDate.getDate() + 1)
                           setMinDate(_minDate)
-
-                          if (to && to.getTime() <= date.getTime()) {
-                            setTo(undefined)
-                          }
+                          setFromError(false)
                         },
                         (err) => {
                           toastErr(err)
                         },
                       )
                     } else {
-                      setMinDate(undefined)
                       setFrom(undefined)
+                      setMinDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setFromError(true)
+                    } else {
+                      setFromError(false)
                     }
                   }}
                   language={UserService.getLanguage()}
@@ -610,11 +630,26 @@ const UpdateBooking = () => {
                           setBooking(booking)
                           setPrice(_price)
                           setTo(date)
+
+                          const _maxDate = new Date(date)
+                          _maxDate.setDate(_maxDate.getDate() - 1)
+                          setMaxDate(_maxDate)
+                          setToError(false)
                         },
                         (err) => {
                           toastErr(err)
                         },
                       )
+                    } else {
+                      setTo(undefined)
+                      setMaxDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setToError(true)
+                    } else {
+                      setToError(false)
                     }
                   }}
                   language={UserService.getLanguage()}
@@ -782,8 +817,8 @@ const UpdateBooking = () => {
             <div className="col-2-header">
               <div className="price">
                 <span className="price-days">{helper.getDays(days)}</span>
-                <span className="price-main">{`${bookcarsHelper.formatNumber(price ?? 0)} ${commonStrings.CURRENCY}`}</span>
-                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${Math.floor((price ?? 0) / days)} ${commonStrings.CURRENCY}`}</span>
+                <span className="price-main">{bookcarsHelper.formatPrice(price as number, commonStrings.CURRENCY, language)}</span>
+                <span className="price-day">{`${csStrings.PRICE_PER_DAY} ${bookcarsHelper.formatPrice(Math.floor((price as number) / days), commonStrings.CURRENCY, language)}`}</span>
               </div>
             </div>
             <CarList
@@ -791,6 +826,7 @@ const UpdateBooking = () => {
               user={user}
               booking={booking}
               cars={((car && [booking.car]) as bookcarsTypes.Car[]) || []}
+              language={language}
               hidePrice
             />
           </div>

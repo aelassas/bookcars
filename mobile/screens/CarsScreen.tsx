@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 import Master from '../components/Master'
 import i18n from '../lang/i18n'
@@ -19,7 +19,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [reload, setReload] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [companies, setCompanies] = useState<string[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>([])
   const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
@@ -44,13 +44,13 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setReload(false)
   }
 
-  const onLoadCompanies = (_companies: string[]) => {
-    setCompanies(_companies)
+  const onLoadSuppliers = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
     setLoaded(true)
   }
 
-  const onChangeCompanies = (_companies: string[]) => {
-    setCompanies(_companies)
+  const onChangeSuppliers = (_suppliers: string[]) => {
+    setSuppliers(_suppliers)
   }
 
   const onChangeFuel = (_fuel: bookcarsTypes.CarType[]) => {
@@ -74,7 +74,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
       {visible && (
         <CarList
           navigation={navigation}
-          companies={companies}
+          suppliers={suppliers}
           fuel={fuel}
           gearbox={gearbox}
           mileage={mileage}
@@ -85,7 +85,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
           to={new Date(route.params.to)}
           header={(
             <View>
-              <SupplierFilter style={styles.filter} visible onLoad={onLoadCompanies} onChange={onChangeCompanies} />
+              <SupplierFilter style={styles.filter} visible onLoad={onLoadSuppliers} onChange={onChangeSuppliers} />
               <FuelFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
               <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
               <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />

@@ -8,7 +8,7 @@ import {
   Paper
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'

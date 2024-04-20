@@ -37,6 +37,9 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const _minDate = new Date()
   _minDate.setDate(_minDate.getDate() + 2)
 
+  const _maxDate = new Date(_toDate)
+  _maxDate.setDate(_maxDate.getDate() - 1)
+
   const [init, setInit] = useState(false)
   const [visible, setVisible] = useState(false)
   const [pickupLocation, setPickupLocation] = useState('')
@@ -49,6 +52,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [toTime, setToTime] = useState<Date | undefined>(_toTime)
   const [toDate, setToDate] = useState<Date | undefined>(_toDate)
   const [minDate, setMinDate] = useState(_minDate)
+  const [maxDate, setMaxDate] = useState(_maxDate)
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
   const [blur, setBlur] = useState(false)
   const [reload, setReload] = useState(false)
@@ -209,6 +213,7 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               label={i18n.t('FROM_DATE')}
               value={fromDate}
               minDate={_fromDate}
+              maxDate={maxDate}
               hideClearButton
               onChange={(date) => {
                 if (date) {
@@ -250,7 +255,14 @@ const HomeScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
               minDate={minDate}
               hideClearButton
               onChange={(date) => {
-                setToDate(date)
+                if (date) {
+                  setToDate(date)
+                  const __maxDate = new Date(date)
+                  __maxDate.setDate(__maxDate.getDate() - 1)
+                  setMaxDate(__maxDate)
+                } else {
+                  setMaxDate(_maxDate)
+                }
               }}
               onPress={blurLocations}
             />

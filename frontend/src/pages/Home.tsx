@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { FormControl, Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import { DateTimeValidationError } from '@mui/x-date-pickers'
+import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
 import * as UserService from '../services/UserService'
@@ -21,9 +22,12 @@ const Home = () => {
   const [pickupLocation, setPickupLocation] = useState('')
   const [dropOffLocation, setDropOffLocation] = useState('')
   const [minDate, setMinDate] = useState(_minDate)
+  const [maxDate, setMaxDate] = useState<Date>()
   const [from, setFrom] = useState<Date>()
   const [to, setTo] = useState<Date>()
   const [sameLocation, setSameLocation] = useState(true)
+  const [fromError, setFromError] = useState(false)
+  const [toError, setToError] = useState(false)
 
   useEffect(() => {
     const _from = new Date()
@@ -35,6 +39,10 @@ const Home = () => {
 
     const _to = new Date(_from)
     _to.setDate(_to.getDate() + 3)
+
+    const _maxDate = new Date(_to)
+    _maxDate.setDate(_maxDate.getDate() - 1)
+    setMaxDate(_maxDate)
 
     const __minDate = new Date(_from)
     __minDate.setDate(__minDate.getDate() + 1)
@@ -78,11 +86,18 @@ const Home = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!pickupLocation || !dropOffLocation || !from || !to) {
+    if (!pickupLocation || !dropOffLocation || !from || !to || fromError || toError) {
       return
     }
 
-    navigate(`/cars?p=${pickupLocation}&d=${dropOffLocation}&f=${from.getTime()}&t=${to.getTime()}`)
+    navigate('/search', {
+      state: {
+        pickupLocationId: pickupLocation,
+        dropOffLocationId: dropOffLocation,
+        from,
+        to
+      }
+    })
   }
 
   const onLoad = () => { }
@@ -104,23 +119,28 @@ const Home = () => {
                 <DateTimePicker
                   label={commonStrings.FROM}
                   value={from}
-                  minDate={new Date()}
+                  minDate={_minDate}
+                  maxDate={maxDate}
                   variant="outlined"
                   required
                   onChange={(date) => {
                     if (date) {
-                      if (to && to.getTime() <= date.getTime()) {
-                        setTo(undefined)
-                      }
-
                       const __minDate = new Date(date)
                       __minDate.setDate(date.getDate() + 1)
+                      setFrom(date)
                       setMinDate(__minDate)
+                      setFromError(false)
                     } else {
+                      setFrom(undefined)
                       setMinDate(_minDate)
                     }
-
-                    setFrom(date || undefined)
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setFromError(true)
+                    } else {
+                      setFromError(false)
+                    }
                   }}
                   language={UserService.getLanguage()}
                 />
@@ -133,7 +153,23 @@ const Home = () => {
                   variant="outlined"
                   required
                   onChange={(date) => {
-                    setTo(date || undefined)
+                    if (date) {
+                      const _maxDate = new Date(date)
+                      _maxDate.setDate(_maxDate.getDate() - 1)
+                      setTo(date)
+                      setMaxDate(_maxDate)
+                      setToError(false)
+                    } else {
+                      setTo(undefined)
+                      setMaxDate(undefined)
+                    }
+                  }}
+                  onError={(err: DateTimeValidationError) => {
+                    if (err) {
+                      setToError(true)
+                    } else {
+                      setToError(false)
+                    }
                   }}
                   language={UserService.getLanguage()}
                 />

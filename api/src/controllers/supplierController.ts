@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Request, Response } from 'express'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
 import User from '../models/User'
@@ -12,6 +12,7 @@ import AdditionalDriver from '../models/AdditionalDriver'
 import Booking from '../models/Booking'
 import Car from '../models/Car'
 import * as helper from '../common/helper'
+import * as logger from '../common/logger'
 
 /**
  * Validate Supplier by fullname.
@@ -30,12 +31,12 @@ export const validate = async (req: Request, res: Response) => {
     const keyword = escapeStringRegexp(fullName)
     const options = 'i'
     const user = await User.findOne({
-      type: bookcarsTypes.UserType.Company,
+      type: bookcarsTypes.UserType.Supplier,
       fullName: { $regex: new RegExp(`^${keyword}$`), $options: options },
     })
     return user ? res.sendStatus(204) : res.sendStatus(200)
   } catch (err) {
-    console.error(`[supplier.validate] ${i18n.t('DB_ERROR')} ${fullName}`, err)
+    logger.error(`[supplier.validate] ${i18n.t('DB_ERROR')} ${fullName}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -83,10 +84,10 @@ export const update = async (req: Request, res: Response) => {
         payLater: supplier.payLater,
       })
     }
-    console.error('[supplier.update] Supplier not found:', _id)
+    logger.error('[supplier.update] Supplier not found:', _id)
     return res.sendStatus(204)
   } catch (err) {
-    console.error(`[supplier.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
+    logger.error(`[supplier.update] ${i18n.t('DB_ERROR')} ${_id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -116,11 +117,11 @@ export const deleteSupplier = async (req: Request, res: Response) => {
 
         await NotificationCounter.deleteMany({ user: id })
         await Notification.deleteMany({ user: id })
-        const additionalDrivers = (await Booking.find({ company: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
+        const additionalDrivers = (await Booking.find({ supplier: id, _additionalDriver: { $ne: null } }, { _id: 0, _additionalDriver: 1 })).map((b) => b._additionalDriver)
         await AdditionalDriver.deleteMany({ _id: { $in: additionalDrivers } })
-        await Booking.deleteMany({ company: id })
-        const cars = await Car.find({ company: id })
-        await Car.deleteMany({ company: id })
+        await Booking.deleteMany({ supplier: id })
+        const cars = await Car.find({ supplier: id })
+        await Car.deleteMany({ supplier: id })
         for (const car of cars) {
           if (car.image) {
             const image = path.join(env.CDN_CARS, car.image)
@@ -135,7 +136,7 @@ export const deleteSupplier = async (req: Request, res: Response) => {
     }
     return res.sendStatus(200)
   } catch (err) {
-    console.error(`[supplier.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[supplier.delete] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -156,7 +157,7 @@ export const getSupplier = async (req: Request, res: Response) => {
     const user = await User.findById(id).lean()
 
     if (!user) {
-      console.error('[supplier.getSupplier] Supplier not found:', id)
+      logger.error('[supplier.getSupplier] Supplier not found:', id)
       return res.sendStatus(204)
     }
     const {
@@ -181,7 +182,7 @@ export const getSupplier = async (req: Request, res: Response) => {
       payLater,
     })
   } catch (err) {
-    console.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
+    logger.error(`[supplier.getSupplier] ${i18n.t('DB_ERROR')} ${id}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -206,7 +207,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
       [
         {
           $match: {
-            type: bookcarsTypes.UserType.Company,
+            type: bookcarsTypes.UserType.Supplier,
             fullName: { $regex: keyword, $options: options },
           },
         },
@@ -231,7 +232,7 @@ export const getSuppliers = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
+    logger.error(`[supplier.getSuppliers] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -249,7 +250,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
   try {
     let data = await User.aggregate(
       [
-        { $match: { type: bookcarsTypes.UserType.Company } },
+        { $match: { type: bookcarsTypes.UserType.Supplier } },
         { $sort: { fullName: 1 } },
       ],
       { collation: { locale: env.DEFAULT_LANGUAGE, strength: 2 } },
@@ -262,7 +263,7 @@ export const getAllSuppliers = async (req: Request, res: Response) => {
 
     return res.json(data)
   } catch (err) {
-    console.error(`[supplier.getAllSuppliers] ${i18n.t('DB_ERROR')}`, err)
+    logger.error(`[supplier.getAllSuppliers] ${i18n.t('DB_ERROR')}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

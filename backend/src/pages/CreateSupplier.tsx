@@ -12,10 +12,10 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
-import * as bookcarsTypes from 'bookcars-types'
+import * as bookcarsTypes from ':bookcars-types'
 import Master from '../components/Master'
 import { strings as commonStrings } from '../lang/common'
-import { strings } from '../lang/create-company'
+import { strings } from '../lang/create-supplier'
 import * as UserService from '../services/UserService'
 import * as SupplierService from '../services/SupplierService'
 import Error from '../components/Error'
@@ -23,9 +23,9 @@ import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import * as helper from '../common/helper'
 
-import '../assets/css/create-company.css'
+import '../assets/css/create-supplier.css'
 
-const CreateCompany = () => {
+const CreateSupplier = () => {
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -217,7 +217,7 @@ const CreateCompany = () => {
         location,
         bio,
         language: UserService.getLanguage(),
-        type: bookcarsTypes.RecordType.Company,
+        type: bookcarsTypes.RecordType.Supplier,
         avatar,
         payLater,
       }
@@ -236,16 +236,16 @@ const CreateCompany = () => {
 
   return (
     <Master onLoad={onLoad} strict admin>
-      <div className="create-company">
-        <Paper className="company-form company-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
-          <h1 className="company-form-title">
+      <div className="create-supplier">
+        <Paper className="supplier-form" elevation={10} style={visible ? {} : { display: 'none' }}>
+          <h1 className="supplier-form-title">
             {' '}
-            {strings.CREATE_COMPANY_HEADING}
+            {strings.CREATE_SUPPLIER_HEADING}
             {' '}
           </h1>
           <form onSubmit={handleSubmit}>
             <Avatar
-              type={bookcarsTypes.RecordType.Company}
+              type={bookcarsTypes.RecordType.Supplier}
               mode="create"
               record={null}
               size="large"
@@ -272,7 +272,7 @@ const CreateCompany = () => {
                 onChange={handleFullNameChange}
                 autoComplete="off"
               />
-              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_COMPANY_NAME) || ''}</FormHelperText>
+              <FormHelperText error={fullNameError}>{(fullNameError && strings.INVALID_SUPPLIER_NAME) || ''}</FormHelperText>
             </FormControl>
 
             <FormControl fullWidth margin="dense">
@@ -349,4 +349,4 @@ const CreateCompany = () => {
   )
 }
 
-export default CreateCompany
+export default CreateSupplier

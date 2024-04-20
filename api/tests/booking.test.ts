@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import request from 'supertest'
-import * as bookcarsTypes from 'bookcars-types'
 import { v1 as uuid } from 'uuid'
 import mongoose from 'mongoose'
+import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
 import * as testHelper from './testHelper'
@@ -51,7 +51,7 @@ beforeAll(async () => {
         // create car
         const payload: bookcarsTypes.CreateCarPayload = {
             name: 'BMW X1',
-            company: SUPPLIER_ID,
+            supplier: SUPPLIER_ID,
             minimumAge: 21,
             locations: [LOCATION_ID],
             price: 780,
@@ -115,7 +115,7 @@ describe('POST /api/create-booking', () => {
 
         const payload: bookcarsTypes.UpsertBookingPayload = {
             booking: {
-                company: SUPPLIER_ID,
+                supplier: SUPPLIER_ID,
                 car: CAR1_ID,
                 driver: DRIVER1_ID,
                 pickupLocation: LOCATION_ID,
@@ -167,7 +167,7 @@ describe('POST /api/checkout', () => {
 
         const payload: bookcarsTypes.CheckoutPayload = {
             booking: {
-                company: SUPPLIER_ID,
+                supplier: SUPPLIER_ID,
                 car: CAR1_ID,
                 driver: DRIVER1_ID,
                 pickupLocation: LOCATION_ID,
@@ -266,13 +266,13 @@ describe('POST /api/checkout', () => {
         expect(res.statusCode).toBe(204)
 
         payload.booking!.dropOffLocation = LOCATION_ID
-        payload.booking!.company = testHelper.GetRandromObjectIdAsString()
+        payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
             .send(payload)
         expect(res.statusCode).toBe(204)
 
-        payload.booking!.company = SUPPLIER_ID
+        payload.booking!.supplier = SUPPLIER_ID
         payload.booking!.driver = testHelper.GetRandromObjectIdAsString()
         res = await request(app)
             .post('/api/checkout')
@@ -300,7 +300,7 @@ describe('POST /api/update-booking', () => {
         const payload: bookcarsTypes.UpsertBookingPayload = {
             booking: {
                 _id: BOOKING_ID,
-                company: SUPPLIER_ID,
+                supplier: SUPPLIER_ID,
                 car: CAR2_ID,
                 driver: DRIVER1_ID,
                 pickupLocation: LOCATION_ID,
@@ -483,7 +483,7 @@ describe('POST /api/bookings/:page/:size/:language', () => {
         const token = await testHelper.signinAsAdmin()
 
         const payload: bookcarsTypes.GetBookingsPayload = {
-            companies: [SUPPLIER_ID],
+            suppliers: [SUPPLIER_ID],
             statuses: [bookcarsTypes.BookingStatus.Reserved],
             filter: {
                 pickupLocation: LOCATION_ID,

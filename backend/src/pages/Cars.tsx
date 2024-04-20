@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
-import * as bookcarsTypes from 'bookcars-types'
-import * as bookcarsHelper from 'bookcars-helper'
+import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 import * as helper from '../common/helper'
+import env from '../config/env.config'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
 import Master from '../components/Master'
@@ -22,8 +23,8 @@ import '../assets/css/cars.css'
 const Cars = () => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [admin, setAdmin] = useState(false)
-  const [allCompanies, setAllCompanies] = useState<bookcarsTypes.User[]>([])
-  const [companies, setCompanies] = useState<string[]>()
+  const [allSuppliers, setAllSuppliers] = useState<bookcarsTypes.User[]>([])
+  const [suppliers, setSuppliers] = useState<string[]>()
   const [keyword, setKeyword] = useState('')
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -32,13 +33,14 @@ const Cars = () => {
   const [mileage, setMileage] = useState<string[]>([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [availability, setAvailability] = useState<string[]>([bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable])
   const [deposit, setDeposit] = useState(-1)
+  const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
 
   const handleSearch = (newKeyword: string) => {
     setKeyword(newKeyword)
   }
 
-  const handleSupplierFilterChange = (newCompanies: string[]) => {
-    setCompanies(newCompanies)
+  const handleSupplierFilterChange = (newSuppliers: string[]) => {
+    setSuppliers(newSuppliers)
   }
 
   const handleCarListLoad: bookcarsTypes.DataEvent<bookcarsTypes.Car> = (data) => {
@@ -73,11 +75,12 @@ const Cars = () => {
 
   const onLoad = async (_user?: bookcarsTypes.User) => {
     setUser(_user)
+    setLanguage(_user?.language as string)
     setAdmin(helper.admin(_user))
-    const _allCompanies = await SupplierService.getAllSuppliers()
-    const _companies = bookcarsHelper.flattenCompanies(_allCompanies)
-    setAllCompanies(_allCompanies)
-    setCompanies(_companies)
+    const _allSuppliers = await SupplierService.getAllSuppliers()
+    const _suppliers = bookcarsHelper.flattenSuppliers(_allSuppliers)
+    setAllSuppliers(_allSuppliers)
+    setSuppliers(_suppliers)
     setLoading(false)
   }
 
@@ -95,7 +98,7 @@ const Cars = () => {
 
               {rowCount > 0 && <InfoBox value={`${rowCount} ${commonStrings.CAR}${rowCount > 1 ? 's' : ''}`} className="car-count" />}
 
-              <SupplierFilter companies={allCompanies} onChange={handleSupplierFilterChange} className="filter" />
+              <SupplierFilter suppliers={allSuppliers} onChange={handleSupplierFilterChange} className="filter" />
 
               {rowCount > -1 && (
                 <>
@@ -111,7 +114,7 @@ const Cars = () => {
           <div className="col-2">
             <CarList
               user={user}
-              companies={companies}
+              suppliers={suppliers}
               fuel={fuel}
               gearbox={gearbox}
               mileage={mileage}
@@ -119,6 +122,7 @@ const Cars = () => {
               availability={availability}
               keyword={keyword}
               loading={loading}
+              language={language}
               onLoad={handleCarListLoad}
               onDelete={handleCarDelete}
             />

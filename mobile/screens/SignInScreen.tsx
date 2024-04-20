@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, View, TextInput as ReactTextInput } from 'react
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import validator from 'validator'
-import * as bookcarsTypes from '../miscellaneous/bookcarsTypes'
+import * as bookcarsTypes from ':bookcars-types'
 
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
@@ -17,6 +17,7 @@ import Header from '../components/Header'
 
 const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'SignIn'>) => {
   const isFocused = useIsFocused()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [stayConnected, setStayConnected] = useState(false)
@@ -190,7 +191,7 @@ const SignInScreen = ({ navigation, route }: NativeStackScreenProps<StackParams,
 
   return (
     <View style={styles.master}>
-      <Header title={i18n.t('SIGN_IN_TITLE')} hideTitle={false} loggedIn={false} notificationCount={0} />
+      <Header title={i18n.t('SIGN_IN_TITLE')} hideTitle={false} loggedIn={false} />
 
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
         <View style={styles.contentContainer}>
