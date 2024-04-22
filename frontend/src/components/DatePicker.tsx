@@ -22,7 +22,7 @@ interface DatePickerProps {
 const DatePicker = ({
   value: dateValue,
   label,
-  minDate,
+  minDate: minDateValue,
   maxDate,
   required,
   language,
@@ -32,10 +32,21 @@ const DatePicker = ({
   onError
 }: DatePickerProps) => {
   const [value, setValue] = useState<Date | null>(null)
+  const [minDate, setMinDate] = useState<Date>()
 
   useEffect(() => {
     setValue(dateValue || null)
   }, [dateValue])
+
+  useEffect(() => {
+    if (minDateValue) {
+      const _minDate = new Date(minDateValue)
+      _minDate.setHours(10, 0, 0, 0)
+      setMinDate(_minDate)
+    } else {
+      setMinDate(undefined)
+    }
+  }, [minDateValue])
 
   return (
     <LocalizationProvider adapterLocale={language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>

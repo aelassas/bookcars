@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Avatar, Dialog, Portal, Button as NativeButton, Paragraph } from 'react-native-paper'
-import * as ImagePicker from 'expo-image-picker'
+// import * as ImagePicker from 'expo-image-picker'
 import validator from 'validator'
 import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
@@ -248,9 +248,9 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                     <Pressable
                       style={styles.deleteAvatar}
                       hitSlop={15}
-                      onPress={() => {
-                        setOpenDeleteDialog(true)
-                      }}
+                      // onPress={() => {
+                      //   setOpenDeleteDialog(true)
+                      // }}
                     >
                       {/* <Badge style={styles.badge} size={36}> */}
                       <View style={styles.badge}>
@@ -262,44 +262,44 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   <Pressable
                     style={styles.updateAvatar}
                     hitSlop={15}
-                    onPress={async () => {
-                      try {
-                        if (!user || !user._id) {
-                          helper.error()
-                          return
-                        }
+                    // onPress={async () => {
+                    //   try {
+                    //     if (!user || !user._id) {
+                    //       helper.error()
+                    //       return
+                    //     }
 
-                        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+                    //     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
-                        if (permissionResult.granted === false) {
-                          alert(i18n.t('CAMERA_PERMISSION'))
-                          return
-                        }
+                    //     if (permissionResult.granted === false) {
+                    //       alert(i18n.t('CAMERA_PERMISSION'))
+                    //       return
+                    //     }
 
-                        const pickerResult = await ImagePicker.launchImageLibraryAsync()
+                    //     const pickerResult = await ImagePicker.launchImageLibraryAsync()
 
-                        if (pickerResult.canceled === true) {
-                          return
-                        }
+                    //     if (pickerResult.canceled === true) {
+                    //       return
+                    //     }
 
-                        const { uri } = pickerResult.assets[0]
-                        const name = helper.getFileName(uri)
-                        const type = helper.getMimeType(name)
-                        const image: BlobInfo = { uri, name, type }
-                        const status = await UserService.updateAvatar(user._id, image)
+                    //     const { uri } = pickerResult.assets[0]
+                    //     const name = helper.getFileName(uri)
+                    //     const type = helper.getMimeType(name)
+                    //     const image: BlobInfo = { uri, name, type }
+                    //     const status = await UserService.updateAvatar(user._id, image)
 
-                        if (status === 200) {
-                          const _user = await UserService.getUser(user._id)
-                          setUser(_user)
-                          const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
-                          setAvatar(_avatar)
-                        } else {
-                          helper.error()
-                        }
-                      } catch (err) {
-                        helper.error(err)
-                      }
-                    }}
+                    //     if (status === 200) {
+                    //       const _user = await UserService.getUser(user._id)
+                    //       setUser(_user)
+                    //       const _avatar = bookcarsHelper.joinURL(env.CDN_USERS, _user.avatar)
+                    //       setAvatar(_avatar)
+                    //     } else {
+                    //       helper.error()
+                    //     }
+                    //   } catch (err) {
+                    //     helper.error(err)
+                    //   }
+                    // }}
                   >
                     {/* <Badge style={styles.badge} size={36}> */}
                     <View style={styles.badge}>
