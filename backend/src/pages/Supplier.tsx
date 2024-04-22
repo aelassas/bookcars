@@ -148,7 +148,8 @@ const Supplier = () => {
                   hideDelete
                   onBeforeUpload={onBeforeUpload}
                   onChange={onAvatarChange}
-                  readonly={!edit}
+                  // readonly={!edit}
+                  readonly
                   color="disabled"
                   className="supplier-avatar"
                 />

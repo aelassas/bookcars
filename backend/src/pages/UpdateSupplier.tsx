@@ -268,7 +268,8 @@ const UpdateSupplier = () => {
                 mode="update"
                 record={supplier}
                 size="large"
-                readonly={false}
+                // readonly={false}
+                readonly
                 hideDelete
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}

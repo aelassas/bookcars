@@ -346,7 +346,8 @@ const UpdateUser = () => {
                 mode="update"
                 record={user}
                 size="large"
-                readonly={false}
+                // readonly={false}
+                readonly
                 onBeforeUpload={onBeforeUpload}
                 onChange={onAvatarChange}
                 color="disabled"

@@ -340,7 +340,8 @@ const UpdateCar = () => {
                 record={car}
                 hideDelete
                 size="large"
-                readonly={false}
+                // readonly={false}
+                readonly
                 onBeforeUpload={handleBeforeUpload}
                 onChange={handleImageChange}
                 onValidate={handleImageValidate}
