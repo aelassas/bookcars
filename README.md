@@ -8,7 +8,7 @@ BookCars is designed to work with multiple suppliers. Each supplier can manage h
 
 From the backend, admins can create and manage suppliers, cars, locations, customers and bookings.
 
-When new suppliers are created, they will receive an email prompting them to create an account in order to access the backend and manage their car fleet and bookings.
+When new suppliers are created, they receive an email prompting them to create an account in order to access the backend and manage their car fleet and bookings.
 
 Customers can sign up from the frontend or the mobile app, search for available cars based on pickup and drop-off points and time, choose a car and complete the checkout process.
 
