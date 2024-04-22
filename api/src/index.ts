@@ -28,7 +28,7 @@ if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
   }
 
   const close = () => {
-    logger.info('\nGracefully stopping...')
+    logger.info('Gracefully stopping...')
     server.close(async () => {
       logger.info(`HTTP${env.HTTPS ? 'S' : ''} server closed`)
       await databaseHelper.Close(true)
