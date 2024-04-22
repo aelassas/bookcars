@@ -318,7 +318,7 @@ const Header = ({
             <div className="header-desktop">
               {isSignedIn && (
                 <IconButton aria-label="" color="inherit" onClick={handleNotificationsClick}>
-                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="primary">
+                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="info">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
@@ -347,7 +347,7 @@ const Header = ({
               )}
               {isSignedIn && (
                 <IconButton color="inherit" onClick={handleNotificationsClick}>
-                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="secondary">
+                  <Badge badgeContent={notificationCount > 0 ? notificationCount : null} color="info">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
