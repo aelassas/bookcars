@@ -17,4 +17,12 @@ module.exports = {
       ':disable-react-devtools': path.resolve(__dirname, '../packages/disable-react-devtools'),
     },
   },
+  devServer: {
+    watchFiles: {
+      paths: ['src/**/*', 'public/**/*', 'package.json'],
+      options: {
+        usePolling: true,
+      },
+    },
+  },
 }
