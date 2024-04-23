@@ -22,6 +22,7 @@ module.exports = {
       paths: ['src/**/*', 'public/**/*', 'package.json'],
       options: {
         usePolling: true,
+        interval: 500,
       },
     },
   },
