@@ -75,12 +75,12 @@ const Bookings = () => {
                 </Button>
                 {admin
                   && (
-                  <SupplierFilter
-                    suppliers={allSuppliers}
-                    onChange={handleSupplierFilterChange}
-                    className="cl-supplier-filter"
-                  />
-)}
+                    <SupplierFilter
+                      suppliers={allSuppliers}
+                      onChange={handleSupplierFilterChange}
+                      className="cl-supplier-filter"
+                    />
+                  )}
                 <StatusFilter
                   onChange={handleStatusFilterChange}
                   className="cl-status-filter"
