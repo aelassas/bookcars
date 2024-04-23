@@ -204,6 +204,7 @@ const User = () => {
                 hideDates={env.isMobile()}
                 checkboxSelection={!env.isMobile()}
                 hideSupplierColumn={supplier}
+                language={loggedUser.language}
               />
             )}
           </div>
