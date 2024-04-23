@@ -54,7 +54,7 @@ const Bookings = () => {
       setLeftPanel(!_admin)
       setLoadingSuppliers(_admin)
 
-      const _allSuppliers = _admin ? await SupplierService.getAllSuppliers() : []
+      const _allSuppliers = await SupplierService.getAllSuppliers()
       const _suppliers = _admin ? bookcarsHelper.flattenSuppliers(_allSuppliers) : [_user._id ?? '']
       setAllSuppliers(_allSuppliers)
       setSuppliers(_suppliers)
@@ -75,12 +75,12 @@ const Bookings = () => {
                 </Button>
                 {admin
                   && (
-                  <SupplierFilter
-                    suppliers={allSuppliers}
-                    onChange={handleSupplierFilterChange}
-                    className="cl-supplier-filter"
-                  />
-)}
+                    <SupplierFilter
+                      suppliers={allSuppliers}
+                      onChange={handleSupplierFilterChange}
+                      className="cl-supplier-filter"
+                    />
+                  )}
                 <StatusFilter
                   onChange={handleStatusFilterChange}
                   className="cl-status-filter"
