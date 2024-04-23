@@ -137,6 +137,19 @@ const User = () => {
   const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.supplier))
   const supplier = user && user.type === bookcarsTypes.RecordType.Supplier
 
+  const _suppliers: string[] = []
+  if (loggedUser && user) {
+    if ((supplier && loggedUser._id === user._id)
+      || (loggedUser.type === bookcarsTypes.RecordType.Admin && user.type === bookcarsTypes.RecordType.Supplier)
+    ) {
+      _suppliers.push(user._id as string)
+    } else if (loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User) {
+      _suppliers.push(loggedUser._id as string)
+    } else if (loggedUser.type === bookcarsTypes.RecordType.Admin) {
+      _suppliers.push(...suppliers)
+    }
+  }
+
   return (
     <Master onLoad={onLoad} strict>
       {loggedUser && user && visible && (
@@ -193,13 +206,13 @@ const User = () => {
             </div>
           </div>
           <div className="col-2">
-            {(edit || supplier) && (
+            {_suppliers.length > 0 && (
               <BookingList
                 containerClassName="user"
                 offset={offset}
                 loggedUser={loggedUser}
                 user={supplier ? undefined : user}
-                suppliers={supplier ? [user._id as string] : suppliers}
+                suppliers={_suppliers}
                 statuses={statuses}
                 hideDates={env.isMobile()}
                 checkboxSelection={!env.isMobile()}
