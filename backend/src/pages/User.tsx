@@ -137,16 +137,16 @@ const User = () => {
   const edit = loggedUser && user && (loggedUser.type === bookcarsTypes.RecordType.Admin || loggedUser._id === user._id || (loggedUser.type === bookcarsTypes.RecordType.Supplier && loggedUser._id === user.supplier))
   const supplier = user && user.type === bookcarsTypes.RecordType.Supplier
 
-  const _suppliers: string[] = []
+  let _suppliers: string[] = []
   if (loggedUser && user) {
     if ((supplier && loggedUser._id === user._id)
       || (loggedUser.type === bookcarsTypes.RecordType.Admin && user.type === bookcarsTypes.RecordType.Supplier)
     ) {
-      _suppliers.push(user._id as string)
+      _suppliers = [user._id as string]
     } else if (loggedUser.type === bookcarsTypes.RecordType.Supplier && user.type === bookcarsTypes.RecordType.User) {
-      _suppliers.push(loggedUser._id as string)
+      _suppliers = [loggedUser._id as string]
     } else if (loggedUser.type === bookcarsTypes.RecordType.Admin) {
-      _suppliers.push(...suppliers)
+      _suppliers = suppliers
     }
   }
 
