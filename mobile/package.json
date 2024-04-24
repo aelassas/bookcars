@@ -13,7 +13,7 @@
     "build:ios": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform ios",
     "build:ios:local": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform ios --local",
     "build:ios:preview": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile preview --platform android",
-    "ts:check": "tsc -b",
+    "ts:check": "tsc --build",
     "lint": "eslint --ext .ts,.tsx .",
     "fix": "eslint --fix .",
     "ncu": "ncu -u -x eslint && npm i && expo install --fix && npm prune"
@@ -64,8 +64,8 @@
   "devDependencies": {
     "@babel/core": "^7.24.4",
     "@types/react": "~18.2.79",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",

@@ -22,7 +22,7 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^3.1.0",
     "react-localization": "^1.0.19",
-    "react-router-dom": "^6.22.3",
+    "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "typescript": "^4.9.5",
@@ -61,7 +61,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-airbnb": "^19.0.4",
     "npm-check-updates": "^16.14.18",
-    "stylelint": "^16.3.1",
+    "stylelint": "^16.4.0",
     "stylelint-config-standard": "^36.0.0"
   }
 }
