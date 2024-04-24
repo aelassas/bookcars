@@ -5,9 +5,9 @@ name: Mobile CI
 
 on:
   push:
-    branches: [ demo ]
+    branches: [ main ]
   pull_request:
-    branches: [ demo ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -32,4 +32,5 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './mobile/package-lock.json'
     - run: npm install
+    - run: npm run lint
     - run: npm run ts:check

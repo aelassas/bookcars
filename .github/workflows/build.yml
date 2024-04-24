@@ -5,9 +5,9 @@ name: build
 
 on:
   push:
-    branches: [ demo ]
+    branches: [ main ]
   pull_request:
-    branches: [ demo ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -37,14 +37,17 @@ jobs:
       run: |
            cd ./backend
            npm install
+           npm run lint
            npm run build
     - name: Build Frontend
       run: |
            cd ./frontend
            npm install
+           npm run lint
            npm run build
     - name: Build Mobile App
       run: |
            cd ./mobile
            npm install
+           npm run lint
            npm run ts:check
