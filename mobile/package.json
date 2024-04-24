@@ -13,7 +13,7 @@
     "build:ios": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform ios",
     "build:ios:local": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile production --platform ios --local",
     "build:ios:preview": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile preview --platform android",
-    "ts:check": "tsc -b",
+    "ts:check": "tsc --build",
     "lint": "eslint --ext .ts,.tsx .",
     "fix": "eslint --fix .",
     "ncu": "ncu -u -x eslint && npm i && expo install --fix && npm prune"
