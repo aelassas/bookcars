@@ -64,8 +64,8 @@
   "devDependencies": {
     "@babel/core": "^7.24.4",
     "@types/react": "~18.2.79",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
