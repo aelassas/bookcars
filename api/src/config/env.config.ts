@@ -13,14 +13,14 @@ import * as helper from '../common/helper'
  * @returns {string}
  */
 export const __env__ = (name: string, required?: boolean, defaultValue?: string): string => {
-    const value = process.env[name]
-    if (required && !value) {
-        throw new Error(`'${name} not found`)
-    }
-    if (!value) {
-        return defaultValue || ''
-    }
-    return String(value)
+  const value = process.env[name]
+  if (required && !value) {
+    throw new Error(`'${name} not found`)
+  }
+  if (!value) {
+    return defaultValue || ''
+  }
+  return String(value)
 }
 
 /**
@@ -255,6 +255,13 @@ export const MINIMUM_AGE = Number.parseInt(__env__('BC_MINIMUM_AGE', false, '21'
 export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
 
 /**
+ * Stripe secret key.
+ *
+ * @type {string}
+ */
+export const STRIPE_SECRET_KEY = __env__('BC_STRIPE_SECRET_KEY', false, 'STRIPE_SECRET_KEY')
+
+/**
  * User Document.
  *
  * @export
@@ -263,23 +270,24 @@ export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
  * @extends {Document}
  */
 export interface User extends Document {
-    supplier?: Types.ObjectId
-    fullName: string
-    email: string
-    phone?: string
-    password?: string
-    birthDate?: Date
-    verified?: boolean
-    verifiedAt?: Date
-    active?: boolean
-    language: string
-    enableEmailNotifications?: boolean
-    avatar?: string
-    bio?: string
-    location?: string
-    type?: bookcarsTypes.UserType
-    blacklisted?: boolean
-    payLater?: boolean
+  supplier?: Types.ObjectId
+  fullName: string
+  email: string
+  phone?: string
+  password?: string
+  birthDate?: Date
+  verified?: boolean
+  verifiedAt?: Date
+  active?: boolean
+  language: string
+  enableEmailNotifications?: boolean
+  avatar?: string
+  bio?: string
+  location?: string
+  type?: bookcarsTypes.UserType
+  blacklisted?: boolean
+  payLater?: boolean
+  customerId?: string
 }
 
 /**
@@ -290,24 +298,24 @@ export interface User extends Document {
  * @typedef {UserInfo}
  */
 export interface UserInfo {
-    _id?: Types.ObjectId
-    supplier?: Types.ObjectId
-    fullName: string
-    email?: string
-    phone?: string
-    password?: string
-    birthDate?: Date
-    verified?: boolean
-    verifiedAt?: Date
-    active?: boolean
-    language?: string
-    enableEmailNotifications?: boolean
-    avatar?: string
-    bio?: string
-    location?: string
-    type?: string
-    blacklisted?: boolean
-    payLater?: boolean
+  _id?: Types.ObjectId
+  supplier?: Types.ObjectId
+  fullName: string
+  email?: string
+  phone?: string
+  password?: string
+  birthDate?: Date
+  verified?: boolean
+  verifiedAt?: Date
+  active?: boolean
+  language?: string
+  enableEmailNotifications?: boolean
+  avatar?: string
+  bio?: string
+  location?: string
+  type?: string
+  blacklisted?: boolean
+  payLater?: boolean
 }
 
 /**
@@ -318,10 +326,10 @@ export interface UserInfo {
  * @typedef {AdditionalDriver}
  */
 export interface AdditionalDriver {
-    fullName: string
-    email: string
-    phone: string
-    birthDate: Date
+  fullName: string
+  email: string
+  phone: string
+  birthDate: Date
 }
 
 /**
@@ -333,24 +341,24 @@ export interface AdditionalDriver {
  * @extends {Document}
  */
 export interface Booking extends Document {
-    _id: Types.ObjectId
-    supplier: Types.ObjectId
-    car: Types.ObjectId
-    driver: Types.ObjectId
-    pickupLocation: Types.ObjectId
-    dropOffLocation: Types.ObjectId
-    from: Date
-    to: Date
-    status: bookcarsTypes.BookingStatus
-    cancellation?: boolean
-    amendments?: boolean
-    theftProtection?: boolean
-    collisionDamageWaiver?: boolean
-    fullInsurance?: boolean
-    additionalDriver?: boolean
-    _additionalDriver?: Types.ObjectId
-    cancelRequest?: boolean
-    price: number
+  _id: Types.ObjectId
+  supplier: Types.ObjectId
+  car: Types.ObjectId
+  driver: Types.ObjectId
+  pickupLocation: Types.ObjectId
+  dropOffLocation: Types.ObjectId
+  from: Date
+  to: Date
+  status: bookcarsTypes.BookingStatus
+  cancellation?: boolean
+  amendments?: boolean
+  theftProtection?: boolean
+  collisionDamageWaiver?: boolean
+  fullInsurance?: boolean
+  additionalDriver?: boolean
+  _additionalDriver?: Types.ObjectId
+  cancelRequest?: boolean
+  price: number
 }
 
 /**
@@ -362,27 +370,27 @@ export interface Booking extends Document {
  * @extends {Document}
  */
 export interface Car extends Document {
-    name: string
-    supplier: Types.ObjectId
-    minimumAge: number
-    locations: Types.ObjectId[]
-    price: number
-    deposit: number
-    available: boolean
-    type: bookcarsTypes.CarType
-    gearbox: bookcarsTypes.GearboxType
-    aircon: boolean
-    image: string | null
-    seats: number
-    doors: number
-    fuelPolicy: bookcarsTypes.FuelPolicy
-    mileage: number
-    cancellation: number
-    amendments: number
-    theftProtection: number
-    collisionDamageWaiver: number
-    fullInsurance: number
-    additionalDriver: number
+  name: string
+  supplier: Types.ObjectId
+  minimumAge: number
+  locations: Types.ObjectId[]
+  price: number
+  deposit: number
+  available: boolean
+  type: bookcarsTypes.CarType
+  gearbox: bookcarsTypes.GearboxType
+  aircon: boolean
+  image: string | null
+  seats: number
+  doors: number
+  fuelPolicy: bookcarsTypes.FuelPolicy
+  mileage: number
+  cancellation: number
+  amendments: number
+  theftProtection: number
+  collisionDamageWaiver: number
+  fullInsurance: number
+  additionalDriver: number
 }
 
 /**
@@ -393,28 +401,28 @@ export interface Car extends Document {
  * @typedef {CarInfo}
  */
 export interface CarInfo {
-    _id?: Types.ObjectId
-    name: string
-    supplier: UserInfo
-    minimumAge: number
-    locations: Types.ObjectId[]
-    price: number
-    deposit: number
-    available: boolean
-    type: bookcarsTypes.CarType
-    gearbox: bookcarsTypes.GearboxType
-    aircon: boolean
-    image?: string
-    seats: number
-    doors: number
-    fuelPolicy: bookcarsTypes.FuelPolicy
-    mileage: number
-    cancellation: number
-    amendments: number
-    theftProtection: number
-    collisionDamageWaiver: number
-    fullInsurance: number
-    additionalDriver: number
+  _id?: Types.ObjectId
+  name: string
+  supplier: UserInfo
+  minimumAge: number
+  locations: Types.ObjectId[]
+  price: number
+  deposit: number
+  available: boolean
+  type: bookcarsTypes.CarType
+  gearbox: bookcarsTypes.GearboxType
+  aircon: boolean
+  image?: string
+  seats: number
+  doors: number
+  fuelPolicy: bookcarsTypes.FuelPolicy
+  mileage: number
+  cancellation: number
+  amendments: number
+  theftProtection: number
+  collisionDamageWaiver: number
+  fullInsurance: number
+  additionalDriver: number
 }
 
 /**
@@ -425,24 +433,24 @@ export interface CarInfo {
  * @typedef {BookingInfo}
  */
 export interface BookingInfo {
-    _id?: Types.ObjectId
-    supplier: UserInfo
-    car: Car
-    driver: UserInfo
-    pickupLocation: Types.ObjectId
-    dropOffLocation: Types.ObjectId
-    from: Date
-    to: Date
-    status: bookcarsTypes.BookingStatus
-    cancellation?: boolean
-    amendments?: boolean
-    theftProtection?: boolean
-    collisionDamageWaiver?: boolean
-    fullInsurance?: boolean
-    additionalDriver?: boolean
-    _additionalDriver?: Types.ObjectId
-    cancelRequest?: boolean
-    price: number
+  _id?: Types.ObjectId
+  supplier: UserInfo
+  car: Car
+  driver: UserInfo
+  pickupLocation: Types.ObjectId
+  dropOffLocation: Types.ObjectId
+  from: Date
+  to: Date
+  status: bookcarsTypes.BookingStatus
+  cancellation?: boolean
+  amendments?: boolean
+  theftProtection?: boolean
+  collisionDamageWaiver?: boolean
+  fullInsurance?: boolean
+  additionalDriver?: boolean
+  _additionalDriver?: Types.ObjectId
+  cancelRequest?: boolean
+  price: number
 }
 
 /**
@@ -454,8 +462,8 @@ export interface BookingInfo {
  * @extends {Document}
  */
 export interface Location extends Document {
-    values: Types.ObjectId[]
-    name?: string
+  values: Types.ObjectId[]
+  name?: string
 }
 
 /**
@@ -467,8 +475,8 @@ export interface Location extends Document {
  * @extends {Document}
  */
 export interface LocationValue extends Document {
-    language: string
-    value: string
+  language: string
+  value: string
 }
 
 /**
@@ -479,9 +487,9 @@ export interface LocationValue extends Document {
  * @typedef {LocationInfo}
  */
 export interface LocationInfo {
-    _id?: Types.ObjectId
-    name?: string
-    values: LocationValue[]
+  _id?: Types.ObjectId
+  name?: string
+  values: LocationValue[]
 }
 
 /**
@@ -493,10 +501,10 @@ export interface LocationInfo {
  * @extends {Document}
  */
 export interface Notification extends Document {
-    user: Types.ObjectId
-    message: string
-    booking: Types.ObjectId
-    isRead?: boolean
+  user: Types.ObjectId
+  message: string
+  booking: Types.ObjectId
+  isRead?: boolean
 }
 
 /**
@@ -508,8 +516,8 @@ export interface Notification extends Document {
  * @extends {Document}
  */
 export interface NotificationCounter extends Document {
-    user: Types.ObjectId
-    count?: number
+  user: Types.ObjectId
+  count?: number
 }
 
 /**
@@ -521,8 +529,8 @@ export interface NotificationCounter extends Document {
  * @extends {Document}
  */
 export interface PushToken extends Document {
-    user: Types.ObjectId
-    token: string
+  user: Types.ObjectId
+  token: string
 }
 
 /**
@@ -534,7 +542,7 @@ export interface PushToken extends Document {
  * @extends {Document}
  */
 export interface Token extends Document {
-    user: Types.ObjectId
-    token: string
-    expireAt?: Date
+  user: Types.ObjectId
+  token: string
+  expireAt?: Date
 }

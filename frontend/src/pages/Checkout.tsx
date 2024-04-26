@@ -12,7 +12,8 @@ import {
   FormControlLabel,
   Switch,
   RadioGroup,
-  Radio
+  Radio,
+  CircularProgress
 } from '@mui/material'
 import {
   DirectionsCar as CarIcon,
@@ -24,6 +25,17 @@ import {
 import validator from 'validator'
 import { format, intervalToDuration } from 'date-fns'
 import { fr, enUS } from 'date-fns/locale'
+import {
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js'
+import {
+  StripeCardNumberElement,
+  StripeCardNumberElementOptions
+} from '@stripe/stripe-js'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
@@ -35,10 +47,10 @@ import * as helper from '../common/helper'
 import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import * as LocationService from '../services/LocationService'
+import * as StripeService from '../services/StripeService'
 import Master from '../components/Master'
 import Error from '../components/Error'
 import DatePicker from '../components/DatePicker'
-import Backdrop from '../components/SimpleBackdrop'
 import NoMatch from './NoMatch'
 import Info from './Info'
 
@@ -69,14 +81,8 @@ const Checkout = () => {
   const [tosChecked, setTosChecked] = useState(false)
   const [tosError, setTosError] = useState(false)
   const [error, setError] = useState(false)
-  const [cardName, setCardName] = useState('')
-  const [cardNumber, setCardNumber] = useState('')
   const [cardNumberValid, setCardNumberValid] = useState(true)
-  const [cardMonth, setCardMonth] = useState('')
-  const [cardMonthValid, setCardMonthValid] = useState(true)
-  const [cardYear, setcardYear] = useState('')
-  const [cardYearValid, setCardYearValid] = useState(true)
-  const [cvv, setCvv] = useState('')
+  const [cardExpiryValid, setCardExpiryValid] = useState(true)
   const [cvvValid, setCvvValid] = useState(true)
   const [price, setPrice] = useState(0)
   const [emailInfo, setEmailInfo] = useState(true)
@@ -87,7 +93,6 @@ const Checkout = () => {
   const [collisionDamageWaiver, setCollisionDamageWaiver] = useState(false)
   const [fullInsurance, setFullInsurance] = useState(false)
   const [additionalDriver, setAdditionalDriver] = useState(false)
-  const [cardDateError, setCardDateError] = useState(false)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [addiontalDriverFullName, setAddiontalDriverFullName] = useState('')
@@ -105,6 +110,10 @@ const Checkout = () => {
   const [adPhone, setAdPhone] = useState(false)
   const [adBirthDate, setAdBirthDate] = useState(false)
   const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
+
+  const stripe = useStripe()
+  const elements = useElements()
+  const [paymentFailed, setPaymentFailed] = useState(false)
 
   const adValidate = (val?: string | Date | null) => !!val
 
@@ -375,140 +384,6 @@ const Checkout = () => {
     }
   }
 
-  const validateCardNumber = (_cardNumber?: string) => {
-    if (_cardNumber) {
-      const _cardNumberValid = validator.isCreditCard(_cardNumber)
-      setCardNumberValid(_cardNumberValid)
-
-      return _cardNumberValid
-    }
-    setCardNumberValid(true)
-
-    return true
-  }
-
-  const handleCardNumberBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validateCardNumber(e.target.value)
-  }
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardNumber(e.target.value)
-
-    if (!e.target.value) {
-      setCardNumberValid(true)
-    }
-  }
-
-  const validateCardMonth = (_cardMonth?: string) => {
-    if (_cardMonth) {
-      if (bookcarsHelper.isInteger(_cardMonth)) {
-        const month = Number.parseInt(_cardMonth, 10)
-        const _cardMonthValid = month >= 1 && month <= 12
-
-        setCardMonthValid(_cardMonthValid)
-        setCardDateError(false)
-
-        return _cardMonthValid
-      }
-      setCardMonthValid(false)
-      setCardDateError(false)
-
-      return false
-    }
-    setCardMonthValid(true)
-    setCardDateError(false)
-
-    return true
-  }
-
-  const handleCardMonthBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validateCardMonth(e.target.value)
-  }
-
-  const handleCardMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardMonth(e.target.value)
-
-    if (!e.target.value) {
-      setCardMonthValid(true)
-      setCardDateError(false)
-    }
-  }
-
-  const validateCardYear = (_cardYear?: string) => {
-    if (_cardYear) {
-      if (bookcarsHelper.isYear(_cardYear)) {
-        const year = Number.parseInt(_cardYear, 10)
-        const currentYear = Number.parseInt(String(new Date().getFullYear()).slice(2), 10)
-        const _cardYearValid = year >= currentYear
-
-        setCardYearValid(_cardYearValid)
-        setCardDateError(false)
-
-        return _cardYearValid
-      }
-      setCardYearValid(false)
-      setCardDateError(false)
-
-      return false
-    }
-    setCardYearValid(true)
-    setCardDateError(false)
-
-    return true
-  }
-
-  const handleCardYearBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validateCardYear(e.target.value)
-  }
-
-  const handleCardYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setcardYear(e.target.value)
-
-    if (!e.target.value) {
-      setCardYearValid(true)
-      setCardDateError(false)
-    }
-  }
-
-  const validateCvv = (_cvv?: string) => {
-    if (_cvv) {
-      const _cvvValid = bookcarsHelper.isCvv(_cvv)
-      setCvvValid(_cvvValid)
-
-      return _cvvValid
-    }
-    setCvvValid(true)
-
-    return true
-  }
-
-  const handleCvvBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    validateCvv(e.target.value)
-  }
-
-  const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCvv(e.target.value)
-
-    if (!e.target.value) {
-      setCvvValid(true)
-    }
-  }
-
-  const validateCardDate = (_cardMonth: string, _cardYear: string) => {
-    const today = new Date()
-    const cardDate = new Date()
-    const y = Number.parseInt(String(today.getFullYear()).slice(0, 2), 10) * 100
-    const year = y + Number.parseInt(_cardYear, 10)
-    const month = Number.parseInt(_cardMonth, 10)
-    cardDate.setFullYear(year, month - 1, 1)
-
-    if (cardDate < today) {
-      return false
-    }
-
-    return true
-  }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault()
@@ -540,34 +415,29 @@ const Checkout = () => {
         }
       }
 
+      let card: StripeCardNumberElement | null = null
       if (!payLater) {
-        if (cardName && cardName.length < 1) {
+        if (!cardNumberValid) {
           return
         }
 
-        const _cardNumberValid = validateCardNumber(cardNumber)
-        if (!_cardNumberValid) {
+        if (!cardExpiryValid) {
           return
         }
 
-        const _cardMonthValid = validateCardMonth(cardMonth)
-        if (!_cardMonthValid) {
+        if (!cvvValid) {
           return
         }
 
-        const _cardYearValid = validateCardYear(cardYear)
-        if (!_cardYearValid) {
+        if (!stripe || !elements) {
+          // Stripe.js hasn't yet loaded.
           return
         }
 
-        const _cvvValid = validateCvv(cvv)
-        if (!_cvvValid) {
-          return
-        }
+        card = elements.getElement(CardNumberElement)
 
-        const cardDateValid = validateCardDate(cardMonth, cardYear)
-        if (!cardDateValid) {
-          setCardDateError(true)
+        if (!card) {
+          // CardNumberElement hasn't yet loaded.
           return
         }
       }
@@ -590,6 +460,7 @@ const Checkout = () => {
       }
 
       setLoading(true)
+      setPaymentFailed(false)
 
       let driver: bookcarsTypes.User | undefined
       let _additionalDriver: bookcarsTypes.AdditionalDriver | undefined
@@ -612,7 +483,7 @@ const Checkout = () => {
         dropOffLocation: dropOffLocation._id,
         from,
         to,
-        status: payLater ? bookcarsTypes.BookingStatus.Pending : bookcarsTypes.BookingStatus.Paid,
+        status: bookcarsTypes.BookingStatus.Pending,
         cancellation,
         amendments,
         theftProtection,
@@ -631,18 +502,73 @@ const Checkout = () => {
         }
       }
 
+      //
+      // Stripe Payment Gateway
+      //
+      let paid = payLater
+      let validationError = false
+      let paymentIntentId: string | undefined
+      let customerId: string | undefined
+
+      if (!payLater) {
+        const createPaymentIntentPayload: bookcarsTypes.CreatePaymentIntentPayload = {
+          amount: price,
+          // Supported currencies for the moment: usd, eur
+          // Must be a supported currency: https://docs.stripe.com/currencies
+          currency: commonStrings.CURRENCY === '$' ? 'usd' : commonStrings.CURRENCY === '€' ? 'eur' : '',
+          receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
+          description: 'BookCars Booking Service',
+          customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
+        }
+
+        // Create payment intent
+        const {
+          paymentIntentId: stripePaymentIntentId,
+          clientSecret,
+          customerId: stripeCustomerId,
+        } = await StripeService.createPaymentIntent(createPaymentIntentPayload)
+        paymentIntentId = stripePaymentIntentId || undefined
+        customerId = stripeCustomerId || undefined
+
+        if (clientSecret) {
+          const paymentPayload = await stripe?.confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: card as StripeCardNumberElement,
+            }
+          })
+
+          validationError = paymentPayload?.error?.type === 'validation_error'
+          paid = !paymentPayload?.error
+        } else {
+          paid = false
+        }
+      }
+
+      if (validationError) {
+        // Card Validation Error
+        setLoading(false)
+        return
+      }
+
+      if (!paid) {
+        // Payment failed
+        setLoading(false)
+        setPaymentFailed(true)
+        return
+      }
+
       const payload: bookcarsTypes.CheckoutPayload = {
         driver,
         booking,
         additionalDriver: _additionalDriver,
         payLater,
+        paymentIntentId,
+        customerId
       }
 
       const status = await BookingService.checkout(payload)
 
       if (status === 200) {
-        window.history.replaceState({}, window.document.title, '/checkout')
-
         setLoading(false)
         setVisible(false)
         setSuccess(true)
@@ -733,6 +659,24 @@ const Checkout = () => {
   const _format = _fr ? 'eee d LLL yyyy kk:mm' : 'eee, d LLL yyyy, p'
   const bookingDetailHeight = env.SUPPLIER_IMAGE_HEIGHT + 10
   const days = bookcarsHelper.days(from, to)
+
+  const cardStyle: StripeCardNumberElementOptions = {
+    style: {
+      base: {
+        color: 'rgba(0, 0, 0, 0.87)',
+        fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'",
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#606060',
+        },
+      },
+      invalid: {
+        color: '#d32f2f',
+        iconColor: '#d32f2f'
+      }
+    }
+  }
 
   return (
     <Master onLoad={onLoad} strict={false}>
@@ -1087,78 +1031,41 @@ const Checkout = () => {
                       </div>
                     </div>
 
-                    <div className="secure-payment-logo">
-                      <img src={SecurePayment} alt="" />
-                    </div>
-
                     <div className="card">
                       <FormControl margin="dense" className="card-number" fullWidth>
-                        <InputLabel className="required">{strings.CARD_NAME}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={strings.CARD_NAME}
-                          onChange={(e) => {
-                            setCardName(e.target.value)
-                          }}
-                          required
-                          autoComplete="off"
-                        />
-                      </FormControl>
-                      <FormControl margin="dense" className="card-number" fullWidth>
-                        <InputLabel className="required">{strings.CARD_NUMBER}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={strings.CARD_NUMBER}
-                          error={!cardNumberValid}
-                          onBlur={handleCardNumberBlur}
-                          onChange={handleCardNumberChange}
-                          required
-                          autoComplete="off"
-                        />
+                        <div className="stripe-card">
+                          <CardNumberElement
+                            className="card-element"
+                            options={{ ...cardStyle, placeholder: strings.CARD_NUMBER }}
+                            onChange={(e) => {
+                              setCardNumberValid(!e.error)
+                            }}
+                          />
+                        </div>
                         <FormHelperText error={!cardNumberValid}>{(!cardNumberValid && strings.CARD_NUMBER_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
-                      <div className="card-date">
-                        <FormControl margin="dense" className="card-month" fullWidth>
-                          <InputLabel className="required">{strings.CARD_MONTH}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={strings.CARD_MONTH}
-                            error={!cardMonthValid}
-                            onBlur={handleCardMonthBlur}
-                            onChange={handleCardMonthChange}
-                            required
-                            autoComplete="off"
-                          // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{1,2})$' }}
+                      <FormControl margin="dense" className="card-month" fullWidth>
+                        <div className="stripe-card">
+                          <CardExpiryElement
+                            className="card-element"
+                            options={{ ...cardStyle, placeholder: bookcarsHelper.isFrench(language) ? 'MM / AA' : 'MM / YY' }}
+                            onChange={(e) => {
+                              setCardExpiryValid(!e.error)
+                            }}
                           />
-                          <FormHelperText error={!cardMonthValid}>{(!cardMonthValid && strings.CARD_MONTH_NOT_VALID) || ''}</FormHelperText>
-                        </FormControl>
-                        <FormControl margin="dense" className="card-year" fullWidth>
-                          <InputLabel className="required">{strings.CARD_YEAR}</InputLabel>
-                          <OutlinedInput
-                            type="text"
-                            label={strings.CARD_YEAR}
-                            error={!cardYearValid}
-                            onBlur={handleCardYearBlur}
-                            onChange={handleCardYearChange}
-                            required
-                            autoComplete="off"
-                          // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{2})$' }}
-                          />
-                          <FormHelperText error={!cardYearValid}>{(!cardYearValid && strings.CARD_YEAR_NOT_VALID) || ''}</FormHelperText>
-                        </FormControl>
-                      </div>
+                        </div>
+                        <FormHelperText error={!cardExpiryValid}>{(!cardExpiryValid && strings.CARD_EXPIRY_NOT_VALID) || ''}</FormHelperText>
+                      </FormControl>
                       <FormControl margin="dense" className="cvv" fullWidth>
-                        <InputLabel className="required">{strings.CVV}</InputLabel>
-                        <OutlinedInput
-                          type="text"
-                          label={strings.CVV}
-                          error={!cvvValid}
-                          onBlur={handleCvvBlur}
-                          onChange={handleCvvChange}
-                          required
-                          autoComplete="off"
-                        // inputProps={{ inputMode: 'numeric', pattern: '^(\\s*|\\d{3,4})$' }}
-                        />
+                        <div className="stripe-card">
+                          <CardCvcElement
+                            className="card-element"
+                            options={cardStyle}
+                            onChange={(e) => {
+                              setCvvValid(!e.error)
+                            }}
+                          />
+                        </div>
                         <FormHelperText error={!cvvValid}>{(!cvvValid && strings.CVV_NOT_VALID) || ''}</FormHelperText>
                       </FormControl>
                     </div>
@@ -1167,11 +1074,19 @@ const Checkout = () => {
                       <LockIcon className="secure-payment-lock" />
                       <span>{strings.SECURE_PAYMENT_INFO}</span>
                     </div>
+
+                    <div className="secure-payment-logo">
+                      <img src={SecurePayment} alt="" />
+                    </div>
                   </div>
                 )}
                 <div className="booking-buttons">
-                  <Button type="submit" variant="contained" className="btn-book btn-margin-bottom" size="small">
-                    {strings.BOOK}
+                  <Button type="submit" variant="contained" className="btn-checkout btn-margin-bottom" size="small" disabled={loading}>
+                    {
+                      loading
+                        ? <CircularProgress color="inherit" size={24} />
+                        : strings.BOOK
+                    }
                   </Button>
                   <Button variant="contained" className="btn-cancel btn-margin-bottom" size="small" href="/">
                     {commonStrings.CANCEL}
@@ -1179,9 +1094,9 @@ const Checkout = () => {
                 </div>
               </div>
               <div className="form-error">
-                {cardDateError && <Error message={strings.CARD_DATE_ERROR} />}
                 {tosError && <Error message={commonStrings.TOS_ERROR} />}
                 {error && <Error message={commonStrings.GENERIC_ERROR} />}
+                {paymentFailed && <Error message={strings.PAYMENT_FAILED} />}
               </div>
             </form>
           </Paper>
@@ -1189,7 +1104,6 @@ const Checkout = () => {
       )}
       {noMatch && <NoMatch hideHeader />}
       {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
-      {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
     </Master>
   )
 }
