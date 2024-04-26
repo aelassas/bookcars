@@ -12,11 +12,11 @@ import { v1 as uuid } from 'uuid'
  * @returns {boolean}
  */
 export const StringToBoolean = (input: string): boolean => {
-    try {
-        return Boolean(JSON.parse(input.toLowerCase()))
-    } catch {
-        return false
-    }
+  try {
+    return Boolean(JSON.parse(input.toLowerCase()))
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -28,12 +28,12 @@ export const StringToBoolean = (input: string): boolean => {
  * @returns {Promise<boolean>}
  */
 export const exists = async (filePath: string): Promise<boolean> => {
-    try {
-        await fs.access(filePath)
-        return true
-    } catch {
-        return false
-    }
+  try {
+    await fs.access(filePath)
+    return true
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -46,7 +46,23 @@ export const exists = async (filePath: string): Promise<boolean> => {
  * @returns {Promise<void>}
  */
 export const mkdir = async (folder: string) => {
-    await fs.mkdir(folder, { recursive: true })
+  await fs.mkdir(folder, { recursive: true })
+}
+
+/**
+ * Removes a start line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
+export const trimStart = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(0) === char) {
+    res = res.substring(1, res.length)
+  }
+  return res
 }
 
 /**
@@ -57,12 +73,26 @@ export const mkdir = async (folder: string) => {
  * @param {string} char
  * @returns {string}
  */
+export const trimEnd = (str: string, char: string): string => {
+  let res = str
+  while (res.charAt(res.length - 1) === char) {
+    res = res.substring(0, res.length - 1)
+  }
+  return res
+}
+
+/**
+ * Removes a stating, leading and trailing line terminator character from a string.
+ *
+ * @export
+ * @param {string} str
+ * @param {string} char
+ * @returns {string}
+ */
 export const trim = (str: string, char: string): string => {
-    let res = str
-    while (res.charAt(res.length - 1) === char) {
-        res = res.substring(0, res.length - 1)
-    }
-    return res
+  let res = trimStart(str, char)
+  res = trimEnd(res, char)
+  return res
 }
 
 /**
@@ -74,14 +104,14 @@ export const trim = (str: string, char: string): string => {
  * @returns {string}
  */
 export const joinURL = (part1: string, part2: string): string => {
-    const p1 = trim(part1, '/')
-    let p2 = part2
+  const p1 = trimEnd(part1, '/')
+  let p2 = part2
 
-    if (part2.charAt(0) === '/') {
-        p2 = part2.substring(1)
-    }
+  if (part2.charAt(0) === '/') {
+    p2 = part2.substring(1)
+  }
 
-    return `${p1}/${p2}`
+  return `${p1}/${p2}`
 }
 
 /**

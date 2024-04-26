@@ -43,7 +43,7 @@ div.booking div.payment-options span.payment-info {
   font-size: 13px;
 }
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.booking div.payment-options span.payment-button {
     display: flex;
     flex-direction: column;
@@ -184,11 +184,15 @@ div.booking div.payment div.cost div.secure-payment-cost span.cost-value {
 
 div.booking div.payment div.secure-payment-logo {
   width: 100%;
-  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
+  margin-top: 15px;
+}
+
+div.booking div.payment div.secure-payment-logo img {
+  max-width: 100%;
 }
 
 div.booking div.booking-buttons {
@@ -201,7 +205,7 @@ div.booking div.booking-buttons a {
   float: right;
 }
 
-div.booking .btn-book,
+div.booking .btn-checkout,
 div.booking .btn-cancel {
   font-size: 18px;
   line-height: 24px;
@@ -210,14 +214,14 @@ div.booking .btn-cancel {
   border-radius: 5px;
   color: #fff;
   height: 42px;
-  min-width: 75px;
+  min-width: 164px;
   margin: 0;
   white-space: nowrap;
   padding: 5px 32px;
   margin-left: 7px;
 }
 
-div.booking .btn-book {
+div.booking .btn-checkout {
   background: #f37022;
 }
 
@@ -225,9 +229,24 @@ div.booking .btn-cancel {
   background: #999;
 }
 
+div.booking .stripe-card {
+  margin: 0;
+}
+
+div.booking .card-number {
+  margin-top: 2rem;
+}
+
+div.booking .card-element {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  padding: 17px;
+  margin: 0;
+}
+
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.booking .booking-form {
     padding: 30px;
     margin: 10px;
@@ -251,7 +270,7 @@ div.booking .btn-cancel {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.booking .booking-form {
     margin: 45px 0 20px calc(50% - 350px);
     width: 700px;

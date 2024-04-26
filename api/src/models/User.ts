@@ -99,6 +99,9 @@ const userSchema = new Schema<env.User>(
       type: Boolean,
       default: true,
     },
+    customerId: {
+      type: String,
+    },
   },
   {
     timestamps: true,

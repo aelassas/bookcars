@@ -55,6 +55,7 @@ jobs:
            echo BC_FRONTEND_HOST=$BC_FRONTEND_HOST >> .env
            echo BC_MINIMUM_AGE=$BC_MINIMUM_AGE >> .env
            echo BC_EXPO_ACCESS_TOKEN=$BC_EXPO_ACCESS_TOKEN >> .env
+           echo BC_STRIPE_SECRET_KEY=$BC_STRIPE_SECRET_KEY >> .env
            npm install
            npm test
       env:
@@ -82,3 +83,4 @@ jobs:
         BC_FRONTEND_HOST: ${{ vars.BC_FRONTEND_HOST }}
         BC_MINIMUM_AGE: ${{ vars.BC_MINIMUM_AGE }}
         BC_EXPO_ACCESS_TOKEN: ${{ secrets.BC_EXPO_ACCESS_TOKEN }}
+        BC_STRIPE_SECRET_KEY: ${{ secrets.BC_STRIPE_SECRET_KEY }}
