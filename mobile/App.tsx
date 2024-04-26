@@ -7,11 +7,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-native-paper'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications'
+import { StripeProvider } from '@stripe/stripe-react-native'
 import DrawerNavigator from './components/DrawerNavigator'
 import * as helper from './common/helper'
 import * as NotificationService from './services/NotificationService'
 import * as UserService from './services/UserService'
 import { GlobalProvider } from './context/GlobalContext'
+import * as env from './config/env.config'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -97,12 +99,14 @@ const App = () => {
     <GlobalProvider>
       <SafeAreaProvider>
         <Provider>
-          <RootSiblingParent>
-            <NavigationContainer ref={navigationRef} onReady={onReady}>
-              <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
-              <DrawerNavigator />
-            </NavigationContainer>
-          </RootSiblingParent>
+          <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY}>
+            <RootSiblingParent>
+              <NavigationContainer ref={navigationRef} onReady={onReady}>
+                <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />
+                <DrawerNavigator />
+              </NavigationContainer>
+            </RootSiblingParent>
+          </StripeProvider>
         </Provider>
       </SafeAreaProvider>
     </GlobalProvider>
