@@ -46,6 +46,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
   const { body }: { body: bookcarsTypes.SignUpPayload } = req
 
   try {
+    body.email = helper.trim(body.email, ' ')
     body.active = true
     body.verified = false
     body.blacklisted = false
@@ -396,7 +397,8 @@ export const activate = async (req: Request, res: Response) => {
  */
 export const signin = async (req: Request, res: Response) => {
   const { body }: { body: bookcarsTypes.SignInPayload } = req
-  const { email, password, stayConnected, mobile } = body
+  const { email: emailFromBody, password, stayConnected, mobile } = body
+  const email = helper.trim(emailFromBody, ' ')
 
   try {
     if (!helper.isValidEmail(email)) {
@@ -916,6 +918,7 @@ export const getUser = async (req: Request, res: Response) => {
       blacklisted: 1,
       birthDate: 1,
       payLater: 1,
+      customerId: 1,
     }).lean()
 
     if (!user) {
@@ -1218,6 +1221,7 @@ export const getUsers = async (req: Request, res: Response) => {
             type: 1,
             blacklisted: 1,
             birthDate: 1,
+            customerId: 1,
           },
         },
         {

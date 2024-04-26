@@ -36,7 +36,7 @@ export const info = (message: string, obj?: any) => {
 
 export const error = (message: string, err?: unknown) => {
   if (err instanceof Error) {
-    logger.error(`${message} ${err.message} ${err.stack}`)
+    logger.error(`${message} ${err.message}`) // ${err.stack}
   } else {
     logger.error(message)
   }
