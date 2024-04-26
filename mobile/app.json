@@ -5,7 +5,9 @@
     "version": "3.5.0",
     "slug": "bookcars",
     "icon": "./assets/icon.png",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "splash": {
       "backgroundColor": "#f37022",
       "image": "./assets/splash.png"
@@ -34,7 +36,17 @@
       },
       "bundleIdentifier": "com.bookcars"
     },
-    "plugins": ["expo-localization", "./plugins/usesCleartextTraffic"],
+    "plugins": [
+      "expo-localization",
+      "./plugins/usesCleartextTraffic",
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "MERCHANT_IDENTIFIER",
+          "enableGooglePay": false
+        }
+      ]
+    ],
     "owner": "aelassas",
     "extra": {
       "eas": {
@@ -46,6 +58,6 @@
     },
     "experiments": {
       "tsconfigPaths": true
-     }
+    }
   }
 }

@@ -201,7 +201,7 @@ describe('POST /api/checkout', () => {
       currency: 'usd',
       receiptEmail,
       customerName: 'John Doe',
-      description: 'BookCars Booking Service',
+      description: 'BookCars Web Service',
     }
     res = await request(app)
       .post('/api/create-payment-intent')

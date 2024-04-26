@@ -15,8 +15,7 @@
     "build:ios:preview": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile preview --platform android",
     "ts:check": "tsc --build",
     "lint": "eslint --ext .ts,.tsx .",
-    "fix": "eslint --fix .",
-    "ncu": "ncu -u -x eslint && npm i && expo install --fix && npm prune"
+    "fix": "eslint --fix ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -41,7 +40,7 @@
     "expo-image-picker": "~14.7.1",
     "expo-localization": "~14.8.4",
     "expo-notifications": "~0.27.7",
-    "expo-splash-screen": "~0.26.4",
+    "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "expo-updates": "~0.24.12",
     "i18n-js": "^4.4.3",
@@ -59,7 +58,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-size-matters": "^0.4.2",
     "react-native-vector-icons": "^10.0.3",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "@stripe/stripe-react-native": "~0.35.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

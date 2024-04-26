@@ -159,7 +159,7 @@ export const en = {
   BOOK_NOW: 'Book now',
   SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
   CARD_DATE_ERROR: 'Invalid card date.',
-  BOOKING_SUCCESS: 'Your booking and payment were successfully done. We have sent you a confirmation email.',
+  BOOKING_SUCCESS: 'Your booking and payment were successfully done. We sent you a confirmation email.',
   BOOKING_EMAIL_ALREADY_REGISTERED: 'This email address is already registered. Please sign in.',
   EMPTY_BOOKING_LIST: 'No bookings.',
   OPTIONS: 'Options',
@@ -193,4 +193,5 @@ export const en = {
   FROM_TIME_EMPTY: 'Please enter a pickup time.',
   TO_DATE_EMPTY: 'Please enter a drop-off date.',
   TO_TIME_EMPTY: 'Please enter a drop-off time.',
+  PAYMENT_FAILED: 'Payment failed.',
 }
