@@ -11,6 +11,7 @@ import {
   BC_CAR_IMAGE_WIDTH,
   BC_CAR_IMAGE_HEIGHT,
   BC_MINIMUM_AGE,
+  BC_STRIPE_PUBLISHABLE_KEY
 } from '@env'
 
 /**
@@ -148,3 +149,10 @@ export const CAR_IMAGE_HEIGHT: number = Number.parseInt(BC_CAR_IMAGE_HEIGHT, 10)
  * @type {number}
  */
 export const MINIMUM_AGE: number = Number.parseInt(BC_MINIMUM_AGE, 10) || 21
+
+/**
+ * Stripe Publishable Key.
+ *
+ * @type {string}
+ */
+export const STRIPE_PUBLISHABLE_KEY: string = BC_STRIPE_PUBLISHABLE_KEY

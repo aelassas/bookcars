@@ -193,6 +193,5 @@ export const fr = {
   FROM_TIME_EMPTY: "Veuillez saisir l'heure de prise en charge.",
   TO_DATE_EMPTY: 'Veuillez saisir la date de restitution.',
   TO_TIME_EMPTY: "Veuillez saisir l'heure de restitution.",
+  PAYMENT_FAILED: 'Paiement échoué.',
 }
-
-export default fr
