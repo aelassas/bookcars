@@ -1,6 +1,6 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) [![](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki) [![](https://img.shields.io/badge/live-demo-brightgreen)](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo)
 
-BookCars is a car rental platform, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a fully functional car rental platform with operational [stripe payment gateway](https://github.com/aelassas/bookcars/wiki/Stripe-Setup), supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
@@ -22,6 +22,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Booking management
 * Customer management
 * Multiple payment methods (Credit Card, Pay Later)
+* Operational stripe payment gateway
 * Multiple language support (English, French)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
 * Responsive backend and frontend
@@ -72,22 +73,23 @@ You can also install the Android App by directly downloading the APK and install
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Installing on VPS](https://github.com/aelassas/bookcars/wiki/Installing-on-VPS)
-5. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
+5. [Stripe Setup](https://github.com/aelassas/bookcars/wiki/Stripe-Setup)
+6. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Docker#docker-image)
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Docker#ssl)
-6. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
-7. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
+7. [Build Mobile App](https://github.com/aelassas/bookcars/wiki/Build-Mobile-App)
+8. [Demo Database](https://github.com/aelassas/bookcars/wiki/Demo-Database)
    1. [Windows, Linux and macOS](https://github.com/aelassas/bookcars/wiki/Demo-Database#windows-linux-and-macos)
    2. [Docker](https://github.com/aelassas/bookcars/wiki/Demo-Database#docker)
-8. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
-9. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
-   1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
-   2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
-   3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
-10. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
-11. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
-12. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
-13. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
+9. [Run from Source](https://github.com/aelassas/bookcars/wiki/Run-from-Source)
+10. [Run Mobile App](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App)
+    1. [Prerequisites](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#prerequisites)
+    2. [Instructions](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#instructions)
+    3. [Push Notifications](https://github.com/aelassas/bookcars/wiki/Run-Mobile-App#push-notifications)
+11. [Change Currency](https://github.com/aelassas/bookcars/wiki/Change-Currency)
+12. [Add New Language](https://github.com/aelassas/bookcars/wiki/Add-New-Language)
+13. [Unit Tests and Coverage](https://github.com/aelassas/bookcars/wiki/Unit-Tests-and-Coverage)
+14. [Logs](https://github.com/aelassas/bookcars/wiki/Logs)
 
 ## License
 
