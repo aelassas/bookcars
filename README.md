@@ -21,6 +21,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Car fleet management
 * Booking management
 * Customer management
+* Payment management
 * Multiple payment methods (Credit Card, Pay Later)
 * Operational stripe payment gateway
 * Multiple language support (English, French)
