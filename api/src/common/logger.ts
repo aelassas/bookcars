@@ -34,9 +34,11 @@ export const info = (message: string, obj?: any) => {
   }
 }
 
-export const error = (message: string, err?: unknown) => {
-  if (err instanceof Error) {
-    logger.error(`${message} ${err.message}`) // ${err.stack}
+export const error = (message: string, obj?: unknown) => {
+  if (obj instanceof Error) {
+    logger.error(`${message} ${obj.message}`) // ${err.stack}
+  } else if (obj) {
+    logger.error(`${message} ${JSON.stringify(obj)}`)
   } else {
     logger.error(message)
   }
