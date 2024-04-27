@@ -24,7 +24,7 @@ describe('POST /api/create-payment-intent', () => {
 
     // Test create payment intent whith existant user
     const paymentIntent = await stripeAPI.paymentIntents.create({
-      amount: payload.amount,
+      amount: Math.floor(payload.amount * 100),
       currency: payload.currency,
       receipt_email: receiptEmail,
     })
