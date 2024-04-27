@@ -46,10 +46,12 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       // For example, to charge 10 USD, provide an amount value of 1000 (that is, 1000 cents).
       amount: Math.floor(amount * 100),
       currency,
-      payment_method_types: ['card'],
       receipt_email: receiptEmail,
       description,
       customer: customer.id,
+      automatic_payment_methods: {
+        enabled: true,
+      },
     })
 
     //
