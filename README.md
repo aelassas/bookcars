@@ -73,7 +73,7 @@ You can also install the Android App by directly downloading the APK and install
 2. [Architecture](https://github.com/aelassas/bookcars/wiki/Architecture)
 3. [Installing](https://github.com/aelassas/bookcars/wiki/Installing)
 4. [Installing on VPS](https://github.com/aelassas/bookcars/wiki/Installing-on-VPS)
-5. [Stripe Setup](https://github.com/aelassas/bookcars/wiki/Stripe-Setup)
+5. [Setup Stripe](https://github.com/aelassas/bookcars/wiki/Setup-Stripe)
 6. [Docker](https://github.com/aelassas/bookcars/wiki/Docker)
    1. [Docker Image](https://github.com/aelassas/bookcars/wiki/Docker#docker-image)
    2. [SSL](https://github.com/aelassas/bookcars/wiki/Docker#ssl)
