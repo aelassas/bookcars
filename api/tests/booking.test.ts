@@ -24,7 +24,7 @@ let CAR2_ID: string
 let BOOKING_ID: string
 let ADDITIONAL_DRIVER_ID: string
 
-const ADDITIONAL_DRIVER_EMAIL: string = 'addtional.driver@test.bookcars.ma'
+const ADDITIONAL_DRIVER_EMAIL: string = testHelper.GetRandomEmail()
 const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
   email: ADDITIONAL_DRIVER_EMAIL,
   fullName: 'Additional Driver 1',
