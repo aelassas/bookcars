@@ -166,7 +166,7 @@ export const createLocation = async (nameEN: string, nameFR: string) => {
     return location.id as string
 }
 
-export const GetRandomEmail = () => `random.${uuid()}@test.bookcars.ma`
+export const GetRandomEmail = () => `random.${uuid()}.${Date.now()}@test.bookcars.ma`
 
 export const GetRandromObjectId = () => new mongoose.Types.ObjectId()
 
