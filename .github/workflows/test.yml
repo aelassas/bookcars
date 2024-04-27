@@ -15,12 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: TEST
     
+    strategy:
+      matrix:
+        node-version: [lts/*]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: ${{ matrix.node-version }}
+
+        
     - name: test API
       run: |
            cd ./api
