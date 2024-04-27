@@ -1,6 +1,6 @@
 [![build](https://github.com/aelassas/bookcars/actions/workflows/build.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/build.yml) [![test](https://github.com/aelassas/bookcars/actions/workflows/test.yml/badge.svg)](https://github.com/aelassas/bookcars/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/aelassas/bookcars/graph/badge.svg?token=FSB0H9RDEQ)](https://codecov.io/gh/aelassas/bookcars) [![](https://img.shields.io/badge/docs-wiki-brightgreen)](https://github.com/aelassas/bookcars/wiki) [![](https://img.shields.io/badge/live-demo-brightgreen)](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo)
 
-BookCars is a fully functional car rental platform with operational [stripe payment gateway](https://github.com/aelassas/bookcars/wiki/Stripe-Setup), supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a fully functional car rental platform with operational [stripe payment gateway](https://github.com/aelassas/bookcars/wiki/Setup-Stripe), supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
