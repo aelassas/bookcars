@@ -30,7 +30,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Native Mobile app for Android and iOS with single codebase
 * Push notifications
 * Secure against XSS, XST, CSRF and MITM
-* Supported Platforms: ![iOS](https://img.shields.io/badge/iOS-4630EB.svg?logo=APPLE&labelColor=999999&logoColor=fff) ![Android](https://img.shields.io/badge/Android-4630EB.svg?&logo=ANDROID&labelColor=A4C639&logoColor=fff) ![Web](https://img.shields.io/badge/web-4630EB.svg?logo=GOOGLE-CHROME&labelColor=FBC117&logoColor=fff) ![Docker](https://img.shields.io/badge/Docker-4630EB.svg?logo=DOCKER&labelColor=4285F4&logoColor=fff)
+* Supported Platforms: iOS, Android, Web, Docker
 
 ## Live Demo
 
