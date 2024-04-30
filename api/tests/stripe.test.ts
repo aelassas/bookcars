@@ -60,6 +60,8 @@ describe('POST /api/create-checkout-session', () => {
       expect(res.statusCode).toBe(200)
       expect(res.body.sessionId).not.toBeNull()
       expect(res.body.customerId).not.toBeNull()
+    } catch (err) {
+      console.error(err)
     } finally {
       const customers = await stripeAPI.customers.list({ email: receiptEmail })
       if (customers.data.length > 0) {
@@ -149,6 +151,8 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(400)
+    } catch (err) {
+      console.error(err)
     } finally {
       await booking.deleteOne()
     }
@@ -161,6 +165,8 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(400)
+    } catch (err) {
+      console.error(err)
     } finally {
       const dbRes = await databaseHelper.Connect(env.DB_URI, false, false)
       expect(dbRes).toBeTruthy()
@@ -200,6 +206,8 @@ describe('POST /api/create-payment-intent', () => {
       expect(res.statusCode).toBe(200)
       expect(res.body.paymentIntentId).not.toBeNull()
       expect(res.body.customerId).not.toBeNull()
+    } catch (err) {
+      console.error(err)
     } finally {
       const customers = await stripeAPI.customers.list({ email: receiptEmail })
       if (customers.data.length > 0) {

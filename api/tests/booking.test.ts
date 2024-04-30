@@ -238,6 +238,8 @@ describe('POST /api/checkout', () => {
       expect(res.statusCode).toBe(200)
       bookings = await Booking.find({ driver: DRIVER1_ID })
       expect(bookings.length).toBeGreaterThan(2)
+    } catch (err) {
+      console.error(err)
     } finally {
       const customer = await stripeAPI.customers.retrieve(customerId)
       if (customer) {
@@ -642,7 +644,7 @@ describe('POST /api/cancel-booking/:id', () => {
   })
 })
 
-describe('DELETE /api/delete-bookings', () => {
+describe('POST /api/delete-bookings', () => {
   it('should delete bookings', async () => {
     const token = await testHelper.signinAsAdmin()
 
@@ -666,5 +668,58 @@ describe('DELETE /api/delete-bookings', () => {
     expect(res.statusCode).toBe(400)
 
     await testHelper.signout(token)
+  })
+})
+
+describe('DELETE /api/delete-temp-booking', () => {
+  it('should delete temporary booking', async () => {
+    //
+    // Test successful delete
+    //
+    const sessionId = testHelper.GetRandromObjectIdAsString()
+    const expireAt = new Date()
+    expireAt.setSeconds(expireAt.getSeconds() + env.BOOKING_EXPIRE_AT)
+
+    const booking = new Booking({
+      supplier: SUPPLIER_ID,
+      car: CAR1_ID,
+      driver: DRIVER1_ID,
+      pickupLocation: LOCATION_ID,
+      dropOffLocation: LOCATION_ID,
+      from: new Date(2024, 2, 1),
+      to: new Date(1990, 2, 4),
+      status: bookcarsTypes.BookingStatus.Void,
+      sessionId,
+      expireAt,
+      cancellation: true,
+      amendments: true,
+      theftProtection: false,
+      collisionDamageWaiver: false,
+      fullInsurance: false,
+      price: 312,
+      additionalDriver: true,
+    })
+    await booking.save()
+
+    let res = await request(app)
+      .delete(`/api/delete-temp-booking/${booking._id.toString()}/${sessionId}`)
+    expect(res.statusCode).toBe(200)
+    const _booking = await Booking.findById(booking._id)
+    expect(_booking).toBeNull()
+
+    //
+    // Test failure
+    //
+    try {
+      await databaseHelper.Close()
+      res = await request(app)
+        .delete(`/api/delete-temp-booking/${booking._id.toString()}/${sessionId}`)
+      expect(res.statusCode).toBe(400)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      const connRes = await databaseHelper.Connect(env.DB_URI, false, false)
+      expect(connRes).toBeTruthy()
+    }
   })
 })

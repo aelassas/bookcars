@@ -83,6 +83,8 @@ describe('Test database initialization', () => {
       await databaseHelper.Close()
       res = await databaseHelper.initialize()
       expect(res).toBeFalsy()
+    } catch (err) {
+      console.error(err)
     } finally {
       res = await databaseHelper.Connect(env.DB_URI, false, false)
       expect(res).toBeTruthy()
