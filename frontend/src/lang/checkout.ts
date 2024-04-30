@@ -22,7 +22,7 @@ const strings = new LocalizedStrings({
     SIGN_IN: 'Se connecter ?',
     SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
     SUCCESS: 'Votre paiement a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
-    PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
+    PAY_LATER_SUCCESS: 'Votre réservation a été effectuée avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     PAYMENT_OPTIONS: 'Options de paiement',
     PAY_LATER: 'Payer plus tard',
     PAY_LATER_INFO: 'Modification et annulation gratuites',
