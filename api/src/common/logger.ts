@@ -1,5 +1,8 @@
 import winston, { format, transports } from 'winston'
 
+let ENABLE_LOGGING = true
+let ENABLE_ERROR_LOGGING = true
+
 const logFormat = format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
 
 const logger = winston.createLogger({
@@ -27,19 +30,39 @@ const logger = winston.createLogger({
 })
 
 export const info = (message: string, obj?: any) => {
-  if (obj) {
-    logger.info(`${message} ${JSON.stringify(obj)}`)
-  } else {
-    logger.info(message)
+  if (ENABLE_LOGGING) {
+    if (obj) {
+      logger.info(`${message} ${JSON.stringify(obj)}`)
+    } else {
+      logger.info(message)
+    }
   }
 }
 
 export const error = (message: string, obj?: unknown) => {
-  if (obj instanceof Error) {
-    logger.error(`${message} ${obj.message}`) // ${err.stack}
-  } else if (obj) {
-    logger.error(`${message} ${JSON.stringify(obj)}`)
-  } else {
-    logger.error(message)
+  if (ENABLE_LOGGING && ENABLE_ERROR_LOGGING) {
+    if (obj instanceof Error) {
+      logger.error(`${message} ${obj.message}`) // ${err.stack}
+    } else if (obj) {
+      logger.error(`${message} ${JSON.stringify(obj)}`)
+    } else {
+      logger.error(message)
+    }
   }
+}
+
+export const enableLogging = () => {
+  ENABLE_LOGGING = true
+}
+
+export const disableLogging = () => {
+  ENABLE_LOGGING = false
+}
+
+export const enableErrorLogging = () => {
+  ENABLE_ERROR_LOGGING = true
+}
+
+export const disableErrorLogging = () => {
+  ENABLE_ERROR_LOGGING = false
 }

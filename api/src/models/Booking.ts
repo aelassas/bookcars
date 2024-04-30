@@ -2,12 +2,15 @@ import { Schema, model } from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 
+export const BOOKING_EXPIRE_AT_INDEX_NAME = 'expireAt'
+
 const bookingSchema = new Schema<env.Booking>(
   {
     supplier: {
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
       ref: 'User',
+      index: true,
     },
     car: {
       type: Schema.Types.ObjectId,
@@ -18,6 +21,7 @@ const bookingSchema = new Schema<env.Booking>(
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
       ref: 'User',
+      index: true,
     },
     pickupLocation: {
       type: Schema.Types.ObjectId,
@@ -84,6 +88,24 @@ const bookingSchema = new Schema<env.Booking>(
     cancelRequest: {
       type: Boolean,
       default: false,
+    },
+    sessionId: {
+      type: String,
+      index: true,
+    },
+    paymentIntentId: {
+      type: String,
+    },
+    customerId: {
+      type: String,
+    },
+    expireAt: {
+      //
+      // Bookings created from checkout with Stripe are temporary and
+      // are automatically deleted if the payment checkout session expires.
+      //
+      type: Date,
+      index: { name: BOOKING_EXPIRE_AT_INDEX_NAME, expireAfterSeconds: env.BOOKING_EXPIRE_AT, background: true },
     },
   },
   {

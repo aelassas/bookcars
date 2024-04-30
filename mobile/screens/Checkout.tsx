@@ -644,12 +644,14 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       try {
         if (!payLater) {
           const currency = i18n.t('CURRENCY')
-          const createPaymentIntentPayload: bookcarsTypes.CreatePaymentIntentPayload = {
+          const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
             amount: price,
             // Supported currencies for the moment: usd, eur
             // Must be a supported currency: https://docs.stripe.com/currencies
             currency: currency === '$' ? 'usd' : currency === '€' ? 'eur' : '',
+            locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
+            name: '',
             description: 'BookCars Mobile Service',
             customerName: (!authenticated ? driver?.fullName : user?.fullName) as string,
           }
