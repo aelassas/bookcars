@@ -4,6 +4,7 @@ import url from 'url'
 import path from 'path'
 import fs from 'node:fs/promises'
 import { v1 as uuid } from 'uuid'
+import mongoose from 'mongoose'
 import * as bookcarsTypes from ':bookcars-types'
 import app from '../src/app'
 import * as databaseHelper from '../src/common/databaseHelper'
@@ -38,20 +39,24 @@ const ADMIN_EMAIL = `${testHelper.getName('admin')}@test.bookcars.ma`
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-  if (await databaseHelper.Connect(env.DB_URI, false, false)) {
-    await testHelper.initialize()
-  }
+  testHelper.initializeLogger()
+
+  const res = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+  expect(res).toBeTruthy()
+  await testHelper.initialize()
 })
 
 //
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  await testHelper.close()
+  if (mongoose.connection.readyState) {
+    await testHelper.close()
 
-  await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
+    await Token.deleteMany({ user: { $in: [ADMIN_ID] } })
 
-  await databaseHelper.Close()
+    await databaseHelper.Close()
+  }
 })
 
 //
@@ -1269,7 +1274,7 @@ describe('POST /api/delete-users', () => {
       theftProtection: false,
       collisionDamageWaiver: false,
       fullInsurance: false,
-      price: 3120,
+      price: 312,
       additionalDriver: true,
       _additionalDriver: additionalDriver._id,
     })

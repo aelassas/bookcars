@@ -14,6 +14,7 @@ const carSchema = new Schema<env.Car>(
       type: Schema.Types.ObjectId,
       required: [true, "can't be blank"],
       ref: 'User',
+      index: true,
     },
     minimumAge: {
       type: Number,

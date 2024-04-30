@@ -298,7 +298,7 @@ const MultipleSelect = ({
         renderOption={(props, option) => {
           if (type === bookcarsTypes.RecordType.User) {
             return (
-              <li {...props} className={`${props.className} ms-option`}>
+              <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image">
                   {option.image ? <Avatar src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)} className="avatar-medium" /> : <AccountCircle className="avatar-medium" color="disabled" />}
                 </span>
@@ -307,7 +307,7 @@ const MultipleSelect = ({
             )
           } if (type === bookcarsTypes.RecordType.Supplier) {
             return (
-              <li {...props} className={`${props.className} ms-option`}>
+              <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image supplier-ia">
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_USERS, option.image)}
@@ -320,7 +320,7 @@ const MultipleSelect = ({
             )
           } if (type === bookcarsTypes.RecordType.Location) {
             return (
-              <li {...props} className={`${props.className} ms-option`}>
+              <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image">
                   <LocationIcon />
                 </span>
@@ -329,7 +329,7 @@ const MultipleSelect = ({
             )
           } if (type === bookcarsTypes.RecordType.Car) {
             return (
-              <li {...props} className={`${props.className} ms-option`}>
+              <li {...props} key={option._id} className={`${props.className} ms-option`}>
                 <span className="option-image car-ia">
                   <img
                     src={bookcarsHelper.joinURL(env.CDN_CARS, option.image)}
@@ -345,7 +345,7 @@ const MultipleSelect = ({
           }
 
           return (
-            <li {...props} className={`${props.className} ms-option`}>
+            <li {...props} key={option._id} className={`${props.className} ms-option`}>
               <span>{option.name}</span>
             </li>
           )

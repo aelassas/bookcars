@@ -261,6 +261,27 @@ export const EXPO_ACCESS_TOKEN = __env__('BC_EXPO_ACCESS_TOKEN', false)
  */
 export const STRIPE_SECRET_KEY = __env__('BC_STRIPE_SECRET_KEY', false, 'STRIPE_SECRET_KEY')
 
+let stripeSessionExpireAt = Number.parseInt(__env__('BC_STRIPE_SESSION_EXPIRE_AT', false, '82800'), 10)
+stripeSessionExpireAt = stripeSessionExpireAt < 1800 ? 1800 : stripeSessionExpireAt
+stripeSessionExpireAt = stripeSessionExpireAt <= 82800 ? stripeSessionExpireAt : 82800
+
+/**
+ * Stripe Checkout Session expiration in seconds. Should be at least 1800 seconds (30min) and max 82800 seconds. Default is 82800 seconds (~23h).
+ * If the value is lower than 1800 seconds, it wil be set to 1800 seconds.
+ * If the value is greater than 82800 seconds, it wil be set to 82800 seconds.
+ *
+ * @type {number}
+ */
+export const STRIPE_SESSION_EXPIRE_AT = stripeSessionExpireAt
+
+/**
+ * Booking expiration in seconds.
+ * Bookings created from checkout with Stripe are temporary and are automatically deleted if the payment checkout session expires.
+ *
+ * @type {number}
+ */
+export const BOOKING_EXPIRE_AT = STRIPE_SESSION_EXPIRE_AT + (10 * 60)
+
 /**
  * User Document.
  *
@@ -359,6 +380,10 @@ export interface Booking extends Document {
   _additionalDriver?: Types.ObjectId
   cancelRequest?: boolean
   price: number
+  sessionId?: string
+  paymentIntentId?: string
+  customerId?: string
+  expireAt?: Date
 }
 
 /**
