@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   OutlinedInput,
   InputLabel,
@@ -49,12 +49,15 @@ import Info from './Info'
 
 import '../assets/css/checkout.css'
 
+//
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
+//
 const stripePromise = loadStripe(env.STRIPE_PUBLISHABLE_KEY as string)
 
 const Checkout = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [car, setCar] = useState<bookcarsTypes.Car>()
@@ -106,6 +109,8 @@ const Checkout = () => {
 
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const [bookingId, setBookingId] = useState<string>()
+  const [sessionId, setSessionId] = useState<string>()
 
   const _fr = language === 'fr'
   const _locale = _fr ? fr : enUS
@@ -481,8 +486,8 @@ const Checkout = () => {
       //
       // Stripe Payment Gateway
       //
-      let customerId: string | undefined
-      let sessionId: string | undefined
+      let _customerId: string | undefined
+      let _sessionId: string | undefined
       if (!payLater) {
         const payload: bookcarsTypes.CreatePaymentPayload = {
           amount: price,
@@ -499,8 +504,8 @@ const Checkout = () => {
         }
         const res = await StripeService.createCheckoutSession(payload)
         setClientSecret(res.clientSecret)
-        sessionId = res.sessionId
-        customerId = res.customerId
+        _sessionId = res.sessionId
+        _customerId = res.customerId
       }
 
       const payload: bookcarsTypes.CheckoutPayload = {
@@ -508,11 +513,11 @@ const Checkout = () => {
         booking,
         additionalDriver: _additionalDriver,
         payLater,
-        sessionId,
-        customerId
+        sessionId: _sessionId,
+        customerId: _customerId
       }
 
-      const status = await BookingService.checkout(payload)
+      const { status, bookingId: _bookingId } = await BookingService.checkout(payload)
       setLoading(false)
 
       if (status === 200) {
@@ -520,6 +525,8 @@ const Checkout = () => {
           setVisible(false)
           setSuccess(true)
         }
+        setBookingId(_bookingId)
+        setSessionId(_sessionId)
       } else {
         helper.error()
       }
@@ -963,7 +970,27 @@ const Checkout = () => {
                       }
                     </Button>
                   )}
-                  <Button variant="contained" className="btn-cancel btn-margin-bottom" size="small" href="/">
+                  <Button
+                    variant="contained"
+                    className="btn-cancel btn-margin-bottom"
+                    size="small"
+                    onClick={async () => {
+                      try {
+                        if (bookingId && sessionId) {
+                          //
+                          // Delete temporary booking on cancel.
+                          // Otherwise, temporary bookings are
+                          // automatically deleted through a TTL index.
+                          //
+                          await BookingService.deleteTempBooking(bookingId, sessionId)
+                        }
+                      } catch (err) {
+                        helper.error(err)
+                      } finally {
+                        navigate('/')
+                      }
+                    }}
+                  >
                     {commonStrings.CANCEL}
                   </Button>
                 </div>

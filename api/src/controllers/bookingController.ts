@@ -552,6 +552,26 @@ export const deleteBookings = async (req: Request, res: Response) => {
 }
 
 /**
+ * Delete temporary Booking created from checkout session.
+ *
+ * @async
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {unknown}
+ */
+export const deleteTempBooking = async (req: Request, res: Response) => {
+  const { bookingId, sessionId } = req.params
+
+  try {
+    await Booking.deleteOne({ _id: bookingId, sessionId, status: bookcarsTypes.BookingStatus.Void, expireAt: { $ne: null } })
+    return res.sendStatus(200)
+  } catch (err) {
+    logger.error(`[booking.deleteTempBooking] ${i18n.t('DB_ERROR')} ${{ bookingId, sessionId }}`, err)
+    return res.status(400).send(i18n.t('DB_ERROR') + err)
+  }
+}
+
+/**
  * Get Booking by ID.
  *
  * @export

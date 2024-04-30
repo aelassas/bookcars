@@ -8,13 +8,13 @@ import * as UserService from './UserService'
  * @param {bookcarsTypes.CheckoutPayload} data
  * @returns {Promise<number>}
  */
-export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<number> =>
+export const checkout = (data: bookcarsTypes.CheckoutPayload): Promise<{ status: number, bookingId: string }> =>
   axiosInstance
     .post(
       '/api/checkout',
       data
     )
-    .then((res) => res.status)
+    .then((res) => ({ status: res.status, bookingId: res.data.bookingId }))
 
 /**
  * Update a Booking.
@@ -74,4 +74,17 @@ export const cancel = (id: string): Promise<number> =>
       `/api/cancel-booking/${encodeURIComponent(id)}`,
       null,
       { withCredentials: true }
+    ).then((res) => res.status)
+
+/**
+ * Delete temporary Booking created from checkout session.
+ *
+ * @param {string} bookingId
+ * @param {string} sessionId
+ * @returns {Promise<number>}
+ */
+export const deleteTempBooking = (bookingId: string, sessionId: string): Promise<number> =>
+  axiosInstance
+    .delete(
+      `/api/delete-temp-booking/${bookingId}/${sessionId}`,
     ).then((res) => res.status)
