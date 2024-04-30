@@ -21,7 +21,7 @@ const strings = new LocalizedStrings({
     BOOK: 'Réserver',
     SIGN_IN: 'Se connecter ?',
     SECURE_PAYMENT_INFO: 'Vos données sont protégées par le paiement sécurisé SSL.',
-    SUCCESS: 'Votre réservation et votre paiement ont été effectués avec succès. Nous vous avons envoyé un e-mail de confirmation.',
+    SUCCESS: 'Votre paiement a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     PAY_LATER_SUCCESS: 'Votre réservation a été effectué avec succès. Nous vous avons envoyé un e-mail de confirmation.',
     PAYMENT_OPTIONS: 'Options de paiement',
     PAY_LATER: 'Payer plus tard',
@@ -29,6 +29,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE: 'Payer en ligne',
     PAY_ONLINE_INFO: 'Modification et annulation sous conditions',
     PAYMENT_FAILED: 'Paiement échoué.',
+    CHECKING: 'Vérification en cours...',
   },
   en: {
     BOOKING_HEADING: 'Book now',
@@ -49,7 +50,7 @@ const strings = new LocalizedStrings({
     BOOK: 'Book now',
     SIGN_IN: 'Sign in?',
     SECURE_PAYMENT_INFO: 'Your data is protected by SSL secure payment.',
-    SUCCESS: 'Your booking and payment were successfully done. We sent you a confirmation email.',
+    SUCCESS: 'Your payment was successfully done. We sent you a confirmation email.',
     PAY_LATER_SUCCESS: 'Your booking was successfully done. We sent you a confirmation email.',
     PAYMENT_OPTIONS: 'Payment options',
     PAY_LATER: 'Paye later',
@@ -57,6 +58,7 @@ const strings = new LocalizedStrings({
     PAY_ONLINE: 'Pay online',
     PAY_ONLINE_INFO: 'Amendments and cancellation under conditions',
     PAYMENT_FAILED: 'Payment failed.',
+    CHECKING: 'Checking in progress...',
   },
 })
 

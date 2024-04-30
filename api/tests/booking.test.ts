@@ -36,74 +36,79 @@ const ADDITIONAL_DRIVER: bookcarsTypes.AdditionalDriver = {
 // Connecting and initializing the database before running the test suite
 //
 beforeAll(async () => {
-  if (await databaseHelper.Connect(env.DB_URI, false, false)) {
-    await testHelper.initialize()
+  testHelper.initializeLogger()
 
-    // create a supplier
-    const supplierName = testHelper.getSupplierName()
-    SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
+  const res = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+  expect(res).toBeTruthy()
 
-    // get user id
-    DRIVER1_ID = testHelper.getUserId()
+  await testHelper.initialize()
 
-    // create a location
-    LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
+  // create a supplier
+  const supplierName = testHelper.getSupplierName()
+  SUPPLIER_ID = await testHelper.createSupplier(`${supplierName}@test.bookcars.ma`, supplierName)
 
-    // create car
-    const payload: bookcarsTypes.CreateCarPayload = {
-      name: 'BMW X1',
-      supplier: SUPPLIER_ID,
-      minimumAge: 21,
-      locations: [LOCATION_ID],
-      price: 780,
-      deposit: 9500,
-      available: false,
-      type: bookcarsTypes.CarType.Diesel,
-      gearbox: bookcarsTypes.GearboxType.Automatic,
-      aircon: true,
-      seats: 5,
-      doors: 4,
-      fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
-      mileage: -1,
-      cancellation: 0,
-      amendments: 0,
-      theftProtection: 90,
-      collisionDamageWaiver: 120,
-      fullInsurance: 200,
-      additionalDriver: 0,
-    }
+  // get user id
+  DRIVER1_ID = testHelper.getUserId()
 
-    // car 1
-    let car = new Car(payload)
-    await car.save()
-    CAR1_ID = car.id
+  // create a location
+  LOCATION_ID = await testHelper.createLocation('Location 1 EN', 'Location 1 FR')
 
-    // car 2
-    car = new Car({ ...payload, name: 'BMW X5', price: 880 })
-    await car.save()
-    CAR2_ID = car.id
+  // create car
+  const payload: bookcarsTypes.CreateCarPayload = {
+    name: 'BMW X1',
+    supplier: SUPPLIER_ID,
+    minimumAge: 21,
+    locations: [LOCATION_ID],
+    price: 780,
+    deposit: 9500,
+    available: false,
+    type: bookcarsTypes.CarType.Diesel,
+    gearbox: bookcarsTypes.GearboxType.Automatic,
+    aircon: true,
+    seats: 5,
+    doors: 4,
+    fuelPolicy: bookcarsTypes.FuelPolicy.FreeTank,
+    mileage: -1,
+    cancellation: 0,
+    amendments: 0,
+    theftProtection: 90,
+    collisionDamageWaiver: 120,
+    fullInsurance: 200,
+    additionalDriver: 0,
   }
+
+  // car 1
+  let car = new Car(payload)
+  await car.save()
+  CAR1_ID = car.id
+
+  // car 2
+  car = new Car({ ...payload, name: 'BMW X5', price: 880 })
+  await car.save()
+  CAR2_ID = car.id
 })
 
 //
 // Closing and cleaning the database connection after running the test suite
 //
 afterAll(async () => {
-  await testHelper.close()
+  if (mongoose.connection.readyState) {
+    await testHelper.close()
 
-  // delete the supplier
-  await testHelper.deleteSupplier(SUPPLIER_ID)
+    // delete the supplier
+    await testHelper.deleteSupplier(SUPPLIER_ID)
 
-  // delete the location
-  await testHelper.deleteLocation(LOCATION_ID)
+    // delete the location
+    await testHelper.deleteLocation(LOCATION_ID)
 
-  // delete the car
-  await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
+    // delete the car
+    await Car.deleteMany({ _id: { $in: [CAR1_ID, CAR2_ID] } })
 
-  // delete drivers
-  await User.deleteOne({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
+    // delete drivers
+    await User.deleteOne({ _id: { $in: [DRIVER1_ID, DRIVER2_ID] } })
 
-  await databaseHelper.Close()
+    await databaseHelper.Close()
+  }
 })
 
 //
@@ -129,7 +134,7 @@ describe('POST /api/create-booking', () => {
         theftProtection: false,
         collisionDamageWaiver: false,
         fullInsurance: false,
-        price: 3120,
+        price: 312,
         additionalDriver: true,
       },
       additionalDriver: ADDITIONAL_DRIVER,
@@ -181,7 +186,7 @@ describe('POST /api/checkout', () => {
         theftProtection: false,
         collisionDamageWaiver: false,
         fullInsurance: false,
-        price: 3120,
+        price: 312,
         additionalDriver: true,
       },
       payLater: true,
@@ -196,12 +201,14 @@ describe('POST /api/checkout', () => {
     // Test failed stripe payment
     payload.payLater = false
     const receiptEmail = testHelper.GetRandomEmail()
-    const paymentIntentPayload: bookcarsTypes.CreatePaymentIntentPayload = {
+    const paymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
       amount: 234,
       currency: 'usd',
       receiptEmail,
       customerName: 'John Doe',
-      description: 'BookCars Web Service',
+      description: 'BookCars Testing Service',
+      locale: 'en',
+      name: 'Test',
     }
     res = await request(app)
       .post('/api/create-payment-intent')
@@ -237,6 +244,19 @@ describe('POST /api/checkout', () => {
         await stripeAPI.customers.del(customerId)
       }
     }
+
+    // Test checkout session
+    payload.paymentIntentId = undefined
+    payload.sessionId = 'xxxxxxxxxxxxxx'
+    res = await request(app)
+      .post('/api/checkout')
+      .send(payload)
+    expect(res.statusCode).toBe(200)
+    const { bookingId } = res.body
+    expect(bookingId).toBeTruthy()
+    const booking = await Booking.findById(bookingId)
+    expect(booking?.status).toBe(bookcarsTypes.BookingStatus.Void)
+    expect(booking?.sessionId).toBe(payload.sessionId)
     payload.payLater = true
 
     payload.booking!.additionalDriver = false

@@ -8,6 +8,7 @@ const notificationCounterSchema = new Schema<env.NotificationCounter>(
       required: [true, "can't be blank"],
       unique: true,
       ref: 'User',
+      index: true,
     },
     count: {
       type: Number,

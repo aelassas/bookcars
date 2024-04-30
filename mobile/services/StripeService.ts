@@ -7,7 +7,7 @@ import axiosInstance from './axiosInstance'
  * @param {bookcarsTypes.CreatePaymentIntentPayload} payload
  * @returns {Promise<bookcarsTypes.CreatePaymentIntentResult>}
  */
-export const createPaymentIntent = (payload: bookcarsTypes.CreatePaymentIntentPayload): Promise<bookcarsTypes.PaymentIntentResult> =>
+export const createPaymentIntent = (payload: bookcarsTypes.CreatePaymentPayload): Promise<bookcarsTypes.PaymentResult> =>
   axiosInstance
     .post(
       '/api/create-payment-intent',

@@ -8,7 +8,7 @@ import * as databaseHelper from './common/databaseHelper'
 import app from './app'
 import * as logger from './common/logger'
 
-if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG)) {
+if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG) && await databaseHelper.initialize()) {
   let server: http.Server | https.Server
 
   if (env.HTTPS) {
