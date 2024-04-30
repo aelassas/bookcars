@@ -12,7 +12,7 @@ import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../src/models/Token'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+  const res = await databaseHelper.Connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 })
 

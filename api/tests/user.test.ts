@@ -41,7 +41,7 @@ const ADMIN_EMAIL = `${testHelper.getName('admin')}@test.bookcars.ma`
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+  const res = await databaseHelper.Connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
   await testHelper.initialize()
 })

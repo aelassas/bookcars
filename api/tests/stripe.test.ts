@@ -15,7 +15,7 @@ import Booking from '../src/models/Booking'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+  const res = await databaseHelper.Connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 })
 
@@ -162,7 +162,7 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(400)
     } finally {
-      const dbRes = await databaseHelper.Connect(env.DB_URI, false, false) && await databaseHelper.initialize()
+      const dbRes = await databaseHelper.Connect(env.DB_URI, false, false)
       expect(dbRes).toBeTruthy()
     }
   })
