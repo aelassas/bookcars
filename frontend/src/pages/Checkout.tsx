@@ -944,7 +944,6 @@ const Checkout = () => {
                 {(!car.supplier.payLater || !payLater) && (
                   clientSecret && (
                     <div className="payment-options-container">
-
                       <EmbeddedCheckoutProvider
                         stripe={stripePromise}
                         options={{ clientSecret }}

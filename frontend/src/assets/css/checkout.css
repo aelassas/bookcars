@@ -229,21 +229,6 @@ div.booking .btn-cancel {
   background: #999;
 }
 
-div.booking .stripe-card {
-  margin: 0;
-}
-
-div.booking .card-number {
-  margin-top: 2rem;
-}
-
-div.booking .card-element {
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  border-radius: 4px;
-  padding: 17px;
-  margin: 0;
-}
-
 /* Device width is less than or equal to 960px */
 
 @media only screen and (width <=960px) {
@@ -280,25 +265,5 @@ div.booking .card-element {
   div.booking div.driver-details-form {
     width: 390px;
     margin-left: calc(50% - 195px);
-  }
-
-  div.booking div.payment div.card {
-    width: 410px;
-    margin-left: calc(50% - 205px);
-    padding-bottom: 10px;
-  }
-
-  div.booking .card-number {
-    width: 395px;
-  }
-
-  div.booking div.payment .card-month,
-  div.booking div.payment .card-year {
-    margin-right: 15px;
-    width: 190px;
-  }
-
-  div.booking div.payment .cvv {
-    width: 190px;
   }
 }
