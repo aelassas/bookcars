@@ -576,6 +576,7 @@ const UpdateBooking = () => {
                   label={commonStrings.FROM}
                   value={from}
                   maxDate={maxDate}
+                  showClear
                   required
                   onChange={(date) => {
                     if (date) {
@@ -618,6 +619,7 @@ const UpdateBooking = () => {
                   label={commonStrings.TO}
                   value={to}
                   minDate={minDate}
+                  showClear
                   required
                   onChange={(date) => {
                     if (date) {
