@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker as MuiDateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { fr, enUS } from 'date-fns/locale'
 import { TextFieldVariants } from '@mui/material'
-import { DateTimeValidationError } from '@mui/x-date-pickers'
+import { DateTimeValidationError, PickersActionBarAction } from '@mui/x-date-pickers'
 
 interface DateTimePickerProps {
   value?: Date
@@ -15,6 +15,7 @@ interface DateTimePickerProps {
   language?: string
   variant?: TextFieldVariants
   readOnly?: boolean
+  showClear?: boolean
   onChange?: (value: Date | null) => void
   onError?: (error: DateTimeValidationError, value: Date | null) => void
 }
@@ -28,6 +29,7 @@ const DateTimePicker = ({
   variant,
   language,
   readOnly,
+  showClear,
   onChange,
   onError
 }: DateTimePickerProps) => {
@@ -36,6 +38,12 @@ const DateTimePicker = ({
   useEffect(() => {
     setValue(dateTimeValue || null)
   }, [dateTimeValue])
+
+  const actions: PickersActionBarAction[] = ['accept', 'cancel']
+
+  if (showClear) {
+    actions.push('clear')
+  }
 
   return (
     <LocalizationProvider adapterLocale={language === 'fr' ? fr : enUS} dateAdapter={AdapterDateFns}>
@@ -50,8 +58,15 @@ const DateTimePicker = ({
             onChange(_value)
           }
 
-          if (_value && minDate && _value < minDate && onError) {
-            onError('minDate', _value)
+          if (_value && minDate) {
+            const val = new Date(_value)
+            val.setHours(0, 0, 0, 0)
+            const min = new Date(minDate)
+            min.setHours(0, 0, 0, 0)
+
+            if (val < min && onError) {
+              onError('minDate', _value)
+            }
           }
         }}
         onError={onError}
@@ -64,7 +79,7 @@ const DateTimePicker = ({
             required,
           },
           actionBar: {
-            actions: ['accept', 'cancel', 'clear'],
+            actions,
           },
         }}
       />
