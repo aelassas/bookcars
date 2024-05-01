@@ -14,7 +14,7 @@ import User from '../src/models/User'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false)
+  const res = await databaseHelper.connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 })
 
@@ -23,7 +23,7 @@ beforeAll(async () => {
 //
 afterAll(async () => {
   if (mongoose.connection.readyState) {
-    await databaseHelper.Close()
+    await databaseHelper.close()
   }
 })
 

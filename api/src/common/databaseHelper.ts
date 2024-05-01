@@ -21,7 +21,7 @@ import User from '../models/User'
  * @param {boolean} debug
  * @returns {Promise<boolean>}
  */
-export const Connect = async (uri: string, ssl: boolean, debug: boolean): Promise<boolean> => {
+export const connect = async (uri: string, ssl: boolean, debug: boolean): Promise<boolean> => {
   let options: ConnectOptions = {}
 
   if (ssl) {
@@ -53,7 +53,7 @@ export const Connect = async (uri: string, ssl: boolean, debug: boolean): Promis
  * @param {boolean} force
  * @returns {Promise<void>}
  */
-export const Close = async (force: boolean = false): Promise<void> => {
+export const close = async (force: boolean = false): Promise<void> => {
   await mongoose.connection.close(force)
 }
 

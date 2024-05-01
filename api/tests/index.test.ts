@@ -12,7 +12,7 @@ import Token, { TOKEN_EXPIRE_AT_INDEX_NAME } from '../src/models/Token'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false)
+  const res = await databaseHelper.connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 })
 
@@ -21,7 +21,7 @@ beforeAll(async () => {
 //
 afterAll(async () => {
   if (mongoose.connection.readyState) {
-    await databaseHelper.Close()
+    await databaseHelper.close()
   }
 })
 
@@ -80,13 +80,13 @@ describe('Test database initialization', () => {
     // Test failure
     //
     try {
-      await databaseHelper.Close()
+      await databaseHelper.close()
       res = await databaseHelper.initialize()
       expect(res).toBeFalsy()
     } catch (err) {
       console.error(err)
     } finally {
-      res = await databaseHelper.Connect(env.DB_URI, false, false)
+      res = await databaseHelper.connect(env.DB_URI, false, false)
       expect(res).toBeTruthy()
     }
   })
