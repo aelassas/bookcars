@@ -55,7 +55,11 @@ describe('Test database initialization', () => {
 
     if (tokenIndex) {
       const { expireAfterSeconds } = tokenIndex
-      await Token.collection.dropIndex(tokenIndex.name)
+      try {
+        await Token.collection.dropIndex(tokenIndex.name)
+      } catch (err) {
+        console.log('Error while dropping Booking.expireAt TTL index')
+      }
       await createTokenIndex(expireAfterSeconds + 1)
       await delay()
       res = await databaseHelper.initialize()
@@ -69,7 +73,11 @@ describe('Test database initialization', () => {
 
     if (bookingIndex) {
       const { expireAfterSeconds } = bookingIndex
-      await Booking.collection.dropIndex(bookingIndex.name)
+      try {
+        await Booking.collection.dropIndex(bookingIndex.name)
+      } catch (err) {
+        console.log('Error while dropping Booking.expireAt TTL index')
+      }
       await createBookingIndex(expireAfterSeconds + 1)
       await delay()
       res = await databaseHelper.initialize()
