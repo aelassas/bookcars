@@ -103,7 +103,7 @@ const SupplierFilter = ({
   }
 
   return (
-    (suppliers.length > 1
+    ((suppliers.length > 1 && suppliers.length < 17)
       && (
         <Accordion
           title={commonStrings.SUPPLIER}
