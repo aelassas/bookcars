@@ -9,15 +9,15 @@ beforeAll(() => {
 
 describe('Test database connection', () => {
   it('should connect to database', async () => {
-    const res = await databaseHelper.Connect(env.DB_URI, false, false)
+    const res = await databaseHelper.connect(env.DB_URI, false, false)
     expect(res).toBeTruthy()
-    await databaseHelper.Close()
+    await databaseHelper.close()
   })
 })
 
 describe('Test database connection failure', () => {
   it('should fail connecting to database', async () => {
-    const res = await databaseHelper.Connect('wrong-uri', true, false)
+    const res = await databaseHelper.connect('wrong-uri', true, false)
     expect(res).toBeFalsy()
   })
 })

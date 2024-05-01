@@ -8,7 +8,7 @@ import * as databaseHelper from './common/databaseHelper'
 import app from './app'
 import * as logger from './common/logger'
 
-if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG) && await databaseHelper.initialize()) {
+if (await databaseHelper.connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG) && await databaseHelper.initialize()) {
   let server: http.Server | https.Server
 
   if (env.HTTPS) {
@@ -31,7 +31,7 @@ if (await databaseHelper.Connect(env.DB_URI, env.DB_SSL, env.DB_DEBUG) && await 
     logger.info('Gracefully stopping...')
     server.close(async () => {
       logger.info(`HTTP${env.HTTPS ? 'S' : ''} server closed`)
-      await databaseHelper.Close(true)
+      await databaseHelper.close(true)
       logger.info('MongoDB connection closed')
       process.exit(0)
     })

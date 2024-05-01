@@ -19,7 +19,7 @@ let NOTIFICATION2_ID: string
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false)
+  const res = await databaseHelper.connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 
   await testHelper.initialize()
@@ -51,7 +51,7 @@ afterAll(async () => {
     await Notification.deleteMany({ user: ADMIN_USER_ID })
     await NotificationCounter.deleteOne({ user: ADMIN_USER_ID })
 
-    await databaseHelper.Close()
+    await databaseHelper.close()
   }
 })
 

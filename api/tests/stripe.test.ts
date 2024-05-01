@@ -15,7 +15,7 @@ import Booking from '../src/models/Booking'
 beforeAll(async () => {
   testHelper.initializeLogger()
 
-  const res = await databaseHelper.Connect(env.DB_URI, false, false)
+  const res = await databaseHelper.connect(env.DB_URI, false, false)
   expect(res).toBeTruthy()
 })
 
@@ -24,7 +24,7 @@ beforeAll(async () => {
 //
 afterAll(async () => {
   if (mongoose.connection.readyState) {
-    await databaseHelper.Close()
+    await databaseHelper.close()
   }
 })
 
@@ -161,14 +161,14 @@ describe('POST /api/check-checkout-session/:sessionId', () => {
     // Test database failure
     //
     try {
-      databaseHelper.Close()
+      databaseHelper.close()
       res = await request(app)
         .post(`/api/check-checkout-session/${sessionId}`)
       expect(res.statusCode).toBe(400)
     } catch (err) {
       console.error(err)
     } finally {
-      const dbRes = await databaseHelper.Connect(env.DB_URI, false, false)
+      const dbRes = await databaseHelper.connect(env.DB_URI, false, false)
       expect(dbRes).toBeTruthy()
     }
   })
