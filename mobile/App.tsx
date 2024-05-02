@@ -32,7 +32,7 @@ SplashScreen.preventAutoHideAsync()
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
-  const notificationListener = useRef<Notifications.Subscription>()
+
   const responseListener = useRef<Notifications.Subscription>()
   const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)
 
@@ -53,13 +53,6 @@ const App = () => {
     // Register push notifiations token
     //
     register()
-
-    //
-    // This listener is fired whenever a notification is received while the app is running.
-    //
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
-      console.log(notification)
-    })
 
     //
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
@@ -84,7 +77,6 @@ const App = () => {
     })
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current!)
       Notifications.removeNotificationSubscription(responseListener.current!)
     }
   }, [])
