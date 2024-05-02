@@ -6,7 +6,7 @@ As of 30<sup>th</sup> April 2024, Stripe Payment Gateway integration was success
 
 ## BookCars
 
-BookCars is a fully functional car rental platform with operational Stripe Payment Gateway, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
+BookCars is a car rental platform with operational Stripe Payment Gateway, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
 
 BookCars is designed to work with multiple suppliers. Each supplier can manage his car fleet and bookings from the backend. BookCars can also work with only one supplier as well.
 
