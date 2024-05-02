@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
+import Constants from 'expo-constants'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
@@ -85,7 +86,11 @@ export const registerPushToken = async (userId: string) => {
           alert('Failed to get push token for push notification!')
           return ''
         }
-        token = (await Notifications.getDevicePushTokenAsync()).data
+        token = (
+          await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig?.extra?.eas?.projectId,
+          })
+        ).data
       } else {
         alert('Must use physical device for Push Notifications')
       }
