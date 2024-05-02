@@ -34,7 +34,7 @@ const createBookingIndex = async (expireAfterSeconds: number): Promise<void> => 
 }
 
 const delay = async () => {
-  await testHelper.delay(3 * 1000)
+  await testHelper.delay(5 * 1000)
 }
 
 describe('Test database initialization', () => {
@@ -55,11 +55,7 @@ describe('Test database initialization', () => {
 
     if (tokenIndex) {
       const { expireAfterSeconds } = tokenIndex
-      try {
-        await Token.collection.dropIndex(tokenIndex.name)
-      } catch (err) {
-        console.log('Error while dropping Booking.expireAt TTL index')
-      }
+      await Token.collection.dropIndex(tokenIndex.name)
       await createTokenIndex(expireAfterSeconds + 1)
       await delay()
       res = await databaseHelper.initialize()
@@ -73,11 +69,7 @@ describe('Test database initialization', () => {
 
     if (bookingIndex) {
       const { expireAfterSeconds } = bookingIndex
-      try {
-        await Booking.collection.dropIndex(bookingIndex.name)
-      } catch (err) {
-        console.log('Error while dropping Booking.expireAt TTL index')
-      }
+      await Booking.collection.dropIndex(bookingIndex.name)
       await createBookingIndex(expireAfterSeconds + 1)
       await delay()
       res = await databaseHelper.initialize()
