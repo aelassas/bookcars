@@ -55,7 +55,7 @@ const App = () => {
     register()
 
     //
-    // This listener is fired whenever whenever a notification is received while the app is running.
+    // This listener is fired whenever a notification is received while the app is running.
     //
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       console.log(notification)
