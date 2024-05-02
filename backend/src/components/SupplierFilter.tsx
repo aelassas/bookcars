@@ -103,7 +103,7 @@ const SupplierFilter = ({
   }
 
   return (
-    ((suppliers.length > 1 && suppliers.length < 17)
+    (suppliers.length > 1
       && (
         <Accordion
           title={commonStrings.SUPPLIER}
@@ -128,7 +128,11 @@ const SupplierFilter = ({
                   role="button"
                   tabIndex={0}
                 >
-                  <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+                  <img
+                    src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)}
+                    alt={supplier.fullName}
+                    title={supplier.fullName}
+                  />
                 </span>
               </li>
             ))}

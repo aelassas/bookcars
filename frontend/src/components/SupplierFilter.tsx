@@ -128,7 +128,11 @@ const SupplierFilter = ({
                   tabIndex={0}
                   onClick={handleSupplierClick}
                 >
-                  <img src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)} alt={supplier.fullName} />
+                  <img
+                    src={bookcarsHelper.joinURL(env.CDN_USERS, supplier.avatar)}
+                    alt={supplier.fullName}
+                    title={supplier.fullName}
+                  />
                 </span>
               </li>
             ))}
