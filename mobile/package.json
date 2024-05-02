@@ -15,7 +15,8 @@
     "build:ios:preview": "cross-env EAS_NO_VCS=1 tsc --build --verbose && eas build --profile preview --platform android",
     "ts:check": "tsc --build",
     "lint": "eslint --ext .ts,.tsx .",
-    "fix": "eslint --fix ."
+    "fix": "eslint --fix .",
+    "ncu": "ncu -u -x eslint,react,react-native && npm i && npm prune && expo install --fix"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -45,7 +46,7 @@
     "expo-updates": "~0.24.12",
     "i18n-js": "^4.4.3",
     "lodash.debounce": "^4.0.8",
-    "mime": "^4.0.1",
+    "mime": "^4.0.3",
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "0.73.6",
@@ -57,22 +58,22 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-size-matters": "^0.4.2",
-    "react-native-vector-icons": "^10.0.3",
+    "react-native-vector-icons": "^10.1.0",
     "validator": "^13.11.0",
     "@stripe/stripe-react-native": "~0.35.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@types/react": "~18.2.79",
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
+    "@babel/core": "^7.24.5",
+    "@types/react": "~18.2.45",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "npm-check-updates": "^16.14.18",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "npm-check-updates": "^16.14.20",
     "typescript": "^5.4.5"
   },
   "private": true
