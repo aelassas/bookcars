@@ -52,25 +52,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 
 ### Mobile App
 
-You can install the Android app on any Android device.
-
-#### Scan this code with a device
-
-Open the Camera app and point it at this code. Then tap the notification that appears.
-
-![Mobile App Demo QR Code](https://bookcars.github.io/content/bookcars-3.7-qr-code.png)
-
-#### How to install the Mobile App on Android
-
-* On devices running Android 8.0 (API level 26) and higher, you must navigate to the Install unknown apps system settings screen to enable app installations from a particular location (i.e. the web browser you are downloading the app from).
-
-* On devices running Android 7.1.1 (API level 25) and lower, you should enable the Unknown sources system setting, found in Settings > Security on your device.
-
-#### Alternative Way
-
-You can also install the Android App by directly downloading the APK and installing it on an Android device.
-
-* [Download APK](https://expo.dev/artifacts/eas/2ZqDse8Qr4YCXKGsxXoQHW.apk)
+* [Download APK]()
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
