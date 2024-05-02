@@ -23,13 +23,16 @@ Notifications.setNotificationHandler({
   }),
 })
 
+//
 // Prevent native splash screen from autohiding before App component declaration
+//
 SplashScreen.preventAutoHideAsync()
   .then((result) => console.log(`SplashScreen.preventAutoHideAsync() succeeded: ${result}`))
   .catch(console.warn) // it's good to explicitly catch and inspect any error
 
 const App = () => {
   const [appIsReady, setAppIsReady] = useState(false)
+  const notificationListener = useRef<Notifications.Subscription>()
   const responseListener = useRef<Notifications.Subscription>()
   const navigationRef = useRef<NavigationContainerRef<StackParams>>(null)
 
@@ -46,10 +49,21 @@ const App = () => {
       }
     }
 
+    //
     // Register push notifiations token
+    //
     register()
 
+    //
+    // This listener is fired whenever whenever a notification is received while the app is running.
+    //
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      console.log(notification)
+    })
+
+    //
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    //
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
       try {
         if (navigationRef.current) {
@@ -70,9 +84,8 @@ const App = () => {
     })
 
     return () => {
-      if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current)
-      }
+      Notifications.removeNotificationSubscription(notificationListener.current!)
+      Notifications.removeNotificationSubscription(responseListener.current!)
     }
   }, [])
 
@@ -82,11 +95,13 @@ const App = () => {
 
   const onReady = useCallback(async () => {
     if (appIsReady) {
+      //
       // This tells the splash screen to hide immediately! If we call this after
       // `setAppIsReady`, then we may see a blank screen while the app is
       // loading its initial state and rendering its first pixels. So instead,
       // we hide the splash screen once we know the root view has already
       // performed layout.
+      //
       await SplashScreen.hideAsync()
     }
   }, [appIsReady])
