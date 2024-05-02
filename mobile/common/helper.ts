@@ -86,7 +86,6 @@ export const registerPushToken = async (userId: string) => {
           return ''
         }
         token = (await Notifications.getDevicePushTokenAsync()).data
-        console.log('PushToken', token)
       } else {
         alert('Must use physical device for Push Notifications')
       }
