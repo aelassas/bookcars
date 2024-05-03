@@ -65,7 +65,7 @@ export const create = async (req: Request, res: Response) => {
     await location.save()
     return res.send(location)
   } catch (err) {
-    logger.error(`[location.create] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[location.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }
@@ -109,7 +109,7 @@ export const update = async (req: Request, res: Response) => {
     logger.error('[location.update] Location not found:', id)
     return res.sendStatus(204)
   } catch (err) {
-    logger.error(`[location.update] ${i18n.t('DB_ERROR')} ${req.body}`, err)
+    logger.error(`[location.update] ${i18n.t('DB_ERROR')} ${JSON.stringify(req.body)}`, err)
     return res.status(400).send(i18n.t('DB_ERROR') + err)
   }
 }

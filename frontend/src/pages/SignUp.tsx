@@ -239,7 +239,6 @@ const SignUp = () => {
           setPasswordsDontMatch(false)
           setError(true)
           setTosError(false)
-          setLoading(false)
         }
       } else {
         setPasswordError(false)
@@ -249,12 +248,14 @@ const SignUp = () => {
         setTosError(false)
       }
     } catch (err) {
-      helper.error(err)
+      console.error(err)
       setPasswordError(false)
       setRecaptchaError(false)
       setPasswordsDontMatch(false)
       setError(true)
       setTosError(false)
+    } finally {
+      setLoading(false)
     }
   }
 
