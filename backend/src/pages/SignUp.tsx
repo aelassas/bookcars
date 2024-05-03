@@ -137,7 +137,6 @@ const SignUp = () => {
           setPasswordError(false)
           setPasswordsDontMatch(false)
           setError(true)
-          setLoading(false)
         }
       } else {
         setPasswordError(false)
@@ -145,10 +144,12 @@ const SignUp = () => {
 
       setPasswordsDontMatch(false)
     } catch (err) {
-      helper.error(err)
+      console.error(err)
       setPasswordError(false)
       setPasswordsDontMatch(false)
       setError(true)
+    } finally {
+      setLoading(false)
     }
   }
 

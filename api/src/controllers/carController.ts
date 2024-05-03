@@ -26,7 +26,7 @@ export const create = async (req: Request, res: Response) => {
 
   try {
     if (!body.image) {
-      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${body}`)
+      logger.error(`[car.create] ${i18n.t('CAR_IMAGE_REQUIRED')} ${JSON.stringify(body)}`)
       return res.status(400).send(i18n.t('CAR_IMAGE_REQUIRED'))
     }
 
@@ -50,7 +50,7 @@ export const create = async (req: Request, res: Response) => {
 
     return res.json(car)
   } catch (err) {
-    logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${body}`, err)
+    logger.error(`[car.create] ${i18n.t('DB_ERROR')} ${JSON.stringify(body)}`, err)
     return res.status(400).send(i18n.t('ERROR') + err)
   }
 }
