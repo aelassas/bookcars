@@ -41,15 +41,22 @@ const env = {
   RECAPTCHA_ENABLED: (process.env.REACT_APP_BC_RECAPTCHA_ENABLED && process.env.REACT_APP_BC_RECAPTCHA_ENABLED.toLowerCase()) === 'true',
   RECAPTCHA_SITE_KEY: String(process.env.REACT_APP_BC_RECAPTCHA_SITE_KEY),
   MINIMUM_AGE: Number.parseInt(String(process.env.REACT_APP_BC_MINIMUM_AGE), 10) || 21,
-  // PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
-  // If you choose CLASSIC, you will get a classic pagination with next and previous buttons on desktop and infinite scroll on mobile.
-  // If you choose INFINITE_SCROLL, you will get infinite scroll on desktop and mobile.
-  // Defaults to CLASSIC
+  /**
+   * PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
+   * If you choose CLASSIC, you will get a classic pagination with next and previous buttons on desktop and infinite scroll on mobile.
+   * If you choose INFINITE_SCROLL, you will get infinite scroll on desktop and mobile.
+   * Default is CLASSIC
+   */
   PAGINATION_MODE:
     (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
   STRIPE_PUBLISHABLE_KEY: String(process.env.REACT_APP_BC_STRIPE_PUBLISHABLE_KEY),
+  /**
+   * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
+   * Must be a supported currency: https://docs.stripe.com/currencies
+   * */
+  STRIPE_CURRENCY_CODE: String(process.env.REACT_APP_BC_STRIPE_CURRENCY_CODE || 'USD')
 }
 
 export default env
