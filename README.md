@@ -52,7 +52,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 
 ### Mobile App
 
-* [Download APK](https://github.com/aelassas/bookcars/releases/download/v3.7/bookcars-3.7.apk)
+* [Download APK](https://github.com/aelassas/bookcars/releases/download/v3.8/bookcars-3.8.apk)
 * Login: jdoe@bookcars.ma
 * Password: B00kC4r5
 
