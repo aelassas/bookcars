@@ -643,12 +643,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       let customerId: string | undefined
       try {
         if (!payLater) {
-          const currency = i18n.t('CURRENCY')
           const createPaymentIntentPayload: bookcarsTypes.CreatePaymentPayload = {
             amount: price,
-            // Supported currencies for the moment: usd, eur
-            // Must be a supported currency: https://docs.stripe.com/currencies
-            currency: currency === '$' ? 'usd' : currency === '€' ? 'eur' : '',
+            currency: env.STRIPE_CURRENCY_CODE,
             locale: language,
             receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
             name: '',
@@ -670,6 +667,14 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               customerId,
               paymentIntentClientSecret: clientSecret,
               merchantDisplayName: 'BookCars',
+              googlePay: {
+                merchantCountryCode: env.STRIPE_COUNTRY_CODE,
+                testEnv: env.STRIPE_PUBLISHABLE_KEY.includes('_test_'),
+                currencyCode: env.STRIPE_CURRENCY_CODE,
+              },
+              applePay: {
+                merchantCountryCode: env.STRIPE_COUNTRY_CODE,
+              },
             })
             if (initPaymentSheetError) {
               console.log(initPaymentSheetError)

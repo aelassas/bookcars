@@ -106,7 +106,7 @@ const App = () => {
     <GlobalProvider>
       <SafeAreaProvider>
         <Provider>
-          <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY}>
+          <StripeProvider publishableKey={env.STRIPE_PUBLISHABLE_KEY} merchantIdentifier={env.STRIPE_MERCHANT_IDENTIFIER}>
             <RootSiblingParent>
               <NavigationContainer ref={navigationRef} onReady={onReady}>
                 <ExpoStatusBar style="light" backgroundColor="rgba(0, 0, 0, .9)" />

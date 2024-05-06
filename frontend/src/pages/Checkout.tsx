@@ -491,9 +491,7 @@ const Checkout = () => {
       if (!payLater) {
         const payload: bookcarsTypes.CreatePaymentPayload = {
           amount: price,
-          // Supported currencies for the moment: usd, eur
-          // Must be a supported currency: https://docs.stripe.com/currencies
-          currency: commonStrings.CURRENCY === '$' ? 'usd' : commonStrings.CURRENCY === '€' ? 'eur' : '',
+          currency: env.STRIPE_CURRENCY_CODE,
           locale: language,
           receiptEmail: (!authenticated ? driver?.email : user?.email) as string,
           name: `${car.name} 
