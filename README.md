@@ -4,7 +4,7 @@
 
 As of 30<sup>th</sup> April 2024, Stripe Payment Gateway integration was successfully implemented in the frontend, the backend and the mobile app, and is fully operational. You can download the demo mobile app, and find the frontend and backend demo links [here](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo).
 
-Currently, the following payment methods are supported: Credit Card, Paypal, Google Pay, Apple Pay, Link, other Stripe payment methods, and Pay Later.
+Currently, the following payment methods are supported: Credit Card, PayPal, Google Pay, Apple Pay, Link, other Stripe payment methods, and Pay Later.
 
 ## BookCars
 
