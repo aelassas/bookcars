@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import mongoose from 'mongoose'
 import validator from 'validator'
+import Stripe from 'stripe'
 import { v1 as uuid } from 'uuid'
 
 /**
@@ -153,3 +154,60 @@ export const isValidEmail = (email?: string) => !!email && validator.isEmail(ema
  * @returns {string}
  */
 export const generateToken = () => `${uuid()}-${Date.now()}`
+
+/**
+ * The IETF language tag of the locale Checkout is displayed in.
+ *
+ * @param {string} locale
+ * @returns {Stripe.Checkout.SessionCreateParams.Locale}
+ */
+export const getStripeLocale = (locale: string): Stripe.Checkout.SessionCreateParams.Locale => {
+  const locales = [
+    'bg',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'en',
+    'en-GB',
+    'es',
+    'es-419',
+    'et',
+    'fi',
+    'fil',
+    'fr',
+    'fr-CA',
+    'hr',
+    'hu',
+    'id',
+    'it',
+    'ja',
+    'ko',
+    'lt',
+    'lv',
+    'ms',
+    'mt',
+    'nb',
+    'nl',
+    'pl',
+    'pt',
+    'pt-BR',
+    'ro',
+    'ru',
+    'sk',
+    'sl',
+    'sv',
+    'th',
+    'tr',
+    'vi',
+    'zh',
+    'zh-HK',
+    'zh-TW',
+  ]
+
+  if (locales.includes(locale)) {
+    return locale as Stripe.Checkout.SessionCreateParams.Locale
+  }
+
+  return 'auto'
+}
