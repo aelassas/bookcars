@@ -65,7 +65,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       mode: 'payment',
       return_url: `${helper.trimEnd(env.FRONTEND_HOST, '/')}/checkout-session/{CHECKOUT_SESSION_ID}`,
       customer: customer.id,
-      locale: locale.toLowerCase() as Stripe.Checkout.SessionCreateParams.Locale,
+      locale: helper.getStripeLocale(locale),
       payment_intent_data: {
         description,
       },
