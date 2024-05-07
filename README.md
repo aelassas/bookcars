@@ -30,7 +30,7 @@ BookCars can run in a Docker container. Follow this step by step [guide](https:/
 * Booking management
 * Payment management
 * Customer management
-* Multiple payment methods (Credit Card, Pay Later)
+* Multiple payment methods (Credit Card, PayPal, Google Pay, Apple Pay, Link, Pay Later)
 * Operational Stripe Payment Gateway
 * Multiple language support (English, French)
 * Multiple pagination options (Classic pagination with next and previous buttons, infinite scroll)
