@@ -668,12 +668,12 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
               paymentIntentClientSecret: clientSecret,
               merchantDisplayName: 'BookCars',
               googlePay: {
-                merchantCountryCode: env.STRIPE_COUNTRY_CODE,
+                merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
                 testEnv: env.STRIPE_PUBLISHABLE_KEY.includes('_test_'),
-                currencyCode: env.STRIPE_CURRENCY_CODE,
+                currencyCode: env.STRIPE_CURRENCY_CODE.toUpperCase(),
               },
               applePay: {
-                merchantCountryCode: env.STRIPE_COUNTRY_CODE,
+                merchantCountryCode: env.STRIPE_COUNTRY_CODE.toUpperCase(),
               },
             })
             if (initPaymentSheetError) {
