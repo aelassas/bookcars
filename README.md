@@ -4,8 +4,6 @@
 
 As of 30<sup>th</sup> April 2024, Stripe Payment Gateway integration was successfully implemented in the frontend, the backend and the mobile app, and is fully operational. You can download the demo mobile app, and find the frontend and backend demo links [here](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo).
 
-Currently, the following payment methods are supported: Credit Card, PayPal, Google Pay, Apple Pay, Link, other Stripe payment methods, and Pay Later.
-
 ## BookCars
 
 BookCars is a car rental platform with operational Stripe Payment Gateway, supplier-oriented, with a backend for managing car fleets and bookings, as well as a frontend and a mobile app for renting cars.
