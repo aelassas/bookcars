@@ -139,6 +139,9 @@ const DepositFilter = ({
     }
   }
 
+  return null
+
+  // TODO
   return (
     <Accordion title={strings.DEPOSIT} className={`${className ? `${className} ` : ''}deposit-filter`}>
       <div className="filter-elements">
