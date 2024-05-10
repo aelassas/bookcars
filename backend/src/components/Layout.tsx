@@ -4,11 +4,11 @@ import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/master'
 import Header from './Header'
 import * as UserService from '../services/UserService'
-import Unauthorized from '../components/Unauthorized'
+import Unauthorized from './Unauthorized'
 import * as helper from '../common/helper'
 import { useInit } from '../common/customHooks'
 
-interface MasterProps {
+interface LayoutProps {
   user?: bookcarsTypes.User
   strict?: boolean
   admin?: boolean
@@ -18,7 +18,7 @@ interface MasterProps {
   onLoad?: (user?: bookcarsTypes.User) => void
 }
 
-const Master = ({
+const Layout = ({
   user: masterUser,
   strict,
   admin,
@@ -26,7 +26,7 @@ const Master = ({
   style,
   children,
   onLoad
-}: MasterProps) => {
+}: LayoutProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
   const [unauthorized, setUnauthorized] = useState(false)
@@ -138,4 +138,4 @@ const Master = ({
   )
 }
 
-export default Master
+export default Layout

@@ -13,7 +13,7 @@ import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-supplier'
 import * as UserService from '../services/UserService'
@@ -235,7 +235,7 @@ const CreateSupplier = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict admin>
+    <Layout onLoad={onLoad} strict admin>
       <div className="create-supplier">
         <Paper className="supplier-form" elevation={10} style={visible ? {} : { display: 'none' }}>
           <h1 className="supplier-form-title">
@@ -345,7 +345,7 @@ const CreateSupplier = () => {
         </Paper>
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

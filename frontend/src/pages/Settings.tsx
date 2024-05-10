@@ -14,7 +14,7 @@ import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/settings'
 import * as UserService from '../services/UserService'
@@ -172,7 +172,7 @@ const Settings = () => {
   }
 
   return (
-    <Master onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} user={user} strict>
       {visible && user && (
         <div className="settings">
           <Paper className="settings-form settings-form-wrapper" elevation={10}>
@@ -252,7 +252,7 @@ const Settings = () => {
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

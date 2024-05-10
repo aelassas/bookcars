@@ -13,7 +13,7 @@ import { Info as InfoIcon } from '@mui/icons-material'
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as ccStrings } from '../lang/create-supplier'
@@ -258,7 +258,7 @@ const UpdateSupplier = () => {
   const admin = helper.admin(user)
 
   return (
-    <Master onLoad={onLoad} strict user={user}>
+    <Layout onLoad={onLoad} strict user={user}>
       {visible && (
         <div className="update-supplier">
           <Paper className="supplier-form-update" elevation={10}>
@@ -357,7 +357,7 @@ const UpdateSupplier = () => {
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

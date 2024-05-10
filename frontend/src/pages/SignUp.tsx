@@ -19,7 +19,7 @@ import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-up'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import DatePicker from '../components/DatePicker'
@@ -269,7 +269,7 @@ const SignUp = () => {
   }
 
   return (
-    <Master strict={false} onLoad={onLoad}>
+    <Layout strict={false} onLoad={onLoad}>
       {visible && (
         <div className="signup">
           <Paper className="signup-form" elevation={10}>
@@ -414,7 +414,7 @@ const SignUp = () => {
         </div>
       )}
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

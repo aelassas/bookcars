@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import NotificationList from '../components/NotificationList'
 
 const Notifications = () => {
@@ -11,9 +11,9 @@ const Notifications = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       <NotificationList user={user} />
-    </Master>
+    </Layout>
   )
 }
 

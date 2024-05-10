@@ -2,12 +2,12 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings } from '../lang/master'
-import Header from '../components/Header'
+import Header from './Header'
 import * as UserService from '../services/UserService'
 import * as helper from '../common/helper'
 import { useInit } from '../common/customHooks'
 
-interface MasterProps {
+interface LayoutProps {
   user?: bookcarsTypes.User
   strict?: boolean
   hideSignin?: boolean
@@ -15,13 +15,13 @@ interface MasterProps {
   onLoad?: (user?: bookcarsTypes.User) => void
 }
 
-const Master = ({
+const Layout = ({
   user: masterUser,
   strict,
   hideSignin,
   children,
   onLoad
-}: MasterProps) => {
+}: LayoutProps) => {
   const [user, setUser] = useState<bookcarsTypes.User>()
   const [loading, setLoading] = useState(true)
 
@@ -119,4 +119,4 @@ const Master = ({
   )
 }
 
-export default Master
+export default Layout

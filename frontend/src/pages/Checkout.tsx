@@ -41,7 +41,7 @@ import * as UserService from '../services/UserService'
 import * as CarService from '../services/CarService'
 import * as LocationService from '../services/LocationService'
 import * as StripeService from '../services/StripeService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import Error from '../components/Error'
 import DatePicker from '../components/DatePicker'
 import NoMatch from './NoMatch'
@@ -105,7 +105,7 @@ const Checkout = () => {
   const [adEmail, setAdEmail] = useState(false)
   const [adPhone, setAdPhone] = useState(false)
   const [adBirthDate, setAdBirthDate] = useState(false)
-  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
+  const adRequired = (adFullName || adEmail || adPhone || adBirthDate) && adManuallyChecked
 
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -609,7 +609,7 @@ const Checkout = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       {visible && car && from && to && pickupLocation && dropOffLocation && (
         <div className="booking">
           <Paper className="booking-form" elevation={10}>
@@ -620,6 +620,7 @@ const Checkout = () => {
             </h1>
             <form onSubmit={handleSubmit}>
               <div>
+
                 <div className="booking-options-container">
                   <div className="booking-info">
                     <BookingIcon />
@@ -745,6 +746,7 @@ const Checkout = () => {
                     </div>
                   </div>
                 </div>
+
                 {!authenticated && (
                   <div className="driver-details">
                     <div className="booking-info">
@@ -824,7 +826,8 @@ const Checkout = () => {
                     </div>
                   </div>
                 )}
-                {additionalDriver && (
+
+                {(adRequired && additionalDriver) && (
                   <div className="driver-details">
                     <div className="booking-info">
                       <DriverIcon />
@@ -1004,7 +1007,7 @@ const Checkout = () => {
       )}
       {noMatch && <NoMatch hideHeader />}
       {success && <Info message={payLater ? strings.PAY_LATER_SUCCESS : strings.SUCCESS} />}
-    </Master>
+    </Layout>
   )
 }
 
