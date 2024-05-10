@@ -607,7 +607,7 @@ const Checkout = () => {
                   <div className="booking-options">
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.cancellation === -1 || car.cancellation === 0}
+                        disabled={car.cancellation === -1 || car.cancellation === 0 || !!clientSecret}
                         control={<Switch checked={cancellation} onChange={handleCancellationChange} color="primary" />}
                         label={(
                           <span>
@@ -620,7 +620,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.amendments === -1 || car.amendments === 0}
+                        disabled={car.amendments === -1 || car.amendments === 0 || !!clientSecret}
                         control={<Switch checked={amendments} onChange={handleAmendmentsChange} color="primary" />}
                         label={(
                           <span>
@@ -633,7 +633,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0}
+                        disabled={car.collisionDamageWaiver === -1 || car.collisionDamageWaiver === 0 || !!clientSecret}
                         control={<Switch checked={collisionDamageWaiver} onChange={handleCollisionDamageWaiverChange} color="primary" />}
                         label={(
                           <span>
@@ -646,7 +646,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.theftProtection === -1 || car.theftProtection === 0}
+                        disabled={car.theftProtection === -1 || car.theftProtection === 0 || !!clientSecret}
                         control={<Switch checked={theftProtection} onChange={handleTheftProtectionChange} color="primary" />}
                         label={(
                           <span>
@@ -659,7 +659,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.fullInsurance === -1 || car.fullInsurance === 0}
+                        disabled={car.fullInsurance === -1 || car.fullInsurance === 0 || !!clientSecret}
                         control={<Switch checked={fullInsurance} onChange={handleFullInsuranceChange} color="primary" />}
                         label={(
                           <span>
@@ -672,7 +672,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.additionalDriver === -1 || car.additionalDriver === 0}
+                        disabled={car.additionalDriver === -1 || car.additionalDriver === 0 || !!clientSecret}
                         control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
                         label={(
                           <span>
