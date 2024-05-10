@@ -1,5 +1,7 @@
 div.supplier {
   display: flex;
+  flex: 1 0 auto;
+  transform: translate3d(0, 0, 0);
 }
 
 .supplier div.col-1 .supplier-name {
@@ -42,7 +44,7 @@ div.supplier {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.supplier {
     flex-direction: column;
   }
@@ -70,7 +72,7 @@ div.supplier {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.supplier {
     flex-direction: row;
   }
