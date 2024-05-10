@@ -4,7 +4,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
 
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import BookingList from '../components/BookingList'
@@ -96,7 +96,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   return (
-    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
+    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
       {visible && user?._id && (
         <BookingList
           user={user._id}
@@ -127,7 +127,7 @@ const BookingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           )}
         />
       )}
-    </Master>
+    </Layout>
   )
 }
 
