@@ -77,6 +77,9 @@ const DepositFilter = ({
     }
   }
 
+  return null
+
+  // TODO
   return (
     visible && (
       <View style={{ ...styles.container, ...style }}>
