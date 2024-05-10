@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   OutlinedInput,
@@ -101,11 +101,7 @@ const Checkout = () => {
   const [payLater, setPayLater] = useState(false)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
-  const [adFullName, setAdFullName] = useState(false)
-  const [adEmail, setAdEmail] = useState(false)
-  const [adPhone, setAdPhone] = useState(false)
-  const [adBirthDate, setAdBirthDate] = useState(false)
-  const adRequired = (adFullName || adEmail || adPhone || adBirthDate) && adManuallyChecked
+  const adRequired = true
 
   const [paymentFailed, setPaymentFailed] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -122,24 +118,6 @@ const Checkout = () => {
     format(from, _format, { locale: _locale }),
   )} 
   - ${bookcarsHelper.capitalize(format(to, _format, { locale: _locale }))})`
-
-  const adValidate = (val?: string | Date | null) => !!val
-
-  useEffect(() => {
-    setAdFullName(adValidate(addiontalDriverFullName))
-  }, [addiontalDriverFullName])
-
-  useEffect(() => {
-    setAdEmail(adValidate(addiontalDriverEmail))
-  }, [addiontalDriverEmail])
-
-  useEffect(() => {
-    setAdPhone(adValidate(addiontalDriverPhone))
-  }, [addiontalDriverPhone])
-
-  useEffect(() => {
-    setAdBirthDate(adValidate(addiontalDriverBirthDate))
-  }, [addiontalDriverBirthDate])
 
   const handleCancellationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (car && from && to) {
@@ -423,7 +401,7 @@ const Checkout = () => {
         }
       }
 
-      if (adRequired && additionalDriver) {
+      if (adManuallyChecked && additionalDriver) {
         const _emailValid = _validateEmail(addiontalDriverEmail)
         if (!_emailValid) {
           return
@@ -827,7 +805,7 @@ const Checkout = () => {
                   </div>
                 )}
 
-                {(adRequired && additionalDriver) && (
+                {(adManuallyChecked && additionalDriver) && (
                   <div className="driver-details">
                     <div className="booking-info">
                       <DriverIcon />
