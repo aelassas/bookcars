@@ -6,7 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import BookingList from '../components/BookingList'
 import * as env from '../config/env.config'
 
@@ -55,7 +55,7 @@ const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams
   }
 
   return (
-    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
+    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
       {visible
         && (
         <BookingList
@@ -64,7 +64,7 @@ const BookingScreen = ({ navigation, route }: NativeStackScreenProps<StackParams
           language={language}
         />
 )}
-    </Master>
+    </Layout>
   )
 }
 

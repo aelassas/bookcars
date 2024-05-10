@@ -7,7 +7,7 @@ import * as bookcarsTypes from ':bookcars-types'
 
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import NotificationList from '../components/NotificationList'
 
 const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, 'Notifications'>) => {
@@ -55,11 +55,11 @@ const NotificationsScreen = ({ navigation, route }: NativeStackScreenProps<Stack
   }
 
   return (
-    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
+    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} strict>
       {visible && (
         <NotificationList navigation={navigation} user={user} locale={locale} />
       )}
-    </Master>
+    </Layout>
   )
 }
 

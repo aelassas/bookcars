@@ -10,7 +10,7 @@ import { PaymentSheetError, initPaymentSheet, useStripe } from '@stripe/stripe-r
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import TextInput from '../components/TextInput'
@@ -766,7 +766,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const days = bookcarsHelper.days(from, to)
 
   return (
-    <Master style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
+    <Layout style={styles.master} navigation={navigation} onLoad={onLoad} reload={reload} route={route}>
       {visible && car && from && to && pickupLocation && dropOffLocation && (
         <>
           {formVisible && (
@@ -1070,7 +1070,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           {loading && <Backdrop message={i18n.t('PLEASE_WAIT')} />}
         </>
       )}
-    </Master>
+    </Layout>
   )
 }
 

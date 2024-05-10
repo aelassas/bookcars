@@ -10,7 +10,7 @@ import { intervalToDuration } from 'date-fns'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import TextInput from '../components/TextInput'
@@ -232,7 +232,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   }
 
   return (
-    <Master style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
+    <Layout style={styles.master} navigation={navigation} route={route} onLoad={onLoad} reload={reload} avatar={avatar} strict>
       {visible && language && (
         <>
           <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled>
@@ -402,7 +402,7 @@ const SettingsScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
           </Portal>
         </>
       )}
-    </Master>
+    </Layout>
   )
 }
 
