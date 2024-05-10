@@ -4,13 +4,13 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RouteProp } from '@react-navigation/native'
 
 import * as UserService from '../services/UserService'
-import Button from '../components/Button'
+import Button from './Button'
 import i18n from '../lang/i18n'
 import * as helper from '../common/helper'
-import Header from '../components/Header'
+import Header from './Header'
 import * as bookcarsTypes from ':bookcars-types'
 
-interface MasterProps {
+interface LayoutProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   strict?: boolean
   route?: RouteProp<StackParams, keyof StackParams>,
@@ -23,7 +23,7 @@ interface MasterProps {
   onLoad: (user?: bookcarsTypes.User) => void
 }
 
-const Master = ({
+const Layout = ({
   navigation,
   strict,
   route,
@@ -34,7 +34,7 @@ const Master = ({
   avatar,
   children,
   onLoad
-}: MasterProps) => {
+}: LayoutProps) => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<bookcarsTypes.User | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Master
+export default Layout
