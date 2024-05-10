@@ -1,4 +1,12 @@
-/* Create Supplier */
+/* Update User */
+div.update-user {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+  margin: 45px 0;
+}
 
 div.update-user .user-form-wrapper {
   margin: 32px 0;
@@ -17,10 +25,8 @@ div.update-user .resend-activation-link {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.update-user .user-form {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 180px) !important;
     width: 360px;
     padding: 30px;
   }
@@ -28,10 +34,8 @@ div.update-user .resend-activation-link {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.update-user .user-form {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 275px) !important;
     width: 550px;
     padding: 30px;
   }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import env from '../config/env.config'
 import { strings } from '../lang/users'
 import * as helper from '../common/helper'
@@ -37,7 +37,7 @@ const Users = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {user && (
         <div className="users">
           <div className="col-1">
@@ -68,7 +68,7 @@ const Users = () => {
           </div>
         </div>
       )}
-    </Master>
+    </Layout>
   )
 }
 

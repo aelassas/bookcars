@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { strings } from 'src/lang/checkout'
-import Master from 'src/components/Master'
+import Layout from 'src/components/Layout'
 import NoMatch from './NoMatch'
 import * as StripeService from '../services/StripeService'
 import Info from './Info'
@@ -36,7 +36,7 @@ const CheckoutSession = () => {
   }, [sessionId])
 
   return (
-    <Master>
+    <Layout>
       {
         loading
           ? <Info message={strings.CHECKING} hideLink />
@@ -50,7 +50,7 @@ const CheckoutSession = () => {
               )
           )
       }
-    </Master>
+    </Layout>
   )
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import env from '../config/env.config'
 import * as helper from '../common/helper'
 import BookingList from '../components/BookingList'
@@ -54,7 +54,7 @@ const Bookings = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {user && (
         <div className="bookings">
           <div className="col-1">
@@ -80,7 +80,7 @@ const Bookings = () => {
           </div>
         </div>
       )}
-    </Master>
+    </Layout>
   )
 }
 

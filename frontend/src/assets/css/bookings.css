@@ -1,16 +1,21 @@
 div.bookings {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+@media only screen and (width >=960px) {
+  div.bookings {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+}
+
 /* Device width is lower than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.bookings {
     top: 56px;
     overflow-y: auto;
@@ -56,7 +61,7 @@ div.bookings {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.bookings {
     top: 64px;
   }

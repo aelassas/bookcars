@@ -1,13 +1,19 @@
+section.car-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+}
+
 section.car-list .empty-list {
   margin-top: 15px;
   text-align: center;
   width: 250px;
-  margin-left: calc(50% - 125px);
 }
 
 /* Device width is between 500px and 960px */
 
-@media only screen and (width >= 500px) and (width <= 960px) {
+@media only screen and (width >=500px) and (width <=960px) {
   section.car-list {
     max-width: 480px;
   }
@@ -15,7 +21,11 @@ section.car-list .empty-list {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
+  section.car-list {
+    flex: 0 1 auto;
+  }
+
   section.car-list article {
     position: relative;
     background: #fff;
@@ -193,7 +203,7 @@ section.car-list .empty-list {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   section.car-list {
     padding-top: 10px;
   }
@@ -208,7 +218,6 @@ section.car-list .empty-list {
     margin-bottom: 10px;
     height: 430px;
     width: 800px;
-    margin-left: calc(50% - 400px);
   }
 
   section.car-list article div.name {

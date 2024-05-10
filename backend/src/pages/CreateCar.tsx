@@ -13,7 +13,7 @@ import {
 import { Info as InfoIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings as csStrings } from '../lang/cars'
@@ -260,7 +260,7 @@ const CreateCar = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       <div className="create-car">
         <Paper className="car-form car-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
           <h1 className="car-form-title">
@@ -492,7 +492,7 @@ const CreateCar = () => {
         </Paper>
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

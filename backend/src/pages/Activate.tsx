@@ -11,7 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings as cpStrings } from '../lang/change-password'
 import { strings as rpStrings } from '../lang/reset-password'
@@ -153,7 +153,7 @@ const Activate = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       {resend && (
         <div className="resend">
           <Paper className="resend-form" elevation={10}>
@@ -212,7 +212,7 @@ const Activate = () => {
         </div>
       )}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

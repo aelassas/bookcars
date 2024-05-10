@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings } from '../lang/locations'
 import Search from '../components/Search'
 import LocationList from '../components/LocationList'
@@ -30,7 +30,7 @@ const Locations = () => {
   const onLoad = () => { }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       <div className="locations">
         <div className="col-1">
           <div className="col-1-container">
@@ -59,7 +59,7 @@ const Locations = () => {
           />
         </div>
       </div>
-    </Master>
+    </Layout>
   )
 }
 

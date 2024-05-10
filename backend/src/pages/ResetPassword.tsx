@@ -10,7 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings as cpStrings } from '../lang/change-password'
 import { strings as rpStrings } from '../lang/reset-password'
@@ -129,7 +129,7 @@ const ResetPassword = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       {visible && (
         <div className="reset-password">
           <Paper className="reset-password-form" elevation={10}>
@@ -173,7 +173,7 @@ const ResetPassword = () => {
       )}
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

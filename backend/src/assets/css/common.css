@@ -213,12 +213,15 @@
   height: 20px !important;
 }
 
-@media only screen and (width <= 960px) {
-  div.content {
-    margin: 0;
-    padding: 0;
-  }
+div.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin: 0;
+  padding: 0;
+}
 
+@media only screen and (width <=960px) {
   .buttons {
     margin-top: 15px;
     margin-bottom: 5px;
@@ -239,12 +242,7 @@
   }
 }
 
-@media only screen and (width >= 960px) {
-  div.content {
-    margin: 0;
-    padding: 0;
-  }
-
+@media only screen and (width >=960px) {
   .buttons {
     margin-top: 15px;
     margin-bottom: 5px;

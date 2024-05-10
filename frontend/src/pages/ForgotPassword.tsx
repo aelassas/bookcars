@@ -11,7 +11,7 @@ import {
 import validator from 'validator'
 import * as bookcarsTypes from ':bookcars-types'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/reset-password'
 import NoMatch from './NoMatch'
@@ -112,7 +112,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       {visible && (
         <div className="forgot-password">
           <Paper className="forgot-password-form" elevation={10}>
@@ -155,7 +155,7 @@ const ForgotPassword = () => {
         </div>
       )}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

@@ -29,7 +29,7 @@ import { strings as bfStrings } from '../lang/booking-filter'
 import { strings as csStrings } from '../lang/cars'
 import { strings } from '../lang/booking'
 import * as helper from '../common/helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import * as UserService from '../services/UserService'
 import * as BookingService from '../services/BookingService'
 import * as CarService from '../services/CarService'
@@ -517,7 +517,7 @@ const UpdateBooking = () => {
   const days = bookcarsHelper.days(from, to)
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && booking && (
         <div className="booking">
           <div className="col-1">
@@ -851,7 +851,7 @@ const UpdateBooking = () => {
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {noMatch && <NoMatch hideHeader />}
       {error && <Error />}
-    </Master>
+    </Layout>
   )
 }
 

@@ -6,7 +6,7 @@ import env from '../config/env.config'
 import * as helper from '../common/helper'
 import * as LocationService from '../services/LocationService'
 import * as SupplierService from '../services/SupplierService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import NoMatch from './NoMatch'
 import CarFilter from '../components/CarFilter'
 import SupplierFilter from '../components/SupplierFilter'
@@ -122,7 +122,7 @@ const Search = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       {visible && suppliers && pickupLocation && dropOffLocation && from && to && (
         <div className="cars">
           <div className="col-1">
@@ -154,7 +154,7 @@ const Search = () => {
         </div>
       )}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 
