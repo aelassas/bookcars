@@ -579,7 +579,6 @@ const Checkout = () => {
       setTheftProtection(included(_car.theftProtection))
       setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
       setFullInsurance(included(_car.fullInsurance))
-      setAdditionalDriver(included(_car.additionalDriver))
       setVisible(true)
     } catch (err) {
       helper.error(err)
@@ -672,7 +671,7 @@ const Checkout = () => {
 
                     <FormControl fullWidth margin="dense">
                       <FormControlLabel
-                        disabled={car.additionalDriver === -1 || car.additionalDriver === 0 || !!clientSecret}
+                        disabled={car.additionalDriver === -1 || !!clientSecret}
                         control={<Switch checked={additionalDriver} onChange={handleAdditionalDriverChange} color="primary" />}
                         label={(
                           <span>

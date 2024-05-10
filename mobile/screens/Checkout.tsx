@@ -83,32 +83,9 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
   const [additionalDriverBirthDateValid, setAdditionalDriverBirthDateValid] = useState(true)
 
   const [adManuallyChecked, setAdManuallyChecked] = useState(false)
-  const [adFullName, setAdFullName] = useState(false)
-  const [adEmail, setAdEmail] = useState(false)
-  const [adPhone, setAdPhone] = useState(false)
-  const [adBirthDate, setAdBirthDate] = useState(false)
-
-  const adRequired = adManuallyChecked || adFullName || adEmail || adPhone || adBirthDate
+  const adRequired = true
 
   const { presentPaymentSheet } = useStripe()
-
-  const adValidate = (val?: string | Date | null) => !!val
-
-  useEffect(() => {
-    setAdFullName(adValidate(additionalDriverfullName))
-  }, [additionalDriverfullName])
-
-  useEffect(() => {
-    setAdEmail(adValidate(addtionalDriverEmail))
-  }, [addtionalDriverEmail])
-
-  useEffect(() => {
-    setAdPhone(adValidate(additionalDriverPhone))
-  }, [additionalDriverPhone])
-
-  useEffect(() => {
-    setAdBirthDate(adValidate(addtionalDriverBirthDate))
-  }, [addtionalDriverBirthDate])
 
   const fullNameRef = useRef<ReactTextInput>(null)
   const emailRef = useRef<ReactTextInput>(null)
@@ -261,7 +238,6 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
       setCollisionDamageWaiver(included(_car.collisionDamageWaiver))
       setTheftProtection(included(_car.theftProtection))
       setFullInsurance(included(_car.fullInsurance))
-      setAdditionalDriver(included(_car.additionalDriver))
 
       setVisible(true)
       setFormVisible(true)
@@ -600,7 +576,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
         }
       }
 
-      if (adRequired && additionalDriver) {
+      if (adManuallyChecked && additionalDriver) {
         const fullNameValid = _validateFullName()
         if (!fullNameValid) {
           return
@@ -835,7 +811,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
 
                   <View style={styles.extra}>
                     <Switch
-                      disabled={car.additionalDriver === -1 || car.additionalDriver === 0}
+                      disabled={car.additionalDriver === -1}
                       textStyle={styles.extraSwitch}
                       label={i18n.t('ADDITIONAL_DRIVER')}
                       value={additionalDriver}
@@ -944,7 +920,7 @@ const CheckoutScreen = ({ navigation, route }: NativeStackScreenProps<StackParam
                   </View>
                 )}
 
-                {additionalDriver && (
+                {(adManuallyChecked && additionalDriver) && (
                   <View style={styles.section}>
                     <View style={styles.sectionHeader}>
                       <MaterialIcons name="person" size={iconSize} color={iconColor} />
