@@ -34,6 +34,7 @@ const LocationSelectList = ({
 
   useEffect(() => {
     const _value = multiple ? value as bookcarsTypes.Location[] : [value as bookcarsTypes.Location]
+
     if (value && !bookcarsHelper.arrayEqual(selectedOptions, _value)) {
       setSelectedOptions(_value)
     }

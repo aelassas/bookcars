@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/create-location'
 import * as LocationService from '../services/LocationService'
@@ -67,7 +67,7 @@ const CreateLocation = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       <div className="create-location">
         <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
           <h1 className="location-form-title">
@@ -111,7 +111,7 @@ const CreateLocation = () => {
           </form>
         </Paper>
       </div>
-    </Master>
+    </Layout>
   )
 }
 

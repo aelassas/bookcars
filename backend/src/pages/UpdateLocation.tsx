@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/create-location'
 import { strings } from '../lang/update-location'
@@ -160,7 +160,7 @@ const UpdateLocation = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {!error && !noMatch && location && location.values && (
         <div className="update-location">
           <Paper className="location-form location-form-wrapper" elevation={10} style={visible ? {} : { display: 'none' }}>
@@ -205,7 +205,7 @@ const UpdateLocation = () => {
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

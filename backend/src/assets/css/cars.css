@@ -1,5 +1,7 @@
 div.cars {
   display: flex;
+  flex: 1 0 auto;
+  transform: translate3d(0, 0, 0);
 }
 
 div.cars div.search {
@@ -15,9 +17,10 @@ div.cars div.col-1 div.info-box {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.cars {
     flex-direction: column;
+    flex: 0 1 auto;
   }
 
   div.cars .sc-search {
@@ -60,7 +63,7 @@ div.cars div.col-1 div.info-box {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.cars {
     flex-direction: row;
   }

@@ -1,4 +1,14 @@
 /* Create settings */
+div.settings {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  justify-content: center;
+  align-items: center;
+  margin: 45px 0;
+  transform: translate3d(0, 0, 0);
+}
+
 div.settings .settings-form-wrapper {
   margin: 32px 0;
 }
@@ -15,10 +25,8 @@ div.settings .settings-net-wrapper {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.settings .settings-form {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 180px) !important;
     width: 360px;
     height: 780px;
     padding: 30px;
@@ -29,8 +37,6 @@ div.settings .settings-net-wrapper {
   }
 
   div.settings .settings-net {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 180px) !important;
     width: 360px;
     height: 200px;
     padding: 30px;
@@ -39,10 +45,8 @@ div.settings .settings-net-wrapper {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.settings .settings-form {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 275px) !important;
     width: 550px;
     height: 700px;
     padding: 30px;
@@ -53,8 +57,6 @@ div.settings .settings-net-wrapper {
   }
 
   div.settings .settings-net {
-    margin-top: 45px !important;
-    margin-left: calc(50% - 275px) !important;
     width: 550px;
     height: 200px;
     padding: 30px;

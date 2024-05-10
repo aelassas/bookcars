@@ -1,5 +1,7 @@
 div.cars {
   display: flex;
+  flex: 1 0 auto;
+  transform: translate3d(0, 0, 0);
 }
 
 div.cars div.col-1 {
@@ -17,8 +19,9 @@ div.cars div.col-1 .filter {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.cars {
+    flex: 0 1 auto;
     flex-direction: column;
   }
 
@@ -34,7 +37,7 @@ div.cars div.col-1 .filter {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.cars {
     flex-direction: row;
   }
@@ -48,6 +51,6 @@ div.cars div.col-1 .filter {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1;
+    flex: 1 0 auto;
   }
 }

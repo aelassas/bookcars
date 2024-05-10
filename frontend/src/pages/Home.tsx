@@ -6,7 +6,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import LocationSelectList from '../components/LocationSelectList'
 import DateTimePicker from '../components/DateTimePicker'
 
@@ -103,7 +103,7 @@ const Home = () => {
   const onLoad = () => { }
 
   return (
-    <Master onLoad={onLoad} strict={false}>
+    <Layout onLoad={onLoad} strict={false}>
       <div className="home">
         <div className="home-content">
           <div className="home-logo">
@@ -216,7 +216,7 @@ const Home = () => {
           </div>
         </footer>
       </div>
-    </Master>
+    </Layout>
   )
 }
 

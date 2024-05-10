@@ -1,4 +1,13 @@
 /* Signup */
+div.signup {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  justify-content: center;
+  margin: 45px 0;
+  transform: translate3d(0, 0, 0);
+}
+
 .signup-form-title {
   text-align: center;
   text-transform: capitalize;
@@ -18,9 +27,8 @@
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   .signup-form {
-    margin: 45px 0 20px calc(50% - 175px);
     width: 350px;
     height: 730px;
     padding: 30px;
@@ -34,9 +42,8 @@
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   .signup-form {
-    margin: 45px 0 20px calc(50% - 275px);
     width: 550px;
     height: 610px;
     padding: 30px;

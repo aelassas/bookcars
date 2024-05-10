@@ -1,11 +1,17 @@
+div.bs-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+}
+
 div.bs-list .empty-list {
   margin-top: 15px;
   text-align: center;
   width: 250px;
-  margin-left: calc(50% - 125px);
 }
 
-div.bs-list {
+div.bs-list .booking-grid {
   width: 100%;
 }
 

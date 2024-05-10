@@ -13,7 +13,7 @@ import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/sign-up'
 import * as UserService from '../services/UserService'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import Error from '../components/Error'
 import Backdrop from '../components/SimpleBackdrop'
 import * as helper from '../common/helper'
@@ -162,7 +162,7 @@ const SignUp = () => {
   }
 
   return (
-    <Master strict={false} onLoad={onLoad}>
+    <Layout strict={false} onLoad={onLoad}>
       <div className="signup">
         <Paper className="signup-form" elevation={10} style={visible ? {} : { display: 'none' }}>
           <h1 className="signup-form-title">
@@ -236,7 +236,7 @@ const SignUp = () => {
         </Paper>
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

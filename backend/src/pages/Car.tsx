@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import env from '../config/env.config'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/cars'
@@ -168,7 +168,7 @@ const Car = () => {
   const fr = (user && user.language === 'fr') || false
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {visible && car && car.supplier && (
         <div className="car">
           <div className="col-1">
@@ -381,7 +381,7 @@ const Car = () => {
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 

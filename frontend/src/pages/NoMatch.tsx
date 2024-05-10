@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from '@mui/material'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/no-match'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 
 interface NoMatchProps {
   hideHeader?: boolean
@@ -18,7 +18,7 @@ const NoMatch = ({ hideHeader }: NoMatchProps) => {
     </div>
   )
 
-  return hideHeader ? noMatch() : <Master strict={false}>{noMatch()}</Master>
+  return hideHeader ? noMatch() : <Layout strict={false}>{noMatch()}</Layout>
 }
 
 export default NoMatch

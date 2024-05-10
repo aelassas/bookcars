@@ -8,7 +8,7 @@ import {
   Button
 } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/change-password'
 import * as UserService from '../services/UserService'
@@ -126,7 +126,7 @@ const ChangePassword = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       <div className="password-reset" style={visible ? {} : { display: 'none' }}>
         <Paper className="password-reset-form password-reset-form-wrapper" elevation={10}>
           <h1 className="password-reset-form-title">
@@ -178,7 +178,7 @@ const ChangePassword = () => {
         </Paper>
       </div>
       {loading && <Backdrop text={commonStrings.PLEASE_WAIT} />}
-    </Master>
+    </Layout>
   )
 }
 

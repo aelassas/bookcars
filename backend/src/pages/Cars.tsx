@@ -6,7 +6,7 @@ import * as helper from '../common/helper'
 import env from '../config/env.config'
 import { strings } from '../lang/cars'
 import { strings as commonStrings } from '../lang/common'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import SupplierFilter from '../components/SupplierFilter'
 import Search from '../components/Search'
 import InfoBox from '../components/InfoBox'
@@ -85,7 +85,7 @@ const Cars = () => {
   }
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {user && (
         <div className="cars">
           <div className="col-1">
@@ -129,7 +129,7 @@ const Cars = () => {
           </div>
         </div>
       )}
-    </Master>
+    </Layout>
   )
 }
 

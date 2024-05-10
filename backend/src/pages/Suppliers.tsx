@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import * as bookcarsTypes from ':bookcars-types'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import { strings } from '../lang/suppliers'
 import Search from '../components/Search'
 import SupplierList from '../components/SupplierList'
@@ -36,7 +36,7 @@ const Suppliers = () => {
   const admin = helper.admin(user)
 
   return (
-    <Master onLoad={onLoad} strict>
+    <Layout onLoad={onLoad} strict>
       {user && (
         <div className="suppliers">
           <div className="col-1">
@@ -73,7 +73,7 @@ const Suppliers = () => {
           </div>
         </div>
       )}
-    </Master>
+    </Layout>
   )
 }
 

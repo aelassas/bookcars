@@ -1,15 +1,16 @@
+section.supplier-list {
+  padding-top: 10px;
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+}
+
 section.supplier-list .empty-list {
   margin-top: 15px;
   text-align: center;
   width: 250px;
-  margin-left: calc(50% - 125px);
-}
-
-section.supplier-list {
-  padding-top: 10px;
-  margin: 0 10px;
-  width: 100%;
-  max-width: 480px;
 }
 
 section.supplier-list article {
@@ -68,10 +69,9 @@ section.supplier-list article .supplier-actions button {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   section.supplier-list article {
     width: 550px;
-    margin-left: calc(50% - 275px);
   }
 
   section.supplier-list article .supplier-item {

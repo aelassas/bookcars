@@ -1,5 +1,7 @@
 div.locations {
   display: flex;
+  flex: 1 0 auto;
+  transform: translate3d(0, 0, 0);
 }
 
 div.locations .search {
@@ -14,7 +16,7 @@ div.locations .info-box {
 
 /* Device width is less than or equal to 960px */
 
-@media only screen and (width <= 960px) {
+@media only screen and (width <=960px) {
   div.locations {
     flex-direction: column;
   }
@@ -54,7 +56,7 @@ div.locations .info-box {
 
 /* Device width is greater than or equal to 960px */
 
-@media only screen and (width >= 960px) {
+@media only screen and (width >=960px) {
   div.locations {
     flex-direction: row;
   }

@@ -18,7 +18,7 @@ import { strings as commonStrings } from '../lang/common'
 import { strings as clStrings } from '../lang/supplier-list'
 import * as SupplierService from '../services/SupplierService'
 import * as helper from '../common/helper'
-import Master from '../components/Master'
+import Layout from '../components/Layout'
 import Backdrop from '../components/SimpleBackdrop'
 import Avatar from '../components/Avatar'
 import CarList from '../components/CarList'
@@ -134,7 +134,7 @@ const Supplier = () => {
   const edit = user && supplier && (user.type === bookcarsTypes.RecordType.Admin || user._id === supplier._id)
 
   return (
-    <Master onLoad={onLoad} user={user} strict>
+    <Layout onLoad={onLoad} user={user} strict>
       {visible && supplier && suppliers && (
         <div className="supplier">
           <div className="col-1">
@@ -228,7 +228,7 @@ const Supplier = () => {
       {loading && <Backdrop text={commonStrings.LOADING} />}
       {error && <Error />}
       {noMatch && <NoMatch hideHeader />}
-    </Master>
+    </Layout>
   )
 }
 
