@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import escapeStringRegexp from 'escape-string-regexp'
 import { Expo, ExpoPushMessage, ExpoPushTicket } from 'expo-server-sdk'
 import { Request, Response } from 'express'
+import nodemailer from 'nodemailer'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import Booking from '../models/Booking'
@@ -79,14 +80,22 @@ const notifySupplier = async (user: env.User, bookingId: string, supplier: env.U
   }
 
   // mail
-  const mailOptions = {
+  i18n.locale = supplier.language
+
+  const to = [supplier.email]
+  const admin = !!env.ADMIN_EMAIL && await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin, active: true, verified: true, enableEmailNotifications: true })
+  if (admin) {
+    to.push(env.ADMIN_EMAIL)
+  }
+
+  const mailOptions: nodemailer.SendMailOptions = {
     from: env.SMTP_FROM,
-    to: supplier.email,
+    to,
     subject: message,
     html: `<p>
-    ${i18n.t('HELLO')}${supplier.fullName},<br><br>
+    ${i18n.t('HELLO')},<br><br>
     ${message}<br><br>
-    ${helper.joinURL(env.BACKEND_HOST, `booking?b=${bookingId}`)}<br><br>
+    ${helper.joinURL(env.BACKEND_HOST, `update-booking?b=${bookingId}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
   }
@@ -234,7 +243,7 @@ export const checkout = async (req: Request, res: Response) => {
     }
     const dropOffLocationName = dropOffLocation.values.filter((value) => value.language === language)[0].value
 
-    const mailOptions = {
+    const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: `${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART1')} ${booking._id} ${i18n.t('BOOKING_CONFIRMED_SUBJECT_PART2')}`,
@@ -262,7 +271,8 @@ export const checkout = async (req: Request, res: Response) => {
       return res.sendStatus(204)
     }
     i18n.locale = supplier.language
-    await notifySupplier(user, booking._id.toString(), supplier, i18n.t('BOOKING_NOTIFICATION'))
+    const message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+    await notifySupplier(user, booking._id.toString(), supplier, message)
 
     return res.status(200).send({ bookingId: booking._id })
   } catch (err) {
