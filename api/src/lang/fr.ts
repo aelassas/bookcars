@@ -34,7 +34,10 @@ export const fr = {
   BOOKING_CONFIRMED_PART12: ' (heure locale).',
   BOOKING_CONFIRMED_PART13: 'Veuillez respecter les dates et les horaires de prise en charge et de restitution du véhicule.',
   BOOKING_CONFIRMED_PART14: 'Vous pouvez suivre votre réservation sur : ',
-  BOOKING_NOTIFICATION: 'a payé la réservation',
+
+  BOOKING_PAY_LATER_NOTIFICATION: 'a confirmé (payer plus tard) la réservation',
+  BOOKING_PAID_NOTIFICATION: 'a payé la réservation',
+
   CANCEL_BOOKING_NOTIFICATION: "a fait une demande d'annulation de la réservation",
   BOOKING_UPDATED_NOTIFICATION_PART1: 'Le statut de la réservation',
   BOOKING_UPDATED_NOTIFICATION_PART2: 'a été mis à jour.',
