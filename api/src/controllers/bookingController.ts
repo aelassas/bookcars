@@ -49,58 +49,56 @@ export const create = async (req: Request, res: Response) => {
 }
 
 /**
- * Notify a supplier.
+ * Notify a supplier or admin.
  *
  * @async
- * @param {env.User} user
+ * @param {env.User} driver
  * @param {string} bookingId
- * @param {env.User} supplier
- * @param {string} notificationMessage
+ * @param {env.User} user
+ * @param {boolean} notificationMessage
  * @returns {void}
  */
-const notifySupplier = async (user: env.User, bookingId: string, supplier: env.User, notificationMessage: string) => {
-  i18n.locale = supplier.language
+const notify = async (driver: env.User, bookingId: string, user: env.User, notificationMessage: string) => {
+  if (user.type !== bookcarsTypes.UserType.Supplier && user.type !== bookcarsTypes.UserType.Admin) {
+    return
+  }
+
+  i18n.locale = user.language
 
   // notification
-  const message = `${user.fullName} ${notificationMessage} ${bookingId}.`
+  const message = `${driver.fullName} ${notificationMessage} ${bookingId}.`
   const notification = new Notification({
-    user: supplier._id,
+    user: user._id,
     message,
     booking: bookingId,
   })
 
   await notification.save()
-  let counter = await NotificationCounter.findOne({ user: supplier._id })
+  let counter = await NotificationCounter.findOne({ user: user._id })
   if (counter && typeof counter.count !== 'undefined') {
     counter.count += 1
     await counter.save()
   } else {
-    counter = new NotificationCounter({ user: supplier._id, count: 1 })
+    counter = new NotificationCounter({ user: user._id, count: 1 })
     await counter.save()
   }
 
   // mail
-  i18n.locale = supplier.language
-
-  const to = [supplier.email]
-  const admin = !!env.ADMIN_EMAIL && await User.exists({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin, active: true, verified: true, enableEmailNotifications: true })
-  if (admin) {
-    to.push(env.ADMIN_EMAIL)
-  }
-
-  const mailOptions: nodemailer.SendMailOptions = {
-    from: env.SMTP_FROM,
-    to,
-    subject: message,
-    html: `<p>
-    ${i18n.t('HELLO')},<br><br>
+  if (user.enableEmailNotifications) {
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: env.SMTP_FROM,
+      to: user.email,
+      subject: message,
+      html: `<p>
+    ${i18n.t('HELLO')}${user.fullName},<br><br>
     ${message}<br><br>
     ${helper.joinURL(env.BACKEND_HOST, `update-booking?b=${bookingId}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
-  }
+    }
 
-  await mailHelper.sendMail(mailOptions)
+    await mailHelper.sendMail(mailOptions)
+  }
 }
 
 /**
@@ -170,7 +168,7 @@ export const checkout = async (req: Request, res: Response) => {
 
       i18n.locale = user.language
 
-      const mailOptions = {
+      const mailOptions: nodemailer.SendMailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
         subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
@@ -271,8 +269,16 @@ export const checkout = async (req: Request, res: Response) => {
       return res.sendStatus(204)
     }
     i18n.locale = supplier.language
-    const message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
-    await notifySupplier(user, booking._id.toString(), supplier, message)
+    let message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+    await notify(user, booking._id.toString(), supplier, message)
+
+    // Notify admin
+    const admin = !!env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+    if (admin) {
+      i18n.locale = admin.language
+      message = body.payLater ? i18n.t('BOOKING_PAY_LATER_NOTIFICATION') : i18n.t('BOOKING_PAID_NOTIFICATION')
+      await notify(user, booking._id.toString(), admin, message)
+    }
 
     return res.status(200).send({ bookingId: booking._id })
   } catch (err) {
@@ -315,7 +321,7 @@ const notifyDriver = async (booking: env.Booking) => {
   }
 
   // mail
-  const mailOptions = {
+  const mailOptions: nodemailer.SendMailOptions = {
     from: env.SMTP_FROM,
     to: driver.email,
     subject: message,
@@ -913,7 +919,7 @@ export const cancelBooking = async (req: Request, res: Response) => {
       await booking.save()
 
       // Notify supplier
-      await notifySupplier(booking.driver, booking._id.toString(), booking.supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
+      await notify(booking.driver, booking._id.toString(), booking.supplier, i18n.t('CANCEL_BOOKING_NOTIFICATION'))
 
       return res.sendStatus(200)
     }

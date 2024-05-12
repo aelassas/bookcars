@@ -6,6 +6,7 @@ import { v1 as uuid } from 'uuid'
 import escapeStringRegexp from 'escape-string-regexp'
 import mongoose from 'mongoose'
 import { CookieOptions, Request, Response } from 'express'
+import nodemailer from 'nodemailer'
 import * as bookcarsTypes from ':bookcars-types'
 import i18n from '../lang/i18n'
 import * as env from '../config/env.config'
@@ -92,7 +93,7 @@ const _signup = async (req: Request, res: Response, userType: bookcarsTypes.User
     // Send email
     i18n.locale = user.language
 
-    const mailOptions = {
+    const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
@@ -194,7 +195,7 @@ export const create = async (req: Request, res: Response) => {
     // Send email
     i18n.locale = user.language
 
-    const mailOptions = {
+    const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
@@ -335,7 +336,7 @@ export const resend = async (req: Request, res: Response) => {
 
       const reset = req.params.reset === 'true'
 
-      const mailOptions = {
+      const mailOptions: nodemailer.SendMailOptions = {
         from: env.SMTP_FROM,
         to: user.email,
         subject: reset ? i18n.t('PASSWORD_RESET_SUBJECT') : i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
@@ -753,7 +754,7 @@ export const resendLink = async (req: Request, res: Response) => {
 
     // Send email
     i18n.locale = user.language
-    const mailOptions = {
+    const mailOptions: nodemailer.SendMailOptions = {
       from: env.SMTP_FROM,
       to: user.email,
       subject: i18n.t('ACCOUNT_ACTIVATION_SUBJECT'),
