@@ -34,7 +34,7 @@ export const en = {
   BOOKING_CONFIRMED_PART12: ' (local time).',
   BOOKING_CONFIRMED_PART13: 'Please respect the pick-up and drop-off dates and times.',
   BOOKING_CONFIRMED_PART14: 'You can follow your booking on: ',
-  BOOKING_PAY_LATER_NOTIFICATION: 'confirmed (pay later) the booking',
+  BOOKING_PAY_LATER_NOTIFICATION: 'confirmed the booking',
   BOOKING_PAID_NOTIFICATION: 'paid the booking',
   CANCEL_BOOKING_NOTIFICATION: 'made a request to cancel the booking',
   BOOKING_UPDATED_NOTIFICATION_PART1: 'The status of the booking',
