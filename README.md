@@ -2,7 +2,7 @@
 
 ## Preface
 
-As of 30<sup>th</sup> April 2024, Stripe Payment Gateway integration was successfully implemented in the frontend, the backend and the mobile app, and is fully operational. You can download the demo mobile app, and find the frontend and backend demo links [here](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo).
+You can download the demo mobile app, and find the frontend and backend demo links [here](https://github.com/aelassas/bookcars?tab=readme-ov-file#live-demo).
 
 ## BookCars
 
