@@ -321,18 +321,20 @@ const notifyDriver = async (booking: env.Booking) => {
   }
 
   // mail
-  const mailOptions: nodemailer.SendMailOptions = {
-    from: env.SMTP_FROM,
-    to: driver.email,
-    subject: message,
-    html: `<p>
+  if (driver.enableEmailNotifications) {
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: env.SMTP_FROM,
+      to: driver.email,
+      subject: message,
+      html: `<p>
     ${i18n.t('HELLO')}${driver.fullName},<br><br>
     ${message}<br><br>
     ${helper.joinURL(env.FRONTEND_HOST, `booking?b=${booking._id}`)}<br><br>
     ${i18n.t('REGARDS')}<br>
     </p>`,
+    }
+    await mailHelper.sendMail(mailOptions)
   }
-  await mailHelper.sendMail(mailOptions)
 
   // push notification
   const pushToken = await PushToken.findOne({ user: driver._id })
