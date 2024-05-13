@@ -59,10 +59,6 @@ export const create = async (req: Request, res: Response) => {
  * @returns {void}
  */
 const notify = async (driver: env.User, bookingId: string, user: env.User, notificationMessage: string) => {
-  if (user.type !== bookcarsTypes.UserType.Supplier && user.type !== bookcarsTypes.UserType.Admin) {
-    return
-  }
-
   i18n.locale = user.language
 
   // notification
