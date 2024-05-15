@@ -306,21 +306,21 @@ describe('POST /api/checkout', () => {
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(204)
+    expect(res.statusCode).toBe(400)
 
     payload.booking!.car = CAR1_ID
     payload.booking!.pickupLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(204)
+    expect(res.statusCode).toBe(400)
 
     payload.booking!.pickupLocation = LOCATION_ID
     payload.booking!.dropOffLocation = testHelper.GetRandromObjectIdAsString()
     res = await request(app)
       .post('/api/checkout')
       .send(payload)
-    expect(res.statusCode).toBe(204)
+    expect(res.statusCode).toBe(400)
 
     payload.booking!.dropOffLocation = LOCATION_ID
     payload.booking!.supplier = testHelper.GetRandromObjectIdAsString()
