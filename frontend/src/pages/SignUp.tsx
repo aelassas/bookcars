@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import ReCAPTCHA from 'react-google-recaptcha'
+import React, { useCallback, useState } from 'react'
+import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import {
   OutlinedInput,
   InputLabel,
@@ -144,10 +144,10 @@ const SignUp = () => {
     setConfirmPassword(e.target.value)
   }
 
-  const handleRecaptchaVerify = (token: string | null) => {
+  const handleRecaptchaVerify = useCallback((token: string | null) => {
     setReCaptchaToken(token || '')
     setRecaptchaError(!token)
-  }
+  }, [])
 
   const handleTosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTosChecked(e.target.checked)
@@ -368,11 +368,7 @@ const SignUp = () => {
 
                 {env.RECAPTCHA_ENABLED && (
                   <div className="recaptcha">
-                    <ReCAPTCHA
-                      sitekey={env.RECAPTCHA_SITE_KEY || ''}
-                      hl={language}
-                      onChange={handleRecaptchaVerify}
-                    />
+                    <GoogleReCaptcha onVerify={handleRecaptchaVerify} />
                   </div>
                 )}
 

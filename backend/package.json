@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "3.9.0",
+  "version": "4.0.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
