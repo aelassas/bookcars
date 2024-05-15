@@ -1,8 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
-import env from './config/env.config'
-import * as UserService from './services/UserService'
+import ReCaptchaProvider from './components/ReCaptchaProvider'
 import { GlobalProvider } from './context/GlobalContext'
 
 const SignIn = lazy(() => import('./pages/SignIn'))
@@ -25,10 +23,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const NoMatch = lazy(() => import('./pages/NoMatch'))
 
 const App = () => (
-  <GoogleReCaptchaProvider
-    reCaptchaKey={env.RECAPTCHA_SITE_KEY}
-    language={UserService.getLanguage()}
-  >
+  <ReCaptchaProvider>
     <GlobalProvider>
       <Router>
         <div className="app">
@@ -58,7 +53,7 @@ const App = () => (
         </div>
       </Router>
     </GlobalProvider>
-  </GoogleReCaptchaProvider>
+  </ReCaptchaProvider>
 )
 
 export default App
