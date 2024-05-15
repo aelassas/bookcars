@@ -1,5 +1,8 @@
 import React, { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
+import env from './config/env.config'
+import * as UserService from './services/UserService'
 import { GlobalProvider } from './context/GlobalContext'
 
 const SignIn = lazy(() => import('./pages/SignIn'))
@@ -22,35 +25,40 @@ const Contact = lazy(() => import('./pages/Contact'))
 const NoMatch = lazy(() => import('./pages/NoMatch'))
 
 const App = () => (
-  <GlobalProvider>
-    <Router>
-      <div className="app">
-        <Suspense fallback={<></>}>
-          <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/activate" element={<Activate />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/checkout-session/:sessionId" element={<CheckoutSession />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/notifications" element={<Notifications />} />
-            {/* <Route path="/change-password" element={<ChangePassword />} /> */}
-            <Route path="/about" element={<About />} />
-            <Route path="/tos" element={<ToS />} />
-            <Route path="/contact" element={<Contact />} />
+  <GoogleReCaptchaProvider
+    reCaptchaKey={env.RECAPTCHA_SITE_KEY}
+    language={UserService.getLanguage()}
+  >
+    <GlobalProvider>
+      <Router>
+        <div className="app">
+          <Suspense fallback={<></>}>
+            <Routes>
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/activate" element={<Activate />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout-session/:sessionId" element={<CheckoutSession />} />
+              <Route path="/bookings" element={<Bookings />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/notifications" element={<Notifications />} />
+              {/* <Route path="/change-password" element={<ChangePassword />} /> */}
+              <Route path="/about" element={<About />} />
+              <Route path="/tos" element={<ToS />} />
+              <Route path="/contact" element={<Contact />} />
 
-            <Route path="*" element={<NoMatch />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
-  </GlobalProvider>
+              <Route path="*" element={<NoMatch />} />
+            </Routes>
+          </Suspense>
+        </div>
+      </Router>
+    </GlobalProvider>
+  </GoogleReCaptchaProvider>
 )
 
 export default App
