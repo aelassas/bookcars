@@ -7,6 +7,8 @@ import * as bookcarsTypes from ':bookcars-types'
 import * as env from '../config/env.config'
 import * as helper from '../common/helper'
 import Booking from '../models/Booking'
+import User from '../models/User'
+import * as bookingController from './bookingController'
 
 /**
  * Create Checkout Session.
@@ -127,6 +129,36 @@ export const checkCheckoutSession = async (req: Request, res: Response) => {
       booking.expireAt = undefined
       booking.status = bookcarsTypes.BookingStatus.Paid
       await booking.save()
+
+      // Send confirmation email
+      const user = await User.findById(booking.driver)
+      if (!user) {
+        logger.info(`Driver ${booking.driver} not found`)
+        return res.sendStatus(204)
+      }
+
+      if (!await bookingController.confirm(user, booking, false)) {
+        return res.sendStatus(400)
+      }
+
+      // Notify supplier
+      const supplier = await User.findById(booking.supplier)
+      if (!supplier) {
+        logger.info(`Supplier ${booking.supplier} not found`)
+        return res.sendStatus(204)
+      }
+      i18n.locale = supplier.language
+      let message = i18n.t('BOOKING_PAID_NOTIFICATION')
+      await bookingController.notify(user, booking._id.toString(), supplier, message)
+
+      // Notify admin
+      const admin = !!env.ADMIN_EMAIL && await User.findOne({ email: env.ADMIN_EMAIL, type: bookcarsTypes.UserType.Admin })
+      if (admin) {
+        i18n.locale = admin.language
+        message = i18n.t('BOOKING_PAID_NOTIFICATION')
+        await bookingController.notify(user, booking._id.toString(), admin, message)
+      }
+
       return res.sendStatus(200)
     }
 
