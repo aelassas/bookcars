@@ -55,8 +55,8 @@ describe('Test database initialization', () => {
 
     if (tokenIndex) {
       const { expireAfterSeconds } = tokenIndex
-      await Token.collection.dropIndex(tokenIndex.name)
-      await createTokenIndex(expireAfterSeconds + 1)
+      await Token.collection.dropIndex(tokenIndex.name!)
+      await createTokenIndex(expireAfterSeconds! + 1)
       await delay()
       res = await databaseHelper.initialize()
       expect(res).toBeTruthy()
@@ -69,8 +69,8 @@ describe('Test database initialization', () => {
 
     if (bookingIndex) {
       const { expireAfterSeconds } = bookingIndex
-      await Booking.collection.dropIndex(bookingIndex.name)
-      await createBookingIndex(expireAfterSeconds + 1)
+      await Booking.collection.dropIndex(bookingIndex.name!)
+      await createBookingIndex(expireAfterSeconds! + 1)
       await delay()
       res = await databaseHelper.initialize()
       expect(res).toBeTruthy()

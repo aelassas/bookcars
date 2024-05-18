@@ -3,13 +3,14 @@ import { StyleSheet, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as bookcarsTypes from ':bookcars-types'
+import * as bookcarsHelper from ':bookcars-helper'
 
 import Layout from '../components/Layout'
 import i18n from '../lang/i18n'
 import * as UserService from '../services/UserService'
 import CarList from '../components/CarList'
 import SupplierFilter from '../components/SupplierFilter'
-import FuelFilter from '../components/FuelFilter'
+import CarTypeFilter from '../components/CarTypeFilter'
 import GearboxFilter from '../components/GearboxFilter'
 import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
@@ -20,7 +21,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
   const [loaded, setLoaded] = useState(false)
   const [visible, setVisible] = useState(false)
   const [suppliers, setSuppliers] = useState<string[]>([])
-  const [fuel, setFuel] = useState([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
+  const [carType, setCarType] = useState(bookcarsHelper.getAllCarTypes())
   const [gearbox, setGearbox] = useState([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
   const [mileage, setMileage] = useState([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [deposit, setDeposit] = useState(-1)
@@ -53,8 +54,8 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
     setSuppliers(_suppliers)
   }
 
-  const onChangeFuel = (_fuel: bookcarsTypes.CarType[]) => {
-    setFuel(_fuel)
+  const onChangeFuel = (_carType: bookcarsTypes.CarType[]) => {
+    setCarType(_carType)
   }
 
   const onChangeGearbox = (_gearbox: bookcarsTypes.GearboxType[]) => {
@@ -75,7 +76,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
         <CarList
           navigation={navigation}
           suppliers={suppliers}
-          fuel={fuel}
+          carType={carType}
           gearbox={gearbox}
           mileage={mileage}
           deposit={deposit}
@@ -86,7 +87,7 @@ const CarsScreen = ({ navigation, route }: NativeStackScreenProps<StackParams, '
           header={(
             <View>
               <SupplierFilter style={styles.filter} visible onLoad={onLoadSuppliers} onChange={onChangeSuppliers} />
-              <FuelFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
+              <CarTypeFilter style={styles.filter} visible={loaded} onChange={onChangeFuel} />
               <GearboxFilter style={styles.filter} visible={loaded} onChange={onChangeGearbox} />
               <MileageFilter style={styles.filter} visible={loaded} onChange={onChangeMileage} />
               <DepositFilter style={styles.filter} visible={loaded} onChange={onChangeDeposit} />

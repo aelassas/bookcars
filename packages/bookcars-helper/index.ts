@@ -241,3 +241,16 @@ export const formatPrice = (price: number, currency: string, language: string) =
  * @returns {boolean}
  */
 export const isFrench = (language?: string) => language === 'fr'
+
+/**
+ * Return all car types.
+ *
+ * @returns {bookcarsTypes.CarType[]}
+ */
+export const getAllCarTypes = () => [
+  bookcarsTypes.CarType.Diesel,
+  bookcarsTypes.CarType.Gasoline,
+  bookcarsTypes.CarType.Electric,
+  bookcarsTypes.CarType.Hybrid,
+  bookcarsTypes.CarType.PlugInHybrid
+]

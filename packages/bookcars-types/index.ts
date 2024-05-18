@@ -11,7 +11,10 @@ export enum AppType {
 
 export enum CarType {
   Diesel = 'diesel',
-  Gasoline = 'gasoline'
+  Gasoline = 'gasoline',
+  Electric = 'Electric',
+  Hybrid = 'Hybrid',
+  PlugInHybrid = 'PlugInHybrid'
 }
 
 export enum GearboxType {
@@ -159,7 +162,7 @@ export interface UpdateCarPayload extends CreateCarPayload {
 
 export interface GetCarsPayload {
   suppliers: string[]
-  fuel?: string[]
+  carType?: string[]
   gearbox?: string[]
   mileage?: string[]
   deposit?: number

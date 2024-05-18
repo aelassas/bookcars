@@ -72,6 +72,15 @@ export const getCarTypeShort = (type: string) => {
     case bookcarsTypes.CarType.Gasoline:
       return strings.GASOLINE_SHORT
 
+    case bookcarsTypes.CarType.Electric:
+      return strings.ELECTRIC_SHORT
+
+    case bookcarsTypes.CarType.Hybrid:
+      return strings.HYBRID_SHORT
+
+    case bookcarsTypes.CarType.PlugInHybrid:
+      return strings.PLUG_IN_HYBRID_SHORT
+
     default:
       return ''
   }
@@ -147,6 +156,15 @@ export const getCarTypeTooltip = (type: string) => {
 
     case bookcarsTypes.CarType.Gasoline:
       return strings.GASOLINE_TOOLTIP
+
+    case bookcarsTypes.CarType.Electric:
+      return strings.ELECTRIC_TOOLTIP
+
+    case bookcarsTypes.CarType.Hybrid:
+      return strings.HYBRID_TOOLTIP
+
+    case bookcarsTypes.CarType.PlugInHybrid:
+      return strings.PLUG_IN_HYBRID_TOOLTIP
 
     default:
       return ''

@@ -113,7 +113,7 @@ export const initialize = async (): Promise<boolean> => {
     const bookingIndex = bookingIndexes.find((index: any) => index.name === BOOKING_EXPIRE_AT_INDEX_NAME && index.expireAfterSeconds !== env.BOOKING_EXPIRE_AT)
     if (bookingIndex) {
       try {
-        await Booking.collection.dropIndex(bookingIndex.name)
+        await Booking.collection.dropIndex(bookingIndex.name!)
       } catch (err) {
         logger.error('Failed dropping Booking TTL index', err)
       } finally {
@@ -129,7 +129,7 @@ export const initialize = async (): Promise<boolean> => {
     const tokenIndex = tokenIndexes.find((index: any) => index.name.includes(TOKEN_EXPIRE_AT_INDEX_NAME))
     if (tokenIndex) {
       try {
-        await Token.collection.dropIndex(tokenIndex.name)
+        await Token.collection.dropIndex(tokenIndex.name!)
       } catch (err) {
         logger.error('Failed dropping Token TTL index', err)
       } finally {

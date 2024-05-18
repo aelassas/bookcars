@@ -44,6 +44,9 @@ const CarTypeList = ({
       <Select label={label} value={value} onChange={handleChange} variant={variant || 'standard'} required={required} fullWidth>
         <MenuItem value={bookcarsTypes.CarType.Diesel}>{strings.DIESEL}</MenuItem>
         <MenuItem value={bookcarsTypes.CarType.Gasoline}>{strings.GASOLINE}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarType.Electric}>{strings.ELECTRIC}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarType.Hybrid}>{strings.HYBRID}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarType.PlugInHybrid}>{strings.PLUG_IN_HYBRID}</MenuItem>
       </Select>
     </div>
   )

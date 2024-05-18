@@ -148,6 +148,15 @@ export const getCarTypeShort = (type: string) => {
     case bookcarsTypes.CarType.Gasoline:
       return i18n.t('GASOLINE_SHORT')
 
+    case bookcarsTypes.CarType.Electric:
+      return i18n.t('ELECTRIC_SHORT')
+
+    case bookcarsTypes.CarType.Hybrid:
+      return i18n.t('HYBRID_SHORT')
+
+    case bookcarsTypes.CarType.PlugInHybrid:
+      return i18n.t('PLUG_IN_HYBRID_SHORT')
+
     default:
       return ''
   }
