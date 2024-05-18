@@ -42,7 +42,13 @@ const carSchema = new Schema<env.Car>(
     },
     type: {
       type: String,
-      enum: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      enum: [
+        bookcarsTypes.CarType.Diesel,
+        bookcarsTypes.CarType.Gasoline,
+        bookcarsTypes.CarType.Electric,
+        bookcarsTypes.CarType.Hybrid,
+        bookcarsTypes.CarType.PlugInHybrid,
+      ],
       required: [true, "can't be blank"],
     },
     gearbox: {

@@ -399,7 +399,7 @@ export const getCars = async (req: Request, res: Response) => {
     const size = Number.parseInt(req.params.size, 10)
     const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const {
-      fuel,
+      carType,
       gearbox,
       mileage,
       deposit,
@@ -412,8 +412,8 @@ export const getCars = async (req: Request, res: Response) => {
       $and: [{ name: { $regex: keyword, $options: options } }, { supplier: { $in: suppliers } }],
     }
 
-    if (fuel) {
-      $match.$and!.push({ type: { $in: fuel } })
+    if (carType) {
+      $match.$and!.push({ type: { $in: carType } })
     }
 
     if (gearbox) {
@@ -564,7 +564,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     const suppliers = body.suppliers.map((id) => new mongoose.Types.ObjectId(id))
     const pickupLocation = new mongoose.Types.ObjectId(body.pickupLocation)
     const {
-      fuel,
+      carType,
       gearbox,
       mileage,
       deposit,
@@ -574,7 +574,7 @@ export const getFrontendCars = async (req: Request, res: Response) => {
       $and: [
         { supplier: { $in: suppliers } },
         { locations: pickupLocation },
-        { available: true }, { type: { $in: fuel } },
+        { available: true }, { type: { $in: carType } },
         { gearbox: { $in: gearbox } },
       ],
     }

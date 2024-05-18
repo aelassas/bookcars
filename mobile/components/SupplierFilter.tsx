@@ -55,7 +55,7 @@ const SupplierFilter = ({
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    visible && suppliers.length > 1 && (
+    visible && (suppliers.length > 1 && suppliers.length < 17) && (
       <View style={{ ...styles.container, ...style }}>
         <Accordion style={styles.accordion} title={i18n.t('SUPPLIER')}>
           <View style={styles.suppliers}>
@@ -158,6 +158,8 @@ const styles = StyleSheet.create({
   image: {
     width: env.SUPPLIER_IMAGE_WIDTH,
     height: env.SUPPLIER_IMAGE_HEIGHT,
+    flex: 1,
+    resizeMode: 'contain',
   },
   link: {
     marginTop: 10,

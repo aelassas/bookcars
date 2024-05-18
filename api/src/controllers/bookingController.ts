@@ -236,13 +236,13 @@ export const checkout = async (req: Request, res: Response) => {
         html: `<p>
         ${i18n.t('HELLO')}${user.fullName},<br><br>
         ${i18n.t('ACCOUNT_ACTIVATION_LINK')}<br><br>
-        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user._id.toString())}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        ${helper.joinURL(env.FRONTEND_HOST, 'activate')}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${i18n.t('REGARDS')}<br>
         </p>`,
       }
       await mailHelper.sendMail(mailOptions)
 
-      body.booking.driver = user._id.toString()
+      body.booking.driver = user.id
     } else {
       user = await User.findById(body.booking.driver)
     }

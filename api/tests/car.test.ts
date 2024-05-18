@@ -372,7 +372,7 @@ describe('POST /api/cars/:page/:size', () => {
 
     const payload: bookcarsTypes.GetCarsPayload = {
       suppliers: [SUPPLIER2_ID],
-      fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       availability: [bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable],
@@ -386,7 +386,7 @@ describe('POST /api/cars/:page/:size', () => {
     expect(res.statusCode).toBe(200)
     expect(res.body[0].resultData.length).toBeGreaterThan(0)
 
-    payload.fuel = undefined
+    payload.carType = undefined
     payload.gearbox = undefined
     payload.mileage = undefined
     payload.availability = undefined
@@ -493,7 +493,7 @@ describe('POST /api/frontend-cars/:page/:size', () => {
     const payload: bookcarsTypes.GetCarsPayload = {
       suppliers: [SUPPLIER2_ID],
       pickupLocation: LOCATION2_ID,
-      fuel: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
+      carType: [bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline],
       gearbox: [bookcarsTypes.GearboxType.Manual, bookcarsTypes.GearboxType.Automatic],
       mileage: [bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited],
       deposit: -1,
