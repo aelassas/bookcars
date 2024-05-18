@@ -10,7 +10,7 @@ import Layout from '../components/Layout'
 import SupplierFilter from '../components/SupplierFilter'
 import Search from '../components/Search'
 import InfoBox from '../components/InfoBox'
-import FuelFilter from '../components/FuelFilter'
+import CarTypeFilter from '../components/CarTypeFilter'
 import GearboxFilter from '../components/GearboxFilter'
 import MileageFilter from '../components/MileageFilter'
 import DepositFilter from '../components/DepositFilter'
@@ -29,7 +29,7 @@ const Cars = () => {
   const [rowCount, setRowCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [gearbox, setGearbox] = useState<string[]>([bookcarsTypes.GearboxType.Automatic, bookcarsTypes.GearboxType.Manual])
-  const [fuel, setFuel] = useState<string[]>([bookcarsTypes.CarType.Diesel, bookcarsTypes.CarType.Gasoline])
+  const [carType, setCarType] = useState<string[]>(bookcarsHelper.getAllCarTypes())
   const [mileage, setMileage] = useState<string[]>([bookcarsTypes.Mileage.Limited, bookcarsTypes.Mileage.Unlimited])
   const [availability, setAvailability] = useState<string[]>([bookcarsTypes.Availablity.Available, bookcarsTypes.Availablity.Unavailable])
   const [deposit, setDeposit] = useState(-1)
@@ -53,8 +53,9 @@ const Cars = () => {
     setRowCount(_rowCount)
   }
 
-  const handleFuelFilterChange = (values: string[]) => {
-    setFuel(values)
+  const handleCarTypeFilterChange = (values: string[]) => {
+    console.log(values)
+    setCarType(values)
   }
 
   const handleGearboxFilterChange = (values: string[]) => {
@@ -102,7 +103,7 @@ const Cars = () => {
 
               {rowCount > -1 && (
                 <>
-                  <FuelFilter className="car-filter" onChange={handleFuelFilterChange} />
+                  <CarTypeFilter className="car-filter" onChange={handleCarTypeFilterChange} />
                   <GearboxFilter className="car-filter" onChange={handleGearboxFilterChange} />
                   <MileageFilter className="car-filter" onChange={handleMileageFilterChange} />
                   <DepositFilter className="car-filter" onChange={handleDepositFilterChange} />
@@ -115,7 +116,7 @@ const Cars = () => {
             <CarList
               user={user}
               suppliers={suppliers}
-              fuel={fuel}
+              carType={carType}
               gearbox={gearbox}
               mileage={mileage}
               deposit={deposit}

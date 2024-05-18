@@ -186,6 +186,8 @@ const styles = StyleSheet.create({
   img: {
     width: env.CAR_IMAGE_WIDTH,
     height: env.CAR_IMAGE_HEIGHT,
+    flex: 1,
+    resizeMode: 'contain',
   },
   infos: {
     flexDirection: 'row',
@@ -234,6 +236,8 @@ const styles = StyleSheet.create({
   supplierImg: {
     width: env.SUPPLIER_IMAGE_WIDTH,
     height: env.SUPPLIER_IMAGE_HEIGHT,
+    flex: 1,
+    resizeMode: 'contain',
   },
   supplierText: {
     color: '#a1a1a1',

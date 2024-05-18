@@ -12,7 +12,7 @@ import {
   Typography
 } from '@mui/material'
 import {
-  LocalGasStation as FuelIcon,
+  LocalGasStation as CarTypeIcon,
   AccountTree as GearboxIcon,
   Person as SeatsIcon,
   AcUnit as AirconIcon,
@@ -41,7 +41,7 @@ import '../assets/css/car-list.css'
 interface CarListProps {
   suppliers?: string[]
   keyword?: string
-  fuel?: string[]
+  carType?: string[]
   gearbox?: string[]
   mileage?: string[]
   deposit?: number
@@ -62,7 +62,7 @@ interface CarListProps {
 const CarList = ({
   suppliers: carSuppliers,
   keyword: carKeyword,
-  fuel: carFuel,
+  carType: _carType,
   gearbox: carGearbox,
   mileage: carMileage,
   deposit: carDeposit,
@@ -114,7 +114,7 @@ const CarList = ({
     _page: number,
     suppliers?: string[],
     keyword?: string,
-    fuel?: string[],
+    __carType?: string[],
     gearbox?: string[],
     mileage?: string[],
     deposit?: number,
@@ -125,7 +125,7 @@ const CarList = ({
 
       const payload: bookcarsTypes.GetCarsPayload = {
         suppliers: suppliers ?? [],
-        fuel,
+        carType: __carType,
         gearbox,
         mileage,
         deposit,
@@ -174,7 +174,7 @@ const CarList = ({
           page,
           carSuppliers,
           carKeyword,
-          carFuel,
+          _carType,
           carGearbox,
           carMileage,
           carDeposit || 0,
@@ -194,7 +194,7 @@ const CarList = ({
     page,
     carSuppliers,
     carKeyword,
-    carFuel,
+    _carType,
     carGearbox,
     carMileage,
     carDeposit,
@@ -218,7 +218,7 @@ const CarList = ({
   }, [
     carSuppliers,
     carKeyword,
-    carFuel,
+    _carType,
     carGearbox,
     carMileage,
     carDeposit,
@@ -232,7 +232,7 @@ const CarList = ({
         1,
         carSuppliers,
         carKeyword,
-        carFuel,
+        _carType,
         carGearbox,
         carMileage,
         carDeposit,
@@ -243,7 +243,7 @@ const CarList = ({
     reload,
     carSuppliers,
     carKeyword,
-    carFuel,
+    _carType,
     carGearbox,
     carMileage,
     carDeposit,
@@ -393,7 +393,7 @@ const CarList = ({
                       <li className="car-type">
                         <Tooltip title={helper.getCarTypeTooltip(car.type)} placement="top">
                           <div className="car-info-list-item">
-                            <FuelIcon />
+                            <CarTypeIcon />
                             <span className="car-info-list-text">{helper.getCarTypeShort(car.type)}</span>
                           </div>
                         </Tooltip>
@@ -442,7 +442,7 @@ const CarList = ({
                       <li className="fuel-policy">
                         <Tooltip title={helper.getFuelPolicyTooltip(car.fuelPolicy)} placement="left">
                           <div className="car-info-list-item">
-                            <FuelIcon />
+                            <CarTypeIcon />
                             <span className="car-info-list-text">{`${strings.FUEL_POLICY}${fr ? ' : ' : ': '}${helper.getFuelPolicy(car.fuelPolicy)}`}</span>
                           </div>
                         </Tooltip>

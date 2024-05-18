@@ -206,7 +206,7 @@ export const create = async (req: Request, res: Response) => {
         ${helper.joinURL(
           user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
           'activate',
-        )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+        )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
         ${i18n.t('REGARDS')}<br>
         </p>`,
     }
@@ -347,7 +347,7 @@ export const resend = async (req: Request, res: Response) => {
           ${helper.joinURL(
             user.type === bookcarsTypes.UserType.User ? env.FRONTEND_HOST : env.BACKEND_HOST,
             reset ? 'reset-password' : 'activate',
-          )}/?u=${encodeURIComponent(user._id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
+          )}/?u=${encodeURIComponent(user.id)}&e=${encodeURIComponent(user.email)}&t=${encodeURIComponent(token.token)}<br><br>
           ${i18n.t('REGARDS')}<br>
           </p>`,
       }
@@ -478,7 +478,7 @@ export const signin = async (req: Request, res: Response) => {
       const token = jwt.sign(payload, env.JWT_SECRET, options)
 
       const loggedUser: bookcarsTypes.User = {
-        _id: user._id,
+        _id: user.id,
         email: user.email,
         fullName: user.fullName,
         language: user.language,

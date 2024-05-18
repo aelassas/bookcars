@@ -17,7 +17,7 @@ interface CarListProps {
   suppliers?: string[]
   pickupLocation?: string
   dropOffLocation?: string
-  fuel?: string[]
+  carType?: string[]
   gearbox?: string[]
   mileage?: string[]
   deposit?: number
@@ -32,7 +32,7 @@ const CarList = ({
   suppliers,
   pickupLocation,
   dropOffLocation,
-  fuel,
+  carType: _carType,
   gearbox,
   mileage,
   deposit,
@@ -64,7 +64,7 @@ const CarList = ({
     _page: number,
     _suppliers?: string[],
     _pickupLocation?: string,
-    _fuel?: string[],
+    __carType?: string[],
     _gearbox?: string[],
     _mileage?: string[],
     _deposit?: number
@@ -74,10 +74,10 @@ const CarList = ({
         setLoading(true)
         setFetch(true)
 
-        const payload = {
+        const payload: bookcarsTypes.GetCarsPayload = {
           suppliers: _suppliers,
           pickupLocation: _pickupLocation,
-          fuel: _fuel,
+          carType: __carType,
           gearbox: _gearbox,
           mileage: _mileage,
           deposit: _deposit,
@@ -111,7 +111,7 @@ const CarList = ({
   useEffect(() => {
     if (suppliers) {
       if (suppliers.length > 0) {
-        fetchData(page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit)
+        fetchData(page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit)
       } else {
         setRows([])
         setFetch(false)
@@ -120,11 +120,11 @@ const CarList = ({
         }
       }
     } // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
 
   useEffect(() => {
     setPage(1)
-  }, [suppliers, pickupLocation, fuel, gearbox, mileage, deposit])
+  }, [suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
 
   const numToRender = Math.floor(env.CARS_PAGE_SIZE / 2)
 
