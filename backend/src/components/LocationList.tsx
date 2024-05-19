@@ -210,7 +210,7 @@ const LocationList = ({
             </Card>
           )
         ) : (
-          <List>
+          <List className="location-list-items">
             {rows.map((location, index) => (
               <ListItem
                 className="location-list-item"
