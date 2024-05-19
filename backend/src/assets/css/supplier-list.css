@@ -1,5 +1,5 @@
 section.supplier-list {
-  padding-top: 10px;
+  padding-top: 8px;
   margin: 0 10px;
   display: flex;
   flex-direction: column;
@@ -14,7 +14,9 @@ section.supplier-list .empty-list {
 }
 
 section.supplier-list article {
-  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -23,19 +25,17 @@ section.supplier-list article {
   padding: 25px;
   margin-bottom: 15px;
   height: 85px;
+  width: 100%;
 }
 
 section.supplier-list article .supplier-item {
-  position: absolute;
-  left: 15px;
-  top: 25px;
+  display: flex;
+  flex-direction: row;
+  width: calc(100% - 120px);
 }
 
 section.supplier-list article .supplier-item .supplier-item-avatar {
-  float: left;
-  display: inline;
-  margin-top: 3px;
-  color: #333;
+  flex: none;
   width: 60px;
   height: 34px;
 }
@@ -46,20 +46,17 @@ section.supplier-list article .supplier-item .supplier-item-avatar img {
 }
 
 section.supplier-list article .supplier-item .supplier-item-title {
-  display: inline;
+  display: inline-block;
   font-size: 1.7em;
-  margin-left: 20px;
-  text-size-adjust: none;
-  line-height: 1.3em;
-  text-decoration: none;
+  margin-left: 10px;
   color: #333;
-  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 section.supplier-list article .supplier-actions {
-  position: absolute;
-  right: 10px;
-  width: 160px;
+  min-width: 120px;
 }
 
 section.supplier-list article .supplier-actions a,

@@ -1,8 +1,6 @@
 section.location-list {
-  padding-top: 10px;
   margin: 0 10px;
-  width: 100%;
-  max-width: 480px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,6 +11,12 @@ section.location-list .empty-list {
   margin-top: 15px;
   text-align: center;
   width: 250px;
+}
+
+@media only screen and (width <=960px) {
+  section.location-list .location-list-items {
+    width: 100%;
+  }
 }
 
 section.location-list .location-list-item {
@@ -28,13 +32,16 @@ section.location-list .location-list-item {
 }
 
 section.location-list .location-title {
-  margin-right: 10px;
+  margin-right: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Device width is greater than or equal to 960px */
 
 @media only screen and (width >=960px) {
   section.location-list .location-list-item {
-    width: 500px;
+    width: 480px;
   }
 }
