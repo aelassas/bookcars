@@ -47,10 +47,11 @@ div.locations .info-box {
   }
 
   div.locations div.col-2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     margin-top: 3px;
     padding: 1px;
-    display: flex;
-    justify-content: center;
   }
 }
 
