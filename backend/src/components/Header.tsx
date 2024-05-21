@@ -210,6 +210,7 @@ const Header = ({
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      className="menu"
     >
       <MenuItem onClick={handleSettingsClick}>
         <SettingsIcon className="header-action" />
@@ -232,6 +233,7 @@ const Header = ({
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      className="menu"
     >
       <MenuItem onClick={handleSettingsClick}>
         <SettingsIcon className="header-action" />
@@ -279,7 +281,7 @@ const Header = ({
             </IconButton>
           )}
           <>
-            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose}>
+            <Drawer open={isSideMenuOpen} onClose={handleSideMenuClose} className="menu">
               <List sx={classes.list}>
                 <ListItemLink href="/">
                   <ListItemIcon><DashboardIcon /></ListItemIcon>

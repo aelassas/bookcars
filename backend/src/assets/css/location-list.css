@@ -1,6 +1,5 @@
 section.location-list {
   margin: 0 10px;
-  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;

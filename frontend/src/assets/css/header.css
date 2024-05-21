@@ -3,7 +3,11 @@
   position: -webkit-sticky !important;
   position: sticky !important;
   top: 0;
-  z-index: 101;
+  z-index: 1400;
+}
+
+.menu {
+  z-index: 1401 !important;
 }
 
 .header-action {
