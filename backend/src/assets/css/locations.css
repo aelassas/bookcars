@@ -68,7 +68,6 @@ div.locations .info-box {
   }
 
   div.locations div.col-2 {
-    margin-bottom: 50px;
     display: flex;
     align-items: center;
     flex-direction: column;
