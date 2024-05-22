@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { FormControl, Button } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
+import env from 'src/config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
@@ -100,7 +101,8 @@ const CarFilter = ({
           <LocationSelectList
             label={commonStrings.PICKUP_LOCATION}
             hidePopupIcon
-            customOpen
+            customOpen={env.isMobile()}
+            init={!env.isMobile()}
             required
             variant="standard"
             value={pickupLocation as bookcarsTypes.Location}
@@ -113,7 +115,8 @@ const CarFilter = ({
               label={commonStrings.DROP_OFF_LOCATION}
               value={dropOffLocation as bookcarsTypes.Location}
               hidePopupIcon
-              customOpen
+              customOpen={env.isMobile()}
+              init={!env.isMobile()}
               required
               variant="standard"
               onChange={handleDropOffLocationChange}

@@ -112,6 +112,10 @@ const MultipleSelect = ({
           if (init) {
             if (!event) {
               setInputValue(value)
+              if (onInputChange) {
+                onInputChange(event, value)
+              }
+
               setOpen(false)
               return
             }
@@ -148,6 +152,13 @@ const MultipleSelect = ({
           } else {
             const value = (newValue && [newValue]) || []
             setValues(value)
+
+            const val = (newValue && newValue.name) || ''
+            setInputValue(val)
+            if (onInputChange) {
+              onInputChange(event, val)
+            }
+
             if (callbackFromMultipleSelect) {
               callbackFromMultipleSelect(value, key, reference)
             }

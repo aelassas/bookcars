@@ -51,7 +51,7 @@ const LocationSelectList = ({
     try {
       if (fetch || _page === 1) {
         setLoading(true)
-        const data = await LocationService.getLocations(_keyword, _page, 7) // env.PAGE_SIZE
+        const data = await LocationService.getLocations(_keyword, _page, env.PAGE_SIZE)
         const _data = data && data.length > 0 ? data[0] : { pageInfo: { totalRecord: 0 }, resultData: [] }
         if (!_data) {
           return
@@ -105,6 +105,7 @@ const LocationSelectList = ({
       }}
       onFocus={() => {
         if (!init && listInit) {
+          // if (!init) {
           const p = 1
           setRows([])
           setPage(p)
@@ -113,8 +114,8 @@ const LocationSelectList = ({
           })
         }
       }}
-      onInputChange={(event) => {
-        const _value = (event && event.target && 'value' in event.target && event.target.value as string) || ''
+      onInputChange={(event, val) => {
+        const _value = (event && event.target && 'value' in event.target && event.target.value as string) || val || ''
 
         // if (event.target.type === 'text' && value !== keyword) {
         if (_value !== keyword) {
