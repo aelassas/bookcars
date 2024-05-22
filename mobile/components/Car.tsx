@@ -60,10 +60,12 @@ const Car = ({
             <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
             <Text style={styles.text}>{car.seats}</Text>
           </View>
-          <View style={styles.info}>
-            <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
-            <Text style={styles.text}>{car.doors}</Text>
-          </View>
+          {car.doors > 0 && (
+            <View style={styles.info}>
+              <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
+              <Text style={styles.text}>{car.doors}</Text>
+            </View>
+          )}
           {car.aircon && (
             <View style={styles.info}>
               <MaterialIcons name="ac-unit" size={iconSize} color={iconColor} style={styles.infoIcon} />

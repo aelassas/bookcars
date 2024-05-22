@@ -414,14 +414,16 @@ const CarList = ({
                           </div>
                         </Tooltip>
                       </li>
-                      <li className="doors">
-                        <Tooltip title={helper.getDoorsTooltip(car.doors)} placement="top">
-                          <div className="car-info-list-item">
-                            <img src={DoorsIcon} alt="" className="car-doors" />
-                            <span className="car-info-list-text">{car.doors}</span>
-                          </div>
-                        </Tooltip>
-                      </li>
+                      {car.doors > 0 && (
+                        <li className="doors">
+                          <Tooltip title={helper.getDoorsTooltip(car.doors)} placement="top">
+                            <div className="car-info-list-item">
+                              <img src={DoorsIcon} alt="" className="car-doors" />
+                              <span className="car-info-list-text">{car.doors}</span>
+                            </div>
+                          </Tooltip>
+                        </li>
+                      )}
                       {car.aircon && (
                         <li className="aircon">
                           <Tooltip title={strings.AIRCON_TOOLTIP} placement="top">

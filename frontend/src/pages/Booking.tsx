@@ -330,7 +330,7 @@ const Booking = () => {
                   variant="standard"
                   onChange={handlePickupLocationChange}
                   value={pickupLocation}
-                  init
+                  // init
                   readOnly={!edit}
                 />
               </FormControl>
@@ -342,7 +342,7 @@ const Booking = () => {
                   variant="standard"
                   onChange={handleDropOffLocationChange}
                   value={dropOffLocation}
-                  init
+                  // init
                   readOnly={!edit}
                 />
               </FormControl>
