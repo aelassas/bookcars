@@ -252,5 +252,6 @@ export const getAllCarTypes = () => [
   bookcarsTypes.CarType.Gasoline,
   bookcarsTypes.CarType.Electric,
   bookcarsTypes.CarType.Hybrid,
-  bookcarsTypes.CarType.PlugInHybrid
+  bookcarsTypes.CarType.PlugInHybrid,
+  bookcarsTypes.CarType.Unknown
 ]

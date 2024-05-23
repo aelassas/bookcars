@@ -12,9 +12,10 @@ export enum AppType {
 export enum CarType {
   Diesel = 'diesel',
   Gasoline = 'gasoline',
-  Electric = 'Electric',
-  Hybrid = 'Hybrid',
-  PlugInHybrid = 'PlugInHybrid'
+  Electric = 'electric',
+  Hybrid = 'hybrid',
+  PlugInHybrid = 'plugInHybrid',
+  Unknown = 'unknown'
 }
 
 export enum GearboxType {
