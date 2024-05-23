@@ -48,10 +48,12 @@ const Car = ({
         </View>
 
         <View style={styles.infos}>
-          <View style={styles.info}>
-            <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCarTypeShort(car.type)}</Text>
-          </View>
+          {car.type !== bookcarsTypes.CarType.Unknown && (
+            <View style={styles.info}>
+              <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getCarTypeShort(car.type)}</Text>
+            </View>
+          )}
           <View style={styles.info}>
             <MaterialIcons name="account-tree" size={iconSize} color={iconColor} style={styles.infoIcon} />
             <Text style={styles.text}>{helper.getGearboxTypeShort(car.gearbox)}</Text>

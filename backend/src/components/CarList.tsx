@@ -390,14 +390,16 @@ const CarList = ({
                   </div>
                   <div className="car-info">
                     <ul className="car-info-list">
-                      <li className="car-type">
-                        <Tooltip title={helper.getCarTypeTooltip(car.type)} placement="top">
-                          <div className="car-info-list-item">
-                            <CarTypeIcon />
-                            <span className="car-info-list-text">{helper.getCarTypeShort(car.type)}</span>
-                          </div>
-                        </Tooltip>
-                      </li>
+                      {car.type !== bookcarsTypes.CarType.Unknown && (
+                        <li className="car-type">
+                          <Tooltip title={helper.getCarTypeTooltip(car.type)} placement="top">
+                            <div className="car-info-list-item">
+                              <CarTypeIcon />
+                              <span className="car-info-list-text">{helper.getCarTypeShort(car.type)}</span>
+                            </div>
+                          </Tooltip>
+                        </li>
+                      )}
                       <li className="gearbox">
                         <Tooltip title={helper.getGearboxTooltip(car.gearbox)} placement="top">
                           <div className="car-info-list-item">
