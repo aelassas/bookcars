@@ -47,6 +47,7 @@ const CarTypeList = ({
         <MenuItem value={bookcarsTypes.CarType.Electric}>{strings.ELECTRIC}</MenuItem>
         <MenuItem value={bookcarsTypes.CarType.Hybrid}>{strings.HYBRID}</MenuItem>
         <MenuItem value={bookcarsTypes.CarType.PlugInHybrid}>{strings.PLUG_IN_HYBRID}</MenuItem>
+        <MenuItem value={bookcarsTypes.CarType.Unknown}>{strings.UNKNOWN}</MenuItem>
       </Select>
     </div>
   )
