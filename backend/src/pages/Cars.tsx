@@ -54,7 +54,6 @@ const Cars = () => {
   }
 
   const handleCarTypeFilterChange = (values: string[]) => {
-    console.log(values)
     setCarType(values)
   }
 
