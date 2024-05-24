@@ -58,10 +58,12 @@ const Car = ({
             <MaterialIcons name="account-tree" size={iconSize} color={iconColor} style={styles.infoIcon} />
             <Text style={styles.text}>{helper.getGearboxTypeShort(car.gearbox)}</Text>
           </View>
-          <View style={styles.info}>
-            <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
-            <Text style={styles.text}>{car.seats}</Text>
-          </View>
+          {car.seats > 0 && (
+            <View style={styles.info}>
+              <MaterialIcons name="person" size={iconSize} color={iconColor} style={styles.infoIcon} />
+              <Text style={styles.text}>{car.seats}</Text>
+            </View>
+          )}
           {car.doors > 0 && (
             <View style={styles.info}>
               <Image source={require('../assets/car-door.png')} style={{ ...styles.infoIcon, width: 20, height: 20 }} />
@@ -75,10 +77,12 @@ const Car = ({
           )}
         </View>
 
-        <View style={styles.infos}>
-          <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
-          <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</Text>
-        </View>
+        {car.mileage !== 0 && (
+          <View style={styles.infos}>
+            <MaterialIcons name="directions-car" size={iconSize} color={iconColor} style={styles.infoIcon} />
+            <Text style={styles.text}>{`${i18n.t('MILEAGE')}${fr ? ' : ' : ': '}${helper.getMileage(car.mileage, language)}`}</Text>
+          </View>
+        )}
 
         <View style={styles.infos}>
           <MaterialIcons name="local-gas-station" size={iconSize} color={iconColor} style={styles.infoIcon} />
@@ -86,35 +90,42 @@ const Car = ({
         </View>
 
         <View style={styles.extras}>
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCancellation(car.cancellation, language)}</Text>
-          </View>
-
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAmendments(car.amendments, language)}</Text>
-          </View>
-
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, language)}</Text>
-          </View>
-
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</Text>
-          </View>
-
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, language)}</Text>
-          </View>
-
-          <View style={styles.extra}>
-            <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
-            <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, language)}</Text>
-          </View>
+          {car.cancellation > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.cancellation)} color={getExtraColor(car.cancellation)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getCancellation(car.cancellation, language)}</Text>
+            </View>
+          )}
+          {car.amendments > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.amendments)} color={getExtraColor(car.amendments)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getAmendments(car.amendments, language)}</Text>
+            </View>
+          )}
+          {car.theftProtection > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.theftProtection)} color={getExtraColor(car.theftProtection)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getTheftProtection(car.theftProtection, language)}</Text>
+            </View>
+          )}
+          {car.collisionDamageWaiver > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.collisionDamageWaiver)} color={getExtraColor(car.collisionDamageWaiver)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getCollisionDamageWaiver(car.collisionDamageWaiver, language)}</Text>
+            </View>
+          )}
+          {car.fullInsurance > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.fullInsurance)} color={getExtraColor(car.fullInsurance)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getFullInsurance(car.fullInsurance, language)}</Text>
+            </View>
+          )}
+          {car.additionalDriver > -1 && (
+            <View style={styles.extra}>
+              <MaterialIcons name={getExtraIcon(car.additionalDriver)} color={getExtraColor(car.additionalDriver)} size={iconSize} style={styles.infoIcon} />
+              <Text style={styles.text}>{helper.getAdditionalDriver(car.additionalDriver, language)}</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.footer}>
