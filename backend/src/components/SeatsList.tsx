@@ -25,11 +25,11 @@ const SeatsList = ({
   const [value, setValue] = useState('')
 
   useEffect(() => {
-    setValue(seatsListValue || '')
+    setValue(seatsListValue === undefined ? '' : seatsListValue)
   }, [seatsListValue])
 
   const handleChange = (e: SelectChangeEvent<string>) => {
-    const _value = e.target.value || ''
+    const _value = e.target.value
     setValue(_value)
 
     if (onChange) {
@@ -41,6 +41,8 @@ const SeatsList = ({
     <div>
       <InputLabel className={required ? 'required' : ''}>{label}</InputLabel>
       <Select label={label} value={value} onChange={handleChange} variant={variant || 'standard'} required={required} fullWidth>
+        <MenuItem value={0}>0</MenuItem>
+        <MenuItem value={1}>1</MenuItem>
         <MenuItem value={2}>2</MenuItem>
         <MenuItem value={3}>3</MenuItem>
         <MenuItem value={4}>4</MenuItem>
