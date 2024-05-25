@@ -311,8 +311,6 @@ const MultipleSelect = ({
           <Chip {...getTagProps({ index })} key={option._id} label={option.name} />
         ))}
         renderOption={(props, option) => {
-          if ('key' in props) delete props.key
-
           if (type === bookcarsTypes.RecordType.User) {
             return (
               <li {...props} key={option._id} className={`${props.className} ms-option`}>

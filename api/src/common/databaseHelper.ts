@@ -155,7 +155,7 @@ export const initialize = async (): Promise<boolean> => {
  */
 export const InitializeLocations = async () => {
   try {
-    console.log('Initializing locations...')
+    logger.info('Initializing locations...')
     const locations = await Location.find({})
       .populate<{ values: env.LocationValue[] }>({
         path: 'values',
@@ -179,10 +179,10 @@ export const InitializeLocations = async () => {
         console.log('English value not found for location:', location.id)
       }
     }
-    console.log('Locations initialized')
+    logger.info('Locations initialized')
     return true
   } catch (err) {
-    console.log('Error while initializing locations:', err)
+    logger.error('Error while initializing locations:', err)
     return false
   }
 }

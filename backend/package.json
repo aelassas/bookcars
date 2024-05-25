@@ -1,62 +1,51 @@
 {
   "name": "backend",
-  "version": "4.1.0",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build --verbose && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "fix": "eslint --fix .",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "ncu": "ncu -u -x typescript,date-fns",
+    "stylelint": "stylelint \"**/*.css\"",
+    "stylelint:fix": "stylelint \"**/*.css\" --fix"
+  },
   "dependencies": {
-    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@mui/x-data-grid": "^7.5.0",
     "@mui/x-date-pickers": "^7.5.0",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
     "@types/node": "^20.12.12",
-    "@types/react": "^18.3.2",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@types/react-google-recaptcha": "^2.1.9",
     "@types/validator": "^13.11.10",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "axios": "^1.6.8",
     "date-fns": "^2.29.3",
-    "react": "^18.3.1",
-    "react-app-alias-ex": "^2.1.0",
-    "react-dom": "^18.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-google-recaptcha-v3": "^1.10.1",
     "react-localization": "^1.0.19",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
-    "typescript": "^4.9.5",
-    "validator": "^13.12.0"
-  },
-  "scripts": {
-    "start": "tsc --build --verbose && craco start",
-    "build": "tsc --build --verbose && craco build",
-    "test": "tsc --build --verbose && craco test",
-    "eject": "craco eject",
-    "lint": "eslint --ext .ts,.tsx .",
-    "fix": "eslint --fix .",
-    "stylelint": "stylelint \"**/*.css\"",
-    "stylelint:fix": "stylelint \"**/*.css\" --fix",
-    "ncu": "ncu -u -x typescript,date-fns"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "typescript": "^5.2.2",
+    "validator": "^13.12.0",
+    "vite": "^5.2.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-airbnb": "^19.0.4",
     "npm-check-updates": "^16.14.20",
     "stylelint": "^16.5.0",
