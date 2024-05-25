@@ -391,7 +391,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${strings.PRICE} (${csStrings.CAR_CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -407,7 +406,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.DEPOSIT} (${commonStrings.CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -458,7 +456,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.MILEAGE} (${csStrings.MILEAGE_UNIT})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -473,7 +470,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.CANCELLATION} (${commonStrings.CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -488,7 +484,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.AMENDMENTS} (${commonStrings.CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -503,7 +498,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.THEFT_PROTECTION} (${csStrings.CAR_CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -518,7 +512,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.COLLISION_DAMAGE_WAVER} (${csStrings.CAR_CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -533,7 +526,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.FULL_INSURANCE} (${csStrings.CAR_CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',
@@ -548,7 +540,6 @@ const UpdateCar = () => {
               <FormControl fullWidth margin="dense">
                 <TextField
                   label={`${csStrings.ADDITIONAL_DRIVER} (${csStrings.CAR_CURRENCY})`}
-                  // eslint-disable-next-line
                   inputProps={{
                     inputMode: 'numeric',
                     pattern: '^\\d+(.\\d+)?$',

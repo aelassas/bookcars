@@ -23,4 +23,5 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 }
 
 // Create a custom hook to access context
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGlobalContext = () => useContext(GlobalContext)

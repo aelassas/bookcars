@@ -24,36 +24,36 @@ const env = {
   isMobile: () => window.innerWidth <= 960,
 
   APP_TYPE: bookcarsTypes.AppType.Backend,
-  API_HOST: String(process.env.REACT_APP_BC_API_HOST),
+  API_HOST: String(import.meta.env.VITE_BC_API_HOST),
   LANGUAGES: LANGUAGES.map((l) => l.code),
   _LANGUAGES: LANGUAGES,
-  DEFAULT_LANGUAGE: String(process.env.REACT_APP_BC_DEFAULT_LANGUAGE || 'en'),
-  PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_PAGE_SIZE), 10) || 30,
-  CARS_PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_CARS_PAGE_SIZE), 10) || 15,
-  BOOKINGS_PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
-  BOOKINGS_MOBILE_PAGE_SIZE: Number.parseInt(String(process.env.REACT_APP_BC_BOOKINGS_MOBILE_PAGE_SIZE), 10) || 10,
-  CDN_USERS: String(process.env.REACT_APP_BC_CDN_USERS),
-  CDN_TEMP_USERS: String(process.env.REACT_APP_BC_CDN_TEMP_USERS),
-  CDN_CARS: String(process.env.REACT_APP_BC_CDN_CARS),
-  CDN_TEMP_CARS: String(process.env.REACT_APP_BC_CDN_TEMP_CARS),
+  DEFAULT_LANGUAGE: String(import.meta.env.VITE_BC_DEFAULT_LANGUAGE || 'en'),
+  PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_PAGE_SIZE), 10) || 30,
+  CARS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_CARS_PAGE_SIZE), 10) || 15,
+  BOOKINGS_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_PAGE_SIZE), 10) || 20,
+  BOOKINGS_MOBILE_PAGE_SIZE: Number.parseInt(String(import.meta.env.VITE_BC_BOOKINGS_MOBILE_PAGE_SIZE), 10) || 10,
+  CDN_USERS: String(import.meta.env.VITE_BC_CDN_USERS),
+  CDN_TEMP_USERS: String(import.meta.env.VITE_BC_CDN_TEMP_USERS),
+  CDN_CARS: String(import.meta.env.VITE_BC_CDN_CARS),
+  CDN_TEMP_CARS: String(import.meta.env.VITE_BC_CDN_TEMP_CARS),
   PAGE_OFFSET: 200,
   INFINITE_SCROLL_OFFSET: 40,
-  SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,
-  SUPPLIER_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_SUPPLIER_IMAGE_HEIGHT), 10) || 30,
-  CAR_IMAGE_WIDTH: Number.parseInt(String(process.env.REACT_APP_BC_CAR_IMAGE_WIDTH), 10) || 300,
-  CAR_IMAGE_HEIGHT: Number.parseInt(String(process.env.REACT_APP_BC_CAR_IMAGE_HEIGHT), 10) || 200,
+  SUPPLIER_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_WIDTH), 10) || 60,
+  SUPPLIER_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_SUPPLIER_IMAGE_HEIGHT), 10) || 30,
+  CAR_IMAGE_WIDTH: Number.parseInt(String(import.meta.env.VITE_BC_CAR_IMAGE_WIDTH), 10) || 300,
+  CAR_IMAGE_HEIGHT: Number.parseInt(String(import.meta.env.VITE_BC_CAR_IMAGE_HEIGHT), 10) || 200,
   CAR_OPTION_IMAGE_HEIGHT: 85,
   SELECTED_CAR_OPTION_IMAGE_HEIGHT: 30,
-  MINIMUM_AGE: Number.parseInt(String(process.env.REACT_APP_BC_MINIMUM_AGE), 10) || 21,
+  MINIMUM_AGE: Number.parseInt(String(import.meta.env.VITE_BC_MINIMUM_AGE), 10) || 21,
   // PAGINATION_MODE: CLASSIC or INFINITE_SCROLL
   // If you choose CLASSIC, you will get a classic pagination with next and previous buttons on desktop and infinite scroll on mobile.
   // If you choose INFINITE_SCROLL, you will get infinite scroll on desktop and mobile.
   // Defaults to CLASSIC
   PAGINATION_MODE:
-    (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
+    (import.meta.env.VITE_BC_PAGINATION_MODE && import.meta.env.VITE_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
-  CURRENCY: process.env.REACT_APP_BC_CURRENCY || '$',
+  CURRENCY: import.meta.env.VITE_BC_CURRENCY || '$',
 }
 
 export default env

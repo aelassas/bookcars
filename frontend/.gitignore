@@ -2,11 +2,6 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# Next.js
-/.next
 
 # testing
 /coverage
