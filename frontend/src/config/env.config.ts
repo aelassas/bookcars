@@ -62,6 +62,7 @@ const env = {
    * */
   STRIPE_CURRENCY_CODE: String(process.env.REACT_APP_BC_STRIPE_CURRENCY_CODE || 'USD'),
   CURRENCY: process.env.REACT_APP_BC_CURRENCY || '$',
+  SET_LANGUAGE_FROM_IP: (process.env.REACT_APP_BC_SET_LANGUAGE_FROM_IP && process.env.REACT_APP_BC_SET_LANGUAGE_FROM_IP.toLowerCase()) === 'true',
 }
 
 export default env
