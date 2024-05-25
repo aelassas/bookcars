@@ -14,7 +14,8 @@ import {
   BC_STRIPE_PUBLISHABLE_KEY,
   BC_STRIPE_MERCHANT_IDENTIFIER,
   BC_STRIPE_COUNTRY_CODE,
-  BC_STRIPE_CURRENCY_CODE
+  BC_STRIPE_CURRENCY_CODE,
+  BC_CURRENCY,
 } from '@env'
 
 /**
@@ -181,3 +182,10 @@ export const STRIPE_COUNTRY_CODE: string = BC_STRIPE_COUNTRY_CODE
  * @type {string}
  */
 export const STRIPE_CURRENCY_CODE: string = BC_STRIPE_CURRENCY_CODE
+
+/**
+ * Currency. Default is $.
+ *
+ * @type {string}
+ */
+export const CURRENCY: string = BC_CURRENCY

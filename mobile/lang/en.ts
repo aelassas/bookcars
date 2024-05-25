@@ -112,7 +112,7 @@ export const en = {
   PASSWORD_UPDATE: 'Password changed successfully.',
   PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
   EMPTY_CAR_LIST: 'No cars.',
-  CURRENCY: '$',
+  CURRENCY: env.CURRENCY,
   DAILY: '/day',
   DIESEL_SHORT: 'D',
   GASOLINE_SHORT: 'G',

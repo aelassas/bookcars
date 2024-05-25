@@ -16,6 +16,12 @@ const strings = new LocalizedStrings({
     COPYRIGHT_PART2: '®',
     COPYRIGHT_PART3: '. All rights reserved.',
   },
+  el: {
+     DROP_OFF: 'Επιστροφή στην ίδια τοποθεσία',
+     COPYRIGHT_PART1,
+     COPYRIGHT_PART2: '®',
+     COPYRIGHT_PART3: '. Ολα τα δικαιώματα διατηρούνται.',
+   },
 })
 
 langHelper.setLanguage(strings)
