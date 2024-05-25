@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { FormControl, Button } from '@mui/material'
 import { DateTimeValidationError } from '@mui/x-date-pickers'
-import env from 'src/config/env.config'
+import env from '../config/env.config'
 import * as bookcarsTypes from ':bookcars-types'
 import { strings as commonStrings } from '../lang/common'
 import { strings } from '../lang/home'
