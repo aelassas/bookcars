@@ -14,10 +14,11 @@ interface CarProps {
   navigation: NativeStackNavigationProp<StackParams, keyof StackParams>
   language: string
   car: bookcarsTypes.Car
-  from: Date
-  to: Date
-  pickupLocation: string
-  dropOffLocation: string
+  from?: Date
+  to?: Date
+  pickupLocation?: string
+  dropOffLocation?: string
+  hidePrice?: boolean
 }
 
 const iconSize = 24
@@ -34,7 +35,8 @@ const Car = ({
   to,
   pickupLocation,
   dropOffLocation,
-  navigation
+  navigation,
+  hidePrice
 }: CarProps) => {
   const fr = bookcarsHelper.isFrench(language)
 
@@ -139,29 +141,33 @@ const Car = ({
             <Text style={styles.supplierText}>{car.supplier.fullName}</Text>
           </View>
 
-          <View style={styles.price}>
-            <Text style={styles.priceSecondary}>{helper.getDays(bookcarsHelper.days(from, to))}</Text>
-            <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(helper.price(car, from, to), i18n.t('CURRENCY'), language)}`}</Text>
-            <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}`}</Text>
-          </View>
+          {!hidePrice && from && to && (
+            <View style={styles.price}>
+              <Text style={styles.priceSecondary}>{helper.getDays(bookcarsHelper.days(from, to))}</Text>
+              <Text style={styles.pricePrimary}>{`${bookcarsHelper.formatPrice(helper.price(car, from, to), i18n.t('CURRENCY'), language)}`}</Text>
+              <Text style={styles.priceSecondary}>{`${i18n.t('PRICE_PER_DAY')} ${bookcarsHelper.formatPrice(car.price, i18n.t('CURRENCY'), language)}`}</Text>
+            </View>
+          )}
         </View>
 
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.button}
-            label={i18n.t('BOOK')}
-            onPress={() => {
-              const params = {
-                car: car._id,
-                pickupLocation,
-                dropOffLocation,
-                from: from.getTime(),
-                to: to.getTime(),
-              }
-              navigation.navigate('Checkout', params)
-            }}
-          />
-        </View>
+        {!hidePrice && from && to && pickupLocation && dropOffLocation && (
+          <View style={styles.buttonContainer}>
+            <Button
+              style={styles.button}
+              label={i18n.t('BOOK')}
+              onPress={() => {
+                const params = {
+                  car: car._id,
+                  pickupLocation,
+                  dropOffLocation,
+                  from: from.getTime(),
+                  to: to.getTime(),
+                }
+                navigation.navigate('Checkout', params)
+              }}
+            />
+          </View>
+        )}
       </View>
     </View>
   )
@@ -246,7 +252,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
+    flex: 0.5,
   },
   supplierImg: {
     width: env.SUPPLIER_IMAGE_WIDTH,
@@ -260,7 +266,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   price: {
-    flex: 2,
+    flex: 0.5,
     alignSelf: 'stretch',
     alignItems: 'flex-end',
     marginTop: 20,

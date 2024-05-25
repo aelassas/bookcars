@@ -29,6 +29,7 @@ import {
   EmbeddedCheckout,
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import CarList from 'src/components/CarList'
 import * as bookcarsTypes from ':bookcars-types'
 import * as bookcarsHelper from ':bookcars-helper'
 import env from '../config/env.config'
@@ -597,6 +598,12 @@ const Checkout = () => {
             </h1>
             <form onSubmit={handleSubmit}>
               <div>
+
+                <CarList
+                  cars={[car]}
+                  hidePrice
+                  sizeAuto
+                />
 
                 <div className="booking-options-container">
                   <div className="booking-info">

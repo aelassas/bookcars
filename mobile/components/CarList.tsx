@@ -22,6 +22,9 @@ interface CarListProps {
   mileage?: string[]
   deposit?: number
   header?: React.ReactElement
+  cars?: bookcarsTypes.Car[]
+  hidePrice?: boolean
+  footerComponent?: React.ReactElement
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -37,6 +40,9 @@ const CarList = ({
   mileage,
   deposit,
   header,
+  cars,
+  hidePrice,
+  footerComponent,
   onLoad
 }: CarListProps) => {
   const [language, setLanguage] = useState(env.DEFAULT_LANGUAGE)
@@ -126,11 +132,22 @@ const CarList = ({
     setPage(1)
   }, [suppliers, pickupLocation, _carType, gearbox, mileage, deposit])
 
+  useEffect(() => {
+    if (cars) {
+      setRows(cars)
+      setFetch(false)
+      if (onLoad) {
+        onLoad({ rows: cars, rowCount: cars.length })
+      }
+      setLoading(false)
+    }
+  }, [cars]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const numToRender = Math.floor(env.CARS_PAGE_SIZE / 2)
 
   return (
     <View style={styles.container}>
-      {from && to && pickupLocation && dropOffLocation && (
+      {((from && to && pickupLocation && dropOffLocation) || hidePrice) && (
         <FlatList
           keyboardShouldPersistTaps="handled"
           initialNumToRender={numToRender}
@@ -149,6 +166,7 @@ const CarList = ({
               pickupLocation={pickupLocation}
               dropOffLocation={dropOffLocation}
               navigation={navigation}
+              hidePrice={hidePrice}
             />
           )}
           keyExtractor={(item) => item._id}
@@ -161,9 +179,9 @@ const CarList = ({
           }}
           ListHeaderComponent={header}
           ListFooterComponent={
-            fetch
+            footerComponent || (fetch
               ? <ActivityIndicator size="large" color="#f37022" style={styles.indicator} />
-              : <></>
+              : <></>)
           }
           ListEmptyComponent={
             !loading ? (
