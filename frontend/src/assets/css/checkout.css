@@ -42,6 +42,7 @@ div.booking div.booking-details-container,
 div.booking div.payment-options-container {
   background: #fbfbfb;
   border: 1px solid #d9d8d9;
+  border-radius: 5px;
   padding: 25px;
   margin-bottom: 15px;
 }
