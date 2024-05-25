@@ -67,6 +67,37 @@ if (lang) {
   } catch (err) {
     helper.error(err, commonStrings.CHANGE_LANGUAGE_ERROR)
   }
+} else {
+  //
+  // If language not set, set language by IP
+  //
+  let storedLang
+
+  if (user && user.language) {
+    storedLang = user.language
+  } else {
+    const slang = localStorage.getItem('bc-language')
+    if (slang && slang.length === 2) {
+      storedLang = slang
+    }
+  }
+
+  const updateLang = (_lang: string) => {
+    UserService.setLanguage(_lang)
+    commonStrings.setLanguage(_lang)
+  }
+
+  if (env.SET_LANGUAGE_FROM_IP && !storedLang) {
+    const country = await UserService.getCountryFromIP()
+
+    if (country === 'France' || country === 'Morocco') {
+      updateLang('fr')
+    } else if (country === 'Greece') {
+      updateLang('el')
+    } else {
+      updateLang(env.DEFAULT_LANGUAGE)
+    }
+  }
 }
 
 language = UserService.getLanguage()
