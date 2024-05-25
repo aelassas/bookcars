@@ -123,7 +123,7 @@ const LocationList = ({
         }
       }
     }
-  }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetch, loading, page, keyword])
 
   const handleDelete = async (e: React.MouseEvent<HTMLElement>) => {
     try {

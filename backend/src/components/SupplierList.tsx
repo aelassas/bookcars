@@ -119,7 +119,7 @@ const SupplierList = ({
         }
       }
     }
-  }, [fetch, loading, page, keyword]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetch, loading, page, keyword])
 
   const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
     const _supplierId = e.currentTarget.getAttribute('data-id') as string
