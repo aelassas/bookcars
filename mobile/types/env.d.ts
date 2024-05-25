@@ -16,4 +16,5 @@ declare module '@env' {
   export const BC_STRIPE_MERCHANT_IDENTIFIER: string
   export const BC_STRIPE_COUNTRY_CODE: string
   export const BC_STRIPE_CURRENCY_CODE: string
+  export const BC_CURRENCY: string
 }

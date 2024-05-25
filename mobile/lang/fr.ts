@@ -111,7 +111,7 @@ export const fr = {
   PASSWORD_UPDATE: 'Le mot de passe a été mofifié avec succès.',
   PASSWORD_UPDATE_ERROR: "Une erreur s'est produite lors de la modification du mot de passe.",
   EMPTY_CAR_LIST: 'Pas de voitures.',
-  CURRENCY: '$',
+  CURRENCY: env.CURRENCY,
   DAILY: '/jour',
   DIESEL_SHORT: 'D',
   GASOLINE_SHORT: 'E',

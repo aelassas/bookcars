@@ -7,12 +7,16 @@ import Const from './const'
 //
 const LANGUAGES = [
   {
+    code: 'en',
+    label: 'English',
+  },
+  {
     code: 'fr',
     label: 'Français',
   },
   {
-    code: 'en',
-    label: 'English',
+    code: 'el',
+    label: 'Greek',
   },
 ]
 
@@ -56,7 +60,8 @@ const env = {
    * The three-letter ISO 4217 alphabetic currency code, e.g. "USD" or "EUR". Required for Stripe payments. Default is "USD".
    * Must be a supported currency: https://docs.stripe.com/currencies
    * */
-  STRIPE_CURRENCY_CODE: String(process.env.REACT_APP_BC_STRIPE_CURRENCY_CODE || 'USD')
+  STRIPE_CURRENCY_CODE: String(process.env.REACT_APP_BC_STRIPE_CURRENCY_CODE || 'USD'),
+  CURRENCY: process.env.REACT_APP_BC_CURRENCY || '$',
 }
 
 export default env

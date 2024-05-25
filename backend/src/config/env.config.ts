@@ -7,12 +7,16 @@ import Const from './const'
 //
 const LANGUAGES = [
   {
+    code: 'en',
+    label: 'English',
+  },
+  {
     code: 'fr',
     label: 'Français',
   },
   {
-    code: 'en',
-    label: 'English',
+    code: 'el',
+    label: 'Greek',
   },
 ]
 
@@ -49,6 +53,7 @@ const env = {
     (process.env.REACT_APP_BC_PAGINATION_MODE && process.env.REACT_APP_BC_PAGINATION_MODE.toUpperCase()) === Const.PAGINATION_MODE.INFINITE_SCROLL
       ? Const.PAGINATION_MODE.INFINITE_SCROLL
       : Const.PAGINATION_MODE.CLASSIC,
+  CURRENCY: process.env.REACT_APP_BC_CURRENCY || '$',
 }
 
 export default env

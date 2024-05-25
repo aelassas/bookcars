@@ -12,6 +12,11 @@ const strings = new LocalizedStrings({
     TOKEN_EXPIRED: 'Your account activation link expired.',
     ACTIVATE: 'Activate',
   },
+  el: {
+     ACTIVATE_HEADING: 'Ενεργοποίηση λογαριασμού',
+     TOKEN_EXPIRED: 'Ο σύνδεσμος ενεργοποίησης του λογαριασμού σας έληξε.',
+     ACTIVE: 'Ενεργοποίηση',
+   },
 })
 
 langHelper.setLanguage(strings)
