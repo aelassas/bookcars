@@ -49,6 +49,7 @@ interface CarListProps {
   hidePrice?: boolean
   hideSupplier?: boolean
   loading?: boolean
+  sizeAuto?: boolean
   onLoad?: bookcarsTypes.DataEvent<bookcarsTypes.Car>
 }
 
@@ -69,7 +70,8 @@ const CarList = ({
   hidePrice,
   hideSupplier,
   loading: carListLoading,
-  onLoad
+  sizeAuto,
+  onLoad,
 }: CarListProps) => {
   const navigate = useNavigate()
 
@@ -251,16 +253,16 @@ const CarList = ({
               </CardContent>
             </Card>
           )
-          : ((from && to && pickupLocation && dropOffLocation) || (hidePrice && booking))
+          : ((from && to && pickupLocation && dropOffLocation) || hidePrice) // || (hidePrice && booking))
           && rows.map((car) => (
-            <article key={car._id}>
+            <article key={car._id} style={sizeAuto ? { width: 'auto' } : {}}>
               <div className="name">
                 <h2>{car.name}</h2>
               </div>
               <div className="car">
                 <img src={bookcarsHelper.joinURL(env.CDN_CARS, car.image)} alt={car.name} className="car-img" />
                 {!hideSupplier && (
-                  <div className="car-supplier">
+                  <div className="car-supplier" style={sizeAuto ? { bottom: 10 } : {}}>
                     <span className="car-supplier-logo">
                       <img src={bookcarsHelper.joinURL(env.CDN_USERS, car.supplier.avatar)} alt={car.supplier.fullName} />
                     </span>
