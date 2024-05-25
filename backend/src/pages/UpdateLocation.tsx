@@ -116,8 +116,8 @@ const UpdateLocation = () => {
       setLoading(true)
 
       const params = new URLSearchParams(window.location.search)
-      if (params.has('l')) {
-        const id = params.get('l')
+      if (params.has('loc')) {
+        const id = params.get('loc')
         if (id && id !== '') {
           try {
             const _location = await LocationService.getLocation(id)
@@ -171,7 +171,7 @@ const UpdateLocation = () => {
             </h1>
             <form onSubmit={handleSubmit}>
               {location.values.map((value, index) => (
-                <FormControl key={value.value} fullWidth margin="dense">
+                <FormControl key={value.language} fullWidth margin="dense">
                   <InputLabel className="required">{env._LANGUAGES.filter((l) => l.code === value.language)[0].label}</InputLabel>
                   <Input
                     type="text"

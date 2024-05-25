@@ -223,7 +223,7 @@ export const getLanguage = (): string => {
 export const getQueryLanguage = (): string | null => {
   const params = new URLSearchParams(window.location.search)
   if (params.has('l')) {
-    return params.get('l') ?? ''
+    return params.get('l') || ''
   }
   return ''
 }

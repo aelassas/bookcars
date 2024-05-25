@@ -20,6 +20,15 @@ const strings = new LocalizedStrings({
     PASSWORD_UPDATE_ERROR: 'An error occurred while updating password.',
     PASSWORD_UPDATE: 'Password changed successfully.',
   },
+  el: {
+     CHANGE_PASSWORD_HEADING: 'Τροποποίηση κωδικού πρόσβασης',
+     CURRENT_PASSWORD: 'Τρέχον κωδικός πρόσβασης',
+     CURRENT_PASSWORD_ERROR: 'Λάθος κωδικός πρόσβασης',
+     NEW_PASSWORD: 'Νέος κωδικός πρόσβασης',
+     NEW_PASSWORD_ERROR: 'Παρακαλώ επιλέξτε νέο κωδικό πρόσβασης',
+     PASSWORD_UPDATE_ERROR: 'Παρουσιάστηκε σφάλμα κατά την ενημέρωση του κωδικού πρόσβασης.',
+     PASSWORD_UPDATE: 'Ο κωδικός πρόσβασης άλλαξε με επιτυχία.',
+   },
 })
 
 langHelper.setLanguage(strings)

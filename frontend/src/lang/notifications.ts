@@ -24,6 +24,17 @@ const strings = new LocalizedStrings({
     DELETE_NOTIFICATION: 'Are you sure you want to delete this notification?',
     DELETE_NOTIFICATIONS: 'Are you sure you want to delete these notifications?',
   },
+  el: {
+     EMPTY_LIST: 'Δεν υπάρχουν ειδοποιήσεις',
+     VIEW: 'Προβολή',
+     MARK_AS_READ: 'Επισήμανση ως αναγνωσμένου',
+     MARK_AS_UNREAD: 'Επισήμανση ως μη αναγνωσμένου',
+     MARK_ALL_AS_READ: 'Επισήμανση όλων ως αναγνωσμένων',
+     MARK_ALL_AS_UNREAD: 'Επισήμανση όλων ως μη αναγνωσμένων',
+     DELETE_ALL: 'Διαγραφή όλων',
+     DELETE_NOTIFICATION: 'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ειδοποίηση;',
+     DELETE_NOTIFICATIONS: 'Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτές τις ειδοποιήσεις;',
+   },
 })
 
 langHelper.setLanguage(strings)

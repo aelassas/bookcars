@@ -24,6 +24,17 @@ const strings = new LocalizedStrings({
     SETTINGS: 'Settings',
     SIGN_OUT: 'Sign out',
   },
+  el: {
+  SIGN_IN: 'Είσοδος',
+  HOME: 'Αρχική σελίδα',
+  BOOKINGS: 'Κρατήσεις',
+  ABOUT: 'ΣΧΕΤΙΚΑ ΜΕ',
+  TOS: 'Όροι χρήσης',
+  CONTACT: 'Επικοινωνία',
+  LANGUAGE: 'Γλώσσα',
+  SETTINGS: 'Ρυθμίσεις',
+  SIGN_OUT: 'Αποσύνδεση',
+},
 })
 
 langHelper.setLanguage(strings)

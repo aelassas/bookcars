@@ -144,3 +144,45 @@ export const initialize = async (): Promise<boolean> => {
     return false
   }
 }
+
+/**
+ * Initialize locations.
+ * If a new language is added, english values will be added by default with the new language.
+ * The new language values must be updated from the backend.
+ *
+ * @async
+ * @returns {*}
+ */
+export const InitializeLocations = async () => {
+  try {
+    console.log('Initializing locations...')
+    const locations = await Location.find({})
+      .populate<{ values: env.LocationValue[] }>({
+        path: 'values',
+        model: 'LocationValue',
+      })
+
+    for (const location of locations) {
+      const enLocationValue = location.values.find((val) => val.language === 'en')
+
+      if (enLocationValue) {
+        for (const lang of env.LANGUAGES) {
+          if (!location.values.some((val) => val.language === lang)) {
+            const langLocationValue = new LocationValue({ language: lang, value: enLocationValue.value })
+            await langLocationValue.save()
+            const loc = await Location.findById(location.id)
+            loc?.values.push(new mongoose.Types.ObjectId(String(langLocationValue.id)))
+            await loc?.save()
+          }
+        }
+      } else {
+        console.log('English value not found for location:', location.id)
+      }
+    }
+    console.log('Locations initialized')
+    return true
+  } catch (err) {
+    console.log('Error while initializing locations:', err)
+    return false
+  }
+}

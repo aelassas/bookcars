@@ -263,6 +263,7 @@ const Header = ({
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isLangMenuOpen}
       onClose={handleLangMenuClose}
+      className="menu"
     >
       {
         env._LANGUAGES.map((language) => (

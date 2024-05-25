@@ -14,6 +14,12 @@ const strings = new LocalizedStrings({
     VALIDATION_EMAIL_SENT: 'Validation email sent.',
     VALIDATION_EMAIL_ERROR: 'An error occurred while sending validation email.',
   },
+  el: {
+     VALIDATE_EMAIL: 'Έχει σταλεί ένα email επικύρωσης στη διεύθυνση email σας. Ελέγξτε το γραμματοκιβώτιό σας και επικυρώστε τον λογαριασμό σας κάνοντας κλικ στον σύνδεσμο στο email. Θα λήξει μετά από μία ημέρα. Εάν δεν λάβατε το email επικύρωσης, κάντε κλικ στην αποστολή ξανά .',
+     RESEND: 'Επαναποστολή',
+     VALIDATION_EMAIL_SENT: 'Εστάλη email επικύρωσης.',
+     VALIDATION_EMAIL_ERROR: 'Παρουσιάστηκε σφάλμα κατά την αποστολή email επικύρωσης.',
+   },
 })
 
 langHelper.setLanguage(strings)
