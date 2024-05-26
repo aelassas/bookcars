@@ -642,11 +642,8 @@ export const getFrontendCars = async (req: Request, res: Response) => {
     for (const car of data[0].resultData) {
       const { _id, fullName, avatar } = car.supplier
       car.supplier = { _id, fullName, avatar }
-      console.log(car._id)
     }
-    console.log('page', page)
-    console.log('skip', (page - 1) * size)
-    console.log('data', data[0].resultData.length)
+
     return res.json(data)
   } catch (err) {
     logger.error(`[car.getFrontendCars] ${i18n.t('DB_ERROR')} ${req.query.s}`, err)
