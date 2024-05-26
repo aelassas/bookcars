@@ -116,7 +116,7 @@ const CarList = ({
 
   useEffect(() => {
     if (suppliers) {
-      if (suppliers.length > 0) {
+      if (suppliers.length > 0 && pickupLocation && _carType && gearbox && mileage && deposit) {
         fetchData(page, suppliers, pickupLocation, _carType, gearbox, mileage, deposit)
       } else {
         setRows([])
